@@ -8,6 +8,11 @@
 
 #include "ButtonExample.h"
 
+void ButtonExample::setup_colorBACK(ofFloatColor &c)
+{
+    colorBACK = &c;
+}
+
 void ButtonExample::setColor(ofColor c)
 {
     color_picked = c;
@@ -69,6 +74,9 @@ void ButtonExample::draw()
 	}
 }
 
+void ButtonExample::setLocked(bool b){
+    bLocked = b;
+}
 
 void ButtonExample::onTouchDown(ofxInterface::TouchEvent &event)
 {
@@ -82,6 +90,8 @@ void ButtonExample::onTouchDown(ofxInterface::TouchEvent &event)
 	bTouched = true;
 
 	touchAnchor = local;
+
+    colorBACK->set(ofFloatColor(color_picked));
 }
 
 void ButtonExample::onTouchUp(ofxInterface::TouchEvent &event)
@@ -95,7 +105,11 @@ void ButtonExample::onTouchUp(ofxInterface::TouchEvent &event)
 
 void ButtonExample::onTouchMove(ofxInterface::TouchEvent &event)
 {
-	ofVec2f parentPos = ((Node*)parent)->toLocal(event.position);
 
+    if (!bLocked)
+    {
+
+	ofVec2f parentPos = ((Node*)parent)->toLocal(event.position);
 	setPosition(parentPos - touchAnchor);
+    }
 }

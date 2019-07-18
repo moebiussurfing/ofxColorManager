@@ -111,7 +111,8 @@ void ofxColorManager::add_color_Interface(ofColor c)
     ButtonExample *btn = new ButtonExample();
     btn->setup(x, y, size, size);
     btn->setColor(c);
-
+    btn->setup_colorBACK( color_p );
+    btn->setLocked(true);
     btn->setName("btn" + ofToString(i));
 
     // add it to the scene
@@ -438,6 +439,8 @@ void ofxColorManager::setup_palettes()
         x += (size+pad);
         ButtonExample *btn = new ButtonExample();
         btn->setup(x, y, size, size);
+        btn->setup_colorBACK( color_p );
+        btn->setLocked(true);
         btn->setName("analogue" + ofToString(i));
         btn->setColor(analogue[i]);
         scene->addChild(btn);
@@ -455,6 +458,8 @@ void ofxColorManager::setup_palettes()
         x += (size+pad);
         ButtonExample *btn = new ButtonExample();
         btn->setup(x, y, size, size);
+        btn->setup_colorBACK( color_p );
+        btn->setLocked(true);
         btn->setName("compSat" + ofToString(i));
         btn->setColor(complement[i]);
         scene->addChild(btn);
@@ -647,6 +652,10 @@ void ofxColorManager::update_palettes()
 //--------------------------------------------------------------
 void ofxColorManager::draw()
 {
+    //-
+
+    // BACKGROUND
+
     ofClear(ofColor( color_backGround.get() ));
 
     //-
@@ -660,7 +669,8 @@ void ofxColorManager::draw()
     ofRectangle rColor = ofRectangle( x, y, w, h );
     ofPushStyle();
     ofFill();
-    ofSetColor( ofColor( myColor.get() ) );
+//    ofSetColor( ofColor( myColor.get() ) );
+    ofSetColor( ofColor( color_p ) );
     ofDrawRectangle(rColor);
     ofPopStyle();
 

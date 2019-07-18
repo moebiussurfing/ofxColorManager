@@ -40,7 +40,6 @@ class ButtonExample : public ofxInterface::Node
 
 public:
 	void setup(float x, float y, float w, float h);
-
 	void update();
 	void draw();
 
@@ -49,6 +48,8 @@ public:
 	void onTouchMove(TouchEvent& event);
 	void onTouchUp(TouchEvent& event);
 
+    void setup_colorBACK(ofFloatColor &c);
+    ofFloatColor *colorBACK;
 
     ofColor color;
     ofColor color_picked;
@@ -58,6 +59,9 @@ public:
     ofVec2f touchAnchor;
 
 	bool bTouched;
+
+	bool bLocked = false;
+    void setLocked(bool b);
 
     void setColor(ofColor c);
     ofColor getColor();

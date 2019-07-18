@@ -19,6 +19,8 @@ public:
     ofxColorManager();
     ~ofxColorManager();
 
+    ofFloatColor color_p;
+
     void setup();
     void update();
     void draw();
