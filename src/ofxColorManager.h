@@ -1,17 +1,16 @@
 
 #pragma once
 #include "ofMain.h"
-#include "ofxImGui.h"
 
+#include "ofxImGui.h"
 #include "ofxColorPalette.h"
 #define NUM_COLOR 9
 #define RECT_SIZE 35
 #define PADDING 5
-
 #include "ofxInterface.h"
 #include "ButtonExample.h"
-
 #include "ofxColorGradient.h"
+#include "ofxCurvesTool.h"
 
 class ofxColorManager {
 
@@ -24,6 +23,19 @@ public:
     void update();
     void draw();
     void exit();
+
+    //-
+
+    void keyPressed( ofKeyEventArgs& eventArgs);
+    void keyReleased( ofKeyEventArgs& eventArgs );
+    void addKeysListeners();
+    void removeKeysListeners();
+
+    void mouseDragged( ofMouseEventArgs& eventArgs );
+    void mousePressed( ofMouseEventArgs& eventArgs );
+    void mouseReleased( ofMouseEventArgs& eventArgs );
+    void addMouseListeners();
+    void removeMouseListeners();
 
     //-
 
@@ -56,6 +68,7 @@ public:
     ofColor color_backGround;
 
     void add_color(ofColor c);
+    void remove_colorLast();
     vector<ofColor> palette;
     vector<ofColor> colors;
 
@@ -63,26 +76,30 @@ public:
 
     ofxInterface::Node* scene;
 	vector<ButtonExample*> buttons;
-    void setup_UI();
-    void update_UI();
-    void draw_UI();
-    void addColorUI(ofColor c);
+    void setup_Interface();
+    void update_Interface();
+    void draw_Interface();
+    void add_color_Interface(ofColor c);
     bool bShowDebug = false;
+
+    vector<ButtonExample*> buttons_palettes[8];
+    void add_color_Palette(int pal);
+
+    //-
 
     ofxColorGradient<ofColor> gradient;
 
-    //--
+    //-
 
-    void keyPressed( ofKeyEventArgs& eventArgs);
-    void keyReleased( ofKeyEventArgs& eventArgs );
-    void addKeysListeners();
-    void removeKeysListeners();
-
-    void mouseDragged( ofMouseEventArgs& eventArgs );
-    void mousePressed( ofMouseEventArgs& eventArgs );
-    void mouseReleased( ofMouseEventArgs& eventArgs );
-    void addMouseListeners();
-    void removeMouseListeners();
+    ofxCurvesTool curvesTool;
+    ofImage img;
+    bool show;
+    float cnt = 0;
+    int amount = amount;
+    void setup_curveTool();
+    void update_curveTool();
+    void draw_curveTool();
+    ofParameter<float> curve_pos;
 
     //--
 };

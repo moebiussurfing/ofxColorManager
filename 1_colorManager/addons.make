@@ -1,5 +1,6 @@
 ofxColorGradient
 ofxColorManager
 ofxColorPalette
+ofxCurvesTool
 ofxImGui
 ofxInterface

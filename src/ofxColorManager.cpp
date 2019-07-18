@@ -11,7 +11,7 @@ ofxColorManager::~ofxColorManager()
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::setup_UI()
+void ofxColorManager::setup_Interface()
 {
 /******
      * setup the scene with width and height
@@ -46,9 +46,11 @@ void ofxColorManager::setup()
 
     //-
 
-    setup_UI();
+    setup_Interface();
 
     gradient.reset();
+
+    setup_curveTool();
 
     //-
 
@@ -57,7 +59,7 @@ void ofxColorManager::setup()
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::addColorUI(ofColor c)
+void ofxColorManager::add_color_Interface(ofColor c)
 {
     float size = 40;
     float pad = 40;
@@ -94,7 +96,7 @@ void ofxColorManager::addColorUI(ofColor c)
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::update_UI(){
+void ofxColorManager::update_Interface(){
 
     /******
      * update the touch manager,
@@ -111,7 +113,7 @@ void ofxColorManager::update_UI(){
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::draw_UI(){
+void ofxColorManager::draw_Interface(){
     /******
      * this will render the scene
      * 1. this function takes all the visible nodes
@@ -143,8 +145,21 @@ bool ofxColorManager::imGui()
         if (ofxImGui::BeginWindow("COLOR MANAGER", mainSettings, false))
         {
             ofxImGui::AddParameter(this->myColor, true);
-            ofxImGui::AddParameter(this->MODE);
 
+            if (ImGui::Button("RANDOM COLOR"))
+            {
+                myColor = ofFloatColor( ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.) );
+            }
+            if (ImGui::Button("ADD COLOR"))
+            {
+                add_color(ofColor(myColor.get()));
+            }
+            if (ImGui::Button("REMOVE COLOR"))
+            {
+                remove_colorLast();
+            }
+
+            ofxImGui::AddParameter(this->MODE);
             if ( MODE )
             {
                 ImGui::Text( "MODE SATURATION" );
@@ -156,10 +171,7 @@ bool ofxColorManager::imGui()
                 ofxImGui::AddParameter(this->BRIGHTNESS);
             }
 
-            if (ImGui::Button("ADD COLOR"))
-            {
-                add_color(ofColor(myColor.get()));
-            }
+            ofxImGui::AddParameter(this->curve_pos);
 
         }
         ofxImGui::EndWindow(mainSettings);
@@ -175,15 +187,37 @@ void ofxColorManager::add_color(ofColor c)
     palette.push_back( c );
     ofLogNotice("ofxColorManager") << "added color " << ofToString(palette.size()) << " (" << ofToString(c) << ") to palette";
 
-    addColorUI(c);
+    add_color_Interface(c);
 
     gradient.addColor( c );
 }
 
 //--------------------------------------------------------------
+void ofxColorManager::remove_colorLast()
+{
+//    if (!palette.empty())
+    {
+        palette.pop_back();
+    }
+
+    if (true)
+    {
+        gradient.removeColorLast();
+    }
+
+//    if (!buttons.empty())
+    {
+        buttons.pop_back();
+        int iSize = scene->getNumChildren();
+        scene->removeChild(iSize);
+    }
+
+}
+
+//--------------------------------------------------------------
 void ofxColorManager::update()
 {
-    update_UI();
+    update_Interface();
 
     if (MODE.get())
     {
@@ -194,7 +228,99 @@ void ofxColorManager::update()
         mode = ofxColorPalette::BRIGHTNESS;
     }
 
+    //-
+
     update_color(BRIGHTNESS, SATURATION);
+
+    //-
+
+    update_curveTool();
+
+    //-
+}
+
+
+//--------------------------------------------------------------
+void ofxColorManager::setup_curveTool()
+{
+    amount = 256;
+    curvesTool.setup(amount);
+    curvesTool.load("curves.yml"); //needed because it fills polyline
+
+//    img.allocate(amount, amount, OF_IMAGE_GRAYSCALE);
+    img.allocate(amount, amount, OF_IMAGE_COLOR);
+    show = true;
+
+    curve_pos.set("CURVE POS", 0., 0., 1.);
+
+    cnt = 0;
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::update_curveTool()
+{
+    for(int x = 0; x < amount; x++) {
+        for(int y = 0; y < amount; y++)
+        {
+//            img.setColor(x, y, ofColor(curvesTool[x]));
+
+            float f = ofMap( curvesTool[x], 0, 255, 0., 1. );
+            ofColor c = gradient.getColorAtPercent(f);
+
+            img.setColor(x, y, c);
+
+        }
+    }
+    img.update();
+
+//    cnt+= 0.1;
+//    cnt = fmod(cnt,amount);
+    cnt = ofMap( curve_pos.get(), 0., 1., 0, amount );
+
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::draw_curveTool() {
+    ofPushMatrix();
+    ofPushStyle();
+
+//    ofBackground(0);
+    ofTranslate(700, 100);
+
+    if(show) {
+        ofSetColor(255);
+//        curvesTool.draw();
+        curvesTool.draw(0,0,cnt);
+        img.draw(amount, 0);
+    }
+
+    ofSetColor(255,0,0);
+//    ofDrawLine(0, amount-curvesTool[cnt], ofGetWidth(),amount-curvesTool[cnt]);
+    ofDrawLine(0, amount-curvesTool[cnt], amount, amount-curvesTool[cnt]);
+
+    ofDrawCircle(cnt,amount-curvesTool[cnt],3);
+
+    float lerp_amt = ofMap(cnt,0,amount-1,0,1);
+    ofNoFill();
+    ofSetColor(255);
+
+//    //--result based on interpolation
+//    ofPushMatrix();
+//    ofTranslate(0, amount + 10 );
+//    float vv = curvesTool.getAt(cnt);
+//    ofDrawRectangle(0,0,vv,50);
+//    ofDrawBitmapString(ofToString(vv,2),0,10);
+//    ofPopMatrix();
+//
+//    //----result based on lut[index]
+//    ofPushMatrix();
+//    ofTranslate(0, amount + 60 );
+//    ofDrawRectangle(0,0,curvesTool[cnt],50);
+//    ofDrawBitmapString(ofToString(curvesTool[cnt]),0,10);
+//    ofPopMatrix();
+
+    ofPopMatrix();
+    ofPopStyle();
 }
 
 //--------------------------------------------------------------
@@ -245,9 +371,32 @@ void ofxColorManager::draw()
 
     //-
 
-    draw_UI();
+    draw_Interface();
 
-    gradient.drawDebug(50, 700, 200, 40);
+    //-
+
+    int grad_x;
+    int grad_y;
+    int grad_w;
+    int grad_h;
+    grad_x = 50;
+    grad_y = 700;
+    grad_w = 200;
+    grad_h = 40;
+
+    gradient.drawDebug(grad_x, grad_y, grad_w, grad_h);
+
+    int rSize = 50;
+    ofRectangle r = ofRectangle( grad_x, grad_y + rSize + 2, rSize, rSize );
+    ofPushStyle();
+    ofFill();
+    ofSetColor(gradient.getColorAtPercent(curve_pos));
+    ofDrawRectangle(r);
+    ofPopStyle();
+
+    //-
+
+    draw_curveTool();
 
     //-
 
@@ -414,6 +563,8 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
     const int & key = eventArgs.key;
     cout << "key: " << key << endl;
 
+    //-
+
     if(key == 'd')
     {
         bShowDebug = !bShowDebug;
@@ -424,7 +575,7 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
         this->guiVisible = ! this->guiVisible;
     }
 
-    //--
+    //-
 
     if (key == 's')
     {
@@ -439,6 +590,16 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
     }
 
     //-
+
+    if (key == '\t') {
+        show = !show;
+    }
+    if (key == 's') {
+        curvesTool.save("curves.yml");
+    }
+    if (key == 'l') {
+        curvesTool.load("curves.yml");
+    }
 }
 
 //--------------------------------------------------------------

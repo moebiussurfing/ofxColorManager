@@ -971,6 +971,109 @@
 				<key>sourceTree</key>
 				<string>SOURCE_ROOT</string>
 			</dict>
+			<key>DF27CC1BDEE86E17685B13B7</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxCurvesTool.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxCurvesTool/src/ofxCurvesTool.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>368CCF86BF3EF63BAFDFA84A</key>
+			<dict>
+				<key>fileRef</key>
+				<string>778CD81BE8E76BB260EF07E9</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>778CD81BE8E76BB260EF07E9</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxCurvesTool.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxCurvesTool/src/ofxCurvesTool.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>FDC7E48CDC4CEFDBBCA9DBAC</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>CurveLut.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxCurvesTool/src/CurveLut.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>33B5C9EE7906A41F4DB818C4</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>46806B2A6D449C0728C1E5B0</string>
+					<string>FDC7E48CDC4CEFDBBCA9DBAC</string>
+					<string>778CD81BE8E76BB260EF07E9</string>
+					<string>DF27CC1BDEE86E17685B13B7</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>src</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>20FC95435D1FC200D4265565</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>33B5C9EE7906A41F4DB818C4</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>ofxCurvesTool</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>CABA2A99CFDFE993141568F9</key>
+			<dict>
+				<key>fileRef</key>
+				<string>46806B2A6D449C0728C1E5B0</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>46806B2A6D449C0728C1E5B0</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>CurveLut.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxCurvesTool/src/CurveLut.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
 			<key>9ADE112845E38CA604AC94E8</key>
 			<dict>
 				<key>explicitFileType</key>
@@ -1369,6 +1472,7 @@ fi
 						<string>../../../addons/ofxColorGradient/src</string>
 						<string>../../../addons/ofxColorManager/src</string>
 						<string>../../../addons/ofxColorPalette/src</string>
+						<string>../../../addons/ofxCurvesTool/src</string>
 						<string>../../../addons/ofxImGui/libs</string>
 						<string>../../../addons/ofxImGui/libs/imgui</string>
 						<string>../../../addons/ofxImGui/libs/imgui/src</string>
@@ -1419,6 +1523,7 @@ fi
 						<string>../../../addons/ofxColorGradient/src</string>
 						<string>../../../addons/ofxColorManager/src</string>
 						<string>../../../addons/ofxColorPalette/src</string>
+						<string>../../../addons/ofxCurvesTool/src</string>
 						<string>../../../addons/ofxImGui/libs</string>
 						<string>../../../addons/ofxImGui/libs/imgui</string>
 						<string>../../../addons/ofxImGui/libs/imgui/src</string>
@@ -1463,6 +1568,7 @@ fi
 					<string>126B40D5DC6E4508DDE87321</string>
 					<string>01D059B3D9AA705900B182CC</string>
 					<string>ADD30217DA6E9945E447F8A3</string>
+					<string>20FC95435D1FC200D4265565</string>
 					<string>768C3255AF2F3E1A78DC4DF4</string>
 					<string>2CCFAD75F0D6A81E947E5D26</string>
 				</array>
@@ -4234,6 +4340,7 @@ fi
 						<string>../../../addons/ofxColorGradient/src</string>
 						<string>../../../addons/ofxColorManager/src</string>
 						<string>../../../addons/ofxColorPalette/src</string>
+						<string>../../../addons/ofxCurvesTool/src</string>
 						<string>../../../addons/ofxImGui/libs</string>
 						<string>../../../addons/ofxImGui/libs/imgui</string>
 						<string>../../../addons/ofxImGui/libs/imgui/src</string>
@@ -4304,6 +4411,7 @@ fi
 						<string>../../../addons/ofxColorGradient/src</string>
 						<string>../../../addons/ofxColorManager/src</string>
 						<string>../../../addons/ofxColorPalette/src</string>
+						<string>../../../addons/ofxCurvesTool/src</string>
 						<string>../../../addons/ofxImGui/libs</string>
 						<string>../../../addons/ofxImGui/libs/imgui</string>
 						<string>../../../addons/ofxImGui/libs/imgui/src</string>
@@ -4338,6 +4446,8 @@ fi
 					<string>DC3E64B573BA582B0A3FA78B</string>
 					<string>337B608BE5657DFFB9DB56C0</string>
 					<string>208330A0A93D54E1B72C8A3E</string>
+					<string>CABA2A99CFDFE993141568F9</string>
+					<string>368CCF86BF3EF63BAFDFA84A</string>
 					<string>5C2607C471F8D48C0036C56E</string>
 					<string>E984796BE84AA4315636B6E7</string>
 					<string>00413C35AAE31B483D7538AB</string>
@@ -4461,6 +4571,7 @@ fi
 						<string>../../../addons/ofxColorGradient/src</string>
 						<string>../../../addons/ofxColorManager/src</string>
 						<string>../../../addons/ofxColorPalette/src</string>
+						<string>../../../addons/ofxCurvesTool/src</string>
 						<string>../../../addons/ofxImGui/libs</string>
 						<string>../../../addons/ofxImGui/libs/imgui</string>
 						<string>../../../addons/ofxImGui/libs/imgui/src</string>
@@ -4522,6 +4633,7 @@ fi
 						<string>../../../addons/ofxColorGradient/src</string>
 						<string>../../../addons/ofxColorManager/src</string>
 						<string>../../../addons/ofxColorPalette/src</string>
+						<string>../../../addons/ofxCurvesTool/src</string>
 						<string>../../../addons/ofxImGui/libs</string>
 						<string>../../../addons/ofxImGui/libs/imgui</string>
 						<string>../../../addons/ofxImGui/libs/imgui/src</string>

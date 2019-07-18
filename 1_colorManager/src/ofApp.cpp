@@ -4,10 +4,10 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     ofSetLogLevel(OF_LOG_NOTICE);
-    ofDisableArbTex();
-    ofSetBackgroundAuto(false);
-    ofSetVerticalSync(true);
-    ofSetFrameRate(60);
+//    ofDisableArbTex();
+//    ofSetBackgroundAuto(false);
+//    ofSetVerticalSync(true);
+    ofSetFrameRate(30);
 
 	ColorManager.setup();
 }
