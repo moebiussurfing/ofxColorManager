@@ -56,13 +56,13 @@ public:
     ofxColorPalette monochromeBrightness;
     ofxColorPalette analogue;
     ofxColorPalette random;
-    ofxColorPalette::ColorChannel mode;
+//    ofxColorPalette::ColorChannel mode;
     float brightness;
     float saturation;
     ofParameter<float> BRIGHTNESS;
     ofParameter<float> SATURATION;
-    void update_color(int brg, int sat);
-    ofParameter<bool> MODE;
+    void update_palettes(int brg, int sat);
+//    ofParameter<bool> MODE;
     ofParameter<bool> bRandomPalette;
 
     //-

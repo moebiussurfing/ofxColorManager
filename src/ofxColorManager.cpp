@@ -39,17 +39,14 @@ void ofxColorManager::setup()
     //-
 
     // ALGORITHMIC PALETTE
-    mode = ofxColorPalette::BRIGHTNESS;
     brightness = 200;
     saturation = 200;
 
-    MODE.set("SWITCH MODE", false);
     BRIGHTNESS.set("BRIGHTNESS", brightness, 0, 255 );
     SATURATION.set("SATURATION", saturation, 0, 255 );
     bRandomPalette.set("RANDOMIZE", false);
 
     params_palette.setName("ALGORITHMIC PALETTE");
-    params_palette.add(MODE);
     params_palette.add(BRIGHTNESS);
     params_palette.add(SATURATION);
     params_palette.add(bRandomPalette);
@@ -170,17 +167,8 @@ bool ofxColorManager::imGui()
             // ALGORITHMIC PALETTE
             if (ofxImGui::BeginTree(this->params_palette, mainSettings))
             {
-                ofxImGui::AddParameter(this->MODE);
-                if (MODE)
-                {
-                    ImGui::Text("MODE SATURATION");
                     ofxImGui::AddParameter(this->SATURATION);
-                }
-                else
-                {
-                    ImGui::Text("MODE BRIGHTNESS");
                     ofxImGui::AddParameter(this->BRIGHTNESS);
-                }
 
                 ofxImGui::AddParameter(this->bRandomPalette);
                 if (ImGui::Button("RANDOMIZE"))
@@ -259,18 +247,9 @@ void ofxColorManager::update()
 {
     update_Interface();
 
-    if (MODE.get())
-    {
-        mode = ofxColorPalette::SATURATION;
-    }
-    else
-    {
-        mode = ofxColorPalette::BRIGHTNESS;
-    }
-
     //-
 
-    update_color(BRIGHTNESS, SATURATION);
+    update_palettes(BRIGHTNESS, SATURATION);
 
     //-
 
@@ -284,6 +263,7 @@ void ofxColorManager::update()
 void ofxColorManager::setup_curveTool()
 {
     amount = 256;
+//    amount = 100;
     curvesTool.setup(amount);
     curvesTool.load("curves.yml"); //needed because it fills polyline
 
@@ -325,11 +305,17 @@ void ofxColorManager::update_curveTool()
 
 //--------------------------------------------------------------
 void ofxColorManager::draw_curveTool() {
+    int pos_curve_x;
+    int pos_curve_y;
+    pos_curve_x = 700;
+    pos_curve_y = 100;
+
+    //-
+
     ofPushMatrix();
     ofPushStyle();
 
-//    ofBackground(0);
-    ofTranslate(700, 100);
+    ofTranslate(pos_curve_x, pos_curve_y);
 
     if(show) {
         ofSetColor(255);
@@ -368,23 +354,13 @@ void ofxColorManager::draw_curveTool() {
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::update_color(int brg, int sat)
+void ofxColorManager::update_palettes(int brg, int sat)
 {
-    switch (mode) {
-        case ofxColorPalette::BRIGHTNESS:
-//            brightness = ofMap(ofGetMouseY(), 0, ofGetHeight(), 0, 255);
-            brightness = brg;
-            break;
-        case ofxColorPalette::SATURATION:
-//            saturation = ofMap(ofGetMouseY(), 0, ofGetHeight(), 0, 255);
-            saturation = sat;
-            break;
-        default:
-            break;
-    };
+    brightness = brg;
+    saturation = sat;
 
-//    ofColor base = ofColor::fromHsb(ofMap(ofGetMouseX(), 0, ofGetWidth(), 0, 255), saturation, brightness);
-//    ofColor c = (ofColor) (myColor.get());
+    //-
+
     ofColor base = ofColor::fromHsb(ofMap(myColor.get().getHue(), 0., 1., 0, 255), saturation, brightness);
 
     complement.setBaseColor(base);
@@ -582,21 +558,6 @@ void ofxColorManager::draw()
     ofDrawBitmapString("Random (Click to regenerate)", 0, 0);
     ofPopMatrix();
 
-    ofTranslate(10, RECT_SIZE+PADDING);
-    string info = MODE.get() ? "saturation" : "brightness";
-    info += "\nhue:" + ofToString(complement[0].getHue()) + "\n";
-    string modeString;
-    float modeValue;
-    if(mode == ofxColorPalette::SATURATION){
-        modeString = " (saturation)";
-        modeValue = saturation;
-    }else {
-        modeString = " (brightness)";
-        modeValue = brightness;
-    }
-    info += " " + modeString + ofToString(modeValue) +  "\n";
-    ofDrawBitmapString(info,0,0);
-
     ofPopMatrix();
     //--
 }
@@ -628,15 +589,7 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 
     //-
 
-    if (key == 's')
-    {
-        mode = ofxColorPalette::SATURATION;
-    }
-    else if (key == 'b')
-    {
-        mode = ofxColorPalette::BRIGHTNESS;
-    }
-    else if (key == 'r') {
+    if (key == 'r') {
         random.generateRandom();
     }
 
