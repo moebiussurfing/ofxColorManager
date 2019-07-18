@@ -39,11 +39,11 @@ void ofxColorManager::setup()
     //-
 
     // ALGORITHMIC PALETTE
-    brightness = 200;
-    saturation = 200;
+//    brightness = 128;
+//    saturation = 128;
 
-    BRIGHTNESS.set("BRIGHTNESS", brightness, 0, 255 );
-    SATURATION.set("SATURATION", saturation, 0, 255 );
+    BRIGHTNESS.set("BRIGHTNESS", 128, 0, 255 );
+    SATURATION.set("SATURATION", 128, 0, 255 );
     bRandomPalette.set("RANDOMIZE", false);
 
     params_palette.setName("ALGORITHMIC PALETTE");
@@ -53,15 +53,33 @@ void ofxColorManager::setup()
 
     //-
 
+    // INTERFACE
+
     setup_Interface();
 
+    //-
+
+    // PALETTES
+
+    update_palettes();
+    setup_palettes();
+
+    //-
+
+    // GRADIENT
+
     gradient.reset();
+
+    //-
+
+    // CURVE
 
     setup_curveTool();
 
     //-
 
-    // Gui
+    // GUI
+
     this->gui.setup();
     this->guiVisible = true;
 
@@ -115,14 +133,27 @@ void ofxColorManager::update_Interface(){
 
     TouchManager::one().update();
 
-    for (int i=0; i<buttons.size(); i++) {
+    // COLORS OF CURRENT PALETTE
+    for (int i=0; i<buttons.size(); i++)
+    {
         buttons[i]->update();
+    }
+
+    // PALETTES
+    for (int i=0; i<buttons_palette_Analog.size(); i++)
+    {
+        buttons_palette_Analog[i]->update();
+    }
+    for (int i=0; i<buttons_palette_CompSat.size(); i++)
+    {
+        buttons_palette_CompSat[i]->update();
     }
 }
 
 //--------------------------------------------------------------
 void ofxColorManager::draw_Interface(){
     scene->render();
+
     if (bShowDebug)
     {
         scene->renderDebug();
@@ -249,7 +280,7 @@ void ofxColorManager::update()
 
     //-
 
-    update_palettes(BRIGHTNESS, SATURATION);
+    update_palettes();
 
     //-
 
@@ -354,10 +385,229 @@ void ofxColorManager::draw_curveTool() {
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::update_palettes(int brg, int sat)
+void ofxColorManager::add_color_Palette(int i)
 {
-    brightness = brg;
-    saturation = sat;
+//    float x = 150;
+//    float y = 400;
+//
+//    float size = 40;
+//    float pad = 40;
+//    int perRow = 10;
+//
+//    int i = buttons.size();
+//
+////    for (int i=0; i<perRow*4; i++) {
+//
+//    // setup them in a grid
+//    x += (i%perRow)*(size+pad);
+//    y += (i/perRow)*(size+pad);
+//
+//    // create a ButtonExample node
+//    ButtonExample *btn = new ButtonExample();
+//    btn->setup(x, y, size, size);
+//    btn->setColor(c);
+//
+//    btn->setName("btn" + ofToString(i));
+//
+//    // add it to the scene
+//    scene->addChild(btn);
+//
+//    if (i%perRow>0) {
+//        // this can be called to place nodes next to each other
+//        btn->placeNextTo(*buttons[i-1], Node::RIGHT);
+//    }
+//
+//    // keep reference (we need it to update the nodes)
+//    buttons.push_back(btn);
+////    }
+
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::setup_palettes()
+{
+    int x = 50;
+    int y = 500;
+    int size = 40;
+    int pad = 5;
+    int x0 = x;
+
+    // analogue
+    for (int i=0; i<analogue.size(); i++)
+    {
+        x += (size+pad);
+        ButtonExample *btn = new ButtonExample();
+        btn->setup(x, y, size, size);
+        btn->setName("analogue" + ofToString(i));
+        btn->setColor(analogue[i]);
+        scene->addChild(btn);
+        if (i>0)
+        {
+            btn->placeNextTo(*buttons_palette_Analog[i-1], Node::RIGHT);
+        }
+        buttons_palette_Analog.push_back(btn);
+    }
+
+    // complement saturation
+    x = x0;
+    y += (size+pad);
+    for (int i = 0 ; i < complement.size(); i++) {
+        x += (size+pad);
+        ButtonExample *btn = new ButtonExample();
+        btn->setup(x, y, size, size);
+        btn->setName("compSat" + ofToString(i));
+        btn->setColor(complement[i]);
+        scene->addChild(btn);
+        if (i>0)
+        {
+            btn->placeNextTo(*buttons_palette_CompSat[i-1], Node::RIGHT);
+        }
+        buttons_palette_CompSat.push_back(btn);
+    }
+
+
+    //    ofPushMatrix();
+//    for (int i = 0 ; i < analogue.size(); i++) {
+//        ofSetColor(analogue[i]);
+//        ofRect(0, 0, RECT_SIZE, RECT_SIZE);
+//        ofTranslate(RECT_SIZE, 0);
+//    }
+//    ofPopMatrix();
+//    ofPushMatrix();
+//    ofTranslate(padTxt, RECT_SIZE /2);
+//    ofSetColor(0);
+//    ofDrawBitmapString("Analogue", 0, 0);
+//    ofPopMatrix();
+//    ofTranslate(0, RECT_SIZE + PADDING);
+
+
+//// ALGORTIHMIC PALETTE
+//
+//    ofPushMatrix();
+//    ofTranslate(600, 400);
+//    int padTxt = 200;
+//
+////--begin
+//    ofPushMatrix();
+//    for (int i = 0 ; i < triad.size(); i++) {
+//        ofSetColor(triad[i]);
+//        ofRect(0, 0, RECT_SIZE, RECT_SIZE);
+//        ofTranslate(RECT_SIZE, 0);
+//    }
+//    ofPopMatrix();
+//    ofPushMatrix();
+//    ofTranslate(padTxt, RECT_SIZE /2);
+//    ofSetColor(0);
+//    ofDrawBitmapString("Triad", 0, 0);
+//    ofPopMatrix();
+//    ofTranslate(0, RECT_SIZE + PADDING);
+//// ----
+//    ofPushMatrix();
+//    for (int i = 0 ; i < complementTriad.size(); i++) {
+//        ofSetColor(complementTriad[i]);
+//        ofRect(0, 0, RECT_SIZE, RECT_SIZE);
+//        ofTranslate(RECT_SIZE, 0);
+//    }
+//    ofPopMatrix();
+//    ofPushMatrix();
+//    ofTranslate(padTxt, RECT_SIZE /2);
+//    ofSetColor(0);
+//    ofDrawBitmapString("Complement Triad", 0, 0);
+//    ofPopMatrix();
+//    ofTranslate(0, RECT_SIZE + PADDING);
+//// ----
+//    ofPushMatrix();
+//    for (int i = 0 ; i < complement.size(); i++) {
+//        ofSetColor(complement[i]);
+//        ofRect(0, 0, RECT_SIZE, RECT_SIZE);
+//        ofTranslate(RECT_SIZE, 0);
+//    }
+//    ofPopMatrix();
+//    ofPushMatrix();
+//    ofTranslate(padTxt, RECT_SIZE /2);
+//    ofSetColor(0);
+//    ofDrawBitmapString("Complement (Saturation)", 0, 0);
+//    ofPopMatrix();
+//    ofTranslate(0, RECT_SIZE + PADDING);
+//// ----
+//    ofPushMatrix();
+//    for (int i = 0 ; i < complementBrightness.size(); i++) {
+//        ofSetColor(complementBrightness[i]);
+//        ofRect(0, 0, RECT_SIZE, RECT_SIZE);
+//        ofTranslate(RECT_SIZE, 0);
+//    }
+//    ofPopMatrix();
+//    ofPushMatrix();
+//    ofTranslate(padTxt, RECT_SIZE /2);
+//    ofSetColor(0);
+//    ofDrawBitmapString("Complement (Brightness)", 0, 0);
+//    ofPopMatrix();
+//    ofTranslate(0, RECT_SIZE + PADDING);
+//// ----
+//    ofPushMatrix();
+//    for (int i = 0 ; i < monochrome.size(); i++) {
+//        ofSetColor(monochrome[i]);
+//        ofRect(0, 0, RECT_SIZE, RECT_SIZE);
+//        ofTranslate(RECT_SIZE, 0);
+//    }
+//    ofPopMatrix();
+//    ofPushMatrix();
+//    ofTranslate(padTxt, RECT_SIZE /2);
+//    ofSetColor(0);
+//    ofDrawBitmapString("Monochrome (Saturation)", 0, 0);
+//    ofPopMatrix();
+//    ofTranslate(0, RECT_SIZE + PADDING);
+//// ----
+//    ofPushMatrix();
+//    for (int i = 0 ; i < monochromeBrightness.size(); i++) {
+//        ofSetColor(monochromeBrightness[i]);
+//        ofRect(0, 0, RECT_SIZE, RECT_SIZE);
+//        ofTranslate(RECT_SIZE, 0);
+//    }
+//    ofPopMatrix();
+//    ofPushMatrix();
+//    ofTranslate(padTxt, RECT_SIZE /2);
+//    ofSetColor(0);
+//    ofDrawBitmapString("Monochrome (Brightness)", 0, 0);
+//    ofPopMatrix();
+//    ofTranslate(0, RECT_SIZE + PADDING);
+//// ----
+//    ofPushMatrix();
+//    for (int i = 0 ; i < analogue.size(); i++) {
+//        ofSetColor(analogue[i]);
+//        ofRect(0, 0, RECT_SIZE, RECT_SIZE);
+//        ofTranslate(RECT_SIZE, 0);
+//    }
+//    ofPopMatrix();
+//    ofPushMatrix();
+//    ofTranslate(padTxt, RECT_SIZE /2);
+//    ofSetColor(0);
+//    ofDrawBitmapString("Analogue", 0, 0);
+//    ofPopMatrix();
+//    ofTranslate(0, RECT_SIZE + PADDING);
+//// ----
+//    ofPushMatrix();
+//    for (int i = 0 ; i < random.size(); i++) {
+//        ofSetColor(random[i]);
+//        ofRect(0, 0, RECT_SIZE, RECT_SIZE);
+//        ofTranslate(RECT_SIZE, 0);
+//    }
+//    ofPopMatrix();
+//    ofPushMatrix();
+//    ofTranslate(padTxt, RECT_SIZE /2);
+//    ofSetColor(0);
+//    ofDrawBitmapString("Random (Click to regenerate)", 0, 0);
+//    ofPopMatrix();
+//
+//    ofPopMatrix();
+//--
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::update_palettes()
+{
+    brightness = BRIGHTNESS;
+    saturation = SATURATION;
 
     //-
 
@@ -380,12 +630,39 @@ void ofxColorManager::update_palettes(int brg, int sat)
     monochrome.generateMonoChromatic();
     monochromeBrightness.generateMonoChromatic(ofxColorPalette::BRIGHTNESS);
     analogue.generateAnalogous();
+
+    //-
+
+    // PALETTES
+    for (int i=0; i<buttons_palette_Analog.size(); i++)
+    {
+        buttons_palette_Analog[i]->setColor(analogue[i]);
+    }
+    for (int i=0; i<buttons_palette_CompSat.size(); i++)
+    {
+        buttons_palette_CompSat[i]->setColor(complement[i]);
+    }
 }
 
 //--------------------------------------------------------------
 void ofxColorManager::draw()
 {
     ofClear(ofColor( color_backGround.get() ));
+
+    //-
+
+    // COLOR
+
+    int x, y, w, h;
+    x = 400;
+    y = 20;
+    w = h = 100;
+    ofRectangle rColor = ofRectangle( x, y, w, h );
+    ofPushStyle();
+    ofFill();
+    ofSetColor( ofColor( myColor.get() ) );
+    ofDrawRectangle(rColor);
+    ofPopStyle();
 
     //-
 
@@ -577,6 +854,12 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 
     //-
 
+    if(key == ' ')
+    {
+        cout << "setup_palettes" << endl;
+        setup_palettes();
+    }
+
     if(key == 'd')
     {
         bShowDebug = !bShowDebug;
@@ -595,7 +878,7 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 
     //-
 
-    if (key == '\t') {
+    if (key == 'c') {
         show = !show;
     }
     if (key == 's') {

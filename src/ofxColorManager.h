@@ -57,22 +57,24 @@ public:
     ofxColorPalette analogue;
     ofxColorPalette random;
 //    ofxColorPalette::ColorChannel mode;
+//    ofParameter<bool> MODE;
     float brightness;
     float saturation;
     ofParameter<float> BRIGHTNESS;
     ofParameter<float> SATURATION;
-    void update_palettes(int brg, int sat);
-//    ofParameter<bool> MODE;
     ofParameter<bool> bRandomPalette;
+    void setup_palettes();
+    void update_palettes();
+    void draw_palettes();
 
     //-
 
+    // GUI
     bool imGui();
     ofxImGui::Gui gui;
     bool guiVisible;
     bool mouseOverGui;
 
-    // Parameters
     ofParameter<ofFloatColor> myColor;
     ofParameter<ofFloatColor> color_backGround;
 
@@ -83,6 +85,8 @@ public:
 
     //-
 
+    // INTERFACE
+
     ofxInterface::Node* scene;
 	vector<ButtonExample*> buttons;
     void setup_Interface();
@@ -91,8 +95,10 @@ public:
     void add_color_Interface(ofColor c);
     bool bShowDebug = false;
 
-    vector<ButtonExample*> buttons_palettes[8];
-    void add_color_Palette(int pal);
+    vector<ButtonExample*> buttons_palette_Analog;
+    vector<ButtonExample*> buttons_palette_CompSat;
+
+    void add_color_Palette(int i);
 
     //-
 
