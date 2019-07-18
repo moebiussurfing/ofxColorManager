@@ -61,9 +61,9 @@ void ofxColorManager::setup()
 
     // PALETTES
 
-    setup_palettes();
-//    update_palettes();
 //    setup_palettes();
+    update_palettes();
+    setup_palettes();
 
     //-
 
@@ -334,7 +334,7 @@ void ofxColorManager::update()
 
     //-
 
-//    update_palettes();
+    update_palettes();
 
     //-
 
@@ -634,37 +634,37 @@ void ofxColorManager::update_palettes()
     // PALETTES
 
     // 1. triad
-    for (int i = 0 ; i < triad.size(); i++)
+    for (int i = 0 ; i < buttons_palette_Triad.size(); i++)
     {
         buttons_palette_Triad[i]->setColor(triad[i]);
     }
 
     // 2. complement triad
-    for (int i = 0 ; i < complementTriad.size(); i++)
+    for (int i = 0 ; i < buttons_palette_ComplTriad.size(); i++)
     {
-        buttons_palette_ComplTriad[i]->setColor(triad[i]);
+        buttons_palette_ComplTriad[i]->setColor(complementTriad[i]);
     }
 
     // 3. complement sat
-    for (int i = 0 ; i < complement.size(); i++)
+    for (int i = 0 ; i < buttons_palette_CompSat.size(); i++)
     {
         buttons_palette_CompSat[i]->setColor(complement[i]);
     }
 
     // 4. complement brgt
-    for (int i = 0 ; i < complementBrightness.size(); i++)
+    for (int i = 0 ; i < buttons_palette_ComplBrgt.size(); i++)
     {
         buttons_palette_ComplBrgt[i]->setColor(complementBrightness[i]);
     }
 
     // 5. mono sat
-    for (int i = 0 ; i < monochrome.size(); i++)
+    for (int i = 0 ; i < buttons_palette_MonoSat.size(); i++)
     {
         buttons_palette_MonoSat[i]->setColor(monochrome[i]);
     }
 
     // 6. mono brgt
-    for (int i = 0 ; i < monochromeBrightness.size(); i++)
+    for (int i = 0 ; i < buttons_palette_MonoBrgt.size(); i++)
     {
         buttons_palette_MonoBrgt[i]->setColor(monochromeBrightness[i]);
     }
@@ -676,7 +676,7 @@ void ofxColorManager::update_palettes()
     }
 
     // 8. random
-    for (int i = 0 ; i < random.size(); i++)
+    for (int i = 0 ; i < buttons_palette_Random.size(); i++)
     {
         buttons_palette_Random[i]->setColor(random[i]);
     }
