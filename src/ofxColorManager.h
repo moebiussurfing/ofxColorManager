@@ -11,10 +11,12 @@
 #include "ButtonExample.h"
 #include "ofxColorGradient.h"
 #include "ofxCurvesTool.h"
+//#include "ofxMouseRuler.h"
 
 class ofxColorManager {
 
 public:
+//    ofxMouseRuler mouseRuler;
 
     ofxColorManager();
     ~ofxColorManager();
@@ -125,6 +127,17 @@ public:
     void draw_curveTool();
     ofParameter<float> curve_pos;
     ofParameter<bool> bResetCurve;
+
+    //--
+
+    //--
+
+    // XML settings
+
+    void save_group_XML(ofParameterGroup &g, string path);
+    void load_group_XML(ofParameterGroup &g, string path);
+    ofParameterGroup XML_params;
+    string XML_path = "ofxColorManager.xml";
 
     //--
 };

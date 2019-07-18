@@ -61,7 +61,6 @@ void ofxColorManager::setup()
 
     // PALETTES
 
-//    setup_palettes();
     update_palettes();
     setup_palettes();
 
@@ -88,6 +87,19 @@ void ofxColorManager::setup()
 
     addKeysListeners();
     addMouseListeners();
+
+    //--
+
+    // SETTINGS
+
+    XML_params.setName("ofxColorManager");
+    XML_params.add(color_backGround);
+    XML_params.add(myColor);
+    XML_params.add(BRIGHTNESS);
+    XML_params.add(SATURATION);
+    load_group_XML(XML_params, XML_path);
+
+    //-
 }
 
 //--------------------------------------------------------------
@@ -631,6 +643,8 @@ void ofxColorManager::update_palettes()
 
     //-
 
+    // this will not runned on setup() because vectors are empty yet
+
     // PALETTES
 
     // 1. triad
@@ -888,6 +902,8 @@ void ofxColorManager::exit()
 {
     removeKeysListeners();
     removeMouseListeners();
+
+    save_group_XML(XML_params, XML_path);
 }
 
 //--------------------------------------------------------------
@@ -1005,4 +1021,24 @@ void ofxColorManager::addMouseListeners()
 void ofxColorManager::removeMouseListeners()
 {
     ofRemoveListener( ofEvents().keyPressed, this, &ofxColorManager::keyPressed );
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::load_group_XML(ofParameterGroup &g, string path)
+{
+    ofLogNotice("ofxColorManager") << "load_group_XML " << path;
+
+    ofXml settings;
+    settings.load(path);
+    ofDeserialize(settings, g);
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::save_group_XML(ofParameterGroup &g, string path)
+{
+    ofLogNotice("ofxColorManager") << "save_group_XML " << path;
+
+    ofXml settings;
+    ofSerialize(settings, g);
+    settings.save(path);
 }
