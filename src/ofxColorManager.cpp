@@ -1,13 +1,32 @@
 #include "ofxColorManager.h"
 
+//--------------------------------------------------------------
 ofxColorManager::ofxColorManager()
 {
 }
 
+//--------------------------------------------------------------
 ofxColorManager::~ofxColorManager()
 {
 }
 
+//--------------------------------------------------------------
+void ofxColorManager::setup_UI()
+{
+/******
+     * setup the scene with width and height
+     */
+    scene = new Node();
+    scene->setSize(ofGetWidth(), ofGetHeight());
+    scene->setName("Scene");
+
+/******
+ * this is the touch manager, give him the scene to set it up
+ */
+    TouchManager::one().setup(scene);
+}
+
+//--------------------------------------------------------------
 void ofxColorManager::setup()
 {
     // Gui
@@ -23,8 +42,91 @@ void ofxColorManager::setup()
     BRIGHTNESS.set("BRIGHTNESS", brightness, 0, 255 );
     SATURATION.set("SATURATION", saturation, 0, 255 );
 
-    MODE.set("MODE", false);
+    MODE.set("SWITCH MODE", false);
 
+    //-
+
+    setup_UI();
+
+    addKeysListeners();
+    addMouseListeners();
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::addColorUI(ofColor c)
+{
+    float size = 40;
+    float pad = 40;
+    int perRow = 10;
+
+    int i = buttons.size();
+
+//    for (int i=0; i<perRow*4; i++) {
+
+    // setup them in a grid
+    float x = 150 + (i%perRow)*(size+pad);
+    float y = 200 + (i/perRow)*(size+pad);
+
+    // create a ButtonExample node
+    ButtonExample *btn = new ButtonExample();
+    btn->setup(x, y, size, size);
+    btn->setColor(c);
+
+    btn->setName("btn" + ofToString(i));
+
+    // add it to the scene
+    scene->addChild(btn);
+
+    if (i%perRow>0) {
+        // this can be called to place nodes next to each other
+        btn->placeNextTo(*buttons[i-1], Node::RIGHT);
+    }
+
+    // keep reference (we need it to update the nodes)
+    buttons.push_back(btn);
+//    }
+
+
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::update_UI(){
+
+    /******
+     * update the touch manager,
+     */
+    TouchManager::one().update();
+
+
+    /******
+     * update the nodes (optional, only if you have an update)
+     */
+    for (int i=0; i<buttons.size(); i++) {
+        buttons[i]->update();
+    }
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::draw_UI(){
+    /******
+     * this will render the scene
+     * 1. this function takes all the visible nodes
+     * 2. sort them by 'plane' float
+     * 3. transform into the local space of each node
+     * 4. calls the 'draw' function on each node
+     */
+    scene->render();
+
+    /******
+     * if you want debug rendering
+     */
+    if (bShowDebug) {
+        scene->renderDebug();
+    }
+
+
+    ofSetColor(255);
+    ofDrawBitmapString("hit 'd' to toggle debug rendering", 5, ofGetHeight()-8);
 }
 
 //--------------------------------------------------------------
@@ -34,12 +136,26 @@ bool ofxColorManager::imGui()
 
     this->gui.begin();
     {
-        if (ofxImGui::BeginWindow("Helpers", mainSettings, false))
+        if (ofxImGui::BeginWindow("COLOR MANAGER", mainSettings, false))
         {
             ofxImGui::AddParameter(this->myColor, true);
             ofxImGui::AddParameter(this->MODE);
-            ofxImGui::AddParameter(this->SATURATION);
-            ofxImGui::AddParameter(this->BRIGHTNESS);
+
+            if ( MODE )
+            {
+                ImGui::Text( "MODE SATURATION" );
+                ofxImGui::AddParameter(this->SATURATION);
+            }
+            else
+            {
+                ImGui::Text( "MODE BRIGHTNESS" );
+                ofxImGui::AddParameter(this->BRIGHTNESS);
+            }
+
+            if (ImGui::Button("ADD COLOR"))
+            {
+                add_color(ofColor(myColor.get()));
+            }
 
         }
         ofxImGui::EndWindow(mainSettings);
@@ -49,8 +165,20 @@ bool ofxColorManager::imGui()
     return mainSettings.mouseOverGui;
 }
 
+//--------------------------------------------------------------
+void ofxColorManager::add_color(ofColor c)
+{
+    palette.push_back( c );
+    ofLogNotice("ofxColorManager") << "added color " << ofToString(palette.size()) << " (" << ofToString(c) << ") to palette";
+
+    addColorUI(c);
+}
+
+//--------------------------------------------------------------
 void ofxColorManager::update()
 {
+    update_UI();
+
     if (MODE.get())
     {
         mode = ofxColorPalette::SATURATION;
@@ -63,6 +191,7 @@ void ofxColorManager::update()
     update_color(BRIGHTNESS, SATURATION);
 }
 
+//--------------------------------------------------------------
 void ofxColorManager::update_color(int brg, int sat)
 {
     switch (mode) {
@@ -101,11 +230,16 @@ void ofxColorManager::update_color(int brg, int sat)
     analogue.generateAnalogous();
 }
 
+//--------------------------------------------------------------
 void ofxColorManager::draw()
 {
     // We have to use ofParameter::get() since this we are using an ofFloatColor.
 //    ofClear(this->myColor.get());
     ofClear(color_backGround);
+
+    //-
+
+    draw_UI();
 
     //-
 
@@ -259,18 +393,22 @@ void ofxColorManager::draw()
     //--
 }
 
+//--------------------------------------------------------------
 void ofxColorManager::exit()
 {
+    removeKeysListeners();
+    removeMouseListeners();
 }
 
-void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs ) 
-{    
-	const int & key = eventArgs.key;	
+//--------------------------------------------------------------
+void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
+{
+    const int & key = eventArgs.key;
     cout << "key: " << key << endl;
 
     if(key == ' ')
-	{
-	}
+    {
+    }
 
     if(key == 'g')
     {
@@ -294,13 +432,76 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
     //-
 }
 
-void ofxColorManager::keyReleased( ofKeyEventArgs& eventArgs ) 
+//--------------------------------------------------------------
+void ofxColorManager::keyReleased( ofKeyEventArgs& eventArgs )
 {
-    if( eventArgs.key == ' ') 
+    if( eventArgs.key == ' ')
     {
-	}
+    }
 }
 
-void ofxColorManager::mousePressed( int x, int y ) 
+//--------------------------------------------------------------
+void ofxColorManager::addKeysListeners()
 {
+    ofAddListener( ofEvents().keyPressed, this, &ofxColorManager::keyPressed );
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::removeKeysListeners()
+{
+    ofRemoveListener( ofEvents().keyPressed, this, &ofxColorManager::keyPressed );
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::mouseDragged(ofMouseEventArgs& eventArgs){
+    const int & x = eventArgs.x;
+    const int & y = eventArgs.y;
+    const int & button = eventArgs.button;
+    ofLogNotice("ofxColorManager") << "mouseDragged " <<  x << ", " << y << ", " << button;
+
+    /******
+     * pass touch/mouse events to the touch manager
+     */
+    TouchManager::one().touchMove(button, ofVec2f(x, y));
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::mousePressed(ofMouseEventArgs& eventArgs){
+    const int & x = eventArgs.x;
+    const int & y = eventArgs.y;
+    const int & button = eventArgs.button;
+    ofLogNotice("ofxColorManager") << "mousePressed " <<  x << ", " << y << ", " << button;
+
+    /******
+     * pass touch/mouse events to the touch manager
+     */
+    TouchManager::one().touchDown(button, ofVec2f(x, y));
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::mouseReleased(ofMouseEventArgs& eventArgs){
+    const int & x = eventArgs.x;
+    const int & y = eventArgs.y;
+    const int & button = eventArgs.button;
+    ofLogNotice("ofxColorManager") << "mouseReleased " <<  x << ", " << y << ", " << button;
+
+    /******
+     * pass touch/mouse events to the touch manager
+     */
+    TouchManager::one().touchUp(button, ofVec2f(x, y));
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::addMouseListeners()
+{
+    ofAddListener( ofEvents().mouseDragged, this, &ofxColorManager::mouseDragged );
+    ofAddListener( ofEvents().mousePressed, this, &ofxColorManager::mousePressed );
+    ofAddListener( ofEvents().mouseReleased, this, &ofxColorManager::mouseReleased );
+
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::removeMouseListeners()
+{
+    ofRemoveListener( ofEvents().keyPressed, this, &ofxColorManager::keyPressed );
 }

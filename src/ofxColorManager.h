@@ -8,6 +8,9 @@
 #define RECT_SIZE 35
 #define PADDING 5
 
+#include "ofxInterface.h"
+#include "ButtonExample.h"
+
 class ofxColorManager {
 
 public:
@@ -46,10 +49,27 @@ public:
 
     ofColor color_backGround;
 
+    void add_color(ofColor c);
+    vector<ofColor> palette;
+    vector<ofColor> colors;
+
+    ofxInterface::Node* scene;
+	vector<ButtonExample*> buttons;
+    void setup_UI();
+    void update_UI();
+    void draw_UI();
+    void addColorUI(ofColor c);
+    bool bShowDebug = true;
+
     void keyPressed( ofKeyEventArgs& eventArgs);
     void keyReleased( ofKeyEventArgs& eventArgs );
-    void mousePressed( int x, int y );
-    
-};
+    void addKeysListeners();
+    void removeKeysListeners();
 
-//}
+    void mouseDragged( ofMouseEventArgs& eventArgs );
+    void mousePressed( ofMouseEventArgs& eventArgs );
+    void mouseReleased( ofMouseEventArgs& eventArgs );
+    void addMouseListeners();
+    void removeMouseListeners();
+
+};

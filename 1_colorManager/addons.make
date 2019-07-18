@@ -1,3 +1,4 @@
 ofxColorManager
 ofxColorPalette
 ofxImGui
+ofxInterface
