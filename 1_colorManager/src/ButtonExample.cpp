@@ -10,12 +10,12 @@
 
 void ButtonExample::setColor(ofColor c)
 {
-    color = c;
+    color_picked = c;
 }
 
 ofColor ButtonExample::getColor()
 {
-    return color;
+    return color_picked;
 }
 
 void ButtonExample::setup(float x, float y, float w, float h)
@@ -26,7 +26,10 @@ void ButtonExample::setup(float x, float y, float w, float h)
 	setPosition(x, y);
 	setSize(w, h);
 
-	color = ofColor(100);
+    color_picked = ofColor(ofColor::red);
+    color_over = ofColor(100);//default
+    color_down = ofColor(ofColor::green);
+
 	bTouched = false;
 
 	/*****
@@ -50,14 +53,17 @@ void ButtonExample::draw()
 	 */
 
 	// draw the frame
-	ofSetColor(color);
-    ofNoFill();
+//	ofSetColor(ofColor::black);
+//    ofNoFill();
+
+    ofSetColor(color_picked);
+    ofFill();
 
     ofDrawRectangle(0, 0, getWidth(), getHeight());
 
 	// draw the touch anchor
 	if (bTouched) {
-		ofSetColor(150, 200, 255);
+		ofSetColor(color_over);
 		ofFill();
 		ofDrawEllipse(touchAnchor, 10, 10);
 	}
@@ -72,7 +78,7 @@ void ButtonExample::onTouchDown(ofxInterface::TouchEvent &event)
 
 	ofVec2f local = toLocal(event.position);
 
-	color = ofColor(255);
+	color = color_down;
 	bTouched = true;
 
 	touchAnchor = local;
@@ -82,7 +88,7 @@ void ButtonExample::onTouchUp(ofxInterface::TouchEvent &event)
 {
 	ofVec2f local = toLocal(event.position);
 
-	color = ofColor(100);
+	color = color_picked;
 	bTouched = false;
 }
 

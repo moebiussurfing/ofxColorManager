@@ -48,6 +48,10 @@ void ofxColorManager::setup()
 
     setup_UI();
 
+    gradient.reset();
+
+    //-
+
     addKeysListeners();
     addMouseListeners();
 }
@@ -172,6 +176,8 @@ void ofxColorManager::add_color(ofColor c)
     ofLogNotice("ofxColorManager") << "added color " << ofToString(palette.size()) << " (" << ofToString(c) << ") to palette";
 
     addColorUI(c);
+
+    gradient.addColor( c );
 }
 
 //--------------------------------------------------------------
@@ -240,6 +246,8 @@ void ofxColorManager::draw()
     //-
 
     draw_UI();
+
+    gradient.drawDebug(50, 700, 200, 40);
 
     //-
 
@@ -406,8 +414,9 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
     const int & key = eventArgs.key;
     cout << "key: " << key << endl;
 
-    if(key == ' ')
+    if(key == 'd')
     {
+        bShowDebug = !bShowDebug;
     }
 
     if(key == 'g')

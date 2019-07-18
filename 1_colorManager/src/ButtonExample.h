@@ -50,8 +50,12 @@ public:
 	void onTouchUp(TouchEvent& event);
 
 
-	ofColor color;
-	ofVec2f touchAnchor;
+    ofColor color;
+    ofColor color_picked;
+    ofColor color_over;
+    ofColor color_down;
+
+    ofVec2f touchAnchor;
 
 	bool bTouched;
 

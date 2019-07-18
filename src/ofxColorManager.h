@@ -11,6 +11,8 @@
 #include "ofxInterface.h"
 #include "ButtonExample.h"
 
+#include "ofxColorGradient.h"
+
 class ofxColorManager {
 
 public:
@@ -22,6 +24,8 @@ public:
     void update();
     void draw();
     void exit();
+
+    //-
 
     ofxColorPalette complement;
     ofxColorPalette complementBrightness;
@@ -39,6 +43,8 @@ public:
     void update_color(int brg, int sat);
     ofParameter<bool> MODE;
 
+    //-
+
     bool imGui();
     ofxImGui::Gui gui;
     bool guiVisible;
@@ -53,13 +59,19 @@ public:
     vector<ofColor> palette;
     vector<ofColor> colors;
 
+    //-
+
     ofxInterface::Node* scene;
 	vector<ButtonExample*> buttons;
     void setup_UI();
     void update_UI();
     void draw_UI();
     void addColorUI(ofColor c);
-    bool bShowDebug = true;
+    bool bShowDebug = false;
+
+    ofxColorGradient<ofColor> gradient;
+
+    //--
 
     void keyPressed( ofKeyEventArgs& eventArgs);
     void keyReleased( ofKeyEventArgs& eventArgs );
@@ -72,4 +84,5 @@ public:
     void addMouseListeners();
     void removeMouseListeners();
 
+    //--
 };

@@ -1,3 +1,4 @@
+ofxColorGradient
 ofxColorManager
 ofxColorPalette
 ofxImGui
