@@ -39,6 +39,7 @@ public:
 
     //-
 
+    ofParameterGroup params_data;
     ofParameterGroup params_color;
     ofParameterGroup params_palette;
     ofParameterGroup params_curve;
@@ -72,9 +73,8 @@ public:
     bool mouseOverGui;
 
     // Parameters
-    ofParameter<ofFloatColor> myColor{ "myColor", ofFloatColor::black };
-
-    ofColor color_backGround;
+    ofParameter<ofFloatColor> myColor;
+    ofParameter<ofFloatColor> color_backGround;
 
     void add_color(ofColor c);
     void remove_colorLast();

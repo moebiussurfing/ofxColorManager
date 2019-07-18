@@ -22,11 +22,17 @@ void ofxColorManager::setup_Interface()
 //--------------------------------------------------------------
 void ofxColorManager::setup()
 {
-    color_backGround.set (ofColor::white);
+    //-
+
+    // DATA
+    color_backGround.set("BACKGROUND", ofFloatColor::white);
+    params_data.setName("DATA");
+    params_data.add(color_backGround);
 
     //-
 
     // COLOR
+    myColor.set("COLOR", ofFloatColor::black);
     params_color.setName("COLOR");
     params_color.add(myColor);
 
@@ -120,7 +126,8 @@ void ofxColorManager::update_Interface(){
 //--------------------------------------------------------------
 void ofxColorManager::draw_Interface(){
     scene->render();
-    if (bShowDebug) {
+    if (bShowDebug)
+    {
         scene->renderDebug();
     }
 }
@@ -134,6 +141,14 @@ bool ofxColorManager::imGui()
     {
         if (ofxImGui::BeginWindow("COLOR MANAGER", mainSettings, false))
         {
+            // DATA
+            if (ofxImGui::BeginTree(this->params_data, mainSettings))
+            {
+                ofxImGui::AddParameter(this->color_backGround, true);
+
+                ofxImGui::EndTree(mainSettings);
+            }
+
             // COLOR
             if (ofxImGui::BeginTree(this->params_color, mainSettings))
             {
@@ -394,15 +409,17 @@ void ofxColorManager::update_color(int brg, int sat)
 //--------------------------------------------------------------
 void ofxColorManager::draw()
 {
-    // We have to use ofParameter::get() since this we are using an ofFloatColor.
-//    ofClear(this->myColor.get());
-    ofClear(color_backGround);
+    ofClear(ofColor( color_backGround.get() ));
 
     //-
+
+    // INTERFACE
 
     draw_Interface();
 
     //-
+
+    // GRADIENT
 
     int grad_x;
     int grad_y;
@@ -425,11 +442,14 @@ void ofxColorManager::draw()
 
     //-
 
+    // CURVE
+
     draw_curveTool();
 
     //-
 
-    // Gui
+    // GUI
+
     this->mouseOverGui = false;
     if (this->guiVisible)
     {
@@ -443,6 +463,8 @@ void ofxColorManager::draw()
     }
 
     //--
+
+    // ALGORTIHMIC PALETTE
 
     ofPushMatrix();
     ofTranslate(600, 400);
