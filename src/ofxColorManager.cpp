@@ -25,6 +25,7 @@ void ofxColorManager::setup()
     //-
 
     // DATA
+
     color_backGround.set("BACKGROUND", ofFloatColor::white);
     params_data.setName("DATA");
     params_data.add(color_backGround);
@@ -32,6 +33,7 @@ void ofxColorManager::setup()
     //-
 
     // COLOR
+
     myColor.set("COLOR", ofFloatColor::black);
     params_color.setName("COLOR");
     params_color.add(myColor);
@@ -39,8 +41,6 @@ void ofxColorManager::setup()
     //-
 
     // ALGORITHMIC PALETTE
-//    brightness = 128;
-//    saturation = 128;
 
     BRIGHTNESS.set("BRIGHTNESS", 128, 0, 255 );
     SATURATION.set("SATURATION", 128, 0, 255 );
@@ -84,6 +84,8 @@ void ofxColorManager::setup()
     this->guiVisible = true;
 
     //-
+
+    // LISTENERS
 
     addKeysListeners();
     addMouseListeners();
@@ -350,6 +352,9 @@ void ofxColorManager::update()
 
     //-
 
+    // slider
+    curve_pos = mixSlider.getValue();
+
     update_curveTool();
 
     //-
@@ -359,12 +364,21 @@ void ofxColorManager::update()
 //--------------------------------------------------------------
 void ofxColorManager::setup_curveTool()
 {
+    pos_curve_x = 700;
+    pos_curve_y = 100;
+
     amount = 256;
 //    amount = 100;
+
     curvesTool.setup(amount);
     curvesTool.load("curves.yml"); //needed because it fills polyline
 
     img.allocate(amount, amount, OF_IMAGE_COLOR);
+
+//    c_grad_w = 30;
+//    c_grad_h = amount;
+//    img.allocate(c_grad_w, c_grad_h, OF_IMAGE_COLOR);
+
     show = true;
 
     curve_pos.set("CURVE POS", 0., 0., 1.);
@@ -374,6 +388,16 @@ void ofxColorManager::setup_curveTool()
     params_curve.add(bResetCurve);
 
     cnt = 0;
+
+    //-
+
+    // slider
+
+    int slider_w = 20;
+    mixSlider.setup(pos_curve_x - (slider_w + pad), pos_curve_y, slider_w, amount, 0, 1, 1.0, true, true);
+    mixSlider.setLabelString("pos");
+
+    //-
 }
 
 //--------------------------------------------------------------
@@ -387,10 +411,22 @@ void ofxColorManager::update_curveTool()
             float f = ofMap( curvesTool[x], 0, 255, 0., 1. );
             ofColor c = gradient.getColorAtPercent(f);
 
+//            img.setColor(x, y, c);
             img.setColor(x, y, c);
-
         }
     }
+
+//    for(int x = 0; x < c_grad_w; x++)
+//    {
+//        for(int y = 0; y < amount; y++)
+//        {
+//            float f = ofMap( curvesTool[x], 0, 255, 0., 1. );
+//            ofColor c = gradient.getColorAtPercent(f);
+//
+//            img.setColor(x, y, c);
+//        }
+//    }
+
     img.update();
 
     cnt = ofMap( curve_pos.get(), 0., 1., 0, amount );
@@ -398,10 +434,6 @@ void ofxColorManager::update_curveTool()
 
 //--------------------------------------------------------------
 void ofxColorManager::draw_curveTool() {
-    int pos_curve_x;
-    int pos_curve_y;
-    pos_curve_x = 700;
-    pos_curve_y = 100;
 
     //-
 
@@ -415,18 +447,20 @@ void ofxColorManager::draw_curveTool() {
         ofSetColor(255);
 //        curvesTool.draw();
         curvesTool.draw(0,0,cnt);
-        img.draw(amount, 0);
+
+        img.draw(amount + pad, 0);
     }
 
+    // red line
     ofSetColor(255,0,0);
-//    ofDrawLine(0, amount-curvesTool[cnt], ofGetWidth(),amount-curvesTool[cnt]);
     ofDrawLine(0, amount-curvesTool[cnt], amount, amount-curvesTool[cnt]);
 
+    // red current point
     ofDrawCircle(cnt,amount-curvesTool[cnt],3);
 
-    float lerp_amt = ofMap(cnt,0,amount-1,0,1);
-    ofNoFill();
-    ofSetColor(255);
+//    float lerp_amt = ofMap(cnt,0,amount-1,0,1);
+//    ofNoFill();
+//    ofSetColor(255);
 
 //    //--result based on interpolation
 //    ofPushMatrix();
@@ -708,10 +742,10 @@ void ofxColorManager::draw()
 
     //-
 
-    // COLOR
+    // COLOR BOX
 
     int x, y, w, h;
-    x = 400;
+    x = 350;
     y = 20;
     w = h = 100;
     ofRectangle rColor = ofRectangle( x, y, w, h );
@@ -736,15 +770,16 @@ void ofxColorManager::draw()
     int grad_y;
     int grad_w;
     int grad_h;
-    grad_x = 50;
-    grad_y = 700;
-    grad_w = 200;
+    grad_x = pos_curve_x;
+    grad_y = pos_curve_y + amount + pad;
+    grad_w = amount;
     grad_h = 40;
 
     gradient.drawDebug(grad_x, grad_y, grad_w, grad_h);
 
+    // current gradient color at point
     int rSize = 50;
-    ofRectangle r = ofRectangle( grad_x, grad_y + rSize + 2, rSize, rSize );
+    ofRectangle r = ofRectangle( pos_curve_x, pos_curve_y - (rSize + pad), rSize, rSize );
     ofPushStyle();
     ofFill();
     ofSetColor(gradient.getColorAtPercent(curve_pos));
@@ -775,125 +810,17 @@ void ofxColorManager::draw()
 
     //--
 
-//    // ALGORTIHMIC PALETTE
-//
-//    ofPushMatrix();
-//    ofTranslate(600, 400);
-//    int padTxt = 200;
-//
-//    //--begin
-//    ofPushMatrix();
-//    for (int i = 0 ; i < triad.size(); i++) {
-//        ofSetColor(triad[i]);
-//        ofRect(0, 0, RECT_SIZE, RECT_SIZE);
-//        ofTranslate(RECT_SIZE, 0);
-//    }
-//    ofPopMatrix();
-//    ofPushMatrix();
-//    ofTranslate(padTxt, RECT_SIZE /2);
-//    ofSetColor(0);
+    // ALGORTIHMIC PALETTE
+
 //    ofDrawBitmapString("Triad", 0, 0);
-//    ofPopMatrix();
-//    ofTranslate(0, RECT_SIZE + PADDING);
-//    // ----
-//    ofPushMatrix();
-//    for (int i = 0 ; i < complementTriad.size(); i++) {
-//        ofSetColor(complementTriad[i]);
-//        ofRect(0, 0, RECT_SIZE, RECT_SIZE);
-//        ofTranslate(RECT_SIZE, 0);
-//    }
-//    ofPopMatrix();
-//    ofPushMatrix();
-//    ofTranslate(padTxt, RECT_SIZE /2);
-//    ofSetColor(0);
 //    ofDrawBitmapString("Complement Triad", 0, 0);
-//    ofPopMatrix();
-//    ofTranslate(0, RECT_SIZE + PADDING);
-//    // ----
-//    ofPushMatrix();
-//    for (int i = 0 ; i < complement.size(); i++) {
-//        ofSetColor(complement[i]);
-//        ofRect(0, 0, RECT_SIZE, RECT_SIZE);
-//        ofTranslate(RECT_SIZE, 0);
-//    }
-//    ofPopMatrix();
-//    ofPushMatrix();
-//    ofTranslate(padTxt, RECT_SIZE /2);
-//    ofSetColor(0);
 //    ofDrawBitmapString("Complement (Saturation)", 0, 0);
-//    ofPopMatrix();
-//    ofTranslate(0, RECT_SIZE + PADDING);
-//    // ----
-//    ofPushMatrix();
-//    for (int i = 0 ; i < complementBrightness.size(); i++) {
-//        ofSetColor(complementBrightness[i]);
-//        ofRect(0, 0, RECT_SIZE, RECT_SIZE);
-//        ofTranslate(RECT_SIZE, 0);
-//    }
-//    ofPopMatrix();
-//    ofPushMatrix();
-//    ofTranslate(padTxt, RECT_SIZE /2);
-//    ofSetColor(0);
 //    ofDrawBitmapString("Complement (Brightness)", 0, 0);
-//    ofPopMatrix();
-//    ofTranslate(0, RECT_SIZE + PADDING);
-//    // ----
-//    ofPushMatrix();
-//    for (int i = 0 ; i < monochrome.size(); i++) {
-//        ofSetColor(monochrome[i]);
-//        ofRect(0, 0, RECT_SIZE, RECT_SIZE);
-//        ofTranslate(RECT_SIZE, 0);
-//    }
-//    ofPopMatrix();
-//    ofPushMatrix();
-//    ofTranslate(padTxt, RECT_SIZE /2);
-//    ofSetColor(0);
 //    ofDrawBitmapString("Monochrome (Saturation)", 0, 0);
-//    ofPopMatrix();
-//    ofTranslate(0, RECT_SIZE + PADDING);
-//    // ----
-//    ofPushMatrix();
-//    for (int i = 0 ; i < monochromeBrightness.size(); i++) {
-//        ofSetColor(monochromeBrightness[i]);
-//        ofRect(0, 0, RECT_SIZE, RECT_SIZE);
-//        ofTranslate(RECT_SIZE, 0);
-//    }
-//    ofPopMatrix();
-//    ofPushMatrix();
-//    ofTranslate(padTxt, RECT_SIZE /2);
-//    ofSetColor(0);
 //    ofDrawBitmapString("Monochrome (Brightness)", 0, 0);
-//    ofPopMatrix();
-//    ofTranslate(0, RECT_SIZE + PADDING);
-//    // ----
-//    ofPushMatrix();
-//    for (int i = 0 ; i < analogue.size(); i++) {
-//        ofSetColor(analogue[i]);
-//        ofRect(0, 0, RECT_SIZE, RECT_SIZE);
-//        ofTranslate(RECT_SIZE, 0);
-//    }
-//    ofPopMatrix();
-//    ofPushMatrix();
-//    ofTranslate(padTxt, RECT_SIZE /2);
-//    ofSetColor(0);
 //    ofDrawBitmapString("Analogue", 0, 0);
-//    ofPopMatrix();
-//    ofTranslate(0, RECT_SIZE + PADDING);
-//    // ----
-//    ofPushMatrix();
-//    for (int i = 0 ; i < random.size(); i++) {
-//        ofSetColor(random[i]);
-//        ofRect(0, 0, RECT_SIZE, RECT_SIZE);
-//        ofTranslate(RECT_SIZE, 0);
-//    }
-//    ofPopMatrix();
-//    ofPushMatrix();
-//    ofTranslate(padTxt, RECT_SIZE /2);
-//    ofSetColor(0);
 //    ofDrawBitmapString("Random (Click to regenerate)", 0, 0);
-//    ofPopMatrix();
-//
-//    ofPopMatrix();
+
     //--
 }
 
@@ -976,9 +903,6 @@ void ofxColorManager::mouseDragged(ofMouseEventArgs& eventArgs){
     const int & button = eventArgs.button;
     ofLogNotice("ofxColorManager") << "mouseDragged " <<  x << ", " << y << ", " << button;
 
-    /******
-     * pass touch/mouse events to the touch manager
-     */
     TouchManager::one().touchMove(button, ofVec2f(x, y));
 }
 
@@ -989,9 +913,6 @@ void ofxColorManager::mousePressed(ofMouseEventArgs& eventArgs){
     const int & button = eventArgs.button;
     ofLogNotice("ofxColorManager") << "mousePressed " <<  x << ", " << y << ", " << button;
 
-    /******
-     * pass touch/mouse events to the touch manager
-     */
     TouchManager::one().touchDown(button, ofVec2f(x, y));
 }
 
@@ -1002,9 +923,6 @@ void ofxColorManager::mouseReleased(ofMouseEventArgs& eventArgs){
     const int & button = eventArgs.button;
     ofLogNotice("ofxColorManager") << "mouseReleased " <<  x << ", " << y << ", " << button;
 
-    /******
-     * pass touch/mouse events to the touch manager
-     */
     TouchManager::one().touchUp(button, ofVec2f(x, y));
 }
 
@@ -1014,7 +932,6 @@ void ofxColorManager::addMouseListeners()
     ofAddListener( ofEvents().mouseDragged, this, &ofxColorManager::mouseDragged );
     ofAddListener( ofEvents().mousePressed, this, &ofxColorManager::mousePressed );
     ofAddListener( ofEvents().mouseReleased, this, &ofxColorManager::mouseReleased );
-
 }
 
 //--------------------------------------------------------------
@@ -1027,7 +944,6 @@ void ofxColorManager::removeMouseListeners()
 void ofxColorManager::load_group_XML(ofParameterGroup &g, string path)
 {
     ofLogNotice("ofxColorManager") << "load_group_XML " << path;
-
     ofXml settings;
     settings.load(path);
     ofDeserialize(settings, g);
@@ -1037,7 +953,6 @@ void ofxColorManager::load_group_XML(ofParameterGroup &g, string path)
 void ofxColorManager::save_group_XML(ofParameterGroup &g, string path)
 {
     ofLogNotice("ofxColorManager") << "save_group_XML " << path;
-
     ofXml settings;
     ofSerialize(settings, g);
     settings.save(path);

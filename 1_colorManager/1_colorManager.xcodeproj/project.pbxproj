@@ -26,6 +26,7 @@
 		A0F2BFB15B92B4C6EB9527DE /* Helpers.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2C966A8F6085AAA2FED6F411 /* Helpers.cpp */; };
 		A6F396BE5D1E24326E1F796A /* ofxImGuiLoggerChannel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 64438C8902B287DA10BCD63B /* ofxImGuiLoggerChannel.cpp */; };
 		B0AAF8F9DF3AA834C843F3F9 /* Node.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 854A51D15CA4A38E3787553C /* Node.cpp */; };
+		C17CB300263537C31A90A7F1 /* ofxSimpleSlider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C17CBDC6127E8A6EF546085A /* ofxSimpleSlider.cpp */; };
 		C2114978C2A333BA9867109F /* DefaultTheme.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A9A7E144D697FCBB4216A73E /* DefaultTheme.cpp */; };
 		C9AA4E39732FC73FED43B1C7 /* TextureButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3B810C1514598D9F4B35005B /* TextureButton.cpp */; };
 		CABA2A99CFDFE993141568F9 /* CurveLut.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 46806B2A6D449C0728C1E5B0 /* CurveLut.cpp */; };
@@ -91,6 +92,8 @@
 		B55D941FBE2558C9BEB7534B /* imstb_truetype.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = imstb_truetype.h; path = ../../../addons/ofxImGui/libs/imgui/src/imstb_truetype.h; sourceTree = SOURCE_ROOT; };
 		BD4B331EB062FB8391F46AAC /* ofxColorGradient.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = ofxColorGradient.h; path = ../../../addons/ofxColorGradient/src/ofxColorGradient.h; sourceTree = SOURCE_ROOT; };
 		C0AA32A6E85840B27AB020C1 /* ofxColorPalette.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = ofxColorPalette.cpp; path = ../../../addons/ofxColorPalette/src/ofxColorPalette.cpp; sourceTree = SOURCE_ROOT; };
+		C17CB850840AE4D78F050C30 /* ofxSimpleSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxSimpleSlider.h; sourceTree = "<group>"; };
+		C17CBDC6127E8A6EF546085A /* ofxSimpleSlider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxSimpleSlider.cpp; sourceTree = "<group>"; };
 		C507DCCE5E6B6EEB1B355F66 /* SolidColorPanel.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = SolidColorPanel.h; path = ../../../addons/ofxInterface/src/components/SolidColorPanel.h; sourceTree = SOURCE_ROOT; };
 		CB5C15EA0881D35A88C22937 /* EngineOpenGLES.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = EngineOpenGLES.h; path = ../../../addons/ofxImGui/src/EngineOpenGLES.h; sourceTree = SOURCE_ROOT; };
 		CF3B36149F98B5353E4D5F4C /* TouchEvent.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 30; name = TouchEvent.cpp; path = ../../../addons/ofxInterface/src/TouchEvent.cpp; sourceTree = SOURCE_ROOT; };
@@ -478,6 +481,8 @@
 			children = (
 				848FD2C218E0CDEB67218974 /* ofxColorManager.cpp */,
 				DCF230911266564E4BE0D201 /* ofxColorManager.h */,
+				C17CBDC6127E8A6EF546085A /* ofxSimpleSlider.cpp */,
+				C17CB850840AE4D78F050C30 /* ofxSimpleSlider.h */,
 			);
 			name = src;
 			sourceTree = "<group>";
@@ -932,6 +937,7 @@
 				8ED7BFA2A5E75B287D7F938C /* LambdaView.cpp in Sources */,
 				6DBAFCAC912E054401C28548 /* SolidColorPanel.cpp in Sources */,
 				C9AA4E39732FC73FED43B1C7 /* TextureButton.cpp in Sources */,
+				C17CB300263537C31A90A7F1 /* ofxSimpleSlider.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

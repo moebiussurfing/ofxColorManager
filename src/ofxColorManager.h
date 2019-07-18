@@ -12,11 +12,18 @@
 #include "ofxColorGradient.h"
 #include "ofxCurvesTool.h"
 //#include "ofxMouseRuler.h"
+#include "ofxSimpleSlider.h"
 
 class ofxColorManager {
 
 public:
 //    ofxMouseRuler mouseRuler;
+    ofxSimpleSlider mixSlider;
+
+    int c_grad_x, c_grad_y, c_grad_w, c_grad_h;
+    int pos_curve_x;
+    int pos_curve_y;
+    int pad = 5;
 
     ofxColorManager();
     ~ofxColorManager();
@@ -116,6 +123,8 @@ public:
     ofxColorGradient<ofColor> gradient;
 
     //-
+
+    // CURVES
 
     ofxCurvesTool curvesTool;
     ofImage img;
