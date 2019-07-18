@@ -13,36 +13,40 @@ ofxColorManager::~ofxColorManager()
 //--------------------------------------------------------------
 void ofxColorManager::setup_Interface()
 {
-/******
-     * setup the scene with width and height
-     */
     scene = new Node();
     scene->setSize(ofGetWidth(), ofGetHeight());
     scene->setName("Scene");
-
-/******
- * this is the touch manager, give him the scene to set it up
- */
     TouchManager::one().setup(scene);
 }
 
 //--------------------------------------------------------------
 void ofxColorManager::setup()
 {
-    // Gui
-    this->gui.setup();
-    this->guiVisible = true;
-
     color_backGround.set (ofColor::white);
 
+    //-
+
+    // COLOR
+    params_color.setName("COLOR");
+    params_color.add(myColor);
+
+    //-
+
+    // ALGORITHMIC PALETTE
     mode = ofxColorPalette::BRIGHTNESS;
     brightness = 200;
     saturation = 200;
 
+    MODE.set("SWITCH MODE", false);
     BRIGHTNESS.set("BRIGHTNESS", brightness, 0, 255 );
     SATURATION.set("SATURATION", saturation, 0, 255 );
+    bRandomPalette.set("RANDOMIZE", false);
 
-    MODE.set("SWITCH MODE", false);
+    params_palette.setName("ALGORITHMIC PALETTE");
+    params_palette.add(MODE);
+    params_palette.add(BRIGHTNESS);
+    params_palette.add(SATURATION);
+    params_palette.add(bRandomPalette);
 
     //-
 
@@ -54,6 +58,12 @@ void ofxColorManager::setup()
 
     //-
 
+    // Gui
+    this->gui.setup();
+    this->guiVisible = true;
+
+    //-
+
     addKeysListeners();
     addMouseListeners();
 }
@@ -61,6 +71,9 @@ void ofxColorManager::setup()
 //--------------------------------------------------------------
 void ofxColorManager::add_color_Interface(ofColor c)
 {
+    float x = 150;
+    float y = 400;
+
     float size = 40;
     float pad = 40;
     int perRow = 10;
@@ -70,8 +83,8 @@ void ofxColorManager::add_color_Interface(ofColor c)
 //    for (int i=0; i<perRow*4; i++) {
 
     // setup them in a grid
-    float x = 150 + (i%perRow)*(size+pad);
-    float y = 200 + (i/perRow)*(size+pad);
+    x += (i%perRow)*(size+pad);
+    y += (i/perRow)*(size+pad);
 
     // create a ButtonExample node
     ButtonExample *btn = new ButtonExample();
@@ -92,21 +105,13 @@ void ofxColorManager::add_color_Interface(ofColor c)
     buttons.push_back(btn);
 //    }
 
-
 }
 
 //--------------------------------------------------------------
 void ofxColorManager::update_Interface(){
 
-    /******
-     * update the touch manager,
-     */
     TouchManager::one().update();
 
-
-    /******
-     * update the nodes (optional, only if you have an update)
-     */
     for (int i=0; i<buttons.size(); i++) {
         buttons[i]->update();
     }
@@ -114,25 +119,10 @@ void ofxColorManager::update_Interface(){
 
 //--------------------------------------------------------------
 void ofxColorManager::draw_Interface(){
-    /******
-     * this will render the scene
-     * 1. this function takes all the visible nodes
-     * 2. sort them by 'plane' float
-     * 3. transform into the local space of each node
-     * 4. calls the 'draw' function on each node
-     */
     scene->render();
-
-    /******
-     * if you want debug rendering
-     */
     if (bShowDebug) {
         scene->renderDebug();
     }
-
-
-    ofSetColor(255);
-    ofDrawBitmapString("hit 'd' to toggle debug rendering", 5, ofGetHeight()-8);
 }
 
 //--------------------------------------------------------------
@@ -144,35 +134,70 @@ bool ofxColorManager::imGui()
     {
         if (ofxImGui::BeginWindow("COLOR MANAGER", mainSettings, false))
         {
-            ofxImGui::AddParameter(this->myColor, true);
+            // COLOR
+            if (ofxImGui::BeginTree(this->params_color, mainSettings))
+            {
+                ofxImGui::AddParameter(this->myColor, true);
 
-            if (ImGui::Button("RANDOM COLOR"))
-            {
-                myColor = ofFloatColor( ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.) );
-            }
-            if (ImGui::Button("ADD COLOR"))
-            {
-                add_color(ofColor(myColor.get()));
-            }
-            if (ImGui::Button("REMOVE COLOR"))
-            {
-                remove_colorLast();
-            }
+                if (ImGui::Button("RANDOM COLOR")) {
+                    myColor = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
+                }
+                if (ImGui::Button("ADD COLOR")) {
+                    add_color(ofColor(myColor.get()));
+                }
+                if (ImGui::Button("REMOVE COLOR")) {
+                    remove_colorLast();
+                }
 
-            ofxImGui::AddParameter(this->MODE);
-            if ( MODE )
-            {
-                ImGui::Text( "MODE SATURATION" );
-                ofxImGui::AddParameter(this->SATURATION);
-            }
-            else
-            {
-                ImGui::Text( "MODE BRIGHTNESS" );
-                ofxImGui::AddParameter(this->BRIGHTNESS);
+                ofxImGui::EndTree(mainSettings);
             }
 
-            ofxImGui::AddParameter(this->curve_pos);
+            // ALGORITHMIC PALETTE
+            if (ofxImGui::BeginTree(this->params_palette, mainSettings))
+            {
+                ofxImGui::AddParameter(this->MODE);
+                if (MODE)
+                {
+                    ImGui::Text("MODE SATURATION");
+                    ofxImGui::AddParameter(this->SATURATION);
+                }
+                else
+                {
+                    ImGui::Text("MODE BRIGHTNESS");
+                    ofxImGui::AddParameter(this->BRIGHTNESS);
+                }
 
+                ofxImGui::AddParameter(this->bRandomPalette);
+                if (ImGui::Button("RANDOMIZE"))
+                {
+                    cout << "RANDOMIZE: " << bRandomPalette << endl;
+
+                    if (bRandomPalette)
+                    {
+                        bRandomPalette = false;
+                        random.generateRandom();
+                    }
+                }
+
+                ofxImGui::EndTree(mainSettings);
+            }
+
+            // CURVE
+            if (ofxImGui::BeginTree(this->params_curve, mainSettings))
+            {
+                ofxImGui::AddParameter(this->bResetCurve);
+                ofxImGui::AddParameter(this->curve_pos);
+
+                if (bResetCurve)
+                {
+                    bResetCurve = false;
+                    curvesTool.clear();
+                    curvesTool.add(ofVec2f(0, 0));
+                    curvesTool.add(ofVec2f(255, 255));
+                }
+
+                ofxImGui::EndTree(mainSettings);
+            }
         }
         ofxImGui::EndWindow(mainSettings);
     }
@@ -252,6 +277,10 @@ void ofxColorManager::setup_curveTool()
     show = true;
 
     curve_pos.set("CURVE POS", 0., 0., 1.);
+    bResetCurve.set("RESET CURVE", false);
+    params_curve.setName("CURVE");
+    params_curve.add(curve_pos);
+    params_curve.add(bResetCurve);
 
     cnt = 0;
 }

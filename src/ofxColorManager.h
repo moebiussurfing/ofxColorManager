@@ -39,6 +39,14 @@ public:
 
     //-
 
+    ofParameterGroup params_color;
+    ofParameterGroup params_palette;
+    ofParameterGroup params_curve;
+
+    //-
+
+    // ALGORITHMIC PALETTES
+
     ofxColorPalette complement;
     ofxColorPalette complementBrightness;
     ofxColorPalette triad;
@@ -54,6 +62,7 @@ public:
     ofParameter<float> SATURATION;
     void update_color(int brg, int sat);
     ofParameter<bool> MODE;
+    ofParameter<bool> bRandomPalette;
 
     //-
 
@@ -100,6 +109,7 @@ public:
     void update_curveTool();
     void draw_curveTool();
     ofParameter<float> curve_pos;
+    ofParameter<bool> bResetCurve;
 
     //--
 };
