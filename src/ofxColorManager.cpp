@@ -174,19 +174,23 @@ void ofxColorManager::loadPalette(string p)
 
     string path = path_palettes + p + ".json";
     ofFile file(path);
-    if (file.exists()) {
+    if (file.exists())
+    {
         jsonin ji(file);
 //        ji >> poly.getVertices();
         ji >> data;
 
         cout << "palette name: " << data.name << endl;
 
-        palette.clear();
-        palette.resize(data.palette.size());
+        clearPalette();
+
+        ofColor c;
+
         for (int i = 0; i< data.palette.size(); i++)
         {
-            palette[i] = data.palette[i];
-            cout << "palette_" << i << " " << ofToString(data.palette[i]) << endl;
+            c = data.palette[i];
+            cout << "palette " << i << ": " << ofToString(c) << endl;
+            add_color(c);
         }
     }
 }
@@ -208,9 +212,9 @@ void ofxColorManager::savePalette(string p)
         cout << "palette_" << i << " " << ofToString(data.palette[i]) << endl;
     }
 
-        ofFile file(path, ofFile::WriteOnly);
-        jsonout jo(file);
-        jo << data;
+    ofFile file(path, ofFile::WriteOnly);
+    jsonout jo(file);
+    jo << data;
 //        jo << poly.getVertices();
 }
 
@@ -959,11 +963,9 @@ void ofxColorManager::draw()
 void ofxColorManager::add_color(ofColor c)
 {
     ofLogNotice("ofxColorManager") << "add color " << " (" << ofToString(c) << ") to palette";
-
     palette.push_back( c );
     gradient.addColor( c );
     add_color_Interface(c);
-
 }
 
 //--------------------------------------------------------------
@@ -973,10 +975,9 @@ void ofxColorManager::remove_colorLast()
         palette.pop_back();
         gradient.removeColorLast();
 
-        int last = buttons.size()-1;
         if (buttons.size() > 0)
         {
-            std::string n = ("btn" + ofToString(last));
+            std::string n = ("btn" + ofToString(buttons.size()-1));
             auto a = scene->getChildWithName(n, 100);
             auto b = a->getName();
             scene->removeChild(a, false);
