@@ -556,23 +556,26 @@ void ofxColorManager::draw_curveTool() {
         ofTranslate(pos_curve_x, pos_curve_y);
 
         ofSetColor(255);
+
         // curve editor
-        curvesTool.draw(0,0,cnt);
+        curvesTool.draw(0, 0, cnt);
 
         // box LUT gradiant
         img.draw(pos_curve_prev_x, pos_curve_prev_y);
 
-        // red line
+        float y =  amount-curvesTool[cnt];
+//    float y = amount-curvesTool.getAt(cnt);
+
+        // horizontal line
 //        ofSetColor(ofColor::red);
         ofSetColor(ofColor::white);
 
-        float y =  amount-curvesTool[cnt];
-//    float y = amount-curvesTool.getAt(cnt);
         ofDrawLine(0, y, amount, y);
 //    ofDrawLine(amount + slider_w, y, amount + slider_w + pad + pos_curve_prev_w + 100, y);
 
-        // red current point
-        ofDrawCircle(cnt, y, 3);
+//        // current circle point
+//        ofSetColor(25);
+//        ofDrawCircle(cnt, y, 3);
 
 //    float lerp_amt = ofMap(cnt,0,amount-1,0,1);
 //    ofNoFill();
@@ -595,7 +598,6 @@ void ofxColorManager::draw_curveTool() {
 
         ofPopMatrix();
         ofPopStyle();
-
     }
 }
 
