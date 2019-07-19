@@ -492,6 +492,30 @@ void ofxColorManager::remove_colorLast()
 }
 
 //--------------------------------------------------------------
+void ofxColorManager::clearPalette()
+{
+    cout << endl;
+    cout << "clearPalette" << endl;
+
+    palette.clear();
+    gradient.reset();
+
+    cout << "getNumChildren: " << scene->getNumChildren() << endl;
+
+    for (int i=0; i< buttons.size(); i++)
+    {
+        std::string n = ("btn" + ofToString(i));
+        auto a = scene->getChildWithName(n, 100);
+        auto b = a->getName();
+        scene->removeChild(a, true);
+        cout << "removed children: " << b << endl;
+    }
+    buttons.clear();
+
+    cout << endl;
+}
+
+//--------------------------------------------------------------
 void ofxColorManager::update()
 {
     update_Interface();
@@ -1054,7 +1078,10 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
     {
         loadPalette("myPalette");
     }
-
+    if (key == 'x')
+    {
+        clearPalette();
+    }
 }
 
 //--------------------------------------------------------------

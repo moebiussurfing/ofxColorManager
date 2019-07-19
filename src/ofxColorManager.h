@@ -178,6 +178,7 @@ public:
 
     void add_color(ofColor c);
     void remove_colorLast();
+    void clearPalette();
 
     // JSON
 
