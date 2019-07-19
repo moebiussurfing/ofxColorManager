@@ -165,6 +165,7 @@ public:
     ofxImGui::Gui gui;
     bool guiVisible;
     bool mouseOverGui;
+    void setup_Gui_layout();
     void imGui_theme();
 
     //-

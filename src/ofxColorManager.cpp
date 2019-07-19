@@ -11,71 +11,18 @@ ofxColorManager::~ofxColorManager()
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::setup_Interface()
-{
-    scene = new Node();
-    scene->setSize(ofGetWidth(), ofGetHeight());
-    scene->setName("Scene");
-    TouchManager::one().setup(scene);
-}
-
-//--------------------------------------------------------------
 void ofxColorManager::setup()
 {
     mouseRuler.setup();
     mouseRuler.toggleVisibility();
 
-    //-------
+    //-
 
     // LAYOUT
 
-    // global mini pad between panels/objects
-    pad = 5;
+    setup_Gui_layout();
 
-    // gui
-    gui_x = 10;
-    gui_y = 10;
-    gui_w = 200;
-    gui_h = 330;
-
-    // user palette
-    palette_x = gui_x;
-    palette_y = gui_y + gui_h;
-    color_size = 40;
-
-    // algorithmic palettes
-    box_size = color_size;
-    palettes_x = gui_x;
-    palettes_y = palette_y + 2 * box_size;//2 rows
-
-    // curve tool pos
-    amount = 256;
-    pos_curve_x = 525;
-    pos_curve_y = 75;
-
-    // squared LUT referenced to curve pos (vertical)
-    pos_curve_prev_x = amount + pad;
-    pos_curve_prev_y = 0;
-    pos_curve_prev_w = box_size;
-    pos_curve_prev_h = amount;
-
-    // slider
-    slider_x = pos_curve_x + pad + amount + pad + pos_curve_prev_w;
-    slider_y = pos_curve_y;
-    slider_w = box_size / 2;
-    slider_h = amount;
-
-    // gradient pre curve (bad sorted to the left..)
-    grad_w = box_size;
-    grad_x = pos_curve_x - (grad_w + pad);
-    grad_y = pos_curve_y;
-    grad_h = amount;
-
-    // current color bar
-    currColor_x = slider_x + slider_w + pad;
-    currColor_y = pos_curve_y;
-
-    //------
+    //-
 
     // DATA
 
@@ -160,7 +107,7 @@ void ofxColorManager::setup()
 
     setup_curveTool();
 
-    //-
+    //--
 
     // GUI
 
@@ -168,7 +115,7 @@ void ofxColorManager::setup()
     this->guiVisible = true;
     imGui_theme();
 
-    //-
+    //--
 
     // LISTENERS
 
@@ -190,6 +137,67 @@ void ofxColorManager::setup()
     loadPalette("myPalette");
 
     //-
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::setup_Interface()
+{
+    scene = new Node();
+    scene->setSize(ofGetWidth(), ofGetHeight());
+    scene->setName("Scene");
+    TouchManager::one().setup(scene);
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::setup_Gui_layout()
+{
+    // LAYOUT
+
+    // global mini pad between panels/objects
+    pad = 5;
+
+    // gui
+    gui_x = 10;
+    gui_y = 10;
+    gui_w = 200;
+    gui_h = 350;
+
+    // user palette
+    palette_x = gui_x;
+    palette_y = gui_y + gui_h;
+    color_size = 40;
+
+    // algorithmic palettes
+    box_size = color_size;
+    palettes_x = gui_x;
+    palettes_y = palette_y + 2 * box_size;//2 rows
+
+    // curve tool pos
+    amount = 256;
+    pos_curve_x = 525;
+    pos_curve_y = 75;
+
+    // squared LUT referenced to curve pos (vertical)
+    pos_curve_prev_x = amount + pad;
+    pos_curve_prev_y = 0;
+    pos_curve_prev_w = box_size;
+    pos_curve_prev_h = amount;
+
+    // slider
+    slider_x = pos_curve_x + pad + amount + pad + pos_curve_prev_w;
+    slider_y = pos_curve_y;
+    slider_w = box_size / 2;
+    slider_h = amount;
+
+    // gradient pre curve (bad sorted to the left..)
+    grad_w = box_size;
+    grad_x = pos_curve_x - (grad_w + pad);
+    grad_y = pos_curve_y;
+    grad_h = amount;
+
+    // current color bar
+    currColor_x = slider_x + slider_w + pad;
+    currColor_y = pos_curve_y;
 }
 
 //--------------------------------------------------------------
@@ -1011,7 +1019,9 @@ void ofxColorManager::clearPalette()
 void ofxColorManager::Changed_control(ofAbstractParameter &e) {
     string name = e.getName();
 
-    ofLogNotice() << "Changed_control: " << name << ":" << e;
+    //TODO: reduce callbacks..
+    if (name != "CURVE POS")
+        ofLogNotice() << "Changed_control: " << name << ":" << e;
 
     // PALLETE
     if (name == "RANDOM COLOR")
@@ -1058,10 +1068,8 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
     // CURVE
     else if (name == "CURVE POS")
     {
-//        if (bRandomPalette)
+//        if ( )
 //        {
-//            bRandomPalette = false;
-//            random.generateRandom();
 //        }
     }
     else if (name == "RESET CURVE")
