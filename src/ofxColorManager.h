@@ -4,9 +4,9 @@
 
 #include "ofxImGui.h"
 #include "ofxColorPalette.h"
-#define NUM_COLOR 9
-#define RECT_SIZE 35
-#define PADDING 5
+//#define NUM_COLOR 9
+//#define RECT_SIZE 35
+//#define PADDING 5
 #include "ofxInterface.h"
 #include "ButtonExample.h"
 #include "ofxColorGradient.h"
@@ -142,14 +142,14 @@ public:
     void add_color_Interface(ofColor c);
     bool bShowDebug = false;
 
-    vector<ButtonExample*> buttons_palette_Triad;//1
-    vector<ButtonExample*> buttons_palette_ComplTriad;//2
-    vector<ButtonExample*> buttons_palette_CompSat;//3
-    vector<ButtonExample*> buttons_palette_ComplBrgt;//4
-    vector<ButtonExample*> buttons_palette_MonoSat;//5
-    vector<ButtonExample*> buttons_palette_MonoBrgt;//6
-    vector<ButtonExample*> buttons_palette_Analog;//7
-    vector<ButtonExample*> buttons_palette_Random;//8
+    vector<ButtonExample*> buttons_palette_Triad;       // 1
+    vector<ButtonExample*> buttons_palette_ComplTriad;  // 2
+    vector<ButtonExample*> buttons_palette_CompSat;     // 3
+    vector<ButtonExample*> buttons_palette_ComplBrgt;   // 4
+    vector<ButtonExample*> buttons_palette_MonoSat;     // 5
+    vector<ButtonExample*> buttons_palette_MonoBrgt;    // 6
+    vector<ButtonExample*> buttons_palette_Analog;      // 7
+    vector<ButtonExample*> buttons_palette_Random;      // 8
 
 //    void add_color_Palette(int i);
 

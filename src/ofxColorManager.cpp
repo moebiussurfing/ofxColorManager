@@ -141,18 +141,23 @@ void ofxColorManager::setup()
 void ofxColorManager::imGui_theme()
 {
     ofColor myColor;
-    myColor = ofColor(0, 0, 0, 255);//black
+    int grayDark = 0;
+    myColor = ofColor(grayDark, grayDark, grayDark, 255);//black
     ofColor myColor2;
     int gray = 24;
-    myColor2 = ofColor(gray, gray, gray, 255);//gray
+    myColor2 = ofColor(gray, gray, gray, 255);//gray1
+    ofColor myColor3;
+    int gray2 = 16;
+    myColor3 = ofColor(gray2, gray2, gray2, 255);//gray2
 
     ImGuiStyle *style = &ImGui::GetStyle();
+//    style->WindowRounding(2.);
     style->Colors[ImGuiCol_ScrollbarBg] = ImVec4(myColor, 1.00f);
     style->Colors[ImGuiCol_ScrollbarGrab] = ImVec4(myColor2, 0.21f);
     style->Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(myColor, 0.78f);
     style->Colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(myColor2, 1.00f);
     style->Colors[ImGuiCol_CheckMark] = ImVec4(ofColor(255), 0.80f);
-    style->Colors[ImGuiCol_Button] = ImVec4(myColor2, 0.14f);
+    style->Colors[ImGuiCol_Button] = ImVec4(myColor3, 0.8f);
     style->Colors[ImGuiCol_ButtonHovered] = ImVec4(myColor, 0.86f);
     style->Colors[ImGuiCol_ButtonActive] = ImVec4(myColor, 1.00f);
     style->Colors[ImGuiCol_TitleBg] = ImVec4(myColor, 1.00f);
@@ -927,11 +932,11 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
         mouseRuler.toggleVisibility();
     }
 
-//    if (key == ' ')
-//    {
-//        cout << "setup_palettes" << endl;
-//        setup_palettes();
-//    }
+    if (key == ' ')
+    {
+        myColor = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
+        add_color(ofColor(myColor.get()));
+    }
 
     if (key == 'd')
     {
