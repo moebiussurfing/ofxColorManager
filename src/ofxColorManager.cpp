@@ -97,9 +97,9 @@ void ofxColorManager::setup()
     gradient.reset();
     gradient_hard.set("GRADIENT HARD", false);
     gradient.setHardMode(gradient_hard);
-    params_curve.add(gradient_hard);
 
-    params_curve.add(bResetCurve);
+//    params_curve.add(gradient_hard);
+//    params_curve.add(bResetCurve);
 
     //-
 
@@ -113,8 +113,7 @@ void ofxColorManager::setup()
 
     this->gui.setup();
     this->guiVisible = true;
-
-
+    imGui_theme();
 
     //-
 
@@ -136,6 +135,41 @@ void ofxColorManager::setup()
     load_group_XML(XML_params, XML_path);
 
     //-
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::imGui_theme()
+{
+    ofColor myColor;
+    myColor = ofColor(0, 0, 0, 255);//black
+    ofColor myColor2;
+    int gray = 24;
+    myColor2 = ofColor(gray, gray, gray, 255);//gray
+
+    ImGuiStyle *style = &ImGui::GetStyle();
+    style->Colors[ImGuiCol_ScrollbarBg] = ImVec4(myColor, 1.00f);
+    style->Colors[ImGuiCol_ScrollbarGrab] = ImVec4(myColor2, 0.21f);
+    style->Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(myColor, 0.78f);
+    style->Colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(myColor2, 1.00f);
+    style->Colors[ImGuiCol_CheckMark] = ImVec4(ofColor(255), 0.80f);
+    style->Colors[ImGuiCol_Button] = ImVec4(myColor2, 0.14f);
+    style->Colors[ImGuiCol_ButtonHovered] = ImVec4(myColor, 0.86f);
+    style->Colors[ImGuiCol_ButtonActive] = ImVec4(myColor, 1.00f);
+    style->Colors[ImGuiCol_TitleBg] = ImVec4(myColor, 1.00f);
+    style->Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(myColor, 0.75f);
+    style->Colors[ImGuiCol_TitleBgActive] = ImVec4(myColor, 1.00f);
+    style->Colors[ImGuiCol_Header] = ImVec4(myColor, 0.76f);
+    style->Colors[ImGuiCol_HeaderHovered] = ImVec4(myColor2, 0.86f);
+    style->Colors[ImGuiCol_HeaderActive] = ImVec4(myColor, 1.00f);
+//    style->Colors[ImGuiCol_PlotHistogramHovered] = ImVec4(myColor, 1.00f);
+//    style->Colors[ImGuiCol_PlotLinesHovered] = ImVec4(myColor, 1.00f);
+//    style->Colors[ImGuiCol_ResizeGripHovered] = ImVec4(myColor, 0.78f);
+//    style->Colors[ImGuiCol_ColumnHovered] = ImVec4(myColor, 0.78f);
+//    style->Colors[ImGuiCol_HeaderHovered] = ImVec4(myColor, 0.86f);
+//    style->Colors[ImGuiCol_PlotHistogramHovered] = ImVec4(myColor, 1.00f);
+    style->Colors[ImGuiCol_FrameBg] = ImVec4(myColor, 1.00f);
+    style->Colors[ImGuiCol_FrameBgHovered] = ImVec4(myColor2, 0.78f);//hover
+    style->Colors[ImGuiCol_FrameBgActive] = ImVec4(myColor, 1.00f);
 }
 
 //--------------------------------------------------------------
@@ -264,6 +298,8 @@ bool ofxColorManager::imGui()
 {
     auto mainSettings = ofxImGui::Settings();
 
+    //TODO: move ALL listeners outside gui
+
     this->gui.begin();
     {
         if (ofxImGui::BeginWindow("COLOR MANAGER", mainSettings, false))
@@ -299,9 +335,7 @@ bool ofxColorManager::imGui()
             {
                 ofxImGui::AddParameter(this->SATURATION);
                 ofxImGui::AddParameter(this->BRIGHTNESS);
-
                 ofxImGui::AddParameter(this->bRandomPalette);
-//                if (ImGui::Button("RANDOMIZE"))
                 if (bRandomPalette)
                 {
                     cout << "RANDOMIZE: " << bRandomPalette << endl;
@@ -329,6 +363,7 @@ bool ofxColorManager::imGui()
                 else if (true)
                 {
                     gradient.setHardMode(gradient_hard);
+//                    cout << "gradient_hard: " << gradient_hard << endl;
                 }
 
                 ofxImGui::EndTree(mainSettings);

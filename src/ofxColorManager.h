@@ -110,6 +110,7 @@ public:
     ofxImGui::Gui gui;
     bool guiVisible;
     bool mouseOverGui;
+    void imGui_theme();
 
     //-
 
