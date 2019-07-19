@@ -459,63 +459,6 @@ bool ofxColorManager::imGui()
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::add_color(ofColor c)
-{
-    palette.push_back( c );
-    ofLogNotice("ofxColorManager") << "added color " << ofToString(palette.size()) << " (" << ofToString(c) << ") to palette";
-
-    add_color_Interface(c);
-
-    gradient.addColor( c );
-}
-
-//--------------------------------------------------------------
-void ofxColorManager::remove_colorLast()
-{
-//    if (!palette.empty())
-    {
-        palette.pop_back();
-    }
-
-    if (true)
-    {
-        gradient.removeColorLast();
-    }
-
-//    if (!buttons.empty())
-    {
-        buttons.pop_back();
-        int iSize = scene->getNumChildren();
-        scene->removeChild(iSize);
-    }
-
-}
-
-//--------------------------------------------------------------
-void ofxColorManager::clearPalette()
-{
-    cout << endl;
-    cout << "clearPalette" << endl;
-
-    palette.clear();
-    gradient.reset();
-
-    cout << "getNumChildren: " << scene->getNumChildren() << endl;
-
-    for (int i=0; i< buttons.size(); i++)
-    {
-        std::string n = ("btn" + ofToString(i));
-        auto a = scene->getChildWithName(n, 100);
-        auto b = a->getName();
-        scene->removeChild(a, true);
-        cout << "removed children: " << b << endl;
-    }
-    buttons.clear();
-
-    cout << endl;
-}
-
-//--------------------------------------------------------------
 void ofxColorManager::update()
 {
     update_Interface();
@@ -1013,6 +956,61 @@ void ofxColorManager::draw()
 }
 
 //--------------------------------------------------------------
+void ofxColorManager::add_color(ofColor c)
+{
+    ofLogNotice("ofxColorManager") << "add color " << " (" << ofToString(c) << ") to palette";
+
+    palette.push_back( c );
+    gradient.addColor( c );
+    add_color_Interface(c);
+
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::remove_colorLast()
+{
+    if (palette.size() > 0) {
+        palette.pop_back();
+        gradient.removeColorLast();
+
+        int last = buttons.size()-1;
+        if (buttons.size() > 0)
+        {
+            std::string n = ("btn" + ofToString(last));
+            auto a = scene->getChildWithName(n, 100);
+            auto b = a->getName();
+            scene->removeChild(a, false);
+            cout << "removed children: " << b << endl;
+        }
+        buttons.pop_back();
+    }
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::clearPalette()
+{
+    cout << endl;
+    cout << "clearPalette" << endl;
+
+    palette.clear();
+    gradient.reset();
+
+    cout << "getNumChildren: " << scene->getNumChildren() << endl;
+
+    for (int i=0; i< buttons.size(); i++)
+    {
+        std::string n = ("btn" + ofToString(i));
+        auto a = scene->getChildWithName(n, 100);
+        auto b = a->getName();
+        scene->removeChild(a, false);
+        cout << "removed children: " << b << endl;
+    }
+    buttons.clear();
+
+    cout << endl;
+}
+
+//--------------------------------------------------------------
 void ofxColorManager::exit()
 {
     removeKeysListeners();
@@ -1032,12 +1030,6 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
     if (key == 'm')
     {
         mouseRuler.toggleVisibility();
-    }
-
-    if (key == ' ')
-    {
-        myColor = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
-        add_color(ofColor(myColor.get()));
     }
 
     if (key == 'd')
@@ -1060,9 +1052,9 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 
     //-
 
-    if (key == 'c') {
-        curveShow = !curveShow;
-    }
+//    if (key == 'c') {
+//        curveShow = !curveShow;
+//    }
 //    if (key == 's') {
 //        curvesTool.save("curves.yml");
 //    }
@@ -1078,9 +1070,19 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
     {
         loadPalette("myPalette");
     }
-    if (key == 'x')
+    if (key == 'c')
     {
         clearPalette();
+    }
+    if (key == 'x')
+    {
+        remove_colorLast();
+    }
+
+    if (key == ' ')
+    {
+        myColor = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
+        add_color(ofColor(myColor.get()));
     }
 }
 
