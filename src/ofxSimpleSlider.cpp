@@ -103,9 +103,12 @@ void ofxSimpleSlider::draw(ofEventArgs& event){
 		float thumbX = ofMap(percent, 0, 1, 0, width, true);
 		ofDrawLine(thumbX,0, thumbX,height);
 	}
-	
-	
-	ofTranslate( -77, -7);
+
+	// move label up left
+//	ofTranslate( -77, -7);
+
+    // move label down left
+    ofTranslate( -32, 33);
 
 	// draw numeric value 
 	if (bHasFocus){
@@ -123,7 +126,6 @@ void ofxSimpleSlider::draw(ofEventArgs& event){
 		ofDrawBitmapString( labelString, 0-labelStringWidth*8-5, height/2 + 4); 
 	}	
 
-	
 	ofPopMatrix();
 	ofSetLineWidth(1.0);
 	ofDisableAlphaBlending();

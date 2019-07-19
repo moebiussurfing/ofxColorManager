@@ -179,7 +179,7 @@ public:
 
     ofxCurvesTool curvesTool;
     ofImage img;
-    bool show;
+    bool curveShow;
     float cnt = 0;
     int amount = amount;
     void setup_curveTool();

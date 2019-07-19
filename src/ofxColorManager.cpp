@@ -53,25 +53,26 @@ void ofxColorManager::setup()
     pos_curve_x = 525;
     pos_curve_y = 75;
 
-    // slider
-    slider_x = pos_curve_x + amount + pad;
-    slider_y = pos_curve_y;
-    slider_w = box_size / 2;
-    slider_h = amount;
-
     // squared LUT referenced to curve pos (vertical)
-    pos_curve_prev_x = amount + pad + slider_w + pad;
+    pos_curve_prev_x = amount + pad;
     pos_curve_prev_y = 0;
     pos_curve_prev_w = box_size;
     pos_curve_prev_h = amount;
 
-    // gradient pre curve
+    // slider
+    slider_x = pos_curve_x + pad + amount + pad + pos_curve_prev_w;
+    slider_y = pos_curve_y;
+    slider_w = box_size / 2;
+    slider_h = amount;
+
+    // gradient pre curve (bad sorted to the left..)
     grad_w = box_size;
     grad_x = pos_curve_x - (grad_w + pad);
     grad_y = pos_curve_y;
     grad_h = amount;
 
-    currColor_x = pos_curve_x + pos_curve_prev_x + pos_curve_prev_w + pad;
+    // current color bar
+    currColor_x = slider_x + slider_w + pad;
     currColor_y = pos_curve_y;
 
     //-
@@ -463,7 +464,7 @@ void ofxColorManager::update()
 //--------------------------------------------------------------
 void ofxColorManager::setup_curveTool()
 {
-    show = true;
+    curveShow = true;
 
     //    amount = 256;
     cnt = 0;
@@ -527,30 +528,51 @@ void ofxColorManager::update_curveTool()
 //--------------------------------------------------------------
 void ofxColorManager::draw_curveTool() {
 
-    ofPushMatrix();
-    ofPushStyle();
-
-    ofTranslate(pos_curve_x, pos_curve_y);
-
-    if (show)
+    if (curveShow)
     {
+        //-
+
+        // GRADIENT
+
+        // full rectangle
+        gradient.drawDebug(grad_x, grad_y, grad_w, grad_h);
+
+        // current box color at point
+
+        ofRectangle r = ofRectangle( currColor_x, currColor_y, box_size/2, slider_h );
+        ofPushStyle();
+        ofFill();
+        ofSetColor( gradient.getColorAtPercent( curve_pos ) );
+        ofDrawRectangle(r);
+        ofPopStyle();
+
+        //--
+
+        // CURVE TOOL
+
+        ofPushMatrix();
+        ofPushStyle();
+
+        ofTranslate(pos_curve_x, pos_curve_y);
+
         ofSetColor(255);
         // curve editor
         curvesTool.draw(0,0,cnt);
 
         // box LUT gradiant
         img.draw(pos_curve_prev_x, pos_curve_prev_y);
-    }
 
-    // red line
-    ofSetColor(ofColor::red);
-    float y =  amount-curvesTool[cnt];
+        // red line
+//        ofSetColor(ofColor::red);
+        ofSetColor(ofColor::white);
+
+        float y =  amount-curvesTool[cnt];
 //    float y = amount-curvesTool.getAt(cnt);
-    ofDrawLine(0, y, amount, y);
+        ofDrawLine(0, y, amount, y);
 //    ofDrawLine(amount + slider_w, y, amount + slider_w + pad + pos_curve_prev_w + 100, y);
 
-    // red current point
-    ofDrawCircle(cnt, y, 3);
+        // red current point
+        ofDrawCircle(cnt, y, 3);
 
 //    float lerp_amt = ofMap(cnt,0,amount-1,0,1);
 //    ofNoFill();
@@ -571,8 +593,10 @@ void ofxColorManager::draw_curveTool() {
 //    ofDrawBitmapString(ofToString(curvesTool[cnt]),0,10);
 //    ofPopMatrix();
 
-    ofPopMatrix();
-    ofPopStyle();
+        ofPopMatrix();
+        ofPopStyle();
+
+    }
 }
 
 ////--------------------------------------------------------------
@@ -857,21 +881,6 @@ void ofxColorManager::draw()
 
     draw_Interface();
 
-    //-
-
-    // GRADIENT
-
-    // full rectangle
-    gradient.drawDebug(grad_x, grad_y, grad_w, grad_h);
-
-    // current box color at point
-
-    ofRectangle r = ofRectangle( currColor_x, currColor_y, box_size/2, slider_h );
-    ofPushStyle();
-    ofFill();
-    ofSetColor( gradient.getColorAtPercent( curve_pos ) );
-    ofDrawRectangle(r);
-    ofPopStyle();
 
     //-
 
@@ -979,7 +988,7 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
     //-
 
     if (key == 'c') {
-        show = !show;
+        curveShow = !curveShow;
     }
     if (key == 's') {
         curvesTool.save("curves.yml");
