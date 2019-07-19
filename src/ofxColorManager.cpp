@@ -24,6 +24,23 @@ void ofxColorManager::setup()
 {
     //-
 
+    // LAYOUT
+
+    gui_x = 10;
+    gui_y = 10;
+    gui_w = 200;
+    gui_h = 330;
+
+    palette_x = gui_x;
+    palette_y = gui_y + gui_h;
+    color_size = 40;
+
+    box_size = color_size;
+    palettes_x = gui_x;
+    palettes_y = palette_y + 2 * box_size;//2 rows
+
+    //-
+
     // DATA
 
     color_backGround.set("BACKGROUND", ofFloatColor::white);
@@ -83,6 +100,8 @@ void ofxColorManager::setup()
     this->gui.setup();
     this->guiVisible = true;
 
+
+
     //-
 
     // LISTENERS
@@ -107,24 +126,22 @@ void ofxColorManager::setup()
 //--------------------------------------------------------------
 void ofxColorManager::add_color_Interface(ofColor c)
 {
-    float x = 150;
-    float y = 400;
-
-    float size = 40;
-    float pad = 40;
-    int perRow = 10;
+    palette_x = gui_x;
+    int miniPad = 4;
+    int perRow = 5;
 
     int i = buttons.size();
 
-//    for (int i=0; i<perRow*4; i++) {
-
     // setup them in a grid
-    x += (i%perRow)*(size+pad);
-    y += (i/perRow)*(size+pad);
+//    palette_x += (i%perRow)*(color_size+miniPad);
+//    palette_y += (i/perRow)*(color_size+miniPad);
+
+    palette_x += ( i * ( color_size + miniPad ) );
+//    palette_y += (i/perRow)*(color_size+pad);
 
     // create a ButtonExample node
     ButtonExample *btn = new ButtonExample();
-    btn->setup(x, y, size, size);
+    btn->setup(palette_x, palette_y, color_size, color_size);
     btn->setColor(c);
     btn->setup_colorBACK( color_p );
     btn->setLocked(true);
@@ -133,15 +150,14 @@ void ofxColorManager::add_color_Interface(ofColor c)
     // add it to the scene
     scene->addChild(btn);
 
-    if (i%perRow>0) {
-        // this can be called to place nodes next to each other
-        btn->placeNextTo(*buttons[i-1], Node::RIGHT);
-    }
+//    if (i%perRow>0)
+//    {
+//        // this can be called to place nodes next to each other
+//        btn->placeNextTo(*buttons[i-1], Node::RIGHT);
+//    }
 
     // keep reference (we need it to update the nodes)
     buttons.push_back(btn);
-//    }
-
 }
 
 //--------------------------------------------------------------
@@ -352,9 +368,6 @@ void ofxColorManager::update()
 
     //-
 
-    // slider
-    curve_pos = mixSlider.getValue();
-
     update_curveTool();
 
     //-
@@ -364,6 +377,8 @@ void ofxColorManager::update()
 //--------------------------------------------------------------
 void ofxColorManager::setup_curveTool()
 {
+    show = true;
+
     pos_curve_x = 700;
     pos_curve_y = 100;
 
@@ -379,8 +394,6 @@ void ofxColorManager::setup_curveTool()
 //    c_grad_h = amount;
 //    img.allocate(c_grad_w, c_grad_h, OF_IMAGE_COLOR);
 
-    show = true;
-
     curve_pos.set("CURVE POS", 0., 0., 1.);
     bResetCurve.set("RESET CURVE", false);
     params_curve.setName("CURVE");
@@ -394,8 +407,8 @@ void ofxColorManager::setup_curveTool()
     // slider
 
     int slider_w = 20;
-    mixSlider.setup(pos_curve_x - (slider_w + pad), pos_curve_y, slider_w, amount, 0, 1, 1.0, true, true);
-    mixSlider.setLabelString("pos");
+    curveSlider.setup(pos_curve_x - (slider_w + pad), pos_curve_y, slider_w, amount, 0., 1., 0, true, true);
+    curveSlider.setLabelString("pos");
 
     //-
 }
@@ -403,6 +416,11 @@ void ofxColorManager::setup_curveTool()
 //--------------------------------------------------------------
 void ofxColorManager::update_curveTool()
 {
+    // slider
+    curve_pos = curveSlider.getValue();
+
+    //-
+
     for(int x = 0; x < amount; x++)
     {
         for(int y = 0; y < amount; y++)
@@ -489,19 +507,14 @@ void ofxColorManager::add_color_Palette(int i)
 //--------------------------------------------------------------
 void ofxColorManager::setup_palettes()
 {
-    int x = 50;
-    int y = 500;
-    int size = 40;
-    int pad = 5;
-    int x0 = x;
+    int x0 = palettes_x;
 
     // 1. triad
-    x = x0;
-    y += (size+pad);
+    palettes_x = x0;
+    palettes_y += (box_size+pad);
     for (int i = 0 ; i < triad.size(); i++) {
-        x += (size+pad);
         ButtonExample *btn = new ButtonExample();
-        btn->setup(x, y, size, size);
+        btn->setup(palettes_x, palettes_y, box_size, box_size);
         btn->setup_colorBACK( color_p );
         btn->setLocked(true);
         btn->setName("triad" + ofToString(i));
@@ -512,15 +525,15 @@ void ofxColorManager::setup_palettes()
             btn->placeNextTo(*buttons_palette_Triad[i-1], Node::RIGHT);
         }
         buttons_palette_Triad.push_back(btn);
+        palettes_x += (box_size+pad);
     }
 
     // 2. complement triad
-    x = x0;
-    y += (size+pad);
+    palettes_x = x0;
+    palettes_y += (box_size+pad);
     for (int i = 0 ; i < complementTriad.size(); i++) {
-        x += (size+pad);
         ButtonExample *btn = new ButtonExample();
-        btn->setup(x, y, size, size);
+        btn->setup(palettes_x, palettes_y, box_size, box_size);
         btn->setup_colorBACK( color_p );
         btn->setLocked(true);
         btn->setName("compTriad" + ofToString(i));
@@ -531,15 +544,15 @@ void ofxColorManager::setup_palettes()
             btn->placeNextTo(*buttons_palette_ComplTriad[i-1], Node::RIGHT);
         }
         buttons_palette_ComplTriad.push_back(btn);
+        palettes_x += (box_size+pad);
     }
 
     // 3. complement sat
-    x = x0;
-    y += (size+pad);
+    palettes_x = x0;
+    palettes_y += (box_size+pad);
     for (int i = 0 ; i < complement.size(); i++) {
-        x += (size+pad);
         ButtonExample *btn = new ButtonExample();
-        btn->setup(x, y, size, size);
+        btn->setup(palettes_x, palettes_y, box_size, box_size);
         btn->setup_colorBACK( color_p );
         btn->setLocked(true);
         btn->setName("compSat" + ofToString(i));
@@ -550,15 +563,15 @@ void ofxColorManager::setup_palettes()
             btn->placeNextTo(*buttons_palette_CompSat[i-1], Node::RIGHT);
         }
         buttons_palette_CompSat.push_back(btn);
+        palettes_x += (box_size+pad);
     }
 
     // 4. complement brgt
-    x = x0;
-    y += (size+pad);
+    palettes_x = x0;
+    palettes_y += (box_size+pad);
     for (int i = 0 ; i < complementBrightness.size(); i++) {
-        x += (size+pad);
         ButtonExample *btn = new ButtonExample();
-        btn->setup(x, y, size, size);
+        btn->setup(palettes_x, palettes_y, box_size, box_size);
         btn->setup_colorBACK( color_p );
         btn->setLocked(true);
         btn->setName("compBrgt" + ofToString(i));
@@ -569,15 +582,15 @@ void ofxColorManager::setup_palettes()
             btn->placeNextTo(*buttons_palette_ComplBrgt[i-1], Node::RIGHT);
         }
         buttons_palette_ComplBrgt.push_back(btn);
+        palettes_x += (box_size+pad);
     }
 
     // 5. mono sat
-    x = x0;
-    y += (size+pad);
+    palettes_x = x0;
+    palettes_y += (box_size+pad);
     for (int i = 0 ; i < monochrome.size(); i++) {
-        x += (size+pad);
         ButtonExample *btn = new ButtonExample();
-        btn->setup(x, y, size, size);
+        btn->setup(palettes_x, palettes_y, box_size, box_size);
         btn->setup_colorBACK( color_p );
         btn->setLocked(true);
         btn->setName("monoSat" + ofToString(i));
@@ -588,15 +601,15 @@ void ofxColorManager::setup_palettes()
             btn->placeNextTo(*buttons_palette_MonoSat[i-1], Node::RIGHT);
         }
         buttons_palette_MonoSat.push_back(btn);
+        palettes_x += (box_size+pad);
     }
 
     // 6. mono brgt
-    x = x0;
-    y += (size+pad);
+    palettes_x = x0;
+    palettes_y += (box_size+pad);
     for (int i = 0 ; i < monochromeBrightness.size(); i++) {
-        x += (size+pad);
         ButtonExample *btn = new ButtonExample();
-        btn->setup(x, y, size, size);
+        btn->setup(palettes_x, palettes_y, box_size, box_size);
         btn->setup_colorBACK( color_p );
         btn->setLocked(true);
         btn->setName("monoBrgt" + ofToString(i));
@@ -607,14 +620,16 @@ void ofxColorManager::setup_palettes()
             btn->placeNextTo(*buttons_palette_MonoBrgt[i-1], Node::RIGHT);
         }
         buttons_palette_MonoBrgt.push_back(btn);
+        palettes_x += (box_size+pad);
     }
 
     // 7. analogue
+    palettes_x = x0;
+    palettes_y += (box_size+pad);
     for (int i=0; i<analogue.size(); i++)
     {
-        x += (size+pad);
         ButtonExample *btn = new ButtonExample();
-        btn->setup(x, y, size, size);
+        btn->setup(palettes_x, palettes_y, box_size, box_size);
         btn->setup_colorBACK( color_p );
         btn->setLocked(true);
         btn->setName("analogue" + ofToString(i));
@@ -625,15 +640,15 @@ void ofxColorManager::setup_palettes()
             btn->placeNextTo(*buttons_palette_Analog[i-1], Node::RIGHT);
         }
         buttons_palette_Analog.push_back(btn);
+        palettes_x += (box_size+pad);
     }
 
     // 8. random
-    x = x0;
-    y += (size+pad);
+    palettes_x = x0;
+    palettes_y += (box_size+pad);
     for (int i = 0 ; i < random.size(); i++) {
-        x += (size+pad);
         ButtonExample *btn = new ButtonExample();
-        btn->setup(x, y, size, size);
+        btn->setup(palettes_x, palettes_y, box_size, box_size);
         btn->setup_colorBACK( color_p );
         btn->setLocked(true);
         btn->setName("random" + ofToString(i));
@@ -644,6 +659,7 @@ void ofxColorManager::setup_palettes()
             btn->placeNextTo(*buttons_palette_Random[i-1], Node::RIGHT);
         }
         buttons_palette_Random.push_back(btn);
+        palettes_x += (box_size+pad);
     }
 }
 
@@ -766,15 +782,10 @@ void ofxColorManager::draw()
 
     // GRADIENT
 
-    int grad_x;
-    int grad_y;
-    int grad_w;
-    int grad_h;
     grad_x = pos_curve_x;
     grad_y = pos_curve_y + amount + pad;
     grad_w = amount;
     grad_h = 40;
-
     gradient.drawDebug(grad_x, grad_y, grad_w, grad_h);
 
     // current gradient color at point
@@ -841,18 +852,23 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 
     //-
 
-    if(key == ' ')
+    if (key == 'm')
     {
-        cout << "setup_palettes" << endl;
-        setup_palettes();
+        mouseRuler.toggleVisibility();
     }
 
-    if(key == 'd')
+//    if (key == ' ')
+//    {
+//        cout << "setup_palettes" << endl;
+//        setup_palettes();
+//    }
+
+    if (key == 'd')
     {
         bShowDebug = !bShowDebug;
     }
 
-    if(key == 'g')
+    if (key == 'g')
     {
         this->guiVisible = ! this->guiVisible;
     }

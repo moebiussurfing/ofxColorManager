@@ -11,19 +11,38 @@
 #include "ButtonExample.h"
 #include "ofxColorGradient.h"
 #include "ofxCurvesTool.h"
-//#include "ofxMouseRuler.h"
+#include "ofxMouseRuler.h"
 #include "ofxSimpleSlider.h"
 
 class ofxColorManager {
 
 public:
-//    ofxMouseRuler mouseRuler;
-    ofxSimpleSlider mixSlider;
+
+    ofxMouseRuler mouseRuler;
+
+    //--
+
+    int gui_x, gui_y, gui_w, gui_h;
 
     int c_grad_x, c_grad_y, c_grad_w, c_grad_h;
     int pos_curve_x;
     int pos_curve_y;
     int pad = 5;
+
+    int grad_x;
+    int grad_y;
+    int grad_w;
+    int grad_h;
+
+    int palettes_x;
+    int palettes_y;
+    int box_size;
+
+    int palette_x;
+    int palette_y;
+    int color_size;
+
+    //--
 
     ofxColorManager();
     ~ofxColorManager();
@@ -82,6 +101,7 @@ public:
     //-
 
     // GUI
+
     bool imGui();
     ofxImGui::Gui gui;
     bool guiVisible;
@@ -136,6 +156,7 @@ public:
     void draw_curveTool();
     ofParameter<float> curve_pos;
     ofParameter<bool> bResetCurve;
+    ofxSimpleSlider curveSlider;
 
     //--
 

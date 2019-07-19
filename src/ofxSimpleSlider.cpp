@@ -105,7 +105,8 @@ void ofxSimpleSlider::draw(ofEventArgs& event){
 	}
 	
 	
-	
+	ofTranslate( -60,0);
+
 	// draw numeric value 
 	if (bHasFocus){
 		ofSetColor(255);

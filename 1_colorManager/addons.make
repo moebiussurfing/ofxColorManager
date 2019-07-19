@@ -4,3 +4,4 @@ ofxColorPalette
 ofxCurvesTool
 ofxImGui
 ofxInterface
+ofxMouseRuler

@@ -102,14 +102,11 @@ void ButtonExample::onTouchUp(ofxInterface::TouchEvent &event)
 	bTouched = false;
 }
 
-
 void ButtonExample::onTouchMove(ofxInterface::TouchEvent &event)
 {
-
     if (!bLocked)
     {
-
-	ofVec2f parentPos = ((Node*)parent)->toLocal(event.position);
-	setPosition(parentPos - touchAnchor);
+        ofVec2f parentPos = ((Node*)parent)->toLocal(event.position);
+        setPosition(parentPos - touchAnchor);
     }
 }
