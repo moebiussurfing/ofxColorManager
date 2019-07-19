@@ -126,6 +126,13 @@ public:
     ofParameterGroup params_palette;
     ofParameterGroup params_curve;
 
+    ofParameter<bool> bRandomColor;
+    ofParameter<bool> bAddColor;
+    ofParameter<bool> bRemoveColor;
+    ofParameter<bool> bClearPalette;
+    ofParameterGroup params_control;
+    void Changed_control(ofAbstractParameter &e);
+
     //-
 
     // ALGORITHMIC PALETTES
@@ -191,21 +198,23 @@ public:
     // INTERFACE
 
     ofxInterface::Node* scene;
-	vector<ButtonExample*> buttons;
+	vector<ButtonExample*> btns_palette;
     void setup_Interface();
     void update_Interface();
     void draw_Interface();
     void add_color_Interface(ofColor c);
     bool bShowDebug = false;
 
-    vector<ButtonExample*> buttons_palette_Triad;       // 1
-    vector<ButtonExample*> buttons_palette_ComplTriad;  // 2
-    vector<ButtonExample*> buttons_palette_CompSat;     // 3
-    vector<ButtonExample*> buttons_palette_ComplBrgt;   // 4
-    vector<ButtonExample*> buttons_palette_MonoSat;     // 5
-    vector<ButtonExample*> buttons_palette_MonoBrgt;    // 6
-    vector<ButtonExample*> buttons_palette_Analog;      // 7
-    vector<ButtonExample*> buttons_palette_Random;      // 8
+
+    // ALGORITHMIC PALETTES
+    vector<ButtonExample*> btns_plt_Triad;       // 1
+    vector<ButtonExample*> btns_plt_ComplTriad;  // 2
+    vector<ButtonExample*> btns_plt_CompSat;     // 3
+    vector<ButtonExample*> btns_plt_ComplBrgt;   // 4
+    vector<ButtonExample*> btns_plt_MonoSat;     // 5
+    vector<ButtonExample*> btns_plt_MonoBrgt;    // 6
+    vector<ButtonExample*> btns_plt_Analog;      // 7
+    vector<ButtonExample*> btns_plt_Random;      // 8
 
 //    void add_color_Palette(int i);
 
@@ -229,8 +238,9 @@ public:
     void update_curveTool();
     void draw_curveTool();
     ofParameter<float> curve_pos;
-    ofParameter<bool> bResetCurve;
     ofxSimpleSlider curveSlider;
+
+    ofParameter<bool> bResetCurve;
 
     //--
 
