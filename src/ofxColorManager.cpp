@@ -56,13 +56,13 @@ void ofxColorManager::setup()
     // slider
     slider_x = pos_curve_x + amount + pad;
     slider_y = pos_curve_y;
-    slider_w = box_size;
+    slider_w = box_size / 2;
     slider_h = amount;
 
-    // referenced to curve pos
+    // squared LUT referenced to curve pos (vertical)
     pos_curve_prev_x = amount + pad + slider_w + pad;
     pos_curve_prev_y = 0;
-    pos_curve_prev_w = amount;
+    pos_curve_prev_w = box_size;
     pos_curve_prev_h = amount;
 
     // gradient pre curve
@@ -70,6 +70,9 @@ void ofxColorManager::setup()
     grad_x = pos_curve_x - (grad_w + pad);
     grad_y = pos_curve_y;
     grad_h = amount;
+
+    currColor_x = pos_curve_x + pos_curve_prev_x + pos_curve_prev_w + pad;
+    currColor_y = pos_curve_y;
 
     //-
 
@@ -463,24 +466,22 @@ void ofxColorManager::setup_curveTool()
     show = true;
 
     //    amount = 256;
+    cnt = 0;
 
     curvesTool.setup(amount);
     curvesTool.load("curves.yml"); //needed because it fills polyline
 
-        img.allocate(amount, amount, OF_IMAGE_COLOR);
-//    img.allocate(box_size, amount, OF_IMAGE_COLOR);
+    img.allocate(pos_curve_prev_w, pos_curve_prev_h, OF_IMAGE_COLOR);
 
-    curve_pos.set("CURVE POS", 0., 0., 1.);
+    curve_pos.set("CURVE POS", 0., 0., 1.);// pct value 0. to 1.
     bResetCurve.set("RESET CURVE", false);
     params_curve.setName("CURVE");
     params_curve.add(curve_pos);
     params_curve.add(bResetCurve);
 
-    cnt = 0;
-
     //-
 
-    // slider
+    // pct slider
     curveSlider.setup(slider_x, slider_y, slider_w, slider_h, 0., 1., 0, true, true);
     curveSlider.setLabelString("value");
 
@@ -490,44 +491,41 @@ void ofxColorManager::setup_curveTool()
 //--------------------------------------------------------------
 void ofxColorManager::update_curveTool()
 {
-    // slider
+    // slider // TODO: mirror to gui param
     curve_pos = curveSlider.getValue();
 
     //-
 
-    for(int x = 0; x < amount; x++)
-    {
-        for(int y = 0; y < amount; y++)
-        {
-//            img.setColor(x, y, ofColor(curvesTool[x]));
-            float f = ofMap( curvesTool[x], 0, 255, 0., 1. );
-            ofColor c = gradient.getColorAtPercent(f);
+    // vertical and rectangle
 
-//            img.setColor(x, y, c);
+    bool bInvert = true;// flip gradient direction
+    float pct;
+    float curveVal;
+
+    for(int y = 0; y < pos_curve_prev_h; y++)
+    {
+        curveVal = curvesTool[y];
+        if (!bInvert)
+        {
+            pct = ofMap( curveVal, 0, amount-1, 0., 1. );
+        }
+        else{
+            pct = ofMap( curveVal, 0, amount-1, 1., 0. );
+        }
+        ofColor c = gradient.getColorAtPercent(pct);
+
+        for(int x = 0; x < pos_curve_prev_w; x++)
+        {
             img.setColor(x, y, c);
         }
     }
-
-//    for(int x = 0; x < c_grad_w; x++)
-//    {
-//        for(int y = 0; y < amount; y++)
-//        {
-//            float f = ofMap( curvesTool[x], 0, 255, 0., 1. );
-//            ofColor c = gradient.getColorAtPercent(f);
-//
-//            img.setColor(x, y, c);
-//        }
-//    }
-
     img.update();
 
-    cnt = ofMap( curve_pos.get(), 0., 1., 0, amount );
+    cnt = ofMap( curve_pos.get(), 0., 1., 0, amount-1 );
 }
 
 //--------------------------------------------------------------
 void ofxColorManager::draw_curveTool() {
-
-    //-
 
     ofPushMatrix();
     ofPushStyle();
@@ -537,17 +535,22 @@ void ofxColorManager::draw_curveTool() {
     if (show)
     {
         ofSetColor(255);
+        // curve editor
         curvesTool.draw(0,0,cnt);
 
+        // box LUT gradiant
         img.draw(pos_curve_prev_x, pos_curve_prev_y);
     }
 
     // red line
-    ofSetColor(255,0,0);
-    ofDrawLine(0, amount-curvesTool[cnt], amount, amount-curvesTool[cnt]);
+    ofSetColor(ofColor::red);
+    float y =  amount-curvesTool[cnt];
+//    float y = amount-curvesTool.getAt(cnt);
+    ofDrawLine(0, y, amount, y);
+//    ofDrawLine(amount + slider_w, y, amount + slider_w + pad + pos_curve_prev_w + 100, y);
 
     // red current point
-    ofDrawCircle(cnt,amount-curvesTool[cnt],3);
+    ofDrawCircle(cnt, y, 3);
 
 //    float lerp_amt = ofMap(cnt,0,amount-1,0,1);
 //    ofNoFill();
@@ -858,14 +861,15 @@ void ofxColorManager::draw()
 
     // GRADIENT
 
+    // full rectangle
     gradient.drawDebug(grad_x, grad_y, grad_w, grad_h);
 
-    // current gradient color at point
-    int rSize = 50;
-    ofRectangle r = ofRectangle( pos_curve_x, pos_curve_y - (rSize + pad), rSize, rSize );
+    // current box color at point
+
+    ofRectangle r = ofRectangle( currColor_x, currColor_y, box_size/2, slider_h );
     ofPushStyle();
     ofFill();
-    ofSetColor(gradient.getColorAtPercent(curve_pos));
+    ofSetColor( gradient.getColorAtPercent( curve_pos ) );
     ofDrawRectangle(r);
     ofPopStyle();
 

@@ -54,6 +54,9 @@ public:
     int palette_y;
     int color_size;
 
+    int currColor_x;
+    int currColor_y;
+
     //--
 
     ofxColorManager();

@@ -97,15 +97,15 @@ void ofxSimpleSlider::draw(ofEventArgs& event){
 	ofSetLineWidth(5.0);
 	ofSetColor(255,255,255, thumbAlpha);
 	if (bVertical){
-		float thumbY = ofMap(percent, 0,1, height,0, true);
+		float thumbY = ofMap(percent, 0, 1, height, 0, true);
 		ofDrawLine(0,thumbY, width,thumbY);
 	} else {
-		float thumbX = ofMap(percent, 0,1, 0,width, true);
+		float thumbX = ofMap(percent, 0, 1, 0, width, true);
 		ofDrawLine(thumbX,0, thumbX,height);
 	}
 	
 	
-	ofTranslate( - 70,0);
+	ofTranslate( -77, -7);
 
 	// draw numeric value 
 	if (bHasFocus){
