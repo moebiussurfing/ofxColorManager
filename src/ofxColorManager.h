@@ -29,7 +29,7 @@ public:
     int c_grad_x, c_grad_y, c_grad_w, c_grad_h;
     int pos_curve_x;
     int pos_curve_y;
-    int pad = 5;
+    int pad;
 
     int grad_x;
     int grad_y;
@@ -157,6 +157,7 @@ public:
     // GRADIENT
 
     ofxColorGradient<ofColor> gradient;
+    ofParameter<bool> gradient_hard;
 
     //-
 

@@ -29,6 +29,8 @@ void ofxColorManager::setup()
 
     // LAYOUT
 
+    pad = 5;
+
     gui_x = 10;
     gui_y = 10;
     gui_w = 200;
@@ -41,6 +43,9 @@ void ofxColorManager::setup()
     box_size = color_size;
     palettes_x = gui_x;
     palettes_y = palette_y + 2 * box_size;//2 rows
+
+    pos_curve_x = 525;
+    pos_curve_y = 75;
 
     //-
 
@@ -90,6 +95,11 @@ void ofxColorManager::setup()
     // GRADIENT
 
     gradient.reset();
+    gradient_hard.set("GRADIENT HARD", false);
+    gradient.setHardMode(gradient_hard);
+    params_curve.add(gradient_hard);
+
+    params_curve.add(bResetCurve);
 
     //-
 
@@ -122,6 +132,7 @@ void ofxColorManager::setup()
     XML_params.add(myColor);
     XML_params.add(BRIGHTNESS);
     XML_params.add(SATURATION);
+    XML_params.add(gradient_hard);
     load_group_XML(XML_params, XML_path);
 
     //-
@@ -290,15 +301,12 @@ bool ofxColorManager::imGui()
                 ofxImGui::AddParameter(this->BRIGHTNESS);
 
                 ofxImGui::AddParameter(this->bRandomPalette);
-                if (ImGui::Button("RANDOMIZE"))
+//                if (ImGui::Button("RANDOMIZE"))
+                if (bRandomPalette)
                 {
                     cout << "RANDOMIZE: " << bRandomPalette << endl;
-
-                    if (bRandomPalette)
-                    {
-                        bRandomPalette = false;
-                        random.generateRandom();
-                    }
+                    random.generateRandom();
+                    bRandomPalette = false;
                 }
 
                 ofxImGui::EndTree(mainSettings);
@@ -309,6 +317,7 @@ bool ofxColorManager::imGui()
             {
                 ofxImGui::AddParameter(this->bResetCurve);
                 ofxImGui::AddParameter(this->curve_pos);
+                ofxImGui::AddParameter(this->gradient_hard);
 
                 if (bResetCurve)
                 {
@@ -316,6 +325,10 @@ bool ofxColorManager::imGui()
                     curvesTool.clear();
                     curvesTool.add(ofVec2f(0, 0));
                     curvesTool.add(ofVec2f(255, 255));
+                }
+                else if (true)
+                {
+                    gradient.setHardMode(gradient_hard);
                 }
 
                 ofxImGui::EndTree(mainSettings);
@@ -383,9 +396,6 @@ void ofxColorManager::setup_curveTool()
 {
     show = true;
 
-    pos_curve_x = 700;
-    pos_curve_y = 100;
-
     amount = 256;
 //    amount = 100;
 
@@ -409,9 +419,8 @@ void ofxColorManager::setup_curveTool()
     //-
 
     // slider
-
     int slider_w = 20;
-    curveSlider.setup(pos_curve_x - (slider_w + pad), pos_curve_y, slider_w, amount, 0., 1., 0, true, true);
+    curveSlider.setup(pos_curve_x - (slider_w + 10), pos_curve_y, slider_w, amount, 0., 1., 0, true, true);
     curveSlider.setLabelString("value");
 
     //-
