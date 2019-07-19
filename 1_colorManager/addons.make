@@ -1,3 +1,4 @@
+ofxCereal
 ofxColorGradient
 ofxColorManager
 ofxColorPalette

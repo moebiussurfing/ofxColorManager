@@ -4,9 +4,6 @@
 
 #include "ofxImGui.h"
 #include "ofxColorPalette.h"
-//#define NUM_COLOR 9
-//#define RECT_SIZE 35
-//#define PADDING 5
 #include "ofxInterface.h"
 #include "ButtonExample.h"
 #include "ofxColorGradient.h"
@@ -14,11 +11,46 @@
 #include "ofxMouseRuler.h"
 #include "ofxSimpleSlider.h"
 
+#include "ofxCereal.h"
+
+using namespace ofxCereal;
+
+struct CustomData
+{
+    ofMatrix4x4 transform;
+    vector<ofVec3f> points;
+    ofColor color;
+
+OFX_CEREAL_DEFINE(CEREAL_NVP(transform), CEREAL_NVP(points), CEREAL_NVP(color))
+
+//    void draw() {
+//        ofPushStyle();
+//        ofSetColor(color);
+//        ofPushMatrix();
+//        ofMultMatrix(transform);
+//
+//        glBegin(GL_LINE_STRIP);
+//        for (auto v : points) {
+//            glVertex3fv(&v.x);
+//        }
+//        glEnd();
+//
+//        ofPopMatrix();
+//        ofPopStyle();
+//    }
+};
+
+
 class ofxColorManager {
+
+    CustomData data;
+    ofPolyline poly;
 
 public:
 
     ofxMouseRuler mouseRuler;
+
+    void savePalette();
 
     //--
 
@@ -138,10 +170,11 @@ public:
 
     // USER PALETTE
 
-    void add_color(ofColor c);
-    void remove_colorLast();
     vector<ofColor> palette;
     vector<ofColor> colors;
+
+    void add_color(ofColor c);
+    void remove_colorLast();
 
     //-
 

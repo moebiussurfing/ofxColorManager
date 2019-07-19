@@ -164,9 +164,79 @@ void ofxColorManager::setup()
     XML_params.add(gradient_hard);
     load_group_XML(XML_params, XML_path);
 
-    //-
-}
 
+}
+//
+//void load()
+//{
+//    ofFile file("poly.json");
+//    if (file.exists()) {
+//        jsonin ji(file);
+//        ji >> poly.getVertices();
+//        ji >> data;
+//    }
+//}
+//--------------------------------------------------------------
+void ofxColorManager::savePalette()
+{
+    for (int p=0; p < 5; p++)
+    {
+        poly.addVertex(glm::vec3(ofRandom(100),ofRandom(100),0));
+        data.points.push_back(ofVec3f(ofRandom(100),0,ofRandom(100)));
+        data.color = ofColor::fromHsb(ofRandom(255), 255, 255);
+    }
+    
+
+        ofFile file("poly.json", ofFile::WriteOnly);
+        jsonout jo(file);
+        jo << poly.getVertices();
+        jo << data;
+
+
+
+//    //-
+//
+//    SomeData data;
+//
+////    data.palette.resize(palette.size());
+////    for (int i = 0; i< palette.size(); i++)
+////    {
+////        data.palette[i] = palette[i];
+//////        data.palette[i].set (palette[i]);
+////    }
+//
+//    ofColor c;
+//    c.set(ofColor::red);
+//    data.palette.push_back (c);
+////    c = (ofColor::black);
+////    data.palette.push_back (c);
+////    c = (ofColor::white);
+////    data.palette.push_back (c);
+//
+//    std::string path = ofToDataPath("data.json", true);
+//
+////    if(ofFile(path).exists()) {
+////        // Read
+////        std::ifstream stream(path);
+////        cereal::JSONInputArchive archive(stream);
+////        archive(CEREAL_NVP(data));
+////    } else {
+//        data.name = "Trantor";
+//        data.age = 1;
+////    }
+//
+//    data.age++;
+//    data.values.push_back(ofRandomuf());
+//
+//    {
+//        // Write
+//        std::ofstream stream(path);
+//        cereal::JSONOutputArchive archive(stream);
+//        archive(CEREAL_NVP(data));
+//    }
+//
+//    ofLog() << "File updated. Check " << path;
+}
 //--------------------------------------------------------------
 void ofxColorManager::imGui_theme()
 {
@@ -992,12 +1062,18 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
     if (key == 'c') {
         curveShow = !curveShow;
     }
-    if (key == 's') {
-        curvesTool.save("curves.yml");
+//    if (key == 's') {
+//        curvesTool.save("curves.yml");
+//    }
+//    if (key == 'l') {
+//        curvesTool.load("curves.yml");
+//    }
+
+    if (key == 's')
+    {
+        savePalette();
     }
-    if (key == 'l') {
-        curvesTool.load("curves.yml");
-    }
+
 }
 
 //--------------------------------------------------------------
