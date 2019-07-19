@@ -17,11 +17,16 @@ using namespace ofxCereal;
 
 struct CustomData
 {
-    ofMatrix4x4 transform;
-    vector<ofVec3f> points;
-    ofColor color;
+    string name;
+    vector<ofColor> palette;
 
-OFX_CEREAL_DEFINE(CEREAL_NVP(transform), CEREAL_NVP(points), CEREAL_NVP(color))
+OFX_CEREAL_DEFINE(CEREAL_NVP(name), CEREAL_NVP(palette))
+
+//    ofMatrix4x4 transform;
+//    vector<ofVec3f> points;
+//    ofColor color;
+
+//OFX_CEREAL_DEFINE(CEREAL_NVP(transform), CEREAL_NVP(points), CEREAL_NVP(color))
 
 //    void draw() {
 //        ofPushStyle();
@@ -49,8 +54,6 @@ class ofxColorManager {
 public:
 
     ofxMouseRuler mouseRuler;
-
-    void savePalette();
 
     //--
 
@@ -175,6 +178,12 @@ public:
 
     void add_color(ofColor c);
     void remove_colorLast();
+
+    // JSON
+
+    void savePalette(string p);
+    void loadPalette(string p);
+    string path_palettes = "assets/palettes/";
 
     //-
 
