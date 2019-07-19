@@ -22,6 +22,9 @@ void ofxColorManager::setup_Interface()
 //--------------------------------------------------------------
 void ofxColorManager::setup()
 {
+    mouseRuler.setup();
+    mouseRuler.toggleVisibility();
+
     //-
 
     // LAYOUT
@@ -78,6 +81,7 @@ void ofxColorManager::setup()
 
     // PALETTES
 
+    random.generateRandom();
     update_palettes();
     setup_palettes();
 
@@ -408,7 +412,7 @@ void ofxColorManager::setup_curveTool()
 
     int slider_w = 20;
     curveSlider.setup(pos_curve_x - (slider_w + pad), pos_curve_y, slider_w, amount, 0., 1., 0, true, true);
-    curveSlider.setLabelString("pos");
+    curveSlider.setLabelString("value");
 
     //-
 }
@@ -499,15 +503,16 @@ void ofxColorManager::draw_curveTool() {
     ofPopStyle();
 }
 
-//--------------------------------------------------------------
-void ofxColorManager::add_color_Palette(int i)
-{
-}
+////--------------------------------------------------------------
+//void ofxColorManager::add_color_Palette(int i)
+//{
+//}
 
 //--------------------------------------------------------------
 void ofxColorManager::setup_palettes()
 {
     int x0 = palettes_x;
+    int y0 = palettes_y;//to recall at end
 
     // 1. triad
     palettes_x = x0;
@@ -661,6 +666,8 @@ void ofxColorManager::setup_palettes()
         buttons_palette_Random.push_back(btn);
         palettes_x += (box_size+pad);
     }
+
+    palettes_y = y0; //back
 }
 
 //--------------------------------------------------------------
@@ -760,11 +767,11 @@ void ofxColorManager::draw()
 
     // COLOR BOX
 
-    int x, y, w, h;
-    x = 350;
-    y = 20;
-    w = h = 100;
-    ofRectangle rColor = ofRectangle( x, y, w, h );
+    int cx, cy, cw, ch;
+    cx = 350;
+    cy = 20;
+    cw = ch = 100;
+    ofRectangle rColor = ofRectangle( cx, cy, cw, ch );
     ofPushStyle();
     ofFill();
 //    ofSetColor( ofColor( myColor.get() ) );//TODO: mirror with params pointer ?
@@ -823,14 +830,33 @@ void ofxColorManager::draw()
 
     // ALGORTIHMIC PALETTE
 
-//    ofDrawBitmapString("Triad", 0, 0);
-//    ofDrawBitmapString("Complement Triad", 0, 0);
-//    ofDrawBitmapString("Complement (Saturation)", 0, 0);
-//    ofDrawBitmapString("Complement (Brightness)", 0, 0);
-//    ofDrawBitmapString("Monochrome (Saturation)", 0, 0);
-//    ofDrawBitmapString("Monochrome (Brightness)", 0, 0);
-//    ofDrawBitmapString("Analogue", 0, 0);
-//    ofDrawBitmapString("Random (Click to regenerate)", 0, 0);
+    int x, y, w, h;
+    h = (box_size+pad);
+
+    ofPushMatrix();
+    ofPushStyle();
+    ofSetColor(ofColor::white);
+    ofTranslate(palettes_x + 80, palettes_y + h/2 + 12);
+
+    ofTranslate(0, h);
+    ofDrawBitmapString("Triad", 0, 0);
+    ofTranslate(0, h);
+    ofDrawBitmapString("Complement Triad", 0, 0);
+    ofTranslate(0, h);
+    ofDrawBitmapString("Complement (Saturation)", 0, 0);
+    ofTranslate(0, h);
+    ofDrawBitmapString("Complement (Brightness)", 0, 0);
+    ofTranslate(0, h);
+    ofDrawBitmapString("Monochrome (Saturation)", 0, 0);
+    ofTranslate(0, h);
+    ofDrawBitmapString("Monochrome (Brightness)", 0, 0);
+    ofTranslate(0, h);
+    ofDrawBitmapString("Analogue", 0, 0);
+    ofTranslate(0, h);
+    ofDrawBitmapString("Random", 0, 0);
+
+    ofPopMatrix();
+    ofPopStyle();
 
     //--
 }
@@ -875,8 +901,10 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 
     //-
 
-    if (key == 'r') {
+    if (key == 'r')
+    {
         random.generateRandom();
+//        update_palettes();
     }
 
     //-

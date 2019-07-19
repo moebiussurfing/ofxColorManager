@@ -22,6 +22,8 @@ public:
 
     //--
 
+    // LAYOUT
+
     int gui_x, gui_y, gui_w, gui_h;
 
     int c_grad_x, c_grad_y, c_grad_w, c_grad_h;
@@ -47,14 +49,14 @@ public:
     ofxColorManager();
     ~ofxColorManager();
 
-    ofFloatColor color_p;
-
     void setup();
     void update();
     void draw();
     void exit();
 
     //-
+
+    // LISTENERS
 
     void keyPressed( ofKeyEventArgs& eventArgs);
     void keyReleased( ofKeyEventArgs& eventArgs );
@@ -68,6 +70,8 @@ public:
     void removeMouseListeners();
 
     //-
+
+    // PARAMETERS
 
     ofParameterGroup params_data;
     ofParameterGroup params_color;
@@ -88,7 +92,6 @@ public:
     ofxColorPalette random;
 //    ofxColorPalette::ColorChannel mode;
 
-//    ofParameter<bool> MODE;
     float brightness;
     float saturation;
     ofParameter<float> BRIGHTNESS;
@@ -97,6 +100,7 @@ public:
     void setup_palettes();
     void update_palettes();
     void draw_palettes();
+//    ofParameter<bool> MODE;
 
     //-
 
@@ -107,8 +111,18 @@ public:
     bool guiVisible;
     bool mouseOverGui;
 
+    //-
+
+    // COLORS
+
     ofParameter<ofFloatColor> myColor;
     ofParameter<ofFloatColor> color_backGround;
+
+    ofFloatColor color_p;//TODO: pointer color to get click from button class
+
+    //-
+
+    // USER PALETTE
 
     void add_color(ofColor c);
     void remove_colorLast();
@@ -136,9 +150,11 @@ public:
     vector<ButtonExample*> buttons_palette_Analog;//7
     vector<ButtonExample*> buttons_palette_Random;//8
 
-    void add_color_Palette(int i);
+//    void add_color_Palette(int i);
 
     //-
+
+    // GRADIENT
 
     ofxColorGradient<ofColor> gradient;
 
@@ -157,8 +173,6 @@ public:
     ofParameter<float> curve_pos;
     ofParameter<bool> bResetCurve;
     ofxSimpleSlider curveSlider;
-
-    //--
 
     //--
 
