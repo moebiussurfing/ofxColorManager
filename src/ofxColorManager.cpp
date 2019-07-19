@@ -29,23 +29,47 @@ void ofxColorManager::setup()
 
     // LAYOUT
 
+    // global mini pad between panels/objects
     pad = 5;
 
+    // gui
     gui_x = 10;
     gui_y = 10;
     gui_w = 200;
     gui_h = 330;
 
+    // user palette
     palette_x = gui_x;
     palette_y = gui_y + gui_h;
     color_size = 40;
 
+    // algorithmic palettes
     box_size = color_size;
     palettes_x = gui_x;
     palettes_y = palette_y + 2 * box_size;//2 rows
 
+    // curve tool pos
+    amount = 256;
     pos_curve_x = 525;
     pos_curve_y = 75;
+
+    // slider
+    slider_x = pos_curve_x + amount + pad;
+    slider_y = pos_curve_y;
+    slider_w = box_size;
+    slider_h = amount;
+
+    // referenced to curve pos
+    pos_curve_prev_x = amount + pad + slider_w + pad;
+    pos_curve_prev_y = 0;
+    pos_curve_prev_w = amount;
+    pos_curve_prev_h = amount;
+
+    // gradient pre curve
+    grad_w = box_size;
+    grad_x = pos_curve_x - (grad_w + pad);
+    grad_y = pos_curve_y;
+    grad_h = amount;
 
     //-
 
@@ -92,20 +116,22 @@ void ofxColorManager::setup()
 
     //-
 
+    // CURVE
+
+    setup_curveTool();
+
+    //-
+
     // GRADIENT
 
     gradient.reset();
     gradient_hard.set("GRADIENT HARD", false);
     gradient.setHardMode(gradient_hard);
+    gradient.setDrawVertical(true);
+    gradient.setDrawDirFlip(true);
 
 //    params_curve.add(gradient_hard);
 //    params_curve.add(bResetCurve);
-
-    //-
-
-    // CURVE
-
-    setup_curveTool();
 
     //-
 
@@ -436,17 +462,13 @@ void ofxColorManager::setup_curveTool()
 {
     show = true;
 
-    amount = 256;
-//    amount = 100;
+    //    amount = 256;
 
     curvesTool.setup(amount);
     curvesTool.load("curves.yml"); //needed because it fills polyline
 
-    img.allocate(amount, amount, OF_IMAGE_COLOR);
-
-//    c_grad_w = 30;
-//    c_grad_h = amount;
-//    img.allocate(c_grad_w, c_grad_h, OF_IMAGE_COLOR);
+        img.allocate(amount, amount, OF_IMAGE_COLOR);
+//    img.allocate(box_size, amount, OF_IMAGE_COLOR);
 
     curve_pos.set("CURVE POS", 0., 0., 1.);
     bResetCurve.set("RESET CURVE", false);
@@ -459,8 +481,7 @@ void ofxColorManager::setup_curveTool()
     //-
 
     // slider
-    int slider_w = 20;
-    curveSlider.setup(pos_curve_x - (slider_w + 10), pos_curve_y, slider_w, amount, 0., 1., 0, true, true);
+    curveSlider.setup(slider_x, slider_y, slider_w, slider_h, 0., 1., 0, true, true);
     curveSlider.setLabelString("value");
 
     //-
@@ -513,13 +534,12 @@ void ofxColorManager::draw_curveTool() {
 
     ofTranslate(pos_curve_x, pos_curve_y);
 
-    if(show)
+    if (show)
     {
         ofSetColor(255);
-//        curvesTool.draw();
         curvesTool.draw(0,0,cnt);
 
-        img.draw(amount + pad, 0);
+        img.draw(pos_curve_prev_x, pos_curve_prev_y);
     }
 
     // red line
@@ -838,10 +858,6 @@ void ofxColorManager::draw()
 
     // GRADIENT
 
-    grad_x = pos_curve_x;
-    grad_y = pos_curve_y + amount + pad;
-    grad_w = amount;
-    grad_h = 40;
     gradient.drawDebug(grad_x, grad_y, grad_w, grad_h);
 
     // current gradient color at point
