@@ -27,6 +27,7 @@ void ofxColorManager::setup()
     // DATA
 
     color_backGround.set("BACKGROUND", ofFloatColor::white);
+
     params_data.setName("DATA");
     params_data.add(color_backGround);
 
@@ -34,12 +35,18 @@ void ofxColorManager::setup()
 
     // COLOR
 
-    myColor.set("COLOR", ofFloatColor::black);
+    myColor.set("COLOR", ofFloatColor::red);
+    color_HUE.set("HUE", 0, 0, 255);
+    color_SAT.set("SATURATION", 0, 0, 255);
+    color_BRG.set("BRIGHTNESS", 0, 0, 255);
+
     params_color.setName("COLOR");
     params_color.add(myColor);
+    params_color.add(color_HUE);
+    params_color.add(color_SAT);
+    params_color.add(color_BRG);
 
-//    bClearPalette.set("RESET PALETTE", false);
-//    params_color.add(bClearPalette);
+    ofAddListener(params_color.parameterChangedE(), this, &ofxColorManager::Changed_control);
 
     //-
 
@@ -127,8 +134,12 @@ void ofxColorManager::setup()
     // STARTUP SETTINGS
 
     XML_params.setName("ofxColorManager");
+    XML_params.add(myColor);
     XML_params.add(color_backGround);
     XML_params.add(myColor);
+    XML_params.add(color_HUE);
+    XML_params.add(color_SAT),
+            XML_params.add(color_BRG);
     XML_params.add(BRIGHTNESS);
     XML_params.add(SATURATION);
     XML_params.add(gradient_hard);
@@ -160,22 +171,22 @@ void ofxColorManager::setup_Gui_layout()
     gui_x = 10;
     gui_y = 10;
     gui_w = 200;
-    gui_h = 350;
+    gui_h = 400;
 
     // user palette
     palette_x = gui_x;
-    palette_y = gui_y + gui_h;
+    palette_y = gui_y + gui_h + pad;
     color_size = 40;
 
     // algorithmic palettes
     box_size = color_size;
     palettes_x = gui_x;
-    palettes_y = palette_y + 2 * box_size;//2 rows
+    palettes_y = 460;
 
-    // curve tool pos
+    // curve tool pos (anchor for others)
     amount = 256;
     pos_curve_x = 525;
-    pos_curve_y = 75;
+    pos_curve_y = 25;
 
     // squared LUT referenced to curve pos (vertical)
     pos_curve_prev_x = amount + pad;
@@ -189,7 +200,7 @@ void ofxColorManager::setup_Gui_layout()
     slider_w = box_size / 2;
     slider_h = amount;
 
-    // gradient pre curve (bad sorted to the left..)
+    // gradient pre curve (bad sorted to the left but anchored to curve..)
     grad_w = box_size;
     grad_x = pos_curve_x - (grad_w + pad);
     grad_y = pos_curve_y;
@@ -198,6 +209,18 @@ void ofxColorManager::setup_Gui_layout()
     // current color bar
     currColor_x = slider_x + slider_w + pad;
     currColor_y = pos_curve_y;
+
+    // color box picker
+    color_x = 335;
+    color_y = 20;
+    color_w = color_h = 2*color_size;
+    rColor1 = ofRectangle( color_x, color_y, color_w, color_h );
+
+    // color box clicked
+    colorPick_x = 335;
+    colorPick_y = color_h + 30;
+    colorPick_w = colorPick_h = 2*color_size;
+    rColor2 = ofRectangle( colorPick_x, colorPick_y, colorPick_w, colorPick_h );
 }
 
 //--------------------------------------------------------------
@@ -249,9 +272,9 @@ void ofxColorManager::savePalette(string p)
 //--------------------------------------------------------------
 void ofxColorManager::imGui_theme()
 {
-    ofColor myColor;
+    ofColor myColor1;
     int grayDark = 0;
-    myColor = ofColor(grayDark, grayDark, grayDark, 255);//black
+    myColor1 = ofColor(grayDark, grayDark, grayDark, 255);//black
     ofColor myColor2;
     int gray = 24;
     myColor2 = ofColor(gray, gray, gray, 255);//gray1
@@ -261,29 +284,29 @@ void ofxColorManager::imGui_theme()
 
     ImGuiStyle *style = &ImGui::GetStyle();
 //    style->WindowRounding(2.);
-    style->Colors[ImGuiCol_ScrollbarBg] = ImVec4(myColor, 1.00f);
+    style->Colors[ImGuiCol_ScrollbarBg] = ImVec4(myColor1, 1.00f);
     style->Colors[ImGuiCol_ScrollbarGrab] = ImVec4(myColor2, 0.21f);
-    style->Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(myColor, 0.78f);
+    style->Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(myColor1, 0.78f);
     style->Colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(myColor2, 1.00f);
     style->Colors[ImGuiCol_CheckMark] = ImVec4(ofColor(255), 0.80f);
     style->Colors[ImGuiCol_Button] = ImVec4(myColor3, 0.8f);
-    style->Colors[ImGuiCol_ButtonHovered] = ImVec4(myColor, 0.86f);
-    style->Colors[ImGuiCol_ButtonActive] = ImVec4(myColor, 1.00f);
-    style->Colors[ImGuiCol_TitleBg] = ImVec4(myColor, 1.00f);
-    style->Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(myColor, 0.75f);
-    style->Colors[ImGuiCol_TitleBgActive] = ImVec4(myColor, 1.00f);
-    style->Colors[ImGuiCol_Header] = ImVec4(myColor, 0.76f);
+    style->Colors[ImGuiCol_ButtonHovered] = ImVec4(myColor1, 0.86f);
+    style->Colors[ImGuiCol_ButtonActive] = ImVec4(myColor1, 1.00f);
+    style->Colors[ImGuiCol_TitleBg] = ImVec4(myColor1, 1.00f);
+    style->Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(myColor1, 0.75f);
+    style->Colors[ImGuiCol_TitleBgActive] = ImVec4(myColor1, 1.00f);
+    style->Colors[ImGuiCol_Header] = ImVec4(myColor1, 0.76f);
     style->Colors[ImGuiCol_HeaderHovered] = ImVec4(myColor2, 0.86f);
-    style->Colors[ImGuiCol_HeaderActive] = ImVec4(myColor, 1.00f);
-//    style->Colors[ImGuiCol_PlotHistogramHovered] = ImVec4(myColor, 1.00f);
-//    style->Colors[ImGuiCol_PlotLinesHovered] = ImVec4(myColor, 1.00f);
-//    style->Colors[ImGuiCol_ResizeGripHovered] = ImVec4(myColor, 0.78f);
-//    style->Colors[ImGuiCol_ColumnHovered] = ImVec4(myColor, 0.78f);
-//    style->Colors[ImGuiCol_HeaderHovered] = ImVec4(myColor, 0.86f);
-//    style->Colors[ImGuiCol_PlotHistogramHovered] = ImVec4(myColor, 1.00f);
-    style->Colors[ImGuiCol_FrameBg] = ImVec4(myColor, 1.00f);
+    style->Colors[ImGuiCol_HeaderActive] = ImVec4(myColor1, 1.00f);
+//    style->Colors[ImGuiCol_PlotHistogramHovered] = ImVec4(myColor1, 1.00f);
+//    style->Colors[ImGuiCol_PlotLinesHovered] = ImVec4(myColor1, 1.00f);
+//    style->Colors[ImGuiCol_ResizeGripHovered] = ImVec4(myColor1, 0.78f);
+//    style->Colors[ImGuiCol_ColumnHovered] = ImVec4(myColor1, 0.78f);
+//    style->Colors[ImGuiCol_HeaderHovered] = ImVec4(myColor1, 0.86f);
+//    style->Colors[ImGuiCol_PlotHistogramHovered] = ImVec4(myColor1, 1.00f);
+    style->Colors[ImGuiCol_FrameBg] = ImVec4(myColor1, 1.00f);
     style->Colors[ImGuiCol_FrameBgHovered] = ImVec4(myColor2, 0.78f);//hover
-    style->Colors[ImGuiCol_FrameBgActive] = ImVec4(myColor, 1.00f);
+    style->Colors[ImGuiCol_FrameBgActive] = ImVec4(myColor1, 1.00f);
 }
 
 //--------------------------------------------------------------
@@ -430,6 +453,10 @@ bool ofxColorManager::imGui()
             if (ofxImGui::BeginTree(this->params_control, mainSettings))
             {
                 ofxImGui::AddParameter(this->myColor, true);
+                ofxImGui::AddParameter(this->color_HUE);
+                ofxImGui::AddParameter(this->color_SAT);
+                ofxImGui::AddParameter(this->color_BRG);
+
                 ofxImGui::AddParameter(this->bRandomColor);
                 ofxImGui::AddParameter(this->bAddColor);
                 ofxImGui::AddParameter(this->bRemoveColor);
@@ -634,9 +661,18 @@ void ofxColorManager::setup_palettes()
     int x0 = palettes_x;
     int y0 = palettes_y;//to recall at end
 
+    // palettes labels
+    int btn_plt_w, btn_plt_h, btn_pad_w;
+    ofColor btn_plt_c;
+    btn_plt_c.set(ofColor(128));
+    btn_plt_w = 200;
+    btn_plt_h = 30;
+    btn_pad_w = 300;
+
     // 1. triad
     palettes_x = x0;
     palettes_y += (box_size+pad);
+
     for (int i = 0 ; i < triad.size(); i++) {
         ButtonExample *btn = new ButtonExample();
         btn->setup(palettes_x, palettes_y, box_size, box_size);
@@ -656,6 +692,7 @@ void ofxColorManager::setup_palettes()
     // 2. complement triad
     palettes_x = x0;
     palettes_y += (box_size+pad);
+
     for (int i = 0 ; i < complementTriad.size(); i++) {
         ButtonExample *btn = new ButtonExample();
         btn->setup(palettes_x, palettes_y, box_size, box_size);
@@ -675,6 +712,7 @@ void ofxColorManager::setup_palettes()
     // 3. complement sat
     palettes_x = x0;
     palettes_y += (box_size+pad);
+
     for (int i = 0 ; i < complement.size(); i++) {
         ButtonExample *btn = new ButtonExample();
         btn->setup(palettes_x, palettes_y, box_size, box_size);
@@ -694,6 +732,7 @@ void ofxColorManager::setup_palettes()
     // 4. complement brgt
     palettes_x = x0;
     palettes_y += (box_size+pad);
+
     for (int i = 0 ; i < complementBrightness.size(); i++) {
         ButtonExample *btn = new ButtonExample();
         btn->setup(palettes_x, palettes_y, box_size, box_size);
@@ -713,6 +752,7 @@ void ofxColorManager::setup_palettes()
     // 5. mono sat
     palettes_x = x0;
     palettes_y += (box_size+pad);
+
     for (int i = 0 ; i < monochrome.size(); i++) {
         ButtonExample *btn = new ButtonExample();
         btn->setup(palettes_x, palettes_y, box_size, box_size);
@@ -732,6 +772,7 @@ void ofxColorManager::setup_palettes()
     // 6. mono brgt
     palettes_x = x0;
     palettes_y += (box_size+pad);
+
     for (int i = 0 ; i < monochromeBrightness.size(); i++) {
         ButtonExample *btn = new ButtonExample();
         btn->setup(palettes_x, palettes_y, box_size, box_size);
@@ -751,6 +792,7 @@ void ofxColorManager::setup_palettes()
     // 7. analogue
     palettes_x = x0;
     palettes_y += (box_size+pad);
+
     for (int i=0; i<analogue.size(); i++)
     {
         ButtonExample *btn = new ButtonExample();
@@ -771,6 +813,7 @@ void ofxColorManager::setup_palettes()
     // 8. random
     palettes_x = x0;
     palettes_y += (box_size+pad);
+
     for (int i = 0 ; i < random.size(); i++) {
         ButtonExample *btn = new ButtonExample();
         btn->setup(palettes_x, palettes_y, box_size, box_size);
@@ -788,6 +831,83 @@ void ofxColorManager::setup_palettes()
     }
 
     palettes_y = y0; //back
+
+    //--
+
+    // LABELS PICKER : TODO: maybe can use simpler thing than ofxInterface for this
+//    {
+//        ButtonExample *btn = new ButtonExample();
+//        btn->setup(palettes_x + btn_pad_w, palettes_y, btn_plt_w, btn_plt_h);
+//        btn->setLocked(true);
+//        btn->setName("TRIAD");
+//        btn->setColor(btn_plt_c);
+//        scene->addChild(btn);
+//        btns_plt_Selector.push_back(btn);
+//    }
+//    {
+//        ButtonExample *btn = new ButtonExample();
+//        btn->setup(palettes_x + btn_pad_w, palettes_y, btn_plt_w, btn_plt_h);
+//        btn->setLocked(true);
+//        btn->setName("COMPLEMENT TRIAD");
+//        btn->setColor(btn_plt_c);
+//        scene->addChild(btn);
+//        btns_plt_Selector.push_back(btn);
+//    }
+//    {
+//        ButtonExample *btn = new ButtonExample();
+//        btn->setup(palettes_x + btn_pad_w, palettes_y, btn_plt_w, btn_plt_h);
+//        btn->setLocked(true);
+//        btn->setName("COMPLEMENT SATURATION");
+//        btn->setColor(btn_plt_c);
+//        scene->addChild(btn);
+//        btns_plt_Selector.push_back(btn);
+//    }
+//    {
+//        ButtonExample *btn = new ButtonExample();
+//        btn->setup(palettes_x + btn_pad_w, palettes_y, btn_plt_w, btn_plt_h);
+//        btn->setLocked(true);
+//        btn->setName("COMPLEMENT BRIGHTNESS");
+//        btn->setColor(btn_plt_c);
+//        scene->addChild(btn);
+//        btns_plt_Selector.push_back(btn);
+//    }
+//    {
+//        ButtonExample *btn = new ButtonExample();
+//        btn->setup(palettes_x + btn_pad_w, palettes_y, btn_plt_w, btn_plt_h);
+//        btn->setLocked(true);
+//        btn->setName("MONOCHROME SATURATION");
+//        btn->setColor(btn_plt_c);
+//        scene->addChild(btn);
+//        btns_plt_Selector.push_back(btn);
+//    }
+//    {
+//        ButtonExample *btn = new ButtonExample();
+//        btn->setup(palettes_x + btn_pad_w, palettes_y, btn_plt_w, btn_plt_h);
+//        btn->setLocked(true);
+//        btn->setName("MONOCHROME BRIGHTNESS");
+//        btn->setColor(btn_plt_c);
+//        scene->addChild(btn);
+//        btns_plt_Selector.push_back(btn);
+//    }
+//    {
+//        ButtonExample *btn = new ButtonExample();
+//        btn->setup(palettes_x + btn_pad_w, palettes_y, btn_plt_w, btn_plt_h);
+//        btn->setLocked(true);
+//        btn->setName("ANALOGUE");
+//        btn->setColor(btn_plt_c);
+//        scene->addChild(btn);
+//        btns_plt_Selector.push_back(btn);
+//    }
+//    {
+//        ButtonExample *btn = new ButtonExample();
+//        btn->setup(palettes_x + btn_pad_w, palettes_y, btn_plt_w, btn_plt_h);
+//        btn->setLocked(true);
+//        btn->setName("RANDOM");
+//        btn->setColor(btn_plt_c);
+//        scene->addChild(btn);
+//        btns_plt_Selector.push_back(btn);
+//    }
+
 }
 
 //--------------------------------------------------------------
@@ -885,18 +1005,22 @@ void ofxColorManager::draw()
 
     //-
 
-    // COLOR BOX
+    // COLOR BOX PICKER (CURRENT)
 
-    int cx, cy, cw, ch;
-    cx = 350;
-    cy = 20;
-    cw = ch = 100;
-    ofRectangle rColor = ofRectangle( cx, cy, cw, ch );
     ofPushStyle();
     ofFill();
-//    ofSetColor( ofColor( myColor.get() ) );//TODO: mirror with params pointer ?
+    ofSetColor( ofColor( myColor.get() ) );
+    ofDrawRectangle(rColor1);
+    ofPopStyle();
+
+    //-
+
+    // COLOR BOX CLICKER
+
+    ofPushStyle();
+    ofFill();
     ofSetColor( ofColor( color_p ) );
-    ofDrawRectangle(rColor);
+    ofDrawRectangle(rColor2);
     ofPopStyle();
 
     //-
@@ -904,7 +1028,6 @@ void ofxColorManager::draw()
     // INTERFACE
 
     draw_Interface();
-
 
     //-
 
@@ -1023,8 +1146,35 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
     if (name != "CURVE POS")
         ofLogNotice() << "Changed_control: " << name << ":" << e;
 
-    // PALLETE
-    if (name == "RANDOM COLOR")
+    // COLOR
+    if (name == "COLOR")
+    {
+        update_palettes();
+    }
+    else if (name == "HUE")
+    {
+        ofColor c;
+        c.set(ofColor( myColor.get() ));
+        c.setHue(color_HUE);
+        myColor.set(c);
+    }
+    else if (name == "SATURATION")
+    {
+        ofColor c;
+        c.set(ofColor( myColor.get() ));
+        c.setSaturation(color_SAT);
+        myColor.set(c);
+    }
+    else if (name == "BRIGHTNESS")
+    {
+        ofColor c;
+        c.set(ofColor( myColor.get() ));
+        c.setBrightness(color_BRG);
+        myColor.set(c);
+    }
+
+        // PALLETE
+    else if (name == "RANDOM COLOR")
     {
         if (bRandomColor)
         {
@@ -1065,7 +1215,7 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
         }
     }
 
-    // CURVE
+        // CURVE
     else if (name == "CURVE POS")
     {
 //        if ( )
@@ -1084,7 +1234,7 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
     }
     else if (name == "GRADIENT HARD")
     {
-            gradient.setHardMode(gradient_hard);
+        gradient.setHardMode(gradient_hard);
     }
 }
 
@@ -1246,6 +1396,7 @@ void ofxColorManager::exit()
     removeKeysListeners();
     removeMouseListeners();
     ofRemoveListener(params_control.parameterChangedE(), this, &ofxColorManager::Changed_control);
+    ofRemoveListener(params_color.parameterChangedE(), this, &ofxColorManager::Changed_control);
     ofRemoveListener(params_palette.parameterChangedE(), this, &ofxColorManager::Changed_control);
     ofRemoveListener(params_curve.parameterChangedE(), this, &ofxColorManager::Changed_control);
 

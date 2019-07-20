@@ -92,6 +92,9 @@ public:
     int currColor_x;
     int currColor_y;
 
+    int colorPick_x, colorPick_y, colorPick_w, colorPick_h;
+    int color_x, color_y, color_w, color_h;
+
     //--
 
     ofxColorManager();
@@ -173,9 +176,14 @@ public:
     // COLORS
 
     ofParameter<ofFloatColor> myColor;
+    ofRectangle rColor1;
     ofParameter<ofFloatColor> color_backGround;
-
+    ofRectangle rColor2;
     ofFloatColor color_p;//TODO: pointer color to get click from button class
+
+    ofParameter<int> color_HUE;
+    ofParameter<int> color_SAT;
+    ofParameter<int> color_BRG;
 
     //-
 
@@ -216,6 +224,8 @@ public:
     vector<ButtonExample*> btns_plt_MonoBrgt;    // 6
     vector<ButtonExample*> btns_plt_Analog;      // 7
     vector<ButtonExample*> btns_plt_Random;      // 8
+
+    vector<ButtonExample*> btns_plt_Selector;    // 1-8
 
 //    void add_color_Palette(int i);
 
