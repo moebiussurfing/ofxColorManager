@@ -591,7 +591,17 @@ void ofxColorManager::draw_curveTool() {
         ofRectangle r = ofRectangle( currColor_x, currColor_y, box_size/2, slider_h );
         ofPushStyle();
         ofFill();
-        ofSetColor( gradient.getColorAtPercent( curve_pos ) );
+        ofColor c;
+        float curveVal;//out of curve
+
+//        curveVal = curvesTool[ ofMap( curve_pos, 0., 1., 0, amount ) ];
+//        curveVal = curvesTool[curve_pos];
+          curveVal = curvesTool.getAtPercent(curve_pos);
+
+        c.set(gradient.getColorAtPercent( curveVal ));      // LUT
+//        c.set(gradient.getColorAtPercent( curve_pos ));   // GRADIENT
+
+        ofSetColor(c);
         ofDrawRectangle(r);
         ofPopStyle();
 
@@ -1149,7 +1159,16 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
     // COLOR
     if (name == "COLOR")
     {
-        update_palettes();
+//        update_palettes();
+//        myColor.get().setHsb
+//                (	float 	hue,
+//                float 	saturation,
+//                float 	brightness,
+//                float 	alpha = limit()
+//        )
+        color_HUE = 255 * myColor.get().getHue();
+//        color_SAT = 255 * myColor.get().getBrightness();//BUG
+//        color_BRG = 255 * myColor.get().getSaturation();
     }
     else if (name == "HUE")
     {

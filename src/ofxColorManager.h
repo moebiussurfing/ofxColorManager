@@ -22,29 +22,7 @@ struct CustomData
 
 OFX_CEREAL_DEFINE(CEREAL_NVP(name), CEREAL_NVP(palette))
 
-//    ofMatrix4x4 transform;
-//    vector<ofVec3f> points;
-//    ofColor color;
-
-//OFX_CEREAL_DEFINE(CEREAL_NVP(transform), CEREAL_NVP(points), CEREAL_NVP(color))
-
-//    void draw() {
-//        ofPushStyle();
-//        ofSetColor(color);
-//        ofPushMatrix();
-//        ofMultMatrix(transform);
-//
-//        glBegin(GL_LINE_STRIP);
-//        for (auto v : points) {
-//            glVertex3fv(&v.x);
-//        }
-//        glEnd();
-//
-//        ofPopMatrix();
-//        ofPopStyle();
-//    }
 };
-
 
 class ofxColorManager {
 
@@ -190,7 +168,7 @@ public:
     // USER PALETTE
 
     vector<ofColor> palette;
-    vector<ofColor> colors;
+//    vector<ofColor> colors;
 
     void add_color(ofColor c);
     void remove_colorLast();
@@ -207,7 +185,7 @@ public:
     // INTERFACE
 
     ofxInterface::Node* scene;
-	vector<ButtonExample*> btns_palette;
+    vector<ButtonExample*> btns_palette;
     void setup_Interface();
     void update_Interface();
     void draw_Interface();
