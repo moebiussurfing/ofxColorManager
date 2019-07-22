@@ -73,6 +73,675 @@
 				<key>sourceTree</key>
 				<string>SOURCE_ROOT</string>
 			</dict>
+			<key>26A541233BC6F736E758F718</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxJSONElement.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxJSON/src/ofxJSONElement.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>BEDFEE7400C58EA4E412B757</key>
+			<dict>
+				<key>fileRef</key>
+				<string>F2B099E6BD1199664C48B177</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>F2B099E6BD1199664C48B177</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxJSONElement.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxJSON/src/ofxJSONElement.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>292AF6148769654D0DF26018</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>1645F56257269CD0356320BD</string>
+					<string>F2B099E6BD1199664C48B177</string>
+					<string>26A541233BC6F736E758F718</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>src</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>1645F56257269CD0356320BD</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxJSON.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxJSON/src/ofxJSON.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>CCDC6F9CCF925CC402160B85</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>21BDE665988474F1B1F4D302</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>src</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>FB84AAF8D1B7A95266DB5C09</key>
+			<dict>
+				<key>fileRef</key>
+				<string>21BDE665988474F1B1F4D302</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>21BDE665988474F1B1F4D302</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>jsoncpp.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxJSON/libs/jsoncpp/src/jsoncpp.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>2C7CF000B7B4F782C187C353</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>json.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxJSON/libs/jsoncpp/include/json/json.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>58AD3BD71B781D9BC25763C8</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>61313493CDB52744E22A604D</string>
+					<string>2C7CF000B7B4F782C187C353</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>json</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>D486FC87F063317BB47E9FAC</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>58AD3BD71B781D9BC25763C8</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>include</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>977A836DD2C489CCC5E330FF</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>D486FC87F063317BB47E9FAC</string>
+					<string>CCDC6F9CCF925CC402160B85</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>jsoncpp</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>F40E80CB2D443CBA9581DD03</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>977A836DD2C489CCC5E330FF</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>libs</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>2865DAEF86B1907A704CA70B</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>F40E80CB2D443CBA9581DD03</string>
+					<string>292AF6148769654D0DF26018</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>ofxJSON</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>61313493CDB52744E22A604D</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>json-forwards.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxJSON/libs/jsoncpp/include/json/json-forwards.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>C4A10A9024D6DDF49910C7E2</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>WidgetViewLayout.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxInterfaceWidgets/src/widgets/WidgetViewLayout.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>8E227F7FC10450AC2BF0DC96</key>
+			<dict>
+				<key>fileRef</key>
+				<string>747BBC463511D86E11E7F69D</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>747BBC463511D86E11E7F69D</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>WidgetViewLayout.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxInterfaceWidgets/src/widgets/WidgetViewLayout.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>13B8222AC8C7410B36A8F667</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>WidgetView.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxInterfaceWidgets/src/widgets/WidgetView.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>6040400B83D2057D2917DB53</key>
+			<dict>
+				<key>fileRef</key>
+				<string>F8121B8B670D52714A29E25B</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>F8121B8B670D52714A29E25B</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>WidgetView.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxInterfaceWidgets/src/widgets/WidgetView.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>CF538D8973B02DBC6D76F0A0</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>Widget.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxInterfaceWidgets/src/widgets/Widget.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>ECA8DB70BA11041923B927CC</key>
+			<dict>
+				<key>fileRef</key>
+				<string>5BCCD3D52C7A226478D392E7</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>5BCCD3D52C7A226478D392E7</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>Widget.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxInterfaceWidgets/src/widgets/Widget.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>DC09EDAEEF67C9ECD46ADCA1</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>TextureView.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxInterfaceWidgets/src/widgets/TextureView.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>9A7B589FF1ECAFE71D09790D</key>
+			<dict>
+				<key>fileRef</key>
+				<string>F7FBA5BDDAE9102CB4FA5E11</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>F7FBA5BDDAE9102CB4FA5E11</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>TextureView.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxInterfaceWidgets/src/widgets/TextureView.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>6DF103792E3FE0C17F91FB58</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>Slider.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxInterfaceWidgets/src/widgets/Slider.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>6F195E7227E6DA50AF14B91C</key>
+			<dict>
+				<key>fileRef</key>
+				<string>7B21BBC87DBFCA503A003A6E</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>7B21BBC87DBFCA503A003A6E</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>Slider.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxInterfaceWidgets/src/widgets/Slider.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>48099F73B0B7946523CD2EF2</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ScrollView.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxInterfaceWidgets/src/widgets/ScrollView.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>AD6F2CDB3BDCD130CD2C0ED9</key>
+			<dict>
+				<key>fileRef</key>
+				<string>8751A89E6EE5DF5C4C1C0072</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>8751A89E6EE5DF5C4C1C0072</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ScrollView.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxInterfaceWidgets/src/widgets/ScrollView.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>486C7B161F377399FE5B6FEF</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>Label.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxInterfaceWidgets/src/widgets/Label.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>C256A1FF0ED23D777B7E4E8C</key>
+			<dict>
+				<key>fileRef</key>
+				<string>5F51594026F71F8C5B8FE04C</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>5F51594026F71F8C5B8FE04C</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>Label.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxInterfaceWidgets/src/widgets/Label.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>E087CBC33554000DBB1273D1</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ImageView.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxInterfaceWidgets/src/widgets/ImageView.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>A2FCB3FF0E9AAE5DA169D9E8</key>
+			<dict>
+				<key>fileRef</key>
+				<string>7A03161F329372284106A7F3</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>7A03161F329372284106A7F3</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ImageView.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxInterfaceWidgets/src/widgets/ImageView.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>23DA78712A154CE2661E821D</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>Button.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxInterfaceWidgets/src/widgets/Button.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>0F5CB85EF445EEEE787E2BB4</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>7109D19AD88CB072CF62A9AC</string>
+					<string>23DA78712A154CE2661E821D</string>
+					<string>7A03161F329372284106A7F3</string>
+					<string>E087CBC33554000DBB1273D1</string>
+					<string>5F51594026F71F8C5B8FE04C</string>
+					<string>486C7B161F377399FE5B6FEF</string>
+					<string>8751A89E6EE5DF5C4C1C0072</string>
+					<string>48099F73B0B7946523CD2EF2</string>
+					<string>7B21BBC87DBFCA503A003A6E</string>
+					<string>6DF103792E3FE0C17F91FB58</string>
+					<string>F7FBA5BDDAE9102CB4FA5E11</string>
+					<string>DC09EDAEEF67C9ECD46ADCA1</string>
+					<string>5BCCD3D52C7A226478D392E7</string>
+					<string>CF538D8973B02DBC6D76F0A0</string>
+					<string>F8121B8B670D52714A29E25B</string>
+					<string>13B8222AC8C7410B36A8F667</string>
+					<string>747BBC463511D86E11E7F69D</string>
+					<string>C4A10A9024D6DDF49910C7E2</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>widgets</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>45A36AA943A2C79ED0024F33</key>
+			<dict>
+				<key>fileRef</key>
+				<string>7109D19AD88CB072CF62A9AC</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>7109D19AD88CB072CF62A9AC</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>Button.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxInterfaceWidgets/src/widgets/Button.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>908B543C3EBE982CE1A291E5</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>1726B2BDA9ADC726F1EC9B4F</string>
+					<string>0F5CB85EF445EEEE787E2BB4</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>src</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>075F5D89219CC26FB7D909D1</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>908B543C3EBE982CE1A291E5</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>ofxInterfaceWidgets</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>1726B2BDA9ADC726F1EC9B4F</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxInterfaceWidgets.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxInterfaceWidgets/src/ofxInterfaceWidgets.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>AC637324DF5CA23DFDFDC770</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxInterfaceKeyboard.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxInterfaceKeyboard/src/ofxInterfaceKeyboard.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>75436081B4A9BDE1BE2D0F6E</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>959DD9906585B52715DE0A1B</string>
+					<string>AC637324DF5CA23DFDFDC770</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>src</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>2FA23A2E92E4AC455468B1C6</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>75436081B4A9BDE1BE2D0F6E</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>ofxInterfaceKeyboard</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>0E19CC3F8D636BF96ECF20C9</key>
+			<dict>
+				<key>fileRef</key>
+				<string>959DD9906585B52715DE0A1B</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>959DD9906585B52715DE0A1B</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxInterfaceKeyboard.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxInterfaceKeyboard/src/ofxInterfaceKeyboard.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
 			<key>51BFD4ACF6836282F18FEB2F</key>
 			<dict>
 				<key>explicitFileType</key>
@@ -1032,6 +1701,187 @@
 				<string>imgui.cpp</string>
 				<key>path</key>
 				<string>../../../addons/ofxImGui/libs/imgui/src/imgui.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>093C39E85E4407D3C432539E</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxFontStash.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxFontStash/src/ofxFontStash.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>EE9FC485BA17E42108FEDBF5</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>D8A535D3474A0EAB684CAC5D</string>
+					<string>093C39E85E4407D3C432539E</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>src</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>7B388D550037229D99E7F52A</key>
+			<dict>
+				<key>fileRef</key>
+				<string>D8A535D3474A0EAB684CAC5D</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>D8A535D3474A0EAB684CAC5D</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxFontStash.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxFontStash/src/ofxFontStash.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>BDA8CA36896AACFB09C55252</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>stb_truetype.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxFontStash/libs/fontstash/src/stb_truetype.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>522FFFB6EB3DA57CCB07EF9A</key>
+			<dict>
+				<key>fileRef</key>
+				<string>DC55FEC740DD28FBDD2D4406</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>DC55FEC740DD28FBDD2D4406</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.c</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>stb_truetype.c</string>
+				<key>path</key>
+				<string>../../../addons/ofxFontStash/libs/fontstash/src/stb_truetype.c</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>9B3F7D0AAB9DF619553ADA1B</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>fontstash.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxFontStash/libs/fontstash/src/fontstash.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>4C084EBF7CBFDB1868AFF470</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>D5AE78144E3980BD0B4445D7</string>
+					<string>9B3F7D0AAB9DF619553ADA1B</string>
+					<string>DC55FEC740DD28FBDD2D4406</string>
+					<string>BDA8CA36896AACFB09C55252</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>src</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>A721EFB518B2BFE659AAD339</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>4C084EBF7CBFDB1868AFF470</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>fontstash</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>787C5E98195D5F7A798BEDA5</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>A721EFB518B2BFE659AAD339</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>libs</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>B7006DB7785B098B4504962B</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>787C5E98195D5F7A798BEDA5</string>
+					<string>EE9FC485BA17E42108FEDBF5</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>ofxFontStash</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>801397981E78A4CBDE809376</key>
+			<dict>
+				<key>fileRef</key>
+				<string>D5AE78144E3980BD0B4445D7</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>D5AE78144E3980BD0B4445D7</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.c</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>fontstash.c</string>
+				<key>path</key>
+				<string>../../../addons/ofxFontStash/libs/fontstash/src/fontstash.c</string>
 				<key>sourceTree</key>
 				<string>SOURCE_ROOT</string>
 			</dict>
@@ -2594,12 +3444,26 @@ fi
 						<string>../../../addons/ofxColorManager/src</string>
 						<string>../../../addons/ofxColorPalette/src</string>
 						<string>../../../addons/ofxCurvesTool/src</string>
+						<string>../../../addons/ofxFontStash/libs</string>
+						<string>../../../addons/ofxFontStash/libs/fontstash</string>
+						<string>../../../addons/ofxFontStash/libs/fontstash/src</string>
+						<string>../../../addons/ofxFontStash/src</string>
+						<string>../../../addons/ofxFontStash/libs/fontstash/src</string>
 						<string>../../../addons/ofxImGui/libs</string>
 						<string>../../../addons/ofxImGui/libs/imgui</string>
 						<string>../../../addons/ofxImGui/libs/imgui/src</string>
 						<string>../../../addons/ofxImGui/src</string>
 						<string>../../../addons/ofxInterface/src</string>
 						<string>../../../addons/ofxInterface/src/components</string>
+						<string>../../../addons/ofxInterfaceKeyboard/src</string>
+						<string>../../../addons/ofxInterfaceWidgets/src</string>
+						<string>../../../addons/ofxInterfaceWidgets/src/widgets</string>
+						<string>../../../addons/ofxJSON/libs</string>
+						<string>../../../addons/ofxJSON/libs/jsoncpp</string>
+						<string>../../../addons/ofxJSON/libs/jsoncpp/include</string>
+						<string>../../../addons/ofxJSON/libs/jsoncpp/include/json</string>
+						<string>../../../addons/ofxJSON/libs/jsoncpp/src</string>
+						<string>../../../addons/ofxJSON/src</string>
 						<string>../../../addons/ofxMouseRuler/src</string>
 					</array>
 					<key>MACOSX_DEPLOYMENT_TARGET</key>
@@ -2648,12 +3512,26 @@ fi
 						<string>../../../addons/ofxColorManager/src</string>
 						<string>../../../addons/ofxColorPalette/src</string>
 						<string>../../../addons/ofxCurvesTool/src</string>
+						<string>../../../addons/ofxFontStash/libs</string>
+						<string>../../../addons/ofxFontStash/libs/fontstash</string>
+						<string>../../../addons/ofxFontStash/libs/fontstash/src</string>
+						<string>../../../addons/ofxFontStash/src</string>
+						<string>../../../addons/ofxFontStash/libs/fontstash/src</string>
 						<string>../../../addons/ofxImGui/libs</string>
 						<string>../../../addons/ofxImGui/libs/imgui</string>
 						<string>../../../addons/ofxImGui/libs/imgui/src</string>
 						<string>../../../addons/ofxImGui/src</string>
 						<string>../../../addons/ofxInterface/src</string>
 						<string>../../../addons/ofxInterface/src/components</string>
+						<string>../../../addons/ofxInterfaceKeyboard/src</string>
+						<string>../../../addons/ofxInterfaceWidgets/src</string>
+						<string>../../../addons/ofxInterfaceWidgets/src/widgets</string>
+						<string>../../../addons/ofxJSON/libs</string>
+						<string>../../../addons/ofxJSON/libs/jsoncpp</string>
+						<string>../../../addons/ofxJSON/libs/jsoncpp/include</string>
+						<string>../../../addons/ofxJSON/libs/jsoncpp/include/json</string>
+						<string>../../../addons/ofxJSON/libs/jsoncpp/src</string>
+						<string>../../../addons/ofxJSON/src</string>
 						<string>../../../addons/ofxMouseRuler/src</string>
 					</array>
 					<key>ICON</key>
@@ -2695,8 +3573,12 @@ fi
 					<string>01D059B3D9AA705900B182CC</string>
 					<string>ADD30217DA6E9945E447F8A3</string>
 					<string>20FC95435D1FC200D4265565</string>
+					<string>B7006DB7785B098B4504962B</string>
 					<string>768C3255AF2F3E1A78DC4DF4</string>
 					<string>2CCFAD75F0D6A81E947E5D26</string>
+					<string>2FA23A2E92E4AC455468B1C6</string>
+					<string>075F5D89219CC26FB7D909D1</string>
+					<string>2865DAEF86B1907A704CA70B</string>
 					<string>52F81B91F554ACD32FA1F358</string>
 				</array>
 				<key>isa</key>
@@ -5470,12 +6352,26 @@ fi
 						<string>../../../addons/ofxColorManager/src</string>
 						<string>../../../addons/ofxColorPalette/src</string>
 						<string>../../../addons/ofxCurvesTool/src</string>
+						<string>../../../addons/ofxFontStash/libs</string>
+						<string>../../../addons/ofxFontStash/libs/fontstash</string>
+						<string>../../../addons/ofxFontStash/libs/fontstash/src</string>
+						<string>../../../addons/ofxFontStash/src</string>
+						<string>../../../addons/ofxFontStash/libs/fontstash/src</string>
 						<string>../../../addons/ofxImGui/libs</string>
 						<string>../../../addons/ofxImGui/libs/imgui</string>
 						<string>../../../addons/ofxImGui/libs/imgui/src</string>
 						<string>../../../addons/ofxImGui/src</string>
 						<string>../../../addons/ofxInterface/src</string>
 						<string>../../../addons/ofxInterface/src/components</string>
+						<string>../../../addons/ofxInterfaceKeyboard/src</string>
+						<string>../../../addons/ofxInterfaceWidgets/src</string>
+						<string>../../../addons/ofxInterfaceWidgets/src/widgets</string>
+						<string>../../../addons/ofxJSON/libs</string>
+						<string>../../../addons/ofxJSON/libs/jsoncpp</string>
+						<string>../../../addons/ofxJSON/libs/jsoncpp/include</string>
+						<string>../../../addons/ofxJSON/libs/jsoncpp/include/json</string>
+						<string>../../../addons/ofxJSON/libs/jsoncpp/src</string>
+						<string>../../../addons/ofxJSON/src</string>
 						<string>../../../addons/ofxMouseRuler/src</string>
 					</array>
 					<key>MACOSX_DEPLOYMENT_TARGET</key>
@@ -5544,12 +6440,26 @@ fi
 						<string>../../../addons/ofxColorManager/src</string>
 						<string>../../../addons/ofxColorPalette/src</string>
 						<string>../../../addons/ofxCurvesTool/src</string>
+						<string>../../../addons/ofxFontStash/libs</string>
+						<string>../../../addons/ofxFontStash/libs/fontstash</string>
+						<string>../../../addons/ofxFontStash/libs/fontstash/src</string>
+						<string>../../../addons/ofxFontStash/src</string>
+						<string>../../../addons/ofxFontStash/libs/fontstash/src</string>
 						<string>../../../addons/ofxImGui/libs</string>
 						<string>../../../addons/ofxImGui/libs/imgui</string>
 						<string>../../../addons/ofxImGui/libs/imgui/src</string>
 						<string>../../../addons/ofxImGui/src</string>
 						<string>../../../addons/ofxInterface/src</string>
 						<string>../../../addons/ofxInterface/src/components</string>
+						<string>../../../addons/ofxInterfaceKeyboard/src</string>
+						<string>../../../addons/ofxInterfaceWidgets/src</string>
+						<string>../../../addons/ofxInterfaceWidgets/src/widgets</string>
+						<string>../../../addons/ofxJSON/libs</string>
+						<string>../../../addons/ofxJSON/libs/jsoncpp</string>
+						<string>../../../addons/ofxJSON/libs/jsoncpp/include</string>
+						<string>../../../addons/ofxJSON/libs/jsoncpp/include/json</string>
+						<string>../../../addons/ofxJSON/libs/jsoncpp/src</string>
+						<string>../../../addons/ofxJSON/src</string>
 						<string>../../../addons/ofxMouseRuler/src</string>
 					</array>
 					<key>MACOSX_DEPLOYMENT_TARGET</key>
@@ -5582,6 +6492,9 @@ fi
 					<string>208330A0A93D54E1B72C8A3E</string>
 					<string>CABA2A99CFDFE993141568F9</string>
 					<string>368CCF86BF3EF63BAFDFA84A</string>
+					<string>801397981E78A4CBDE809376</string>
+					<string>522FFFB6EB3DA57CCB07EF9A</string>
+					<string>7B388D550037229D99E7F52A</string>
 					<string>5C2607C471F8D48C0036C56E</string>
 					<string>E984796BE84AA4315636B6E7</string>
 					<string>00413C35AAE31B483D7538AB</string>
@@ -5602,6 +6515,18 @@ fi
 					<string>8ED7BFA2A5E75B287D7F938C</string>
 					<string>6DBAFCAC912E054401C28548</string>
 					<string>C9AA4E39732FC73FED43B1C7</string>
+					<string>0E19CC3F8D636BF96ECF20C9</string>
+					<string>45A36AA943A2C79ED0024F33</string>
+					<string>A2FCB3FF0E9AAE5DA169D9E8</string>
+					<string>C256A1FF0ED23D777B7E4E8C</string>
+					<string>AD6F2CDB3BDCD130CD2C0ED9</string>
+					<string>6F195E7227E6DA50AF14B91C</string>
+					<string>9A7B589FF1ECAFE71D09790D</string>
+					<string>ECA8DB70BA11041923B927CC</string>
+					<string>6040400B83D2057D2917DB53</string>
+					<string>8E227F7FC10450AC2BF0DC96</string>
+					<string>FB84AAF8D1B7A95266DB5C09</string>
+					<string>BEDFEE7400C58EA4E412B757</string>
 					<string>A05B3B5EB678BCB79C972FFC</string>
 				</array>
 				<key>isa</key>
@@ -5709,12 +6634,26 @@ fi
 						<string>../../../addons/ofxColorManager/src</string>
 						<string>../../../addons/ofxColorPalette/src</string>
 						<string>../../../addons/ofxCurvesTool/src</string>
+						<string>../../../addons/ofxFontStash/libs</string>
+						<string>../../../addons/ofxFontStash/libs/fontstash</string>
+						<string>../../../addons/ofxFontStash/libs/fontstash/src</string>
+						<string>../../../addons/ofxFontStash/src</string>
+						<string>../../../addons/ofxFontStash/libs/fontstash/src</string>
 						<string>../../../addons/ofxImGui/libs</string>
 						<string>../../../addons/ofxImGui/libs/imgui</string>
 						<string>../../../addons/ofxImGui/libs/imgui/src</string>
 						<string>../../../addons/ofxImGui/src</string>
 						<string>../../../addons/ofxInterface/src</string>
 						<string>../../../addons/ofxInterface/src/components</string>
+						<string>../../../addons/ofxInterfaceKeyboard/src</string>
+						<string>../../../addons/ofxInterfaceWidgets/src</string>
+						<string>../../../addons/ofxInterfaceWidgets/src/widgets</string>
+						<string>../../../addons/ofxJSON/libs</string>
+						<string>../../../addons/ofxJSON/libs/jsoncpp</string>
+						<string>../../../addons/ofxJSON/libs/jsoncpp/include</string>
+						<string>../../../addons/ofxJSON/libs/jsoncpp/include/json</string>
+						<string>../../../addons/ofxJSON/libs/jsoncpp/src</string>
+						<string>../../../addons/ofxJSON/src</string>
 						<string>../../../addons/ofxMouseRuler/src</string>
 					</array>
 					<key>ICON</key>
@@ -5774,12 +6713,26 @@ fi
 						<string>../../../addons/ofxColorManager/src</string>
 						<string>../../../addons/ofxColorPalette/src</string>
 						<string>../../../addons/ofxCurvesTool/src</string>
+						<string>../../../addons/ofxFontStash/libs</string>
+						<string>../../../addons/ofxFontStash/libs/fontstash</string>
+						<string>../../../addons/ofxFontStash/libs/fontstash/src</string>
+						<string>../../../addons/ofxFontStash/src</string>
+						<string>../../../addons/ofxFontStash/libs/fontstash/src</string>
 						<string>../../../addons/ofxImGui/libs</string>
 						<string>../../../addons/ofxImGui/libs/imgui</string>
 						<string>../../../addons/ofxImGui/libs/imgui/src</string>
 						<string>../../../addons/ofxImGui/src</string>
 						<string>../../../addons/ofxInterface/src</string>
 						<string>../../../addons/ofxInterface/src/components</string>
+						<string>../../../addons/ofxInterfaceKeyboard/src</string>
+						<string>../../../addons/ofxInterfaceWidgets/src</string>
+						<string>../../../addons/ofxInterfaceWidgets/src/widgets</string>
+						<string>../../../addons/ofxJSON/libs</string>
+						<string>../../../addons/ofxJSON/libs/jsoncpp</string>
+						<string>../../../addons/ofxJSON/libs/jsoncpp/include</string>
+						<string>../../../addons/ofxJSON/libs/jsoncpp/include/json</string>
+						<string>../../../addons/ofxJSON/libs/jsoncpp/src</string>
+						<string>../../../addons/ofxJSON/src</string>
 						<string>../../../addons/ofxMouseRuler/src</string>
 					</array>
 					<key>ICON</key>

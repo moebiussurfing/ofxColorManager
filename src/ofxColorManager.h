@@ -5,12 +5,12 @@
 #include "ofxImGui.h"
 #include "ofxColorPalette.h"
 #include "ofxInterface.h"
+#include "ofxInterfaceWidgets.h"
 #include "ButtonExample.h"
 #include "ofxColorGradient.h"
 #include "ofxCurvesTool.h"
 #include "ofxMouseRuler.h"
 #include "ofxSimpleSlider.h"
-
 #include "ofxCereal.h"
 
 using namespace ofxCereal;
@@ -97,6 +97,8 @@ public:
     void mouseReleased( ofMouseEventArgs& eventArgs );
     void addMouseListeners();
     void removeMouseListeners();
+
+    float dt;
 
     //-
 
@@ -216,7 +218,7 @@ public:
     vector<ButtonExample*> btns_plt_Analog;      // 7
     vector<ButtonExample*> btns_plt_Random;      // 8
 
-    vector<ButtonExample*> btns_plt_Selector;    // 1-8
+    vector<BitmapTextButton*> btns_plt_Selector;    // 1-8
 
 //    void add_color_Palette(int i);
 

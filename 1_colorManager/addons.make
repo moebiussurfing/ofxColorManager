@@ -3,6 +3,10 @@ ofxColorGradient
 ofxColorManager
 ofxColorPalette
 ofxCurvesTool
+ofxFontStash
 ofxImGui
 ofxInterface
+ofxInterfaceKeyboard
+ofxInterfaceWidgets
+ofxJSON
 ofxMouseRuler
