@@ -136,7 +136,7 @@ public:
     void setup_palettes();
     void update_palettes();
     void draw_palettes();
-//    ofParameter<bool> MODE;
+    ofParameter<bool> MODE_Palette;
 
     //-
 
@@ -153,11 +153,10 @@ public:
 
     // COLORS
 
+    ofParameter<ofFloatColor> color_backGround;
+
     ofParameter<ofFloatColor> color_picked;
     ofRectangle r_color_picked;
-
-    ofParameter<ofFloatColor> color_backGround;
-    ofRectangle r_color_clicked;
 
     ofParameter<int> color_HUE;
     ofParameter<int> color_SAT;
@@ -165,7 +164,8 @@ public:
 
     ofFloatColor color_clicked;//TODO: pointer color to get click from button class
     ofFloatColor color_clicked_PRE;
-//    bool bColor_clicked_CHANGED = false;
+    ofRectangle r_color_clicked;
+    bool bColor_clicked_DISABLED = false;
 
     // TODO: TEST LINKING
 

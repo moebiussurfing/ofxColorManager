@@ -41,7 +41,6 @@ void ofxColorManager::setup()
     color_BRG.set("BRIGHTNESS", 0, 0, 255);
 
     params_color.setName("COLOR");
-    params_color.add(color_picked);
     params_color.add(color_HUE);
     params_color.add(color_SAT);
     params_color.add(color_BRG);
@@ -70,11 +69,13 @@ void ofxColorManager::setup()
 
     // ALGORITHMIC PALETTE
 
+    MODE_Palette.set("MODE COLOR/SLIDERS", false);
     BRIGHTNESS.set("BRIGHTNESS", 128, 0, 255 );
     SATURATION.set("SATURATION", 128, 0, 255 );
     bRandomPalette.set("RANDOMIZE", false);
 
     params_palette.setName("ALGORITHMIC PALETTE");
+    params_palette.add(MODE_Palette);
     params_palette.add(BRIGHTNESS);
     params_palette.add(SATURATION);
     params_palette.add(bRandomPalette);
@@ -134,15 +135,16 @@ void ofxColorManager::setup()
     // STARTUP SETTINGS
 
     XML_params.setName("ofxColorManager");
-    XML_params.add(color_picked);
     XML_params.add(color_backGround);
-//    XML_params.add(color_picked);
+    XML_params.add(color_picked);
+//    XML_params.add(color_clicked);//not parameter
     XML_params.add(color_HUE);
     XML_params.add(color_SAT);
     XML_params.add(color_BRG);
+    XML_params.add(MODE_Palette);// algo palette
     XML_params.add(BRIGHTNESS);
     XML_params.add(SATURATION);
-    XML_params.add(gradient_hard);
+    XML_params.add(gradient_hard);//gradient
     load_group_XML(XML_params, XML_path);
 
     loadPalette("myPalette");
@@ -477,10 +479,12 @@ bool ofxColorManager::imGui()
             // ALGORITHMIC PALETTE
             if (ofxImGui::BeginTree(this->params_palette, mainSettings))
             {
-                ofxImGui::AddParameter(this->SATURATION);
-                ofxImGui::AddParameter(this->BRIGHTNESS);
+                ofxImGui::AddParameter(this->MODE_Palette);
+                if (MODE_Palette) {
+                    ofxImGui::AddParameter(this->SATURATION);
+                    ofxImGui::AddParameter(this->BRIGHTNESS);
+                }
                 ofxImGui::AddParameter(this->bRandomPalette);
-
                 ofxImGui::EndTree(mainSettings);
             }
 
@@ -518,7 +522,7 @@ void ofxColorManager::update()
 
     if (color_clicked_PRE != color_clicked)
     {
-//        bColor_clicked_CHANGED = true;
+//        if (!bColor_clicked_DISABLED)
         ofLogNotice("ofxColorManager") << "-> color_clicked CHANGED"<< endl;
 
         color_picked.set(color_clicked);
@@ -614,7 +618,7 @@ void ofxColorManager::draw_curveTool() {
 
 //        curveVal = curvesTool[ ofMap( curve_pos, 0., 1., 0, amount ) ];
 //        curveVal = curvesTool[curve_pos];
-          curveVal = curvesTool.getAtPercent(curve_pos);
+        curveVal = curvesTool.getAtPercent(curve_pos);
 
         c.set(gradient.getColorAtPercent( curveVal ));      // LUT
 //        c.set(gradient.getColorAtPercent( curve_pos ));   // GRADIENT
@@ -978,11 +982,21 @@ void ofxColorManager::update_palettes()
 {
     brightness = BRIGHTNESS;
     saturation = SATURATION;
+    ofColor base;
 
     //-
 
-    ofColor base = ofColor::fromHsb(ofMap(color_picked.get().getHue(), 0., 1., 0, 255), saturation, brightness);
-
+    if (MODE_Palette)
+    {
+        // using hue only from picked color and sat/(brg from sliders
+        base = ofColor::fromHsb(ofMap(color_picked.get().getHue(), 0., 1., 0, 255), saturation, brightness);
+    }
+    else
+    {
+        // check using hue + sat/brg from color
+        base = ofColor::fromHsb(ofMap(color_picked.get().getHue(), 0., 1., 0, 255), color_SAT, color_BRG);
+    }
+    
     complement.setBaseColor(base);
     complementBrightness.setBaseColor(base);
     triad.setBaseColor(base);
@@ -991,7 +1005,6 @@ void ofxColorManager::update_palettes()
     monochromeBrightness.setBaseColor(base);
     analogue.setBaseColor(base);
     random.setBaseColor(base);
-
 
     complement.generateComplementary();
     complementBrightness.generateComplementary(ofxColorPalette::BRIGHTNESS);
@@ -1213,7 +1226,7 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
         ofLogNotice() << "Changed_control: " << name << ":" << e;
 
     // COLOR
-    if (name == "COLOR")//picked
+    if (name == "COLOR") // color picked
     {
 ////        update_palettes();
 ////        color_picked.get().setHsb
@@ -1228,24 +1241,27 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
     }
     else if (name == "HUE")
     {
-//        ofColor c;
-//        c.set(ofColor( color_picked.get() ));
-//        c.setHue(color_HUE);
-//        color_picked.set(c);
+        ofColor c;
+        c.set(ofColor( color_picked.get() ));
+        c.setHue(color_HUE);
+        color_picked.set(c);
+
     }
     else if (name == "SATURATION")
     {
-//        ofColor c;
-//        c.set(ofColor( color_picked.get() ));
-//        c.setSaturation(color_SAT);
-//        color_picked.set(c);
+        ofColor c;
+        c.set(ofColor( color_picked.get() ));
+        c.setSaturation(color_SAT);
+        color_picked.set(c);
+//        color_clicked.set(color_picked);//TODO: ?
     }
     else if (name == "BRIGHTNESS")
     {
-//        ofColor c;
-//        c.set(ofColor( color_picked.get() ));
-//        c.setBrightness(color_BRG);
-//        color_picked.set(c);
+        ofColor c;
+        c.set(ofColor( color_picked.get() ));
+        c.setBrightness(color_BRG);
+        color_picked.set(c);
+//        color_clicked.set(color_picked);//TODO: ?
     }
 
         // PALLETE
