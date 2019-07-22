@@ -18,6 +18,14 @@ void ofxColorManager::setup()
 
     //-
 
+//    ofEventListener listener = color_picked.newListener([this](ofFloatColor &v){ color_backGround.set(v); });
+//    color_picked.addListener([this](ofFloatColor &v){ color_backGround.set(v); });
+
+    color_picked.addListener(this, &ofxColorManager::Changed_color_picked);
+    color_clicked_param.addListener(this, &ofxColorManager::Changed_color_clicked);
+
+    //-
+
     dt = 1/30.0f;
 
     //-
@@ -155,11 +163,6 @@ void ofxColorManager::setup()
 
     //-
 
-//    ofEventListener listener = color_picked.newListener([this](ofFloatColor &v){ color_backGround.set(v); });
-//    color_picked.addListener([this](ofFloatColor &v){ color_backGround.set(v); });
-
-    color_picked.addListener(this, &ofxColorManager::Changed_color_picked);
-    color_clicked_param.addListener(this, &ofxColorManager::Changed_color_clicked);
 
 }
 
@@ -889,7 +892,7 @@ void ofxColorManager::setup_palettes() {
     btn_plt_h = box_size + pad;
     btn_pad_w = 230;
     palettes_x = x0;
-    palettes_y = y0 + btn_plt_h + 9;
+    palettes_y = y0 + btn_plt_h + 11;
 
     //-
 
@@ -927,12 +930,12 @@ void ofxColorManager::setup_palettes() {
                 break;
         }
 
-//        btn->setSize(btn_plt_w, btn_plt_h);
         btn->setPosition(palettes_x + btn_pad_w, palettes_y + p * btn_plt_h);
         btn->setBGColor(btn_plt_c);
         btn->setLabelColor(ofColor::white);
         btn->setBorder(false);
 //        btn->setBorderColor(ofColor::white);
+//        btn->setSize(btn_plt_w, btn_plt_h);
 
         scene->addChild(btn);
         btns_plt_Selector.push_back(btn);
@@ -1053,16 +1056,16 @@ void ofxColorManager::draw()
 
     //-
 
-    // COLOR BOX CLICKER
+    // COLOR BOX CLICKED
 
-    ofPushStyle();
-    ofFill();
-
-    ofSetColor( ofColor( color_clicked ) );
-//    ofSetColor( ofColor( color_clicked_param.get() ) );
-
-    ofDrawRectangle(r_color_clicked);
-    ofPopStyle();
+//    ofPushStyle();
+//    ofFill();
+//
+//    ofSetColor( ofColor( color_clicked ) );
+////    ofSetColor( ofColor( color_clicked_param.get() ) );
+//
+//    ofDrawRectangle(r_color_clicked);
+//    ofPopStyle();
 
     //-
 
