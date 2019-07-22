@@ -35,13 +35,13 @@ void ofxColorManager::setup()
 
     // COLOR
 
-    myColor.set("COLOR", ofFloatColor::red);
+    color_picked.set("COLOR", ofFloatColor::red);
     color_HUE.set("HUE", 0, 0, 255);
     color_SAT.set("SATURATION", 0, 0, 255);
     color_BRG.set("BRIGHTNESS", 0, 0, 255);
 
     params_color.setName("COLOR");
-    params_color.add(myColor);
+    params_color.add(color_picked);
     params_color.add(color_HUE);
     params_color.add(color_SAT);
     params_color.add(color_BRG);
@@ -58,7 +58,7 @@ void ofxColorManager::setup()
     bClearPalette.set("CLEAR PALETTE", false);
 
     params_control.setName("CONTROL");
-    params_control.add(myColor);
+    params_control.add(color_picked);
     params_control.add(bRandomColor);
     params_control.add(bAddColor);
     params_control.add(bRemoveColor);
@@ -134,12 +134,12 @@ void ofxColorManager::setup()
     // STARTUP SETTINGS
 
     XML_params.setName("ofxColorManager");
-    XML_params.add(myColor);
+    XML_params.add(color_picked);
     XML_params.add(color_backGround);
-    XML_params.add(myColor);
+//    XML_params.add(color_picked);
     XML_params.add(color_HUE);
-    XML_params.add(color_SAT),
-            XML_params.add(color_BRG);
+    XML_params.add(color_SAT);
+    XML_params.add(color_BRG);
     XML_params.add(BRIGHTNESS);
     XML_params.add(SATURATION);
     XML_params.add(gradient_hard);
@@ -148,6 +148,13 @@ void ofxColorManager::setup()
     loadPalette("myPalette");
 
     //-
+
+//    ofEventListener listener = color_picked.newListener([this](ofFloatColor &v){ color_backGround.set(v); });
+//    color_picked.addListener([this](ofFloatColor &v){ color_backGround.set(v); });
+
+    color_picked.addListener(this, &ofxColorManager::Changed_color_picked);
+    color_clicked_param.addListener(this, &ofxColorManager::Changed_color_clicked);
+
 }
 
 //--------------------------------------------------------------
@@ -214,13 +221,13 @@ void ofxColorManager::setup_Gui_layout()
     color_x = 335;
     color_y = 20;
     color_w = color_h = 2*color_size;
-    rColor1 = ofRectangle( color_x, color_y, color_w, color_h );
+    r_color_picked = ofRectangle( color_x, color_y, color_w, color_h );
 
     // color box clicked
     colorPick_x = 335;
     colorPick_y = color_h + 30;
     colorPick_w = colorPick_h = 2*color_size;
-    rColor2 = ofRectangle( colorPick_x, colorPick_y, colorPick_w, colorPick_h );
+    r_color_clicked = ofRectangle( colorPick_x, colorPick_y, colorPick_w, colorPick_h );
 }
 
 //--------------------------------------------------------------
@@ -329,7 +336,9 @@ void ofxColorManager::add_color_Interface(ofColor c)
     ButtonExample *btn = new ButtonExample();
     btn->setup(palette_x, palette_y, color_size, color_size);
     btn->setColor(c);
-    btn->setup_colorBACK( color_p );
+    btn->setup_colorBACK( color_clicked );
+//    ofFloatColor cBtn = color_clicked_param.get();
+//    btn->setup_colorBACK( cBtn );
     btn->setLocked(true);
     btn->setName("btn" + ofToString(i));
 
@@ -452,7 +461,7 @@ bool ofxColorManager::imGui()
             // COLOR
             if (ofxImGui::BeginTree(this->params_control, mainSettings))
             {
-                ofxImGui::AddParameter(this->myColor, true);
+                ofxImGui::AddParameter(this->color_picked, true);
                 ofxImGui::AddParameter(this->color_HUE);
                 ofxImGui::AddParameter(this->color_SAT);
                 ofxImGui::AddParameter(this->color_BRG);
@@ -506,8 +515,17 @@ void ofxColorManager::update()
     update_curveTool();
 
     //-
-}
 
+    if (color_clicked_PRE != color_clicked)
+    {
+//        bColor_clicked_CHANGED = true;
+        ofLogNotice("ofxColorManager") << "-> color_clicked CHANGED"<< endl;
+
+        color_picked.set(color_clicked);
+
+        color_clicked_PRE = color_clicked;
+    }
+}
 
 //--------------------------------------------------------------
 void ofxColorManager::setup_curveTool()
@@ -686,7 +704,12 @@ void ofxColorManager::setup_palettes()
     for (int i = 0 ; i < triad.size(); i++) {
         ButtonExample *btn = new ButtonExample();
         btn->setup(palettes_x, palettes_y, box_size, box_size);
-        btn->setup_colorBACK( color_p );
+        btn->setup_colorBACK( color_clicked );
+
+////        btn->setup_colorBACK( color_clicked_param.get() );
+//        ofFloatColor cBtn = color_clicked_param.get();
+//        btn->setup_colorBACK( cBtn );
+
         btn->setLocked(true);
         btn->setName("triad" + ofToString(i));
         btn->setColor(triad[i]);
@@ -706,7 +729,12 @@ void ofxColorManager::setup_palettes()
     for (int i = 0 ; i < complementTriad.size(); i++) {
         ButtonExample *btn = new ButtonExample();
         btn->setup(palettes_x, palettes_y, box_size, box_size);
-        btn->setup_colorBACK( color_p );
+        btn->setup_colorBACK( color_clicked );
+
+////        btn->setup_colorBACK( color_clicked_param.get() );
+//        ofFloatColor cBtn = color_clicked_param.get();
+//        btn->setup_colorBACK( cBtn );
+
         btn->setLocked(true);
         btn->setName("compTriad" + ofToString(i));
         btn->setColor(complementTriad[i]);
@@ -726,7 +754,12 @@ void ofxColorManager::setup_palettes()
     for (int i = 0 ; i < complement.size(); i++) {
         ButtonExample *btn = new ButtonExample();
         btn->setup(palettes_x, palettes_y, box_size, box_size);
-        btn->setup_colorBACK( color_p );
+        btn->setup_colorBACK( color_clicked );
+
+////        btn->setup_colorBACK( color_clicked_param.get() );
+//        ofFloatColor cBtn = color_clicked_param.get();
+//        btn->setup_colorBACK( cBtn );
+
         btn->setLocked(true);
         btn->setName("compSat" + ofToString(i));
         btn->setColor(complement[i]);
@@ -746,7 +779,12 @@ void ofxColorManager::setup_palettes()
     for (int i = 0 ; i < complementBrightness.size(); i++) {
         ButtonExample *btn = new ButtonExample();
         btn->setup(palettes_x, palettes_y, box_size, box_size);
-        btn->setup_colorBACK( color_p );
+        btn->setup_colorBACK( color_clicked );
+
+////        btn->setup_colorBACK( color_clicked_param.get() );
+//        ofFloatColor cBtn = color_clicked_param.get();
+//        btn->setup_colorBACK( cBtn );
+
         btn->setLocked(true);
         btn->setName("compBrgt" + ofToString(i));
         btn->setColor(complementBrightness[i]);
@@ -766,7 +804,12 @@ void ofxColorManager::setup_palettes()
     for (int i = 0 ; i < monochrome.size(); i++) {
         ButtonExample *btn = new ButtonExample();
         btn->setup(palettes_x, palettes_y, box_size, box_size);
-        btn->setup_colorBACK( color_p );
+        btn->setup_colorBACK( color_clicked );
+
+////        btn->setup_colorBACK( color_clicked_param.get() );
+//        ofFloatColor cBtn = color_clicked_param.get();
+//        btn->setup_colorBACK( cBtn );
+
         btn->setLocked(true);
         btn->setName("monoSat" + ofToString(i));
         btn->setColor(monochrome[i]);
@@ -786,7 +829,12 @@ void ofxColorManager::setup_palettes()
     for (int i = 0 ; i < monochromeBrightness.size(); i++) {
         ButtonExample *btn = new ButtonExample();
         btn->setup(palettes_x, palettes_y, box_size, box_size);
-        btn->setup_colorBACK( color_p );
+        btn->setup_colorBACK( color_clicked );
+
+////        btn->setup_colorBACK( color_clicked_param.get() );
+//        ofFloatColor cBtn = color_clicked_param.get();
+//        btn->setup_colorBACK( cBtn );
+
         btn->setLocked(true);
         btn->setName("monoBrgt" + ofToString(i));
         btn->setColor(monochromeBrightness[i]);
@@ -807,7 +855,7 @@ void ofxColorManager::setup_palettes()
     {
         ButtonExample *btn = new ButtonExample();
         btn->setup(palettes_x, palettes_y, box_size, box_size);
-        btn->setup_colorBACK( color_p );
+        btn->setup_colorBACK( color_clicked );
         btn->setLocked(true);
         btn->setName("analogue" + ofToString(i));
         btn->setColor(analogue[i]);
@@ -827,7 +875,12 @@ void ofxColorManager::setup_palettes()
     for (int i = 0 ; i < random.size(); i++) {
         ButtonExample *btn = new ButtonExample();
         btn->setup(palettes_x, palettes_y, box_size, box_size);
-        btn->setup_colorBACK( color_p );
+        btn->setup_colorBACK( color_clicked );
+
+////        btn->setup_colorBACK( color_clicked_param.get() );
+//        ofFloatColor cBtn = color_clicked_param.get();
+//        btn->setup_colorBACK( cBtn );
+
         btn->setLocked(true);
         btn->setName("random" + ofToString(i));
         btn->setColor(random[i]);
@@ -928,7 +981,7 @@ void ofxColorManager::update_palettes()
 
     //-
 
-    ofColor base = ofColor::fromHsb(ofMap(myColor.get().getHue(), 0., 1., 0, 255), saturation, brightness);
+    ofColor base = ofColor::fromHsb(ofMap(color_picked.get().getHue(), 0., 1., 0, 255), saturation, brightness);
 
     complement.setBaseColor(base);
     complementBrightness.setBaseColor(base);
@@ -1019,8 +1072,8 @@ void ofxColorManager::draw()
 
     ofPushStyle();
     ofFill();
-    ofSetColor( ofColor( myColor.get() ) );
-    ofDrawRectangle(rColor1);
+    ofSetColor( ofColor( color_picked.get() ) );
+    ofDrawRectangle(r_color_picked);
     ofPopStyle();
 
     //-
@@ -1029,8 +1082,11 @@ void ofxColorManager::draw()
 
     ofPushStyle();
     ofFill();
-    ofSetColor( ofColor( color_p ) );
-    ofDrawRectangle(rColor2);
+
+    ofSetColor( ofColor( color_clicked ) );
+//    ofSetColor( ofColor( color_clicked_param.get() ) );
+
+    ofDrawRectangle(r_color_clicked);
     ofPopStyle();
 
     //-
@@ -1153,43 +1209,43 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
     string name = e.getName();
 
     //TODO: reduce callbacks..
-    if (name != "CURVE POS")
+    if (name != "CURVE POS" && name != "COLOR")
         ofLogNotice() << "Changed_control: " << name << ":" << e;
 
     // COLOR
-    if (name == "COLOR")
+    if (name == "COLOR")//picked
     {
-//        update_palettes();
-//        myColor.get().setHsb
-//                (	float 	hue,
-//                float 	saturation,
-//                float 	brightness,
-//                float 	alpha = limit()
-//        )
-        color_HUE = 255 * myColor.get().getHue();
-//        color_SAT = 255 * myColor.get().getBrightness();//BUG
-//        color_BRG = 255 * myColor.get().getSaturation();
+////        update_palettes();
+////        color_picked.get().setHsb
+////                (	float 	hue,
+////                float 	saturation,
+////                float 	brightness,
+////                float 	alpha = limit()
+////        )
+//        color_HUE = 255 * color_picked.get().getHue();
+////        color_SAT = 255 * color_picked.get().getBrightness();//BUG
+////        color_BRG = 255 * color_picked.get().getSaturation();
     }
     else if (name == "HUE")
     {
-        ofColor c;
-        c.set(ofColor( myColor.get() ));
-        c.setHue(color_HUE);
-        myColor.set(c);
+//        ofColor c;
+//        c.set(ofColor( color_picked.get() ));
+//        c.setHue(color_HUE);
+//        color_picked.set(c);
     }
     else if (name == "SATURATION")
     {
-        ofColor c;
-        c.set(ofColor( myColor.get() ));
-        c.setSaturation(color_SAT);
-        myColor.set(c);
+//        ofColor c;
+//        c.set(ofColor( color_picked.get() ));
+//        c.setSaturation(color_SAT);
+//        color_picked.set(c);
     }
     else if (name == "BRIGHTNESS")
     {
-        ofColor c;
-        c.set(ofColor( myColor.get() ));
-        c.setBrightness(color_BRG);
-        myColor.set(c);
+//        ofColor c;
+//        c.set(ofColor( color_picked.get() ));
+//        c.setBrightness(color_BRG);
+//        color_picked.set(c);
     }
 
         // PALLETE
@@ -1198,7 +1254,7 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
         if (bRandomColor)
         {
             bRandomColor= false;
-            myColor = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
+            color_picked = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
         }
     }
     else if (name == "ADD COLOR")
@@ -1206,7 +1262,7 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
         if (bAddColor)
         {
             bAddColor= false;
-            add_color(ofColor(myColor.get()));
+            add_color(ofColor(color_picked.get()));
         }
     }
     else if (name == "REMOVE COLOR")
@@ -1261,7 +1317,7 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
 void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 {
     const int & key = eventArgs.key;
-    cout << "key: " << key << endl;
+//    cout << "key: " << key << endl;
 
     //-
 
@@ -1319,8 +1375,8 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 
     if (key == ' ')
     {
-        myColor = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
-        add_color(ofColor(myColor.get()));
+        color_picked = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
+        add_color(ofColor(color_picked.get()));
     }
 }
 
@@ -1349,7 +1405,7 @@ void ofxColorManager::mouseDragged(ofMouseEventArgs& eventArgs){
     const int & x = eventArgs.x;
     const int & y = eventArgs.y;
     const int & button = eventArgs.button;
-    ofLogNotice("ofxColorManager") << "mouseDragged " <<  x << ", " << y << ", " << button;
+//    ofLogNotice("ofxColorManager") << "mouseDragged " <<  x << ", " << y << ", " << button;
 
     TouchManager::one().touchMove(button, ofVec2f(x, y));
 }
@@ -1359,7 +1415,7 @@ void ofxColorManager::mousePressed(ofMouseEventArgs& eventArgs){
     const int & x = eventArgs.x;
     const int & y = eventArgs.y;
     const int & button = eventArgs.button;
-    ofLogNotice("ofxColorManager") << "mousePressed " <<  x << ", " << y << ", " << button;
+//    ofLogNotice("ofxColorManager") << "mousePressed " <<  x << ", " << y << ", " << button;
 
     TouchManager::one().touchDown(button, ofVec2f(x, y));
 }
@@ -1369,7 +1425,7 @@ void ofxColorManager::mouseReleased(ofMouseEventArgs& eventArgs){
     const int & x = eventArgs.x;
     const int & y = eventArgs.y;
     const int & button = eventArgs.button;
-    ofLogNotice("ofxColorManager") << "mouseReleased " <<  x << ", " << y << ", " << button;
+//    ofLogNotice("ofxColorManager") << "mouseReleased " <<  x << ", " << y << ", " << button;
 
     TouchManager::one().touchUp(button, ofVec2f(x, y));
 }
@@ -1419,4 +1475,19 @@ void ofxColorManager::exit()
     ofRemoveListener(params_palette.parameterChangedE(), this, &ofxColorManager::Changed_control);
     ofRemoveListener(params_curve.parameterChangedE(), this, &ofxColorManager::Changed_control);
 
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::Changed_color_picked(ofFloatColor &color)
+{
+    ofLogNotice("ofxColorManager") << "Changed_color_picked " << ofToString(color);
+    color_clicked.set(color);
+//    color_clicked_param.set(color);
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::Changed_color_clicked(ofFloatColor &color)
+{
+//    ofLogNotice("ofxColorManager") << "Changed_color_clicked " << ofToString(color);
+//    color_picked.set(color);
 }

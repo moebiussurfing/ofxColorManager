@@ -49,7 +49,10 @@ public:
 	void onTouchUp(TouchEvent& event);
 
     void setup_colorBACK(ofFloatColor &c);
+
+    //pointer to the external color that will be updated onClick callback
     ofFloatColor *colorBACK;
+    ofParameter<ofFloatColor>  *colorBACK_param;//
 
     ofColor color;
     ofColor color_picked;

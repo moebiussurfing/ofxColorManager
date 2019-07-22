@@ -153,15 +153,28 @@ public:
 
     // COLORS
 
-    ofParameter<ofFloatColor> myColor;
-    ofRectangle rColor1;
+    ofParameter<ofFloatColor> color_picked;
+    ofRectangle r_color_picked;
+
     ofParameter<ofFloatColor> color_backGround;
-    ofRectangle rColor2;
-    ofFloatColor color_p;//TODO: pointer color to get click from button class
+    ofRectangle r_color_clicked;
 
     ofParameter<int> color_HUE;
     ofParameter<int> color_SAT;
     ofParameter<int> color_BRG;
+
+    ofFloatColor color_clicked;//TODO: pointer color to get click from button class
+    ofFloatColor color_clicked_PRE;
+//    bool bColor_clicked_CHANGED = false;
+
+    // TODO: TEST LINKING
+
+    ofParameter<ofFloatColor> color_clicked_param;
+
+//    ofEventListener listener = test1->myParameter.newListener([this](unsigned char &v){ test3->myParameter.set(v); });
+//    ofEventListener listener = color_picked.newListener([this](unsigned char &v){ color_backGround.set(v); });
+    void Changed_color_picked(ofFloatColor &color);
+    void Changed_color_clicked(ofFloatColor &color);
 
     //-
 
