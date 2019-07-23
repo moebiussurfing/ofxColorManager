@@ -269,7 +269,7 @@ void ofxColorManager::setup_Gui_layout()
 //--------------------------------------------------------------
 void ofxColorManager::loadPalette(string p)
 {
-    cout << "loadPalette: " << p << endl;
+    ofLogNotice("ofxColorManager") << "loadPalette: " << p;
 
     string path = path_palettes + p + ".json";
     ofFile file(path);
@@ -278,13 +278,13 @@ void ofxColorManager::loadPalette(string p)
         jsonin ji(file);
         ji >> data;
 
-        cout << "palette name: " << data.name << endl;
+        ofLogNotice("ofxColorManager") << "palette name: " << data.name;
         clearPalette();
         ofColor c;
         for (int i = 0; i< data.palette.size(); i++)
         {
             c = data.palette[i];
-            cout << "palette " << i << ": " << ofToString(c) << endl;
+            ofLogNotice("ofxColorManager") << "palette " << i << ": " << ofToString(c);
             add_color(c);
         }
     }
@@ -293,18 +293,18 @@ void ofxColorManager::loadPalette(string p)
 //--------------------------------------------------------------
 void ofxColorManager::savePalette(string p)
 {
-    cout << "savePalette: " << p << endl;
+    ofLogNotice("ofxColorManager") << "savePalette: " << p;
 
     string path = path_palettes + p + ".json";
 
     data.name = "myPalette";
-    cout << "palette name: " << data.name << endl;
+    ofLogNotice("ofxColorManager") << "palette name: " << data.name;
 
     data.palette.resize(palette.size());
     for (int i = 0; i< palette.size(); i++)
     {
         data.palette[i] = palette[i];
-        cout << "palette_" << i << " " << ofToString(data.palette[i]) << endl;
+        ofLogNotice("ofxColorManager") << "palette_" << i << " " << ofToString(data.palette[i]);
     }
 
     ofFile file(path, ofFile::WriteOnly);
@@ -511,7 +511,7 @@ void ofxColorManager::update()
 {
     if (SELECTED_palette != SELECTED_palette_PRE)
     {
-        ofLogNotice("ofxColorManager::update") << "-> CHANGED SELECTED_palette: " << SELECTED_palette << endl;
+        ofLogNotice("ofxColorManager::update") << "-> CHANGED SELECTED_palette: " << SELECTED_palette;
         recall_AlgorithmicPalette(SELECTED_palette);
 
         SELECTED_palette_PRE = SELECTED_palette = -1;
@@ -529,7 +529,7 @@ void ofxColorManager::update()
     if (color_clicked != color_clicked_PRE )
     {
         color_clicked_PRE = color_clicked;
-        ofLogNotice("ofxColorManager") << "-> CHANGED color_clicked"<< endl;
+        ofLogNotice("ofxColorManager") << "-> CHANGED color_clicked";
         color_picked.set(color_clicked);
     }
 }
@@ -1309,7 +1309,7 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
 void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 {
     const int & key = eventArgs.key;
-//    cout << "key: " << key << endl;
+//    ofLogNotice("ofxColorManager") << "key: " << key;
 
     //-
 
