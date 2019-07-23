@@ -9,6 +9,47 @@
 		<string>46</string>
 		<key>objects</key>
 		<dict>
+			<key>E7A778D8FC4DFA397CDB78CB</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>DD984AA76AF504D2D2450558</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>src</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>8B3A069D4C26DD08C7152F5C</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>E7A778D8FC4DFA397CDB78CB</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>ofxOpenColor</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>DD984AA76AF504D2D2450558</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxOpenColor.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxOpenColor/src/ofxOpenColor.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
 			<key>15C831F7DC59AEED3AE0B034</key>
 			<dict>
 				<key>explicitFileType</key>
@@ -1988,6 +2029,109 @@
 				<key>sourceTree</key>
 				<string>SOURCE_ROOT</string>
 			</dict>
+			<key>596F4E053159B15CFF257089</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxColorsBrowser.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxColorsBrowser/src/ofxColorsBrowser.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>670A9295C1AE54CB57256710</key>
+			<dict>
+				<key>fileRef</key>
+				<string>A147078E489924AF8B78E52C</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>A147078E489924AF8B78E52C</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxColorsBrowser.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxColorsBrowser/src/ofxColorsBrowser.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>6DE7EFCB6746E39DA58EC49D</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>Color_BitmapTextButton.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxColorsBrowser/src/Color_BitmapTextButton.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>256CFDCE4330BFA88B712424</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>E322C7E4902C9522586C7C68</string>
+					<string>6DE7EFCB6746E39DA58EC49D</string>
+					<string>A147078E489924AF8B78E52C</string>
+					<string>596F4E053159B15CFF257089</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>src</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>675E8D80B434F885A8567372</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>256CFDCE4330BFA88B712424</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>ofxColorsBrowser</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>5D6B535C76B09F00706F2407</key>
+			<dict>
+				<key>fileRef</key>
+				<string>E322C7E4902C9522586C7C68</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>E322C7E4902C9522586C7C68</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>Color_BitmapTextButton.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxColorsBrowser/src/Color_BitmapTextButton.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
 			<key>9ADE112845E38CA604AC94E8</key>
 			<dict>
 				<key>explicitFileType</key>
@@ -2104,10 +2248,49 @@
 				<key>sourceTree</key>
 				<string>SOURCE_ROOT</string>
 			</dict>
+			<key>337B608BE5657DFFB9DB56C0</key>
+			<dict>
+				<key>fileRef</key>
+				<string>848FD2C218E0CDEB67218974</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>848FD2C218E0CDEB67218974</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxColorManager.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxColorManager/src/ofxColorManager.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>49495CC98A09EB75A0DBC280</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>Color_BitmapTextButton.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxColorManager/src/Color_BitmapTextButton.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
 			<key>C59F6912A1A1005BE7F4455E</key>
 			<dict>
 				<key>children</key>
 				<array>
+					<string>A3FD8AF58B7AAA5542750AFB</string>
+					<string>49495CC98A09EB75A0DBC280</string>
 					<string>848FD2C218E0CDEB67218974</string>
 					<string>DCF230911266564E4BE0D201</string>
 					<string>0D0DEB4D937DB118B069002E</string>
@@ -2133,14 +2316,14 @@
 				<key>sourceTree</key>
 				<string>&lt;group&gt;</string>
 			</dict>
-			<key>337B608BE5657DFFB9DB56C0</key>
+			<key>AECE174E17E293C9B3287FFB</key>
 			<dict>
 				<key>fileRef</key>
-				<string>848FD2C218E0CDEB67218974</string>
+				<string>A3FD8AF58B7AAA5542750AFB</string>
 				<key>isa</key>
 				<string>PBXBuildFile</string>
 			</dict>
-			<key>848FD2C218E0CDEB67218974</key>
+			<key>A3FD8AF58B7AAA5542750AFB</key>
 			<dict>
 				<key>explicitFileType</key>
 				<string>sourcecode.cpp.cpp</string>
@@ -2149,9 +2332,9 @@
 				<key>isa</key>
 				<string>PBXFileReference</string>
 				<key>name</key>
-				<string>ofxColorManager.cpp</string>
+				<string>Color_BitmapTextButton.cpp</string>
 				<key>path</key>
-				<string>../../../addons/ofxColorManager/src/ofxColorManager.cpp</string>
+				<string>../../../addons/ofxColorManager/src/Color_BitmapTextButton.cpp</string>
 				<key>sourceTree</key>
 				<string>SOURCE_ROOT</string>
 			</dict>
@@ -3443,6 +3626,7 @@ fi
 						<string>../../../addons/ofxColorGradient/src</string>
 						<string>../../../addons/ofxColorManager/src</string>
 						<string>../../../addons/ofxColorPalette/src</string>
+						<string>../../../addons/ofxColorsBrowser/src</string>
 						<string>../../../addons/ofxCurvesTool/src</string>
 						<string>../../../addons/ofxFontStash/libs</string>
 						<string>../../../addons/ofxFontStash/libs/fontstash</string>
@@ -3465,6 +3649,7 @@ fi
 						<string>../../../addons/ofxJSON/libs/jsoncpp/src</string>
 						<string>../../../addons/ofxJSON/src</string>
 						<string>../../../addons/ofxMouseRuler/src</string>
+						<string>../../../addons/ofxOpenColor/src</string>
 					</array>
 					<key>MACOSX_DEPLOYMENT_TARGET</key>
 					<string>10.9</string>
@@ -3511,6 +3696,7 @@ fi
 						<string>../../../addons/ofxColorGradient/src</string>
 						<string>../../../addons/ofxColorManager/src</string>
 						<string>../../../addons/ofxColorPalette/src</string>
+						<string>../../../addons/ofxColorsBrowser/src</string>
 						<string>../../../addons/ofxCurvesTool/src</string>
 						<string>../../../addons/ofxFontStash/libs</string>
 						<string>../../../addons/ofxFontStash/libs/fontstash</string>
@@ -3533,6 +3719,7 @@ fi
 						<string>../../../addons/ofxJSON/libs/jsoncpp/src</string>
 						<string>../../../addons/ofxJSON/src</string>
 						<string>../../../addons/ofxMouseRuler/src</string>
+						<string>../../../addons/ofxOpenColor/src</string>
 					</array>
 					<key>ICON</key>
 					<string>$(ICON_NAME_RELEASE)</string>
@@ -3572,6 +3759,7 @@ fi
 					<string>126B40D5DC6E4508DDE87321</string>
 					<string>01D059B3D9AA705900B182CC</string>
 					<string>ADD30217DA6E9945E447F8A3</string>
+					<string>675E8D80B434F885A8567372</string>
 					<string>20FC95435D1FC200D4265565</string>
 					<string>B7006DB7785B098B4504962B</string>
 					<string>768C3255AF2F3E1A78DC4DF4</string>
@@ -3580,6 +3768,7 @@ fi
 					<string>075F5D89219CC26FB7D909D1</string>
 					<string>2865DAEF86B1907A704CA70B</string>
 					<string>52F81B91F554ACD32FA1F358</string>
+					<string>8B3A069D4C26DD08C7152F5C</string>
 				</array>
 				<key>isa</key>
 				<string>PBXGroup</string>
@@ -6351,6 +6540,7 @@ fi
 						<string>../../../addons/ofxColorGradient/src</string>
 						<string>../../../addons/ofxColorManager/src</string>
 						<string>../../../addons/ofxColorPalette/src</string>
+						<string>../../../addons/ofxColorsBrowser/src</string>
 						<string>../../../addons/ofxCurvesTool/src</string>
 						<string>../../../addons/ofxFontStash/libs</string>
 						<string>../../../addons/ofxFontStash/libs/fontstash</string>
@@ -6373,6 +6563,7 @@ fi
 						<string>../../../addons/ofxJSON/libs/jsoncpp/src</string>
 						<string>../../../addons/ofxJSON/src</string>
 						<string>../../../addons/ofxMouseRuler/src</string>
+						<string>../../../addons/ofxOpenColor/src</string>
 					</array>
 					<key>MACOSX_DEPLOYMENT_TARGET</key>
 					<string>10.9</string>
@@ -6439,6 +6630,7 @@ fi
 						<string>../../../addons/ofxColorGradient/src</string>
 						<string>../../../addons/ofxColorManager/src</string>
 						<string>../../../addons/ofxColorPalette/src</string>
+						<string>../../../addons/ofxColorsBrowser/src</string>
 						<string>../../../addons/ofxCurvesTool/src</string>
 						<string>../../../addons/ofxFontStash/libs</string>
 						<string>../../../addons/ofxFontStash/libs/fontstash</string>
@@ -6461,6 +6653,7 @@ fi
 						<string>../../../addons/ofxJSON/libs/jsoncpp/src</string>
 						<string>../../../addons/ofxJSON/src</string>
 						<string>../../../addons/ofxMouseRuler/src</string>
+						<string>../../../addons/ofxOpenColor/src</string>
 					</array>
 					<key>MACOSX_DEPLOYMENT_TARGET</key>
 					<string>10.9</string>
@@ -6487,9 +6680,12 @@ fi
 					<string>E4B69E210A3A1BDC003C02F2</string>
 					<string>6EE981023CA8E127609728B3</string>
 					<string>DC3E64B573BA582B0A3FA78B</string>
+					<string>AECE174E17E293C9B3287FFB</string>
 					<string>337B608BE5657DFFB9DB56C0</string>
 					<string>6F637BF7D2AE9FCDDD512D90</string>
 					<string>208330A0A93D54E1B72C8A3E</string>
+					<string>5D6B535C76B09F00706F2407</string>
+					<string>670A9295C1AE54CB57256710</string>
 					<string>CABA2A99CFDFE993141568F9</string>
 					<string>368CCF86BF3EF63BAFDFA84A</string>
 					<string>801397981E78A4CBDE809376</string>
@@ -6633,6 +6829,7 @@ fi
 						<string>../../../addons/ofxColorGradient/src</string>
 						<string>../../../addons/ofxColorManager/src</string>
 						<string>../../../addons/ofxColorPalette/src</string>
+						<string>../../../addons/ofxColorsBrowser/src</string>
 						<string>../../../addons/ofxCurvesTool/src</string>
 						<string>../../../addons/ofxFontStash/libs</string>
 						<string>../../../addons/ofxFontStash/libs/fontstash</string>
@@ -6655,6 +6852,7 @@ fi
 						<string>../../../addons/ofxJSON/libs/jsoncpp/src</string>
 						<string>../../../addons/ofxJSON/src</string>
 						<string>../../../addons/ofxMouseRuler/src</string>
+						<string>../../../addons/ofxOpenColor/src</string>
 					</array>
 					<key>ICON</key>
 					<string>$(ICON_NAME_DEBUG)</string>
@@ -6712,6 +6910,7 @@ fi
 						<string>../../../addons/ofxColorGradient/src</string>
 						<string>../../../addons/ofxColorManager/src</string>
 						<string>../../../addons/ofxColorPalette/src</string>
+						<string>../../../addons/ofxColorsBrowser/src</string>
 						<string>../../../addons/ofxCurvesTool/src</string>
 						<string>../../../addons/ofxFontStash/libs</string>
 						<string>../../../addons/ofxFontStash/libs/fontstash</string>
@@ -6734,6 +6933,7 @@ fi
 						<string>../../../addons/ofxJSON/libs/jsoncpp/src</string>
 						<string>../../../addons/ofxJSON/src</string>
 						<string>../../../addons/ofxMouseRuler/src</string>
+						<string>../../../addons/ofxOpenColor/src</string>
 					</array>
 					<key>ICON</key>
 					<string>$(ICON_NAME_RELEASE)</string>

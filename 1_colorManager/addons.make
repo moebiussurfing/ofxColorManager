@@ -2,6 +2,7 @@ ofxCereal
 ofxColorGradient
 ofxColorManager
 ofxColorPalette
+ofxColorsBrowser
 ofxCurvesTool
 ofxFontStash
 ofxImGui
@@ -10,3 +11,4 @@ ofxInterfaceKeyboard
 ofxInterfaceWidgets
 ofxJSON
 ofxMouseRuler
+ofxOpenColor

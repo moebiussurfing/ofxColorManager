@@ -18,11 +18,21 @@ void ofxColorManager::setup()
 
     //-
 
-//    ofEventListener listener = color_picked.newListener([this](ofFloatColor &v){ color_backGround.set(v); });
-//    color_picked.addListener([this](ofFloatColor &v){ color_backGround.set(v); });
+    // COLOR BROWSER
+
+    ColorBrowser.setBoxSize(25);
+    ColorBrowser.setRowsSize(10);
+    ColorBrowser.setup_colorBACK(color_BACK);
+    ColorBrowser.setPosition(glm::vec2(925, 40));
+    ColorBrowser.setup();
+
+    //-
 
     color_picked.addListener(this, &ofxColorManager::Changed_color_picked);
     color_clicked_param.addListener(this, &ofxColorManager::Changed_color_clicked);
+
+//    ofEventListener listener = color_picked.newListener([this](ofFloatColor &v){ color_backGround.set(v); });
+//    color_picked.addListener([this](ofFloatColor &v){ color_backGround.set(v); });
 
     //-
 
@@ -520,6 +530,12 @@ void ofxColorManager::update()
     //-
 
     update_curveTool();
+
+    //-
+
+    // COLOR BROWSER
+
+    ColorBrowser.update();
 
     //-
 
@@ -1081,6 +1097,12 @@ void ofxColorManager::draw()
 
     //-
 
+    // COLOR BROWSER
+
+    ColorBrowser.draw();
+
+    //-
+
     // GUI
 
     this->mouseOverGui = false;
@@ -1354,11 +1376,19 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
         remove_colorLast();
     }
 
-    if (key == ' ')
+    if (key == 'a')
     {
         color_picked = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
         add_color(ofColor(color_picked.get()));
     }
+
+    // COLOR BROWSER
+
+    if (key == ' ')
+        ColorBrowser.switch_palette_Type();
+
+    if (key == OF_KEY_RETURN)
+        ColorBrowser.switch_sorted_Type();
 }
 
 //--------------------------------------------------------------
@@ -1448,6 +1478,8 @@ void ofxColorManager::exit()
 {
     savePalette("myPalette");
     save_group_XML(XML_params, XML_path);
+
+    ColorBrowser.exit();
 
     removeKeysListeners();
     removeMouseListeners();

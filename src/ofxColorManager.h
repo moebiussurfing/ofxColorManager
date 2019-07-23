@@ -12,6 +12,7 @@
 #include "ofxMouseRuler.h"
 #include "ofxSimpleSlider.h"
 #include "ofxCereal.h"
+#include "ofxColorsBrowser.h"
 
 using namespace ofxCereal;
 
@@ -32,6 +33,13 @@ class ofxColorManager {
 public:
 
     ofxMouseRuler mouseRuler;
+
+    //--
+
+    // COLOR BROWSER
+
+    ofxColorsBrowser ColorBrowser;
+    ofFloatColor color_BACK;
 
     //--
 
