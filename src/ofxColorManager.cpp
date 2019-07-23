@@ -152,6 +152,8 @@ void ofxColorManager::setup()
     addKeysListeners();
     addMouseListeners();
 
+
+
     //--
 
     // STARTUP SETTINGS
@@ -1382,13 +1384,17 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
         add_color(ofColor(color_picked.get()));
     }
 
+    //-
+
     // COLOR BROWSER
 
-    if (key == ' ')
-        ColorBrowser.switch_palette_Type();
+//    ColorBrowser.keyPressed( eventArgs );
 
-    if (key == OF_KEY_RETURN)
-        ColorBrowser.switch_sorted_Type();
+//    if (key == ' ')
+//        ColorBrowser.switch_palette_Type();
+//
+//    if (key == OF_KEY_RETURN)
+//        ColorBrowser.switch_sorted_Type();
 }
 
 //--------------------------------------------------------------
@@ -1419,6 +1425,11 @@ void ofxColorManager::mouseDragged(ofMouseEventArgs& eventArgs){
 //    ofLogNotice("ofxColorManager") << "mouseDragged " <<  x << ", " << y << ", " << button;
 
     TouchManager::one().touchMove(button, ofVec2f(x, y));
+
+    //-
+
+//    ColorBrowser.mouseDragged(eventArgs);
+//    ColorBrowser.TouchManager::one().touchMove(button, ofVec2f(x, y));
 }
 
 //--------------------------------------------------------------
@@ -1429,6 +1440,11 @@ void ofxColorManager::mousePressed(ofMouseEventArgs& eventArgs){
 //    ofLogNotice("ofxColorManager") << "mousePressed " <<  x << ", " << y << ", " << button;
 
     TouchManager::one().touchDown(button, ofVec2f(x, y));
+
+    //-
+
+//    ColorBrowser.mousePressed(eventArgs);
+//    ColorBrowser.TouchManager::one().touchDown(button, ofVec2f(x, y));
 }
 
 //--------------------------------------------------------------
@@ -1439,6 +1455,11 @@ void ofxColorManager::mouseReleased(ofMouseEventArgs& eventArgs){
 //    ofLogNotice("ofxColorManager") << "mouseReleased " <<  x << ", " << y << ", " << button;
 
     TouchManager::one().touchUp(button, ofVec2f(x, y));
+
+    //-
+
+//    ColorBrowser.mouseReleased(eventArgs);
+//    ColorBrowser.TouchManager::one().touchUp(button, ofVec2f(x, y));
 }
 
 //--------------------------------------------------------------
@@ -1447,12 +1468,22 @@ void ofxColorManager::addMouseListeners()
     ofAddListener( ofEvents().mouseDragged, this, &ofxColorManager::mouseDragged );
     ofAddListener( ofEvents().mousePressed, this, &ofxColorManager::mousePressed );
     ofAddListener( ofEvents().mouseReleased, this, &ofxColorManager::mouseReleased );
+
+//    ofAddListener( ofEvents().mouseDragged, this, &ofxColorsBrowser::mouseDragged );
+//    ofAddListener( ofEvents().mousePressed, this, &ofxColorsBrowser::mousePressed );
+//    ofAddListener( ofEvents().mouseReleased, this, &ofxColorsBrowser::mouseReleased );
 }
 
 //--------------------------------------------------------------
 void ofxColorManager::removeMouseListeners()
 {
-    ofRemoveListener( ofEvents().keyPressed, this, &ofxColorManager::keyPressed );
+    ofRemoveListener( ofEvents().mouseDragged, this, &ofxColorManager::mouseDragged );
+    ofRemoveListener( ofEvents().mousePressed, this, &ofxColorManager::mousePressed );
+    ofRemoveListener( ofEvents().mouseReleased, this, &ofxColorManager::mouseReleased );
+
+//    ofRemoveListener( ofEvents().mouseDragged, this, &ofxColorsBrowser::mouseDragged );
+//    ofRemoveListener( ofEvents().mousePressed, this, &ofxColorsBrowser::mousePressed );
+//    ofRemoveListener( ofEvents().mouseReleased, this, &ofxColorsBrowser::mouseReleased );
 }
 
 //--------------------------------------------------------------

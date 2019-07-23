@@ -101,21 +101,6 @@ public:
 
     //-
 
-    // LISTENERS
-
-    void keyPressed( ofKeyEventArgs& eventArgs);
-    void keyReleased( ofKeyEventArgs& eventArgs );
-    void addKeysListeners();
-    void removeKeysListeners();
-
-    void mouseDragged( ofMouseEventArgs& eventArgs );
-    void mousePressed( ofMouseEventArgs& eventArgs );
-    void mouseReleased( ofMouseEventArgs& eventArgs );
-    void addMouseListeners();
-    void removeMouseListeners();
-
-    //-
-
     // PARAMETERS
 
     ofParameter<bool> bRandomColor;
@@ -269,6 +254,21 @@ public:
     void load_group_XML(ofParameterGroup &g, string path);
     ofParameterGroup XML_params;
     string XML_path = "ofxColorManager.xml";
+
+    //-
+
+    // LISTENERS
+
+    void keyPressed( ofKeyEventArgs& eventArgs);
+    void keyReleased( ofKeyEventArgs& eventArgs );
+    void addKeysListeners();
+    void removeKeysListeners();
+
+    void mouseDragged( ofMouseEventArgs& eventArgs );
+    void mousePressed( ofMouseEventArgs& eventArgs );
+    void mouseReleased( ofMouseEventArgs& eventArgs );
+    void addMouseListeners();
+    void removeMouseListeners();
 
     //--
 };
