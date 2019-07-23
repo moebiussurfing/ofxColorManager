@@ -96,7 +96,7 @@ void ofxColorManager::setup()
     MODE_Palette.set("MODE COLOR/SLIDERS", false);
     BRIGHTNESS.set("BRIGHTNESS", 128, 0, 255 );
     SATURATION.set("SATURATION", 128, 0, 255 );
-    bRandomPalette.set("RANDOMIZE", false);
+    bRandomPalette.set("RANDOM PALETTE", false);
 
     params_palette.setName("ALGORITHMIC PALETTE");
     params_palette.add(MODE_Palette);
@@ -209,7 +209,7 @@ void ofxColorManager::setup_Gui_layout()
     // LAYOUT
 
     // global mini pad between panels/objects
-    pad = 5;
+    pad = 2;
 
     // gui
     gui_x = 10;
@@ -737,7 +737,7 @@ void ofxColorManager::setup_palettes() {
         btn->setColor(triad[i]);
         scene->addChild(btn);
         btns_plt_Triad.push_back(btn);
-        palettes_x += (box_size + pad);
+        palettes_x += h0;
     }
 
     // 2. complement triad
@@ -753,7 +753,7 @@ void ofxColorManager::setup_palettes() {
         btn->setColor(complementTriad[i]);
         scene->addChild(btn);
         btns_plt_ComplTriad.push_back(btn);
-        palettes_x += (box_size + pad);
+        palettes_x += h0;
     }
 
     // 3. complement sat
@@ -769,7 +769,7 @@ void ofxColorManager::setup_palettes() {
         btn->setColor(complement[i]);
         scene->addChild(btn);
         btns_plt_CompSat.push_back(btn);
-        palettes_x += (box_size + pad);
+        palettes_x += h0;
     }
 
     // 4. complement brgt
@@ -785,7 +785,7 @@ void ofxColorManager::setup_palettes() {
         btn->setColor(complementBrightness[i]);
         scene->addChild(btn);
         btns_plt_ComplBrgt.push_back(btn);
-        palettes_x += (box_size + pad);
+        palettes_x += h0;
     }
 
     // 5. mono sat
@@ -801,7 +801,7 @@ void ofxColorManager::setup_palettes() {
         btn->setColor(monochrome[i]);
         scene->addChild(btn);
         btns_plt_MonoSat.push_back(btn);
-        palettes_x += (box_size + pad);
+        palettes_x += h0;
     }
 
     // 6. mono brgt
@@ -817,7 +817,7 @@ void ofxColorManager::setup_palettes() {
         btn->setColor(monochromeBrightness[i]);
         scene->addChild(btn);
         btns_plt_MonoBrgt.push_back(btn);
-        palettes_x += (box_size + pad);
+        palettes_x += h0;
     }
 
     // 7. analogue
@@ -833,7 +833,7 @@ void ofxColorManager::setup_palettes() {
         btn->setColor(analogue[i]);
         scene->addChild(btn);
         btns_plt_Analog.push_back(btn);
-        palettes_x += (box_size + pad);
+        palettes_x += h0;
     }
 
     // 8. random
@@ -849,7 +849,7 @@ void ofxColorManager::setup_palettes() {
         btn->setColor(random[i]);
         scene->addChild(btn);
         btns_plt_Random.push_back(btn);
-        palettes_x += (box_size + pad);
+        palettes_x += h0;
     }
 
     //--
@@ -1286,7 +1286,7 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
     {
         if (bRandomColor)
         {
-            bRandomColor= false;
+            bRandomColor = false;
             color_picked = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
         }
     }
@@ -1314,7 +1314,7 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
             clearPalette();
         }
     }
-    else if (name == "RANDOMIZE")
+    else if (name == "RANDOM PALETTE")
     {
         if (bRandomPalette)
         {
@@ -1374,7 +1374,9 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
     if (key == 'r')
     {
         random.generateRandom();
-//        update_palettes();
+        bRandomColor = true;
+
+//        update_palettes();//TODO: should reduce calls on update()
     }
 
     //-
@@ -1418,11 +1420,11 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 
 //    ColorBrowser.keyPressed( eventArgs );
 
-//    if (key == ' ')
-//        ColorBrowser.switch_palette_Type();
-//
-//    if (key == OF_KEY_RETURN)
-//        ColorBrowser.switch_sorted_Type();
+    if (key == ' ')
+        ColorBrowser.switch_palette_Type();
+
+    if (key == OF_KEY_RETURN)
+        ColorBrowser.switch_sorted_Type();
 }
 
 //--------------------------------------------------------------
