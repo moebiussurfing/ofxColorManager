@@ -29,8 +29,11 @@ public:
 
 	//-
 
-    int *SELECTED_palette;
+    // pointer back link the outside (ofApp) variable
     void set_SELECTED_palette(int &palette);
+    int *SELECTED_palette_pointer;
+
+    //-
 
     //0:triad, 1:compTriad ... 7:random
     int thisPaletteType = -1;//undefined

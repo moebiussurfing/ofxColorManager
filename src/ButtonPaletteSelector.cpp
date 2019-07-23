@@ -2,20 +2,6 @@
 
 namespace ofxInterface
 {
-    void ButtonPaletteSelector::setThisPaletteType(int palette)
-    {
-        thisPaletteType = palette;
-
-        ofLogNotice("ButtonPaletteSelector") << "thisPaletteType:" << thisPaletteType;
-    }
-
-    void ButtonPaletteSelector::set_SELECTED_palette(int &palette)
-    {
-        SELECTED_palette = &palette;
-
-        ofLogNotice("ButtonPaletteSelector") << "SELECTED_palette:" << SELECTED_palette;
-    }
-
     void ButtonPaletteSelector::setup(const string &_label)
     {
         label = _label;
@@ -53,23 +39,44 @@ namespace ofxInterface
         }
     }
 
+    // pointer back link the outside (ofApp) variable
+    void ButtonPaletteSelector::set_SELECTED_palette(int &palette)
+    {
+        //        colorBACK = &c;
+        SELECTED_palette_pointer = &palette;
+
+        ofLogNotice("ButtonPaletteSelector") << "set_SELECTED_palette:" << palette;
+    }
+
     void ButtonPaletteSelector::onTouchDown(ofxInterface::TouchEvent &event)
     {
         ofVec2f local = toLocal(event.position);
 
-        SELECTED_palette = &thisPaletteType;
-        ofLogNotice("ButtonPaletteSelector") << "onTouchDown: " << thisPaletteType;
+        ofLogNotice("ButtonPaletteSelector") << "onTouchDown: thisPaletteType: " << thisPaletteType;
+
+//        & : reference operator : gives the memory address of variable
+//        * : deference operator : gives the value of the variable (pointed to by the pointer). Dereferences a reference.
+//        -> : used to access a vaiable within a pointer (equivilant to (*p).x)
+
+        // pointer back link the outside (ofApp) variable
+        //        colorBACK->set(ofFloatColor(color_picked));
+        (*SELECTED_palette_pointer) = thisPaletteType;
     }
 
     void ButtonPaletteSelector::onTouchUp(ofxInterface::TouchEvent &event)
     {
         ofVec2f local = toLocal(event.position);
-//        ofLogNotice("ButtonPaletteSelector") << "onTouchUp: " << thisPaletteType;
+//        ofLogNotice("ButtonPaletteSelector") << "onTouchUp: ";
     }
 
     void ButtonPaletteSelector::onTouchMove(ofxInterface::TouchEvent &event)
     {
+    }
 
+    void ButtonPaletteSelector::setThisPaletteType(int palette)
+    {
+        thisPaletteType = palette;
+        ofLogNotice("ButtonPaletteSelector") << "thisPaletteType:" << thisPaletteType;
     }
 
 } 	// namespace

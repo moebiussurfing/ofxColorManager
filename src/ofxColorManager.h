@@ -209,7 +209,6 @@ public:
     void add_color_Interface(ofColor c);
     bool bShowDebug = false;
 
-
     // ALGORITHMIC PALETTES
     vector<ButtonExample*> btns_plt_Triad;       // 1
     vector<ButtonExample*> btns_plt_ComplTriad;  // 2
@@ -220,10 +219,10 @@ public:
     vector<ButtonExample*> btns_plt_Analog;      // 7
     vector<ButtonExample*> btns_plt_Random;      // 8
 
-//    vector<BitmapTextButton*> btns_plt_Selector;    // 1-8
-    vector<ButtonPaletteSelector*> btns_plt_Selector;    // 1-8
+    // pointer back link the outside (ofApp) variable
+    vector<ButtonPaletteSelector*> btns_plt_Selector; // 1-8
     int SELECTED_palette = -1;
-    int SELECTED_palette_PRE = -2;
+    int SELECTED_palette_PRE = 0;//to check if changed on update() loop
 
 //    void add_color_Palette(int i);
 
@@ -240,9 +239,9 @@ public:
 
     ofxCurvesTool curvesTool;
     ofImage img;
-    bool curveShow;
+    bool curveShow = true;
     float cnt = 0;
-    int amount;
+    int amount = 256;
     void setup_curveTool();
     void update_curveTool();
     void draw_curveTool();

@@ -10,11 +10,6 @@ ofColor ButtonExample::getColor()
     return color_picked;
 }
 
-void ButtonExample::setup_colorBACK(ofFloatColor &c)
-{
-    colorBACK = &c;
-}
-
 void ButtonExample::setup(float x, float y, float w, float h)
 {
     setPosition(x, y);
@@ -53,6 +48,12 @@ void ButtonExample::draw()
 
 void ButtonExample::setLocked(bool b){
     bLocked = b;
+}
+
+// pointer back
+void ButtonExample::setup_colorBACK(ofFloatColor &c)
+{
+    colorBACK = &c;
 }
 
 void ButtonExample::onTouchDown(ofxInterface::TouchEvent &event)

@@ -517,9 +517,9 @@ bool ofxColorManager::imGui()
 //--------------------------------------------------------------
 void ofxColorManager::update()
 {
-        cout << "SELECTED_palette: " << SELECTED_palette << endl;
     if (SELECTED_palette != SELECTED_palette_PRE)
     {
+        ofLogNotice("ofxColorManager::update") << "-> CHANGED SELECTED_palette: " << SELECTED_palette << endl;
         SELECTED_palette_PRE = SELECTED_palette;
     }
 
@@ -541,22 +541,18 @@ void ofxColorManager::update()
 
     //-
 
-    if (color_clicked_PRE != color_clicked)
+    //        if (!bColor_clicked_DISABLED)
+    if (color_clicked != color_clicked_PRE )
     {
-//        if (!bColor_clicked_DISABLED)
-        ofLogNotice("ofxColorManager") << "-> color_clicked CHANGED"<< endl;
-        color_picked.set(color_clicked);
         color_clicked_PRE = color_clicked;
+        ofLogNotice("ofxColorManager") << "-> CHANGED color_clicked"<< endl;
+        color_picked.set(color_clicked);
     }
 }
 
 //--------------------------------------------------------------
 void ofxColorManager::setup_curveTool()
 {
-    curveShow = true;
-    cnt = 0;
-    // amount = 256;
-
     curvesTool.setup(amount);
     curvesTool.load("curves.yml"); //needed because it fills polyline
 
@@ -575,8 +571,6 @@ void ofxColorManager::setup_curveTool()
     // pct slider
     curveSlider.setup(slider_x, slider_y, slider_w, slider_h, 0., 1., 0, true, true);
     curveSlider.setLabelString("value");
-
-    //-
 }
 
 //--------------------------------------------------------------
@@ -869,39 +863,39 @@ void ofxColorManager::setup_palettes() {
                 btn->set_SELECTED_palette(SELECTED_palette);
                 break;
             case 1:
+                btn->setup("COMPLEMENT TRIAD");
                 btn->setThisPaletteType(1);
                 btn->set_SELECTED_palette(SELECTED_palette);
-                btn->setup("COMPLEMENT TRIAD");
                 break;
             case 2:
+                btn->setup("COMPLEMENT (SATURATION)");
                 btn->setThisPaletteType(2);
                 btn->set_SELECTED_palette(SELECTED_palette);
-                btn->setup("COMPLEMENT (SATURATION)");
                 break;
             case 3:
+                btn->setup("COMPLEMENT (BRIGHTNESS)");
                 btn->setThisPaletteType(3);
                 btn->set_SELECTED_palette(SELECTED_palette);
-                btn->setup("COMPLEMENT (BRIGHTNESS)");
                 break;
             case 4:
+                btn->setup("MONOCHROME (SATURATION)");
                 btn->setThisPaletteType(4);
                 btn->set_SELECTED_palette(SELECTED_palette);
-                btn->setup("MONOCHROME (SATURATION)");
                 break;
             case 5:
+                btn->setup("MONOCHROME (BRIGHTNESS)");
                 btn->setThisPaletteType(5);
                 btn->set_SELECTED_palette(SELECTED_palette);
-                btn->setup("MONOCHROME (BRIGHTNESS)");
                 break;
             case 6:
+                btn->setup("ANALOGUE");
                 btn->setThisPaletteType(6);
                 btn->set_SELECTED_palette(SELECTED_palette);
-                btn->setup("ANALOGUE");
                 break;
             case 7:
+                btn->setup("RANDOM");
                 btn->setThisPaletteType(7);
                 btn->set_SELECTED_palette(SELECTED_palette);
-                btn->setup("RANDOM");
                 break;
         }
         btn->setPosition(palettes_x + btn_pad_w, palettes_y + p * btn_plt_h);
