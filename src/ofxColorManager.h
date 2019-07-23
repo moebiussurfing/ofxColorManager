@@ -57,12 +57,16 @@ public:
     int gui_x, gui_y, gui_w, gui_h;
 
     int c_grad_x, c_grad_y, c_grad_w, c_grad_h;
-    int pos_curve_x;
-    int pos_curve_y;
-    int pos_curve_prev_x;
-    int pos_curve_prev_y;
-    int pos_curve_prev_w;
-    int pos_curve_prev_h;
+
+    int curveTool_x;
+    int curveTool_y;
+    int curveTool_w;
+    int curveTool_h;
+
+    int image_curvedGradient_x;
+    int image_curvedGradient_y;
+    int image_curvedGradient_w;
+    int image_curvedGradient_h;
 
     int slider_x;
     int slider_y;

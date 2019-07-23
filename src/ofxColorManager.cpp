@@ -190,8 +190,6 @@ void ofxColorManager::setup()
     loadPalette("myPalette");
 
     //-
-
-
 }
 
 //--------------------------------------------------------------
@@ -228,31 +226,32 @@ void ofxColorManager::setup_Gui_layout()
     palettes_y = 460;
 
     // curve tool pos (anchor for others)
-    amount = 256;
-    pos_curve_x = 525;
-    pos_curve_y = 25;
+    curveTool_x = 525;
+    curveTool_y = 25;
+    curveTool_w = 256;
+    curveTool_h = 256;
 
-    // squared LUT referenced to curve pos (vertical)
-    pos_curve_prev_x = amount + pad;
-    pos_curve_prev_y = 0;
-    pos_curve_prev_w = box_size;
-    pos_curve_prev_h = amount;
+    // gradient curved image LUT [referenced to curve pos (vertical)]
+    image_curvedGradient_x = amount + pad;
+    image_curvedGradient_y = 0;
+    image_curvedGradient_w = box_size;
+    image_curvedGradient_h = amount;
 
     // slider
-    slider_x = pos_curve_x + pad + amount + pad + pos_curve_prev_w;
-    slider_y = pos_curve_y;
+    slider_x = curveTool_x + pad + amount + pad + image_curvedGradient_w;
+    slider_y = curveTool_y;
     slider_w = box_size / 2;
     slider_h = amount;
 
     // gradient pre curve (bad sorted to the left but anchored to curve..)
     grad_w = box_size;
-    grad_x = pos_curve_x - (grad_w + pad);
-    grad_y = pos_curve_y;
+    grad_x = curveTool_x - (grad_w + pad);
+    grad_y = curveTool_y;
     grad_h = amount;
 
     // current color bar
     currColor_x = slider_x + slider_w + pad;
-    currColor_y = pos_curve_y;
+    currColor_y = curveTool_y;
 
     // color box picker
     color_x = 335;
@@ -357,32 +356,17 @@ void ofxColorManager::imGui_theme()
 void ofxColorManager::add_color_Interface(ofColor c)
 {
     palette_x = gui_x;
-    int miniPad = 4;
     int perRow = 5;
-
     int i = btns_palette.size();
+    palette_x += i * ( color_size + pad );
 
-    // setup them in a grid
-//    palette_x += (i%perRow)*(color_size+miniPad);
-//    palette_y += (i/perRow)*(color_size+miniPad);
-
-    palette_x += ( i * ( color_size + miniPad ) );
-//    palette_y += (i/perRow)*(color_size+pad);
-
-    // create a ButtonExample node
     ButtonExample *btn = new ButtonExample();
     btn->setup(palette_x, palette_y, color_size, color_size);
     btn->setColor(c);
     btn->setup_colorBACK( color_clicked );
-//    ofFloatColor cBtn = color_clicked_param.get();
-//    btn->setup_colorBACK( cBtn );
     btn->setLocked(true);
     btn->setName("btn" + ofToString(i));
-
-    // add it to the scene
     scene->addChild(btn);
-
-    // keep reference (we need it to update the nodes)
     btns_palette.push_back(btn);
 }
 
@@ -470,9 +454,6 @@ void ofxColorManager::draw_Interface(){
 bool ofxColorManager::imGui()
 {
     auto mainSettings = ofxImGui::Settings();
-
-    //TODO: move ALL listeners outside gui
-
     this->gui.begin();
     {
         if (ofxImGui::BeginWindow("COLOR MANAGER", mainSettings, false))
@@ -481,7 +462,6 @@ bool ofxColorManager::imGui()
             if (ofxImGui::BeginTree(this->params_data, mainSettings))
             {
                 ofxImGui::AddParameter(this->color_backGround, true);
-
                 ofxImGui::EndTree(mainSettings);
             }
 
@@ -492,12 +472,10 @@ bool ofxColorManager::imGui()
                 ofxImGui::AddParameter(this->color_HUE);
                 ofxImGui::AddParameter(this->color_SAT);
                 ofxImGui::AddParameter(this->color_BRG);
-
                 ofxImGui::AddParameter(this->bRandomColor);
                 ofxImGui::AddParameter(this->bAddColor);
                 ofxImGui::AddParameter(this->bRemoveColor);
                 ofxImGui::AddParameter(this->bClearPalette);
-
                 ofxImGui::EndTree(mainSettings);
             }
 
@@ -519,14 +497,12 @@ bool ofxColorManager::imGui()
                 ofxImGui::AddParameter(this->bResetCurve);
                 ofxImGui::AddParameter(this->curve_pos);
                 ofxImGui::AddParameter(this->gradient_hard);
-
                 ofxImGui::EndTree(mainSettings);
             }
         }
         ofxImGui::EndWindow(mainSettings);
     }
     this->gui.end();
-
     return mainSettings.mouseOverGui;
 }
 
@@ -544,22 +520,12 @@ void ofxColorManager::update()
     //-
 
     update_Interface();
-
-    //-
-
     update_palettes();
-
-    //-
-
     update_curveTool();
-
-    //-
-
     ColorBrowser.update();
 
     //-
 
-    //        if (!bColor_clicked_DISABLED)
     if (color_clicked != color_clicked_PRE )
     {
         color_clicked_PRE = color_clicked;
@@ -574,7 +540,7 @@ void ofxColorManager::setup_curveTool()
     curvesTool.setup(amount);
     curvesTool.load("curves.yml"); //needed because it fills polyline
 
-    img.allocate(pos_curve_prev_w, pos_curve_prev_h, OF_IMAGE_COLOR);
+    img.allocate(image_curvedGradient_w, image_curvedGradient_h, OF_IMAGE_COLOR);
 
     curve_pos.set("CURVE POS", 0., 0., 1.);// pct value 0. to 1.
     bResetCurve.set("RESET CURVE", false);
@@ -605,7 +571,7 @@ void ofxColorManager::update_curveTool()
     float pct;
     float curveVal;
 
-    for(int y = 0; y < pos_curve_prev_h; y++)
+    for(int y = 0; y < image_curvedGradient_h; y++)
     {
         curveVal = curvesTool[y];
         if (!bInvert)
@@ -617,7 +583,7 @@ void ofxColorManager::update_curveTool()
         }
         ofColor c = gradient.getColorAtPercent(pct);
 
-        for(int x = 0; x < pos_curve_prev_w; x++)
+        for(int x = 0; x < image_curvedGradient_w; x++)
         {
             img.setColor(x, y, c);
         }
@@ -665,7 +631,7 @@ void ofxColorManager::draw_curveTool() {
         ofPushMatrix();
         ofPushStyle();
 
-        ofTranslate(pos_curve_x, pos_curve_y);
+        ofTranslate(curveTool_x, curveTool_y);
 
         ofSetColor(255);
 
@@ -673,7 +639,7 @@ void ofxColorManager::draw_curveTool() {
         curvesTool.draw(0, 0, cnt);
 
         // box LUT gradiant
-        img.draw(pos_curve_prev_x, pos_curve_prev_y);
+        img.draw(image_curvedGradient_x, image_curvedGradient_y);
 
         float y =  amount-curvesTool[cnt];
 //    float y = amount-curvesTool.getAt(cnt);
@@ -683,7 +649,7 @@ void ofxColorManager::draw_curveTool() {
         ofSetColor(ofColor::white);
 
         ofDrawLine(0, y, amount, y);
-//    ofDrawLine(amount + slider_w, y, amount + slider_w + pad + pos_curve_prev_w + 100, y);
+//    ofDrawLine(amount + slider_w, y, amount + slider_w + pad + image_curvedGradient_w + 100, y);
 
 //        // current circle point
 //        ofSetColor(25);
@@ -1119,19 +1085,12 @@ void ofxColorManager::draw()
     //-
 
     // INTERFACE
-
     draw_Interface();
 
-    //-
-
     // CURVE
-
     draw_curveTool();
 
-    //-
-
     // COLOR BROWSER
-
     ColorBrowser.draw();
 
     //-
@@ -1152,7 +1111,7 @@ void ofxColorManager::draw()
 
     //--
 
-//    // ALGORTIHMIC PALETTE
+//    // DEBUG ALGORTIHMIC PALETTE
 //
 //    int x, y, w, h;
 //    h = (box_size+pad);
