@@ -143,10 +143,22 @@ void ofxColorManager::setup()
 
     // GUI
 
+    // font
+    ImGuiIO& io = ImGui::GetIO();
+    string inputPath;
+    inputPath = ofFilePath::getAbsolutePath("assets/fonts/PragmataProR_0822.ttf");
+    const char* myPath = inputPath.c_str();
+    ImFontConfig config;
+    config.OversampleH = 3;
+    config.OversampleV = 1;
+    config.GlyphExtraSpacing.x = 1.0f;
+    io.Fonts->AddFontFromFileTTF(myPath, 13.0f, &config);
 
-
+    // create
     this->gui.setup();
     this->guiVisible = true;
+
+    // theme colors
     imGui_theme();
 
     //--
@@ -306,16 +318,16 @@ void ofxColorManager::imGui_theme()
 {
     //-
 
-    // font
-    ImGuiIO& io = ImGui::GetIO();
-    string inputPath;
-    inputPath = ofFilePath::getAbsolutePath("assets/fonts/PragmataProB_0822.ttf");
-    const char* myPath = inputPath.c_str();
-    ImFontConfig config;
-    config.OversampleH = 3;
-    config.OversampleV = 1;
-    config.GlyphExtraSpacing.x = 1.0f;
-    io.Fonts->AddFontFromFileTTF(myPath, 32.0f, &config);
+//    // font
+//    ImGuiIO& io = ImGui::GetIO();
+//    string inputPath;
+//    inputPath = ofFilePath::getAbsolutePath("assets/fonts/PragmataProB_0822.ttf");
+//    const char* myPath = inputPath.c_str();
+//    ImFontConfig config;
+//    config.OversampleH = 3;
+//    config.OversampleV = 1;
+//    config.GlyphExtraSpacing.x = 1.0f;
+//    io.Fonts->AddFontFromFileTTF(myPath, 32.0f, &config);
 
     //-
 
@@ -331,7 +343,7 @@ void ofxColorManager::imGui_theme()
     myColor3 = ofColor(gray2, gray2, gray2, 255);//gray2
 
     ImGuiStyle *style = &ImGui::GetStyle();
-    style->WindowRounding = (5.0f);
+    style->WindowRounding = (3.0f);
     style->Colors[ImGuiCol_ScrollbarBg] = ImVec4(myColor1, 1.00f);
     style->Colors[ImGuiCol_ScrollbarGrab] = ImVec4(myColor2, 0.21f);
     style->Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(myColor1, 0.78f);
@@ -536,6 +548,8 @@ void ofxColorManager::update()
     {
         ofLogNotice("ofxColorManager::update") << "-> CHANGED SELECTED_palette: " << SELECTED_palette << endl;
         SELECTED_palette_PRE = SELECTED_palette;
+
+        recall_AlgorithmicPalette(SELECTED_palette);
     }
 
     //-
@@ -923,6 +937,72 @@ void ofxColorManager::setup_palettes() {
 }
 
 //--------------------------------------------------------------
+void ofxColorManager::recall_AlgorithmicPalette(int p)
+{
+    clearPalette();
+    ofColor color;
+
+    switch (p)
+    {
+        case 0:
+            for (int i = 0; i < btns_plt_Triad.size(); i++) {
+                color = btns_plt_Triad[i]->getColor();
+                add_color( color );
+            }
+            break;
+
+        case 1:
+            for (int i = 0; i < btns_plt_ComplTriad.size(); i++) {
+                color = btns_plt_ComplTriad[i]->getColor();
+                add_color( color );
+            }
+            break;
+
+        case 2:
+            for (int i = 0; i < btns_plt_CompSat.size(); i++) {
+                color = btns_plt_CompSat[i]->getColor();
+                add_color( color );
+            }
+            break;
+
+        case 3:
+            for (int i = 0; i < btns_plt_ComplBrgt.size(); i++) {
+                color = btns_plt_ComplBrgt[i]->getColor();
+                add_color( color );
+            }
+            break;
+
+        case 4:
+            for (int i = 0; i < btns_plt_MonoSat.size(); i++) {
+                color = btns_plt_MonoSat[i]->getColor();
+                add_color( color );
+            }
+            break;
+
+        case 5:
+            for (int i = 0; i < btns_plt_MonoBrgt.size(); i++) {
+                color = btns_plt_MonoBrgt[i]->getColor();
+                add_color( color );
+            }
+            break;
+
+        case 6:
+            for (int i = 0; i < btns_plt_Analog.size(); i++) {
+                color = btns_plt_Analog[i]->getColor();
+                add_color( color );
+            }
+            break;
+
+        case 7:
+            for (int i = 0; i < btns_plt_Random.size(); i++) {
+                color = btns_plt_Random[i]->getColor();
+                add_color( color );
+            }
+            break;
+    }
+}
+
+//--------------------------------------------------------------
 void ofxColorManager::update_palettes()
 {
     brightness = BRIGHTNESS;
@@ -1138,7 +1218,7 @@ void ofxColorManager::remove_colorLast()
             auto a = scene->getChildWithName(n, 100);
             auto b = a->getName();
             scene->removeChild(a, false);
-            cout << "removed children: " << b << endl;
+            ofLogVerbose("ofxColorManager") << "removed children: " << b;
         }
         btns_palette.pop_back();
     }
@@ -1147,13 +1227,12 @@ void ofxColorManager::remove_colorLast()
 //--------------------------------------------------------------
 void ofxColorManager::clearPalette()
 {
-    cout << endl;
-    cout << "clearPalette" << endl;
+    ofLogNotice("ofxColorManager") << "clearPalette";
 
     palette.clear();
     gradient.reset();
 
-    cout << "getNumChildren: " << scene->getNumChildren() << endl;
+    ofLogNotice("ofxColorManager") << "getNumChildren: " << scene->getNumChildren();
 
     for (int i=0; i< btns_palette.size(); i++)
     {
@@ -1161,11 +1240,9 @@ void ofxColorManager::clearPalette()
         auto a = scene->getChildWithName(n, 100);
         auto b = a->getName();
         scene->removeChild(a, false);
-        cout << "removed children: " << b << endl;
+        ofLogVerbose("ofxColorManager") << "removed children: " << b;
     }
     btns_palette.clear();
-
-    cout << endl;
 }
 
 //--------------------------------------------------------------
@@ -1174,7 +1251,7 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
 
     //TODO: reduce callbacks..
     if (name != "CURVE POS" && name != "COLOR")
-        ofLogNotice() << "Changed_control: " << name << ":" << e;
+        ofLogNotice("ofxColorManager") << "Changed_control: " << name << ":" << e;
 
     // COLOR
     if (name == "COLOR") // color picked
@@ -1244,7 +1321,7 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
     {
         if (bClearPalette)
         {
-            bClearPalette= false;
+            bClearPalette = false;
             clearPalette();
         }
     }

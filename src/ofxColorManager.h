@@ -222,7 +222,9 @@ public:
     // pointer back link the outside (ofApp) variable
     vector<ButtonPaletteSelector*> btns_plt_Selector; // 1-8
     int SELECTED_palette = -1;
-    int SELECTED_palette_PRE = 0;//to check if changed on update() loop
+    int SELECTED_palette_PRE = -1;//to check if changed on update() loop
+
+    void recall_AlgorithmicPalette(int p);
 
 //    void add_color_Palette(int i);
 
