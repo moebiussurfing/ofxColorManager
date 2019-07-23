@@ -5,6 +5,7 @@
 #include "ofxImGui.h"
 #include "ofxInterface.h"
 #include "ofxInterfaceWidgets.h"
+#include "ButtonPaletteSelector.h"
 #include "ButtonExample.h"
 #include "ofxColorGradient.h"
 #include "ofxColorPalette.h"
@@ -219,7 +220,10 @@ public:
     vector<ButtonExample*> btns_plt_Analog;      // 7
     vector<ButtonExample*> btns_plt_Random;      // 8
 
-    vector<BitmapTextButton*> btns_plt_Selector;    // 1-8
+//    vector<BitmapTextButton*> btns_plt_Selector;    // 1-8
+    vector<ButtonPaletteSelector*> btns_plt_Selector;    // 1-8
+    int SELECTED_palette = -1;
+    int SELECTED_palette_PRE = -2;
 
 //    void add_color_Palette(int i);
 

@@ -517,6 +517,14 @@ bool ofxColorManager::imGui()
 //--------------------------------------------------------------
 void ofxColorManager::update()
 {
+        cout << "SELECTED_palette: " << SELECTED_palette << endl;
+    if (SELECTED_palette != SELECTED_palette_PRE)
+    {
+        SELECTED_palette_PRE = SELECTED_palette;
+    }
+
+    //-
+
     update_Interface();
 
     //-
@@ -528,8 +536,6 @@ void ofxColorManager::update()
     update_curveTool();
 
     //-
-
-    // COLOR BROWSER
 
     ColorBrowser.update();
 
@@ -853,31 +859,48 @@ void ofxColorManager::setup_palettes() {
 
     for (int p = 0; p< NUM_PALETTES; p++)
     {
-        BitmapTextButton *btn = new BitmapTextButton();
+        ButtonPaletteSelector *btn = new ButtonPaletteSelector();
+//        BitmapTextButton *btn = new BitmapTextButton();
         switch (p)
         {
             case 0:
                 btn->setup("TRIAD");
+                btn->setThisPaletteType(0);
+                btn->set_SELECTED_palette(SELECTED_palette);
                 break;
             case 1:
+                btn->setThisPaletteType(1);
+                btn->set_SELECTED_palette(SELECTED_palette);
                 btn->setup("COMPLEMENT TRIAD");
                 break;
             case 2:
+                btn->setThisPaletteType(2);
+                btn->set_SELECTED_palette(SELECTED_palette);
                 btn->setup("COMPLEMENT (SATURATION)");
                 break;
             case 3:
+                btn->setThisPaletteType(3);
+                btn->set_SELECTED_palette(SELECTED_palette);
                 btn->setup("COMPLEMENT (BRIGHTNESS)");
                 break;
             case 4:
+                btn->setThisPaletteType(4);
+                btn->set_SELECTED_palette(SELECTED_palette);
                 btn->setup("MONOCHROME (SATURATION)");
                 break;
             case 5:
+                btn->setThisPaletteType(5);
+                btn->set_SELECTED_palette(SELECTED_palette);
                 btn->setup("MONOCHROME (BRIGHTNESS)");
                 break;
             case 6:
+                btn->setThisPaletteType(6);
+                btn->set_SELECTED_palette(SELECTED_palette);
                 btn->setup("ANALOGUE");
                 break;
             case 7:
+                btn->setThisPaletteType(7);
+                btn->set_SELECTED_palette(SELECTED_palette);
                 btn->setup("RANDOM");
                 break;
         }
