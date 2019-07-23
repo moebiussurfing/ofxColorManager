@@ -366,12 +366,6 @@ void ofxColorManager::add_color_Interface(ofColor c)
     // add it to the scene
     scene->addChild(btn);
 
-//    if (i%perRow>0)
-//    {
-//        // this can be called to place nodes next to each other
-//        btn->placeNextTo(*btns_palette[i-1], Node::RIGHT);
-//    }
-
     // keep reference (we need it to update the nodes)
     btns_palette.push_back(btn);
 }
@@ -719,18 +713,10 @@ void ofxColorManager::setup_palettes() {
         ButtonExample *btn = new ButtonExample();
         btn->setup(palettes_x, palettes_y, box_size, box_size);
         btn->setup_colorBACK(color_clicked);
-
-////        btn->setup_colorBACK( color_clicked_param.get() );
-//        ofFloatColor cBtn = color_clicked_param.get();
-//        btn->setup_colorBACK( cBtn );
-
         btn->setLocked(true);
         btn->setName("triad" + ofToString(i));
         btn->setColor(triad[i]);
         scene->addChild(btn);
-        if (i > 0) {
-            btn->placeNextTo(*btns_plt_Triad[i - 1], Node::RIGHT);
-        }
         btns_plt_Triad.push_back(btn);
         palettes_x += (box_size + pad);
     }
@@ -743,18 +729,10 @@ void ofxColorManager::setup_palettes() {
         ButtonExample *btn = new ButtonExample();
         btn->setup(palettes_x, palettes_y, box_size, box_size);
         btn->setup_colorBACK(color_clicked);
-
-////        btn->setup_colorBACK( color_clicked_param.get() );
-//        ofFloatColor cBtn = color_clicked_param.get();
-//        btn->setup_colorBACK( cBtn );
-
         btn->setLocked(true);
         btn->setName("compTriad" + ofToString(i));
         btn->setColor(complementTriad[i]);
         scene->addChild(btn);
-        if (i > 0) {
-            btn->placeNextTo(*btns_plt_ComplTriad[i - 1], Node::RIGHT);
-        }
         btns_plt_ComplTriad.push_back(btn);
         palettes_x += (box_size + pad);
     }
@@ -767,18 +745,10 @@ void ofxColorManager::setup_palettes() {
         ButtonExample *btn = new ButtonExample();
         btn->setup(palettes_x, palettes_y, box_size, box_size);
         btn->setup_colorBACK(color_clicked);
-
-////        btn->setup_colorBACK( color_clicked_param.get() );
-//        ofFloatColor cBtn = color_clicked_param.get();
-//        btn->setup_colorBACK( cBtn );
-
         btn->setLocked(true);
         btn->setName("compSat" + ofToString(i));
         btn->setColor(complement[i]);
         scene->addChild(btn);
-        if (i > 0) {
-            btn->placeNextTo(*btns_plt_CompSat[i - 1], Node::RIGHT);
-        }
         btns_plt_CompSat.push_back(btn);
         palettes_x += (box_size + pad);
     }
@@ -791,18 +761,10 @@ void ofxColorManager::setup_palettes() {
         ButtonExample *btn = new ButtonExample();
         btn->setup(palettes_x, palettes_y, box_size, box_size);
         btn->setup_colorBACK(color_clicked);
-
-////        btn->setup_colorBACK( color_clicked_param.get() );
-//        ofFloatColor cBtn = color_clicked_param.get();
-//        btn->setup_colorBACK( cBtn );
-
         btn->setLocked(true);
         btn->setName("compBrgt" + ofToString(i));
         btn->setColor(complementBrightness[i]);
         scene->addChild(btn);
-        if (i > 0) {
-            btn->placeNextTo(*btns_plt_ComplBrgt[i - 1], Node::RIGHT);
-        }
         btns_plt_ComplBrgt.push_back(btn);
         palettes_x += (box_size + pad);
     }
@@ -815,18 +777,10 @@ void ofxColorManager::setup_palettes() {
         ButtonExample *btn = new ButtonExample();
         btn->setup(palettes_x, palettes_y, box_size, box_size);
         btn->setup_colorBACK(color_clicked);
-
-////        btn->setup_colorBACK( color_clicked_param.get() );
-//        ofFloatColor cBtn = color_clicked_param.get();
-//        btn->setup_colorBACK( cBtn );
-
         btn->setLocked(true);
         btn->setName("monoSat" + ofToString(i));
         btn->setColor(monochrome[i]);
         scene->addChild(btn);
-        if (i > 0) {
-            btn->placeNextTo(*btns_plt_MonoSat[i - 1], Node::RIGHT);
-        }
         btns_plt_MonoSat.push_back(btn);
         palettes_x += (box_size + pad);
     }
@@ -839,18 +793,10 @@ void ofxColorManager::setup_palettes() {
         ButtonExample *btn = new ButtonExample();
         btn->setup(palettes_x, palettes_y, box_size, box_size);
         btn->setup_colorBACK(color_clicked);
-
-////        btn->setup_colorBACK( color_clicked_param.get() );
-//        ofFloatColor cBtn = color_clicked_param.get();
-//        btn->setup_colorBACK( cBtn );
-
         btn->setLocked(true);
         btn->setName("monoBrgt" + ofToString(i));
         btn->setColor(monochromeBrightness[i]);
         scene->addChild(btn);
-        if (i > 0) {
-            btn->placeNextTo(*btns_plt_MonoBrgt[i - 1], Node::RIGHT);
-        }
         btns_plt_MonoBrgt.push_back(btn);
         palettes_x += (box_size + pad);
     }
@@ -867,9 +813,6 @@ void ofxColorManager::setup_palettes() {
         btn->setName("analogue" + ofToString(i));
         btn->setColor(analogue[i]);
         scene->addChild(btn);
-        if (i > 0) {
-            btn->placeNextTo(*btns_plt_Analog[i - 1], Node::RIGHT);
-        }
         btns_plt_Analog.push_back(btn);
         palettes_x += (box_size + pad);
     }
@@ -882,18 +825,10 @@ void ofxColorManager::setup_palettes() {
         ButtonExample *btn = new ButtonExample();
         btn->setup(palettes_x, palettes_y, box_size, box_size);
         btn->setup_colorBACK(color_clicked);
-
-////        btn->setup_colorBACK( color_clicked_param.get() );
-//        ofFloatColor cBtn = color_clicked_param.get();
-//        btn->setup_colorBACK( cBtn );
-
         btn->setLocked(true);
         btn->setName("random" + ofToString(i));
         btn->setColor(random[i]);
         scene->addChild(btn);
-        if (i > 0) {
-            btn->placeNextTo(*btns_plt_Random[i - 1], Node::RIGHT);
-        }
         btns_plt_Random.push_back(btn);
         palettes_x += (box_size + pad);
     }
@@ -919,7 +854,6 @@ void ofxColorManager::setup_palettes() {
     for (int p = 0; p< NUM_PALETTES; p++)
     {
         BitmapTextButton *btn = new BitmapTextButton();
-
         switch (p)
         {
             case 0:
@@ -947,14 +881,10 @@ void ofxColorManager::setup_palettes() {
                 btn->setup("RANDOM");
                 break;
         }
-
         btn->setPosition(palettes_x + btn_pad_w, palettes_y + p * btn_plt_h);
         btn->setBGColor(btn_plt_c);
         btn->setLabelColor(ofColor::white);
         btn->setBorder(false);
-//        btn->setBorderColor(ofColor::white);
-//        btn->setSize(btn_plt_w, btn_plt_h);
-
         scene->addChild(btn);
         btns_plt_Selector.push_back(btn);
     }

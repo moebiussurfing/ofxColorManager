@@ -66,12 +66,12 @@ void ButtonExample::draw()
 
     ofDrawRectangle(0, 0, getWidth(), getHeight());
 
-	// draw the touch anchor
-	if (bTouched) {
-		ofSetColor(color_over);
-		ofFill();
-		ofDrawEllipse(touchAnchor, 10, 10);
-	}
+//	// draw the touch anchor
+//	if (bTouched) {
+//		ofSetColor(color_over);
+//		ofFill();
+//		ofDrawEllipse(touchAnchor, 10, 10);
+//	}
 }
 
 void ButtonExample::setLocked(bool b){
