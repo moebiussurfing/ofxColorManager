@@ -3,16 +3,20 @@
 #include "ofMain.h"
 
 #include "ofxImGui.h"
-#include "ofxColorPalette.h"
 #include "ofxInterface.h"
 #include "ofxInterfaceWidgets.h"
 #include "ButtonExample.h"
 #include "ofxColorGradient.h"
+#include "ofxColorPalette.h"
+#include "ofxColorsBrowser.h"
 #include "ofxCurvesTool.h"
-#include "ofxMouseRuler.h"
 #include "ofxSimpleSlider.h"
 #include "ofxCereal.h"
-#include "ofxColorsBrowser.h"
+#include "ofxMouseRuler.h"
+
+//--
+
+// JSON SERIALIZER
 
 using namespace ofxCereal;
 
@@ -24,6 +28,8 @@ struct CustomData
 OFX_CEREAL_DEFINE(CEREAL_NVP(name), CEREAL_NVP(palette))
 
 };
+
+//--
 
 class ofxColorManager {
 
@@ -91,6 +97,8 @@ public:
     void draw();
     void exit();
 
+    float dt;
+
     //-
 
     // LISTENERS
@@ -106,21 +114,19 @@ public:
     void addMouseListeners();
     void removeMouseListeners();
 
-    float dt;
-
     //-
 
     // PARAMETERS
-
-    ofParameterGroup params_data;
-    ofParameterGroup params_color;
-    ofParameterGroup params_palette;
-    ofParameterGroup params_curve;
 
     ofParameter<bool> bRandomColor;
     ofParameter<bool> bAddColor;
     ofParameter<bool> bRemoveColor;
     ofParameter<bool> bClearPalette;
+
+    ofParameterGroup params_data;
+    ofParameterGroup params_color;
+    ofParameterGroup params_palette;
+    ofParameterGroup params_curve;
     ofParameterGroup params_control;
     void Changed_control(ofAbstractParameter &e);
 
@@ -176,6 +182,8 @@ public:
     ofFloatColor color_clicked_PRE;
     ofRectangle r_color_clicked;
     bool bColor_clicked_DISABLED = false;
+
+    //-
 
     // TODO: TEST LINKING
 
@@ -245,13 +253,12 @@ public:
     ofImage img;
     bool curveShow;
     float cnt = 0;
-    int amount = amount;
+    int amount;
     void setup_curveTool();
     void update_curveTool();
     void draw_curveTool();
     ofParameter<float> curve_pos;
     ofxSimpleSlider curveSlider;
-
     ofParameter<bool> bResetCurve;
 
     //--
