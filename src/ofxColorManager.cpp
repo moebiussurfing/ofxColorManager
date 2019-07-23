@@ -13,6 +13,8 @@ ofxColorManager::~ofxColorManager()
 //--------------------------------------------------------------
 void ofxColorManager::setup()
 {
+    //-
+
     mouseRuler.setup();
     mouseRuler.toggleVisibility();
 
@@ -140,6 +142,8 @@ void ofxColorManager::setup()
     //--
 
     // GUI
+
+
 
     this->gui.setup();
     this->guiVisible = true;
@@ -300,6 +304,22 @@ void ofxColorManager::savePalette(string p)
 //--------------------------------------------------------------
 void ofxColorManager::imGui_theme()
 {
+    //-
+
+    // font
+    ImGuiIO& io = ImGui::GetIO();
+    string inputPath;
+    inputPath = ofFilePath::getAbsolutePath("assets/fonts/PragmataProB_0822.ttf");
+    const char* myPath = inputPath.c_str();
+    ImFontConfig config;
+    config.OversampleH = 3;
+    config.OversampleV = 1;
+    config.GlyphExtraSpacing.x = 1.0f;
+    io.Fonts->AddFontFromFileTTF(myPath, 32.0f, &config);
+
+    //-
+
+    // widgets color
     ofColor myColor1;
     int grayDark = 0;
     myColor1 = ofColor(grayDark, grayDark, grayDark, 255);//black
@@ -311,7 +331,7 @@ void ofxColorManager::imGui_theme()
     myColor3 = ofColor(gray2, gray2, gray2, 255);//gray2
 
     ImGuiStyle *style = &ImGui::GetStyle();
-//    style->WindowRounding(2.);
+    style->WindowRounding = (5.0f);
     style->Colors[ImGuiCol_ScrollbarBg] = ImVec4(myColor1, 1.00f);
     style->Colors[ImGuiCol_ScrollbarGrab] = ImVec4(myColor2, 0.21f);
     style->Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(myColor1, 0.78f);
@@ -326,15 +346,10 @@ void ofxColorManager::imGui_theme()
     style->Colors[ImGuiCol_Header] = ImVec4(myColor1, 0.76f);
     style->Colors[ImGuiCol_HeaderHovered] = ImVec4(myColor2, 0.86f);
     style->Colors[ImGuiCol_HeaderActive] = ImVec4(myColor1, 1.00f);
-//    style->Colors[ImGuiCol_PlotHistogramHovered] = ImVec4(myColor1, 1.00f);
-//    style->Colors[ImGuiCol_PlotLinesHovered] = ImVec4(myColor1, 1.00f);
-//    style->Colors[ImGuiCol_ResizeGripHovered] = ImVec4(myColor1, 0.78f);
-//    style->Colors[ImGuiCol_ColumnHovered] = ImVec4(myColor1, 0.78f);
-//    style->Colors[ImGuiCol_HeaderHovered] = ImVec4(myColor1, 0.86f);
-//    style->Colors[ImGuiCol_PlotHistogramHovered] = ImVec4(myColor1, 1.00f);
     style->Colors[ImGuiCol_FrameBg] = ImVec4(myColor1, 1.00f);
     style->Colors[ImGuiCol_FrameBgHovered] = ImVec4(myColor2, 0.78f);//hover
     style->Colors[ImGuiCol_FrameBgActive] = ImVec4(myColor1, 1.00f);
+    style->Colors[ImGuiCol_SliderGrabActive] = ImVec4(myColor2, 0.7f);
 }
 
 //--------------------------------------------------------------
