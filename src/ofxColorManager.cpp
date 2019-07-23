@@ -536,9 +536,9 @@ void ofxColorManager::update()
     if (SELECTED_palette != SELECTED_palette_PRE)
     {
         ofLogNotice("ofxColorManager::update") << "-> CHANGED SELECTED_palette: " << SELECTED_palette << endl;
-        SELECTED_palette_PRE = SELECTED_palette;
-
         recall_AlgorithmicPalette(SELECTED_palette);
+
+        SELECTED_palette_PRE = SELECTED_palette = -1;
     }
 
     //-
@@ -1323,7 +1323,7 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
         }
     }
 
-        // CURVE
+    // CURVE
     else if (name == "CURVE POS")
     {
 //        if ( )
