@@ -316,18 +316,7 @@ void ofxColorManager::savePalette(string p)
 //--------------------------------------------------------------
 void ofxColorManager::imGui_theme()
 {
-    //-
-
-//    // font
-//    ImGuiIO& io = ImGui::GetIO();
-//    string inputPath;
-//    inputPath = ofFilePath::getAbsolutePath("assets/fonts/PragmataProB_0822.ttf");
-//    const char* myPath = inputPath.c_str();
-//    ImFontConfig config;
-//    config.OversampleH = 3;
-//    config.OversampleV = 1;
-//    config.GlyphExtraSpacing.x = 1.0f;
-//    io.Fonts->AddFontFromFileTTF(myPath, 32.0f, &config);
+    // must be done after setup the gui
 
     //-
 
@@ -733,10 +722,11 @@ void ofxColorManager::draw_curveTool() {
 void ofxColorManager::setup_palettes() {
     int x0 = palettes_x;
     int y0 = palettes_y;//to recall at end
+    int h0 = box_size + pad;
 
     // 1. triad
     palettes_x = x0;
-    palettes_y += (box_size + pad);
+    palettes_y += h0;
 
     for (int i = 0; i < triad.size(); i++) {
         ButtonExample *btn = new ButtonExample();
@@ -752,7 +742,7 @@ void ofxColorManager::setup_palettes() {
 
     // 2. complement triad
     palettes_x = x0;
-    palettes_y += (box_size + pad);
+    palettes_y += h0;
 
     for (int i = 0; i < complementTriad.size(); i++) {
         ButtonExample *btn = new ButtonExample();
@@ -768,7 +758,7 @@ void ofxColorManager::setup_palettes() {
 
     // 3. complement sat
     palettes_x = x0;
-    palettes_y += (box_size + pad);
+    palettes_y += h0;
 
     for (int i = 0; i < complement.size(); i++) {
         ButtonExample *btn = new ButtonExample();
@@ -784,7 +774,7 @@ void ofxColorManager::setup_palettes() {
 
     // 4. complement brgt
     palettes_x = x0;
-    palettes_y += (box_size + pad);
+    palettes_y += h0;
 
     for (int i = 0; i < complementBrightness.size(); i++) {
         ButtonExample *btn = new ButtonExample();
@@ -800,7 +790,7 @@ void ofxColorManager::setup_palettes() {
 
     // 5. mono sat
     palettes_x = x0;
-    palettes_y += (box_size + pad);
+    palettes_y += h0;
 
     for (int i = 0; i < monochrome.size(); i++) {
         ButtonExample *btn = new ButtonExample();
@@ -816,7 +806,7 @@ void ofxColorManager::setup_palettes() {
 
     // 6. mono brgt
     palettes_x = x0;
-    palettes_y += (box_size + pad);
+    palettes_y += h0;
 
     for (int i = 0; i < monochromeBrightness.size(); i++) {
         ButtonExample *btn = new ButtonExample();
@@ -832,7 +822,7 @@ void ofxColorManager::setup_palettes() {
 
     // 7. analogue
     palettes_x = x0;
-    palettes_y += (box_size + pad);
+    palettes_y += h0;
 
     for (int i = 0; i < analogue.size(); i++) {
         ButtonExample *btn = new ButtonExample();
@@ -848,7 +838,7 @@ void ofxColorManager::setup_palettes() {
 
     // 8. random
     palettes_x = x0;
-    palettes_y += (box_size + pad);
+    palettes_y += h0;
 
     for (int i = 0; i < random.size(); i++) {
         ButtonExample *btn = new ButtonExample();
@@ -868,22 +858,21 @@ void ofxColorManager::setup_palettes() {
 
     // palettes labels
 
-    int btn_plt_h, btn_pad_w;
     ofColor btn_plt_c;
     btn_plt_c.set(ofColor(32));
-    btn_plt_h = box_size + pad;
+    int btn_plt_h;
+    int btn_pad_w;
     btn_pad_w = 230;
+    btn_plt_h = h0;
     palettes_x = x0;
-    palettes_y = y0 + btn_plt_h + 11;
+    palettes_y = y0 + btn_plt_h + 10;
 
     //-
 
     int NUM_PALETTES = 8;
-
     for (int p = 0; p< NUM_PALETTES; p++)
     {
         ButtonPaletteSelector *btn = new ButtonPaletteSelector();
-//        BitmapTextButton *btn = new BitmapTextButton();
         switch (p)
         {
             case 0:
@@ -927,7 +916,7 @@ void ofxColorManager::setup_palettes() {
                 btn->set_SELECTED_palette(SELECTED_palette);
                 break;
         }
-        btn->setPosition(palettes_x + btn_pad_w, palettes_y + p * btn_plt_h);
+        btn->setPosition(palettes_x + btn_pad_w, palettes_y + p*btn_plt_h);
         btn->setBGColor(btn_plt_c);
         btn->setLabelColor(ofColor::white);
         btn->setBorder(false);
