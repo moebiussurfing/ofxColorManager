@@ -49,7 +49,7 @@ void ofxColorManager::setup()
 
     color_backGround.set("BACKGROUND", ofFloatColor::white);
 
-    params_data.setName("DATA");
+    params_data.setName("GENERAL");
     params_data.add(color_backGround);
 
     //--
@@ -77,7 +77,7 @@ void ofxColorManager::setup()
     bRemoveColor.set("REMOVE COLOR", false);
     bClearPalette.set("CLEAR PALETTE", false);
 
-    params_control.setName("CONTROL");
+    params_control.setName("COLOR EDITOR");
     params_control.add(color_picked);
     params_control.add(bRandomColor);
     params_control.add(bAddColor);
@@ -90,15 +90,15 @@ void ofxColorManager::setup()
 
     // ALGORITHMIC PALETTE
 
-    MODE_Palette.set("MODE COLOR/SLIDERS", false);
-    BRIGHTNESS.set("BRIGHTNESS", 128, 0, 255 );
+    MODE_Palette.set("FROM COLOR", false);
     SATURATION.set("SATURATION", 128, 0, 255 );
+    BRIGHTNESS.set("BRIGHTNESS", 128, 0, 255 );
     bRandomPalette.set("RANDOM PALETTE", false);
     NUM_ALGO_PALETTES.set("COLORS SIZE", 6, 2, 8);
     params_palette.setName("ALGORITHMIC PALETTE");
     params_palette.add(MODE_Palette);
-    params_palette.add(BRIGHTNESS);
     params_palette.add(SATURATION);
+    params_palette.add(BRIGHTNESS);
     params_palette.add(bRandomPalette);
     params_palette.add(NUM_ALGO_PALETTES);
 
@@ -129,7 +129,7 @@ void ofxColorManager::setup()
     gradient.setDrawVertical(true);
     gradient.setDrawDirFlip(true);
 
-    params_curve.setName("CURVE");
+    params_curve.setName("GRADIENT CURVE");
     params_curve.add(gradient_hard);
 
     //-
@@ -472,11 +472,13 @@ bool ofxColorManager::gui_imGui()
             // COLOR
             if (ofxImGui::BeginTree(this->params_control, mainSettings))
             {
+                ofxImGui::AddParameter(this->bRandomColor);
                 ofxImGui::AddParameter(this->color_picked, true);
                 ofxImGui::AddParameter(this->color_HUE);
                 ofxImGui::AddParameter(this->color_SAT);
                 ofxImGui::AddParameter(this->color_BRG);
-                ofxImGui::AddParameter(this->bRandomColor);
+
+                ImGui::Text("PALETTE MANAGER");
                 ofxImGui::AddParameter(this->bAddColor);
                 ofxImGui::AddParameter(this->bRemoveColor);
                 ofxImGui::AddParameter(this->bClearPalette);
@@ -487,7 +489,7 @@ bool ofxColorManager::gui_imGui()
             if (ofxImGui::BeginTree(this->params_palette, mainSettings))
             {
                 ofxImGui::AddParameter(this->MODE_Palette);
-                if (MODE_Palette) {
+                if (!MODE_Palette) {
                     ofxImGui::AddParameter(this->SATURATION);
                     ofxImGui::AddParameter(this->BRIGHTNESS);
                 }
@@ -500,7 +502,11 @@ bool ofxColorManager::gui_imGui()
             if (ofxImGui::BeginTree(this->params_curve, mainSettings))
             {
                 ofxImGui::AddParameter(this->bResetCurve);
-                ofxImGui::AddParameter(this->curve_pos);
+//                ofxImGui::AddParameter(this->curve_pos);
+                if (ofxImGui::AddParameter(this->curve_pos))
+                {
+                    curve_pos_slider.setPercent(curve_pos.get());
+                }
                 ofxImGui::AddParameter(this->gradient_hard);
                 ofxImGui::EndTree(mainSettings);
             }
@@ -558,7 +564,7 @@ void ofxColorManager::curveTool_setup()
     //-
 
     // slider
-    curve_pos_slider.setup(slider_x, slider_y, slider_w, slider_h, 0., 1., 0, true, true);
+    curve_pos_slider.setup(slider_x, slider_y, slider_w, slider_h, 0., 1., 0, true, false);
 //    curve_pos_slider.setLabelString("input");
 }
 
