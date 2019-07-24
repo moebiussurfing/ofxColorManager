@@ -113,7 +113,7 @@ void ofxColorManager::setup()
 
     // PALETTES
 
-    random.generateRandom();
+    random.generateRandom(5);
     palettes_update();
     palettes_setup();
 
@@ -970,13 +970,22 @@ void ofxColorManager::palettes_update()
     analogue.setBaseColor(base);
     random.setBaseColor(base);
 
-    complement.generateComplementary();
-    complementBrightness.generateComplementary(ofxColorPalette::BRIGHTNESS);
+//    complement.generateComplementary();
+//    complementBrightness.generateComplementary(ofxColorPalette::BRIGHTNESS);
+//    triad.generateTriad();
+//    complementTriad.generateComplementaryTriad();
+//    monochrome.generateMonoChromatic();
+//    monochromeBrightness.generateMonoChromatic(ofxColorPalette::BRIGHTNESS);
+//    analogue.generateAnalogous();
+
+    int n = 5;//number of colors
+    complement.generateComplementary(ofxColorPalette::SATURATION, n);//bug +1
+    complementBrightness.generateComplementary(ofxColorPalette::BRIGHTNESS, n);//bug +1
     triad.generateTriad();
     complementTriad.generateComplementaryTriad();
-    monochrome.generateMonoChromatic();
-    monochromeBrightness.generateMonoChromatic(ofxColorPalette::BRIGHTNESS);
-    analogue.generateAnalogous();
+    monochrome.generateMonoChromatic(ofxColorPalette::SATURATION, n);
+    monochromeBrightness.generateMonoChromatic(ofxColorPalette::BRIGHTNESS, n);
+    analogue.generateAnalogous(n, 0.2);
 
     //-
 
@@ -1255,7 +1264,7 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
         if (bRandomPalette)
         {
             bRandomPalette = false;
-            random.generateRandom();
+            random.generateRandom(5);
         }
     }
 
@@ -1309,7 +1318,7 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 
     if (key == 'r')
     {
-        random.generateRandom();
+        random.generateRandom(5);
 
         //TODO: bug because some trigs are flags. we need direct functions
 //        bRandomColor = true;
