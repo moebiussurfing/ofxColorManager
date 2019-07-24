@@ -1434,19 +1434,19 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 
     if (key == 'r')
     {
+        //TODO: bug because some trigs are flags. we need direct functions
+//        color_picked = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
         bRandomColor = true;
     }
 
     if (key == 'p')
     {
         random.generateRandom(NUM_ALGO_PALETTES);
-
-        //TODO: bug because some trigs are flags. we need direct functions
-//        bRandomColor = true;
-        color_picked = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
-
+        palettes_update();
+        //set random palette to user palette
 //        palettes_recall((int)ofRandom(7));
-        palettes_recall(6);//analog palette
+//        palettes_recall(6);
+        palettes_recall(7);
     }
 
     //-
