@@ -138,7 +138,7 @@ public:
     ofxColorPalette analogue;
     ofxColorPalette random;
     ofParameter<int> NUM_ALGO_PALETTES;//number of colors. must be even
-//    ofxColorPalette::ColorChannel mode;
+    //    ofxColorPalette::ColorChannel mode;
 
     float brightness;//TODO: not used
     float saturation;
@@ -187,18 +187,25 @@ public:
 
     ofParameter<ofFloatColor> color_clicked_param;
 
-//    ofEventListener listener = test1->myParameter.newListener([this](unsigned char &v){ test3->myParameter.set(v); });
-//    ofEventListener listener = color_picked.newListener([this](unsigned char &v){ color_backGround.set(v); });
     void Changed_color_picked(ofFloatColor &color);
     void Changed_color_clicked(ofFloatColor &color);
 
-    //-
+    //--
+
+    // API
+
+    vector<ofColor> getPalette();
+    void setColor_TARGET(ofColor &c);
+    ofColor *color_TARGET;
+
+    void setControl(float control);
+//    float &control_TARGET;
+
+    //--
 
     // USER PALETTE
 
     vector<ofColor> palette;
-//    vector<ofColor> colors;
-
     void palette_addColor(ofColor c);
     void palette_removeColorLast();
     void palette_clear();
@@ -252,16 +259,16 @@ public:
     // CURVES
 
     ofxCurvesTool curvesTool;
-    ofImage img_gradient;
+    ofImage curve_img_gradient;
     bool curveShow = true;
-    int curve_pos_LUT = 0;
-    int amount = 256;
+    int curveTool_amount = 256;
     void curveTool_setup();
     void curveTool_update();
     void curveTool_draw();
+    ofxSimpleSlider curve_pos_slider;
     ofParameter<float> curve_pos;
     ofParameter<float> curve_pos_out;
-    ofxSimpleSlider curve_pos_slider;
+    int curve_pos_LUT = 0;
     ofParameter<bool> bResetCurve;
 
     //--

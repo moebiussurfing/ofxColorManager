@@ -6,27 +6,63 @@ void ofApp::setup(){
     ofSetLogLevel(OF_LOG_NOTICE);
     ofSetFrameRate(30);
 
-	ColorManager.setup();
+    ColorManager.setup();
+    ColorManager.setColor_TARGET(color_TARGET);
+
+    control = 0;
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-	ColorManager.update();
+    ColorManager.update();
+
+    control += 0.01;
+    if (control > 1.)
+        control = 0.;
+    ColorManager.setControl(control);
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	ColorManager.draw();
+    ColorManager.draw();
+
+    int x, y, w, h;
+    x = 1200;
+    y = 650;
+    w = h = 100;
+    ofRectangle r (0, 0, w, h);
+
+    ofPushMatrix();
+    ofPushStyle();
+
+    ofTranslate(x, y);
+    ofSetColor(color_TARGET);
+    ofFill();
+    ofDrawRectangle(r);
+
+    ofTranslate(0, h + 20);
+    ofDrawBitmapStringHighlight(ofToString(control), 0, 0, ofColor::white, ofColor::black);
+
+    ofPopStyle();
+    ofPopMatrix();
+
 }
 
 //--------------------------------------------------------------
 void ofApp::exit(){
-	ColorManager.exit();
+    ColorManager.exit();
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
 
+    palette = ColorManager.getPalette();
+    ofLogNotice("ofApp") << "getPalette";
+
+    for (int i=0; i<palette.size(); i++)
+    {
+        ofLogNotice("ofApp") << ofToString(palette[i]);
+    }
 }
 
 //--------------------------------------------------------------
@@ -65,6 +101,6 @@ void ofApp::gotMessage(ofMessage msg){
 }
 
 //--------------------------------------------------------------
-void ofApp::dragEvent(ofDragInfo dragInfo){ 
+void ofApp::dragEvent(ofDragInfo dragInfo){
 
 }
