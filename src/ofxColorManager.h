@@ -153,12 +153,12 @@ public:
 
     // GUI
 
-    bool imGui();
+    bool gui_imGui();
     ofxImGui::Gui gui;
     bool guiVisible;
     bool mouseOverGui;
-    void setup_Gui_layout();
-    void imGui_theme();
+    void gui_setup_layout();
+    void gui_imGui_theme();
 
     //-
 

@@ -41,7 +41,7 @@ void ofxColorManager::setup()
 
     // LAYOUT
 
-    setup_Gui_layout();
+    gui_setup_layout();
 
     //-
 
@@ -125,7 +125,7 @@ void ofxColorManager::setup()
     gradient_hard.set("GRADIENT HARD", false);
     gradient.setHardMode(gradient_hard);
     gradient.setDrawVertical(true);
-    gradient.setDrawDirFlip(true);
+//    gradient.setDrawDirFlip(true);
 
     params_curve.setName("CURVE");
     params_curve.add(gradient_hard);
@@ -156,7 +156,7 @@ void ofxColorManager::setup()
     this->guiVisible = true;
 
     // theme colors
-    imGui_theme();
+    gui_imGui_theme();
 
     //--
 
@@ -199,7 +199,7 @@ void ofxColorManager::interface_setup()
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::setup_Gui_layout()
+void ofxColorManager::gui_setup_layout()
 {
     // LAYOUT
 
@@ -208,11 +208,11 @@ void ofxColorManager::setup_Gui_layout()
     // global mini pad between panels/objects
     pad = 2;
 
-    // gui
+    // gui ImGui panel
     gui_x = 10;
     gui_y = 10;
     gui_w = 200;
-    gui_h = 420;//estimate or measure high of the panel on window resize
+    gui_h = 420;//estimate (or measure) height of the panel on window resize
 
     // user palette
     palette_x = gui_x;
@@ -220,7 +220,7 @@ void ofxColorManager::setup_Gui_layout()
 
     // algorithmic palettes
     palettes_x = gui_x;
-    palettes_y = 460;
+    palettes_y = 480;
 
     // curve tool pos (anchor for others)
     curveTool_x = 525;
@@ -314,7 +314,7 @@ void ofxColorManager::palette_save(string p)
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::imGui_theme()
+void ofxColorManager::gui_imGui_theme()
 {
     // must be done after setup the gui
 
@@ -452,7 +452,7 @@ void ofxColorManager::interface_draw(){
 }
 
 //--------------------------------------------------------------
-bool ofxColorManager::imGui()
+bool ofxColorManager::gui_imGui()
 {
     auto mainSettings = ofxImGui::Settings();
     this->gui.begin();
@@ -583,6 +583,7 @@ void ofxColorManager::curveTool_update()
         else
             outLUT_normalized = ofMap( outLUT, 0, amount-1, 1., 0. );
         ofColor c = gradient.getColorAtPercent( outLUT_normalized );
+//        ofColor c = gradient.getColorAtPercent( 1.-outLUT_normalized );
 
         for (int x = 0; x < image_curvedGradient_w; x++)
         {
@@ -602,6 +603,15 @@ void ofxColorManager::curveTool_update()
 //--------------------------------------------------------------
 void ofxColorManager::curveTool_draw() {
 
+    ofRectangle r;
+    r = ofRectangle( currColor_x, currColor_y, box_size/2, slider_h );
+    bool bInvert = true;
+    float inLUT;
+    float outLUT;
+    float outLUT_normalized;
+    float in;
+    float out;
+
     if (curveShow)
     {
         ofPushMatrix();
@@ -619,20 +629,19 @@ void ofxColorManager::curveTool_draw() {
 
         // 2. current box color at point (right positioned)
 
-        ofRectangle r;
-        bool bInvert = true;
-        float inLUT;
-        float outLUT;
-        float outLUT_normalized;
-        r = ofRectangle( currColor_x, currColor_y, box_size/2, slider_h );
-        inLUT = ofMap( curve_pos, 0., 1., 0, amount-1 );
-        outLUT = curvesTool[inLUT];
+        in = curve_pos;
+        out = ofMap( curvesTool.getAtPercent(in), 0, amount-1, 0., 1.) ;
+        ofColor c = gradient.getColorAtPercent( out );
 
-        if (!bInvert)
-            outLUT_normalized = ofMap( outLUT, 0, amount-1, 0., 1. );
-        else
-            outLUT_normalized = ofMap( outLUT, 0, amount-1, 1., 0. );
-        ofColor c = gradient.getColorAtPercent( outLUT_normalized );
+
+//        inLUT = ofMap( curve_pos, 0., 1., 0, amount-1 );
+//        outLUT = curvesTool[inLUT];
+
+//        if (!bInvert)
+//            outLUT_normalized = ofMap( outLUT, 0, amount-1, 0., 1. );
+//        else
+//            outLUT_normalized = ofMap( outLUT, 0, amount-1, 1., 0. );
+//        ofColor c = gradient.getColorAtPercent( outLUT_normalized );
 
         ofPushStyle();
         ofFill();
@@ -674,6 +683,12 @@ void ofxColorManager::curveTool_draw() {
         ofPopMatrix();
         ofPopStyle();
     }
+
+    int posx, posy;
+    posx = 420;
+    posy = 20;
+    ofDrawBitmapStringHighlight("in : "+ofToString(in), glm::vec2(posx, posy));
+    ofDrawBitmapStringHighlight("out: "+ofToString(out), glm::vec2(posx, posy + 20));
 }
 
 //--------------------------------------------------------------
@@ -812,7 +827,7 @@ void ofxColorManager::palettes_setup() {
     btn_plt_c.set(ofColor(32));
     int btn_plt_h;
     int btn_pad_w;
-    btn_pad_w = 230;
+    btn_pad_w = 265;//padding to place labels to the right
     btn_plt_h = h0;
     palettes_x = x0;
     palettes_y = y0 + btn_plt_h + 10;
@@ -978,9 +993,9 @@ void ofxColorManager::palettes_update()
 //    monochromeBrightness.generateMonoChromatic(ofxColorPalette::BRIGHTNESS);
 //    analogue.generateAnalogous();
 
-    int n = 5;//number of colors
-    complement.generateComplementary(ofxColorPalette::SATURATION, n);//bug +1
-    complementBrightness.generateComplementary(ofxColorPalette::BRIGHTNESS, n);//bug +1
+    int n = 6;//number of colors. must be even
+    complement.generateComplementary(ofxColorPalette::SATURATION, n);
+    complementBrightness.generateComplementary(ofxColorPalette::BRIGHTNESS, n);
     triad.generateTriad();
     complementTriad.generateComplementaryTriad();
     monochrome.generateMonoChromatic(ofxColorPalette::SATURATION, n);
@@ -1093,7 +1108,7 @@ void ofxColorManager::draw()
     this->mouseOverGui = false;
     if (this->guiVisible)
     {
-        this->mouseOverGui = this->imGui();
+        this->mouseOverGui = this->gui_imGui();
     }
     if (this->mouseOverGui)
     {
