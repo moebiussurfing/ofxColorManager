@@ -106,25 +106,29 @@ void ofxSimpleSlider::draw(ofEventArgs& event){
 
 	// move label up left
 //	ofTranslate( -77, -7);
-
     // move label down left
-    ofTranslate( -32, 33);
+//    ofTranslate( -32, 33);
+    // move label down left
+    ofTranslate( -32, 20);
 
 	// draw numeric value 
 	if (bHasFocus){
 		ofSetColor(255);
 	} else {
 		ofSetColor(200);
-	}
-	if (bVertical){
-		ofDrawBitmapString( ofToString(getValue(),numberDisplayPrecision), width+5,height);
-		ofDrawBitmapString(labelString, width+5, height-14);
-	} else {
-		ofDrawBitmapString( ofToString(getValue(),numberDisplayPrecision), width+5,height/2 + 4);
-		
-		float labelStringWidth = labelString.size();
-		ofDrawBitmapString( labelString, 0-labelStringWidth*8-5, height/2 + 4); 
-	}	
+    }
+    if (bDrawNumber)
+    {
+        if (bVertical){
+            ofDrawBitmapString( ofToString(getValue(),numberDisplayPrecision), width+5,height);
+            ofDrawBitmapString(labelString, width+5, height-14);
+        } else {
+            ofDrawBitmapString( ofToString(getValue(),numberDisplayPrecision), width+5,height/2 + 4);
+
+            float labelStringWidth = labelString.size();
+            ofDrawBitmapString( labelString, 0-labelStringWidth*8-5, height/2 + 4);
+        }
+    }
 
 	ofPopMatrix();
 	ofSetLineWidth(1.0);

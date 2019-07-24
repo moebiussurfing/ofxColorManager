@@ -252,13 +252,13 @@ public:
     ofxCurvesTool curvesTool;
     ofImage img_gradient;
     bool curveShow = true;
-    float cnt = 0;
+    float curve_pos_LUT = 0;
     int amount = 256;
     void curveTool_setup();
     void curveTool_update();
     void curveTool_draw();
     ofParameter<float> curve_pos;
-    ofxSimpleSlider curveSlider;
+    ofxSimpleSlider curve_pos_slider;
     ofParameter<bool> bResetCurve;
 
     //--

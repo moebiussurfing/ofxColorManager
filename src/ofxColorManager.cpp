@@ -554,8 +554,8 @@ void ofxColorManager::curveTool_setup()
     //-
 
     // slider
-    curveSlider.setup(slider_x, slider_y, slider_w, slider_h, 0., 1., 0, true, true);
-    curveSlider.setLabelString("");
+    curve_pos_slider.setup(slider_x, slider_y, slider_w, slider_h, 0., 1., 0, true, true);
+//    curve_pos_slider.setLabelString("");
 }
 
 //--------------------------------------------------------------
@@ -563,7 +563,10 @@ void ofxColorManager::curveTool_update()
 {
     // TODO: add parameter to improve backwards mirroring
     // slider // TODO: mirror to gui param
-    curve_pos = curveSlider.getValue();
+    curve_pos = curve_pos_slider.getValue();
+
+//    curve_pos_LUT = ofMap( curve_pos.get(), 0., 1., 0., amount-1 );
+    curve_pos_LUT = ofMap( curve_pos.get(), 0., 0., 1., amount-1 );
 
     //-
 
@@ -595,9 +598,6 @@ void ofxColorManager::curveTool_update()
 
     //-
 
-    // TODO:
-//    cnt = ofMap( curve_pos.get(), 0., 1., 0., amount-1 );
-    cnt = ofMap( curve_pos.get(), 0., 0., 1., amount-1 );
 }
 
 //--------------------------------------------------------------
@@ -657,26 +657,25 @@ void ofxColorManager::curveTool_draw() {
 
         //-
 
-        // image box gradient LUT
+        // 3.1 image box gradient LUT
         img_gradient.draw(image_curvedGradient_x, image_curvedGradient_y);
 
         //-
 
-        // curve editor
+        // 3.2 curve splines editor
 
         ofSetColor(255);
-        curvesTool.draw(0, 0, cnt);
+        curvesTool.draw(0, 0, curve_pos_LUT);
 
-        // horizontal line
+        // 3.3 horizontal line
         ofSetColor(ofColor::white);
-
-        float y =  amount - curvesTool[cnt];
+        float y =  amount - curvesTool[curve_pos_LUT];
         ofDrawLine(0, y, amount, y);
 //    ofDrawLine(amount + slider_w, y, amount + slider_w + pad + image_curvedGradient_w + 100, y);
 
-        // current circle point
+        // 3.4 current circle point
         ofSetColor(25);
-        ofDrawCircle(cnt, y, 3);
+        ofDrawCircle(curve_pos_LUT, y, 3);
 
         //-
 
@@ -685,7 +684,7 @@ void ofxColorManager::curveTool_draw() {
     }
 
     int posx, posy;
-    posx = 420;
+    posx = 425;
     posy = 20;
     ofDrawBitmapStringHighlight("in : "+ofToString(in), glm::vec2(posx, posy));
     ofDrawBitmapStringHighlight("out: "+ofToString(out), glm::vec2(posx, posy + 20));
@@ -787,7 +786,7 @@ void ofxColorManager::palettes_setup() {
         palettes_x += h0;
     }
 
-    // trick hck to put triad to the bottom
+    // tricky hack to put triads to the bottom
     // 1. triad
     palettes_x = x0;
     palettes_y += h0;
@@ -883,7 +882,7 @@ void ofxColorManager::palettes_setup() {
                 break;
         }
 
-        // trick hck to put triad to the bottom
+        // tricky hack to put triads to the bottom
         if (p==0 || p==1)
         {
             p = p + 6;
