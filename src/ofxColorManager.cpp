@@ -1225,7 +1225,7 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
     if (name == "COLOR") // color picked
     {
         color_HUE = 255 * color_picked.get().getHue();
-        color_SAT= 255 * color_picked.get().getSaturation();
+        color_SAT = 255 * color_picked.get().getSaturation();
         color_BRG = 255 * color_picked.get().getBrightness();
     }
     else if (name == "HUE")
