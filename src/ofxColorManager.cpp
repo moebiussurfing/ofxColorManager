@@ -335,7 +335,7 @@ void ofxColorManager::imGui_theme()
     style->WindowRounding = (3.0f);
     style->Colors[ImGuiCol_ScrollbarBg] = ImVec4(myColor1, 1.00f);
     style->Colors[ImGuiCol_ScrollbarGrab] = ImVec4(myColor2, 0.21f);
-    style->Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(myColor1, 0.78f);
+    style->Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(myColor1, 0.5f);
     style->Colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(myColor2, 1.00f);
     style->Colors[ImGuiCol_CheckMark] = ImVec4(ofColor(255), 0.80f);
     style->Colors[ImGuiCol_Button] = ImVec4(myColor3, 0.8f);
@@ -1224,16 +1224,9 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
     // COLOR
     if (name == "COLOR") // color picked
     {
-////        update_palettes();
-////        color_picked.get().setHsb
-////                (	float 	hue,
-////                float 	saturation,
-////                float 	brightness,
-////                float 	alpha = limit()
-////        )
-//        color_HUE = 255 * color_picked.get().getHue();
-////        color_SAT = 255 * color_picked.get().getBrightness();//BUG
-////        color_BRG = 255 * color_picked.get().getSaturation();
+        color_HUE = 255 * color_picked.get().getHue();
+        color_SAT= 255 * color_picked.get().getSaturation();
+        color_BRG = 255 * color_picked.get().getBrightness();
     }
     else if (name == "HUE")
     {
