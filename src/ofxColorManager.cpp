@@ -215,7 +215,7 @@ void ofxColorManager::gui_setup_layout()
     gui_x = 10;
     gui_y = 10;
     gui_w = 200;
-    gui_h = 440;//estimate (or measure) height of the panel on window resize
+    gui_h = 470;//estimate (should measure) height of the panel on window resize
 
     // user palette (related to gui_h)
     palette_x = gui_x;
@@ -223,7 +223,7 @@ void ofxColorManager::gui_setup_layout()
 
     // algorithmic palettes
     palettes_x = gui_x;
-    palettes_y = 515;
+    palettes_y = palette_y + box_size + 20;
 
     // curve tool pos (anchor for others)
     curveTool_x = 525;
@@ -610,7 +610,6 @@ void ofxColorManager::curveTool_draw() {
 
     if (curveShow)
     {
-//        float in;
         ofRectangle r;
         r = ofRectangle( currColor_x, currColor_y, box_size/2, slider_h );
 
@@ -625,14 +624,18 @@ void ofxColorManager::curveTool_draw() {
         gradient.drawDebug(grad_x, grad_y, grad_w, grad_h);
 
         // 2. current box color at point (right positioned)
-//        in = curve_pos;
-        curve_pos_out = ofMap( curvesTool.getAtPercent(1.0-curve_pos), 0, amount-1, 1., 0.) ;
-        ofColor c = gradient.getColorAtPercent( curve_pos_out );
+
+        float out;
+        out = ofMap( curvesTool.getAtPercent(1.0-curve_pos), 0, amount-1, 1., 0.) ;
+        ofColor c = gradient.getColorAtPercent( out );
         ofPushStyle();
         ofFill();
         ofSetColor(c);
         ofDrawRectangle(r);
         ofPopStyle();
+
+        // NOTE: sometimes we need some tricky hacking to avoid rare fliping from gradients
+        curve_pos_out = ofMap( curvesTool.getAtPercent(curve_pos), 0, amount-1, 0., 1.);
 
         // 3. curve tool
         ofTranslate(curveTool_x, curveTool_y);
