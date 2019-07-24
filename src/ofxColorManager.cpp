@@ -30,15 +30,12 @@ void ofxColorManager::setup()
 
     //-
 
-    color_picked.addListener(this, &ofxColorManager::Changed_color_picked);
-    color_clicked_param.addListener(this, &ofxColorManager::Changed_color_clicked);
-
-//    ofEventListener listener = color_picked.newListener([this](ofFloatColor &v){ color_backGround.set(v); });
-//    color_picked.addListener([this](ofFloatColor &v){ color_backGround.set(v); });
+//    color_picked.addListener(this, &ofxColorManager::Changed_color_picked);
+//    color_clicked_param.addListener(this, &ofxColorManager::Changed_color_clicked);
 
     //-
 
-    dt = 1/30.0f;
+    dt = 1/30.0f;//TODO: should be setted externally
 
     //-
 
@@ -143,16 +140,16 @@ void ofxColorManager::setup()
 
     // GUI
 
-    // font
-    ImGuiIO& io = ImGui::GetIO();
-    string inputPath;
-    inputPath = ofFilePath::getAbsolutePath("assets/fonts/PragmataProR_0822.ttf");
-    const char* myPath = inputPath.c_str();
-    ImFontConfig config;
-    config.OversampleH = 3;
-    config.OversampleV = 1;
-    config.GlyphExtraSpacing.x = 1.0f;
-    io.Fonts->AddFontFromFileTTF(myPath, 13.0f, &config);
+//    // font
+//    ImGuiIO& io = ImGui::GetIO();
+//    string inputPath;
+//    inputPath = ofFilePath::getAbsolutePath("assets/fonts/PragmataProR_0822.ttf");
+//    const char* myPath = inputPath.c_str();
+//    ImFontConfig config;
+//    config.OversampleH = 3;
+//    config.OversampleV = 1;
+//    config.GlyphExtraSpacing.x = 1.0f;
+//    io.Fonts->AddFontFromFileTTF(myPath, 13.0f, &config);
 
     // create
     this->gui.setup();
@@ -168,8 +165,6 @@ void ofxColorManager::setup()
     addKeysListeners();
     addMouseListeners();
 
-
-
     //--
 
     // STARTUP SETTINGS
@@ -177,19 +172,21 @@ void ofxColorManager::setup()
     XML_params.setName("ofxColorManager");
     XML_params.add(color_backGround);
     XML_params.add(color_picked);
-//    XML_params.add(color_clicked);//not parameter
     XML_params.add(color_HUE);
     XML_params.add(color_SAT);
     XML_params.add(color_BRG);
-    XML_params.add(MODE_Palette);// algo palette
+    XML_params.add(MODE_Palette);//algorithmic palette
     XML_params.add(BRIGHTNESS);
     XML_params.add(SATURATION);
     XML_params.add(gradient_hard);//gradient
     load_group_XML(XML_params, XML_path);
 
-    loadPalette("myPalette");
+//    loadPalette("myPalette");
 
     //-
+
+//    color_picked.addListener(this, &ofxColorManager::Changed_color_picked);
+//    color_clicked_param.addListener(this, &ofxColorManager::Changed_color_clicked);
 }
 
 //--------------------------------------------------------------
@@ -287,6 +284,10 @@ void ofxColorManager::loadPalette(string p)
             ofLogNotice("ofxColorManager") << "palette " << i << ": " << ofToString(c);
             add_color(c);
         }
+    }
+    else
+    {
+        ofLogNotice("ofxColorManager") << "FILE '" << path << "' NOT FOUND";
     }
 }
 
@@ -512,9 +513,9 @@ void ofxColorManager::update()
     if (SELECTED_palette != SELECTED_palette_PRE)
     {
         ofLogNotice("ofxColorManager::update") << "-> CHANGED SELECTED_palette: " << SELECTED_palette;
-        recall_AlgorithmicPalette(SELECTED_palette);
+//        recall_AlgorithmicPalette(SELECTED_palette);
 
-        SELECTED_palette_PRE = SELECTED_palette = -1;
+//        SELECTED_palette_PRE = SELECTED_palette = -1;//bug if not
     }
 
     //-
@@ -537,17 +538,15 @@ void ofxColorManager::update()
 //--------------------------------------------------------------
 void ofxColorManager::setup_curveTool()
 {
+    img_gradient.allocate(image_curvedGradient_w, image_curvedGradient_h, OF_IMAGE_COLOR);
+
     curvesTool.setup(amount);
     curvesTool.load("curves.yml"); //needed because it fills polyline
 
-    img.allocate(image_curvedGradient_w, image_curvedGradient_h, OF_IMAGE_COLOR);
-
     curve_pos.set("CURVE POS", 0., 0., 1.);// pct value 0. to 1.
     bResetCurve.set("RESET CURVE", false);
-
     params_curve.add(curve_pos);
     params_curve.add(bResetCurve);
-
     ofAddListener(params_curve.parameterChangedE(), this, &ofxColorManager::Changed_control);
 
     //-
@@ -560,6 +559,7 @@ void ofxColorManager::setup_curveTool()
 //--------------------------------------------------------------
 void ofxColorManager::update_curveTool()
 {
+    // TODO: add parameter to improve backwards mirroring
     // slider // TODO: mirror to gui param
     curve_pos = curveSlider.getValue();
 
@@ -567,28 +567,49 @@ void ofxColorManager::update_curveTool()
 
     // vertical and rectangle
 
-    bool bInvert = true;// flip gradient direction
-    float pct;
-    float curveVal;
+    bool bInvert = true; // flip gradient direction
+    float outLUT; // output will be clamped to: [ 0 - 255]
+    float outLUT_normalized; // output [ 0.0 - 1.0 ]
 
-    for(int y = 0; y < image_curvedGradient_h; y++)
+//    for(int y = 0; y < image_curvedGradient_h; y++)
+//    {
+//        outLUT = curvesTool[y];
+//        if (!bInvert)
+//        {
+//            outLUT_normalized = ofMap( outLUT, 0, amount-1, 0., 1. );
+//        }
+//        else{
+//            outLUT_normalized = ofMap( outLUT, 0, amount-1, 1., 0. );
+//        }
+//        ofColor c = gradient.getColorAtPercent(outLUT_normalized);
+//
+//        for(int x = 0; x < image_curvedGradient_w; x++)
+//        {
+//            img_gradient.setColor(x, y, c);
+//        }
+//    }
+//    img_gradient.update();
+//    cnt = ofMap( curve_pos.get(), 0., 1., 0, amount-1 );
+
+    for(int inLUT = 0; inLUT < amount; inLUT++)
     {
-        curveVal = curvesTool[y];
-        if (!bInvert)
-        {
-            pct = ofMap( curveVal, 0, amount-1, 0., 1. );
-        }
-        else{
-            pct = ofMap( curveVal, 0, amount-1, 1., 0. );
-        }
-        ofColor c = gradient.getColorAtPercent(pct);
-
-        for(int x = 0; x < image_curvedGradient_w; x++)
-        {
-            img.setColor(x, y, c);
-        }
+//        outLUT = curvesTool[inLUT];//get value for curve at inLUT (0-255) position
+//        int y = (int) ofMap( inLUT, 0, amount-1, 0, image_curvedGradient_h );
+//
+//        if (!bInvert)
+//            outLUT_normalized = ofMap( outLUT, 0, amount-1, 0., 1. );
+//        else
+//            outLUT_normalized = ofMap( outLUT, 0, amount-1, 1., 0. );
+//        ofColor c = gradient.getColorAtPercent( outLUT_normalized );
+//
+//        for(int x = 0; x < image_curvedGradient_w; x++)
+//        {
+//            img_gradient.setColor(x, y, c);
+//        }
     }
-    img.update();
+    img_gradient.update();
+
+    //-
 
     cnt = ofMap( curve_pos.get(), 0., 1., 0, amount-1 );
 }
@@ -602,27 +623,34 @@ void ofxColorManager::draw_curveTool() {
 
         // GRADIENT
 
-        // full rectangle
-        gradient.drawDebug(grad_x, grad_y, grad_w, grad_h);
-
-        // current box color at point
-
-        ofRectangle r = ofRectangle( currColor_x, currColor_y, box_size/2, slider_h );
-        ofPushStyle();
-        ofFill();
-        ofColor c;
-        float curveVal;//out of curve
-
-//        curveVal = curvesTool[ ofMap( curve_pos, 0., 1., 0, amount ) ];
-//        curveVal = curvesTool[curve_pos];
-        curveVal = curvesTool.getAtPercent(curve_pos);
-
-        c.set(gradient.getColorAtPercent( curveVal ));      // LUT
-//        c.set(gradient.getColorAtPercent( curve_pos ));   // GRADIENT
-
-        ofSetColor(c);
-        ofDrawRectangle(r);
-        ofPopStyle();
+//        // 1. un-curved gradient rectangle (left positioned)
+//
+//        gradient.drawDebug(grad_x, grad_y, grad_w, grad_h);
+//
+//        //-
+//
+//        // 2. current box color at point (right positioned)
+//
+//        ofRectangle r;
+//        bool bInvert = true;
+//        float inLUT;
+//        float outLUT;
+//        float outLUT_normalized;
+//        r = ofRectangle( currColor_x, currColor_y, box_size/2, slider_h );
+//        inLUT = ofMap( curve_pos, 0., 1., 0, amount-1 );
+//        outLUT = curvesTool[inLUT];
+//
+//        if (!bInvert)
+//            outLUT_normalized = ofMap( outLUT, 0, amount-1, 0., 1. );
+//        else
+//            outLUT_normalized = ofMap( outLUT, 0, amount-1, 1., 0. );
+//        ofColor c = gradient.getColorAtPercent( outLUT_normalized );
+//
+//        ofPushStyle();
+//        ofFill();
+//        ofSetColor(c);
+//        ofDrawRectangle(r);
+//        ofPopStyle();
 
         //--
 
@@ -639,7 +667,7 @@ void ofxColorManager::draw_curveTool() {
         curvesTool.draw(0, 0, cnt);
 
         // box LUT gradiant
-        img.draw(image_curvedGradient_x, image_curvedGradient_y);
+        img_gradient.draw(image_curvedGradient_x, image_curvedGradient_y);
 
         float y =  amount-curvesTool[cnt];
 //    float y = amount-curvesTool.getAt(cnt);
@@ -844,42 +872,42 @@ void ofxColorManager::setup_palettes() {
             case 0:
                 btn->setup("TRIAD");
                 btn->setThisPaletteType(0);
-                btn->set_SELECTED_palette(SELECTED_palette);
+//                btn->set_SELECTED_palette(SELECTED_palette);
                 break;
             case 1:
                 btn->setup("COMPLEMENT TRIAD");
                 btn->setThisPaletteType(1);
-                btn->set_SELECTED_palette(SELECTED_palette);
+//                btn->set_SELECTED_palette(SELECTED_palette);
                 break;
             case 2:
                 btn->setup("COMPLEMENT (SATURATION)");
                 btn->setThisPaletteType(2);
-                btn->set_SELECTED_palette(SELECTED_palette);
+//                btn->set_SELECTED_palette(SELECTED_palette);
                 break;
             case 3:
                 btn->setup("COMPLEMENT (BRIGHTNESS)");
                 btn->setThisPaletteType(3);
-                btn->set_SELECTED_palette(SELECTED_palette);
+//                btn->set_SELECTED_palette(SELECTED_palette);
                 break;
             case 4:
                 btn->setup("MONOCHROME (SATURATION)");
                 btn->setThisPaletteType(4);
-                btn->set_SELECTED_palette(SELECTED_palette);
+//                btn->set_SELECTED_palette(SELECTED_palette);
                 break;
             case 5:
                 btn->setup("MONOCHROME (BRIGHTNESS)");
                 btn->setThisPaletteType(5);
-                btn->set_SELECTED_palette(SELECTED_palette);
+//                btn->set_SELECTED_palette(SELECTED_palette);
                 break;
             case 6:
                 btn->setup("ANALOGUE");
                 btn->setThisPaletteType(6);
-                btn->set_SELECTED_palette(SELECTED_palette);
+//                btn->set_SELECTED_palette(SELECTED_palette);
                 break;
             case 7:
                 btn->setup("RANDOM");
                 btn->setThisPaletteType(7);
-                btn->set_SELECTED_palette(SELECTED_palette);
+//                btn->set_SELECTED_palette(SELECTED_palette);
                 break;
         }
         btn->setPosition(palettes_x + btn_pad_w, palettes_y + p*btn_plt_h);
@@ -1088,7 +1116,7 @@ void ofxColorManager::draw()
     draw_Interface();
 
     // CURVE
-    draw_curveTool();
+//    draw_curveTool();
 
     // COLOR BROWSER
     ColorBrowser.draw();
@@ -1282,7 +1310,7 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
         }
     }
 
-    // CURVE
+        // CURVE
     else if (name == "CURVE POS")
     {
 //        if ( )

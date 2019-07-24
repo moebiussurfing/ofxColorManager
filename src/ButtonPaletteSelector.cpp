@@ -42,8 +42,7 @@ namespace ofxInterface
     // pointer back link the outside (ofApp) variable
     void ButtonPaletteSelector::set_SELECTED_palette(int &palette)
     {
-        //        colorBACK = &c;
-        SELECTED_palette_pointer = &palette;
+//        SELECTED_palette_pointer = &palette;
 
         ofLogNotice("ButtonPaletteSelector") << "set_SELECTED_palette:" << palette;
     }
@@ -59,8 +58,7 @@ namespace ofxInterface
 //        -> : used to access a vaiable within a pointer (equivilant to (*p).x)
 
         // pointer back link the outside (ofApp) variable
-        //        colorBACK->set(ofFloatColor(color_picked));
-        (*SELECTED_palette_pointer) = thisPaletteType;
+//        (*SELECTED_palette_pointer) = thisPaletteType;
     }
 
     void ButtonPaletteSelector::onTouchUp(ofxInterface::TouchEvent &event)

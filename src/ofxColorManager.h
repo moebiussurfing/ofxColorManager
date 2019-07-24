@@ -244,7 +244,7 @@ public:
     // CURVES
 
     ofxCurvesTool curvesTool;
-    ofImage img;
+    ofImage img_gradient;
     bool curveShow = true;
     float cnt = 0;
     int amount = 256;
