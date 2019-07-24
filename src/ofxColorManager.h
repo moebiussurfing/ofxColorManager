@@ -3,15 +3,18 @@
 #include "ofMain.h"
 
 #include "ofxImGui.h"
+
 #include "ofxInterface.h"
 #include "ofxInterfaceWidgets.h"
 #include "ButtonPaletteSelector.h"
 #include "ButtonExample.h"
+
 #include "ofxColorGradient.h"
 #include "ofxColorPalette.h"
 #include "ofxColorsBrowser.h"
 #include "ofxCurvesTool.h"
 #include "ofxSimpleSlider.h"
+
 #include "ofxCereal.h"
 #include "ofxMouseRuler.h"
 
@@ -34,10 +37,12 @@ OFX_CEREAL_DEFINE(CEREAL_NVP(name), CEREAL_NVP(palette))
 
 class ofxColorManager {
 
+    // JSON PALETTES SERIALIZER
     CustomData data;
-    ofPolyline poly;
 
 public:
+
+    //-
 
     ofxMouseRuler mouseRuler;
 
@@ -51,6 +56,8 @@ public:
     //--
 
     // LAYOUT
+
+    int box_size;
 
     int pad; //global mini pad
 
@@ -80,11 +87,9 @@ public:
 
     int palettes_x;
     int palettes_y;
-    int box_size;
 
     int palette_x;
     int palette_y;
-    int color_size;
 
     int currColor_x;
     int currColor_y;

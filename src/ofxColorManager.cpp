@@ -203,6 +203,8 @@ void ofxColorManager::setup_Gui_layout()
 {
     // LAYOUT
 
+    box_size = 40;
+
     // global mini pad between panels/objects
     pad = 2;
 
@@ -215,10 +217,8 @@ void ofxColorManager::setup_Gui_layout()
     // user palette
     palette_x = gui_x;
     palette_y = gui_y + gui_h + pad;
-    color_size = 40;
 
     // algorithmic palettes
-    box_size = color_size;
     palettes_x = gui_x;
     palettes_y = 460;
 
@@ -253,13 +253,13 @@ void ofxColorManager::setup_Gui_layout()
     // color box picker
     color_x = 335;
     color_y = 20;
-    color_w = color_h = 2*color_size;
+    color_w = color_h = 2*box_size;
     r_color_picked = ofRectangle( color_x, color_y, color_w, color_h );
 
     // color box clicked
     colorPick_x = 335;
     colorPick_y = color_h + 30;
-    colorPick_w = colorPick_h = 2*color_size;
+    colorPick_w = colorPick_h = 2*box_size;
     r_color_clicked = ofRectangle( colorPick_x, colorPick_y, colorPick_w, colorPick_h );
 }
 
@@ -359,10 +359,10 @@ void ofxColorManager::add_color_Interface(ofColor c)
     palette_x = gui_x;
     int perRow = 5;
     int i = btns_palette.size();
-    palette_x += i * ( color_size + pad );
+    palette_x += i * ( box_size + pad );
 
     ButtonExample *btn = new ButtonExample();
-    btn->setup(palette_x, palette_y, color_size, color_size);
+    btn->setup(palette_x, palette_y, box_size, box_size);
     btn->setColor(c);
     btn->setup_colorBACK( color_clicked );
     btn->setLocked(true);
@@ -521,7 +521,7 @@ void ofxColorManager::update()
     //-
 
     update_Interface();
-    update_palettes();
+    update_palettes();//TODO: should reduce calls on update()
     update_curveTool();
     ColorBrowser.update();
 
@@ -551,9 +551,9 @@ void ofxColorManager::setup_curveTool()
 
     //-
 
-    // pct slider
+    // slider
     curveSlider.setup(slider_x, slider_y, slider_w, slider_h, 0., 1., 0, true, true);
-    curveSlider.setLabelString("value");
+    curveSlider.setLabelString("");
 }
 
 //--------------------------------------------------------------
@@ -571,41 +571,41 @@ void ofxColorManager::update_curveTool()
     float outLUT; // output will be clamped to: [ 0 - 255]
     float outLUT_normalized; // output [ 0.0 - 1.0 ]
 
-//    for(int y = 0; y < image_curvedGradient_h; y++)
-//    {
-//        outLUT = curvesTool[y];
-//        if (!bInvert)
-//        {
-//            outLUT_normalized = ofMap( outLUT, 0, amount-1, 0., 1. );
-//        }
-//        else{
-//            outLUT_normalized = ofMap( outLUT, 0, amount-1, 1., 0. );
-//        }
-//        ofColor c = gradient.getColorAtPercent(outLUT_normalized);
-//
-//        for(int x = 0; x < image_curvedGradient_w; x++)
-//        {
-//            img_gradient.setColor(x, y, c);
-//        }
-//    }
-//    img_gradient.update();
-//    cnt = ofMap( curve_pos.get(), 0., 1., 0, amount-1 );
+////    for(int y = 0; y < image_curvedGradient_h; y++)
+////    {
+////        outLUT = curvesTool[y];
+////        if (!bInvert)
+////        {
+////            outLUT_normalized = ofMap( outLUT, 0, amount-1, 0., 1. );
+////        }
+////        else{
+////            outLUT_normalized = ofMap( outLUT, 0, amount-1, 1., 0. );
+////        }
+////        ofColor c = gradient.getColorAtPercent(outLUT_normalized);
+////
+////        for(int x = 0; x < image_curvedGradient_w; x++)
+////        {
+////            img_gradient.setColor(x, y, c);
+////        }
+////    }
+////    img_gradient.update();
+////    cnt = ofMap( curve_pos.get(), 0., 1., 0, amount-1 );
 
     for(int inLUT = 0; inLUT < amount; inLUT++)
     {
-//        outLUT = curvesTool[inLUT];//get value for curve at inLUT (0-255) position
-//        int y = (int) ofMap( inLUT, 0, amount-1, 0, image_curvedGradient_h );
-//
-//        if (!bInvert)
-//            outLUT_normalized = ofMap( outLUT, 0, amount-1, 0., 1. );
-//        else
-//            outLUT_normalized = ofMap( outLUT, 0, amount-1, 1., 0. );
-//        ofColor c = gradient.getColorAtPercent( outLUT_normalized );
-//
-//        for(int x = 0; x < image_curvedGradient_w; x++)
-//        {
+        outLUT = curvesTool[inLUT]; // get value for curve at inLUT (0-255) position
+        int y = (int) ofMap( inLUT, 0, amount-1, 0, image_curvedGradient_h );
+
+        if (!bInvert)
+            outLUT_normalized = ofMap( outLUT, 0, amount-1, 0., 1. );
+        else
+            outLUT_normalized = ofMap( outLUT, 0, amount-1, 1., 0. );
+        ofColor c = gradient.getColorAtPercent( outLUT_normalized );
+
+        for(int x = 0; x < image_curvedGradient_w; x++)
+        {
 //            img_gradient.setColor(x, y, c);
-//        }
+        }
     }
     img_gradient.update();
 
@@ -623,87 +623,87 @@ void ofxColorManager::draw_curveTool() {
 
         // GRADIENT
 
-//        // 1. un-curved gradient rectangle (left positioned)
-//
-//        gradient.drawDebug(grad_x, grad_y, grad_w, grad_h);
-//
-//        //-
-//
-//        // 2. current box color at point (right positioned)
-//
-//        ofRectangle r;
-//        bool bInvert = true;
-//        float inLUT;
-//        float outLUT;
-//        float outLUT_normalized;
-//        r = ofRectangle( currColor_x, currColor_y, box_size/2, slider_h );
-//        inLUT = ofMap( curve_pos, 0., 1., 0, amount-1 );
-//        outLUT = curvesTool[inLUT];
-//
-//        if (!bInvert)
-//            outLUT_normalized = ofMap( outLUT, 0, amount-1, 0., 1. );
-//        else
-//            outLUT_normalized = ofMap( outLUT, 0, amount-1, 1., 0. );
-//        ofColor c = gradient.getColorAtPercent( outLUT_normalized );
-//
-//        ofPushStyle();
-//        ofFill();
-//        ofSetColor(c);
-//        ofDrawRectangle(r);
-//        ofPopStyle();
+        // 1. un-curved gradient rectangle (left positioned)
+
+        gradient.drawDebug(grad_x, grad_y, grad_w, grad_h);
+
+        //-
+
+        // 2. current box color at point (right positioned)
+
+        ofRectangle r;
+        bool bInvert = false;
+        float inLUT;
+        float outLUT;
+        float outLUT_normalized;
+        r = ofRectangle( currColor_x, currColor_y, box_size/2, slider_h );
+        inLUT = ofMap( curve_pos, 0., 1., 0, amount-1 );
+        outLUT = curvesTool[inLUT];
+
+        if (!bInvert)
+            outLUT_normalized = ofMap( outLUT, 0, amount-1, 0., 1. );
+        else
+            outLUT_normalized = ofMap( outLUT, 0, amount-1, 1., 0. );
+        ofColor c = gradient.getColorAtPercent( outLUT_normalized );
+
+        ofPushStyle();
+        ofFill();
+        ofSetColor(c);
+        ofDrawRectangle(r);
+        ofPopStyle();
 
         //--
 
-        // CURVE TOOL
-
-        ofPushMatrix();
-        ofPushStyle();
-
-        ofTranslate(curveTool_x, curveTool_y);
-
-        ofSetColor(255);
-
-        // curve editor
-        curvesTool.draw(0, 0, cnt);
-
-        // box LUT gradiant
-        img_gradient.draw(image_curvedGradient_x, image_curvedGradient_y);
-
-        float y =  amount-curvesTool[cnt];
-//    float y = amount-curvesTool.getAt(cnt);
-
-        // horizontal line
-//        ofSetColor(ofColor::red);
-        ofSetColor(ofColor::white);
-
-        ofDrawLine(0, y, amount, y);
-//    ofDrawLine(amount + slider_w, y, amount + slider_w + pad + image_curvedGradient_w + 100, y);
-
-//        // current circle point
-//        ofSetColor(25);
-//        ofDrawCircle(cnt, y, 3);
-
-//    float lerp_amt = ofMap(cnt,0,amount-1,0,1);
-//    ofNoFill();
-//    ofSetColor(255);
-
-//    //--result based on interpolation
-//    ofPushMatrix();
-//    ofTranslate(0, amount + 10 );
-//    float vv = curvesTool.getAt(cnt);
-//    ofDrawRectangle(0,0,vv,50);
-//    ofDrawBitmapString(ofToString(vv,2),0,10);
-//    ofPopMatrix();
+//        // CURVE TOOL
 //
-//    //----result based on lut[index]
-//    ofPushMatrix();
-//    ofTranslate(0, amount + 60 );
-//    ofDrawRectangle(0,0,curvesTool[cnt],50);
-//    ofDrawBitmapString(ofToString(curvesTool[cnt]),0,10);
-//    ofPopMatrix();
+//        ofPushMatrix();
+//        ofPushStyle();
+//
+//        ofTranslate(curveTool_x, curveTool_y);
+//
+//        ofSetColor(255);
+//
+//        // curve editor
+//        curvesTool.draw(0, 0, cnt);
+//
+//        // box LUT gradiant
+//        img_gradient.draw(image_curvedGradient_x, image_curvedGradient_y);
+//
+//        float y =  amount-curvesTool[cnt];
+////    float y = amount-curvesTool.getAt(cnt);
+//
+//        // horizontal line
+////        ofSetColor(ofColor::red);
+//        ofSetColor(ofColor::white);
+//
+//        ofDrawLine(0, y, amount, y);
+////    ofDrawLine(amount + slider_w, y, amount + slider_w + pad + image_curvedGradient_w + 100, y);
+//
+////        // current circle point
+////        ofSetColor(25);
+////        ofDrawCircle(cnt, y, 3);
+//
+////    float lerp_amt = ofMap(cnt,0,amount-1,0,1);
+////    ofNoFill();
+////    ofSetColor(255);
+//
+////    //--result based on interpolation
+////    ofPushMatrix();
+////    ofTranslate(0, amount + 10 );
+////    float vv = curvesTool.getAt(cnt);
+////    ofDrawRectangle(0,0,vv,50);
+////    ofDrawBitmapString(ofToString(vv,2),0,10);
+////    ofPopMatrix();
+////
+////    //----result based on lut[index]
+////    ofPushMatrix();
+////    ofTranslate(0, amount + 60 );
+////    ofDrawRectangle(0,0,curvesTool[cnt],50);
+////    ofDrawBitmapString(ofToString(curvesTool[cnt]),0,10);
+////    ofPopMatrix();
 
-        ofPopMatrix();
-        ofPopStyle();
+//        ofPopMatrix();
+//        ofPopStyle();
     }
 }
 
@@ -1108,7 +1108,7 @@ void ofxColorManager::draw()
     draw_Interface();
 
     // CURVE
-//    draw_curveTool();
+    draw_curveTool();
 
     // COLOR BROWSER
     ColorBrowser.draw();
@@ -1346,9 +1346,13 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
     if (key == 'r')
     {
         random.generateRandom();
-        bRandomColor = true;
 
-//        update_palettes();//TODO: should reduce calls on update()
+        //TODO: bug because some trigs are flags. we need direct functions
+//        bRandomColor = true;
+        color_picked = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
+
+//        recall_AlgorithmicPalette((int)ofRandom(7));
+        recall_AlgorithmicPalette(6);//analog palette
     }
 
     //-
