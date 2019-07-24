@@ -513,9 +513,9 @@ void ofxColorManager::update()
     if (SELECTED_palette != SELECTED_palette_PRE)
     {
         ofLogNotice("ofxColorManager::update") << "-> CHANGED SELECTED_palette: " << SELECTED_palette;
-//        recall_AlgorithmicPalette(SELECTED_palette);
+        recall_AlgorithmicPalette(SELECTED_palette);
 
-//        SELECTED_palette_PRE = SELECTED_palette = -1;//bug if not
+        SELECTED_palette_PRE = SELECTED_palette = -1;//bug if not if pressed same button
     }
 
     //-
@@ -721,7 +721,6 @@ void ofxColorManager::setup_palettes() {
     // 1. triad
     palettes_x = x0;
     palettes_y += h0;
-
     for (int i = 0; i < triad.size(); i++) {
         ButtonExample *btn = new ButtonExample();
         btn->setup(palettes_x, palettes_y, box_size, box_size);
@@ -737,7 +736,6 @@ void ofxColorManager::setup_palettes() {
     // 2. complement triad
     palettes_x = x0;
     palettes_y += h0;
-
     for (int i = 0; i < complementTriad.size(); i++) {
         ButtonExample *btn = new ButtonExample();
         btn->setup(palettes_x, palettes_y, box_size, box_size);
@@ -753,7 +751,6 @@ void ofxColorManager::setup_palettes() {
     // 3. complement sat
     palettes_x = x0;
     palettes_y += h0;
-
     for (int i = 0; i < complement.size(); i++) {
         ButtonExample *btn = new ButtonExample();
         btn->setup(palettes_x, palettes_y, box_size, box_size);
@@ -769,7 +766,6 @@ void ofxColorManager::setup_palettes() {
     // 4. complement brgt
     palettes_x = x0;
     palettes_y += h0;
-
     for (int i = 0; i < complementBrightness.size(); i++) {
         ButtonExample *btn = new ButtonExample();
         btn->setup(palettes_x, palettes_y, box_size, box_size);
@@ -785,7 +781,6 @@ void ofxColorManager::setup_palettes() {
     // 5. mono sat
     palettes_x = x0;
     palettes_y += h0;
-
     for (int i = 0; i < monochrome.size(); i++) {
         ButtonExample *btn = new ButtonExample();
         btn->setup(palettes_x, palettes_y, box_size, box_size);
@@ -801,7 +796,6 @@ void ofxColorManager::setup_palettes() {
     // 6. mono brgt
     palettes_x = x0;
     palettes_y += h0;
-
     for (int i = 0; i < monochromeBrightness.size(); i++) {
         ButtonExample *btn = new ButtonExample();
         btn->setup(palettes_x, palettes_y, box_size, box_size);
@@ -817,7 +811,6 @@ void ofxColorManager::setup_palettes() {
     // 7. analogue
     palettes_x = x0;
     palettes_y += h0;
-
     for (int i = 0; i < analogue.size(); i++) {
         ButtonExample *btn = new ButtonExample();
         btn->setup(palettes_x, palettes_y, box_size, box_size);
@@ -833,7 +826,6 @@ void ofxColorManager::setup_palettes() {
     // 8. random
     palettes_x = x0;
     palettes_y += h0;
-
     for (int i = 0; i < random.size(); i++) {
         ButtonExample *btn = new ButtonExample();
         btn->setup(palettes_x, palettes_y, box_size, box_size);
@@ -872,42 +864,42 @@ void ofxColorManager::setup_palettes() {
             case 0:
                 btn->setup("TRIAD");
                 btn->setThisPaletteType(0);
-//                btn->set_SELECTED_palette(SELECTED_palette);
+                btn->set_SELECTED_palette(SELECTED_palette);
                 break;
             case 1:
                 btn->setup("COMPLEMENT TRIAD");
                 btn->setThisPaletteType(1);
-//                btn->set_SELECTED_palette(SELECTED_palette);
+                btn->set_SELECTED_palette(SELECTED_palette);
                 break;
             case 2:
                 btn->setup("COMPLEMENT (SATURATION)");
                 btn->setThisPaletteType(2);
-//                btn->set_SELECTED_palette(SELECTED_palette);
+                btn->set_SELECTED_palette(SELECTED_palette);
                 break;
             case 3:
                 btn->setup("COMPLEMENT (BRIGHTNESS)");
                 btn->setThisPaletteType(3);
-//                btn->set_SELECTED_palette(SELECTED_palette);
+                btn->set_SELECTED_palette(SELECTED_palette);
                 break;
             case 4:
                 btn->setup("MONOCHROME (SATURATION)");
                 btn->setThisPaletteType(4);
-//                btn->set_SELECTED_palette(SELECTED_palette);
+                btn->set_SELECTED_palette(SELECTED_palette);
                 break;
             case 5:
                 btn->setup("MONOCHROME (BRIGHTNESS)");
                 btn->setThisPaletteType(5);
-//                btn->set_SELECTED_palette(SELECTED_palette);
+                btn->set_SELECTED_palette(SELECTED_palette);
                 break;
             case 6:
                 btn->setup("ANALOGUE");
                 btn->setThisPaletteType(6);
-//                btn->set_SELECTED_palette(SELECTED_palette);
+                btn->set_SELECTED_palette(SELECTED_palette);
                 break;
             case 7:
                 btn->setup("RANDOM");
                 btn->setThisPaletteType(7);
-//                btn->set_SELECTED_palette(SELECTED_palette);
+                btn->set_SELECTED_palette(SELECTED_palette);
                 break;
         }
         btn->setPosition(palettes_x + btn_pad_w, palettes_y + p*btn_plt_h);
