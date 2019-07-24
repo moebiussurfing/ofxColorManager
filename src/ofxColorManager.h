@@ -148,6 +148,7 @@ public:
     void palettes_setup();
     void palettes_setup_labels();
     void palettes_update();
+    void palettes_resize();
     void draw_palettes();
     ofParameter<bool> MODE_Palette;
 
