@@ -664,140 +664,136 @@ void ofxColorManager::curveTool_draw() {
 //--------------------------------------------------------------
 void ofxColorManager::palettes_setup() {
     int x0 = palettes_x;
-    int y0 = palettes_y;//to recall at end
+    int y0 = palettes_y;
     int h0 = box_size + pad;
 
     // 3. complement sat
-    palettes_x = x0;
-    palettes_y += h0;
+    x0 = palettes_x;
+    y0 += h0;
     for (int i = 0; i < complement.size(); i++) {
         ButtonExample *btn = new ButtonExample();
-        btn->setup(palettes_x, palettes_y, box_size, box_size);
+        btn->setup(x0, y0, box_size, box_size);
         btn->setup_colorBACK(color_clicked);
         btn->setLocked(true);
         btn->setName("compSat" + ofToString(i));
         btn->setColor(complement[i]);
         scene->addChild(btn);
         btns_plt_CompSat.push_back(btn);
-        palettes_x += h0;
+        x0 += h0;
     }
 
     // 4. complement brgt
-    palettes_x = x0;
-    palettes_y += h0;
+    x0 = palettes_x;
+    y0 += h0;
     for (int i = 0; i < complementBrightness.size(); i++) {
         ButtonExample *btn = new ButtonExample();
-        btn->setup(palettes_x, palettes_y, box_size, box_size);
+        btn->setup(x0, y0, box_size, box_size);
         btn->setup_colorBACK(color_clicked);
         btn->setLocked(true);
         btn->setName("compBrgt" + ofToString(i));
         btn->setColor(complementBrightness[i]);
         scene->addChild(btn);
         btns_plt_ComplBrgt.push_back(btn);
-        palettes_x += h0;
+        x0 += h0;
     }
 
     // 5. mono sat
-    palettes_x = x0;
-    palettes_y += h0;
+    x0 = palettes_x;
+    y0 += h0;
     for (int i = 0; i < monochrome.size(); i++) {
         ButtonExample *btn = new ButtonExample();
-        btn->setup(palettes_x, palettes_y, box_size, box_size);
+        btn->setup(x0, y0, box_size, box_size);
         btn->setup_colorBACK(color_clicked);
         btn->setLocked(true);
         btn->setName("monoSat" + ofToString(i));
         btn->setColor(monochrome[i]);
         scene->addChild(btn);
         btns_plt_MonoSat.push_back(btn);
-        palettes_x += h0;
+        x0 += h0;
     }
 
     // 6. mono brgt
-    palettes_x = x0;
-    palettes_y += h0;
+    x0 = palettes_x;
+    y0 += h0;
     for (int i = 0; i < monochromeBrightness.size(); i++) {
         ButtonExample *btn = new ButtonExample();
-        btn->setup(palettes_x, palettes_y, box_size, box_size);
+        btn->setup(x0, y0, box_size, box_size);
         btn->setup_colorBACK(color_clicked);
         btn->setLocked(true);
         btn->setName("monoBrgt" + ofToString(i));
         btn->setColor(monochromeBrightness[i]);
         scene->addChild(btn);
         btns_plt_MonoBrgt.push_back(btn);
-        palettes_x += h0;
+        x0 += h0;
     }
 
     // 7. analogue
-    palettes_x = x0;
-    palettes_y += h0;
+    x0 = palettes_x;
+    y0 += h0;
     for (int i = 0; i < analogue.size(); i++) {
         ButtonExample *btn = new ButtonExample();
-        btn->setup(palettes_x, palettes_y, box_size, box_size);
+        btn->setup(x0, y0, box_size, box_size);
         btn->setup_colorBACK(color_clicked);
         btn->setLocked(true);
         btn->setName("analogue" + ofToString(i));
         btn->setColor(analogue[i]);
         scene->addChild(btn);
         btns_plt_Analog.push_back(btn);
-        palettes_x += h0;
+        x0 += h0;
     }
 
     // 8. random
-    palettes_x = x0;
-    palettes_y += h0;
+    x0 = palettes_x;
+    y0 += h0;
     for (int i = 0; i < random.size(); i++) {
         ButtonExample *btn = new ButtonExample();
-        btn->setup(palettes_x, palettes_y, box_size, box_size);
+        btn->setup(x0, y0, box_size, box_size);
         btn->setup_colorBACK(color_clicked);
         btn->setLocked(true);
         btn->setName("random" + ofToString(i));
         btn->setColor(random[i]);
         scene->addChild(btn);
         btns_plt_Random.push_back(btn);
-        palettes_x += h0;
+        x0 += h0;
     }
 
     // tricky hack to put triads to the bottom
     // 1. triad
-    palettes_x = x0;
-    palettes_y += h0;
+    x0 = palettes_x;
+    y0 += h0;
     for (int i = 0; i < triad.size(); i++) {
         ButtonExample *btn = new ButtonExample();
-        btn->setup(palettes_x, palettes_y, box_size, box_size);
+        btn->setup(x0, y0, box_size, box_size);
         btn->setup_colorBACK(color_clicked);
         btn->setLocked(true);
         btn->setName("triad" + ofToString(i));
         btn->setColor(triad[i]);
         scene->addChild(btn);
         btns_plt_Triad.push_back(btn);
-        palettes_x += h0;
+        x0 += h0;
     }
 
     // 2. complement triad
-    palettes_x = x0;
-    palettes_y += h0;
+    x0 = palettes_x;
+    y0 += h0;
     for (int i = 0; i < complementTriad.size(); i++) {
         ButtonExample *btn = new ButtonExample();
-        btn->setup(palettes_x, palettes_y, box_size, box_size);
+        btn->setup(x0, y0, box_size, box_size);
         btn->setup_colorBACK(color_clicked);
         btn->setLocked(true);
         btn->setName("compTriad" + ofToString(i));
         btn->setColor(complementTriad[i]);
         scene->addChild(btn);
         btns_plt_ComplTriad.push_back(btn);
-        palettes_x += h0;
+        x0 += h0;
     }
-
-//    palettes_setup_labels();
 }
 
 //--------------------------------------------------------------
 void ofxColorManager::palettes_setup_labels()
 {
-    palettes_x = gui_x;
-    palettes_y = 480;
     int x0 = palettes_x;
-    int y0 = palettes_y;//to recall at end
+    int y0 = palettes_y;
     int h0 = box_size + pad;
 
     //--
@@ -812,7 +808,7 @@ void ofxColorManager::palettes_setup_labels()
     int btn_pad_w;
     btn_pad_w = 265;//padding to place labels to the right
     btn_plt_h = h0;
-    palettes_x = x0;
+    x0 = palettes_x;
     palettes_y = y0 + btn_plt_h + 11;
 
     //-
