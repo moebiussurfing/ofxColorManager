@@ -107,15 +107,15 @@ void ofxColorManager::setup()
 
     // INTERFACE
 
-    setup_Interface();
+    interface_setup();
 
     //-
 
     // PALETTES
 
     random.generateRandom();
-    update_palettes();
-    setup_palettes();
+    palettes_update();
+    palettes_setup();
 
     //-
 
@@ -134,7 +134,7 @@ void ofxColorManager::setup()
 
     // CURVE TOOL
 
-    setup_curveTool();
+    curveTool_setup();
 
     //--
 
@@ -181,7 +181,7 @@ void ofxColorManager::setup()
     XML_params.add(gradient_hard);//gradient
     load_group_XML(XML_params, XML_path);
 
-    loadPalette("myPalette");
+    palette_load("myPalette");
 
     //-
 
@@ -190,7 +190,7 @@ void ofxColorManager::setup()
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::setup_Interface()
+void ofxColorManager::interface_setup()
 {
     scene = new Node();
     scene->setSize(ofGetWidth(), ofGetHeight());
@@ -264,9 +264,9 @@ void ofxColorManager::setup_Gui_layout()
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::loadPalette(string p)
+void ofxColorManager::palette_load(string p)
 {
-    ofLogNotice("ofxColorManager") << "loadPalette: " << p;
+    ofLogNotice("ofxColorManager") << "palette_load: " << p;
 
     string path = path_palettes + p + ".json";
     ofFile file(path);
@@ -276,13 +276,13 @@ void ofxColorManager::loadPalette(string p)
         ji >> data;
 
         ofLogNotice("ofxColorManager") << "palette name: " << data.name;
-        clearPalette();
+        palette_clear();
         ofColor c;
         for (int i = 0; i< data.palette.size(); i++)
         {
             c = data.palette[i];
             ofLogNotice("ofxColorManager") << "palette " << i << ": " << ofToString(c);
-            add_color(c);
+            palette_addColor(c);
         }
     }
     else
@@ -292,9 +292,9 @@ void ofxColorManager::loadPalette(string p)
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::savePalette(string p)
+void ofxColorManager::palette_save(string p)
 {
-    ofLogNotice("ofxColorManager") << "savePalette: " << p;
+    ofLogNotice("ofxColorManager") << "palette_save: " << p;
 
     string path = path_palettes + p + ".json";
 
@@ -354,7 +354,7 @@ void ofxColorManager::imGui_theme()
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::add_color_Interface(ofColor c)
+void ofxColorManager::interface_addColor(ofColor c)
 {
     palette_x = gui_x;
     int perRow = 5;
@@ -372,7 +372,7 @@ void ofxColorManager::add_color_Interface(ofColor c)
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::update_Interface(){
+void ofxColorManager::interface_update(){
 
     TouchManager::one().update();
 
@@ -442,7 +442,7 @@ void ofxColorManager::update_Interface(){
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::draw_Interface(){
+void ofxColorManager::interface_draw(){
     scene->render();
 
     if (bShowDebug)
@@ -513,16 +513,16 @@ void ofxColorManager::update()
     if (SELECTED_palette != SELECTED_palette_PRE)
     {
         ofLogNotice("ofxColorManager::update") << "-> CHANGED SELECTED_palette: " << SELECTED_palette;
-        recall_AlgorithmicPalette(SELECTED_palette);
+        palettes_recall(SELECTED_palette);
 
         SELECTED_palette_PRE = SELECTED_palette = -1;//bug if not if pressed same button
     }
 
     //-
 
-    update_Interface();
-    update_palettes();//TODO: should reduce calls on update()
-    update_curveTool();
+    interface_update();
+    palettes_update();//TODO: should reduce calls on update()
+    curveTool_update();
     ColorBrowser.update();
 
     //-
@@ -535,8 +535,10 @@ void ofxColorManager::update()
     }
 }
 
+//#pragma mark curveTool
+
 //--------------------------------------------------------------
-void ofxColorManager::setup_curveTool()
+void ofxColorManager::curveTool_setup()
 {
     img_gradient.allocate(image_curvedGradient_w, image_curvedGradient_h, OF_IMAGE_COLOR);
 
@@ -557,7 +559,7 @@ void ofxColorManager::setup_curveTool()
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::update_curveTool()
+void ofxColorManager::curveTool_update()
 {
     // TODO: add parameter to improve backwards mirroring
     // slider // TODO: mirror to gui param
@@ -570,26 +572,6 @@ void ofxColorManager::update_curveTool()
     bool bInvert = false; // flip gradient direction
     float outLUT; // output will be clamped to: [ 0 - 255]
     float outLUT_normalized; // output [ 0.0 - 1.0 ]
-
-//    for(int y = 0; y < image_curvedGradient_h; y++)
-//    {
-//        outLUT = curvesTool[y];
-//        if (!bInvert)
-//        {
-//            outLUT_normalized = ofMap( outLUT, 0, amount-1, 0., 1. );
-//        }
-//        else{
-//            outLUT_normalized = ofMap( outLUT, 0, amount-1, 1., 0. );
-//        }
-//        ofColor c = gradient.getColorAtPercent(outLUT_normalized);
-//
-//        for(int x = 0; x < image_curvedGradient_w; x++)
-//        {
-//            img_gradient.setColor(x, y, c);
-//        }
-//    }
-//    img_gradient.update();
-////    cnt = ofMap( curve_pos.get(), 0., 1., 0, amount-1 );
 
     for (int inLUT = 0; inLUT < amount; inLUT++)
     {
@@ -613,11 +595,12 @@ void ofxColorManager::update_curveTool()
     //-
 
     // TODO:
-    cnt = ofMap( curve_pos.get(), 0., 1., 0, amount-1 );
+//    cnt = ofMap( curve_pos.get(), 0., 1., 0., amount-1 );
+    cnt = ofMap( curve_pos.get(), 0., 0., 1., amount-1 );
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::draw_curveTool() {
+void ofxColorManager::curveTool_draw() {
 
     if (curveShow)
     {
@@ -694,7 +677,7 @@ void ofxColorManager::draw_curveTool() {
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::setup_palettes() {
+void ofxColorManager::palettes_setup() {
     int x0 = palettes_x;
     int y0 = palettes_y;//to recall at end
     int h0 = box_size + pad;
@@ -893,9 +876,9 @@ void ofxColorManager::setup_palettes() {
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::recall_AlgorithmicPalette(int p)
+void ofxColorManager::palettes_recall(int p)
 {
-    clearPalette();
+    palette_clear();
     ofColor color;
 
     switch (p)
@@ -903,63 +886,63 @@ void ofxColorManager::recall_AlgorithmicPalette(int p)
         case 0:
             for (int i = 0; i < btns_plt_Triad.size(); i++) {
                 color = btns_plt_Triad[i]->getColor();
-                add_color( color );
+                palette_addColor(color);
             }
             break;
 
         case 1:
             for (int i = 0; i < btns_plt_ComplTriad.size(); i++) {
                 color = btns_plt_ComplTriad[i]->getColor();
-                add_color( color );
+                palette_addColor(color);
             }
             break;
 
         case 2:
             for (int i = 0; i < btns_plt_CompSat.size(); i++) {
                 color = btns_plt_CompSat[i]->getColor();
-                add_color( color );
+                palette_addColor(color);
             }
             break;
 
         case 3:
             for (int i = 0; i < btns_plt_ComplBrgt.size(); i++) {
                 color = btns_plt_ComplBrgt[i]->getColor();
-                add_color( color );
+                palette_addColor(color);
             }
             break;
 
         case 4:
             for (int i = 0; i < btns_plt_MonoSat.size(); i++) {
                 color = btns_plt_MonoSat[i]->getColor();
-                add_color( color );
+                palette_addColor(color);
             }
             break;
 
         case 5:
             for (int i = 0; i < btns_plt_MonoBrgt.size(); i++) {
                 color = btns_plt_MonoBrgt[i]->getColor();
-                add_color( color );
+                palette_addColor(color);
             }
             break;
 
         case 6:
             for (int i = 0; i < btns_plt_Analog.size(); i++) {
                 color = btns_plt_Analog[i]->getColor();
-                add_color( color );
+                palette_addColor(color);
             }
             break;
 
         case 7:
             for (int i = 0; i < btns_plt_Random.size(); i++) {
                 color = btns_plt_Random[i]->getColor();
-                add_color( color );
+                palette_addColor(color);
             }
             break;
     }
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::update_palettes()
+void ofxColorManager::palettes_update()
 {
     brightness = BRIGHTNESS;
     saturation = SATURATION;
@@ -1086,10 +1069,10 @@ void ofxColorManager::draw()
     //-
 
     // INTERFACE
-    draw_Interface();
+    interface_draw();
 
     // CURVE
-    draw_curveTool();
+    curveTool_draw();
 
     // COLOR BROWSER
     ColorBrowser.draw();
@@ -1146,16 +1129,16 @@ void ofxColorManager::draw()
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::add_color(ofColor c)
+void ofxColorManager::palette_addColor(ofColor c)
 {
     ofLogNotice("ofxColorManager") << "add color " << " (" << ofToString(c) << ") to palette";
     palette.push_back( c );
     gradient.addColor( c );
-    add_color_Interface(c);
+    interface_addColor(c);
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::remove_colorLast()
+void ofxColorManager::palette_removeColorLast()
 {
     if (palette.size() > 0) {
         palette.pop_back();
@@ -1174,9 +1157,9 @@ void ofxColorManager::remove_colorLast()
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::clearPalette()
+void ofxColorManager::palette_clear()
 {
-    ofLogNotice("ofxColorManager") << "clearPalette";
+    ofLogNotice("ofxColorManager") << "palette_clear";
 
     palette.clear();
     gradient.reset();
@@ -1248,7 +1231,7 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
         if (bAddColor)
         {
             bAddColor= false;
-            add_color(ofColor(color_picked.get()));
+            palette_addColor(ofColor(color_picked.get()));
         }
     }
     else if (name == "REMOVE COLOR")
@@ -1256,7 +1239,7 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
         if (bRemoveColor)
         {
             bRemoveColor= false;
-            remove_colorLast();
+            palette_removeColorLast();
         }
     }
     else if (name == "CLEAR PALETTE")
@@ -1264,7 +1247,7 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
         if (bClearPalette)
         {
             bClearPalette = false;
-            clearPalette();
+            palette_clear();
         }
     }
     else if (name == "RANDOM PALETTE")
@@ -1332,8 +1315,8 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 //        bRandomColor = true;
         color_picked = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
 
-//        recall_AlgorithmicPalette((int)ofRandom(7));
-        recall_AlgorithmicPalette(6);//analog palette
+//        palettes_recall((int)ofRandom(7));
+        palettes_recall(6);//analog palette
     }
 
     //-
@@ -1350,25 +1333,25 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 
     if (key == 's')
     {
-        savePalette("myPalette");
+        palette_save("myPalette");
     }
     if (key == 'l')
     {
-        loadPalette("myPalette");
+        palette_load("myPalette");
     }
     if (key == 'c')
     {
-        clearPalette();
+        palette_clear();
     }
     if (key == 'x')
     {
-        remove_colorLast();
+        palette_removeColorLast();
     }
 
     if (key == 'a')
     {
         color_picked = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
-        add_color(ofColor(color_picked.get()));
+        palette_addColor(ofColor(color_picked.get()));
     }
 
     //-
@@ -1494,7 +1477,7 @@ void ofxColorManager::save_group_XML(ofParameterGroup &g, string path)
 //--------------------------------------------------------------
 void ofxColorManager::exit()
 {
-    savePalette("myPalette");
+    palette_save("myPalette");
     save_group_XML(XML_params, XML_path);
 
     ColorBrowser.exit();

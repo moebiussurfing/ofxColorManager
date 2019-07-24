@@ -144,8 +144,8 @@ public:
     ofParameter<float> BRIGHTNESS;
     ofParameter<float> SATURATION;
     ofParameter<bool> bRandomPalette;
-    void setup_palettes();
-    void update_palettes();
+    void palettes_setup();
+    void palettes_update();
     void draw_palettes();
     ofParameter<bool> MODE_Palette;
 
@@ -196,14 +196,14 @@ public:
     vector<ofColor> palette;
 //    vector<ofColor> colors;
 
-    void add_color(ofColor c);
-    void remove_colorLast();
-    void clearPalette();
+    void palette_addColor(ofColor c);
+    void palette_removeColorLast();
+    void palette_clear();
 
     // JSON
 
-    void savePalette(string p);
-    void loadPalette(string p);
+    void palette_save(string p);
+    void palette_load(string p);
     string path_palettes = "assets/palettes/";
 
     //-
@@ -212,10 +212,10 @@ public:
 
     ofxInterface::Node* scene;
     vector<ButtonExample*> btns_palette;
-    void setup_Interface();
-    void update_Interface();
-    void draw_Interface();
-    void add_color_Interface(ofColor c);
+    void interface_setup();
+    void interface_update();
+    void interface_draw();
+    void interface_addColor(ofColor c);
     bool bShowDebug = false;
 
     // ALGORITHMIC PALETTES
@@ -233,7 +233,7 @@ public:
     int SELECTED_palette = -1;
     int SELECTED_palette_PRE = -1;//to check if changed on update() loop
 
-    void recall_AlgorithmicPalette(int p);
+    void palettes_recall(int p);
 
 //    void add_color_Palette(int i);
 
@@ -253,9 +253,9 @@ public:
     bool curveShow = true;
     float cnt = 0;
     int amount = 256;
-    void setup_curveTool();
-    void update_curveTool();
-    void draw_curveTool();
+    void curveTool_setup();
+    void curveTool_update();
+    void curveTool_draw();
     ofParameter<float> curve_pos;
     ofxSimpleSlider curveSlider;
     ofParameter<bool> bResetCurve;
