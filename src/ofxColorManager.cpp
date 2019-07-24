@@ -214,7 +214,7 @@ void ofxColorManager::gui_setup_layout()
     gui_x = 10;
     gui_y = 10;
     gui_w = 200;
-    gui_h = 420;//estimate (or measure) height of the panel on window resize
+    gui_h = 430;//estimate (or measure) height of the panel on window resize
 
     // user palette
     palette_x = gui_x;
@@ -894,49 +894,42 @@ void ofxColorManager::palettes_recall(int p)
                 palette_addColor(color);
             }
             break;
-
         case 1:
             for (int i = 0; i < btns_plt_ComplTriad.size(); i++) {
                 color = btns_plt_ComplTriad[i]->getColor();
                 palette_addColor(color);
             }
             break;
-
         case 2:
             for (int i = 0; i < btns_plt_CompSat.size(); i++) {
                 color = btns_plt_CompSat[i]->getColor();
                 palette_addColor(color);
             }
             break;
-
         case 3:
             for (int i = 0; i < btns_plt_ComplBrgt.size(); i++) {
                 color = btns_plt_ComplBrgt[i]->getColor();
                 palette_addColor(color);
             }
             break;
-
         case 4:
             for (int i = 0; i < btns_plt_MonoSat.size(); i++) {
                 color = btns_plt_MonoSat[i]->getColor();
                 palette_addColor(color);
             }
             break;
-
         case 5:
             for (int i = 0; i < btns_plt_MonoBrgt.size(); i++) {
                 color = btns_plt_MonoBrgt[i]->getColor();
                 palette_addColor(color);
             }
             break;
-
         case 6:
             for (int i = 0; i < btns_plt_Analog.size(); i++) {
                 color = btns_plt_Analog[i]->getColor();
                 palette_addColor(color);
             }
             break;
-
         case 7:
             for (int i = 0; i < btns_plt_Random.size(); i++) {
                 color = btns_plt_Random[i]->getColor();
@@ -1219,7 +1212,6 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
         c.set(ofColor( color_picked.get() ));
         c.setSaturation(color_SAT);
         color_picked.set(c);
-//        color_clicked.set(color_picked);//TODO: ?
     }
     else if (name == "BRIGHTNESS")
     {
@@ -1227,7 +1219,6 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
         c.set(ofColor( color_picked.get() ));
         c.setBrightness(color_BRG);
         color_picked.set(c);
-//        color_clicked.set(color_picked);//TODO: ?
     }
 
         // PALLETE
@@ -1282,93 +1273,97 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
 //        analogue.clear();
 //        random.clear();
 
-//        //-
-//
-//        for (int i=0; i< btns_plt_CompSat.size(); i++)
-//        {
-//            std::string n = ("compSat" + ofToString(i));
-//            auto a = scene->getChildWithName(n, 1000);
-//            auto b = a->getName();
-//            scene->removeChild(a, false);
-//            ofLogVerbose("ofxColorManager") << "removed children: " << b;
-//        }
-//        btns_plt_CompSat.clear();
-//
-//        for (int i=0; i< btns_palette.size(); i++)
-//        {
-//            std::string n = ("compBrgt" + ofToString(i));
-//            auto a = scene->getChildWithName(n, 1000);
-//            auto b = a->getName();
-//            scene->removeChild(a, false);
-//            ofLogVerbose("ofxColorManager") << "removed children: " << b;
-//        }
-//        btns_plt_ComplBrgt.clear();
-//
-//        for (int i=0; i< btns_plt_MonoSat.size(); i++)
-//        {
-//            std::string n = ("monoSat" + ofToString(i));
-//            auto a = scene->getChildWithName(n, 1000);
-//            auto b = a->getName();
-//            scene->removeChild(a, false);
-//            ofLogVerbose("ofxColorManager") << "removed children: " << b;
-//        }
-//        btns_plt_MonoSat.clear();
-//
-//        for (int i=0; i< btns_plt_MonoBrgt.size(); i++)
-//        {
-//            std::string n = ("monoBrgt" + ofToString(i));
-//            auto a = scene->getChildWithName(n, 1000);
-//            auto b = a->getName();
-//            scene->removeChild(a, false);
-//            ofLogVerbose("ofxColorManager") << "removed children: " << b;
-//        }
-//        btns_plt_MonoBrgt.clear();
-//
-//        for (int i=0; i< btns_plt_Analog.size(); i++)
-//        {
-//            std::string n = ("analogue" + ofToString(i));
-//            auto a = scene->getChildWithName(n, 1000);
-//            auto b = a->getName();
-//            scene->removeChild(a, false);
-//            ofLogVerbose("ofxColorManager") << "removed children: " << b;
-//        }
-//        btns_plt_Analog.clear();
-//
-//        for (int i=0; i< btns_plt_Random.size(); i++)
-//        {
-//            std::string n = ("random" + ofToString(i));
-//            auto a = scene->getChildWithName(n, 1000);
-//            auto b = a->getName();
-//            scene->removeChild(a, false);
-//            ofLogVerbose("ofxColorManager") << "removed children: " << b;
-//        }
-//        btns_plt_Random.clear();
-//
-//        for (int i=0; i< btns_plt_Triad.size(); i++)
-//        {
-//            std::string n = ("triad" + ofToString(i));
-//            auto a = scene->getChildWithName(n, 1000);
-//            auto b = a->getName();
-//            scene->removeChild(a, false);
-//            ofLogVerbose("ofxColorManager") << "removed children: " << b;
-//        }
-//        btns_plt_Triad.clear();
-//
-//        for (int i=0; i< btns_plt_ComplTriad.size(); i++)
-//        {
-//            std::string n = ("compTriad" + ofToString(i));
-//            auto a = scene->getChildWithName(n, 1000);
-//            auto b = a->getName();
-//            scene->removeChild(a, false);
-//            ofLogVerbose("ofxColorManager") << "removed children: " << b;
-//        }
-//        btns_plt_ComplTriad.clear();
-//
-//        //-
-//
-//        palettes_setup();
-//        palettes_recall(SELECTED_palette);
+        //-
+
+        for (int i=0; i< btns_plt_CompSat.size(); i++)
+        {
+            std::string n = ("compSat" + ofToString(i));
+            auto a = scene->getChildWithName(n, 1000);
+            auto b = a->getName();
+            scene->removeChild(a, false);
+            ofLogVerbose("ofxColorManager") << "removed children: " << b;
+        }
+        btns_plt_CompSat.clear();
+
+        for (int i=0; i< btns_plt_ComplBrgt.size(); i++)
+        {
+            std::string n = ("compBrgt" + ofToString(i));
+            auto a = scene->getChildWithName(n, 1000);
+            auto b = a->getName();
+            scene->removeChild(a, false);
+            ofLogVerbose("ofxColorManager") << "removed children: " << b;
+        }
+        btns_plt_ComplBrgt.clear();
+
+        for (int i=0; i< btns_plt_MonoSat.size(); i++)
+        {
+            std::string n = ("monoSat" + ofToString(i));
+            auto a = scene->getChildWithName(n, 1000);
+            auto b = a->getName();
+            scene->removeChild(a, false);
+            ofLogVerbose("ofxColorManager") << "removed children: " << b;
+        }
+        btns_plt_MonoSat.clear();
+
+        for (int i=0; i< btns_plt_MonoBrgt.size(); i++)
+        {
+            std::string n = ("monoBrgt" + ofToString(i));
+            auto a = scene->getChildWithName(n, 1000);
+            auto b = a->getName();
+            scene->removeChild(a, false);
+            ofLogVerbose("ofxColorManager") << "removed children: " << b;
+        }
+        btns_plt_MonoBrgt.clear();
+
+        for (int i=0; i< btns_plt_Analog.size(); i++)
+        {
+            std::string n = ("analogue" + ofToString(i));
+            auto a = scene->getChildWithName(n, 1000);
+            auto b = a->getName();
+            scene->removeChild(a, false);
+            ofLogVerbose("ofxColorManager") << "removed children: " << b;
+        }
+        btns_plt_Analog.clear();
+
+        for (int i=0; i< btns_plt_Random.size(); i++)
+        {
+            std::string n = ("random" + ofToString(i));
+            auto a = scene->getChildWithName(n, 1000);
+            auto b = a->getName();
+            scene->removeChild(a, false);
+            ofLogVerbose("ofxColorManager") << "removed children: " << b;
+        }
+        btns_plt_Random.clear();
+
+        for (int i=0; i< btns_plt_Triad.size(); i++)
+        {
+            std::string n = ("triad" + ofToString(i));
+            auto a = scene->getChildWithName(n, 1000);
+            auto b = a->getName();
+            scene->removeChild(a, false);
+            ofLogVerbose("ofxColorManager") << "removed children: " << b;
+        }
+        btns_plt_Triad.clear();
+
+        for (int i=0; i< btns_plt_ComplTriad.size(); i++)
+        {
+            std::string n = ("compTriad" + ofToString(i));
+            auto a = scene->getChildWithName(n, 1000);
+            auto b = a->getName();
+            scene->removeChild(a, false);
+            ofLogVerbose("ofxColorManager") << "removed children: " << b;
+        }
+        btns_plt_ComplTriad.clear();
+
+        //-
+
+        palettes_update();
+        palettes_setup();
+//        palettes_setup_labels();
+        palettes_recall(SELECTED_palette);
     }
+
+    //--
 
         // CURVE
     else if (name == "CURVE POS")
