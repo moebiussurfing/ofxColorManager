@@ -137,9 +137,10 @@ public:
     ofxColorPalette monochromeBrightness;
     ofxColorPalette analogue;
     ofxColorPalette random;
+    int NUM_ALGO_PALETTES = 6;//number of colors. must be even
 //    ofxColorPalette::ColorChannel mode;
 
-    float brightness;
+    float brightness;//TODO: not used
     float saturation;
     ofParameter<float> BRIGHTNESS;
     ofParameter<float> SATURATION;

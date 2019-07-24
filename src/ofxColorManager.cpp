@@ -113,7 +113,7 @@ void ofxColorManager::setup()
 
     // PALETTES
 
-    random.generateRandom(5);
+    random.generateRandom(NUM_ALGO_PALETTES);
     palettes_update();
     palettes_setup();
 
@@ -125,7 +125,7 @@ void ofxColorManager::setup()
     gradient_hard.set("GRADIENT HARD", false);
     gradient.setHardMode(gradient_hard);
     gradient.setDrawVertical(true);
-//    gradient.setDrawDirFlip(true);
+    gradient.setDrawDirFlip(true);
 
     params_curve.setName("CURVE");
     params_curve.add(gradient_hard);
@@ -697,36 +697,6 @@ void ofxColorManager::palettes_setup() {
     int y0 = palettes_y;//to recall at end
     int h0 = box_size + pad;
 
-    // 1. triad
-    palettes_x = x0;
-    palettes_y += h0;
-    for (int i = 0; i < triad.size(); i++) {
-        ButtonExample *btn = new ButtonExample();
-        btn->setup(palettes_x, palettes_y, box_size, box_size);
-        btn->setup_colorBACK(color_clicked);
-        btn->setLocked(true);
-        btn->setName("triad" + ofToString(i));
-        btn->setColor(triad[i]);
-        scene->addChild(btn);
-        btns_plt_Triad.push_back(btn);
-        palettes_x += h0;
-    }
-
-    // 2. complement triad
-    palettes_x = x0;
-    palettes_y += h0;
-    for (int i = 0; i < complementTriad.size(); i++) {
-        ButtonExample *btn = new ButtonExample();
-        btn->setup(palettes_x, palettes_y, box_size, box_size);
-        btn->setup_colorBACK(color_clicked);
-        btn->setLocked(true);
-        btn->setName("compTriad" + ofToString(i));
-        btn->setColor(complementTriad[i]);
-        scene->addChild(btn);
-        btns_plt_ComplTriad.push_back(btn);
-        palettes_x += h0;
-    }
-
     // 3. complement sat
     palettes_x = x0;
     palettes_y += h0;
@@ -817,6 +787,37 @@ void ofxColorManager::palettes_setup() {
         palettes_x += h0;
     }
 
+    // trick hck to put triad to the bottom
+    // 1. triad
+    palettes_x = x0;
+    palettes_y += h0;
+    for (int i = 0; i < triad.size(); i++) {
+        ButtonExample *btn = new ButtonExample();
+        btn->setup(palettes_x, palettes_y, box_size, box_size);
+        btn->setup_colorBACK(color_clicked);
+        btn->setLocked(true);
+        btn->setName("triad" + ofToString(i));
+        btn->setColor(triad[i]);
+        scene->addChild(btn);
+        btns_plt_Triad.push_back(btn);
+        palettes_x += h0;
+    }
+
+    // 2. complement triad
+    palettes_x = x0;
+    palettes_y += h0;
+    for (int i = 0; i < complementTriad.size(); i++) {
+        ButtonExample *btn = new ButtonExample();
+        btn->setup(palettes_x, palettes_y, box_size, box_size);
+        btn->setup_colorBACK(color_clicked);
+        btn->setLocked(true);
+        btn->setName("compTriad" + ofToString(i));
+        btn->setColor(complementTriad[i]);
+        scene->addChild(btn);
+        btns_plt_ComplTriad.push_back(btn);
+        palettes_x += h0;
+    }
+
     //--
 
     // LABELS PICKER : TODO: maybe can use simpler thing than ofxInterface for this
@@ -881,7 +882,19 @@ void ofxColorManager::palettes_setup() {
                 btn->set_SELECTED_palette(SELECTED_palette);
                 break;
         }
-        btn->setPosition(palettes_x + btn_pad_w, palettes_y + p*btn_plt_h);
+
+        // trick hck to put triad to the bottom
+        if (p==0 || p==1)
+        {
+            p = p + 6;
+            btn->setPosition(palettes_x + btn_pad_w, palettes_y + p*btn_plt_h);
+        }
+        else
+        {
+            p = p - 2;
+            btn->setPosition(palettes_x + btn_pad_w, palettes_y + p*btn_plt_h);
+        }
+
         btn->setBGColor(btn_plt_c);
         btn->setLabelColor(ofColor::white);
         btn->setBorder(false);
@@ -993,14 +1006,13 @@ void ofxColorManager::palettes_update()
 //    monochromeBrightness.generateMonoChromatic(ofxColorPalette::BRIGHTNESS);
 //    analogue.generateAnalogous();
 
-    int n = 6;//number of colors. must be even
-    complement.generateComplementary(ofxColorPalette::SATURATION, n);
-    complementBrightness.generateComplementary(ofxColorPalette::BRIGHTNESS, n);
+    complement.generateComplementary(ofxColorPalette::SATURATION, NUM_ALGO_PALETTES);
+    complementBrightness.generateComplementary(ofxColorPalette::BRIGHTNESS, NUM_ALGO_PALETTES);
     triad.generateTriad();
     complementTriad.generateComplementaryTriad();
-    monochrome.generateMonoChromatic(ofxColorPalette::SATURATION, n);
-    monochromeBrightness.generateMonoChromatic(ofxColorPalette::BRIGHTNESS, n);
-    analogue.generateAnalogous(n, 0.2);
+    monochrome.generateMonoChromatic(ofxColorPalette::SATURATION, NUM_ALGO_PALETTES);
+    monochromeBrightness.generateMonoChromatic(ofxColorPalette::BRIGHTNESS, NUM_ALGO_PALETTES);
+    analogue.generateAnalogous(NUM_ALGO_PALETTES, 0.2);
 
     //-
 
@@ -1279,7 +1291,7 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
         if (bRandomPalette)
         {
             bRandomPalette = false;
-            random.generateRandom(5);
+            random.generateRandom(NUM_ALGO_PALETTES);
         }
     }
 
@@ -1333,7 +1345,7 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 
     if (key == 'r')
     {
-        random.generateRandom(5);
+        random.generateRandom(NUM_ALGO_PALETTES);
 
         //TODO: bug because some trigs are flags. we need direct functions
 //        bRandomColor = true;
