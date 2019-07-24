@@ -1435,8 +1435,10 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
     if (key == 'r')
     {
         //TODO: bug because some trigs are flags. we need direct functions
-//        color_picked = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
-        bRandomColor = true;
+//        bRandomColor = true;
+        color_picked = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
+        palettes_update();
+        palettes_recall(3);//auto recal complement brightness palette
     }
 
     if (key == 'p')

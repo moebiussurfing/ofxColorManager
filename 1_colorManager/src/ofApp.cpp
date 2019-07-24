@@ -16,9 +16,17 @@ void ofApp::setup(){
 void ofApp::update(){
     ColorManager.update();
 
-    control += 0.01;
+    if (direction)
+        control += 0.02;
+    else
+        control -= 0.02;
+
     if (control > 1.)
-        control = 0.;
+        direction = false;
+    if (control <= 0.)
+        direction = true;
+
+    control = ofClamp(control, 0., 1.);
     ColorManager.setControl(control);
 }
 

@@ -26,5 +26,6 @@ public:
     vector<ofColor> palette;//targeted palette from addon
     ofColor color_TARGET;
     float control;
+    bool direction = true;
 
 };
