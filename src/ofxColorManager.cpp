@@ -94,7 +94,7 @@ void ofxColorManager::setup()
     SATURATION.set("SATURATION", 128, 0, 255 );
     BRIGHTNESS.set("BRIGHTNESS", 128, 0, 255 );
     bRandomPalette.set("RANDOM PALETTE", false);
-    NUM_ALGO_PALETTES.set("COLORS SIZE", 6, 2, 8);
+    NUM_ALGO_PALETTES.set("SIZE", 6, 2, 8);
     params_palette.setName("ALGORITHMIC PALETTE");
     params_palette.add(MODE_Palette);
     params_palette.add(SATURATION);
@@ -333,6 +333,9 @@ void ofxColorManager::gui_imGui_theme()
     ofColor myColor3;
     int gray2 = 16;
     myColor3 = ofColor(gray2, gray2, gray2, 255);//gray2
+    ofColor myColor4;
+    int gray4 = 128;
+    myColor4 = ofColor(gray4, gray4, gray4, 255);//white
 
     ImGuiStyle *style = &ImGui::GetStyle();
     style->WindowRounding = (3.0f);
@@ -353,7 +356,8 @@ void ofxColorManager::gui_imGui_theme()
     style->Colors[ImGuiCol_FrameBg] = ImVec4(myColor1, 1.00f);
     style->Colors[ImGuiCol_FrameBgHovered] = ImVec4(myColor2, 0.78f);//hover
     style->Colors[ImGuiCol_FrameBgActive] = ImVec4(myColor1, 1.00f);
-    style->Colors[ImGuiCol_SliderGrabActive] = ImVec4(myColor2, 0.7f);
+    style->Colors[ImGuiCol_SliderGrabActive] = ImVec4(myColor4, 1.f);
+    style->Colors[ImGuiCol_SliderGrab] = ImVec4(myColor4, 0.4f);
 }
 
 //--------------------------------------------------------------
@@ -556,8 +560,8 @@ void ofxColorManager::curveTool_setup()
     curvesTool.setup(amount);
     curvesTool.load("curves.yml"); //needed because it fills polyline
 
-    curve_pos.set("CURVE INPUT", 0., 0., 1.);
-    curve_pos_out.set("CURVE OUTPUT", 0., 0., 1.);
+    curve_pos.set("INPUT", 0., 0., 1.);
+    curve_pos_out.set("OUTPUT", 0., 0., 1.);
     bResetCurve.set("RESET CURVE", false);
     params_curve.add(curve_pos);
     params_curve.add(curve_pos_out);
@@ -611,7 +615,7 @@ void ofxColorManager::curveTool_draw() {
     if (curveShow)
     {
         ofRectangle r;
-        r = ofRectangle( currColor_x, currColor_y, box_size/2, slider_h );
+        r = ofRectangle( currColor_x, currColor_y, box_size, slider_h );
 
         ofPushMatrix();
         ofPushStyle();
@@ -624,7 +628,6 @@ void ofxColorManager::curveTool_draw() {
         gradient.drawDebug(grad_x, grad_y, grad_w, grad_h);
 
         // 2. current box color at point (right positioned)
-
         float out;
         out = ofMap( curvesTool.getAtPercent(1.0-curve_pos), 0, amount-1, 1., 0.) ;
         ofColor c = gradient.getColorAtPercent( out );
@@ -1291,7 +1294,7 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
     string name = e.getName();
 
     //TODO: reduce callbacks..
-    if (name != "CURVE INPUT" && name != "COLOR")
+    if (name != "INPUT" && name != "COLOR")
         ofLogNotice("ofxColorManager") << "Changed_control: " << name << ":" << e;
 
     // COLOR
@@ -1365,7 +1368,7 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
             random.generateRandom(NUM_ALGO_PALETTES);
         }
     }
-    else if (name == "COLORS SIZE")
+    else if (name == "SIZE")
     {
         palettes_resize();
     }
@@ -1373,7 +1376,7 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
     //--
 
         // CURVE
-    else if (name == "CURVE INPUT")
+    else if (name == "INPUT")
     {
 //        if ( )
 //        {
