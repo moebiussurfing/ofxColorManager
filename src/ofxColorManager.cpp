@@ -512,7 +512,7 @@ void ofxColorManager::update()
 {
     if (SELECTED_palette != SELECTED_palette_PRE)
     {
-        ofLogNotice("ofxColorManager::update") << "-> CHANGED SELECTED_palette: " << SELECTED_palette;
+        ofLogNotice("ofxColorManager::update") << "CHANGED SELECTED_palette: " << SELECTED_palette;
         palettes_recall(SELECTED_palette);
 
         SELECTED_palette_PRE = SELECTED_palette = -1;//bug if not if pressed same button
@@ -530,7 +530,7 @@ void ofxColorManager::update()
     if (color_clicked != color_clicked_PRE )
     {
         color_clicked_PRE = color_clicked;
-        ofLogNotice("ofxColorManager") << "-> CHANGED color_clicked";
+        ofLogNotice("ofxColorManager") << "CHANGED color_clicked";
         color_picked.set(color_clicked);
     }
 }
@@ -555,65 +555,53 @@ void ofxColorManager::curveTool_setup()
 
     // slider
     curve_pos_slider.setup(slider_x, slider_y, slider_w, slider_h, 0., 1., 0, true, true);
-//    curve_pos_slider.setLabelString("");
+//    curve_pos_slider.setLabelString("input");
 }
 
 //--------------------------------------------------------------
 void ofxColorManager::curveTool_update()
 {
     // TODO: add parameter to improve backwards mirroring
-    // slider // TODO: mirror to gui param
+    // TODO: mirror to gui param
+
+    // update values
     curve_pos = curve_pos_slider.getValue();
+    curve_pos_LUT = (int) ofMap( curve_pos.get(), 0., 1., 0, amount-1 );
 
-//    curve_pos_LUT = ofMap( curve_pos.get(), 0., 1., 0., amount-1 );
-    curve_pos_LUT = ofMap( curve_pos.get(), 0., 0., 1., amount-1 );
+    //--
 
-    //-
+    // vertical palette clors gradient rectangle modified by curveTool
 
-    // vertical and rectangle
-
-    bool bInvert = false; // flip gradient direction
-    float outLUT; // output will be clamped to: [ 0 - 255]
-    float outLUT_normalized; // output [ 0.0 - 1.0 ]
-
-    for (int inLUT = 0; inLUT < amount; inLUT++)
+    // every y point has different color
+    for (int y=0; y<image_curvedGradient_h; y++)
     {
-        float y = ofMap( inLUT, 0, amount-1, 0, image_curvedGradient_h );
+        float input_LUT = ofMap( y, 0, image_curvedGradient_h, 0, amount-1 );
+        float output_LUT = curvesTool[input_LUT];
+        float output;
+        output = ofMap( output_LUT, 0, amount-1, 1., 0.) ;
+        ofColor c = gradient.getColorAtPercent( output );
 
-        outLUT = curvesTool[inLUT]; // get value for curve at inLUT (0-255) position
-        if (!bInvert)
-            outLUT_normalized = ofMap( outLUT, 0, amount-1, 0., 1. );
-        else
-            outLUT_normalized = ofMap( outLUT, 0, amount-1, 1., 0. );
-        ofColor c = gradient.getColorAtPercent( outLUT_normalized );
-//        ofColor c = gradient.getColorAtPercent( 1.-outLUT_normalized );
-
+        // all x point has the same color
         for (int x = 0; x < image_curvedGradient_w; x++)
         {
-//            img_gradient.setColor(x, y, c);
-            img_gradient.setColor(x, inLUT, c);
+            img_gradient.setColor(x, y, c);
         }
     }
     img_gradient.update();
 
     //-
-
 }
 
 //--------------------------------------------------------------
 void ofxColorManager::curveTool_draw() {
 
-    ofRectangle r;
-    r = ofRectangle( currColor_x, currColor_y, box_size/2, slider_h );
-    bool bInvert = true;
-    float inLUT;
-    float outLUT;
-    float outLUT_normalized;
-    float in;
-    float out;
-
     if (curveShow)
     {
+        float in;
+        float out;
+        ofRectangle r;
+        r = ofRectangle( currColor_x, currColor_y, box_size/2, slider_h );
+
         ofPushMatrix();
         ofPushStyle();
 
@@ -622,48 +610,25 @@ void ofxColorManager::curveTool_draw() {
         // GRADIENT
 
         // 1. un-curved gradient rectangle (left positioned)
-
         gradient.drawDebug(grad_x, grad_y, grad_w, grad_h);
 
-        //-
-
         // 2. current box color at point (right positioned)
-
         in = curve_pos;
-        out = ofMap( curvesTool.getAtPercent(in), 0, amount-1, 0., 1.) ;
+        out = ofMap( curvesTool.getAtPercent(1.0-in), 0, amount-1, 1., 0.) ;
         ofColor c = gradient.getColorAtPercent( out );
-
-
-//        inLUT = ofMap( curve_pos, 0., 1., 0, amount-1 );
-//        outLUT = curvesTool[inLUT];
-
-//        if (!bInvert)
-//            outLUT_normalized = ofMap( outLUT, 0, amount-1, 0., 1. );
-//        else
-//            outLUT_normalized = ofMap( outLUT, 0, amount-1, 1., 0. );
-//        ofColor c = gradient.getColorAtPercent( outLUT_normalized );
-
         ofPushStyle();
         ofFill();
         ofSetColor(c);
         ofDrawRectangle(r);
         ofPopStyle();
 
-        //--
-
         // 3. curve tool
-
         ofTranslate(curveTool_x, curveTool_y);
-
-        //-
 
         // 3.1 image box gradient LUT
         img_gradient.draw(image_curvedGradient_x, image_curvedGradient_y);
 
-        //-
-
         // 3.2 curve splines editor
-
         ofSetColor(255);
         curvesTool.draw(0, 0, curve_pos_LUT);
 
@@ -671,7 +636,6 @@ void ofxColorManager::curveTool_draw() {
         ofSetColor(ofColor::white);
         float y =  amount - curvesTool[curve_pos_LUT];
         ofDrawLine(0, y, amount, y);
-//    ofDrawLine(amount + slider_w, y, amount + slider_w + pad + image_curvedGradient_w + 100, y);
 
         // 3.4 current circle point
         ofSetColor(25);
@@ -681,13 +645,17 @@ void ofxColorManager::curveTool_draw() {
 
         ofPopMatrix();
         ofPopStyle();
+
+//    // debug curve values
+//    int posx, posy;
+//    posx = 425;
+//    posy = 20;
+//    ofDrawBitmapStringHighlight("in : "+ofToString(in), glm::vec2(posx, posy));
+//    ofDrawBitmapStringHighlight("out: "+ofToString(out), glm::vec2(posx, posy + 20));
+//    ofDrawBitmapStringHighlight("lut: "+ofToString(curve_pos_LUT), glm::vec2(posx, posy + 40));
     }
 
-    int posx, posy;
-    posx = 425;
-    posy = 20;
-    ofDrawBitmapStringHighlight("in : "+ofToString(in), glm::vec2(posx, posy));
-    ofDrawBitmapStringHighlight("out: "+ofToString(out), glm::vec2(posx, posy + 20));
+    //-
 }
 
 //--------------------------------------------------------------
@@ -830,7 +798,7 @@ void ofxColorManager::palettes_setup() {
     btn_pad_w = 265;//padding to place labels to the right
     btn_plt_h = h0;
     palettes_x = x0;
-    palettes_y = y0 + btn_plt_h + 10;
+    palettes_y = y0 + btn_plt_h + 11;
 
     //-
 

@@ -252,7 +252,7 @@ public:
     ofxCurvesTool curvesTool;
     ofImage img_gradient;
     bool curveShow = true;
-    float curve_pos_LUT = 0;
+    int curve_pos_LUT = 0;
     int amount = 256;
     void curveTool_setup();
     void curveTool_update();

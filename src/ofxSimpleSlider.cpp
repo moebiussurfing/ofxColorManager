@@ -109,7 +109,7 @@ void ofxSimpleSlider::draw(ofEventArgs& event){
     // move label down left
 //    ofTranslate( -32, 33);
     // move label down left
-    ofTranslate( -32, 20);
+    ofTranslate( -30, 20);
 
 	// draw numeric value 
 	if (bHasFocus){
