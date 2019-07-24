@@ -30,8 +30,8 @@ void ofxColorManager::setup()
 
     //-
 
-//    color_picked.addListener(this, &ofxColorManager::Changed_color_picked);
-//    color_clicked_param.addListener(this, &ofxColorManager::Changed_color_clicked);
+    color_picked.addListener(this, &ofxColorManager::Changed_color_picked);
+    color_clicked_param.addListener(this, &ofxColorManager::Changed_color_clicked);
 
     //-
 
@@ -140,16 +140,16 @@ void ofxColorManager::setup()
 
     // GUI
 
-//    // font
-//    ImGuiIO& io = ImGui::GetIO();
-//    string inputPath;
-//    inputPath = ofFilePath::getAbsolutePath("assets/fonts/PragmataProR_0822.ttf");
-//    const char* myPath = inputPath.c_str();
-//    ImFontConfig config;
-//    config.OversampleH = 3;
-//    config.OversampleV = 1;
-//    config.GlyphExtraSpacing.x = 1.0f;
-//    io.Fonts->AddFontFromFileTTF(myPath, 13.0f, &config);
+    // font
+    ImGuiIO& io = ImGui::GetIO();
+    string inputPath;
+    inputPath = ofFilePath::getAbsolutePath("assets/fonts/PragmataProR_0822.ttf");
+    const char* myPath = inputPath.c_str();
+    ImFontConfig config;
+    config.OversampleH = 3;
+    config.OversampleV = 1;
+    config.GlyphExtraSpacing.x = 1.0f;
+    io.Fonts->AddFontFromFileTTF(myPath, 13.0f, &config);
 
     // create
     this->gui.setup();
@@ -181,7 +181,7 @@ void ofxColorManager::setup()
     XML_params.add(gradient_hard);//gradient
     load_group_XML(XML_params, XML_path);
 
-//    loadPalette("myPalette");
+    loadPalette("myPalette");
 
     //-
 
