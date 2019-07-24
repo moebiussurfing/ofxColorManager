@@ -137,7 +137,7 @@ public:
     ofxColorPalette monochromeBrightness;
     ofxColorPalette analogue;
     ofxColorPalette random;
-    int NUM_ALGO_PALETTES = 6;//number of colors. must be even
+    ofParameter<int> NUM_ALGO_PALETTES;//number of colors. must be even
 //    ofxColorPalette::ColorChannel mode;
 
     float brightness;//TODO: not used
@@ -146,6 +146,7 @@ public:
     ofParameter<float> SATURATION;
     ofParameter<bool> bRandomPalette;
     void palettes_setup();
+    void palettes_setup_labels();
     void palettes_update();
     void draw_palettes();
     ofParameter<bool> MODE_Palette;
