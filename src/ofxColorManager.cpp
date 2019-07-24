@@ -507,6 +507,7 @@ bool ofxColorManager::gui_imGui()
                 {
                     curve_pos_slider.setPercent(curve_pos.get());
                 }
+                ofxImGui::AddParameter(this->curve_pos_out);
                 ofxImGui::AddParameter(this->gradient_hard);
                 ofxImGui::EndTree(mainSettings);
             }
@@ -555,9 +556,11 @@ void ofxColorManager::curveTool_setup()
     curvesTool.setup(amount);
     curvesTool.load("curves.yml"); //needed because it fills polyline
 
-    curve_pos.set("CURVE POS", 0., 0., 1.);// pct value 0. to 1.
+    curve_pos.set("CURVE INPUT", 0., 0., 1.);
+    curve_pos_out.set("CURVE OUTPUT", 0., 0., 1.);
     bResetCurve.set("RESET CURVE", false);
     params_curve.add(curve_pos);
+    params_curve.add(curve_pos_out);
     params_curve.add(bResetCurve);
     ofAddListener(params_curve.parameterChangedE(), this, &ofxColorManager::Changed_control);
 
@@ -607,8 +610,7 @@ void ofxColorManager::curveTool_draw() {
 
     if (curveShow)
     {
-        float in;
-        float out;
+//        float in;
         ofRectangle r;
         r = ofRectangle( currColor_x, currColor_y, box_size/2, slider_h );
 
@@ -623,9 +625,9 @@ void ofxColorManager::curveTool_draw() {
         gradient.drawDebug(grad_x, grad_y, grad_w, grad_h);
 
         // 2. current box color at point (right positioned)
-        in = curve_pos;
-        out = ofMap( curvesTool.getAtPercent(1.0-in), 0, amount-1, 1., 0.) ;
-        ofColor c = gradient.getColorAtPercent( out );
+//        in = curve_pos;
+        curve_pos_out = ofMap( curvesTool.getAtPercent(1.0-curve_pos), 0, amount-1, 1., 0.) ;
+        ofColor c = gradient.getColorAtPercent( curve_pos_out );
         ofPushStyle();
         ofFill();
         ofSetColor(c);
@@ -660,8 +662,8 @@ void ofxColorManager::curveTool_draw() {
 //    int posx, posy;
 //    posx = 425;
 //    posy = 20;
-//    ofDrawBitmapStringHighlight("in : "+ofToString(in), glm::vec2(posx, posy));
-//    ofDrawBitmapStringHighlight("out: "+ofToString(out), glm::vec2(posx, posy + 20));
+//    ofDrawBitmapStringHighlight("in : "+ofToString(curve_pos), glm::vec2(posx, posy));
+//    ofDrawBitmapStringHighlight("out: "+ofToString(curve_pos_out), glm::vec2(posx, posy + 20));
 //    ofDrawBitmapStringHighlight("lut: "+ofToString(curve_pos_LUT), glm::vec2(posx, posy + 40));
     }
 
@@ -1286,7 +1288,7 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
     string name = e.getName();
 
     //TODO: reduce callbacks..
-    if (name != "CURVE POS" && name != "COLOR")
+    if (name != "CURVE INPUT" && name != "COLOR")
         ofLogNotice("ofxColorManager") << "Changed_control: " << name << ":" << e;
 
     // COLOR
@@ -1368,7 +1370,7 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
     //--
 
         // CURVE
-    else if (name == "CURVE POS")
+    else if (name == "CURVE INPUT")
     {
 //        if ( )
 //        {

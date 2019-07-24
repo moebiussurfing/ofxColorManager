@@ -260,6 +260,7 @@ public:
     void curveTool_update();
     void curveTool_draw();
     ofParameter<float> curve_pos;
+    ofParameter<float> curve_pos_out;
     ofxSimpleSlider curve_pos_slider;
     ofParameter<bool> bResetCurve;
 
