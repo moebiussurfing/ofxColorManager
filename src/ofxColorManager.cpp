@@ -325,24 +325,24 @@ void ofxColorManager::gui_imGui_theme()
 
     // widgets color
     ofColor myColor1;
-    int grayDark = 0;
-    myColor1 = ofColor(grayDark, grayDark, grayDark, 255);//black
     ofColor myColor2;
-    int gray = 24;
-    myColor2 = ofColor(gray, gray, gray, 255);//gray1
     ofColor myColor3;
-    int gray2 = 16;
-    myColor3 = ofColor(gray2, gray2, gray2, 255);//gray2
     ofColor myColor4;
+    int grayDark = 0;
+    int gray = 24;
+    int gray2 = 16;
     int gray4 = 128;
+    myColor1 = ofColor(grayDark, grayDark, grayDark, 255);//black
+    myColor2 = ofColor(gray, gray, gray, 255);//gray light
+    myColor3 = ofColor(gray2, gray2, gray2, 255);//gray darke
     myColor4 = ofColor(gray4, gray4, gray4, 255);//white
 
     ImGuiStyle *style = &ImGui::GetStyle();
     style->WindowRounding = (3.0f);
-    style->Colors[ImGuiCol_ScrollbarBg] = ImVec4(myColor1, 1.00f);
-    style->Colors[ImGuiCol_ScrollbarGrab] = ImVec4(myColor2, 0.21f);
-    style->Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(myColor1, 0.5f);
-    style->Colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(myColor2, 1.00f);
+//    style->Colors[ImGuiCol_ScrollbarBg] = ImVec4(myColor1, 1.00f);
+//    style->Colors[ImGuiCol_ScrollbarGrab] = ImVec4(myColor2, 0.21f);
+//    style->Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(myColor1, 0.5f);
+//    style->Colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(myColor2, 1.00f);
     style->Colors[ImGuiCol_CheckMark] = ImVec4(ofColor(255), 0.80f);
     style->Colors[ImGuiCol_Button] = ImVec4(myColor3, 0.8f);
     style->Colors[ImGuiCol_ButtonHovered] = ImVec4(myColor1, 0.86f);
@@ -354,7 +354,7 @@ void ofxColorManager::gui_imGui_theme()
     style->Colors[ImGuiCol_HeaderHovered] = ImVec4(myColor2, 0.86f);
     style->Colors[ImGuiCol_HeaderActive] = ImVec4(myColor1, 1.00f);
     style->Colors[ImGuiCol_FrameBg] = ImVec4(myColor1, 1.00f);
-    style->Colors[ImGuiCol_FrameBgHovered] = ImVec4(myColor2, 0.78f);//hover
+    style->Colors[ImGuiCol_FrameBgHovered] = ImVec4(myColor2, 0.40f);//hover
     style->Colors[ImGuiCol_FrameBgActive] = ImVec4(myColor1, 1.00f);
     style->Colors[ImGuiCol_SliderGrabActive] = ImVec4(myColor4, 1.f);
     style->Colors[ImGuiCol_SliderGrab] = ImVec4(myColor4, 0.4f);
@@ -1293,8 +1293,8 @@ void ofxColorManager::palette_clear()
 void ofxColorManager::Changed_control(ofAbstractParameter &e) {
     string name = e.getName();
 
-    //TODO: reduce callbacks..
-    if (name != "INPUT" && name != "COLOR")
+    //TODO: should reduce callbacks in output..
+    if (name!="INPUT" && name!="COLOR" && name!="OUTPUT")
         ofLogNotice("ofxColorManager") << "Changed_control: " << name << ":" << e;
 
     // COLOR
@@ -1424,6 +1424,11 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
     //-
 
     if (key == 'r')
+    {
+        bRandomColor = true;
+    }
+
+    if (key == 'p')
     {
         random.generateRandom(NUM_ALGO_PALETTES);
 
