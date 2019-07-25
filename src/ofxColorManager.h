@@ -190,15 +190,6 @@ public:
 
     //--
 
-    // API
-
-    vector<ofColor> getPalette();
-    void setColor_TARGET(ofColor &c);
-    ofColor *color_TARGET;
-    void setControl(float control);
-
-    //--
-
     // USER PALETTE
 
     vector<ofColor> palette;
@@ -292,6 +283,15 @@ public:
 
     //--
 
+    // API
+
+    vector<ofColor> getPalette();
+    void setColor_TARGET(ofColor &c);
+    ofColor *color_TARGET;
+    void setControl(float control);
     bool SHOW_ALL_GUI = true;
     void setVisible(bool b);
+    ofColor getColorAtPercent(float control);
+
+    //--
 };

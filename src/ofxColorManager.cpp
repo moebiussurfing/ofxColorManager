@@ -613,8 +613,7 @@ void ofxColorManager::curveTool_update()
 
     if (color_TARGET != nullptr)//only if pointer is setted
     {
-        float out;
-        out = ofMap( curvesTool.getAtPercent(1.0-curve_pos), 0, curveTool_amount-1, 1., 0.) ;
+        float out = ofMap( curvesTool.getAtPercent(1.0-curve_pos), 0, curveTool_amount-1, 1., 0.) ;
         ofColor c = gradient.getColorAtPercent( out );
         color_TARGET->set(c);//TODO: should reduce calls
     }
@@ -1650,4 +1649,12 @@ void ofxColorManager::setVisible(bool b)
 {
     SHOW_ALL_GUI = b;
     curve_pos_slider.setVisible(b);
+}
+
+//--------------------------------------------------------------
+ofColor ofxColorManager::getColorAtPercent(float control)
+{
+    float out = ofMap( curvesTool.getAtPercent(1.0-control), 0, curveTool_amount-1, 1., 0.) ;
+    ofColor c = gradient.getColorAtPercent( out );
+    return c;
 }
