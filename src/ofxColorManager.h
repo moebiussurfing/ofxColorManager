@@ -197,9 +197,7 @@ public:
     vector<ofColor> getPalette();
     void setColor_TARGET(ofColor &c);
     ofColor *color_TARGET;
-
     void setControl(float control);
-//    float &control_TARGET;
 
     //--
 

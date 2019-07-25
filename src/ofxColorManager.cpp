@@ -11,12 +11,6 @@ ofxColorManager::~ofxColorManager()
 }
 
 //--------------------------------------------------------------
-vector<ofColor> ofxColorManager::getPalette()
-{
-    return palette;
-}
-
-//--------------------------------------------------------------
 void ofxColorManager::setup()
 {
     //-
@@ -638,7 +632,7 @@ void ofxColorManager::curveTool_draw() {
         out = ofMap( curvesTool.getAtPercent(1.0-curve_pos), 0, curveTool_amount-1, 1., 0.) ;
         ofColor c = gradient.getColorAtPercent( out );
 
-        color_TARGET->set(c);//TODO: should reduce calls
+//        color_TARGET->set(c);//TODO: should reduce calls
 
         ofPushStyle();
         ofFill();
@@ -966,13 +960,13 @@ void ofxColorManager::palettes_recall(int p)
 //--------------------------------------------------------------
 void ofxColorManager::palettes_update()
 {
-    brightness = BRIGHTNESS;
+    brightness = BRIGHTNESS;//TODO: delete vars
     saturation = SATURATION;
     ofColor base;
 
     //-
 
-    if (MODE_Palette)
+    if (!MODE_Palette)
     {
         // using hue only from picked color and sat/(brg from sliders
         base = ofColor::fromHsb(ofMap(color_picked.get().getHue(), 0., 1., 0, 255), saturation, brightness);
@@ -1633,10 +1627,14 @@ void ofxColorManager::Changed_color_picked(ofFloatColor &color)
 //--------------------------------------------------------------
 void ofxColorManager::Changed_color_clicked(ofFloatColor &color)
 {
+    //DISABLED
 //    ofLogNotice("ofxColorManager") << "Changed_color_clicked " << ofToString(color);
 //    color_picked.set(color);
 }
 
+//-
+
+// API
 
 //--------------------------------------------------------------
 void ofxColorManager::setColor_TARGET(ofColor &c)
@@ -1649,4 +1647,10 @@ void ofxColorManager::setControl(float control)
 {
     curve_pos = control;
     curve_pos_slider.setPercent(control);
+}
+
+//--------------------------------------------------------------
+vector<ofColor> ofxColorManager::getPalette()
+{
+    return palette;
 }
