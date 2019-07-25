@@ -529,6 +529,7 @@ void ofxColorManager::update()
     {
         ofLogNotice("ofxColorManager::update") << "CHANGED SELECTED_palette: " << SELECTED_palette;
         palettes_recall(SELECTED_palette);
+        SELECTED_palette_LAST = SELECTED_palette;
 
         SELECTED_palette_PRE = SELECTED_palette = -1;//bug if not if pressed same button
     }
@@ -1420,7 +1421,8 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 //        bRandomColor = true;
         color_picked = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
         palettes_update();
-        palettes_recall(3);//auto recal complement brightness palette
+        palettes_recall(SELECTED_palette_LAST);//trig last choice
+//        palettes_recall(3);//auto recal complement brightness palette
     }
 
     if (key == 'p')

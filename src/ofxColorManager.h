@@ -238,10 +238,9 @@ public:
     vector<ButtonPaletteSelector*> btns_plt_Selector; // 1-8
     int SELECTED_palette = -1;
     int SELECTED_palette_PRE = -1;//to check if changed on update() loop
+    int SELECTED_palette_LAST = 0;//last palette type triggered
 
     void palettes_recall(int p);
-
-//    void add_color_Palette(int i);
 
     //-
 
