@@ -607,6 +607,18 @@ void ofxColorManager::curveTool_update()
     curve_img_gradient.update();
 
     //-
+
+    // UPDATE TRAGET COLOR POINTER IN ofApp
+
+    if (color_TARGET != nullptr)//only if pointer is setted
+    {
+        float out;
+        out = ofMap( curvesTool.getAtPercent(1.0-curve_pos), 0, curveTool_amount-1, 1., 0.) ;
+        ofColor c = gradient.getColorAtPercent( out );
+        color_TARGET->set(c);//TODO: should reduce calls
+    }
+
+    //-
 }
 
 //--------------------------------------------------------------
@@ -632,8 +644,8 @@ void ofxColorManager::curveTool_draw() {
         out = ofMap( curvesTool.getAtPercent(1.0-curve_pos), 0, curveTool_amount-1, 1., 0.) ;
         ofColor c = gradient.getColorAtPercent( out );
 
-        if (color_TARGET != nullptr)//only if pointer is setted
-            color_TARGET->set(c);//TODO: should reduce calls
+//        if (color_TARGET != nullptr)//only if pointer is setted
+//            color_TARGET->set(c);//TODO: should reduce calls
 
         ofPushStyle();
         ofFill();
@@ -1132,25 +1144,27 @@ void ofxColorManager::palettes_resize()
 //--------------------------------------------------------------
 void ofxColorManager::draw()
 {
-    //-
+    if (SHOW_ALL_GUI) {
 
-    // BACKGROUND
+        //-
 
-    ofClear(ofColor( color_backGround.get() ));
+        // BACKGROUND
 
-    //-
+        ofClear(ofColor(color_backGround.get()));
 
-    // COLOR BOX PICKER (CURRENT)
+        //-
 
-    ofPushStyle();
-    ofFill();
-    ofSetColor( ofColor( color_picked.get() ) );
-    ofDrawRectangle(r_color_picked);
-    ofPopStyle();
+        // COLOR BOX PICKER (CURRENT)
 
-    //-
+        ofPushStyle();
+        ofFill();
+        ofSetColor(ofColor(color_picked.get()));
+        ofDrawRectangle(r_color_picked);
+        ofPopStyle();
 
-    // COLOR BOX CLICKED
+        //-
+
+        // COLOR BOX CLICKED
 
 //    ofPushStyle();
 //    ofFill();
@@ -1161,34 +1175,30 @@ void ofxColorManager::draw()
 //    ofDrawRectangle(r_color_clicked);
 //    ofPopStyle();
 
-    //-
+        //-
 
-    // INTERFACE
-    interface_draw();
+        // INTERFACE
+        interface_draw();
 
-    // CURVE
-    curveTool_draw();
+        // CURVE
+        curveTool_draw();
 
-    // COLOR BROWSER
-    ColorBrowser.draw();
+        // COLOR BROWSER
+        ColorBrowser.draw();
 
-    //-
+        //-
 
-    // GUI
+        // GUI
 
-    this->mouseOverGui = false;
-    if (this->guiVisible)
-    {
-        this->mouseOverGui = this->gui_imGui();
-    }
-    if (this->mouseOverGui)
-    {
-    }
-    else
-    {
-    }
+        this->mouseOverGui = false;
+        if (this->guiVisible) {
+            this->mouseOverGui = this->gui_imGui();
+        }
+        if (this->mouseOverGui) {
+        } else {
+        }
 
-    //--
+        //--
 
 //    // DEBUG ALGORTIHMIC PALETTE
 //
@@ -1220,7 +1230,8 @@ void ofxColorManager::draw()
 //    ofPopMatrix();
 //    ofPopStyle();
 
-    //--
+        //--
+    }
 }
 
 //--------------------------------------------------------------
@@ -1356,7 +1367,7 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
         palettes_resize();
     }
 
-    //--
+        //--
 
         // CURVE
     else if (name == "INPUT")
@@ -1633,4 +1644,11 @@ void ofxColorManager::setControl(float control)
 vector<ofColor> ofxColorManager::getPalette()
 {
     return palette;
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::setVisible(bool b)
+{
+    SHOW_ALL_GUI = b;
+    curve_pos_slider.setVisible(b);
 }

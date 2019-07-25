@@ -66,73 +66,75 @@ void ofxSimpleSlider::setLabelString (string str){
 
 //----------------------------------------------------
 void ofxSimpleSlider::draw(ofEventArgs& event){
-	
-	ofEnableAlphaBlending();
-	ofDisableSmoothing();
-	ofPushMatrix();
-	ofTranslate(x,y,0);
-	
-	// Use different alphas if we're actively maniupulating me. 
-	float sliderAlpha = (bHasFocus) ? 128:64;
-	float spineAlpha  = (bHasFocus) ? 192:128;
-	float thumbAlpha  = (bHasFocus) ? 255:160;
-	
-	// draw box outline
-	ofNoFill();
-	ofSetLineWidth(1.0);
-	ofSetColor(200,200,200, sliderAlpha);
-	ofSetRectMode(OF_RECTMODE_CORNER);
-	ofDrawRectangle(0,0, width,height);
-	
-	// draw spine
-	ofSetLineWidth(1.0);
-	ofSetColor(255,255,255, spineAlpha);
-	if (bVertical){
-		ofDrawLine(width/2,0, width/2,height);
-	} else {
-		ofDrawLine(0,height/2, width,height/2);
-	}
-	
-	// draw thumb
-	ofSetLineWidth(5.0);
-	ofSetColor(255,255,255, thumbAlpha);
-	if (bVertical){
-		float thumbY = ofMap(percent, 0, 1, height, 0, true);
-		ofDrawLine(0,thumbY, width,thumbY);
-	} else {
-		float thumbX = ofMap(percent, 0, 1, 0, width, true);
-		ofDrawLine(thumbX,0, thumbX,height);
-	}
 
-	// move label up left
-//	ofTranslate( -77, -7);
-    // move label down left
-//    ofTranslate( -32, 33);
-    // move label down left
-    ofTranslate( -30, 20);
+    if (SHOW_ALL_GUI) {
 
-	// draw numeric value 
-	if (bHasFocus){
-		ofSetColor(255);
-	} else {
-		ofSetColor(200);
-    }
-    if (bDrawNumber)
-    {
-        if (bVertical){
-            ofDrawBitmapString( ofToString(getValue(),numberDisplayPrecision), width+5,height);
-            ofDrawBitmapString(labelString, width+5, height-14);
+        ofEnableAlphaBlending();
+        ofDisableSmoothing();
+        ofPushMatrix();
+        ofTranslate(x, y, 0);
+
+        // Use different alphas if we're actively maniupulating me.
+        float sliderAlpha = (bHasFocus) ? 128 : 64;
+        float spineAlpha = (bHasFocus) ? 192 : 128;
+        float thumbAlpha = (bHasFocus) ? 255 : 160;
+
+        // draw box outline
+        ofNoFill();
+        ofSetLineWidth(1.0);
+        ofSetColor(200, 200, 200, sliderAlpha);
+        ofSetRectMode(OF_RECTMODE_CORNER);
+        ofDrawRectangle(0, 0, width, height);
+
+        // draw spine
+        ofSetLineWidth(1.0);
+        ofSetColor(255, 255, 255, spineAlpha);
+        if (bVertical) {
+            ofDrawLine(width / 2, 0, width / 2, height);
         } else {
-            ofDrawBitmapString( ofToString(getValue(),numberDisplayPrecision), width+5,height/2 + 4);
-
-            float labelStringWidth = labelString.size();
-            ofDrawBitmapString( labelString, 0-labelStringWidth*8-5, height/2 + 4);
+            ofDrawLine(0, height / 2, width, height / 2);
         }
-    }
 
-	ofPopMatrix();
-	ofSetLineWidth(1.0);
-	ofDisableAlphaBlending();
+        // draw thumb
+        ofSetLineWidth(5.0);
+        ofSetColor(255, 255, 255, thumbAlpha);
+        if (bVertical) {
+            float thumbY = ofMap(percent, 0, 1, height, 0, true);
+            ofDrawLine(0, thumbY, width, thumbY);
+        } else {
+            float thumbX = ofMap(percent, 0, 1, 0, width, true);
+            ofDrawLine(thumbX, 0, thumbX, height);
+        }
+
+        // move label up left
+//	ofTranslate( -77, -7);
+        // move label down left
+//    ofTranslate( -32, 33);
+        // move label down left
+        ofTranslate(-30, 20);
+
+        // draw numeric value
+        if (bHasFocus) {
+            ofSetColor(255);
+        } else {
+            ofSetColor(200);
+        }
+        if (bDrawNumber) {
+            if (bVertical) {
+                ofDrawBitmapString(ofToString(getValue(), numberDisplayPrecision), width + 5, height);
+                ofDrawBitmapString(labelString, width + 5, height - 14);
+            } else {
+                ofDrawBitmapString(ofToString(getValue(), numberDisplayPrecision), width + 5, height / 2 + 4);
+
+                float labelStringWidth = labelString.size();
+                ofDrawBitmapString(labelString, 0 - labelStringWidth * 8 - 5, height / 2 + 4);
+            }
+        }
+
+        ofPopMatrix();
+        ofSetLineWidth(1.0);
+        ofDisableAlphaBlending();
+    }
 }
 
 //----------------------------------------------------
@@ -206,5 +208,10 @@ void ofxSimpleSlider::updatePercentFromMouse (int mx, int my){
 		percent = ofMap(mx, x, x+width,  0,1, true);
 	}
 }
-		
+
+//--------------------------------------------------------------
+void ofxSimpleSlider::setVisible(bool b)
+{
+    SHOW_ALL_GUI = b;
+}
 

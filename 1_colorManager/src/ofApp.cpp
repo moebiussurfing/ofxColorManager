@@ -30,7 +30,12 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-    ColorManager.draw();
+    ofBackground(16);
+
+//    if (!hide)
+//    {
+        ColorManager.draw();
+//    }
 
     int x, y, w, h;
     x = 1200;
@@ -62,13 +67,22 @@ void ofApp::exit(){
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
 
-//    palette = ColorManager.getPalette();
-//    ofLogNotice("ofApp") << "getPalette";
-//
-//    for (int i=0; i<palette.size(); i++)
-//    {
-//        ofLogNotice("ofApp") << ofToString(palette[i]);
-//    }
+    if (key == 'h')
+    {
+        hide = !hide;
+        ColorManager.setVisible(!hide);
+    }
+
+    if (key == OF_KEY_TAB)
+    {
+        palette = ColorManager.getPalette();
+        ofLogNotice("ofApp") << "getPalette";
+
+        for (int i=0; i<palette.size(); i++)
+        {
+            ofLogNotice("ofApp") << ofToString(palette[i]);
+        }
+    }
 }
 
 //--------------------------------------------------------------

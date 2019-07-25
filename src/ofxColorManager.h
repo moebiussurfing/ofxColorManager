@@ -292,4 +292,7 @@ public:
     void removeMouseListeners();
 
     //--
+
+    bool SHOW_ALL_GUI = true;
+    void setVisible(bool b);
 };

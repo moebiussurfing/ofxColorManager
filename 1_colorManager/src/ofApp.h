@@ -28,4 +28,6 @@ public:
     float control;
     bool direction = true;
 
+    bool hide = false;
+
 };
