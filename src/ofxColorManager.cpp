@@ -644,9 +644,6 @@ void ofxColorManager::curveTool_draw() {
         out = ofMap( curvesTool.getAtPercent(1.0-curve_pos), 0, curveTool_amount-1, 1., 0.) ;
         ofColor c = gradient.getColorAtPercent( out );
 
-//        if (color_TARGET != nullptr)//only if pointer is setted
-//            color_TARGET->set(c);//TODO: should reduce calls
-
         ofPushStyle();
         ofFill();
         ofSetColor(c);
