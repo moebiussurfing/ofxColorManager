@@ -632,7 +632,8 @@ void ofxColorManager::curveTool_draw() {
         out = ofMap( curvesTool.getAtPercent(1.0-curve_pos), 0, curveTool_amount-1, 1., 0.) ;
         ofColor c = gradient.getColorAtPercent( out );
 
-//        color_TARGET->set(c);//TODO: should reduce calls
+        if (color_TARGET != nullptr)//only if pointer is setted
+            color_TARGET->set(c);//TODO: should reduce calls
 
         ofPushStyle();
         ofFill();
@@ -960,16 +961,11 @@ void ofxColorManager::palettes_recall(int p)
 //--------------------------------------------------------------
 void ofxColorManager::palettes_update()
 {
-    brightness = BRIGHTNESS;//TODO: delete vars
-    saturation = SATURATION;
     ofColor base;
-
-    //-
-
     if (!MODE_Palette)
     {
         // using hue only from picked color and sat/(brg from sliders
-        base = ofColor::fromHsb(ofMap(color_picked.get().getHue(), 0., 1., 0, 255), saturation, brightness);
+        base = ofColor::fromHsb(ofMap(color_picked.get().getHue(), 0., 1., 0, 255), SATURATION, BRIGHTNESS);
     }
     else
     {
@@ -985,14 +981,6 @@ void ofxColorManager::palettes_update()
     monochromeBrightness.setBaseColor(base);
     analogue.setBaseColor(base);
     random.setBaseColor(base);
-
-//    complement.generateComplementary();
-//    complementBrightness.generateComplementary(ofxColorPalette::BRIGHTNESS);
-//    triad.generateTriad();
-//    complementTriad.generateComplementaryTriad();
-//    monochrome.generateMonoChromatic();
-//    monochromeBrightness.generateMonoChromatic(ofxColorPalette::BRIGHTNESS);
-//    analogue.generateAnalogous();
 
     complement.generateComplementary(ofxColorPalette::SATURATION, NUM_ALGO_PALETTES);
     complementBrightness.generateComplementary(ofxColorPalette::BRIGHTNESS, NUM_ALGO_PALETTES);
@@ -1013,49 +1001,41 @@ void ofxColorManager::palettes_update()
     {
         btns_plt_Triad[i]->setColor(triad[i]);
     }
-
     // 2. complement triad
     for (int i = 0 ; i < btns_plt_ComplTriad.size(); i++)
     {
         btns_plt_ComplTriad[i]->setColor(complementTriad[i]);
     }
-
     // 3. complement sat
     for (int i = 0 ; i < btns_plt_CompSat.size(); i++)
     {
         btns_plt_CompSat[i]->setColor(complement[i]);
     }
-
     // 4. complement brgt
     for (int i = 0 ; i < btns_plt_ComplBrgt.size(); i++)
     {
         btns_plt_ComplBrgt[i]->setColor(complementBrightness[i]);
     }
-
     // 5. mono sat
     for (int i = 0 ; i < btns_plt_MonoSat.size(); i++)
     {
         btns_plt_MonoSat[i]->setColor(monochrome[i]);
     }
-
     // 6. mono brgt
     for (int i = 0 ; i < btns_plt_MonoBrgt.size(); i++)
     {
         btns_plt_MonoBrgt[i]->setColor(monochromeBrightness[i]);
     }
-
     // 7. analogue
     for (int i=0; i<btns_plt_Analog.size(); i++)
     {
         btns_plt_Analog[i]->setColor(analogue[i]);
     }
-
     // 8. random
     for (int i = 0 ; i < btns_plt_Random.size(); i++)
     {
         btns_plt_Random[i]->setColor(random[i]);
     }
-
 }
 
 //--------------------------------------------------------------

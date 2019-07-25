@@ -140,8 +140,6 @@ public:
     ofParameter<int> NUM_ALGO_PALETTES;//number of colors. must be even
     //    ofxColorPalette::ColorChannel mode;
 
-    float brightness;//TODO: not used
-    float saturation;
     ofParameter<float> BRIGHTNESS;
     ofParameter<float> SATURATION;
     ofParameter<bool> bRandomPalette;

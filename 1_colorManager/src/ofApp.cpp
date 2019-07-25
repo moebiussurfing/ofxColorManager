@@ -8,51 +8,49 @@ void ofApp::setup(){
 
     ColorManager.setup();
 
-//    ColorManager.setColor_TARGET(color_TARGET);
-//    control = 0;
+    ColorManager.setColor_TARGET(color_TARGET);
+    control = 0;
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
     ColorManager.update();
 
-//    if (direction)
-//        control += 0.02;
-//    else
-//        control -= 0.02;
-//
-//    if (control > 1.)
-//        direction = false;
-//    if (control <= 0.)
-//        direction = true;
-//
-//    control = ofClamp(control, 0., 1.);
-//    ColorManager.setControl(control);
+    if (direction)
+        control += 0.02;
+    else
+        control -= 0.02;
+    if (control > 1.)
+        direction = false;
+    if (control <= 0.)
+        direction = true;
+    control = ofClamp(control, 0., 1.);
+    ColorManager.setControl(control);
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
     ColorManager.draw();
 
-//    int x, y, w, h;
-//    x = 1200;
-//    y = 650;
-//    w = h = 100;
-//    ofRectangle r (0, 0, w, h);
-//
-//    ofPushMatrix();
-//    ofPushStyle();
-//
-//    ofTranslate(x, y);
-//    ofSetColor(color_TARGET);
-//    ofFill();
-//    ofDrawRectangle(r);
-//
-//    ofTranslate(0, h + 20);
-//    ofDrawBitmapStringHighlight(ofToString(control), 0, 0, ofColor::white, ofColor::black);
-//
-//    ofPopStyle();
-//    ofPopMatrix();
+    int x, y, w, h;
+    x = 1200;
+    y = 650;
+    w = h = 100;
+    ofRectangle r (0, 0, w, h);
+
+    ofPushMatrix();
+    ofPushStyle();
+
+    ofTranslate(x, y);
+    ofSetColor(color_TARGET);
+    ofFill();
+    ofDrawRectangle(r);
+
+    ofTranslate(0, h + 20);
+    ofDrawBitmapStringHighlight(ofToString(control), 0, 0, ofColor::white, ofColor::black);
+
+    ofPopStyle();
+    ofPopMatrix();
 
 }
 
