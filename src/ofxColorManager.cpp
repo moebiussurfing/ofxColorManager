@@ -91,8 +91,8 @@ void ofxColorManager::setup()
     // ALGORITHMIC PALETTE
 
     MODE_Palette.set("FROM COLOR", false);
-    SATURATION.set("SATURATION", 128, 0, 255 );
-    BRIGHTNESS.set("BRIGHTNESS", 128, 0, 255 );
+    SATURATION.set("SATURATION", 200, 0, 255 );
+    BRIGHTNESS.set("BRIGHTNESS", 200, 0, 255 );
     bRandomPalette.set("RANDOM PALETTE", false);
     NUM_ALGO_PALETTES.set("SIZE", 6, 2, 8);
     params_palette.setName("ALGORITHMIC PALETTE");
