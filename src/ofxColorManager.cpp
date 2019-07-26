@@ -47,6 +47,7 @@ void ofxColorManager::setup()
 
     // DATA
 
+    setBackgroung_ENABLE(false);
     color_backGround.set("BACKGROUND", ofFloatColor::white);
 
     params_data.setName("GENERAL");
@@ -93,7 +94,7 @@ void ofxColorManager::setup()
     MODE_Palette.set("FROM COLOR", false);
     SATURATION.set("SATURATION", 200, 0, 255 );
     BRIGHTNESS.set("BRIGHTNESS", 200, 0, 255 );
-    bRandomPalette.set("RANDOM PALETTE", false);
+    bRandomPalette.set("RANDOM PALE<TTE", false);
     NUM_ALGO_PALETTES.set("SIZE", 6, 2, 8);
     params_palette.setName("ALGORITHMIC PALETTE");
     params_palette.add(MODE_Palette);
@@ -174,9 +175,9 @@ void ofxColorManager::setup()
     XML_params.setName("ofxColorManager");
     XML_params.add(color_backGround);
     XML_params.add(color_picked);
-    XML_params.add(color_HUE);
-    XML_params.add(color_SAT);
-    XML_params.add(color_BRG);
+//    XML_params.add(color_HUE);
+//    XML_params.add(color_SAT);
+//    XML_params.add(color_BRG);
     XML_params.add(MODE_Palette);//algorithmic palette
     XML_params.add(BRIGHTNESS);
     XML_params.add(SATURATION);
@@ -1050,6 +1051,17 @@ void ofxColorManager::palettes_update()
 //--------------------------------------------------------------
 void ofxColorManager::palettes_resize()
 {
+    //-
+
+    // USER PALETTE
+
+//    palette.clear();//TODO:
+    palette_clear();
+
+    //-
+
+    // ALGORITMIC PALETTE
+
     for (int i=0; i< btns_plt_CompSat.size(); i++)
     {
         std::string n = ("compSat" + ofToString(i));
@@ -1141,13 +1153,19 @@ void ofxColorManager::palettes_resize()
 //--------------------------------------------------------------
 void ofxColorManager::draw()
 {
+    ofPushMatrix();
+    ofPushStyle();
+
     if (SHOW_ALL_GUI) {
 
         //-
 
         // BACKGROUND
 
-        ofClear(ofColor(color_backGround.get()));
+        if (backgroundENABLE)
+        {
+            ofClear(ofColor(color_backGround.get()));
+        }
 
         //-
 
@@ -1196,39 +1214,41 @@ void ofxColorManager::draw()
         }
 
         //--
-
-//    // DEBUG ALGORTIHMIC PALETTE
-//
-//    int x, y, w, h;
-//    h = (box_size+pad);
-//
-//    ofPushMatrix();
-//    ofPushStyle();
-//    ofSetColor(ofColor::white);
-//    ofTranslate(palettes_x + 80, palettes_y + h/2 + 12);
-//
-//    ofTranslate(0, h);
-//    ofDrawBitmapString("Triad", 0, 0);
-//    ofTranslate(0, h);
-//    ofDrawBitmapString("Complement Triad", 0, 0);
-//    ofTranslate(0, h);
-//    ofDrawBitmapString("Complement (Saturation)", 0, 0);
-//    ofTranslate(0, h);
-//    ofDrawBitmapString("Complement (Brightness)", 0, 0);
-//    ofTranslate(0, h);
-//    ofDrawBitmapString("Monochrome (Saturation)", 0, 0);
-//    ofTranslate(0, h);
-//    ofDrawBitmapString("Monochrome (Brightness)", 0, 0);
-//    ofTranslate(0, h);
-//    ofDrawBitmapString("Analogue", 0, 0);
-//    ofTranslate(0, h);
-//    ofDrawBitmapString("Random", 0, 0);
-//
-//    ofPopMatrix();
-//    ofPopStyle();
-
-        //--
     }
+
+    if (SHOW_GUI_MINI)
+    {
+        draw_PaleteMINI();
+    }
+
+    ofPopMatrix();
+    ofPopStyle();
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::draw_PaleteMINI()
+{
+    int boxW = 40;
+    int boxPad = 1;
+    int boxSize = boxW+boxPad;
+    glm::vec2 palettePos = glm::vec2(ofGetWidth()-palette.size()*boxSize, 2*boxPad);
+    ofRectangle r;
+
+    ofPushMatrix();
+    ofPushStyle();
+    ofTranslate(palettePos);
+
+    for (int col=0; col<palette.size(); col++)
+    {
+        ofTranslate ( boxSize, 0);
+        r = ofRectangle(0, 0, boxW, boxW);
+        ofFill();
+        ofSetColor(palette[col]);
+        ofDrawRectangle(r);
+    }
+
+    ofPopStyle();
+    ofPopMatrix();
 }
 
 //--------------------------------------------------------------
@@ -1414,14 +1434,14 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 
     //-
 
-    if (key == 'r')
+    if (key == 'o')
     {
         //TODO: bug because some trigs are flags. we need direct functions
 //        bRandomColor = true;
+
         color_picked = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
         palettes_update();
         palettes_recall(SELECTED_palette_LAST);//trig last choice
-//        palettes_recall(3);//auto recal complement brightness palette
     }
 
     if (key == 'p')
@@ -1429,8 +1449,6 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
         random.generateRandom(NUM_ALGO_PALETTES);
         palettes_update();
         //set random palette to user palette
-//        palettes_recall((int)ofRandom(7));
-//        palettes_recall(6);
         palettes_recall(7);
     }
 
@@ -1572,6 +1590,19 @@ void ofxColorManager::removeMouseListeners()
 }
 
 //--------------------------------------------------------------
+void ofxColorManager::disableListeners()
+{
+    addMouseListeners();
+    addKeysListeners();
+}
+//--------------------------------------------------------------
+void ofxColorManager::enableListeners()
+{
+    removeMouseListeners();
+    removeKeysListeners();
+}
+
+//--------------------------------------------------------------
 void ofxColorManager::load_group_XML(ofParameterGroup &g, string path)
 {
     ofLogNotice("ofxColorManager") << "load_group_XML " << path;
@@ -1657,4 +1688,34 @@ ofColor ofxColorManager::getColorAtPercent(float control)
     float out = ofMap( curvesTool.getAtPercent(1.0-control), 0, curveTool_amount-1, 1., 0.) ;
     ofColor c = gradient.getColorAtPercent( out );
     return c;
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::setVisible_GUI_MINI(bool b)
+{
+    SHOW_GUI_MINI = b;
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::setBackgroung_ENABLE(bool b)
+{
+    backgroundENABLE = b;
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::draw_previewGradient(glm::vec2 pos, bool horizontal = true) {
+
+    if (horizontal)
+    {
+        curve_img_gradient.draw(pos);
+    }
+    //TODO: how to draw rotated... can image.rotate the image in some trig...
+//    else
+//    {
+//        ofPushMatrix();
+//        ofTranslate(pos);
+//        ofRotateDeg(90, 1, 0, 0);
+//        curve_img_gradient.draw(0, 0);
+//        ofPopMatrix();
+//    }
 }

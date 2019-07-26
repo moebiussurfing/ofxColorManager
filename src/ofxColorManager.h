@@ -57,11 +57,10 @@ public:
 
     // LAYOUT
 
-    int box_size;
-
-    int pad; //global mini pad
-
     int gui_x, gui_y, gui_w, gui_h;
+
+    int box_size;
+    int pad; //global mini pad
 
     int c_grad_x, c_grad_y, c_grad_w, c_grad_h;
 
@@ -166,10 +165,11 @@ public:
     // COLORS
 
     ofParameter<ofFloatColor> color_backGround;
+    bool backgroundENABLE = true;
+    void setBackgroung_ENABLE(bool b);
 
     ofParameter<ofFloatColor> color_picked;
     ofRectangle r_color_picked;
-
     ofParameter<int> color_HUE;
     ofParameter<int> color_SAT;
     ofParameter<int> color_BRG;
@@ -229,7 +229,7 @@ public:
     vector<ButtonPaletteSelector*> btns_plt_Selector; // 1-8
     int SELECTED_palette = -1;
     int SELECTED_palette_PRE = -1;//to check if changed on update() loop
-    int SELECTED_palette_LAST = 0;//last palette type triggered
+    int SELECTED_palette_LAST = 3;//last palette type triggered. compBrg by default
 
     void palettes_recall(int p);
 
@@ -281,17 +281,24 @@ public:
     void addMouseListeners();
     void removeMouseListeners();
 
+    void disableListeners();
+    void enableListeners();
+
     //--
 
     // API
 
     vector<ofColor> getPalette();
-    void setColor_TARGET(ofColor &c);
-    ofColor *color_TARGET;
+    ofColor getColorAtPercent(float control);
+    void setColor_TARGET(ofColor &c);//backwards pointer ofApp color
+    ofColor *color_TARGET;//backwards pointer ofApp color
     void setControl(float control);
     bool SHOW_ALL_GUI = true;
     void setVisible(bool b);
-    ofColor getColorAtPercent(float control);
+    bool SHOW_GUI_MINI = false;
+    void setVisible_GUI_MINI(bool b);
+    void draw_PaleteMINI();
 
+    void draw_previewGradient(glm::vec2 pos, bool horizontal);
     //--
 };

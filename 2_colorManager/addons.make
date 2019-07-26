@@ -1,0 +1,15 @@
+ofxCereal
+ofxColorGradient
+ofxColorManager
+ofxColorPalette
+ofxColorsBrowser
+ofxCurvesTool
+ofxFontStash
+ofxImGui
+ofxInterface
+ofxInterfaceKeyboard
+ofxInterfaceWidgets
+ofxJSON
+ofxMouseRuler
+ofxOpenColor
+ofxRectangleUtils
