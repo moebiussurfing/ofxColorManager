@@ -15,7 +15,7 @@ void ButtonExample::setup(float x, float y, float w, float h)
     setPosition(x, y);
     setSize(w, h);
     color_picked = ofColor(ofColor::red);
-    color_over = ofColor(100);//default
+    color_over = ofColor(0);//default
     color_down = ofColor(ofColor::green);
     bTouched = false;
 
@@ -24,23 +24,13 @@ void ButtonExample::setup(float x, float y, float w, float h)
     ofAddListener(eventTouchMove, this, &ButtonExample::onTouchMove);
 }
 
-//void ButtonExample::setPosition(float x, float y)
-//{
-//}
-//void ButtonExample::setSize(float w, float h)
-//{
-//}
-
 void ButtonExample::update()
 {
 }
 
 void ButtonExample::draw()
 {
-    // draw the frame
-//	ofSetColor(ofColor::black);
-//    ofNoFill();
-
+    // filled color box
     ofSetColor(color_picked);
     ofFill();
     ofDrawRectangle(0, 0, getWidth(), getHeight());
@@ -51,6 +41,26 @@ void ButtonExample::draw()
 //		ofFill();
 //		ofDrawEllipse(touchAnchor, 10, 10);
 //	}
+
+    // draw border
+    if (bIsSelected)
+    {
+        ofNoFill();
+        ofSetColor(ofColor::black);
+        ofSetLineWidth(2.);
+        ofDrawRectangle(0, 0, getWidth(), getHeight());
+    }
+
+}
+
+void ButtonExample::setSelectable(bool b)
+{
+    bIsSelectable = b;
+}
+
+void ButtonExample::setSelected(bool b)
+{
+    bIsSelected = b;
 }
 
 void ButtonExample::setLocked(bool b){
@@ -72,6 +82,13 @@ void ButtonExample::onTouchDown(ofxInterface::TouchEvent &event)
 
     colorBACK->set(ofFloatColor(color_picked));
 
+    if (bIsSelectable)
+    {
+        if (!bIsSelected)
+            bIsSelected = true;
+        else
+            bIsSelected = false;
+    }
 }
 
 void ButtonExample::onTouchUp(ofxInterface::TouchEvent &event)
@@ -79,6 +96,11 @@ void ButtonExample::onTouchUp(ofxInterface::TouchEvent &event)
     ofVec2f local = toLocal(event.position);
     color = color_picked;
     bTouched = false;
+
+//    if (bIsSelectable && bIsSelected)
+//    {
+//        bIsSelected = false;
+//    }
 }
 
 void ButtonExample::onTouchMove(ofxInterface::TouchEvent &event)

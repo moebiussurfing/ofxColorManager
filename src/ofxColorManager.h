@@ -115,6 +115,7 @@ public:
 
     // PARAMETERS
 
+    ofParameter<bool> bPaletteEdit;
     ofParameter<bool> bRandomColor;
     ofParameter<bool> bAddColor;
     ofParameter<bool> bRemoveColor;
@@ -243,8 +244,8 @@ public:
 
     // GRADIENT
 
-    ofxColorGradient<ofColor> gradient;
-    ofParameter<bool> gradient_hard;
+    ofxColorGradient<ofColor> gradient;//unmodified gradient with curveTool
+    ofParameter<bool> gradient_hard;//stepped
 
     //-
 

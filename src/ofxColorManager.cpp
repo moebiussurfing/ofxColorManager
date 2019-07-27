@@ -74,12 +74,14 @@ void ofxColorManager::setup()
 
     bRandomColor.set("RANDOM COLOR", false);
     bAddColor.set("ADD COLOR", false);
+    bPaletteEdit.set("EDIT COLOR", false);
     bRemoveColor.set("REMOVE COLOR", false);
     bClearPalette.set("CLEAR PALETTE", false);
 
     params_control.setName("COLOR EDITOR");
     params_control.add(color_picked);
     params_control.add(bRandomColor);
+    params_control.add(bPaletteEdit);
     params_control.add(bAddColor);
     params_control.add(bRemoveColor);
     params_control.add(bClearPalette);
@@ -399,7 +401,8 @@ void ofxColorManager::palette_addColor_toInterface(ofColor c)
     btn->setup(0, 0, 10, 10);//temp
     btn->setColor(c);
     btn->setup_colorBACK( color_clicked );
-    btn->setLocked(true);
+    btn->setSelectable(true);//to enable border draw
+    btn->setLocked(true);//avoid dragging
     btn->setName("btn" + ofToString(i));
     scene->addChild(btn);
     btns_palette.push_back(btn);
@@ -443,13 +446,13 @@ void ofxColorManager::interface_update(){
 
     TouchManager::one().update();
 
-    // EACH COLOR OF CURRENT PALETTE
+    // 1. EACH COLOR OF CURRENT USER PALETTE
     for (int i=0; i<btns_palette.size(); i++)
     {
         btns_palette[i]->update();
     }
 
-    // ALGORITHMIC PALETTES SELECTORS
+    // 2. ALGORITHMIC PALETTES SELECTORS
     for (int i=0; i<btns_plt_Selector.size(); i++)
     {
         btns_plt_Selector[i]->update(dt);
@@ -457,7 +460,7 @@ void ofxColorManager::interface_update(){
 
     //-
 
-    // ALGORITHMIC PALETTES COLORS
+    // 3. ALGORITHMIC PALETTES COLORS
 
     // 1. triad
     for (int i = 0 ; i < btns_plt_Triad.size(); i++)
@@ -543,6 +546,7 @@ bool ofxColorManager::gui_imGui()
                 ofxImGui::AddParameter(this->color_BRG);
 
                 ImGui::Text("PALETTE MANAGER");
+                ofxImGui::AddParameter(this->bPaletteEdit);
                 ofxImGui::AddParameter(this->bAddColor);
                 ofxImGui::AddParameter(this->bRemoveColor);
                 ofxImGui::AddParameter(this->bClearPalette);

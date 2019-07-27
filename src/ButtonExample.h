@@ -40,8 +40,10 @@ public:
     void setColor(ofColor c);
     ofColor getColor();
 
-//    void setPosition(float x, float y);
-//    void setSize(float w, float h);
+    bool bIsSelected = false;
+    void setSelected(bool b);
+    bool bIsSelectable = false;
+    void setSelectable(bool b);
 };
 
 #endif /* defined(__example_basic__ButtonExample__) */
