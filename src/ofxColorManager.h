@@ -217,6 +217,7 @@ public:
     void interface_update();
     void interface_draw();
     void palette_addColor_toInterface(ofColor c);
+    void palette_rearrenge();//resize boxes when adding removing colors to user palette
     bool bShowDebug = false;
 
     // ALGORITHMIC PALETTES

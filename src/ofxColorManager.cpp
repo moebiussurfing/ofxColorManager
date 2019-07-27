@@ -368,21 +368,8 @@ void ofxColorManager::gui_imGui_theme()
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::palette_addColor_toInterface(ofColor c)
+void ofxColorManager::palette_rearrenge()
 {
-    // vertical palette with resize boxes size to fit gradient bar height
-
-    // add the new color (current color_clicked) to the user palette
-    int i = btns_palette.size();
-    ButtonExample *btn = new ButtonExample();
-    btn->setup(0, 0, 10, 10);//temp
-    btn->setColor(c);
-    btn->setup_colorBACK( color_clicked );
-    btn->setLocked(true);
-    btn->setName("btn" + ofToString(i));
-    scene->addChild(btn);
-    btns_palette.push_back(btn);
-
     // re-arrenge all resized boxes
     int boxesNum = btns_palette.size();
     float boxesX, boxesY, boxesW, boxesH, boxesY_total, boxesH_total;
@@ -399,6 +386,25 @@ void ofxColorManager::palette_addColor_toInterface(ofColor c)
         a->setPosition(boxesX, boxesY);
         a->setSize(boxesW, boxesH);
     }
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::palette_addColor_toInterface(ofColor c)
+{
+    // vertical palette with resize boxes size to fit gradient bar height
+
+    // add the new color (current color_clicked) to the user palette
+    int i = btns_palette.size();
+    ButtonExample *btn = new ButtonExample();
+    btn->setup(0, 0, 10, 10);//temp
+    btn->setColor(c);
+    btn->setup_colorBACK( color_clicked );
+    btn->setLocked(true);
+    btn->setName("btn" + ofToString(i));
+    scene->addChild(btn);
+    btns_palette.push_back(btn);
+
+    palette_rearrenge();
 
     //-
 
@@ -1370,6 +1376,8 @@ void ofxColorManager::palette_removeColorLast()
         }
         btns_palette.pop_back();
     }
+
+    palette_rearrenge();
 }
 
 //--------------------------------------------------------------
