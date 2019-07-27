@@ -1389,6 +1389,8 @@ void ofxColorManager::palette_touched(string b){
         else
         {
             btns_palette[i]->setSelected(true);
+            palette_colorSelected = i;
+            ofLogNotice("ofxColorManager") << "selected color: " << i;
         }
     }
 }
@@ -1476,6 +1478,7 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
             if (!bPaletteEdit)
             {
                 btns_palette[i]->setSelected(false);//deselect each
+                palette_colorSelected = -1;
             }
             btns_palette[i]->setSelectable(bPaletteEdit);
         }
@@ -1772,9 +1775,20 @@ void ofxColorManager::Changed_color_picked(ofFloatColor &color)
     color_clicked.set(color);
 //    color_clicked_param.set(color);
 
-//    // TODO: BUG
-//    // TODO: recreate palettes
-//    // TODO: could auto create
+    // autosave edited color
+    if (bPaletteEdit && palette_colorSelected!=-1 && btns_palette.size()>palette_colorSelected)
+    {
+        // update user palette color with recently picked color
+        btns_palette[palette_colorSelected]->setColor(color_clicked);
+
+        // update gradient for selected index color
+        if (gradient.getNumColors() > palette_colorSelected)
+        {
+            gradient.replaceColorAtIndex( palette_colorSelected, btns_palette[palette_colorSelected]->getColor() );
+        }
+    }
+
+    // when color picked changes, auto trig and put generated palette to user palette
     if (bAuto_palette_recall)
     {
         palettes_update();

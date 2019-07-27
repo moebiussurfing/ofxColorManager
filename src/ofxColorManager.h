@@ -120,6 +120,7 @@ public:
     ofParameter<bool> bAddColor;
     ofParameter<bool> bRemoveColor;
     ofParameter<bool> bClearPalette;
+    int palette_colorSelected = -1;
 
     ofParameterGroup params_data;
     ofParameterGroup params_color;

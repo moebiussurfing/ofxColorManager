@@ -46,7 +46,7 @@ void ButtonExample::draw()
     if (bIsSelected)
     {
         ofNoFill();
-        ofSetColor(ofColor::black);
+        ofSetColor(ofColor(ofColor::black, 128));//with alpha
         ofSetLineWidth(2.);
         ofDrawRectangle(0, 0, getWidth(), getHeight());
     }
