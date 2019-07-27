@@ -401,13 +401,13 @@ void ofxColorManager::palette_addColor_toInterface(ofColor c)
     btn->setup(0, 0, 10, 10);//temp
     btn->setColor(c);
     btn->setup_colorBACK( color_clicked );
-    btn->setSelectable(true);//to enable border draw
+    btn->setSelectable(false);//to enable border draw
     btn->setLocked(true);//avoid dragging
     btn->setName("btn" + ofToString(i));
     scene->addChild(btn);
     btns_palette.push_back(btn);
 
-    palette_rearrenge();
+    palette_rearrenge();//make resizes to fill bar
 
     //-
 
@@ -467,43 +467,36 @@ void ofxColorManager::interface_update(){
     {
         btns_plt_Triad[i]->update();
     }
-
     // 2. complement triad
     for (int i = 0 ; i < btns_plt_ComplTriad.size(); i++)
     {
         btns_plt_ComplTriad[i]->update();
     }
-
     // 3. complement sat
     for (int i = 0 ; i < btns_plt_CompSat.size(); i++)
     {
         btns_plt_CompSat[i]->update();
     }
-
     // 4. complement brgt
     for (int i = 0 ; i < btns_plt_ComplBrgt.size(); i++)
     {
         btns_plt_ComplBrgt[i]->update();
     }
-
     // 5. mono sat
     for (int i = 0 ; i < btns_plt_MonoSat.size(); i++)
     {
         btns_plt_MonoSat[i]->update();
     }
-
     // 6. mono brgt
     for (int i = 0 ; i < btns_plt_MonoBrgt.size(); i++)
     {
         btns_plt_MonoBrgt[i]->update();
     }
-
     // 7. analogue
     for (int i=0; i<btns_plt_Analog.size(); i++)
     {
         btns_plt_Analog[i]->update();
     }
-
     // 8. random
     for (int i = 0 ; i < btns_plt_Random.size(); i++)
     {
@@ -1385,6 +1378,22 @@ void ofxColorManager::palette_removeColorLast()
 }
 
 //--------------------------------------------------------------
+void ofxColorManager::palette_touched(string b){
+    // handle de-select all buttons and select last clicked
+    for (int i=0; i<btns_palette.size(); i++)
+    {
+        if (btns_palette[i]->getName() != b)
+        {
+            btns_palette[i]->setSelected(false);
+        }
+        else
+        {
+            btns_palette[i]->setSelected(true);
+        }
+    }
+}
+
+//--------------------------------------------------------------
 void ofxColorManager::palette_clear()
 {
     ofLogNotice("ofxColorManager") << "palette_clear";
@@ -1458,6 +1467,17 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
         {
             bAddColor= false;
             palette_addColor(ofColor(color_picked.get()));
+        }
+    }
+    else if (name == "EDIT COLOR")
+    {
+        for (int i=0; i<btns_palette.size(); i++)
+        {
+            if (!bPaletteEdit)
+            {
+                btns_palette[i]->setSelected(false);//deselect each
+            }
+            btns_palette[i]->setSelectable(bPaletteEdit);
         }
     }
     else if (name == "REMOVE COLOR")
@@ -1635,9 +1655,6 @@ void ofxColorManager::mouseDragged(ofMouseEventArgs& eventArgs){
     TouchManager::one().touchMove(button, ofVec2f(x, y));
 
     //-
-
-//    ColorBrowser.mouseDragged(eventArgs);
-//    ColorBrowser.TouchManager::one().touchMove(button, ofVec2f(x, y));
 }
 
 //--------------------------------------------------------------
@@ -1651,8 +1668,25 @@ void ofxColorManager::mousePressed(ofMouseEventArgs& eventArgs){
 
     //-
 
-//    ColorBrowser.mousePressed(eventArgs);
-//    ColorBrowser.TouchManager::one().touchDown(button, ofVec2f(x, y));
+    if (bPaletteEdit)
+    {
+        // filter touch if its an user palette button only
+        auto a = TouchManager::one().getComponentUnder( ofVec2f(x, y) );
+        auto b = a->getName();
+        ofLogNotice("ofxColorManager") << "touched: " << b;
+        auto str = ofSplitString(b, "btn");
+        if (str.size() > 1)//check if "btn" is present
+        {
+            ofLogNotice("ofxColorManager") << "detected palette touch: " << b;
+            palette_touched(b);
+        }
+        else
+        {
+            ofLogNotice("ofxColorManager") << "ignored touch: " << b;
+        }
+    }
+
+    //-
 }
 
 //--------------------------------------------------------------
@@ -1666,8 +1700,6 @@ void ofxColorManager::mouseReleased(ofMouseEventArgs& eventArgs){
 
     //-
 
-//    ColorBrowser.mouseReleased(eventArgs);
-//    ColorBrowser.TouchManager::one().touchUp(button, ofVec2f(x, y));
 }
 
 //--------------------------------------------------------------

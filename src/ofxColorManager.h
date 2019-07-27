@@ -217,9 +217,11 @@ public:
     void interface_setup();
     void interface_update();
     void interface_draw();
+    bool bShowDebug = false;
+
     void palette_addColor_toInterface(ofColor c);
     void palette_rearrenge();//resize boxes when adding removing colors to user palette
-    bool bShowDebug = false;
+    void palette_touched(string name);
 
     // ALGORITHMIC PALETTES
     vector<ButtonExample*> btns_plt_Triad;       // 1
