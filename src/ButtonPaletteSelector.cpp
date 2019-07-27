@@ -18,6 +18,9 @@ namespace ofxInterface
         ofAddListener(eventTouchDown, this, &ButtonPaletteSelector::onTouchDown);
         ofAddListener(eventTouchUp, this, &ButtonPaletteSelector::onTouchUp);
         ofAddListener(eventTouchMove, this, &ButtonPaletteSelector::onTouchMove);
+
+        loadFont("assets/fonts/PragmataProR_0822.ttf");
+        setFontSize(14);
     }
 
     void ButtonPaletteSelector::draw()
@@ -28,8 +31,19 @@ namespace ofxInterface
             ofDrawRectangle(0, 0, getWidth(), getHeight());
         }
 
+        //-
+
         ofSetColor(labelColor);
-        ofDrawBitmapString(label, 5, getHeight()-5);
+        if(font.isLoaded())
+        {
+            font.draw(label,fontSize, 5, getHeight()-5);
+        }
+        else
+        {
+            ofDrawBitmapString(label, 5, getHeight()-5);
+        }
+
+        //-
 
         if (bDrawBorder) {
             ofSetColor(borderColor);
@@ -79,5 +93,24 @@ namespace ofxInterface
         thisPaletteType = palette;
         ofLogNotice("ButtonPaletteSelector") << "thisPaletteType:" << thisPaletteType;
     }
+
+//-
+
+    void ButtonPaletteSelector::setInset(float x, float y){
+        _x = x;
+        _y = y;
+    };
+
+    void ButtonPaletteSelector::setFontSize(float s){
+        fontSize = s;
+        font.setSize(fontSize);
+    };
+
+    bool ButtonPaletteSelector::loadFont(string file){
+        bool s = font.setup(file, 1.0, 1024, false, 8, 1.5);
+        font.setCharacterSpacing(0);
+        return s;
+    };
+
 
 } 	// namespace

@@ -555,22 +555,7 @@ bool ofxColorManager::gui_imGui()
                 ofxImGui::EndTree(mainSettings);
             }
 
-            // ALGORITHMIC PALETTE
-            if (ofxImGui::BeginTree(this->params_palette, mainSettings))
-            {
-                ofxImGui::AddParameter(this->MODE_Palette);
-                if (!MODE_Palette) {
-                    ofxImGui::AddParameter(this->SATURATION);
-                    ofxImGui::AddParameter(this->BRIGHTNESS);
-                }
-                ofxImGui::AddParameter(this->bLock_palette);
-                ofxImGui::AddParameter(this->bAuto_palette_recall);
-                ofxImGui::AddParameter(this->NUM_ALGO_PALETTES);
-                ofxImGui::AddParameter(this->bRandomPalette);
-                ofxImGui::EndTree(mainSettings);
-            }
-
-            // CURVE
+            // CURVE TOOL
             if (ofxImGui::BeginTree(this->params_curve, mainSettings))
             {
                 ofxImGui::AddParameter(this->bResetCurve);
@@ -581,6 +566,21 @@ bool ofxColorManager::gui_imGui()
                 }
                 ofxImGui::AddParameter(this->curve_pos_out);
                 ofxImGui::AddParameter(this->gradient_hard);
+                ofxImGui::EndTree(mainSettings);
+            }
+
+            // ALGORITHMIC PALETTE
+            if (ofxImGui::BeginTree(this->params_palette, mainSettings))
+            {
+                ofxImGui::AddParameter(this->MODE_Palette);
+                if (!MODE_Palette) {
+                    ofxImGui::AddParameter(this->SATURATION);
+                    ofxImGui::AddParameter(this->BRIGHTNESS);
+                }
+                ofxImGui::AddParameter(this->NUM_ALGO_PALETTES);
+                ofxImGui::AddParameter(this->bRandomPalette);
+                ofxImGui::AddParameter(this->bAuto_palette_recall);
+                ofxImGui::AddParameter(this->bLock_palette);
                 ofxImGui::EndTree(mainSettings);
             }
         }

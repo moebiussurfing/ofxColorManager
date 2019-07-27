@@ -5,6 +5,7 @@
 #include "ofMain.h"
 
 #include "ofxInterface.h"
+#include "ofxFontStash.h"
 
 namespace ofxInterface
 {
@@ -38,6 +39,16 @@ public:
     //0:triad, 1:compTriad ... 7:random
     int thisPaletteType = -1;//undefined
     void setThisPaletteType(int palette);
+
+    // font
+    void setInset(float x, float y);
+    float _x = 1;
+    float _y = 1;
+    void setFontSize(float s);
+    float fontSize = 10;
+    bool loadFont(string file);
+    //TODO: Add pointer support to save font loads
+    ofxFontStash font;
 
 private:
 
