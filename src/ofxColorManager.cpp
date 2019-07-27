@@ -899,6 +899,9 @@ void ofxColorManager::palettes_setup_labels()
 
     //-
 
+    //TODO: BUG
+    btns_plt_Selector.clear();
+
     for (int p = 0; p< NUM_PALETTES; p++)
     {
         ButtonPaletteSelector *btn = new ButtonPaletteSelector();
@@ -1205,11 +1208,11 @@ void ofxColorManager::palettes_resize()
     //-
 
     // TODO: BUG
-////    if (bAutoTrigPalette)
-////    {
-////        palettes_update();
-//        palettes_recall(SELECTED_palette_LAST);//trig last choice
-////    }
+//    if (bAutoTrigPalette)
+//    {
+//        palettes_update();
+        palettes_recall(SELECTED_palette_LAST);//trig last choice
+//    }
 }
 
 //--------------------------------------------------------------
