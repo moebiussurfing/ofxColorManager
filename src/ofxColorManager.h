@@ -214,7 +214,7 @@ public:
     void interface_setup();
     void interface_update();
     void interface_draw();
-    void interface_addColor(ofColor c);
+    void palette_addColor_toInterface(ofColor c);
     bool bShowDebug = false;
 
     // ALGORITHMIC PALETTES

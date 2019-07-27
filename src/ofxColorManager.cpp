@@ -220,13 +220,9 @@ void ofxColorManager::gui_setup_layout()
     gui_w = 200;
     gui_h = 470;//estimate (should measure) height of the panel on window resize
 
-    // user palette (related to gui_h)
-    palette_x = gui_x;
-    palette_y = gui_y + gui_h + pad;
-
     // algorithmic palettes
     palettes_x = gui_x;
-    palettes_y = palette_y + box_size + 20;
+    palettes_y = (gui_y + gui_h + pad) + box_size + 20;
 
     // curve tool pos (anchor for others)
     curveTool_x = 525;
@@ -246,11 +242,15 @@ void ofxColorManager::gui_setup_layout()
     slider_w = box_size / 2;
     slider_h = curveTool_amount;
 
-    // gradient pre curve (bad sorted to the left but anchored to curve..)
+    // gradient-pre curve (bad sorted to the left but anchored to curve..)
     grad_w = box_size;
     grad_x = curveTool_x - (grad_w + pad);
     grad_y = curveTool_y;
     grad_h = curveTool_amount;
+
+    // user palette (related gradient-pre curve)
+    palette_x = grad_x - (grad_w + pad);
+    palette_y = curveTool_y + grad_h;
 
     // current color bar
     currColor_x = slider_x + slider_w + pad;
@@ -364,15 +364,30 @@ void ofxColorManager::gui_imGui_theme()
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::interface_addColor(ofColor c)
+void ofxColorManager::palette_addColor_toInterface(ofColor c)
 {
-    palette_x = gui_x;
-    int perRow = 5;
+////     horizontal palette
+//    palette_x = gui_x;
+//    int perRow = 5;
+//    int i = btns_palette.size();
+//    palette_x += i * ( box_size + pad );
+//
+//    ButtonExample *btn = new ButtonExample();
+//    btn->setup(palette_x, palette_y, box_size, box_size);
+//    btn->setColor(c);
+//    btn->setup_colorBACK( color_clicked );
+//    btn->setLocked(true);
+//    btn->setName("btn" + ofToString(i));
+//    scene->addChild(btn);
+//    btns_palette.push_back(btn);
+
+    // vertical palette
     int i = btns_palette.size();
-    palette_x += i * ( box_size + pad );
+    float y = palette_y - box_size;
+    y = y - i * (box_size + pad);
 
     ButtonExample *btn = new ButtonExample();
-    btn->setup(palette_x, palette_y, box_size, box_size);
+    btn->setup(palette_x, y, box_size, box_size);
     btn->setColor(c);
     btn->setup_colorBACK( color_clicked );
     btn->setLocked(true);
@@ -1282,7 +1297,7 @@ void ofxColorManager::palette_addColor(ofColor c)
     ofLogNotice("ofxColorManager") << "add color " << " (" << ofToString(c) << ") to palette";
     palette.push_back( c );
     gradient.addColor( c );
-    interface_addColor(c);
+    palette_addColor_toInterface(c);
 }
 
 //--------------------------------------------------------------
