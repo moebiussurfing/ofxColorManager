@@ -222,7 +222,7 @@ void ofxColorManager::gui_setup_layout()
 
     // algorithmic palettes
     palettes_x = gui_x;
-    palettes_y = (gui_y + gui_h + pad) + box_size + 20;
+    palettes_y = (gui_y + gui_h + pad) + box_size + 10;
 
     // curve tool pos (anchor for others)
     curveTool_x = 525;
@@ -547,6 +547,9 @@ bool ofxColorManager::gui_imGui()
 //--------------------------------------------------------------
 void ofxColorManager::update()
 {
+    //--
+
+    // handle last selected algorithmic palette
     if (SELECTED_palette != SELECTED_palette_PRE)
     {
         ofLogNotice("ofxColorManager::update") << "CHANGED SELECTED_palette: " << SELECTED_palette;
@@ -554,6 +557,18 @@ void ofxColorManager::update()
         SELECTED_palette_LAST = SELECTED_palette;
 
         SELECTED_palette_PRE = SELECTED_palette = -1;//bug if not if pressed same button
+
+        // hide all borders
+        for (int p = 0; p< btns_plt_Selector.size() && p< NUM_PALETTES; p++)
+        {
+            btns_plt_Selector[p]->setBorder(false);
+        }
+
+        // set to draw border to selected palette
+        if (btns_plt_Selector.size()>0)
+        {
+            btns_plt_Selector[SELECTED_palette_LAST]->setBorder(true);
+        }
     }
 
     //-
@@ -739,9 +754,39 @@ void ofxColorManager::palettes_setup() {
     int y0 = palettes_y;
     int h0 = box_size + pad;
 
-    // 3. complement sat
+    // 1. triad
 //    x0 = palettes_x;
 //    y0 += h0;
+    for (int i = 0; i < triad.size(); i++) {
+        ButtonExample *btn = new ButtonExample();
+        btn->setup(x0, y0, box_size, box_size);
+        btn->setup_colorBACK(color_clicked);
+        btn->setLocked(true);
+        btn->setName("triad" + ofToString(i));
+        btn->setColor(triad[i]);
+        scene->addChild(btn);
+        btns_plt_Triad.push_back(btn);
+        x0 += h0;
+    }
+
+    // 2. complement triad
+    x0 = palettes_x;
+    y0 += h0;
+    for (int i = 0; i < complementTriad.size(); i++) {
+        ButtonExample *btn = new ButtonExample();
+        btn->setup(x0, y0, box_size, box_size);
+        btn->setup_colorBACK(color_clicked);
+        btn->setLocked(true);
+        btn->setName("compTriad" + ofToString(i));
+        btn->setColor(complementTriad[i]);
+        scene->addChild(btn);
+        btns_plt_ComplTriad.push_back(btn);
+        x0 += h0;
+    }
+
+    // 3. complement sat
+    x0 = palettes_x;
+    y0 += h0;
     for (int i = 0; i < complement.size(); i++) {
         ButtonExample *btn = new ButtonExample();
         btn->setup(x0, y0, box_size, box_size);
@@ -828,37 +873,6 @@ void ofxColorManager::palettes_setup() {
         btns_plt_Random.push_back(btn);
         x0 += h0;
     }
-
-    // tricky hack to put triads to the bottom
-    // 1. triad
-    x0 = palettes_x;
-    y0 += h0;
-    for (int i = 0; i < triad.size(); i++) {
-        ButtonExample *btn = new ButtonExample();
-        btn->setup(x0, y0, box_size, box_size);
-        btn->setup_colorBACK(color_clicked);
-        btn->setLocked(true);
-        btn->setName("triad" + ofToString(i));
-        btn->setColor(triad[i]);
-        scene->addChild(btn);
-        btns_plt_Triad.push_back(btn);
-        x0 += h0;
-    }
-
-    // 2. complement triad
-    x0 = palettes_x;
-    y0 += h0;
-    for (int i = 0; i < complementTriad.size(); i++) {
-        ButtonExample *btn = new ButtonExample();
-        btn->setup(x0, y0, box_size, box_size);
-        btn->setup_colorBACK(color_clicked);
-        btn->setLocked(true);
-        btn->setName("compTriad" + ofToString(i));
-        btn->setColor(complementTriad[i]);
-        scene->addChild(btn);
-        btns_plt_ComplTriad.push_back(btn);
-        x0 += h0;
-    }
 }
 
 //--------------------------------------------------------------
@@ -885,7 +899,6 @@ void ofxColorManager::palettes_setup_labels()
 
     //-
 
-    int NUM_PALETTES = 8;
     for (int p = 0; p< NUM_PALETTES; p++)
     {
         ButtonPaletteSelector *btn = new ButtonPaletteSelector();
@@ -933,25 +946,22 @@ void ofxColorManager::palettes_setup_labels()
                 break;
         }
 
-        // tricky hack to put triads to the bottom
-        if (p==0 || p==1)
-        {
-            p = p + 6;
-            btn->setPosition(x0, y0 + p*btn_plt_h);
-        }
-        else
-        {
-            p = p - 2;
-            btn->setPosition(x0, y0 + p*btn_plt_h);
-        }
-
+        btn->setPosition(x0, y0 + p*btn_plt_h);
         btn->setBGColor(btn_plt_c);
         btn->setLabelColor(ofColor::white);
+        btn->setBorderColor(ofColor::white);
         btn->setBorder(false);
         scene->addChild(btn);
         btns_plt_Selector.push_back(btn);
     }
+
+    // set to draw border to selected palette
+    if ((btns_plt_Selector.size()>0) && (btns_plt_Selector.size()>SELECTED_palette_LAST))
+    {
+        btns_plt_Selector[SELECTED_palette_LAST]->setBorder(true);
+    }
 }
+
 //--------------------------------------------------------------
 void ofxColorManager::palettes_recall(int p)
 {
@@ -1105,6 +1115,26 @@ void ofxColorManager::palettes_resize()
 
     // ALGORITMIC PALETTE
 
+    for (int i=0; i< btns_plt_Triad.size(); i++)
+    {
+        std::string n = ("triad" + ofToString(i));
+        auto a = scene->getChildWithName(n, 1000);
+        auto b = a->getName();
+        scene->removeChild(a, false);
+        ofLogVerbose("ofxColorManager") << "removed children: " << b;
+    }
+    btns_plt_Triad.clear();
+
+    for (int i=0; i< btns_plt_ComplTriad.size(); i++)
+    {
+        std::string n = ("compTriad" + ofToString(i));
+        auto a = scene->getChildWithName(n, 1000);
+        auto b = a->getName();
+        scene->removeChild(a, false);
+        ofLogVerbose("ofxColorManager") << "removed children: " << b;
+    }
+    btns_plt_ComplTriad.clear();
+
     for (int i=0; i< btns_plt_CompSat.size(); i++)
     {
         std::string n = ("compSat" + ofToString(i));
@@ -1165,26 +1195,6 @@ void ofxColorManager::palettes_resize()
     }
     btns_plt_Random.clear();
 
-    for (int i=0; i< btns_plt_Triad.size(); i++)
-    {
-        std::string n = ("triad" + ofToString(i));
-        auto a = scene->getChildWithName(n, 1000);
-        auto b = a->getName();
-        scene->removeChild(a, false);
-        ofLogVerbose("ofxColorManager") << "removed children: " << b;
-    }
-    btns_plt_Triad.clear();
-
-    for (int i=0; i< btns_plt_ComplTriad.size(); i++)
-    {
-        std::string n = ("compTriad" + ofToString(i));
-        auto a = scene->getChildWithName(n, 1000);
-        auto b = a->getName();
-        scene->removeChild(a, false);
-        ofLogVerbose("ofxColorManager") << "removed children: " << b;
-    }
-    btns_plt_ComplTriad.clear();
-
     //-
 
     random.generateRandom(NUM_ALGO_PALETTES);
@@ -1194,11 +1204,12 @@ void ofxColorManager::palettes_resize()
 
     //-
 
-//    if (bAutoTrigPalette)
-//    {
-//        palettes_update();
-        palettes_recall(SELECTED_palette_LAST);//trig last choice
-//    }
+    // TODO: BUG
+////    if (bAutoTrigPalette)
+////    {
+////        palettes_update();
+//        palettes_recall(SELECTED_palette_LAST);//trig last choice
+////    }
 }
 
 //--------------------------------------------------------------
@@ -1686,13 +1697,14 @@ void ofxColorManager::Changed_color_picked(ofFloatColor &color)
     color_clicked.set(color);
 //    color_clicked_param.set(color);
 
-    // TODO: recreate palettes
-    // TODO: could auto create
-    if (bAutoTrigPalette)
-    {
-        palettes_update();
-        palettes_recall(SELECTED_palette_LAST);//trig last choice
-    }
+    // TODO: BUG
+//    // TODO: recreate palettes
+//    // TODO: could auto create
+//    if (bAutoTrigPalette)
+//    {
+//        palettes_update();
+//        palettes_recall(SELECTED_palette_LAST);//trig last choice
+//    }
 }
 
 //--------------------------------------------------------------

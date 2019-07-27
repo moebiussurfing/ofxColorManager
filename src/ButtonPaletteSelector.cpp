@@ -11,7 +11,7 @@ namespace ofxInterface
         bDrawBorder = true;
         bDrawBackground = true;
 
-        borderColor = ofColor(0);
+        borderColor = ofColor(128);
         bgColor = ofColor(255);
         labelColor = ofColor(0);
 
@@ -57,8 +57,11 @@ namespace ofxInterface
 //        * : deference operator : gives the value of the variable (pointed to by the pointer). Dereferences a reference.
 //        -> : used to access a vaiable within a pointer (equivilant to (*p).x)
 
-        // pointer back link the outside (ofApp) variable
-        (*SELECTED_palette_pointer) = thisPaletteType;
+//        if (SELECTED_palette_pointer != nullptr)
+//        {
+            // pointer back link the outside (ofApp) variable
+            (*SELECTED_palette_pointer) = thisPaletteType;
+//        }
     }
 
     void ButtonPaletteSelector::onTouchUp(ofxInterface::TouchEvent &event)

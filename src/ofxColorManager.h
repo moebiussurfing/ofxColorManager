@@ -236,6 +236,7 @@ public:
     int SELECTED_palette_LAST = 3;//last palette type triggered. compBrg by default
 
     void palettes_recall(int p);
+    int NUM_PALETTES = 8;
 
     //-
 
