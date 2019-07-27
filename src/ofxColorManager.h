@@ -233,7 +233,7 @@ public:
     vector<ButtonPaletteSelector*> btns_plt_Selector; // 1-8
     int SELECTED_palette = -1;
     int SELECTED_palette_PRE = -1;//to check if changed on update() loop
-    int SELECTED_palette_LAST = 3;//last palette type triggered. compBrg by default
+    int SELECTED_palette_LAST = 3;//default last palette type triggered. compBrg by default
 
     void palettes_recall(int p);
     int NUM_PALETTES = 8;

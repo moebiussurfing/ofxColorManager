@@ -257,8 +257,8 @@ void ofxColorManager::gui_setup_layout()
     currColor_x = slider_x + slider_w + pad;
     currColor_y = curveTool_y;
 
-    // color box monitor picked
-    color_x = 325;
+    // color box monitor picked (same that color picker gui)
+    color_x = 320;
     color_y = 45;
     color_w = color_h = 2*box_size;
     r_color_picked = ofRectangle( color_x, color_y, color_w, color_h );
