@@ -94,7 +94,7 @@ void ofxColorManager::setup()
     SATURATION.set("SATURATION", 200, 0, 255 );
     BRIGHTNESS.set("BRIGHTNESS", 200, 0, 255 );
     bRandomPalette.set("RANDOM PALETTE", false);
-    bAutoTrigPalette.set("AUTO TRIG", false);
+    bAutoTrigPalette.set("AUTO PALETTE", false);
     NUM_ALGO_PALETTES.set("SIZE", 6, 2, 8);
     params_palette.setName("ALGORITHMIC PALETTE");
     params_palette.add(MODE_Palette);
@@ -225,7 +225,7 @@ void ofxColorManager::gui_setup_layout()
     palettes_y = (gui_y + gui_h + pad) + box_size + 10;
 
     // curve tool pos (anchor for others)
-    curveTool_x = 525;
+    curveTool_x = 585;
     curveTool_y = 25;
     curveTool_w = curveTool_amount;//TODO: shoul can resize curve tool besides amount
     curveTool_h = curveTool_amount;
@@ -257,9 +257,9 @@ void ofxColorManager::gui_setup_layout()
     currColor_x = slider_x + slider_w + pad;
     currColor_y = curveTool_y;
 
-    // color box picker
-    color_x = 335;
-    color_y = 20;
+    // color box monitor picked
+    color_x = 325;
+    color_y = 45;
     color_w = color_h = 2*box_size;
     r_color_picked = ofRectangle( color_x, color_y, color_w, color_h );
 
@@ -269,8 +269,8 @@ void ofxColorManager::gui_setup_layout()
     colorPick_w = colorPick_h = 2*box_size;
     r_color_clicked = ofRectangle( colorPick_x, colorPick_y, colorPick_w, colorPick_h );
 
-    // color browser
-    colorBrowserPos = glm::vec2(910, 35);
+    // colors palettes browser
+    colorBrowserPos = glm::vec2(990, 35);
 }
 
 //--------------------------------------------------------------
@@ -370,35 +370,6 @@ void ofxColorManager::gui_imGui_theme()
 //--------------------------------------------------------------
 void ofxColorManager::palette_addColor_toInterface(ofColor c)
 {
-////     horizontal palette
-//    palette_x = gui_x;
-//    int perRow = 5;
-//    int i = btns_palette.size();
-//    palette_x += i * ( box_size + pad );
-//
-//    ButtonExample *btn = new ButtonExample();
-//    btn->setup(palette_x, palette_y, box_size, box_size);
-//    btn->setColor(c);
-//    btn->setup_colorBACK( color_clicked );
-//    btn->setLocked(true);
-//    btn->setName("btn" + ofToString(i));
-//    scene->addChild(btn);
-//    btns_palette.push_back(btn);
-
-//    // vertical palette
-//    int i = btns_palette.size();
-//    float y = palette_y - box_size;
-//    y = y - i * (box_size + pad);
-//
-//    ButtonExample *btn = new ButtonExample();
-//    btn->setup(palette_x, y, box_size, box_size);
-//    btn->setColor(c);
-//    btn->setup_colorBACK( color_clicked );
-//    btn->setLocked(true);
-//    btn->setName("btn" + ofToString(i));
-//    scene->addChild(btn);
-//    btns_palette.push_back(btn);
-
     // vertical palette with resize boxes size to fit gradient bar height
 
     // add the new color (current color_clicked) to the user palette
@@ -428,6 +399,37 @@ void ofxColorManager::palette_addColor_toInterface(ofColor c)
         a->setPosition(boxesX, boxesY);
         a->setSize(boxesW, boxesH);
     }
+
+    //-
+
+////     horizontal palette
+//    palette_x = gui_x;
+//    int perRow = 5;
+//    int i = btns_palette.size();
+//    palette_x += i * ( box_size + pad );
+//
+//    ButtonExample *btn = new ButtonExample();
+//    btn->setup(palette_x, palette_y, box_size, box_size);
+//    btn->setColor(c);
+//    btn->setup_colorBACK( color_clicked );
+//    btn->setLocked(true);
+//    btn->setName("btn" + ofToString(i));
+//    scene->addChild(btn);
+//    btns_palette.push_back(btn);
+
+//    // vertical palette
+//    int i = btns_palette.size();
+//    float y = palette_y - box_size;
+//    y = y - i * (box_size + pad);
+//
+//    ButtonExample *btn = new ButtonExample();
+//    btn->setup(palette_x, y, box_size, box_size);
+//    btn->setColor(c);
+//    btn->setup_colorBACK( color_clicked );
+//    btn->setLocked(true);
+//    btn->setName("btn" + ofToString(i));
+//    scene->addChild(btn);
+//    btns_palette.push_back(btn);
 }
 
 //--------------------------------------------------------------
@@ -1733,11 +1735,11 @@ void ofxColorManager::Changed_color_picked(ofFloatColor &color)
 //    // TODO: BUG
 //    // TODO: recreate palettes
 //    // TODO: could auto create
-//    if (bAutoTrigPalette)
-//    {
-//        palettes_update();
-//        palettes_recall(SELECTED_palette_LAST);//trig last choice
-//    }
+    if (bAutoTrigPalette)
+    {
+        palettes_update();
+        palettes_recall(SELECTED_palette_LAST);//trig last choiced algorithmic palette
+    }
 }
 
 //--------------------------------------------------------------
