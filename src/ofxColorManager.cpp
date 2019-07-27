@@ -93,7 +93,8 @@ void ofxColorManager::setup()
     MODE_Palette.set("FROM COLOR", false);
     SATURATION.set("SATURATION", 200, 0, 255 );
     BRIGHTNESS.set("BRIGHTNESS", 200, 0, 255 );
-    bRandomPalette.set("RANDOM PALE<TTE", false);
+    bRandomPalette.set("RANDOM PALETTE", false);
+    bAutoTrigPalette.set("AUTO TRIG", false);
     NUM_ALGO_PALETTES.set("SIZE", 6, 2, 8);
     params_palette.setName("ALGORITHMIC PALETTE");
     params_palette.add(MODE_Palette);
@@ -101,6 +102,7 @@ void ofxColorManager::setup()
     params_palette.add(BRIGHTNESS);
     params_palette.add(bRandomPalette);
     params_palette.add(NUM_ALGO_PALETTES);
+    params_palette.add(bAutoTrigPalette);
 
     ofAddListener(params_palette.parameterChangedE(), this, &ofxColorManager::Changed_control);
 
@@ -182,6 +184,7 @@ void ofxColorManager::setup()
     XML_params.add(SATURATION);
     XML_params.add(gradient_hard);//gradient
     XML_params.add(NUM_ALGO_PALETTES);
+    XML_params.add(bAutoTrigPalette);
     load_group_XML(XML_params, XML_path);
 
     palette_load("myPalette");
@@ -492,12 +495,13 @@ bool ofxColorManager::gui_imGui()
             // ALGORITHMIC PALETTE
             if (ofxImGui::BeginTree(this->params_palette, mainSettings))
             {
+                ofxImGui::AddParameter(this->bRandomPalette);
                 ofxImGui::AddParameter(this->MODE_Palette);
                 if (!MODE_Palette) {
                     ofxImGui::AddParameter(this->SATURATION);
                     ofxImGui::AddParameter(this->BRIGHTNESS);
                 }
-                ofxImGui::AddParameter(this->bRandomPalette);
+                ofxImGui::AddParameter(this->bAutoTrigPalette);
                 ofxImGui::AddParameter(this->NUM_ALGO_PALETTES);
                 ofxImGui::EndTree(mainSettings);
             }
@@ -550,11 +554,20 @@ void ofxColorManager::update()
         color_picked.set(color_clicked);
     }
 
+    //-
+
+    // set the local scope color pointer that is into ofxColorBrowser that whill be used as color picked too
     if (color_BACK != color_BACK_PRE )
     {
         color_BACK_PRE = color_BACK;
         ofLogNotice("ofxColorManager") << "CHANGED color_BACK";
         color_picked.set(color_BACK);
+
+        if (bAutoTrigPalette)
+        {
+            palettes_update();
+            palettes_recall(SELECTED_palette_LAST);//trig last choice
+        }
     }
 }
 
@@ -633,11 +646,13 @@ void ofxColorManager::curveTool_draw() {
 
     if (curveShow)
     {
-        ofRectangle r;
-        r = ofRectangle( currColor_x, currColor_y, box_size, slider_h );
-
         ofPushMatrix();
         ofPushStyle();
+
+        //-
+
+        ofRectangle r;
+        r = ofRectangle( currColor_x, currColor_y, box_size, slider_h );
 
         //-
 
@@ -647,15 +662,14 @@ void ofxColorManager::curveTool_draw() {
         gradient.drawDebug(grad_x, grad_y, grad_w, grad_h);
 
         // 2. current box color at input curve point (right positioned)
-        float out;
-        out = ofMap( curvesTool.getAtPercent(1.0-curve_pos), 0, curveTool_amount-1, 1., 0.) ;
+        float out = ofMap( curvesTool.getAtPercent(1.0-curve_pos), 0, curveTool_amount-1, 1., 0.) ;
         ofColor c = gradient.getColorAtPercent( out );
 
-//        ofPushStyle();
+        ofPushStyle();
         ofFill();
         ofSetColor(c);
         ofDrawRectangle(r);
-//        ofPopStyle();
+        ofPopStyle();
 
         // NOTE: sometimes we need some tricky hacking to avoid rare fliping from gradients
         curve_pos_out = ofMap( curvesTool.getAtPercent(curve_pos), 0, curveTool_amount-1, 0., 1.);
@@ -667,12 +681,11 @@ void ofxColorManager::curveTool_draw() {
         curve_img_gradient.draw(image_curvedGradient_x, image_curvedGradient_y);
 
         // 3.2 curve splines editor
-        ofPushMatrix();
+//        ofPushMatrix();
         ofPushStyle();
+
         ofSetColor(255);
         curvesTool.draw(0, 0, curve_pos_LUT);
-        ofPopMatrix();
-        ofPopStyle();
 
         // 3.3 horizontal line
         ofSetColor(ofColor::white);
@@ -683,6 +696,8 @@ void ofxColorManager::curveTool_draw() {
         ofSetColor(25);
         ofDrawCircle(curve_pos_LUT, y, 3);
 
+//        ofPopMatrix();
+        ofPopStyle();
         //-
 
         ofPopMatrix();
@@ -1208,7 +1223,7 @@ void ofxColorManager::draw()
         // CURVE
         curveTool_draw();
 
-        // COLOR BROWSER
+        // COLORS BROWSER
         ColorBrowser.draw();
 
         //-
@@ -1581,10 +1596,6 @@ void ofxColorManager::addMouseListeners()
     ofAddListener( ofEvents().mouseDragged, this, &ofxColorManager::mouseDragged );
     ofAddListener( ofEvents().mousePressed, this, &ofxColorManager::mousePressed );
     ofAddListener( ofEvents().mouseReleased, this, &ofxColorManager::mouseReleased );
-
-//    ofAddListener( ofEvents().mouseDragged, this, &ofxColorsBrowser::mouseDragged );
-//    ofAddListener( ofEvents().mousePressed, this, &ofxColorsBrowser::mousePressed );
-//    ofAddListener( ofEvents().mouseReleased, this, &ofxColorsBrowser::mouseReleased );
 }
 
 //--------------------------------------------------------------
@@ -1593,10 +1604,6 @@ void ofxColorManager::removeMouseListeners()
     ofRemoveListener( ofEvents().mouseDragged, this, &ofxColorManager::mouseDragged );
     ofRemoveListener( ofEvents().mousePressed, this, &ofxColorManager::mousePressed );
     ofRemoveListener( ofEvents().mouseReleased, this, &ofxColorManager::mouseReleased );
-
-//    ofRemoveListener( ofEvents().mouseDragged, this, &ofxColorsBrowser::mouseDragged );
-//    ofRemoveListener( ofEvents().mousePressed, this, &ofxColorsBrowser::mousePressed );
-//    ofRemoveListener( ofEvents().mouseReleased, this, &ofxColorsBrowser::mouseReleased );
 }
 
 //--------------------------------------------------------------

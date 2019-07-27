@@ -143,6 +143,7 @@ public:
     ofParameter<int> BRIGHTNESS;
     ofParameter<int> SATURATION;
     ofParameter<bool> bRandomPalette;
+    ofParameter<bool> bAutoTrigPalette;//trig last used algo palette on click or change color
     void palettes_setup();
     void palettes_setup_labels();
     void palettes_update();

@@ -69,8 +69,10 @@ void ofxSimpleSlider::draw(ofEventArgs& event){
 
     if (SHOW_ALL_GUI) {
 
-        ofEnableAlphaBlending();
-        ofDisableSmoothing();
+        ofPushStyle();
+
+//        ofEnableAlphaBlending();
+//        ofDisableSmoothing();
         ofPushMatrix();
         ofTranslate(x, y, 0);
 
@@ -83,12 +85,14 @@ void ofxSimpleSlider::draw(ofEventArgs& event){
         ofNoFill();
         ofSetLineWidth(1.0);
         ofSetColor(200, 200, 200, sliderAlpha);
+//        ofSetColor(200, 200, 200);
         ofSetRectMode(OF_RECTMODE_CORNER);
         ofDrawRectangle(0, 0, width, height);
 
         // draw spine
         ofSetLineWidth(1.0);
         ofSetColor(255, 255, 255, spineAlpha);
+//        ofSetColor(255, 255, 255);
         if (bVertical) {
             ofDrawLine(width / 2, 0, width / 2, height);
         } else {
@@ -98,6 +102,7 @@ void ofxSimpleSlider::draw(ofEventArgs& event){
         // draw thumb
         ofSetLineWidth(5.0);
         ofSetColor(255, 255, 255, thumbAlpha);
+//        ofSetColor(255, 255, 255);
         if (bVertical) {
             float thumbY = ofMap(percent, 0, 1, height, 0, true);
             ofDrawLine(0, thumbY, width, thumbY);
@@ -111,7 +116,7 @@ void ofxSimpleSlider::draw(ofEventArgs& event){
         // move label down left
 //    ofTranslate( -32, 33);
         // move label down left
-        ofTranslate(-30, 20);
+//        ofTranslate(-30, 20);
 
         // draw numeric value
         if (bHasFocus) {
@@ -133,7 +138,9 @@ void ofxSimpleSlider::draw(ofEventArgs& event){
 
         ofPopMatrix();
         ofSetLineWidth(1.0);
-        ofDisableAlphaBlending();
+//        ofDisableAlphaBlending();
+
+        ofPopStyle();
     }
 }
 
