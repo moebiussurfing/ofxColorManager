@@ -94,7 +94,7 @@ void ofxColorManager::setup()
     SATURATION.set("SATURATION", 200, 0, 255 );
     BRIGHTNESS.set("BRIGHTNESS", 200, 0, 255 );
     bRandomPalette.set("RANDOM PALETTE", false);
-    bAutoTrigPalette.set("AUTO PALETTE", false);
+    bAuto_palette_recall.set("AUTO PALETTE", false);
     NUM_ALGO_PALETTES.set("SIZE", 6, 2, 8);
     params_palette.setName("ALGORITHMIC PALETTE");
     params_palette.add(MODE_Palette);
@@ -102,7 +102,7 @@ void ofxColorManager::setup()
     params_palette.add(BRIGHTNESS);
     params_palette.add(bRandomPalette);
     params_palette.add(NUM_ALGO_PALETTES);
-    params_palette.add(bAutoTrigPalette);
+    params_palette.add(bAuto_palette_recall);
 
     ofAddListener(params_palette.parameterChangedE(), this, &ofxColorManager::Changed_control);
 
@@ -171,7 +171,7 @@ void ofxColorManager::setup()
 
     color_picked.addListener(this, &ofxColorManager::Changed_color_picked);
     color_clicked_param.addListener(this, &ofxColorManager::Changed_color_clicked);
-    
+
     //--
 
     // STARTUP SETTINGS
@@ -179,15 +179,12 @@ void ofxColorManager::setup()
     XML_params.setName("ofxColorManager");
     XML_params.add(color_backGround);
     XML_params.add(color_picked);
-//    XML_params.add(color_HUE);
-//    XML_params.add(color_SAT);
-//    XML_params.add(color_BRG);
     XML_params.add(MODE_Palette);//algorithmic palette
     XML_params.add(BRIGHTNESS);
     XML_params.add(SATURATION);
     XML_params.add(gradient_hard);//gradient
     XML_params.add(NUM_ALGO_PALETTES);
-    XML_params.add(bAutoTrigPalette);
+    XML_params.add(bAuto_palette_recall);
     load_group_XML(XML_params, XML_path);
 
     palette_load("myPalette");
@@ -262,7 +259,7 @@ void ofxColorManager::gui_setup_layout()
 
     // color box monitor picked (same that color picker gui)
     color_x = 320;
-    color_y = 40;
+    color_y = 42;
     color_w = color_h = 2*box_size;
     r_color_picked = ofRectangle( color_x, color_y, color_w, color_h );
 
@@ -555,7 +552,7 @@ bool ofxColorManager::gui_imGui()
                     ofxImGui::AddParameter(this->SATURATION);
                     ofxImGui::AddParameter(this->BRIGHTNESS);
                 }
-                ofxImGui::AddParameter(this->bAutoTrigPalette);
+                ofxImGui::AddParameter(this->bAuto_palette_recall);
                 ofxImGui::AddParameter(this->NUM_ALGO_PALETTES);
                 ofxImGui::EndTree(mainSettings);
             }
@@ -591,8 +588,8 @@ void ofxColorManager::update()
         ofLogNotice("ofxColorManager::update") << "CHANGED SELECTED_palette: " << SELECTED_palette;
 
         // TODO: BUG should add this to avoid auto load to user palette
-//        if (bAutoTrigPalette) {
-            palettes_recall(SELECTED_palette);
+//        if (bAuto_palette_recall) {
+        palette_recallFromPalettes(SELECTED_palette);
 //        }
 
         SELECTED_palette_LAST = SELECTED_palette;
@@ -637,10 +634,10 @@ void ofxColorManager::update()
         ofLogNotice("ofxColorManager") << "CHANGED color_BACK";
         color_picked.set(color_BACK);
 
-        if (bAutoTrigPalette)
+        if (bAuto_palette_recall)
         {
             palettes_update();
-            palettes_recall(SELECTED_palette_LAST);//trig last choice
+            palette_recallFromPalettes(SELECTED_palette_LAST);//trig last choice
         }
     }
 }
@@ -1006,7 +1003,7 @@ void ofxColorManager::palettes_setup_labels()
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::palettes_recall(int p)
+void ofxColorManager::palette_recallFromPalettes(int p)
 {
     palette_clear();
     ofColor color;
@@ -1149,13 +1146,6 @@ void ofxColorManager::palettes_resize()
 {
     //-
 
-    // USER PALETTE
-
-//    palette.clear();//TODO:
-    palette_clear();
-
-    //-
-
     // ALGORITMIC PALETTE
 
     for (int i=0; i< btns_plt_Triad.size(); i++)
@@ -1243,16 +1233,14 @@ void ofxColorManager::palettes_resize()
     random.generateRandom(NUM_ALGO_PALETTES);
     palettes_update();
     palettes_setup();
-//    palettes_recall(SELECTED_palette);
 
     //-
 
-    // TODO: BUG
-//    if (bAutoTrigPalette)
-//    {
-//        palettes_update();
-        palettes_recall(SELECTED_palette_LAST);//trig last choice
-//    }
+    if (bAuto_palette_recall)
+    {
+        palette_clear();
+        palette_recallFromPalettes(SELECTED_palette_LAST);//trig last choice
+    }
 }
 
 //--------------------------------------------------------------
@@ -1546,7 +1534,7 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 
         color_picked = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
         palettes_update();
-        palettes_recall(SELECTED_palette_LAST);//trig last choice
+        palette_recallFromPalettes(SELECTED_palette_LAST);//trig last choice
     }
 
     if (key == 'p')
@@ -1554,7 +1542,7 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
         random.generateRandom(NUM_ALGO_PALETTES);
         palettes_update();
         //set random palette to user palette
-        palettes_recall(7);
+        palette_recallFromPalettes(7);
     }
 
     //-
@@ -1743,10 +1731,10 @@ void ofxColorManager::Changed_color_picked(ofFloatColor &color)
 //    // TODO: BUG
 //    // TODO: recreate palettes
 //    // TODO: could auto create
-    if (bAutoTrigPalette)
+    if (bAuto_palette_recall)
     {
         palettes_update();
-        palettes_recall(SELECTED_palette_LAST);//trig last choiced algorithmic palette
+        palette_recallFromPalettes(SELECTED_palette_LAST);//trig last choiced algorithmic palette
     }
 }
 

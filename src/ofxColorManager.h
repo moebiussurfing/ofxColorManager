@@ -145,7 +145,7 @@ public:
     ofParameter<int> BRIGHTNESS;
     ofParameter<int> SATURATION;
     ofParameter<bool> bRandomPalette;
-    ofParameter<bool> bAutoTrigPalette;//trig last used algo palette on click or change color
+    ofParameter<bool> bAuto_palette_recall;//trig last used algo palette on click or change color
     void palettes_setup();
     void palettes_setup_labels();
     void palettes_update();
@@ -235,7 +235,7 @@ public:
     int SELECTED_palette_PRE = -1;//to check if changed on update() loop
     int SELECTED_palette_LAST = 3;//default last palette type triggered. compBrg by default
 
-    void palettes_recall(int p);
+    void palette_recallFromPalettes(int p);
     int NUM_PALETTES = 8;
 
     //-
