@@ -221,7 +221,7 @@ void ofxColorManager::gui_setup_layout()
     gui_h = 470;//estimate (should measure) height of the panel on window resize
 
     // algorithmic palettes
-    palettes_x = gui_x;
+    palettes_x = gui_x + 10;
     palettes_y = (gui_y + gui_h + pad) + box_size + 10;
 
     // curve tool pos (anchor for others)
@@ -750,13 +750,14 @@ void ofxColorManager::curveTool_draw() {
 
 //--------------------------------------------------------------
 void ofxColorManager::palettes_setup() {
-    int x0 = palettes_x;
+    int btn_pad_w;
+    btn_pad_w = 210;//padding to place boxes right to the labels
+    int x0;
+    x0 = palettes_x + btn_pad_w;
     int y0 = palettes_y;
     int h0 = box_size + pad;
 
     // 1. triad
-//    x0 = palettes_x;
-//    y0 += h0;
     for (int i = 0; i < triad.size(); i++) {
         ButtonExample *btn = new ButtonExample();
         btn->setup(x0, y0, box_size, box_size);
@@ -770,7 +771,7 @@ void ofxColorManager::palettes_setup() {
     }
 
     // 2. complement triad
-    x0 = palettes_x;
+    x0 = palettes_x + btn_pad_w;
     y0 += h0;
     for (int i = 0; i < complementTriad.size(); i++) {
         ButtonExample *btn = new ButtonExample();
@@ -785,7 +786,7 @@ void ofxColorManager::palettes_setup() {
     }
 
     // 3. complement sat
-    x0 = palettes_x;
+    x0 = palettes_x + btn_pad_w;
     y0 += h0;
     for (int i = 0; i < complement.size(); i++) {
         ButtonExample *btn = new ButtonExample();
@@ -800,7 +801,7 @@ void ofxColorManager::palettes_setup() {
     }
 
     // 4. complement brgt
-    x0 = palettes_x;
+    x0 = palettes_x + btn_pad_w;
     y0 += h0;
     for (int i = 0; i < complementBrightness.size(); i++) {
         ButtonExample *btn = new ButtonExample();
@@ -815,7 +816,7 @@ void ofxColorManager::palettes_setup() {
     }
 
     // 5. mono sat
-    x0 = palettes_x;
+    x0 = palettes_x + btn_pad_w;
     y0 += h0;
     for (int i = 0; i < monochrome.size(); i++) {
         ButtonExample *btn = new ButtonExample();
@@ -830,7 +831,7 @@ void ofxColorManager::palettes_setup() {
     }
 
     // 6. mono brgt
-    x0 = palettes_x;
+    x0 = palettes_x + btn_pad_w;
     y0 += h0;
     for (int i = 0; i < monochromeBrightness.size(); i++) {
         ButtonExample *btn = new ButtonExample();
@@ -845,7 +846,7 @@ void ofxColorManager::palettes_setup() {
     }
 
     // 7. analogue
-    x0 = palettes_x;
+    x0 = palettes_x + btn_pad_w;
     y0 += h0;
     for (int i = 0; i < analogue.size(); i++) {
         ButtonExample *btn = new ButtonExample();
@@ -860,7 +861,7 @@ void ofxColorManager::palettes_setup() {
     }
 
     // 8. random
-    x0 = palettes_x;
+    x0 = palettes_x + btn_pad_w;
     y0 += h0;
     for (int i = 0; i < random.size(); i++) {
         ButtonExample *btn = new ButtonExample();
@@ -882,8 +883,6 @@ void ofxColorManager::palettes_setup_labels()
     int padH = 11;
     int y0 = palettes_y + padH;
     int h0 = box_size + pad;
-    int btn_pad_w;
-    btn_pad_w = 350;//padding to place labels to the right
 
     //--
 
@@ -895,7 +894,7 @@ void ofxColorManager::palettes_setup_labels()
     btn_plt_c.set(ofColor(32));
     int btn_plt_h;
     btn_plt_h = h0;
-    x0 = palettes_x + btn_pad_w;
+    x0 = palettes_x;
 
     //-
 
@@ -1700,7 +1699,7 @@ void ofxColorManager::Changed_color_picked(ofFloatColor &color)
     color_clicked.set(color);
 //    color_clicked_param.set(color);
 
-    // TODO: BUG
+//    // TODO: BUG
 //    // TODO: recreate palettes
 //    // TODO: could auto create
 //    if (bAutoTrigPalette)
