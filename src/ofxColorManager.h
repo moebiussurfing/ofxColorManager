@@ -52,6 +52,7 @@ public:
 
     ofxColorsBrowser ColorBrowser;
     ofFloatColor color_BACK;
+    ofFloatColor color_BACK_PRE;
 
     //--
 
@@ -165,8 +166,8 @@ public:
     // COLORS
 
     ofParameter<ofFloatColor> color_backGround;
-    bool backgroundENABLE = true;
-    void setBackgroung_ENABLE(bool b);
+    bool backgroundENABLE = false;
+    void setBackground_ENABLE(bool b);
 
     ofParameter<ofFloatColor> color_picked;
     ofRectangle r_color_picked;
@@ -300,5 +301,9 @@ public:
     void draw_PaleteMINI();
 
     void draw_previewGradient(glm::vec2 pos, bool horizontal);
+
+    bool SHOW_debugText = false;
+    void setVisible_debugText(bool b);
+
     //--
 };

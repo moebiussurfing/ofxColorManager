@@ -25,7 +25,7 @@ void ofxColorManager::setup()
     ColorBrowser.setBoxSize(25);
     ColorBrowser.setRowsSize(10);
     ColorBrowser.setup_colorBACK(color_BACK);
-    ColorBrowser.setPosition(glm::vec2(925, 40));
+    ColorBrowser.setPosition(glm::vec2(925, 100));
     ColorBrowser.setup();
 
     //-
@@ -46,8 +46,7 @@ void ofxColorManager::setup()
     //-
 
     // DATA
-
-    setBackgroung_ENABLE(false);
+    setBackground_ENABLE(true);
     color_backGround.set("BACKGROUND", ofFloatColor::white);
 
     params_data.setName("GENERAL");
@@ -550,6 +549,13 @@ void ofxColorManager::update()
         ofLogNotice("ofxColorManager") << "CHANGED color_clicked";
         color_picked.set(color_clicked);
     }
+
+    if (color_BACK != color_BACK_PRE )
+    {
+        color_BACK_PRE = color_BACK;
+        ofLogNotice("ofxColorManager") << "CHANGED color_BACK";
+        color_picked.set(color_BACK);
+    }
 }
 
 //#pragma mark curveTool
@@ -645,11 +651,11 @@ void ofxColorManager::curveTool_draw() {
         out = ofMap( curvesTool.getAtPercent(1.0-curve_pos), 0, curveTool_amount-1, 1., 0.) ;
         ofColor c = gradient.getColorAtPercent( out );
 
-        ofPushStyle();
+//        ofPushStyle();
         ofFill();
         ofSetColor(c);
         ofDrawRectangle(r);
-        ofPopStyle();
+//        ofPopStyle();
 
         // NOTE: sometimes we need some tricky hacking to avoid rare fliping from gradients
         curve_pos_out = ofMap( curvesTool.getAtPercent(curve_pos), 0, curveTool_amount-1, 0., 1.);
@@ -661,8 +667,12 @@ void ofxColorManager::curveTool_draw() {
         curve_img_gradient.draw(image_curvedGradient_x, image_curvedGradient_y);
 
         // 3.2 curve splines editor
+        ofPushMatrix();
+        ofPushStyle();
         ofSetColor(255);
         curvesTool.draw(0, 0, curve_pos_LUT);
+        ofPopMatrix();
+        ofPopStyle();
 
         // 3.3 horizontal line
         ofSetColor(ofColor::white);
@@ -1697,7 +1707,7 @@ void ofxColorManager::setVisible_GUI_MINI(bool b)
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::setBackgroung_ENABLE(bool b)
+void ofxColorManager::setBackground_ENABLE(bool b)
 {
     backgroundENABLE = b;
 }
@@ -1718,4 +1728,10 @@ void ofxColorManager::draw_previewGradient(glm::vec2 pos, bool horizontal = true
 //        curve_img_gradient.draw(0, 0);
 //        ofPopMatrix();
 //    }
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::setVisible_debugText(bool b)
+{
+    SHOW_debugText = b;
 }
