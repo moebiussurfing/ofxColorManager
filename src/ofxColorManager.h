@@ -97,6 +97,8 @@ public:
     int colorPick_x, colorPick_y, colorPick_w, colorPick_h;
     int color_x, color_y, color_w, color_h;
 
+    glm::vec2 colorBrowserPos;
+
     //--
 
     ofxColorManager();

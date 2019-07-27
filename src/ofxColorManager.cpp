@@ -20,16 +20,6 @@ void ofxColorManager::setup()
 
     //-
 
-    // COLOR BROWSER
-
-    ColorBrowser.setBoxSize(25);
-    ColorBrowser.setRowsSize(10);
-    ColorBrowser.setup_colorBACK(color_BACK);
-    ColorBrowser.setPosition(glm::vec2(925, 100));
-    ColorBrowser.setup();
-
-    //-
-
     color_picked.addListener(this, &ofxColorManager::Changed_color_picked);
     color_clicked_param.addListener(this, &ofxColorManager::Changed_color_clicked);
 
@@ -42,6 +32,16 @@ void ofxColorManager::setup()
     // LAYOUT
 
     gui_setup_layout();
+
+    //-
+
+    // COLOR BROWSER
+
+    ColorBrowser.setBoxSize(25);
+    ColorBrowser.setRowsSize(10);
+    ColorBrowser.setup_colorBACK(color_BACK);
+    ColorBrowser.setPosition(colorBrowserPos);
+    ColorBrowser.setup();
 
     //-
 
@@ -267,6 +267,9 @@ void ofxColorManager::gui_setup_layout()
     colorPick_y = color_h + 30;
     colorPick_w = colorPick_h = 2*box_size;
     r_color_clicked = ofRectangle( colorPick_x, colorPick_y, colorPick_w, colorPick_h );
+
+    // color browser
+    colorBrowserPos = glm::vec2(910, 35);
 }
 
 //--------------------------------------------------------------
@@ -1187,7 +1190,15 @@ void ofxColorManager::palettes_resize()
     random.generateRandom(NUM_ALGO_PALETTES);
     palettes_update();
     palettes_setup();
-    palettes_recall(SELECTED_palette);
+//    palettes_recall(SELECTED_palette);
+
+    //-
+
+//    if (bAutoTrigPalette)
+//    {
+//        palettes_update();
+        palettes_recall(SELECTED_palette_LAST);//trig last choice
+//    }
 }
 
 //--------------------------------------------------------------
@@ -1674,6 +1685,14 @@ void ofxColorManager::Changed_color_picked(ofFloatColor &color)
     ofLogNotice("ofxColorManager") << "Changed_color_picked " << ofToString(color);
     color_clicked.set(color);
 //    color_clicked_param.set(color);
+
+    // TODO: recreate palettes
+    // TODO: could auto create
+    if (bAutoTrigPalette)
+    {
+        palettes_update();
+        palettes_recall(SELECTED_palette_LAST);//trig last choice
+    }
 }
 
 //--------------------------------------------------------------
