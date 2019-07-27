@@ -24,6 +24,13 @@ void ButtonExample::setup(float x, float y, float w, float h)
     ofAddListener(eventTouchMove, this, &ButtonExample::onTouchMove);
 }
 
+//void ButtonExample::setPosition(float x, float y)
+//{
+//}
+//void ButtonExample::setSize(float w, float h)
+//{
+//}
+
 void ButtonExample::update()
 {
 }

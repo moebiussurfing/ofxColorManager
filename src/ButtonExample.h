@@ -39,6 +39,9 @@ public:
 
     void setColor(ofColor c);
     ofColor getColor();
+
+//    void setPosition(float x, float y);
+//    void setSize(float w, float h);
 };
 
 #endif /* defined(__example_basic__ButtonExample__) */

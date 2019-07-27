@@ -227,30 +227,31 @@ void ofxColorManager::gui_setup_layout()
     // curve tool pos (anchor for others)
     curveTool_x = 525;
     curveTool_y = 25;
-    curveTool_w = 256;
-    curveTool_h = 256;
+    curveTool_w = curveTool_amount;//TODO: shoul can resize curve tool besides amount
+    curveTool_h = curveTool_amount;
 
     // gradient curved image LUT [referenced to curve pos (vertical)]
     image_curvedGradient_x = curveTool_amount + pad;//curveTool +
     image_curvedGradient_y = 0;//curveTool +
     image_curvedGradient_w = box_size;
-    image_curvedGradient_h = curveTool_amount;
+    image_curvedGradient_h = curveTool_h;
 
     // slider
     slider_x = curveTool_x + pad + curveTool_amount + pad + image_curvedGradient_w;
     slider_y = curveTool_y;
     slider_w = box_size / 2;
-    slider_h = curveTool_amount;
+    slider_h = curveTool_h;
 
     // gradient-pre curve (bad sorted to the left but anchored to curve..)
     grad_w = box_size;
     grad_x = curveTool_x - (grad_w + pad);
     grad_y = curveTool_y;
-    grad_h = curveTool_amount;
+    grad_h = curveTool_h;
 
     // user palette (related gradient-pre curve)
     palette_x = grad_x - (grad_w + pad);
-    palette_y = curveTool_y + grad_h;
+//    palette_y = curveTool_y + grad_h;
+    palette_y = curveTool_y;
 
     // current color bar
     currColor_x = slider_x + slider_w + pad;
@@ -384,19 +385,49 @@ void ofxColorManager::palette_addColor_toInterface(ofColor c)
 //    scene->addChild(btn);
 //    btns_palette.push_back(btn);
 
-    // vertical palette
-    int i = btns_palette.size();
-    float y = palette_y - box_size;
-    y = y - i * (box_size + pad);
+//    // vertical palette
+//    int i = btns_palette.size();
+//    float y = palette_y - box_size;
+//    y = y - i * (box_size + pad);
+//
+//    ButtonExample *btn = new ButtonExample();
+//    btn->setup(palette_x, y, box_size, box_size);
+//    btn->setColor(c);
+//    btn->setup_colorBACK( color_clicked );
+//    btn->setLocked(true);
+//    btn->setName("btn" + ofToString(i));
+//    scene->addChild(btn);
+//    btns_palette.push_back(btn);
 
+    // vertical palette with resize boxes size to fit gradient bar height
+
+    // add the new color (current color_clicked) to the user palette
+    int i = btns_palette.size();
     ButtonExample *btn = new ButtonExample();
-    btn->setup(palette_x, y, box_size, box_size);
+    btn->setup(0, 0, 10, 10);//temp
     btn->setColor(c);
     btn->setup_colorBACK( color_clicked );
     btn->setLocked(true);
     btn->setName("btn" + ofToString(i));
     scene->addChild(btn);
     btns_palette.push_back(btn);
+
+    // re-arrenge all resized boxes
+    int boxesNum = btns_palette.size();
+    float boxesX, boxesY, boxesW, boxesH, boxesY_total, boxesH_total;
+    boxesH_total = curveTool_h;
+    boxesH = boxesH_total/boxesNum;
+    boxesY_total = palette_y + boxesH_total - boxesH;
+    boxesX = palette_x;
+    boxesW = box_size;
+    for (int i=0; i<btns_palette.size(); i++)
+    {
+        std::string n = "btn" + ofToString(i);
+        auto a = scene->getChildWithName(n, 1000);
+        boxesY = boxesY_total - (i*boxesH);
+        a->setPosition(boxesX, boxesY);
+        a->setSize(boxesW, boxesH);
+    }
 }
 
 //--------------------------------------------------------------
