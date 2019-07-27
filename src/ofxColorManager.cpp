@@ -190,8 +190,9 @@ void ofxColorManager::setup()
     XML_params.add(gradient_hard);//gradient
     XML_params.add(NUM_ALGO_PALETTES);
     XML_params.add(bAuto_palette_recall);
+    XML_params.add(bCurveSlider);
+    XML_params.add(bPaletteEdit);
     load_group_XML(XML_params, XML_path);
-
     palette_load("myPalette");
 
     //-
@@ -225,10 +226,6 @@ void ofxColorManager::gui_setup_layout()
     gui_w = 200;
     gui_h = 475;//estimate (should measure) height of the panel on window resize
 
-    // all 8 algorithmic palettes
-    palettes_x = gui_x + 10;
-    palettes_y = (gui_y + gui_h + pad) + box_size + 10;
-
     // curve tool pos (anchor for others)
     curveTool_x = 577;//distance required to not be over the colorpicker
     curveTool_y = 25;
@@ -253,7 +250,7 @@ void ofxColorManager::gui_setup_layout()
     grad_y = curveTool_y;
     grad_h = curveTool_h;
 
-    // user palette (related gradient-pre curve)
+    // user palette (pos related to gradient-pre curve)
     palette_x = grad_x - (grad_w + pad);
 //    palette_y = curveTool_y + grad_h;
     palette_y = curveTool_y;
@@ -274,14 +271,22 @@ void ofxColorManager::gui_setup_layout()
     color_h = curveTool_h;
     r_color_picked = ofRectangle( color_x, color_y, color_w, color_h );
 
+    // all 8 algorithmic palettes
+    // down to the gui
+//    palettes_x = gui_x + 10;
+//    palettes_y = (gui_y + gui_h + pad) + box_size + 10;
+// down to the color/curve/gradient editor
+    palettes_x = color_x;
+    palettes_y = color_y + color_h + 40;
+
     // color box clicked on palettes(hidden)
-    colorPick_x = 335;
+    colorPick_x = 390;
     colorPick_y = color_h + 30;
     colorPick_w = colorPick_h = 2*box_size;
     r_color_clicked = ofRectangle( colorPick_x, colorPick_y, colorPick_w, colorPick_h );
 
     // colors palettes browser
-    colorBrowserPos = glm::vec2(990, 35);
+    colorBrowserPos = glm::vec2(1050, 40);
 }
 
 //--------------------------------------------------------------
@@ -566,6 +571,7 @@ bool ofxColorManager::gui_imGui()
                 }
                 ofxImGui::AddParameter(this->curve_pos_out);
                 ofxImGui::AddParameter(this->gradient_hard);
+                ofxImGui::AddParameter(this->bCurveSlider);
                 ofxImGui::EndTree(mainSettings);
             }
 
@@ -602,12 +608,9 @@ void ofxColorManager::update()
 
         // when a label palette is clicked, will always trig and load the palette
         // TODO: BUG should add this to avoid auto load to user palette
-//        if (bAuto_palette_recall) {
         palette_recallFromPalettes(SELECTED_palette);
-//        }
 
         SELECTED_palette_LAST = SELECTED_palette;
-
         SELECTED_palette_PRE = SELECTED_palette = -1;//bug if not if pressed same button
 
         // hide all borders
@@ -626,10 +629,6 @@ void ofxColorManager::update()
     //-
 
     interface_update();
-
-//    if (!bLock_palette)
-//        palettes_update();//TODO: should reduce calls on update()
-
     curveTool_update();
     ColorBrowser.update();
 
@@ -677,15 +676,18 @@ void ofxColorManager::curveTool_setup()
     curve_pos.set("INPUT", 0., 0., 1.);
     curve_pos_out.set("OUTPUT", 0., 0., 1.);
     bResetCurve.set("RESET CURVE", false);
+    bCurveSlider.set("DEBUG GRADIENT", false);
     params_curve.add(curve_pos);
     params_curve.add(curve_pos_out);
     params_curve.add(bResetCurve);
+    params_curve.add(bCurveSlider);
     ofAddListener(params_curve.parameterChangedE(), this, &ofxColorManager::Changed_control);
 
     //-
 
     // slider
     curve_pos_slider.setup(slider_x, slider_y, slider_w, slider_h, 0., 1., 0, true, false);
+    curve_pos_slider.setVisible(bCurveSlider);
 //    curve_pos_slider.setLabelString("input");
 }
 
@@ -744,8 +746,9 @@ void ofxColorManager::curveTool_draw() {
 
         //-
 
+        // COLOR MONITORING SLIDER POSITION ON CURVED GRADIENT
         ofRectangle r;
-        r = ofRectangle( currColor_x, currColor_y, box_size, slider_h );
+        r = ofRectangle( currColor_x, currColor_y, box_size/2, slider_h );
 
         //-
 
@@ -754,15 +757,18 @@ void ofxColorManager::curveTool_draw() {
         // 1. un-curved gradient rectangle (left positioned)
         gradient.drawDebug(grad_x, grad_y, grad_w, grad_h);
 
-        // 2. current box color at input curve point (right positioned)
-        float out = ofMap( curvesTool.getAtPercent(1.0-curve_pos), 0, curveTool_amount-1, 1., 0.) ;
-        ofColor c = gradient.getColorAtPercent( out );
+        if (bCurveSlider)
+        {
+            // 2. current box color at input curve point (right positioned)
+            float out = ofMap( curvesTool.getAtPercent(1.0-curve_pos), 0, curveTool_amount-1, 1., 0.) ;
+            ofColor c = gradient.getColorAtPercent( out );
 
-        ofPushStyle();
-        ofFill();
-        ofSetColor(c);
-        ofDrawRectangle(r);
-        ofPopStyle();
+            ofPushStyle();
+            ofFill();
+            ofSetColor(c);
+            ofDrawRectangle(r);
+            ofPopStyle();
+        }
 
         // NOTE: sometimes we need some tricky hacking to avoid rare fliping from gradients
         curve_pos_out = ofMap( curvesTool.getAtPercent(curve_pos), 0, curveTool_amount-1, 0., 1.);
@@ -780,14 +786,17 @@ void ofxColorManager::curveTool_draw() {
         ofSetColor(255);
         curvesTool.draw(0, 0, curve_pos_LUT);
 
-        // 3.3 horizontal line
-        ofSetColor(ofColor::white);
-        float y =  curveTool_amount - curvesTool[curve_pos_LUT];
-        ofDrawLine(0, y, curveTool_amount, y);
+        if (bCurveSlider)
+        {
+            // 3.3 horizontal line
+            ofSetColor(ofColor::white);
+            float y = curveTool_amount - curvesTool[curve_pos_LUT];
+            ofDrawLine(0, y, curveTool_amount, y);
 
-        // 3.4 current circle point
-        ofSetColor(25);
-        ofDrawCircle(curve_pos_LUT, y, 3);
+            // 3.4 current circle point
+            ofSetColor(25);
+            ofDrawCircle(curve_pos_LUT, y, 3);
+        }
 
 //        ofPopMatrix();
         ofPopStyle();
@@ -1419,6 +1428,12 @@ void ofxColorManager::palette_touched(string b){
             ofLogNotice("ofxColorManager") << "selected color: " << i;
         }
     }
+
+    // workflow: auto set edit mode
+    if (!bPaletteEdit)
+    {
+        bPaletteEdit = true;
+    }
 }
 
 //--------------------------------------------------------------
@@ -1503,10 +1518,20 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
         {
             if (!bPaletteEdit)
             {
+                btns_palette[i]->setSelectable(false);
                 btns_palette[i]->setSelected(false);//deselect each
                 palette_colorSelected = -1;
             }
-            btns_palette[i]->setSelectable(bPaletteEdit);
+            else if (bPaletteEdit)
+            {
+                btns_palette[i]->setSelectable(true);
+                btns_palette[i]->setSelected(false);
+            }
+        }
+        if (bPaletteEdit && btns_palette.size()>0)
+        {
+            palette_colorSelected = 0;
+            btns_palette[0]->setSelected(true);
         }
     }
     else if (name == "REMOVE LAST COLOR")
@@ -1530,7 +1555,13 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
         if (bRandomPalette)
         {
             bRandomPalette = false;
+
             random.generateRandom(NUM_ALGO_PALETTES);
+            palettes_update();
+            if (bAuto_palette_recall) {
+                //set random palette to user palette
+                palette_recallFromPalettes(7);
+            }
         }
     }
     else if (name == "SIZE")
@@ -1538,14 +1569,21 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
         palettes_resize();
     }
 
+    else if (name == "AUTO ERASE USER PALETTE")
+    {
+        if (bAuto_palette_recall)
+            bLock_palette = false;
+    }
+    else if (name == "LOCK PALETTES")
+    {
+        if (bLock_palette)
+            bAuto_palette_recall = false;
+    }
         //--
 
         // CURVE
     else if (name == "INPUT")
     {
-//        if ( )
-//        {
-//        }
     }
     else if (name == "RESET CURVE")
     {
@@ -1557,10 +1595,15 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
             curvesTool.add(ofVec2f(255, 255));
         }
     }
+    else if (name == "DEBUG GRADIENT")
+    {
+            curve_pos_slider.setVisible(bCurveSlider);
+    }
     else if (name == "GRADIENT HARD")
     {
         gradient.setHardMode(gradient_hard);
     }
+
 }
 
 //--------------------------------------------------------------
@@ -1570,6 +1613,15 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 //    ofLogNotice("ofxColorManager") << "key: " << key;
 
     //-
+
+    if (key == 'e')
+    {
+        bPaletteEdit = !bPaletteEdit;
+    }
+    if (key == 'l')
+    {
+        bLock_palette = !bLock_palette;
+    }
 
     if (key == 'm')
     {
@@ -1592,18 +1644,22 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
     {
         //TODO: bug because some trigs are flags. we need direct functions
 //        bRandomColor = true;
-
         color_picked = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
-        palettes_update();
-        palette_recallFromPalettes(SELECTED_palette_LAST);//trig last choice
+
+        if (bAuto_palette_recall) {
+            palettes_update();
+            palette_recallFromPalettes(SELECTED_palette_LAST);//trig last choice
+        }
     }
 
     if (key == 'p')
     {
         random.generateRandom(NUM_ALGO_PALETTES);
         palettes_update();
-        //set random palette to user palette
-        palette_recallFromPalettes(7);
+        if (bAuto_palette_recall) {
+            //set random palette to user palette
+            palette_recallFromPalettes(7);
+        }
     }
 
     //-
@@ -1618,14 +1674,15 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 //        curvesTool.load("curves.yml");
 //    }
 
-    if (key == 's')
-    {
-        palette_save("myPalette");
-    }
-    if (key == 'l')
-    {
-        palette_load("myPalette");
-    }
+//    if (key == 's')
+//    {
+//        palette_save("myPalette");
+//    }
+//    if (key == 'l')
+//    {
+//        palette_load("myPalette");
+//    }
+
     if (key == 'c')
     {
         palette_clear();
@@ -1634,7 +1691,6 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
     {
         palette_removeColorLast();
     }
-
     if (key == 'a')
     {
         color_picked = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
@@ -1697,23 +1753,23 @@ void ofxColorManager::mousePressed(ofMouseEventArgs& eventArgs){
 
     //-
 
-    if (bPaletteEdit)
-    {
+//    if (bPaletteEdit)
+//    {
         // filter touch if its an user palette button only
         auto a = TouchManager::one().getComponentUnder( ofVec2f(x, y) );
         auto b = a->getName();
-        ofLogNotice("ofxColorManager") << "touched: " << b;
+        ofLogVerbose("ofxColorManager") << "touched: " << b;
         auto str = ofSplitString(b, "btn");
         if (str.size() > 1)//check if "btn" is present
         {
-            ofLogNotice("ofxColorManager") << "detected palette touch: " << b;
+            ofLogVerbose("ofxColorManager") << "detected palette touch: " << b;
             palette_touched(b);
         }
         else
         {
-            ofLogNotice("ofxColorManager") << "ignored touch: " << b;
+            //ofLogVerbose("ofxColorManager") << "ignored touch: " << b;
         }
-    }
+//    }
 
     //-
 }
@@ -1821,9 +1877,11 @@ void ofxColorManager::Changed_color_picked(ofFloatColor &color)
         palette_recallFromPalettes(SELECTED_palette_LAST);//trig last choiced algorithmic palette
     }
 
-    // recreate algorithmic palettes if lockingis disable
+    // recreate algorithmic palettes if locking is disable
     if (!bLock_palette)
+    {
         palettes_update();
+    }
 }
 
 //--------------------------------------------------------------

@@ -91,7 +91,7 @@ namespace ofxInterface
     void ButtonPaletteSelector::setThisPaletteType(int palette)
     {
         thisPaletteType = palette;
-        ofLogNotice("ButtonPaletteSelector") << "thisPaletteType:" << thisPaletteType;
+        ofLogVerbose("ButtonPaletteSelector") << "thisPaletteType:" << thisPaletteType;
     }
 
 //-

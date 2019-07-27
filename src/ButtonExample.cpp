@@ -50,7 +50,6 @@ void ButtonExample::draw()
         ofSetLineWidth(1.);
         ofDrawRectangle(1., 1., getWidth()-2., getHeight()-2.);
     }
-
 }
 
 void ButtonExample::setSelectable(bool b)
@@ -86,8 +85,8 @@ void ButtonExample::onTouchDown(ofxInterface::TouchEvent &event)
     {
         if (!bIsSelected)
             bIsSelected = true;
-        else
-            bIsSelected = false;
+//        else
+//            bIsSelected = false;
     }
 }
 
