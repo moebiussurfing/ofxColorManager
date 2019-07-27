@@ -47,8 +47,8 @@ void ButtonExample::draw()
     {
         ofNoFill();
         ofSetColor(ofColor(ofColor::black, 128));//with alpha
-        ofSetLineWidth(2.);
-        ofDrawRectangle(0, 0, getWidth(), getHeight());
+        ofSetLineWidth(1.);
+        ofDrawRectangle(1., 1., getWidth()-2., getHeight()-2.);
     }
 
 }

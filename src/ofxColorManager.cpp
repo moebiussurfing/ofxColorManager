@@ -75,7 +75,7 @@ void ofxColorManager::setup()
     bRandomColor.set("RANDOM COLOR", false);
     bAddColor.set("ADD COLOR", false);
     bPaletteEdit.set("EDIT COLOR", false);
-    bRemoveColor.set("REMOVE COLOR", false);
+    bRemoveColor.set("REMOVE LAST COLOR", false);
     bClearPalette.set("CLEAR PALETTE", false);
 
     params_control.setName("COLOR EDITOR");
@@ -96,15 +96,18 @@ void ofxColorManager::setup()
     SATURATION.set("SATURATION", 200, 0, 255 );
     BRIGHTNESS.set("BRIGHTNESS", 200, 0, 255 );
     bRandomPalette.set("RANDOM PALETTE", false);
-    bAuto_palette_recall.set("AUTO PALETTE", false);
+    bAuto_palette_recall.set("AUTO ERASE USER PALETTE", false);
+    bLock_palette.set("LOCK PALETTES", false);
+
     NUM_ALGO_PALETTES.set("SIZE", 6, 2, 8);
-    params_palette.setName("ALGORITHMIC PALETTE");
+    params_palette.setName("ALGORITHMIC PALETTES");
     params_palette.add(MODE_Palette);
     params_palette.add(SATURATION);
     params_palette.add(BRIGHTNESS);
     params_palette.add(bRandomPalette);
     params_palette.add(NUM_ALGO_PALETTES);
     params_palette.add(bAuto_palette_recall);
+    params_palette.add(bLock_palette);
 
     ofAddListener(params_palette.parameterChangedE(), this, &ofxColorManager::Changed_control);
 
@@ -220,14 +223,14 @@ void ofxColorManager::gui_setup_layout()
     gui_x = 10;
     gui_y = 10;
     gui_w = 200;
-    gui_h = 470;//estimate (should measure) height of the panel on window resize
+    gui_h = 475;//estimate (should measure) height of the panel on window resize
 
-    // algorithmic palettes
+    // all 8 algorithmic palettes
     palettes_x = gui_x + 10;
     palettes_y = (gui_y + gui_h + pad) + box_size + 10;
 
     // curve tool pos (anchor for others)
-    curveTool_x = 585;
+    curveTool_x = 577;//distance required to not be over the colorpicker
     curveTool_y = 25;
     curveTool_w = curveTool_amount;//TODO: shoul can resize curve tool besides amount
     curveTool_h = curveTool_amount;
@@ -255,17 +258,23 @@ void ofxColorManager::gui_setup_layout()
 //    palette_y = curveTool_y + grad_h;
     palette_y = curveTool_y;
 
-    // current color bar
+    // current color bar (the one afect by slider position. just for testing gradient purpose)
     currColor_x = slider_x + slider_w + pad;
     currColor_y = curveTool_y;
 
     // color box monitor picked (same that color picker gui)
-    color_x = 320;
-    color_y = 42;
-    color_w = color_h = 2*box_size;
+    // box mode
+//    color_x = 320;
+//    color_y = 42;
+//    color_w = color_h = 2*box_size;
+    // bar mode
+    color_w = (2*box_size);
+    color_x = palette_x - (color_w+pad);
+    color_y = curveTool_y;
+    color_h = curveTool_h;
     r_color_picked = ofRectangle( color_x, color_y, color_w, color_h );
 
-    // color box clicked
+    // color box clicked on palettes(hidden)
     colorPick_x = 335;
     colorPick_y = color_h + 30;
     colorPick_w = colorPick_h = 2*box_size;
@@ -538,7 +547,7 @@ bool ofxColorManager::gui_imGui()
                 ofxImGui::AddParameter(this->color_SAT);
                 ofxImGui::AddParameter(this->color_BRG);
 
-                ImGui::Text("PALETTE MANAGER");
+                ImGui::Text("USER PALETTE MANAGER");
                 ofxImGui::AddParameter(this->bPaletteEdit);
                 ofxImGui::AddParameter(this->bAddColor);
                 ofxImGui::AddParameter(this->bRemoveColor);
@@ -549,14 +558,15 @@ bool ofxColorManager::gui_imGui()
             // ALGORITHMIC PALETTE
             if (ofxImGui::BeginTree(this->params_palette, mainSettings))
             {
-                ofxImGui::AddParameter(this->bRandomPalette);
                 ofxImGui::AddParameter(this->MODE_Palette);
                 if (!MODE_Palette) {
                     ofxImGui::AddParameter(this->SATURATION);
                     ofxImGui::AddParameter(this->BRIGHTNESS);
                 }
+                ofxImGui::AddParameter(this->bLock_palette);
                 ofxImGui::AddParameter(this->bAuto_palette_recall);
                 ofxImGui::AddParameter(this->NUM_ALGO_PALETTES);
+                ofxImGui::AddParameter(this->bRandomPalette);
                 ofxImGui::EndTree(mainSettings);
             }
 
@@ -590,6 +600,7 @@ void ofxColorManager::update()
     {
         ofLogNotice("ofxColorManager::update") << "CHANGED SELECTED_palette: " << SELECTED_palette;
 
+        // when a label palette is clicked, will always trig and load the palette
         // TODO: BUG should add this to avoid auto load to user palette
 //        if (bAuto_palette_recall) {
         palette_recallFromPalettes(SELECTED_palette);
@@ -615,7 +626,10 @@ void ofxColorManager::update()
     //-
 
     interface_update();
-    palettes_update();//TODO: should reduce calls on update()
+
+//    if (!bLock_palette)
+//        palettes_update();//TODO: should reduce calls on update()
+
     curveTool_update();
     ColorBrowser.update();
 
@@ -634,14 +648,19 @@ void ofxColorManager::update()
     if (color_BACK != color_BACK_PRE )
     {
         color_BACK_PRE = color_BACK;
-        ofLogNotice("ofxColorManager") << "CHANGED color_BACK";
+        ofLogNotice("ofxColorManager") << "CHANGED color_BACK pointer";
         color_picked.set(color_BACK);
 
-        if (bAuto_palette_recall)
+        if (!bPaletteEdit)
         {
-            palettes_update();
-            palette_recallFromPalettes(SELECTED_palette_LAST);//trig last choice
+            if (bAuto_palette_recall)
+            {
+                palettes_update();
+                palette_recallFromPalettes(SELECTED_palette_LAST);//trig last choice
+            }
         }
+
+        //-
     }
 }
 
@@ -1008,6 +1027,8 @@ void ofxColorManager::palettes_setup_labels()
 //--------------------------------------------------------------
 void ofxColorManager::palette_recallFromPalettes(int p)
 {
+    ofLogNotice("ofxColorManager") << "palette_recallFromPalettes: " << p;
+
     palette_clear();
     ofColor color;
 
@@ -1354,6 +1375,11 @@ void ofxColorManager::palette_addColor(ofColor c)
     palette.push_back( c );
     gradient.addColor( c );
     palette_addColor_toInterface(c);
+
+    if (palette_colorSelected>-1 && bPaletteEdit)
+    {
+        palette_colorSelected = palette.size()-1;//select last one, just created now
+    }
 }
 
 //--------------------------------------------------------------
@@ -1483,7 +1509,7 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
             btns_palette[i]->setSelectable(bPaletteEdit);
         }
     }
-    else if (name == "REMOVE COLOR")
+    else if (name == "REMOVE LAST COLOR")
     {
         if (bRemoveColor)
         {
@@ -1794,6 +1820,10 @@ void ofxColorManager::Changed_color_picked(ofFloatColor &color)
         palettes_update();
         palette_recallFromPalettes(SELECTED_palette_LAST);//trig last choiced algorithmic palette
     }
+
+    // recreate algorithmic palettes if lockingis disable
+    if (!bLock_palette)
+        palettes_update();
 }
 
 //--------------------------------------------------------------

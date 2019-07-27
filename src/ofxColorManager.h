@@ -148,6 +148,8 @@ public:
     ofParameter<int> SATURATION;
     ofParameter<bool> bRandomPalette;
     ofParameter<bool> bAuto_palette_recall;//trig last used algo palette on click or change color
+    ofParameter<bool> bLock_palette;
+
     void palettes_setup();
     void palettes_setup_labels();
     void palettes_update();
