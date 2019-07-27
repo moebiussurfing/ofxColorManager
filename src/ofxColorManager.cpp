@@ -20,8 +20,8 @@ void ofxColorManager::setup()
 
     //-
 
-    color_picked.addListener(this, &ofxColorManager::Changed_color_picked);
-    color_clicked_param.addListener(this, &ofxColorManager::Changed_color_clicked);
+//    color_picked.addListener(this, &ofxColorManager::Changed_color_picked);
+//    color_clicked_param.addListener(this, &ofxColorManager::Changed_color_clicked);
 
     //-
 
@@ -169,6 +169,9 @@ void ofxColorManager::setup()
     addKeysListeners();
     addMouseListeners();
 
+    color_picked.addListener(this, &ofxColorManager::Changed_color_picked);
+    color_clicked_param.addListener(this, &ofxColorManager::Changed_color_clicked);
+    
     //--
 
     // STARTUP SETTINGS
@@ -259,7 +262,7 @@ void ofxColorManager::gui_setup_layout()
 
     // color box monitor picked (same that color picker gui)
     color_x = 320;
-    color_y = 45;
+    color_y = 40;
     color_w = color_h = 2*box_size;
     r_color_picked = ofRectangle( color_x, color_y, color_w, color_h );
 
@@ -586,7 +589,12 @@ void ofxColorManager::update()
     if (SELECTED_palette != SELECTED_palette_PRE)
     {
         ofLogNotice("ofxColorManager::update") << "CHANGED SELECTED_palette: " << SELECTED_palette;
-        palettes_recall(SELECTED_palette);
+
+        // TODO: BUG should add this to avoid auto load to user palette
+//        if (bAutoTrigPalette) {
+            palettes_recall(SELECTED_palette);
+//        }
+
         SELECTED_palette_LAST = SELECTED_palette;
 
         SELECTED_palette_PRE = SELECTED_palette = -1;//bug if not if pressed same button
