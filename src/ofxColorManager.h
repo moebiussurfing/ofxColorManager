@@ -33,16 +33,38 @@ OFX_CEREAL_DEFINE(CEREAL_NVP(name), CEREAL_NVP(palette))
 
 };
 
+struct PresetData
+{
+    string name;
+    vector<ofColor> palette;
+    string curveName;
+OFX_CEREAL_DEFINE(CEREAL_NVP(name), CEREAL_NVP(curveName), CEREAL_NVP(palette))
+
+};
+
 //--
 
 class ofxColorManager {
 
     // JSON PALETTES SERIALIZER
     CustomData data;
+    PresetData presetData;
 
 public:
 
-    //-
+    //--
+
+    // JSON
+
+    void palette_save(string p);
+    void palette_load(string p);
+    string path_palettes = "assets/palettes/";
+
+    void preset_save(string p);
+    void preset_load(string p);
+    string preset_path = "assets/presets/";
+
+    //--
 
     ofxMouseRuler mouseRuler;
 
@@ -205,12 +227,6 @@ public:
     void palette_removeColorLast();
     void palette_clear();
 
-    // JSON
-
-    void palette_save(string p);
-    void palette_load(string p);
-    string path_palettes = "assets/palettes/";
-
     //-
 
     // INTERFACE
@@ -269,7 +285,7 @@ public:
     int curve_pos_LUT = 0;
     ofParameter<bool> bResetCurve;
     ofParameter<bool> bCurveSlider;
-
+    string curveTool_name = "curves.yml";
     //--
 
     // XML settings

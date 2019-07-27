@@ -45,7 +45,7 @@ void ofxColorManager::setup()
 
     //-
 
-    // DATA
+    // GENERAL DATA
     setBackground_ENABLE(true);
     color_backGround.set("BACKGROUND", ofFloatColor::white);
 
@@ -337,6 +337,70 @@ void ofxColorManager::palette_save(string p)
     ofFile file(path, ofFile::WriteOnly);
     jsonout jo(file);
     jo << data;
+}
+
+
+//--------------------------------------------------------------
+void ofxColorManager::preset_load(string p)
+{
+    ofLogNotice("ofxColorManager") << "preset_load: " << p;
+
+    string path = preset_path + p + ".json";
+    ofFile file(path);
+    if (file.exists())
+    {
+        jsonin ji(file);
+        ji >> presetData;
+
+        ofLogNotice("ofxColorManager") << "preset name: " << presetData.name;
+        ofLogNotice("ofxColorManager") << "curve name : " << presetData.curveName;
+
+        curvesTool.load(preset_path + presetData.curveName + ".yml");
+
+        palette_clear();
+        ofColor c;
+        for (int i = 0; i< presetData.palette.size(); i++)
+        {
+            c = presetData.palette[i];
+            ofLogNotice("ofxColorManager") << "addColor " << i << ": " << ofToString(c);
+            palette_addColor(c);
+        }
+
+        ofLogNotice("ofxColorManager") << "DONE! preset_load: " << p;
+    }
+    else
+    {
+        ofLogNotice("ofxColorManager") << "FILE '" << path << "' NOT FOUND";
+    }
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::preset_save(string p)
+{
+    ofLogNotice("ofxColorManager") << "preset_save: " << p;
+
+    string path = preset_path + p + ".json";
+
+    presetData.name = "myPreset";//TODO:
+    presetData.curveName = "curve01";//TODO:
+
+    ofLogNotice("ofxColorManager") << "preset name: " << presetData.name;
+    ofLogNotice("ofxColorManager") << "curve name : " << presetData.curveName;
+
+    curvesTool.save(preset_path + presetData.curveName + ".yml");
+
+    presetData.palette.resize(palette.size());
+    for (int i = 0; i< palette.size(); i++)
+    {
+        presetData.palette[i] = palette[i];
+        ofLogNotice("ofxColorManager") << "palette_" << i << " " << ofToString(presetData.palette[i]);
+    }
+
+    ofFile file(path, ofFile::WriteOnly);
+    jsonout jo(file);
+    jo << presetData;
+
+    ofLogNotice("ofxColorManager") << "DONE! preset_save: " << p;
 }
 
 //--------------------------------------------------------------
@@ -1380,11 +1444,12 @@ void ofxColorManager::draw_PaleteMINI()
 //--------------------------------------------------------------
 void ofxColorManager::palette_addColor(ofColor c)
 {
-    ofLogNotice("ofxColorManager") << "add color " << " (" << ofToString(c) << ") to palette";
+    ofLogNotice("ofxColorManager") << "palette_addColor" << " (" << ofToString(c) << ") to user palette";
     palette.push_back( c );
     gradient.addColor( c );
-    palette_addColor_toInterface(c);
+    palette_addColor_toInterface( c );
 
+    // TODO: BUG
     if (palette_colorSelected>-1 && bPaletteEdit)
     {
         palette_colorSelected = palette.size()-1;//select last one, just created now
@@ -1444,7 +1509,7 @@ void ofxColorManager::palette_clear()
     palette.clear();
     gradient.reset();
 
-    ofLogNotice("ofxColorManager") << "getNumChildren: " << scene->getNumChildren();
+//    ofLogNotice("ofxColorManager") << "palette_clear::getNumChildren: " << scene->getNumChildren();
 
     for (int i=0; i< btns_palette.size(); i++)
     {
@@ -1452,7 +1517,7 @@ void ofxColorManager::palette_clear()
         auto a = scene->getChildWithName(n, 1000);
         auto b = a->getName();
         scene->removeChild(a, false);
-        ofLogVerbose("ofxColorManager") << "removed children: " << b;
+        ofLogNotice("ofxColorManager") << "removed children: " << b;
     }
     btns_palette.clear();
 }
@@ -1465,7 +1530,10 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
     if (name!="INPUT" && name!="COLOR" && name!="OUTPUT")
         ofLogNotice("ofxColorManager") << "Changed_control: " << name << ":" << e;
 
+    //--
+
     // COLOR
+
     if (name == "COLOR") // color picked
     {
         color_HUE = 255 * color_picked.get().getHue();
@@ -1495,7 +1563,10 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
         color_picked.set(c);
     }
 
-        // PALLETE
+    //--
+
+    // PALLETE
+
     else if (name == "RANDOM COLOR")
     {
         if (bRandomColor)
@@ -1579,9 +1650,11 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
         if (bLock_palette)
             bAuto_palette_recall = false;
     }
-        //--
 
-        // CURVE
+    //--
+
+    // CURVE
+
     else if (name == "INPUT")
     {
     }
@@ -1603,6 +1676,8 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
     {
         gradient.setHardMode(gradient_hard);
     }
+
+    //--
 
 }
 
@@ -1663,6 +1738,13 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
     }
 
     //-
+
+    if (key == 'z') {
+        preset_save("myPreset");
+    }
+    if (key == 'x') {
+        preset_load("myPreset");
+    }
 
 //    if (key == 'c') {
 //        curveShow = !curveShow;
