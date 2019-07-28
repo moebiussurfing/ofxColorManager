@@ -1,27 +1,28 @@
 #include "ofxColorManager.h"
 
+
+
 //--------------------------------------------------------------
 ofxColorManager::ofxColorManager()
 {
 }
+
 
 //--------------------------------------------------------------
 ofxColorManager::~ofxColorManager()
 {
 }
 
+
 //--------------------------------------------------------------
 void ofxColorManager::setup()
 {
     //-
 
+    // MOUSE DEBUGGER
+
     mouseRuler.setup();
     mouseRuler.toggleVisibility();
-
-    //-
-
-//    color_picked.addListener(this, &ofxColorManager::Changed_color_picked);
-//    color_clicked_param.addListener(this, &ofxColorManager::Changed_color_clicked);
 
     //-
 
@@ -196,10 +197,8 @@ void ofxColorManager::setup()
     palette_load("myPalette");
 
     //-
-
-//    color_picked.addListener(this, &ofxColorManager::Changed_color_picked);
-//    color_clicked_param.addListener(this, &ofxColorManager::Changed_color_clicked);
 }
+
 
 //--------------------------------------------------------------
 void ofxColorManager::interface_setup()
@@ -209,6 +208,7 @@ void ofxColorManager::interface_setup()
     scene->setName("Scene");
     TouchManager::one().setup(scene);
 }
+
 
 //--------------------------------------------------------------
 void ofxColorManager::gui_setup_layout()
@@ -286,8 +286,9 @@ void ofxColorManager::gui_setup_layout()
     r_color_clicked = ofRectangle( colorPick_x, colorPick_y, colorPick_w, colorPick_h );
 
     // colors palettes browser
-    colorBrowserPos = glm::vec2(1050, 40);
+    colorBrowserPos = glm::vec2(920, 320);
 }
+
 
 //--------------------------------------------------------------
 void ofxColorManager::palette_load(string p)
@@ -316,6 +317,7 @@ void ofxColorManager::palette_load(string p)
         ofLogNotice("ofxColorManager") << "FILE '" << path << "' NOT FOUND";
     }
 }
+
 
 //--------------------------------------------------------------
 void ofxColorManager::palette_save(string p)
@@ -374,6 +376,7 @@ void ofxColorManager::preset_load(string p)
     }
 }
 
+
 //--------------------------------------------------------------
 void ofxColorManager::preset_save(string p)
 {
@@ -402,6 +405,7 @@ void ofxColorManager::preset_save(string p)
 
     ofLogNotice("ofxColorManager") << "DONE! preset_save: " << p;
 }
+
 
 //--------------------------------------------------------------
 void ofxColorManager::gui_imGui_theme()
@@ -447,6 +451,7 @@ void ofxColorManager::gui_imGui_theme()
     style->Colors[ImGuiCol_SliderGrab] = ImVec4(myColor4, 0.4f);
 }
 
+
 //--------------------------------------------------------------
 void ofxColorManager::palette_rearrenge()
 {
@@ -467,6 +472,7 @@ void ofxColorManager::palette_rearrenge()
         a->setSize(boxesW, boxesH);
     }
 }
+
 
 //--------------------------------------------------------------
 void ofxColorManager::palette_addColor_toInterface(ofColor c)
@@ -518,6 +524,7 @@ void ofxColorManager::palette_addColor_toInterface(ofColor c)
 //    scene->addChild(btn);
 //    btns_palette.push_back(btn);
 }
+
 
 //--------------------------------------------------------------
 void ofxColorManager::interface_update(){
@@ -582,6 +589,7 @@ void ofxColorManager::interface_update(){
     }
 }
 
+
 //--------------------------------------------------------------
 void ofxColorManager::interface_draw(){
     scene->render();
@@ -591,6 +599,7 @@ void ofxColorManager::interface_draw(){
         scene->renderDebug();
     }
 }
+
 
 //--------------------------------------------------------------
 bool ofxColorManager::gui_imGui()
@@ -660,6 +669,7 @@ bool ofxColorManager::gui_imGui()
     return mainSettings.mouseOverGui;
 }
 
+
 //--------------------------------------------------------------
 void ofxColorManager::update()
 {
@@ -727,7 +737,6 @@ void ofxColorManager::update()
     }
 }
 
-//#pragma mark curveTool
 
 //--------------------------------------------------------------
 void ofxColorManager::curveTool_setup()
@@ -754,6 +763,7 @@ void ofxColorManager::curveTool_setup()
     curve_pos_slider.setVisible(bCurveSlider);
 //    curve_pos_slider.setLabelString("input");
 }
+
 
 //--------------------------------------------------------------
 void ofxColorManager::curveTool_update()
@@ -799,6 +809,7 @@ void ofxColorManager::curveTool_update()
 
     //-
 }
+
 
 //--------------------------------------------------------------
 void ofxColorManager::curveTool_draw() {
@@ -880,6 +891,7 @@ void ofxColorManager::curveTool_draw() {
 
     //-
 }
+
 
 //--------------------------------------------------------------
 void ofxColorManager::palettes_setup() {
@@ -1009,6 +1021,7 @@ void ofxColorManager::palettes_setup() {
     }
 }
 
+
 //--------------------------------------------------------------
 void ofxColorManager::palettes_setup_labels()
 {
@@ -1097,6 +1110,7 @@ void ofxColorManager::palettes_setup_labels()
     }
 }
 
+
 //--------------------------------------------------------------
 void ofxColorManager::palette_recallFromPalettes(int p)
 {
@@ -1157,6 +1171,7 @@ void ofxColorManager::palette_recallFromPalettes(int p)
             break;
     }
 }
+
 
 //--------------------------------------------------------------
 void ofxColorManager::palettes_update()
@@ -1237,6 +1252,7 @@ void ofxColorManager::palettes_update()
         btns_plt_Random[i]->setColor(random[i]);
     }
 }
+
 
 //--------------------------------------------------------------
 void ofxColorManager::palettes_resize()
@@ -1340,6 +1356,7 @@ void ofxColorManager::palettes_resize()
     }
 }
 
+
 //--------------------------------------------------------------
 void ofxColorManager::draw()
 {
@@ -1415,6 +1432,7 @@ void ofxColorManager::draw()
     ofPopStyle();
 }
 
+
 //--------------------------------------------------------------
 void ofxColorManager::draw_PaleteMINI()
 {
@@ -1441,6 +1459,7 @@ void ofxColorManager::draw_PaleteMINI()
     ofPopMatrix();
 }
 
+
 //--------------------------------------------------------------
 void ofxColorManager::palette_addColor(ofColor c)
 {
@@ -1455,6 +1474,7 @@ void ofxColorManager::palette_addColor(ofColor c)
         palette_colorSelected = palette.size()-1;//select last one, just created now
     }
 }
+
 
 //--------------------------------------------------------------
 void ofxColorManager::palette_removeColorLast()
@@ -1476,6 +1496,7 @@ void ofxColorManager::palette_removeColorLast()
 
     palette_rearrenge();
 }
+
 
 //--------------------------------------------------------------
 void ofxColorManager::palette_touched(string b){
@@ -1501,6 +1522,7 @@ void ofxColorManager::palette_touched(string b){
     }
 }
 
+
 //--------------------------------------------------------------
 void ofxColorManager::palette_clear()
 {
@@ -1521,6 +1543,7 @@ void ofxColorManager::palette_clear()
     }
     btns_palette.clear();
 }
+
 
 //--------------------------------------------------------------
 void ofxColorManager::Changed_control(ofAbstractParameter &e) {
@@ -1681,6 +1704,7 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
 
 }
 
+
 //--------------------------------------------------------------
 void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 {
@@ -1792,6 +1816,7 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
         ColorBrowser.switch_sorted_Type();
 }
 
+
 //--------------------------------------------------------------
 void ofxColorManager::keyReleased( ofKeyEventArgs& eventArgs )
 {
@@ -1800,17 +1825,20 @@ void ofxColorManager::keyReleased( ofKeyEventArgs& eventArgs )
     }
 }
 
+
 //--------------------------------------------------------------
 void ofxColorManager::addKeysListeners()
 {
     ofAddListener( ofEvents().keyPressed, this, &ofxColorManager::keyPressed );
 }
 
+
 //--------------------------------------------------------------
 void ofxColorManager::removeKeysListeners()
 {
     ofRemoveListener( ofEvents().keyPressed, this, &ofxColorManager::keyPressed );
 }
+
 
 //--------------------------------------------------------------
 void ofxColorManager::mouseDragged(ofMouseEventArgs& eventArgs){
@@ -1823,6 +1851,7 @@ void ofxColorManager::mouseDragged(ofMouseEventArgs& eventArgs){
 
     //-
 }
+
 
 //--------------------------------------------------------------
 void ofxColorManager::mousePressed(ofMouseEventArgs& eventArgs){
@@ -1856,6 +1885,7 @@ void ofxColorManager::mousePressed(ofMouseEventArgs& eventArgs){
     //-
 }
 
+
 //--------------------------------------------------------------
 void ofxColorManager::mouseReleased(ofMouseEventArgs& eventArgs){
     const int & x = eventArgs.x;
@@ -1869,6 +1899,7 @@ void ofxColorManager::mouseReleased(ofMouseEventArgs& eventArgs){
 
 }
 
+
 //--------------------------------------------------------------
 void ofxColorManager::addMouseListeners()
 {
@@ -1876,6 +1907,7 @@ void ofxColorManager::addMouseListeners()
     ofAddListener( ofEvents().mousePressed, this, &ofxColorManager::mousePressed );
     ofAddListener( ofEvents().mouseReleased, this, &ofxColorManager::mouseReleased );
 }
+
 
 //--------------------------------------------------------------
 void ofxColorManager::removeMouseListeners()
@@ -1885,18 +1917,22 @@ void ofxColorManager::removeMouseListeners()
     ofRemoveListener( ofEvents().mouseReleased, this, &ofxColorManager::mouseReleased );
 }
 
+
 //--------------------------------------------------------------
 void ofxColorManager::disableListeners()
 {
     addMouseListeners();
     addKeysListeners();
 }
+
+
 //--------------------------------------------------------------
 void ofxColorManager::enableListeners()
 {
     removeMouseListeners();
     removeKeysListeners();
 }
+
 
 //--------------------------------------------------------------
 void ofxColorManager::load_group_XML(ofParameterGroup &g, string path)
@@ -1907,6 +1943,7 @@ void ofxColorManager::load_group_XML(ofParameterGroup &g, string path)
     ofDeserialize(settings, g);
 }
 
+
 //--------------------------------------------------------------
 void ofxColorManager::save_group_XML(ofParameterGroup &g, string path)
 {
@@ -1915,6 +1952,7 @@ void ofxColorManager::save_group_XML(ofParameterGroup &g, string path)
     ofSerialize(settings, g);
     settings.save(path);
 }
+
 
 //--------------------------------------------------------------
 void ofxColorManager::exit()
@@ -1931,6 +1969,7 @@ void ofxColorManager::exit()
     ofRemoveListener(params_palette.parameterChangedE(), this, &ofxColorManager::Changed_control);
     ofRemoveListener(params_curve.parameterChangedE(), this, &ofxColorManager::Changed_control);
 }
+
 
 //--------------------------------------------------------------
 void ofxColorManager::Changed_color_picked(ofFloatColor &color)
@@ -1966,6 +2005,7 @@ void ofxColorManager::Changed_color_picked(ofFloatColor &color)
     }
 }
 
+
 //--------------------------------------------------------------
 void ofxColorManager::Changed_color_clicked(ofFloatColor &color)
 {
@@ -1978,11 +2018,13 @@ void ofxColorManager::Changed_color_clicked(ofFloatColor &color)
 
 // API
 
+
 //--------------------------------------------------------------
 void ofxColorManager::setColor_TARGET(ofColor &c)
 {
     color_TARGET = &c;
 }
+
 
 //--------------------------------------------------------------
 void ofxColorManager::setControl(float control)
@@ -1991,11 +2033,13 @@ void ofxColorManager::setControl(float control)
     curve_pos_slider.setPercent(control);
 }
 
+
 //--------------------------------------------------------------
 vector<ofColor> ofxColorManager::getPalette()
 {
     return palette;
 }
+
 
 //--------------------------------------------------------------
 void ofxColorManager::setVisible(bool b)
@@ -2003,6 +2047,7 @@ void ofxColorManager::setVisible(bool b)
     SHOW_ALL_GUI = b;
     curve_pos_slider.setVisible(b);
 }
+
 
 //--------------------------------------------------------------
 ofColor ofxColorManager::getColorAtPercent(float control)
@@ -2012,17 +2057,20 @@ ofColor ofxColorManager::getColorAtPercent(float control)
     return c;
 }
 
+
 //--------------------------------------------------------------
 void ofxColorManager::setVisible_GUI_MINI(bool b)
 {
     SHOW_GUI_MINI = b;
 }
 
+
 //--------------------------------------------------------------
 void ofxColorManager::setBackground_ENABLE(bool b)
 {
     backgroundENABLE = b;
 }
+
 
 //--------------------------------------------------------------
 void ofxColorManager::draw_previewGradient(glm::vec2 pos, bool horizontal = true) {
@@ -2041,6 +2089,7 @@ void ofxColorManager::draw_previewGradient(glm::vec2 pos, bool horizontal = true
 //        ofPopMatrix();
 //    }
 }
+
 
 //--------------------------------------------------------------
 void ofxColorManager::setVisible_debugText(bool b)

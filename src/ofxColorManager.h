@@ -286,6 +286,7 @@ public:
     ofParameter<bool> bResetCurve;
     ofParameter<bool> bCurveSlider;
     string curveTool_name = "curves.yml";
+
     //--
 
     // XML settings
