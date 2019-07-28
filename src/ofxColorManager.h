@@ -52,6 +52,8 @@ class ofxColorManager {
 
 public:
 
+    bool show_another_window;
+
     //--
 
     // JSON
@@ -191,6 +193,8 @@ public:
     void gui_imGui_theme();
 
     //-
+
+//    ofFloatColor color;
 
     // COLORS
 

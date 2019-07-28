@@ -412,43 +412,91 @@ void ofxColorManager::gui_imGui_theme()
 {
     // must be done after setup the gui
 
-    //-
-
-    // widgets color
-    ofColor myColor1;
-    ofColor myColor2;
-    ofColor myColor3;
-    ofColor myColor4;
-    int grayDark = 0;
-    int gray = 24;
-    int gray2 = 16;
-    int gray4 = 128;
-    myColor1 = ofColor(grayDark, grayDark, grayDark, 255);//black
-    myColor2 = ofColor(gray, gray, gray, 255);//gray light
-    myColor3 = ofColor(gray2, gray2, gray2, 255);//gray darke
-    myColor4 = ofColor(gray4, gray4, gray4, 255);//white
-
     ImGuiStyle *style = &ImGui::GetStyle();
     style->WindowRounding = (3.0f);
-//    style->Colors[ImGuiCol_ScrollbarBg] = ImVec4(myColor1, 1.00f);
-//    style->Colors[ImGuiCol_ScrollbarGrab] = ImVec4(myColor2, 0.21f);
-//    style->Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(myColor1, 0.5f);
-//    style->Colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(myColor2, 1.00f);
-    style->Colors[ImGuiCol_CheckMark] = ImVec4(ofColor(255), 0.80f);
-    style->Colors[ImGuiCol_Button] = ImVec4(myColor3, 0.8f);
-    style->Colors[ImGuiCol_ButtonHovered] = ImVec4(myColor1, 0.86f);
-    style->Colors[ImGuiCol_ButtonActive] = ImVec4(myColor1, 1.00f);
-    style->Colors[ImGuiCol_TitleBg] = ImVec4(myColor1, 1.00f);
-    style->Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(myColor1, 0.75f);
-    style->Colors[ImGuiCol_TitleBgActive] = ImVec4(myColor1, 1.00f);
-    style->Colors[ImGuiCol_Header] = ImVec4(myColor1, 0.76f);
-    style->Colors[ImGuiCol_HeaderHovered] = ImVec4(myColor2, 0.86f);
-    style->Colors[ImGuiCol_HeaderActive] = ImVec4(myColor1, 1.00f);
-    style->Colors[ImGuiCol_FrameBg] = ImVec4(myColor1, 1.00f);
-    style->Colors[ImGuiCol_FrameBgHovered] = ImVec4(myColor2, 0.40f);//hover
-    style->Colors[ImGuiCol_FrameBgActive] = ImVec4(myColor1, 1.00f);
-    style->Colors[ImGuiCol_SliderGrabActive] = ImVec4(myColor4, 1.f);
-    style->Colors[ImGuiCol_SliderGrab] = ImVec4(myColor4, 0.4f);
+
+    //-
+
+    // my dark theme
+//    // widgets color
+//    ofColor myColor1;
+//    ofColor myColor2;
+//    ofColor myColor3;
+//    ofColor myColor4;
+//    int grayDark = 0;
+//    int gray = 24;
+//    int gray2 = 16;
+//    int gray4 = 128;
+//    myColor1 = ofColor(grayDark, grayDark, grayDark, 255);//black
+//    myColor2 = ofColor(gray, gray, gray, 255);//gray light
+//    myColor3 = ofColor(gray2, gray2, gray2, 255);//gray darke
+//    myColor4 = ofColor(gray4, gray4, gray4, 255);//white
+//
+////    style->Colors[ImGuiCol_ScrollbarBg] = ImVec4(myColor1, 1.00f);
+////    style->Colors[ImGuiCol_ScrollbarGrab] = ImVec4(myColor2, 0.21f);
+////    style->Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(myColor1, 0.5f);
+////    style->Colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(myColor2, 1.00f);
+//    style->Colors[ImGuiCol_CheckMark] = ImVec4(ofColor(255), 0.80f);
+//    style->Colors[ImGuiCol_Button] = ImVec4(myColor3, 0.8f);
+//    style->Colors[ImGuiCol_ButtonHovered] = ImVec4(myColor1, 0.86f);
+//    style->Colors[ImGuiCol_ButtonActive] = ImVec4(myColor1, 1.00f);
+//    style->Colors[ImGuiCol_TitleBg] = ImVec4(myColor1, 1.00f);
+//    style->Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(myColor1, 0.75f);
+//    style->Colors[ImGuiCol_TitleBgActive] = ImVec4(myColor1, 1.00f);
+//    style->Colors[ImGuiCol_Header] = ImVec4(myColor1, 0.76f);
+//    style->Colors[ImGuiCol_HeaderHovered] = ImVec4(myColor2, 0.86f);
+//    style->Colors[ImGuiCol_HeaderActive] = ImVec4(myColor1, 1.00f);
+//    style->Colors[ImGuiCol_FrameBg] = ImVec4(myColor1, 1.00f);
+//    style->Colors[ImGuiCol_FrameBgHovered] = ImVec4(myColor2, 0.40f);//hover
+//    style->Colors[ImGuiCol_FrameBgActive] = ImVec4(myColor1, 1.00f);
+//    style->Colors[ImGuiCol_SliderGrabActive] = ImVec4(myColor4, 1.f);
+//    style->Colors[ImGuiCol_SliderGrab] = ImVec4(myColor4, 0.4f);
+
+    // defaut dark theme exported
+    style->Colors[ImGuiCol_Text]                   = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
+    style->Colors[ImGuiCol_TextDisabled]           = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
+    style->Colors[ImGuiCol_WindowBg]               = ImVec4(0.06f, 0.06f, 0.06f, 0.94f);
+    style->Colors[ImGuiCol_ChildBg]                = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+    style->Colors[ImGuiCol_PopupBg]                = ImVec4(0.08f, 0.08f, 0.08f, 0.94f);
+    style->Colors[ImGuiCol_Border]                 = ImVec4(0.43f, 0.43f, 0.50f, 0.50f);
+    style->Colors[ImGuiCol_BorderShadow]           = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
+    style->Colors[ImGuiCol_FrameBg]                = ImVec4(0.16f, 0.29f, 0.48f, 0.54f);
+    style->Colors[ImGuiCol_FrameBgHovered]         = ImVec4(0.26f, 0.59f, 0.98f, 0.40f);
+    style->Colors[ImGuiCol_FrameBgActive]          = ImVec4(0.26f, 0.59f, 0.98f, 0.67f);
+    style->Colors[ImGuiCol_TitleBg]                = ImVec4(0.04f, 0.04f, 0.04f, 1.00f);
+    style->Colors[ImGuiCol_TitleBgActive]          = ImVec4(0.16f, 0.29f, 0.48f, 1.00f);
+    style->Colors[ImGuiCol_TitleBgCollapsed]       = ImVec4(0.00f, 0.00f, 0.00f, 0.51f);
+    style->Colors[ImGuiCol_MenuBarBg]              = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
+    style->Colors[ImGuiCol_ScrollbarBg]            = ImVec4(0.02f, 0.02f, 0.02f, 0.53f);
+    style->Colors[ImGuiCol_ScrollbarGrab]          = ImVec4(0.31f, 0.31f, 0.31f, 1.00f);
+    style->Colors[ImGuiCol_ScrollbarGrabHovered]   = ImVec4(0.41f, 0.41f, 0.41f, 1.00f);
+    style->Colors[ImGuiCol_ScrollbarGrabActive]    = ImVec4(0.51f, 0.51f, 0.51f, 1.00f);
+    style->Colors[ImGuiCol_CheckMark]              = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
+    style->Colors[ImGuiCol_SliderGrab]             = ImVec4(0.24f, 0.52f, 0.88f, 1.00f);
+    style->Colors[ImGuiCol_SliderGrabActive]       = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
+    style->Colors[ImGuiCol_Button]                 = ImVec4(0.26f, 0.59f, 0.98f, 0.40f);
+    style->Colors[ImGuiCol_ButtonHovered]          = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
+    style->Colors[ImGuiCol_ButtonActive]           = ImVec4(0.06f, 0.53f, 0.98f, 1.00f);
+    style->Colors[ImGuiCol_Header]                 = ImVec4(0.26f, 0.59f, 0.98f, 0.31f);
+    style->Colors[ImGuiCol_HeaderHovered]          = ImVec4(0.26f, 0.59f, 0.98f, 0.80f);
+    style->Colors[ImGuiCol_HeaderActive]           = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
+    style->Colors[ImGuiCol_Separator]              = ImVec4(0.43f, 0.43f, 0.50f, 0.50f);
+    style->Colors[ImGuiCol_SeparatorHovered]       = ImVec4(0.10f, 0.40f, 0.75f, 0.78f);
+    style->Colors[ImGuiCol_SeparatorActive]        = ImVec4(0.10f, 0.40f, 0.75f, 1.00f);
+    style->Colors[ImGuiCol_ResizeGrip]             = ImVec4(0.26f, 0.59f, 0.98f, 0.25f);
+    style->Colors[ImGuiCol_ResizeGripHovered]      = ImVec4(0.26f, 0.59f, 0.98f, 0.67f);
+    style->Colors[ImGuiCol_ResizeGripActive]       = ImVec4(0.26f, 0.59f, 0.98f, 0.95f);
+    style->Colors[ImGuiCol_PlotLines]              = ImVec4(0.61f, 0.61f, 0.61f, 1.00f);
+    style->Colors[ImGuiCol_PlotLinesHovered]       = ImVec4(1.00f, 0.43f, 0.35f, 1.00f);
+    style->Colors[ImGuiCol_PlotHistogram]          = ImVec4(0.90f, 0.70f, 0.00f, 1.00f);
+    style->Colors[ImGuiCol_PlotHistogramHovered]   = ImVec4(1.00f, 0.60f, 0.00f, 1.00f);
+    style->Colors[ImGuiCol_TextSelectedBg]         = ImVec4(0.26f, 0.59f, 0.98f, 0.35f);
+    style->Colors[ImGuiCol_DragDropTarget]         = ImVec4(1.00f, 1.00f, 0.00f, 0.90f);
+    style->Colors[ImGuiCol_NavHighlight]           = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
+    style->Colors[ImGuiCol_NavWindowingHighlight]  = ImVec4(1.00f, 1.00f, 1.00f, 0.70f);
+    style->Colors[ImGuiCol_NavWindowingDimBg]      = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
+    style->Colors[ImGuiCol_ModalWindowDimBg]       = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
+
 }
 
 
@@ -606,6 +654,101 @@ bool ofxColorManager::gui_imGui()
 {
     auto mainSettings = ofxImGui::Settings();
     this->gui.begin();
+
+    //***************
+
+    // COLOR PICKER CUSTOM
+
+//    if (ImGui::Button("Another Window"))
+//    {
+//        //bitwise OR
+//        show_another_window ^= 1;
+//    }
+
+    if (ofxImGui::BeginWindow("COLOR PICKER", mainSettings, false))
+    {
+
+//note: ofVec2f and ImVec2f are interchangeable
+//    ImGui::SetNextWindowSize(ofVec2f(800,900), ImGuiSetCond_FirstUseEver);
+//    ImGui::SetNextWindowPos(ofVec2f(0,0));
+//
+//    //___________________________
+//    ImGui::Begin("Another Window", &show_another_window);
+
+        // 1. color picker
+
+        static ImVec4 color = ImColor(114, 144, 154, 200);
+
+        ImGuiColorEditFlags colorEdiFlags =
+                ImGuiColorEditFlags_NoSmallPreview |
+                        ImGuiColorEditFlags_NoTooltip |
+                        ImGuiColorEditFlags_NoLabel |
+                        ImGuiColorEditFlags_NoSidePreview |
+                        ImGuiColorEditFlags_HSV |
+                        ImGuiColorEditFlags_RGB |
+                        ImGuiColorEditFlags_NoInputs |
+                        ImGuiColorEditFlags_PickerHueWheel;
+        ImGui::ColorPicker4("Background Color", (float *) &color, colorEdiFlags);
+
+        colorEdiFlags =
+                ImGuiColorEditFlags_NoSmallPreview |
+                        ImGuiColorEditFlags_NoTooltip |
+                        ImGuiColorEditFlags_NoLabel |
+                        ImGuiColorEditFlags_NoSidePreview |
+                        ImGuiColorEditFlags_HSV |
+                        ImGuiColorEditFlags_RGB |
+                        ImGuiColorEditFlags_HDR |
+                        ImGuiColorEditFlags_PickerHueBar;
+        ImGui::ColorPicker4("Background Color", (float *) &color, colorEdiFlags);
+
+        //**********
+
+        // 2.1 Generate a dummy palette
+        static bool saved_palette_inited = false;
+        static ImVec4 saved_palette[100];
+        if (!saved_palette_inited)
+            for (int n = 0; n < IM_ARRAYSIZE(saved_palette); n++) {
+                float randomizer;
+                if ((n % 10) != 0) {
+                    randomizer = ofRandom(1.);
+                }
+                ImGui::ColorConvertHSVtoRGB(randomizer, n / 10., 0.5f, saved_palette[n].x, saved_palette[n].y, saved_palette[n].z);
+                saved_palette[n].w = 1.0f; // Alpha
+            }
+        saved_palette_inited = true;
+
+        // 2.2 draw palette
+        ImGui::Separator();
+        ImGui::Text("Palette");
+        for (int n = 0; n < IM_ARRAYSIZE(saved_palette); n++) {
+            ImGui::PushID(n);
+
+            if ((n % 10) != 0) {
+                ImGui::SameLine(0.0f, ImGui::GetStyle().ItemSpacing.y);
+            }
+
+            if (ImGui::ColorButton("##palette", saved_palette[n], ImGuiColorEditFlags_NoAlpha | ImGuiColorEditFlags_NoPicker | ImGuiColorEditFlags_NoTooltip, ImVec2(20, 20)))
+                color = ImVec4(saved_palette[n].x, saved_palette[n].y, saved_palette[n].z, color.w); // Preserve alpha!
+
+            ImGui::PopID();
+        }
+
+        //*****************
+
+        // 3. button color big
+        ImGui::Text("Color button only:");
+        int misc_flags = ImGuiColorEditFlags_NoOptions;
+        ImGui::ColorButton("MyColor##3c", *(ImVec4 *) &color, misc_flags, ImVec2(80, 80));
+
+//    ImGui::End();
+        //___________________________
+    }
+    ofxImGui::EndWindow(mainSettings);
+    //***********
+
+
+    //-------------------------------------------------------------------
+
     {
         if (ofxImGui::BeginWindow("COLOR MANAGER", mainSettings, false))
         {
@@ -621,17 +764,15 @@ bool ofxColorManager::gui_imGui()
             {
                 ofxImGui::AddParameter(this->bRandomColor);
                 ofxImGui::AddParameter(this->color_picked, true);
-//                        //***
-//            ImGui::Text("Color button only:");
-//            ImGui::ColorButton("MyColor##3c", *(ImVec4*)&color, misc_flags, ImVec2(80,80));
-////***
+
+
                 ofxImGui::AddParameter(this->color_HUE);
                 ofxImGui::AddParameter(this->color_SAT);
                 ofxImGui::AddParameter(this->color_BRG);
 
                 ImGui::Text("USER PALETTE MANAGER");
                 ofxImGui::AddParameter(this->bPaletteEdit);
-                ofxImGui::AddParameter(this->bAddColor);
+                ofxImGui::AddParameter(this->bAddColor);ImGui::SameLine();
                 ofxImGui::AddParameter(this->bRemoveColor);
                 ofxImGui::AddParameter(this->bClearPalette);
                 ofxImGui::EndTree(mainSettings);
@@ -663,8 +804,8 @@ bool ofxColorManager::gui_imGui()
                 }
                 ofxImGui::AddParameter(this->NUM_ALGO_PALETTES);
                 ofxImGui::AddParameter(this->bRandomPalette);
-                ofxImGui::AddParameter(this->bAuto_palette_recall);
-                ofxImGui::AddParameter(this->bLock_palette);
+                ofxImGui::AddParameter(this->bAuto_palette_recall);ImGui::SameLine();
+                ofxImGui::AddParameter(this->bLock_palette);ImGui::SameLine();
                 ofxImGui::EndTree(mainSettings);
             }
         }
@@ -1591,9 +1732,9 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
         color_picked.set(c);
     }
 
-    //--
+        //--
 
-    // PALLETE
+        // PALLETE
 
     else if (name == "RANDOM COLOR")
     {
@@ -1679,9 +1820,9 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
             bAuto_palette_recall = false;
     }
 
-    //--
+        //--
 
-    // CURVE
+        // CURVE
 
     else if (name == "INPUT")
     {
@@ -1698,7 +1839,7 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
     }
     else if (name == "DEBUG GRADIENT")
     {
-            curve_pos_slider.setVisible(bCurveSlider);
+        curve_pos_slider.setVisible(bCurveSlider);
     }
     else if (name == "GRADIENT HARD")
     {
@@ -1871,20 +2012,20 @@ void ofxColorManager::mousePressed(ofMouseEventArgs& eventArgs){
 
 //    if (bPaletteEdit)
 //    {
-        // filter touch if its an user palette button only
-        auto a = TouchManager::one().getComponentUnder( ofVec2f(x, y) );
-        auto b = a->getName();
-        ofLogVerbose("ofxColorManager") << "touched: " << b;
-        auto str = ofSplitString(b, "btn");
-        if (str.size() > 1)//check if "btn" is present
-        {
-            ofLogVerbose("ofxColorManager") << "detected palette touch: " << b;
-            palette_touched(b);
-        }
-        else
-        {
-            //ofLogVerbose("ofxColorManager") << "ignored touch: " << b;
-        }
+    // filter touch if its an user palette button only
+    auto a = TouchManager::one().getComponentUnder( ofVec2f(x, y) );
+    auto b = a->getName();
+    ofLogVerbose("ofxColorManager") << "touched: " << b;
+    auto str = ofSplitString(b, "btn");
+    if (str.size() > 1)//check if "btn" is present
+    {
+        ofLogVerbose("ofxColorManager") << "detected palette touch: " << b;
+        palette_touched(b);
+    }
+    else
+    {
+        //ofLogVerbose("ofxColorManager") << "ignored touch: " << b;
+    }
 //    }
 
     //-
