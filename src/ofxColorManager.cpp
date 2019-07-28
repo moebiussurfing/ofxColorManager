@@ -43,6 +43,34 @@ void ofxColorManager::setup()
     ColorBrowser.setup_colorBACK(color_BACK);
     ColorBrowser.setPosition(colorBrowserPos);
     ColorBrowser.setup();
+    SHOW_BrowserColors.set("SHOW BROWSER COLORS", false);
+
+    ColorBrowser_palette = ColorBrowser.getPalette();
+
+//    // 2.2 Generate palette
+//    saved_palette_inited = false;
+//    if (!saved_palette_inited)
+////        for (int n = 0; n < IM_ARRAYSIZE(saved_palette); n++)
+//        for (int n = 0; n < ColorBrowser_palette.size(); n++)
+//        {
+//            ImVec4 myImColor;
+//
+//            ofFloatColor myOfColor;
+//            myOfColor = ofFloatColor( ColorBrowser_palette[n] );
+//
+//            saved_palette[n].x = myOfColor.r;
+//            saved_palette[n].y = myOfColor.g;
+//            saved_palette[n].z = myOfColor.b;
+//            saved_palette[n].w = myOfColor.a;
+//
+////            myImColor = ColorBrowser_palette[n];
+////            saved_palette[n] = myImColor;
+//
+////            saved_palette[n].x =
+////            ImGui::ColorConvertHSVtoRGB(myHue, n / 10., 0.5f, saved_palette[n].x, saved_palette[n].y, saved_palette[n].z);
+////            saved_palette[n].w = 1.0f; // Alpha
+//        }
+//    saved_palette_inited = true;
 
     //-
 
@@ -93,6 +121,7 @@ void ofxColorManager::setup()
 
     // ALGORITHMIC PALETTE
 
+    SHOW_AlgoPalettes.set("SHOW PALETTES", false);
     MODE_Palette.set("FROM COLOR", false);
     SATURATION.set("SATURATION", 200, 0, 255 );
     BRIGHTNESS.set("BRIGHTNESS", 200, 0, 255 );
@@ -102,6 +131,7 @@ void ofxColorManager::setup()
 
     NUM_ALGO_PALETTES.set("SIZE", 6, 2, 8);
     params_palette.setName("ALGORITHMIC PALETTES");
+    params_palette.add(SHOW_AlgoPalettes);
     params_palette.add(MODE_Palette);
     params_palette.add(SATURATION);
     params_palette.add(BRIGHTNESS);
@@ -189,10 +219,14 @@ void ofxColorManager::setup()
     XML_params.add(BRIGHTNESS);
     XML_params.add(SATURATION);
     XML_params.add(gradient_hard);//gradient
+    XML_params.add(SHOW_AlgoPalettes);
     XML_params.add(NUM_ALGO_PALETTES);
     XML_params.add(bAuto_palette_recall);
     XML_params.add(bCurveSlider);
+    XML_params.add(SHOW_Curve);
     XML_params.add(bPaletteEdit);
+    XML_params.add(SHOW_BrowserColors);
+
     load_group_XML(XML_params, XML_path);
     palette_load("myPalette");
 
@@ -453,6 +487,21 @@ void ofxColorManager::gui_imGui_theme()
 //    style->Colors[ImGuiCol_SliderGrab] = ImVec4(myColor4, 0.4f);
 
     // defaut dark theme exported
+    style->WindowMinSize = ImVec2(160, 65);
+    style->FramePadding = ImVec2(4, 2);
+    style->ItemSpacing = ImVec2(6, 2);
+    style->ItemInnerSpacing = ImVec2(6, 4);
+    style->Alpha = 1.0f;
+    style->WindowRounding = 0.0f;
+    style->FrameRounding = 0.0f;
+    style->IndentSpacing = 6.0f;
+    style->ItemInnerSpacing = ImVec2(2, 4);
+    style->ColumnsMinSpacing = 50.0f;
+    style->GrabMinSize = 14.0f;
+    style->GrabRounding = 0.0f;
+    style->ScrollbarSize = 12.0f;
+    style->ScrollbarRounding = 0.0f;
+
     style->Colors[ImGuiCol_Text]                   = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
     style->Colors[ImGuiCol_TextDisabled]           = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
     style->Colors[ImGuiCol_WindowBg]               = ImVec4(0.06f, 0.06f, 0.06f, 0.94f);
@@ -665,8 +714,26 @@ bool ofxColorManager::gui_imGui()
 //        show_another_window ^= 1;
 //    }
 
+//    ImGui::SetNextWindowPos(ofVec2f(250,460));//not working
     if (ofxImGui::BeginWindow("COLOR PICKER", mainSettings, false))
     {
+        // COLOR
+        if (ofxImGui::BeginTree(this->params_control, mainSettings))
+        {
+            ofxImGui::AddParameter(this->bRandomColor);
+            ofxImGui::AddParameter(this->color_picked, true);
+
+            ofxImGui::AddParameter(this->color_HUE);
+            ofxImGui::AddParameter(this->color_SAT);
+            ofxImGui::AddParameter(this->color_BRG);
+
+            ImGui::Text("USER PALETTE MANAGER");
+            ofxImGui::AddParameter(this->bPaletteEdit);
+            ofxImGui::AddParameter(this->bAddColor);ImGui::SameLine();
+            ofxImGui::AddParameter(this->bRemoveColor);
+            ofxImGui::AddParameter(this->bClearPalette);
+            ofxImGui::EndTree(mainSettings);
+        }
 
 //note: ofVec2f and ImVec2f are interchangeable
 //    ImGui::SetNextWindowSize(ofVec2f(800,900), ImGuiSetCond_FirstUseEver);
@@ -675,9 +742,42 @@ bool ofxColorManager::gui_imGui()
 //    //___________________________
 //    ImGui::Begin("Another Window", &show_another_window);
 
+        //-
+
+        // the target/source color
+
+//        ImVec4 color = ImColor(114, 144, 154, 200);
+//        static ImVec4 color = myImColor;
+
+//        //0.
+//        // not linked outside (but works in palette clicks)
+//        static ImVec4 color = ImColor(114, 144, 154, 200);
+
+//        //1.
+//        // get color from outside colorPicker (not working with palette clicks)
+//        static ImVec4 color;
+//        color.x = color_picked.get().r;
+//        color.y = color_picked.get().g;
+//        color.z = color_picked.get().b;
+//        color.w = color_picked.get().a;
+
+        //2.
+        static ImVec4 color = ImColor(color_picked.get().r, color_picked.get().g, color_picked.get().b, color_picked.get().a);
+
+        //-
+
+        // 0. button color big
+
+        int guiW = 315;
+        ImGui::Separator();
+        int misc_flags = ImGuiColorEditFlags_NoOptions|ImGuiColorEditFlags_NoTooltip;
+        ImGui::ColorButton("MyColor##3c", *(ImVec4 *) &color, misc_flags, ImVec2(guiW, 50));
+
+        //-
+
         // 1. color picker
 
-        static ImVec4 color = ImColor(114, 144, 154, 200);
+        ImGui::Separator();
 
         ImGuiColorEditFlags colorEdiFlags =
                 ImGuiColorEditFlags_NoSmallPreview |
@@ -703,23 +803,38 @@ bool ofxColorManager::gui_imGui()
 
         //**********
 
-        // 2.1 Generate a dummy palette
+//        // 2.1 Generate a dummy palette
+//        static bool saved_palette_inited = false;
+//        static ImVec4 saved_palette[100];
+//        if (!saved_palette_inited)
+//            for (int n = 0; n < IM_ARRAYSIZE(saved_palette); n++) {
+//                float randomizer;
+//                if ((n % 10) != 0) {
+//                    randomizer = ofRandom(1.);
+//                }
+//                ImGui::ColorConvertHSVtoRGB(randomizer, n / 10., 0.5f, saved_palette[n].x, saved_palette[n].y, saved_palette[n].z);
+//                saved_palette[n].w = 1.0f; // Alpha
+//            }
+//        saved_palette_inited = true;
+
+        // 2.1 Generate colorBrowser palette
         static bool saved_palette_inited = false;
-        static ImVec4 saved_palette[100];
+        static ImVec4 saved_palette[130];//same than openColor palettes
         if (!saved_palette_inited)
-            for (int n = 0; n < IM_ARRAYSIZE(saved_palette); n++) {
-                float randomizer;
-                if ((n % 10) != 0) {
-                    randomizer = ofRandom(1.);
-                }
-                ImGui::ColorConvertHSVtoRGB(randomizer, n / 10., 0.5f, saved_palette[n].x, saved_palette[n].y, saved_palette[n].z);
-                saved_palette[n].w = 1.0f; // Alpha
+            for (int n = 0; n < IM_ARRAYSIZE(saved_palette); n++)
+            {
+                ofFloatColor c = ofColor(ColorBrowser_palette[n]);
+                saved_palette[n].x = c.r;
+                saved_palette[n].y = c.g;
+                saved_palette[n].z = c.b;
+                saved_palette[n].w = 1.0f; //alpha
             }
         saved_palette_inited = true;
 
         // 2.2 draw palette
+//        ImGui::BeginGroup();
         ImGui::Separator();
-        ImGui::Text("Palette");
+        ImGui::Text("PALETTE");
         for (int n = 0; n < IM_ARRAYSIZE(saved_palette); n++) {
             ImGui::PushID(n);
 
@@ -732,20 +847,15 @@ bool ofxColorManager::gui_imGui()
 
             ImGui::PopID();
         }
-
         //*****************
 
-        // 3. button color big
-        ImGui::Text("Color button only:");
-        int misc_flags = ImGuiColorEditFlags_NoOptions;
-        ImGui::ColorButton("MyColor##3c", *(ImVec4 *) &color, misc_flags, ImVec2(80, 80));
+        // TODO: update
+//        color_picked = color;
 
+//    ImGui::EndGroup();
 //    ImGui::End();
-        //___________________________
     }
     ofxImGui::EndWindow(mainSettings);
-    //***********
-
 
     //-------------------------------------------------------------------
 
@@ -756,31 +866,33 @@ bool ofxColorManager::gui_imGui()
             if (ofxImGui::BeginTree(this->params_data, mainSettings))
             {
                 ofxImGui::AddParameter(this->color_backGround, true);
+                ofxImGui::AddParameter(this->SHOW_BrowserColors);
                 ofxImGui::EndTree(mainSettings);
             }
 
-            // COLOR
-            if (ofxImGui::BeginTree(this->params_control, mainSettings))
-            {
-                ofxImGui::AddParameter(this->bRandomColor);
-                ofxImGui::AddParameter(this->color_picked, true);
-
-
-                ofxImGui::AddParameter(this->color_HUE);
-                ofxImGui::AddParameter(this->color_SAT);
-                ofxImGui::AddParameter(this->color_BRG);
-
-                ImGui::Text("USER PALETTE MANAGER");
-                ofxImGui::AddParameter(this->bPaletteEdit);
-                ofxImGui::AddParameter(this->bAddColor);ImGui::SameLine();
-                ofxImGui::AddParameter(this->bRemoveColor);
-                ofxImGui::AddParameter(this->bClearPalette);
-                ofxImGui::EndTree(mainSettings);
-            }
+//            // COLOR
+//            if (ofxImGui::BeginTree(this->params_control, mainSettings))
+//            {
+//                ofxImGui::AddParameter(this->bRandomColor);
+//                ofxImGui::AddParameter(this->color_picked, true);
+//
+//
+//                ofxImGui::AddParameter(this->color_HUE);
+//                ofxImGui::AddParameter(this->color_SAT);
+//                ofxImGui::AddParameter(this->color_BRG);
+//
+//                ImGui::Text("USER PALETTE MANAGER");
+//                ofxImGui::AddParameter(this->bPaletteEdit);
+//                ofxImGui::AddParameter(this->bAddColor);ImGui::SameLine();
+//                ofxImGui::AddParameter(this->bRemoveColor);
+//                ofxImGui::AddParameter(this->bClearPalette);
+//                ofxImGui::EndTree(mainSettings);
+//            }
 
             // CURVE TOOL
             if (ofxImGui::BeginTree(this->params_curve, mainSettings))
             {
+                ofxImGui::AddParameter(this->SHOW_Curve);
                 ofxImGui::AddParameter(this->bResetCurve);
 //                ofxImGui::AddParameter(this->curve_pos);
                 if (ofxImGui::AddParameter(this->curve_pos))
@@ -797,6 +909,7 @@ bool ofxColorManager::gui_imGui()
             // ALGORITHMIC PALETTE
             if (ofxImGui::BeginTree(this->params_palette, mainSettings))
             {
+                ofxImGui::AddParameter(this->SHOW_AlgoPalettes);
                 ofxImGui::AddParameter(this->MODE_Palette);
                 if (!MODE_Palette) {
                     ofxImGui::AddParameter(this->SATURATION);
@@ -892,6 +1005,7 @@ void ofxColorManager::curveTool_setup()
     curvesTool.setup(curveTool_amount);
     curvesTool.load("curves.yml"); //needed because it fills polyline
 
+    SHOW_Curve.set("SHOW CURVE", false);
     curve_pos.set("INPUT", 0., 0., 1.);
     curve_pos_out.set("OUTPUT", 0., 0., 1.);
     bResetCurve.set("RESET CURVE", false);
@@ -960,71 +1074,71 @@ void ofxColorManager::curveTool_update()
 //--------------------------------------------------------------
 void ofxColorManager::curveTool_draw() {
 
-    if (curveShow)
+//    if (SHOW_Curve)
+//    {
+    ofPushMatrix();
+    ofPushStyle();
+
+    //-
+
+    // COLOR MONITORING SLIDER POSITION ON CURVED GRADIENT
+    ofRectangle r;
+    r = ofRectangle( currColor_x, currColor_y, box_size/2, slider_h );
+
+    //-
+
+    // GRADIENT
+
+    // 1. un-curved gradient rectangle (left positioned)
+    gradient.drawDebug(grad_x, grad_y, grad_w, grad_h);
+
+    if (bCurveSlider)
     {
-        ofPushMatrix();
+        // 2. current box color at input curve point (right positioned)
+        float out = ofMap( curvesTool.getAtPercent(1.0-curve_pos), 0, curveTool_amount-1, 1., 0.) ;
+        ofColor c = gradient.getColorAtPercent( out );
+
         ofPushStyle();
+        ofFill();
+        ofSetColor(c);
+        ofDrawRectangle(r);
+        ofPopStyle();
+    }
 
-        //-
+    // NOTE: sometimes we need some tricky hacking to avoid rare fliping from gradients
+    curve_pos_out = ofMap( curvesTool.getAtPercent(curve_pos), 0, curveTool_amount-1, 0., 1.);
 
-        // COLOR MONITORING SLIDER POSITION ON CURVED GRADIENT
-        ofRectangle r;
-        r = ofRectangle( currColor_x, currColor_y, box_size/2, slider_h );
+    // 3. curve tool
+    ofTranslate(curveTool_x, curveTool_y);
 
-        //-
+    // 3.1 image box gradient LUT
+    curve_img_gradient.draw(image_curvedGradient_x, image_curvedGradient_y);
 
-        // GRADIENT
-
-        // 1. un-curved gradient rectangle (left positioned)
-        gradient.drawDebug(grad_x, grad_y, grad_w, grad_h);
-
-        if (bCurveSlider)
-        {
-            // 2. current box color at input curve point (right positioned)
-            float out = ofMap( curvesTool.getAtPercent(1.0-curve_pos), 0, curveTool_amount-1, 1., 0.) ;
-            ofColor c = gradient.getColorAtPercent( out );
-
-            ofPushStyle();
-            ofFill();
-            ofSetColor(c);
-            ofDrawRectangle(r);
-            ofPopStyle();
-        }
-
-        // NOTE: sometimes we need some tricky hacking to avoid rare fliping from gradients
-        curve_pos_out = ofMap( curvesTool.getAtPercent(curve_pos), 0, curveTool_amount-1, 0., 1.);
-
-        // 3. curve tool
-        ofTranslate(curveTool_x, curveTool_y);
-
-        // 3.1 image box gradient LUT
-        curve_img_gradient.draw(image_curvedGradient_x, image_curvedGradient_y);
-
-        // 3.2 curve splines editor
+    // 3.2 curve splines editor
 //        ofPushMatrix();
-        ofPushStyle();
+    ofPushStyle();
 
-        ofSetColor(255);
-        curvesTool.draw(0, 0, curve_pos_LUT);
+    ofSetColor(255);
+    curvesTool.draw(0, 0, curve_pos_LUT);
 
-        if (bCurveSlider)
-        {
-            // 3.3 horizontal line
-            ofSetColor(ofColor::white);
-            float y = curveTool_amount - curvesTool[curve_pos_LUT];
-            ofDrawLine(0, y, curveTool_amount, y);
+    if (bCurveSlider)
+    {
+        // 3.3 horizontal line
+        ofSetColor(ofColor::white);
+        float y = curveTool_amount - curvesTool[curve_pos_LUT];
+        ofDrawLine(0, y, curveTool_amount, y);
 
-            // 3.4 current circle point
-            ofSetColor(25);
-            ofDrawCircle(curve_pos_LUT, y, 3);
-        }
+        // 3.4 current circle point
+        ofSetColor(25);
+        ofDrawCircle(curve_pos_LUT, y, 3);
+    }
 
 //        ofPopMatrix();
-        ofPopStyle();
-        //-
+    ofPopStyle();
+    //-
 
-        ofPopMatrix();
-        ofPopStyle();
+    ofPopMatrix();
+    ofPopStyle();
 
 //    // debug curve values
 //    int posx, posy;
@@ -1033,7 +1147,7 @@ void ofxColorManager::curveTool_draw() {
 //    ofDrawBitmapStringHighlight("in : "+ofToString(curve_pos), glm::vec2(posx, posy));
 //    ofDrawBitmapStringHighlight("out: "+ofToString(curve_pos_out), glm::vec2(posx, posy + 20));
 //    ofDrawBitmapStringHighlight("lut: "+ofToString(curve_pos_LUT), glm::vec2(posx, posy + 40));
-    }
+//    }
 
     //-
 }
@@ -1545,14 +1659,24 @@ void ofxColorManager::draw()
 
         //-
 
-        // INTERFACE
-        interface_draw();
+        // TODO: should hide in groups not all
 
-        // CURVE
-        curveTool_draw();
+            // INTERFACE
+        if (SHOW_AlgoPalettes)
+        {
+            interface_draw();
+        }
 
-        // COLORS BROWSER
-        ColorBrowser.draw();
+            // CURVE
+        if (SHOW_Curve) {
+            curveTool_draw();
+        }
+
+            // COLORS BROWSER
+        if (SHOW_BrowserColors)
+        {
+            ColorBrowser.draw();
+        }
 
         //-
 
@@ -2118,11 +2242,18 @@ void ofxColorManager::exit()
 
 
 //--------------------------------------------------------------
-void ofxColorManager::Changed_color_picked(ofFloatColor &color)
+void ofxColorManager::Changed_color_picked(ofFloatColor &_c)
 {
-    ofLogNotice("ofxColorManager") << "Changed_color_picked " << ofToString(color);
-    color_clicked.set(color);
-//    color_clicked_param.set(color);
+    ofLogNotice("ofxColorManager") << "Changed_color_picked " << ofToString(_c);
+    color_clicked.set(_c);
+//    color_clicked_param.set(_c);
+
+    //---
+
+    // TODO: update imGui
+//    ImColor = _c;
+
+    //---
 
     // autosave edited color
     if (bPaletteEdit && palette_colorSelected!=-1 && btns_palette.size()>palette_colorSelected)

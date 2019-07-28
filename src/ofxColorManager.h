@@ -53,6 +53,8 @@ class ofxColorManager {
 public:
 
     bool show_another_window;
+////    static ImVec4 color;
+//    ImVec4 myImColor;
 
     //--
 
@@ -74,9 +76,16 @@ public:
 
     // COLOR BROWSER
 
+    ofParameter<bool> SHOW_BrowserColors;
     ofxColorsBrowser ColorBrowser;
     ofFloatColor color_BACK;
     ofFloatColor color_BACK_PRE;
+    vector<ofColor> ColorBrowser_palette;
+
+////    static bool saved_palette_inited;
+//    bool saved_palette_inited;
+////    static ImVec4 saved_palette[100];
+//    ImVec4 saved_palette[100];
 
     //--
 
@@ -180,6 +189,7 @@ public:
     void palettes_resize();
     void draw_palettes();
     ofParameter<bool> MODE_Palette;
+    ofParameter<bool> SHOW_AlgoPalettes;
 
     //-
 
@@ -276,6 +286,7 @@ public:
 
     // CURVES
 
+    ofParameter<bool> SHOW_Curve;
     ofxCurvesTool curvesTool;
     ofImage curve_img_gradient;
     bool curveShow = true;
