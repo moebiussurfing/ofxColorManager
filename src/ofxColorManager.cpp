@@ -621,6 +621,10 @@ bool ofxColorManager::gui_imGui()
             {
                 ofxImGui::AddParameter(this->bRandomColor);
                 ofxImGui::AddParameter(this->color_picked, true);
+//                        //***
+//            ImGui::Text("Color button only:");
+//            ImGui::ColorButton("MyColor##3c", *(ImVec4*)&color, misc_flags, ImVec2(80,80));
+////***
                 ofxImGui::AddParameter(this->color_HUE);
                 ofxImGui::AddParameter(this->color_SAT);
                 ofxImGui::AddParameter(this->color_BRG);
@@ -644,6 +648,7 @@ bool ofxColorManager::gui_imGui()
                 }
                 ofxImGui::AddParameter(this->curve_pos_out);
                 ofxImGui::AddParameter(this->gradient_hard);
+                ImGui::SameLine();
                 ofxImGui::AddParameter(this->bCurveSlider);
                 ofxImGui::EndTree(mainSettings);
             }
