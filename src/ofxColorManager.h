@@ -55,6 +55,7 @@ public:
     bool show_another_window;
 ////    static ImVec4 color;
 //    ImVec4 myImColor;
+//    ImVec4 myImColor_PRE;
 
     //--
 
