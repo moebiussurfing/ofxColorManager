@@ -19,8 +19,18 @@ void ofxColorManager::setup()
 {
     //-
 
-    // COLOUR LOVERS
+    // MOUSE DEBUGGER
 
+    mouseRuler.setup();
+    mouseRuler.toggleVisibility();
+
+    //-
+
+    dt = 1/30.0f;//TODO: should be setted externally
+
+    //-
+
+    // COLOUR LOVERS
 
     // set positions and panel sizes
     glm::vec2 sizeGui(150, 400);
@@ -45,19 +55,6 @@ void ofxColorManager::setup()
     myPalette[0] = ofColor::white;
     myPalette[0] = ofColor::white;
     myPalette_Name = "NOT LOADED";
-
-    //-
-
-    //-
-
-    // MOUSE DEBUGGER
-
-    mouseRuler.setup();
-    mouseRuler.toggleVisibility();
-
-    //-
-
-    dt = 1/30.0f;//TODO: should be setted externally
 
     //-
 
@@ -117,9 +114,9 @@ void ofxColorManager::setup()
     // COLOR
 
     color_picked.set("COLOR", ofFloatColor::red);
-    color_HUE.set("HUE", 0, 0, 255);
-    color_SAT.set("SATURATION", 0, 0, 255);
-    color_BRG.set("BRIGHTNESS", 0, 0, 255);
+    color_HUE.set("H", 0, 0, 255);
+    color_SAT.set("S", 0, 0, 255);
+    color_BRG.set("V", 0, 0, 255);
 
     params_color.setName("COLOR");
     params_color.add(color_HUE);
@@ -159,7 +156,7 @@ void ofxColorManager::setup()
 
     //-
 
-    // PALETTES
+    // ALGORITHMIC PALETTES
 
     random.generateRandom(NUM_ALGO_PALETTES);
     palettes_update();
@@ -192,7 +189,7 @@ void ofxColorManager::setup()
     bRandomColor.set("RANDOM COLOR", false);
     bAddColor.set("ADD COLOR", false);
     bPaletteEdit.set("EDIT COLOR", false);
-    bRemoveColor.set("REMOVE LAST COLOR", false);
+    bRemoveColor.set("REMOVE COLOR", false);
     bClearPalette.set("CLEAR PALETTE", false);
 
     params_control.setName("COLOR EDITOR");
@@ -758,22 +755,14 @@ void ofxColorManager::interface_draw(){
 //--------------------------------------------------------------
 bool ofxColorManager::gui_imGui()
 {
-//    I wrongly supposed that the begin() and end() methods of OfxImGui were related with ImGui::Begin and ImGui::End methods which is not the case…
-//    The right calling sequence is
-//    im_gui.begin();
-    // Addon begin ImGui::SetNextWindowPos(ImVec2(0,0));
-    // ImGui::SetNextWindowSize(ImVec2(1200,800),
-    // ImGuiSetCond_Once);
-    // ImGui::Begin("Funky Window"); /* Here your ImGui stuff
-    // */ ImGui::End();
-    // im_gui.end(); // Addon end
-
     auto mainSettings = ofxImGui::Settings();
     this->gui.begin();
 
 //    ofxImGui::AddParameter(this->preview);
 
-    //***************
+    //--
+
+    // 1ST WINDOW
 
     // COLOR PICKER CUSTOM
 
@@ -783,8 +772,6 @@ bool ofxColorManager::gui_imGui()
 //        show_another_window ^= 1;
 //    }
 
-//    ImGui::SetNextWindowPos(ofVec2f(250,460));//not working
-
     auto COLOR_PICKER_Settings = ofxImGui::Settings();
     COLOR_PICKER_Settings.windowPos = ofVec2f(0, 0);
     COLOR_PICKER_Settings.windowSize = ofVec2f(233, 200);
@@ -792,29 +779,42 @@ bool ofxColorManager::gui_imGui()
 
     if (ofxImGui::BeginWindow("COLOR PICKER", COLOR_PICKER_Settings, false))
     {
-        ofxImGui::AddParameter(this->preview);
+//        ofxImGui::AddParameter(this->preview);
 
         //-
 
         // COLOR
+
+//        // 1. direct ImGui
+//        ImGui::ColorButton("color_picked", *(ImVec4 *) &color_picked.get());
+//
+//        ImGui::Button("bRandomColor");
+//        ImGui::SliderInt("H", (int*) &color_HUE.get(), 0, 255);
+//        ImGui::SliderInt("S", (int*) &color_SAT.get(), 0, 255);
+//        ImGui::SliderInt("V", (int*) &color_BRG.get(), 0, 255);
+//        ImGui::Button("bPaletteEdit");
+//        ImGui::Button("bAddColor");ImGui::SameLine();
+//        ImGui::Button("bRemoveColor");
+//        ImGui::Button("bClearPalette");
+
+        // 2. OFXIMGUI MODE
         if (ofxImGui::BeginTree("COLOR", COLOR_PICKER_Settings))
-//        if (ofxImGui::BeginTree(this->params_control, COLOR_PICKER_Settings))
         {
             ofxImGui::AddParameter(this->bRandomColor);
             ofxImGui::AddParameter(this->color_picked, true);
-
             ofxImGui::AddParameter(this->color_HUE);
             ofxImGui::AddParameter(this->color_SAT);
             ofxImGui::AddParameter(this->color_BRG);
-
             ImGui::Text("USER PALETTE MANAGER");
             ofxImGui::AddParameter(this->bPaletteEdit);
             ofxImGui::AddParameter(this->bAddColor);
             ImGui::SameLine();
             ofxImGui::AddParameter(this->bRemoveColor);
             ofxImGui::AddParameter(this->bClearPalette);
+
             ofxImGui::EndTree(COLOR_PICKER_Settings);
         }
+
 
 //note: ofVec2f and ImVec2f are interchangeable
 //    ImGui::SetNextWindowSize(ofVec2f(800,900), ImGuiSetCond_FirstUseEver);
@@ -830,21 +830,22 @@ bool ofxColorManager::gui_imGui()
 //        ImVec4 color = ImColor(114, 144, 154, 200);
 //        static ImVec4 color = myImColor;
 
-//        //0.
+//        // 0.
 //        // not linked outside (but works in palette clicks)
 //        static ImVec4 color = ImColor(114, 144, 154, 200);
 
-//        //1.
-//        // get color from outside colorPicker (not working with palette clicks)
-//        static ImVec4 color;
-////        ImVec4 color;//not wokrs neither
-//        color.x = color_picked.get().r;
-//        color.y = color_picked.get().g;
-//        color.z = color_picked.get().b;
-//        color.w = color_picked.get().a;
+        // 1.
+        // get color from outside colorPicker (not working with palette clicks)
+        static ImVec4 color;
+        color.x = color_picked.get().r;
+        color.y = color_picked.get().g;
+        color.z = color_picked.get().b;
+        color.w = color_picked.get().a;
 
-        //2.
-        static ImVec4 color = ImColor(color_picked.get().r, color_picked.get().g, color_picked.get().b, color_picked.get().a);
+//        // 2.  //not working
+//        static ImVec4 color = ImColor(color_picked.get().r, color_picked.get().g, color_picked.get().b, color_picked.get().a);
+//////        static ImVec4 color = *(ImVec4 *) &color_picked.get();
+//////        static ImVec4 color = (ImVec4 ) color_picked.get();
 
         //-
 
@@ -856,7 +857,7 @@ bool ofxColorManager::gui_imGui()
         int misc_flags = ImGuiColorEditFlags_NoOptions|ImGuiColorEditFlags_NoTooltip;
         ImGui::ColorButton("MyColor##3c", *(ImVec4 *) &color, misc_flags, ImVec2(guiW, 50));
 
-        //-
+        //--
 
         // 1. color picker
 
@@ -872,6 +873,7 @@ bool ofxColorManager::gui_imGui()
                         ImGuiColorEditFlags_NoInputs |
                         ImGuiColorEditFlags_PickerHueWheel;
         ImGui::ColorPicker4("Background Color", (float *) &color, colorEdiFlags);
+        //TODO: TEST USE EXTERNAL PICKER COLOR
 
         colorEdiFlags =
                 ImGuiColorEditFlags_NoSmallPreview |
@@ -884,23 +886,9 @@ bool ofxColorManager::gui_imGui()
                         ImGuiColorEditFlags_PickerHueBar;
         ImGui::ColorPicker4("Background Color", (float *) &color, colorEdiFlags);
 
-        //**********
+        //--
 
-//        // 2.1 Generate a dummy palette
-//        static bool saved_palette_inited = false;
-//        static ImVec4 saved_palette[100];
-//        if (!saved_palette_inited)
-//            for (int n = 0; n < IM_ARRAYSIZE(saved_palette); n++) {
-//                float randomizer;
-//                if ((n % 10) != 0) {
-//                    randomizer = ofRandom(1.);
-//                }
-//                ImGui::ColorConvertHSVtoRGB(randomizer, n / 10., 0.5f, saved_palette[n].x, saved_palette[n].y, saved_palette[n].z);
-//                saved_palette[n].w = 1.0f; // Alpha
-//            }
-//        saved_palette_inited = true;
-
-        // 2.1 Generate colorBrowser palette
+        // 2 Generate palete from colorBrowser
         static bool saved_palette_inited = false;
         static ImVec4 saved_palette[130];//same than openColor palettes
         if (!saved_palette_inited)
@@ -915,20 +903,24 @@ bool ofxColorManager::gui_imGui()
         saved_palette_inited = true;
 
         // 2.2 draw palette
-//        ImGui::BeginGroup();
-        ImGui::Separator();
-        ImGui::Text("PALETTE");
-        for (int n = 0; n < IM_ARRAYSIZE(saved_palette); n++) {
-            ImGui::PushID(n);
+        if (ofxImGui::BeginTree("PALETTE", mainSettings))//grouped folder
+        {
+//            ImGui::Separator();
+//            ImGui::Text("PALETTE");
+            for (int n = 0; n < IM_ARRAYSIZE(saved_palette); n++) {
+                ImGui::PushID(n);
 
-            if ((n % 10) != 0) {//10 colors per row
-                ImGui::SameLine(0.0f, ImGui::GetStyle().ItemSpacing.y);
+                if ((n % 10) != 0) {//10 colors per row
+                    ImGui::SameLine(0.0f, ImGui::GetStyle().ItemSpacing.y);
+                }
+
+                if (ImGui::ColorButton("##palette", saved_palette[n], ImGuiColorEditFlags_NoAlpha | ImGuiColorEditFlags_NoPicker | ImGuiColorEditFlags_NoTooltip, ImVec2(20, 20)))
+                    color = ImVec4(saved_palette[n].x, saved_palette[n].y, saved_palette[n].z, color.w); // Preserve alpha!
+
+                ImGui::PopID();
             }
 
-            if (ImGui::ColorButton("##palette", saved_palette[n], ImGuiColorEditFlags_NoAlpha | ImGuiColorEditFlags_NoPicker | ImGuiColorEditFlags_NoTooltip, ImVec2(20, 20)))
-                color = ImVec4(saved_palette[n].x, saved_palette[n].y, saved_palette[n].z, color.w); // Preserve alpha!
-
-            ImGui::PopID();
+            ofxImGui::EndTree(mainSettings);
         }
 
         //--
@@ -956,6 +948,7 @@ bool ofxColorManager::gui_imGui()
 
     //-------------------------------------------------------------------
 
+    // 2ND WINDOW
 
     auto COLOR_MANAGER_Settings = ofxImGui::Settings();
     COLOR_MANAGER_Settings.windowPos = ofVec2f(900, 500);
@@ -1044,6 +1037,16 @@ bool ofxColorManager::gui_imGui()
 
     this->gui.end();
     return mainSettings.mouseOverGui;
+
+    //    I wrongly supposed that the begin() and end() methods of OfxImGui were related with ImGui::Begin and ImGui::End methods which is not the case…
+    //    The right calling sequence is
+    //    im_gui.begin();
+    // Addon begin ImGui::SetNextWindowPos(ImVec2(0,0));
+    // ImGui::SetNextWindowSize(ImVec2(1200,800),
+    // ImGuiSetCond_Once);
+    // ImGui::Begin("Funky Window"); /* Here your ImGui stuff
+    // */ ImGui::End();
+    // im_gui.end(); // Addon end
 }
 
 
@@ -1842,11 +1845,7 @@ void ofxColorManager::draw()
 
 
         // INTERFACE
-        // TODO: should hide in groups not all
-//        if (SHOW_AlgoPalettes)
-//        {
-            interface_draw();
-//        }
+        interface_draw();
 
         // CURVE
         if (SHOW_Curve) {
@@ -1857,6 +1856,12 @@ void ofxColorManager::draw()
         if (SHOW_BrowserColors)
         {
             ColorBrowser.draw();
+        }
+
+        // COLOUR LOVERS
+        if (SHOW_ColourLovers)
+        {
+            draw_ColourLovers();
         }
 
         //-
@@ -2015,10 +2020,7 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
 
     else if (name == "SHOW PALETTES")
     {
-//        if (SHOW_AlgoPalettes)
-//        {
-            palettes_setVisible(SHOW_AlgoPalettes);
-//        }
+        palettes_setVisible(SHOW_AlgoPalettes);
     }
 
     else if (name == "SHOW BROWSER COLORS")
@@ -2041,7 +2043,7 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
         color_SAT = 255 * color_picked.get().getSaturation();
         color_BRG = 255 * color_picked.get().getBrightness();
     }
-    else if (name == "HUE")
+    else if (name == "H")
     {
         ofColor c;
         c.set(ofColor( color_picked.get() ));
@@ -2049,14 +2051,14 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
         color_picked.set(c);
 
     }
-    else if (name == "SATURATION")
+    else if (name == "S")
     {
         ofColor c;
         c.set(ofColor( color_picked.get() ));
         c.setSaturation(color_SAT);
         color_picked.set(c);
     }
-    else if (name == "BRIGHTNESS")
+    else if (name == "V")
     {
         ofColor c;
         c.set(ofColor( color_picked.get() ));
@@ -2106,7 +2108,7 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
             btns_palette[0]->setSelected(true);
         }
     }
-    else if (name == "REMOVE LAST COLOR")
+    else if (name == "REMOVE COLOR")
     {
         if (bRemoveColor)
         {
