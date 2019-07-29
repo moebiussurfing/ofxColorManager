@@ -53,9 +53,7 @@ public:
     string myPalette_Name = "";
     ofColor myColor;
     vector<ofColor> myPalette;
-
-
-    void windowResized(int w, int h);
+    bool bUpdated_BACK = false;
 
     //--
 
@@ -72,6 +70,8 @@ public:
     void update();
     void draw();
     void exit();
+
+    void windowResized(int w, int h);
 
     //--
 
@@ -195,7 +195,8 @@ public:
     ofParameter<int> color_SAT;
     ofParameter<int> color_BRG;
 
-    ofFloatColor color_clicked;//TODO: pointer color to get click from button class
+    //TODO: pointer color to get click from button class
+    ofFloatColor color_clicked;
     ofFloatColor color_clicked_PRE;
     ofRectangle r_color_clicked;
     bool bColor_clicked_DISABLED = false;
@@ -220,6 +221,7 @@ public:
     void palette_rearrenge();//resize boxes when adding removing colors to user palette
     void palette_touched(string name);
     void palette_recallFromPalettes(int p);
+    void palette_load_ColourLovers();
 
     //-
 

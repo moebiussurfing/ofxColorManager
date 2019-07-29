@@ -48,6 +48,7 @@ void ofxColorManager::setup()
     ColourLoversHelper.setColor_BACK(myColor);
     ColourLoversHelper.setPalette_BACK(myPalette);
     ColourLoversHelper.setPalette_Name_BACK(myPalette_Name);
+    ColourLoversHelper.setPalette_bUpdated_BACK(bUpdated_BACK);
 
     // some initiation values..
     myColor = ofColor::white;
@@ -395,7 +396,7 @@ void ofxColorManager::palette_load(string p)
         for (int i = 0; i< data.palette.size(); i++)
         {
             c = data.palette[i];
-            ofLogNotice("ofxColorManager") << "palette " << i << ": " << ofToString(c);
+            ofLogNotice("ofxColorManager") << "color_" << i << ": " << ofToString(c);
             palette_addColor(c);
         }
     }
@@ -420,7 +421,7 @@ void ofxColorManager::palette_save(string p)
     for (int i = 0; i< palette.size(); i++)
     {
         data.palette[i] = palette[i];
-        ofLogNotice("ofxColorManager") << "palette_" << i << " " << ofToString(data.palette[i]);
+        ofLogNotice("ofxColorManager") << "color_" << i << " " << ofToString(data.palette[i]);
     }
 
     ofFile file(path, ofFile::WriteOnly);
@@ -889,7 +890,7 @@ bool ofxColorManager::gui_imGui()
             ImGui::ColorPicker4("Background Color", (float *) &color, colorEdiFlags);
             ofxImGui::EndTree(mainSettings);
         }
-        
+
         //--
 
         // 2 Generate palete from colorBrowser
@@ -1055,6 +1056,26 @@ bool ofxColorManager::gui_imGui()
 
 
 //--------------------------------------------------------------
+void ofxColorManager::palette_load_ColourLovers()
+{
+    ofLogNotice("ofxColorManager") << "palette_load_ColourLovers";
+
+    // 1. erase user palette and fill a new one with just update/received colour lovers
+    palette_clear();
+    ofColor c;
+    for (int i = 0; i< myPalette.size(); i++)
+    {
+        c = myPalette[i];
+        ofLogNotice("ofxColorManager") << "color_" << i << ": " << ofToString(c);
+        palette_addColor(c);
+    }
+
+    // 2. get color from colour lovers
+    color_clicked = ofColor(myColor);
+}
+
+
+//--------------------------------------------------------------
 void ofxColorManager::update()
 {
     //-
@@ -1062,13 +1083,21 @@ void ofxColorManager::update()
     // COLOUR LOVERS
 
     ColourLoversHelper.update();
+    if (bUpdated_BACK)
+    {
+        ofLogWarning("ofxColorManager") << "update:bUpdated_BACK: " << bUpdated_BACK;
+        bUpdated_BACK = false;
+
+        palette_load_ColourLovers();
+
+    }
 
     //--
 
     // handle last selected algorithmic palette
     if (SELECTED_palette != SELECTED_palette_PRE)
     {
-        ofLogNotice("ofxColorManager::update") << "CHANGED SELECTED_palette: " << SELECTED_palette;
+        ofLogNotice("ofxColorManager") << "update:CHANGED SELECTED_palette: " << SELECTED_palette;
 
         // when a label palette is clicked, will always trig and load the palette
         // TODO: BUG should add this to avoid auto load to user palette
@@ -1101,7 +1130,7 @@ void ofxColorManager::update()
     if (color_clicked != color_clicked_PRE )
     {
         color_clicked_PRE = color_clicked;
-        ofLogNotice("ofxColorManager") << "CHANGED color_clicked";
+        ofLogNotice("ofxColorManager") << "update:CHANGED color_clicked";
         color_picked.set(color_clicked);
     }
 
@@ -1111,7 +1140,7 @@ void ofxColorManager::update()
     if (color_BACK != color_BACK_PRE )
     {
         color_BACK_PRE = color_BACK;
-        ofLogNotice("ofxColorManager") << "CHANGED color_BACK pointer";
+        ofLogNotice("ofxColorManager") << "update:CHANGED color_BACK pointer";
         color_picked.set(color_BACK);
 
         if (!bPaletteEdit)
@@ -1959,11 +1988,12 @@ void ofxColorManager::palette_removeColorLast()
 
 
 //--------------------------------------------------------------
-void ofxColorManager::palette_touched(string b){
+void ofxColorManager::palette_touched(string name)
+{
     // handle de-select all buttons and select last clicked
     for (int i=0; i<btns_palette.size(); i++)
     {
-        if (btns_palette[i]->getName() != b)
+        if (btns_palette[i]->getName() != name)
         {
             btns_palette[i]->setSelected(false);
         }
@@ -2506,7 +2536,8 @@ void ofxColorManager::Changed_color_clicked(ofFloatColor &color)
 //    color_picked.set(color);
 }
 
-//-
+//----
+
 
 // API
 
@@ -2584,28 +2615,12 @@ void ofxColorManager::draw_previewGradient(glm::vec2 pos, bool horizontal = true
 
 
 //--------------------------------------------------------------
-void ofxColorManager::exit()
-{
-    palette_save("myPalette");
-    save_group_XML(XML_params, XML_path);
-
-    ColorBrowser.exit();
-    ColourLoversHelper.exit();
-
-    removeKeysListeners();
-    removeMouseListeners();
-    ofRemoveListener(params_control.parameterChangedE(), this, &ofxColorManager::Changed_control);
-    ofRemoveListener(params_color.parameterChangedE(), this, &ofxColorManager::Changed_control);
-    ofRemoveListener(params_palette.parameterChangedE(), this, &ofxColorManager::Changed_control);
-    ofRemoveListener(params_curve.parameterChangedE(), this, &ofxColorManager::Changed_control);
-}
-
-
-//--------------------------------------------------------------
 void ofxColorManager::setVisible_debugText(bool b)
 {
     SHOW_debugText = b;
 }
+
+//----
 
 
 //--------------------------------------------------------------
@@ -2671,4 +2686,22 @@ void ofxColorManager::windowResized(int w, int h)
     ColourLoversHelper.setup(posGui, sizeGui);
 
     ColourLoversHelper.windowResized(w, h);
+}
+
+
+//--------------------------------------------------------------
+void ofxColorManager::exit()
+{
+    palette_save("myPalette");
+    save_group_XML(XML_params, XML_path);
+
+    ColorBrowser.exit();
+    ColourLoversHelper.exit();
+
+    removeKeysListeners();
+    removeMouseListeners();
+    ofRemoveListener(params_control.parameterChangedE(), this, &ofxColorManager::Changed_control);
+    ofRemoveListener(params_color.parameterChangedE(), this, &ofxColorManager::Changed_control);
+    ofRemoveListener(params_palette.parameterChangedE(), this, &ofxColorManager::Changed_control);
+    ofRemoveListener(params_curve.parameterChangedE(), this, &ofxColorManager::Changed_control);
 }
