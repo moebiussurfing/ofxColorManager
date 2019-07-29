@@ -704,6 +704,8 @@ bool ofxColorManager::gui_imGui()
     auto mainSettings = ofxImGui::Settings();
     this->gui.begin();
 
+//    ofxImGui::AddParameter(this->preview);
+
     //***************
 
     // COLOR PICKER CUSTOM
@@ -715,10 +717,20 @@ bool ofxColorManager::gui_imGui()
 //    }
 
 //    ImGui::SetNextWindowPos(ofVec2f(250,460));//not working
-    if (ofxImGui::BeginWindow("COLOR PICKER", mainSettings, false))
+
+    auto COLOR_PICKER_Settings = ofxImGui::Settings();
+    COLOR_PICKER_Settings.windowPos = ofVec2f(0, 0);
+    COLOR_PICKER_Settings.windowSize = ofVec2f(400, 200);
+    COLOR_PICKER_Settings.lockPosition = true;
+
+    if (ofxImGui::BeginWindow("COLOR PICKER", COLOR_PICKER_Settings, false))
     {
+        ofxImGui::AddParameter(this->preview);
+
+        //-
+
         // COLOR
-        if (ofxImGui::BeginTree(this->params_control, mainSettings))
+        if (ofxImGui::BeginTree(this->params_control, COLOR_PICKER_Settings))
         {
             ofxImGui::AddParameter(this->bRandomColor);
             ofxImGui::AddParameter(this->color_picked, true);
@@ -732,7 +744,7 @@ bool ofxColorManager::gui_imGui()
             ofxImGui::AddParameter(this->bAddColor);ImGui::SameLine();
             ofxImGui::AddParameter(this->bRemoveColor);
             ofxImGui::AddParameter(this->bClearPalette);
-            ofxImGui::EndTree(mainSettings);
+            ofxImGui::EndTree(COLOR_PICKER_Settings);
         }
 
 //note: ofVec2f and ImVec2f are interchangeable
@@ -769,7 +781,8 @@ bool ofxColorManager::gui_imGui()
 
         // 0. button color big
 
-        int guiW = 315;
+//        int guiW = 315;
+        int guiW = 100;
         ImGui::Separator();
         int misc_flags = ImGuiColorEditFlags_NoOptions|ImGuiColorEditFlags_NoTooltip;
         ImGui::ColorButton("MyColor##3c", *(ImVec4 *) &color, misc_flags, ImVec2(guiW, 50));
@@ -869,58 +882,82 @@ bool ofxColorManager::gui_imGui()
 //    ImGui::EndGroup();
 //    ImGui::End();
     }
-    ofxImGui::EndWindow(mainSettings);
+    ofxImGui::EndWindow(COLOR_PICKER_Settings);
+
 
     //-------------------------------------------------------------------
 
+
+    auto COLOR_MANAGER_Settings = ofxImGui::Settings();
+    COLOR_MANAGER_Settings.windowPos = ofVec2f(1000, 520);
+    COLOR_MANAGER_Settings.windowSize = ofVec2f(100, 100);
+
+    if (ofxImGui::BeginWindow("COLOR MANAGER", COLOR_MANAGER_Settings, false))
     {
-        if (ofxImGui::BeginWindow("COLOR MANAGER", mainSettings, false))
+        // GENERAL DATA
+
+        if (ofxImGui::BeginTree(this->params_data, mainSettings))
         {
-            // GENERAL DATA
-
-            if (ofxImGui::BeginTree(this->params_data, mainSettings))
-            {
-                ofxImGui::AddParameter(this->color_backGround, true);
-                ofxImGui::AddParameter(this->SHOW_BrowserColors);
-                ofxImGui::AddParameter(this->SHOW_AlgoPalettes);
-                ofxImGui::AddParameter(this->SHOW_Curve);
-                ofxImGui::EndTree(mainSettings);
-            }
-
-            // CURVE TOOL
-
-            if (ofxImGui::BeginTree(this->params_curve, mainSettings))
-            {
-                ofxImGui::AddParameter(this->bResetCurve);
-                if (ofxImGui::AddParameter(this->curve_pos))
-                {
-                    curve_pos_slider.setPercent(curve_pos.get());
-                }
-                ofxImGui::AddParameter(this->curve_pos_out);
-                ofxImGui::AddParameter(this->gradient_hard);
-                ImGui::SameLine();
-                ofxImGui::AddParameter(this->bCurveSlider);
-                ofxImGui::EndTree(mainSettings);
-            }
-
-            // ALGORITHMIC PALETTE
-
-            if (ofxImGui::BeginTree(this->params_palette, mainSettings))
-            {
-                ofxImGui::AddParameter(this->MODE_Palette);
-                if (!MODE_Palette) {
-                    ofxImGui::AddParameter(this->SATURATION);
-                    ofxImGui::AddParameter(this->BRIGHTNESS);
-                }
-                ofxImGui::AddParameter(this->NUM_ALGO_PALETTES);
-                ofxImGui::AddParameter(this->bRandomPalette);
-                ofxImGui::AddParameter(this->bAuto_palette_recall);ImGui::SameLine();
-                ofxImGui::AddParameter(this->bLock_palette);ImGui::SameLine();
-                ofxImGui::EndTree(mainSettings);
-            }
+            ofxImGui::AddParameter(this->color_backGround, true);
+            ofxImGui::AddParameter(this->SHOW_BrowserColors);
+            ofxImGui::AddParameter(this->SHOW_AlgoPalettes);
+            ofxImGui::AddParameter(this->SHOW_Curve);
+            ofxImGui::EndTree(mainSettings);
         }
-        ofxImGui::EndWindow(mainSettings);
+
+        // CURVE TOOL
+
+        if (ofxImGui::BeginTree(this->params_curve, mainSettings))
+        {
+            ofxImGui::AddParameter(this->bResetCurve);
+            if (ofxImGui::AddParameter(this->curve_pos))
+            {
+                curve_pos_slider.setPercent(curve_pos.get());
+            }
+            ofxImGui::AddParameter(this->curve_pos_out);
+            ofxImGui::AddParameter(this->gradient_hard);
+            ImGui::SameLine();
+            ofxImGui::AddParameter(this->bCurveSlider);
+            ofxImGui::EndTree(mainSettings);
+        }
+
+        // ALGORITHMIC PALETTE
+
+        if (ofxImGui::BeginTree(this->params_palette, mainSettings))
+        {
+            ofxImGui::AddParameter(this->MODE_Palette);
+            if (!MODE_Palette) {
+                ofxImGui::AddParameter(this->SATURATION);
+                ofxImGui::AddParameter(this->BRIGHTNESS);
+            }
+            ofxImGui::AddParameter(this->NUM_ALGO_PALETTES);
+            ofxImGui::AddParameter(this->bRandomPalette);
+            ofxImGui::AddParameter(this->bAuto_palette_recall);ImGui::SameLine();
+            ofxImGui::AddParameter(this->bLock_palette);ImGui::SameLine();
+            ofxImGui::EndTree(mainSettings);
+        }
     }
+    ofxImGui::EndWindow(COLOR_MANAGER_Settings);
+
+
+
+
+    if (this->preview)
+    {
+        static const float kPreviewSize = 256.0f;
+        auto previewSettings = ofxImGui::Settings();
+        previewSettings.windowPos = ofVec2f(100,100);
+        previewSettings.windowSize = ofVec2f(200,200);
+
+        if (ofxImGui::BeginWindow(this->preview, previewSettings, false))
+        {
+            ofxImGui::AddImage(this->texture, previewSettings.windowSize);
+        }
+        ofxImGui::EndWindow(previewSettings);
+    }
+
+
+
     this->gui.end();
     return mainSettings.mouseOverGui;
 }
@@ -1658,18 +1695,18 @@ void ofxColorManager::draw()
 
         // TODO: should hide in groups not all
 
-            // INTERFACE
+        // INTERFACE
         if (SHOW_AlgoPalettes)
         {
             interface_draw();
         }
 
-            // CURVE
+        // CURVE
         if (SHOW_Curve) {
             curveTool_draw();
         }
 
-            // COLORS BROWSER
+        // COLORS BROWSER
         if (SHOW_BrowserColors)
         {
             ColorBrowser.draw();
@@ -2243,9 +2280,9 @@ void ofxColorManager::Changed_color_picked(ofFloatColor &_c)
 {
 //    if (_c != color_picked)
 //    {
-        ofLogNotice("ofxColorManager") << "Changed_color_picked: " << ofToString(_c);
+    ofLogNotice("ofxColorManager") << "Changed_color_picked: " << ofToString(_c);
 
-        color_clicked.set(_c);//TODO: mirror clicked/picked colors
+    color_clicked.set(_c);//TODO: mirror clicked/picked colors
 //    }
 
     //---

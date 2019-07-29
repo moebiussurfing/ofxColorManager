@@ -52,6 +52,7 @@ class ofxColorManager {
 
 public:
 
+    ofParameter<bool> preview{ "Preview", false };
     bool show_another_window;
 ////    static ImVec4 color;
 //    ImVec4 myImColor;
