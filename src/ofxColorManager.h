@@ -1,4 +1,3 @@
-
 #pragma once
 #include "ofMain.h"
 
@@ -19,21 +18,23 @@
 // JSON SERIALIZER
 
 using namespace ofxCereal;
+
 struct CustomData
 {
     string name;
     vector<ofColor> palette;
 
 OFX_CEREAL_DEFINE(CEREAL_NVP(name), CEREAL_NVP(palette))
-
 };
+
 struct PresetData
 {
     string name;
     vector<ofColor> palette;
+    ofColor backgroundColor;
     string curveName;
-OFX_CEREAL_DEFINE(CEREAL_NVP(name), CEREAL_NVP(curveName), CEREAL_NVP(palette))
 
+OFX_CEREAL_DEFINE(CEREAL_NVP(name), CEREAL_NVP(curveName), CEREAL_NVP(palette), CEREAL_NVP(backgroundColor))
 };
 
 //--
@@ -44,6 +45,7 @@ public:
 
     //--
 
+    // TODO: TESTING
     ofParameter<bool> preview{ "Preview", false };
     bool show_another_window;
 
@@ -57,9 +59,9 @@ public:
     void draw();
     void exit();
 
-    float dt;
-
     //--
+
+    float dt;
 
     bool SHOW_ALL_GUI = true;
     bool SHOW_GUI_MINI = false;
@@ -82,7 +84,7 @@ public:
     void setVisible(bool b);
     void setVisible_GUI_MINI(bool b);
     void setVisible_debugText(bool b);
-    
+
     void draw_PaleteMINI();
     void draw_previewGradient(glm::vec2 pos, bool horizontal);
 
@@ -98,13 +100,13 @@ public:
     // COLOR BROWSER
 
     ofxColorsBrowser ColorBrowser;
+    vector<ofColor> ColorBrowser_palette;
     ofFloatColor color_BACK;
     ofFloatColor color_BACK_PRE;
-    vector<ofColor> ColorBrowser_palette;
 
-    //-
+    //--
 
-    // PARAMETERS
+    // USER PALETTE & CONTROL
 
     ofParameter<bool> bPaletteEdit;
     ofParameter<bool> bRandomColor;
@@ -113,6 +115,10 @@ public:
     ofParameter<bool> bClearPalette;
     int palette_colorSelected = -1;
 
+    //--
+
+    // PARAMETERS
+
     ofParameterGroup params_data;
     ofParameterGroup params_color;
     ofParameterGroup params_palette;
@@ -120,7 +126,7 @@ public:
     ofParameterGroup params_control;
     void Changed_control(ofAbstractParameter &e);
 
-    //-
+    //--
 
     // ALGORITHMIC PALETTES
 
@@ -148,7 +154,7 @@ public:
     void draw_palettes();
     ofParameter<bool> MODE_Palette;
 
-    //-
+    //--
 
     // GUI
 
@@ -159,7 +165,7 @@ public:
     void gui_setup_layout();
     void gui_imGui_theme();
 
-    //-
+    //--
 
     // COLORS
 
@@ -242,33 +248,34 @@ public:
     void curveTool_setup();
     void curveTool_update();
     void curveTool_draw();
-    ofImage curve_img_gradient;
-    bool curveShow = true;
     int curveTool_amount = 256;
+    string curveTool_name = "curves.yml";
+    ofImage curve_img_gradient;
     ofxSimpleSlider curve_pos_slider;
     ofParameter<float> curve_pos;
     ofParameter<float> curve_pos_out;
-    int curve_pos_LUT = 0;
     ofParameter<bool> bResetCurve;
     ofParameter<bool> bCurveSlider;
-    string curveTool_name = "curves.yml";
+    int curve_pos_LUT = 0;
 
     //--
 
     // JSON PALETTES SERIALIZER
 
-    CustomData data;
-    PresetData presetData;
+    CustomData data;//palette
+    PresetData presetData;//bundle preset: palette+curve+gradient+background
+
     void palette_save(string p);
     void palette_load(string p);
     string path_palettes = "assets/palettes/";
+
     void preset_save(string p);
     void preset_load(string p);
     string preset_path = "assets/presets/";
 
     //--
 
-    // XML settings
+    // App settings XML
 
     void save_group_XML(ofParameterGroup &g, string path);
     void load_group_XML(ofParameterGroup &g, string path);

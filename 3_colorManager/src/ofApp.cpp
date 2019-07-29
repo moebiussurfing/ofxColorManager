@@ -13,6 +13,7 @@ void ofApp::setup(){
 //    control = 0;
 }
 
+
 //--------------------------------------------------------------
 void ofApp::update(){
     ColorManager.update();

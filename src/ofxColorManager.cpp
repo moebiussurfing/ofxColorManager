@@ -2104,9 +2104,6 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
         preset_load("myPreset");
     }
 
-//    if (key == 'c') {
-//        curveShow = !curveShow;
-//    }
 //    if (key == 's') {
 //        curvesTool.save("curves.yml");
 //    }

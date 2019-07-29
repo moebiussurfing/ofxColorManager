@@ -1,11 +1,12 @@
 #pragma once
 
-
 #include "ofMain.h"
 #include "ofxColorManager.h"
 
 class ofApp: public ofBaseApp{
+
 public:
+
     void setup();
     void update();
     void draw();
@@ -23,11 +24,17 @@ public:
 
     ofxColorManager ColorManager;
 
-    vector<ofColor> palette;//targeted palette from addon
+    //-
+
+    // received targeted palette from addon
+    vector<ofColor> palette;
     ofColor color_TARGET;
+
+    // live control
     float control;
     bool direction = true;
 
     bool hide = false;
 
+    //-
 };
