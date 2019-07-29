@@ -1742,6 +1742,7 @@ void ofxColorManager::palettes_resize()
 //--------------------------------------------------------------
 void ofxColorManager::palettes_setVisible(bool b)
 {
+    // hide and disable touchs for buttons
     //-
 
     // 1. ALGORITMIC PALETTES
@@ -1749,34 +1750,42 @@ void ofxColorManager::palettes_setVisible(bool b)
     for (auto& btn : btns_plt_Triad)
     {
         btn->setVisible(b);
+        btn->setEnabled(b);
     }
     for (auto& btn : btns_plt_ComplTriad)
     {
         btn->setVisible(b);
+        btn->setEnabled(b);
     }
     for (auto& btn : btns_plt_CompSat)
     {
         btn->setVisible(b);
+        btn->setEnabled(b);
     }
     for (auto& btn : btns_plt_ComplBrgt)
     {
         btn->setVisible(b);
+        btn->setEnabled(b);
     }
     for (auto& btn : btns_plt_MonoSat)
     {
         btn->setVisible(b);
+        btn->setEnabled(b);
     }
     for (auto& btn : btns_plt_MonoBrgt)
     {
         btn->setVisible(b);
+        btn->setEnabled(b);
     }
     for (auto& btn : btns_plt_Analog)
     {
         btn->setVisible(b);
+        btn->setEnabled(b);
     }
     for (auto& btn : btns_plt_Random)
     {
         btn->setVisible(b);
+        btn->setEnabled(b);
     }
 
     //-
@@ -2601,7 +2610,7 @@ void ofxColorManager::draw_ColourLovers(){
     if (SHOW_ColourLovers)
     {
         int x, y, w, h, pad, lineH;
-        x = 10;
+        x = 320;
         y = ofGetHeight() - 200;
         w = h = 40;
         pad = 3;
