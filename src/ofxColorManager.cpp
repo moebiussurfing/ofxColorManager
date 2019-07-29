@@ -181,15 +181,18 @@ void ofxColorManager::setup()
 
     // GUI
 
+    //-
+
     // font
+
     ImGuiIO& io = ImGui::GetIO();
     string inputPath;
     inputPath = ofFilePath::getAbsolutePath("assets/fonts/PragmataProR_0822.ttf");
     const char* myPath = inputPath.c_str();
     ImFontConfig config;
-    config.OversampleH = 3;
-    config.OversampleV = 1;
-    config.GlyphExtraSpacing.x = 1.0f;
+//    config.OversampleH = 3;
+//    config.OversampleV = 1;
+//    config.GlyphExtraSpacing.x = 1.0f;
     io.Fonts->AddFontFromFileTTF(myPath, 13.0f, &config);
 
     // create
@@ -447,7 +450,8 @@ void ofxColorManager::gui_imGui_theme()
     // must be done after setup the gui
 
     ImGuiStyle *style = &ImGui::GetStyle();
-    style->WindowRounding = (3.0f);
+
+//    style->WindowRounding = (3.0f);
 
     //-
 
@@ -701,6 +705,16 @@ void ofxColorManager::interface_draw(){
 //--------------------------------------------------------------
 bool ofxColorManager::gui_imGui()
 {
+//    I wrongly supposed that the begin() and end() methods of OfxImGui were related with ImGui::Begin and ImGui::End methods which is not the case…
+//    The right calling sequence is
+//    im_gui.begin();
+    // Addon begin ImGui::SetNextWindowPos(ImVec2(0,0));
+    // ImGui::SetNextWindowSize(ImVec2(1200,800),
+    // ImGuiSetCond_Once);
+    // ImGui::Begin("Funky Window"); /* Here your ImGui stuff
+    // */ ImGui::End();
+    // im_gui.end(); // Addon end
+
     auto mainSettings = ofxImGui::Settings();
     this->gui.begin();
 
@@ -720,7 +734,7 @@ bool ofxColorManager::gui_imGui()
 
     auto COLOR_PICKER_Settings = ofxImGui::Settings();
     COLOR_PICKER_Settings.windowPos = ofVec2f(0, 0);
-    COLOR_PICKER_Settings.windowSize = ofVec2f(400, 200);
+    COLOR_PICKER_Settings.windowSize = ofVec2f(233, 200);
     COLOR_PICKER_Settings.lockPosition = true;
 
     if (ofxImGui::BeginWindow("COLOR PICKER", COLOR_PICKER_Settings, false))
@@ -730,7 +744,8 @@ bool ofxColorManager::gui_imGui()
         //-
 
         // COLOR
-        if (ofxImGui::BeginTree(this->params_control, COLOR_PICKER_Settings))
+        if (ofxImGui::BeginTree("COLOR", COLOR_PICKER_Settings))
+//        if (ofxImGui::BeginTree(this->params_control, COLOR_PICKER_Settings))
         {
             ofxImGui::AddParameter(this->bRandomColor);
             ofxImGui::AddParameter(this->color_picked, true);
@@ -741,7 +756,8 @@ bool ofxColorManager::gui_imGui()
 
             ImGui::Text("USER PALETTE MANAGER");
             ofxImGui::AddParameter(this->bPaletteEdit);
-            ofxImGui::AddParameter(this->bAddColor);ImGui::SameLine();
+            ofxImGui::AddParameter(this->bAddColor);
+            ImGui::SameLine();
             ofxImGui::AddParameter(this->bRemoveColor);
             ofxImGui::AddParameter(this->bClearPalette);
             ofxImGui::EndTree(COLOR_PICKER_Settings);
@@ -894,9 +910,11 @@ bool ofxColorManager::gui_imGui()
 
     if (ofxImGui::BeginWindow("COLOR MANAGER", COLOR_MANAGER_Settings, false))
     {
+        //-
+
         // GENERAL DATA
 
-        if (ofxImGui::BeginTree(this->params_data, mainSettings))
+        if (ofxImGui::BeginTree("GLOBAL", mainSettings))
         {
             ofxImGui::AddParameter(this->color_backGround, true);
             ofxImGui::AddParameter(this->SHOW_BrowserColors);
@@ -905,9 +923,11 @@ bool ofxColorManager::gui_imGui()
             ofxImGui::EndTree(mainSettings);
         }
 
+        //-
+
         // CURVE TOOL
 
-        if (ofxImGui::BeginTree(this->params_curve, mainSettings))
+        if (ofxImGui::BeginTree("CURVE TOOL", mainSettings))
         {
             ofxImGui::AddParameter(this->bResetCurve);
             if (ofxImGui::AddParameter(this->curve_pos))
@@ -921,9 +941,11 @@ bool ofxColorManager::gui_imGui()
             ofxImGui::EndTree(mainSettings);
         }
 
-        // ALGORITHMIC PALETTE
+        //-
 
-        if (ofxImGui::BeginTree(this->params_palette, mainSettings))
+        // ALGORITHMIC PALETTE
+        if (ofxImGui::BeginTree("ALGORITHMIC PALETTE", mainSettings))
+//        if (ofxImGui::BeginTree(this->params_palette, mainSettings))
         {
             ofxImGui::AddParameter(this->MODE_Palette);
             if (!MODE_Palette) {
@@ -936,27 +958,35 @@ bool ofxColorManager::gui_imGui()
             ofxImGui::AddParameter(this->bLock_palette);ImGui::SameLine();
             ofxImGui::EndTree(mainSettings);
         }
+
+        //-
     }
     ofxImGui::EndWindow(COLOR_MANAGER_Settings);
 
 
-
-
+    //TODO: TESTINGS WINDOWS SETTINGS
     if (this->preview)
     {
-        static const float kPreviewSize = 256.0f;
+        static const float kPreviewSize = 600.0f;
         auto previewSettings = ofxImGui::Settings();
-        previewSettings.windowPos = ofVec2f(100,100);
-        previewSettings.windowSize = ofVec2f(200,200);
+        previewSettings.windowPos = ofVec2f(kPreviewSize,400);
+        previewSettings.windowSize = ofVec2f(600,200);
+//        previewSettings.lockPosition = true;
+//        previewSettings.windowBlock = true;
+
+//        ImGuiStyle *style = &ImGui::GetStyle();
+//        style->WindowBorderSize(10.);
 
         if (ofxImGui::BeginWindow(this->preview, previewSettings, false))
         {
-            ofxImGui::AddImage(this->texture, previewSettings.windowSize);
+            ImGui::Text("preview PALETTE preview");
+            ImGui::Text("USER preview preview");
+            ofxImGui::AddParameter(this->bPaletteEdit);
+            ImGui::Text("preview preview MANAGER");
+            ImGui::Text("USER preview MANAGER");
         }
         ofxImGui::EndWindow(previewSettings);
     }
-
-
 
     this->gui.end();
     return mainSettings.mouseOverGui;

@@ -5,7 +5,7 @@
 #include "ofxImGui.h"
 
 #include "ofxInterface.h"
-#include "ofxInterfaceWidgets.h"
+//#include "ofxInterfaceWidgets.h"
 #include "ButtonPaletteSelector.h"
 #include "ButtonExample.h"
 
@@ -46,17 +46,55 @@ OFX_CEREAL_DEFINE(CEREAL_NVP(name), CEREAL_NVP(curveName), CEREAL_NVP(palette))
 
 class ofxColorManager {
 
+    //-
+
     // JSON PALETTES SERIALIZER
     CustomData data;
     PresetData presetData;
 
+    //-
+
 public:
+
+    //--
 
     ofParameter<bool> preview{ "Preview", false };
     bool show_another_window;
 ////    static ImVec4 color;
 //    ImVec4 myImColor;
 //    ImVec4 myImColor_PRE;
+
+    //--
+
+    ofxColorManager();
+    ~ofxColorManager();
+
+    void setup();
+    void update();
+    void draw();
+    void exit();
+
+    float dt;
+
+    //--
+
+    // API
+
+    vector<ofColor> getPalette();
+    ofColor getColorAtPercent(float control);
+    void setColor_TARGET(ofColor &c);//backwards pointer ofApp color
+    ofColor *color_TARGET;//backwards pointer ofApp color
+    void setControl(float control);
+    bool SHOW_ALL_GUI = true;
+    void setVisible(bool b);
+    bool SHOW_GUI_MINI = false;
+    void setVisible_GUI_MINI(bool b);
+    void draw_PaleteMINI();
+
+    void draw_previewGradient(glm::vec2 pos, bool horizontal);
+
+    bool SHOW_debugText = false;
+    void setVisible_debugText(bool b);
 
     //--
 
@@ -83,68 +121,6 @@ public:
     ofFloatColor color_BACK;
     ofFloatColor color_BACK_PRE;
     vector<ofColor> ColorBrowser_palette;
-
-////    static bool saved_palette_inited;
-//    bool saved_palette_inited;
-////    static ImVec4 saved_palette[100];
-//    ImVec4 saved_palette[100];
-
-    //--
-
-    // LAYOUT
-
-    int gui_x, gui_y, gui_w, gui_h;
-
-    int box_size;
-    int pad; //global mini pad
-
-    int c_grad_x, c_grad_y, c_grad_w, c_grad_h;
-
-    int curveTool_x;
-    int curveTool_y;
-    int curveTool_w;
-    int curveTool_h;
-
-    int image_curvedGradient_x;
-    int image_curvedGradient_y;
-    int image_curvedGradient_w;
-    int image_curvedGradient_h;
-
-    int slider_x;
-    int slider_y;
-    int slider_w;
-    int slider_h;
-
-    int grad_x;
-    int grad_y;
-    int grad_w;
-    int grad_h;
-
-    int palettes_x;
-    int palettes_y;
-
-    int palette_x;
-    int palette_y;
-
-    int currColor_x;
-    int currColor_y;
-
-    int colorPick_x, colorPick_y, colorPick_w, colorPick_h;
-    int color_x, color_y, color_w, color_h;
-
-    glm::vec2 colorBrowserPos;
-
-    //--
-
-    ofxColorManager();
-    ~ofxColorManager();
-
-    void setup();
-    void update();
-    void draw();
-    void exit();
-
-    float dt;
 
     //-
 
@@ -177,7 +153,7 @@ public:
     ofxColorPalette analogue;
     ofxColorPalette random;
     ofParameter<int> NUM_ALGO_PALETTES;//number of colors. must be even
-    //    ofxColorPalette::ColorChannel mode;
+    //ofxColorPalette::ColorChannel mode;
 
     ofParameter<int> BRIGHTNESS;
     ofParameter<int> SATURATION;
@@ -206,8 +182,6 @@ public:
 
     //-
 
-//    ofFloatColor color;
-
     // COLORS
 
     ofParameter<ofFloatColor> color_backGround;
@@ -230,7 +204,6 @@ public:
     // TODO: TEST LINKING
 
     ofParameter<ofFloatColor> color_clicked_param;
-
     void Changed_color_picked(ofFloatColor &color);
     void Changed_color_clicked(ofFloatColor &color);
 
@@ -313,6 +286,55 @@ public:
     ofParameterGroup XML_params;
     string XML_path = "ofxColorManager.xml";
 
+    //--
+
+private:
+
+    //--
+
+    // LAYOUT
+
+    int gui_x, gui_y, gui_w, gui_h;
+
+    int box_size;
+    int pad; //global mini pad
+
+    int c_grad_x, c_grad_y, c_grad_w, c_grad_h;
+
+    int curveTool_x;
+    int curveTool_y;
+    int curveTool_w;
+    int curveTool_h;
+
+    int image_curvedGradient_x;
+    int image_curvedGradient_y;
+    int image_curvedGradient_w;
+    int image_curvedGradient_h;
+
+    int slider_x;
+    int slider_y;
+    int slider_w;
+    int slider_h;
+
+    int grad_x;
+    int grad_y;
+    int grad_w;
+    int grad_h;
+
+    int palettes_x;
+    int palettes_y;
+
+    int palette_x;
+    int palette_y;
+
+    int currColor_x;
+    int currColor_y;
+
+    int colorPick_x, colorPick_y, colorPick_w, colorPick_h;
+    int color_x, color_y, color_w, color_h;
+
+    glm::vec2 colorBrowserPos;
+
     //-
 
     // LISTENERS
@@ -331,25 +353,6 @@ public:
     void disableListeners();
     void enableListeners();
 
-    //--
-
-    // API
-
-    vector<ofColor> getPalette();
-    ofColor getColorAtPercent(float control);
-    void setColor_TARGET(ofColor &c);//backwards pointer ofApp color
-    ofColor *color_TARGET;//backwards pointer ofApp color
-    void setControl(float control);
-    bool SHOW_ALL_GUI = true;
-    void setVisible(bool b);
-    bool SHOW_GUI_MINI = false;
-    void setVisible_GUI_MINI(bool b);
-    void draw_PaleteMINI();
-
-    void draw_previewGradient(glm::vec2 pos, bool horizontal);
-
-    bool SHOW_debugText = false;
-    void setVisible_debugText(bool b);
 
     //--
 };

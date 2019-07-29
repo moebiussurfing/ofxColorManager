@@ -5,14 +5,11 @@ ofxColorPalette
 ofxColorsBrowser
 ofxColourLovers
 ofxColourLoversHelper
-ofxColourTheory
 ofxCurvesTool
 ofxFontStash
 ofxHttpUtils
 ofxImGui
 ofxInterface
-ofxInterfaceKeyboard
-ofxInterfaceWidgets
 ofxJSON
 ofxMouseRuler
 ofxOpenColor
