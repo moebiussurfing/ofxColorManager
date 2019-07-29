@@ -53,7 +53,8 @@ public:
     string myPalette_Name = "";
     ofColor myColor;
     vector<ofColor> myPalette;
-    bool bUpdated_BACK = false;
+    bool bUpdated_Palette_BACK = false;
+    bool bUpdated_Color_BACK = false;
 
     //--
 

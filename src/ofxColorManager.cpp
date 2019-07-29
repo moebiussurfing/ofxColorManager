@@ -48,7 +48,8 @@ void ofxColorManager::setup()
     ColourLoversHelper.setColor_BACK(myColor);
     ColourLoversHelper.setPalette_BACK(myPalette);
     ColourLoversHelper.setPalette_Name_BACK(myPalette_Name);
-    ColourLoversHelper.setPalette_bUpdated_BACK(bUpdated_BACK);
+    ColourLoversHelper.setPalette_bUpdated_Palette_BACK(bUpdated_Palette_BACK);
+    ColourLoversHelper.setPalette_bUpdated_Color_BACK(bUpdated_Color_BACK);
 
     // some initiation values..
     myColor = ofColor::white;
@@ -956,7 +957,7 @@ bool ofxColorManager::gui_imGui()
     // 2ND WINDOW
 
     auto COLOR_MANAGER_Settings = ofxImGui::Settings();
-    COLOR_MANAGER_Settings.windowPos = ofVec2f(900, 500);
+    COLOR_MANAGER_Settings.windowPos = ofVec2f(980, 480);
     COLOR_MANAGER_Settings.windowSize = ofVec2f(100, 100);
 
     if (ofxImGui::BeginWindow("COLOR MANAGER", COLOR_MANAGER_Settings, false))
@@ -1070,8 +1071,8 @@ void ofxColorManager::palette_load_ColourLovers()
         palette_addColor(c);
     }
 
-    // 2. get color from colour lovers
-    color_clicked = ofColor(myColor);
+//    // 2. get color from colour lovers
+//    color_clicked = ofColor(myColor);
 }
 
 
@@ -1083,13 +1084,22 @@ void ofxColorManager::update()
     // COLOUR LOVERS
 
     ColourLoversHelper.update();
-    if (bUpdated_BACK)
+    if (bUpdated_Palette_BACK)
     {
-        ofLogWarning("ofxColorManager") << "update:bUpdated_BACK: " << bUpdated_BACK;
-        bUpdated_BACK = false;
+        ofLogWarning("ofxColorManager") << "update:bUpdated_Palette_BACK: " << bUpdated_Palette_BACK;
+        bUpdated_Palette_BACK = false;
 
+        // 1. get palette colors from colour lovers
         palette_load_ColourLovers();
+    }
 
+    if (bUpdated_Color_BACK)
+    {
+        ofLogWarning("ofxColorManager") << "update:bUpdated_Color_BACK: " << bUpdated_Color_BACK;
+        bUpdated_Color_BACK = false;
+
+        // 2. get color from colour lovers
+        color_clicked = ofColor(myColor);
     }
 
     //--
