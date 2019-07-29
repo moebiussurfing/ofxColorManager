@@ -12,6 +12,7 @@
 #include "ofxSimpleSlider.h"
 #include "ofxCereal.h"
 #include "ofxMouseRuler.h"
+#include "ofxColourLoversHelper.h"
 
 //--
 
@@ -43,6 +44,19 @@ class ofxColorManager {
 
 public:
 
+    //-
+
+    // COLOUR LOVERS
+
+    void draw_ColourLovers();
+    ofxColourLoversHelper ColourLoversHelper;
+    string myPalette_Name = "";
+    ofColor myColor;
+    vector<ofColor> myPalette;
+
+
+    void windowResized(int w, int h);
+
     //--
 
     // TODO: TESTING
@@ -63,12 +77,13 @@ public:
 
     float dt;
 
-    bool SHOW_ALL_GUI = true;
-    bool SHOW_GUI_MINI = false;
-    bool SHOW_debugText = false;
-    ofParameter<bool> SHOW_BrowserColors;
+    ofParameter<bool> SHOW_ColourLovers;
     ofParameter<bool> SHOW_AlgoPalettes;
+    ofParameter<bool> SHOW_BrowserColors;
     ofParameter<bool> SHOW_Curve;
+    ofParameter<bool> SHOW_ALL_GUI;
+    ofParameter<bool> SHOW_GUI_MINI;
+    ofParameter<bool> SHOW_debugText;
 
     void setColor_TARGET(ofColor &c);//backwards pointer ofApp color
     ofColor *color_TARGET;//backwards pointer ofApp color

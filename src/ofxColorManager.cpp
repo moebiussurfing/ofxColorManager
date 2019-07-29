@@ -19,6 +19,37 @@ void ofxColorManager::setup()
 {
     //-
 
+    // COLOUR LOVERS
+
+
+    // set positions and panel sizes
+    glm::vec2 sizeGui(150, 400);
+    glm::vec2 sizeGrid(150, ofGetHeight());
+    glm::vec2 posGui(ofGetWidth()-(sizeGui.x+sizeGrid.x+4), 0);
+    glm::vec2 posGrid(posGui.x+sizeGui.x+2, 0);
+
+    // must be called before setup() to overwrite default settings
+    ColourLoversHelper.setGrid(posGrid, sizeGrid);
+    ColourLoversHelper.setup(posGui, sizeGui);
+
+    //-
+
+    // receivers pointers
+    ColourLoversHelper.setColor_BACK(myColor);
+    ColourLoversHelper.setPalette_BACK(myPalette);
+    ColourLoversHelper.setPalette_Name_BACK(myPalette_Name);
+
+    // some initiation values..
+    myColor = ofColor::white;
+    myPalette.resize(2);//pointer setter whill clear/resize. nevermind the vector size here
+    myPalette[0] = ofColor::white;
+    myPalette[0] = ofColor::white;
+    myPalette_Name = "NOT LOADED";
+
+    //-
+
+    //-
+
     // MOUSE DEBUGGER
 
     mouseRuler.setup();
@@ -43,7 +74,6 @@ void ofxColorManager::setup()
     ColorBrowser.setup_colorBACK(color_BACK);
     ColorBrowser.setPosition(colorBrowserPos);
     ColorBrowser.setup();
-    SHOW_BrowserColors.set("SHOW BROWSER COLORS", false);
 
     ColorBrowser_palette = ColorBrowser.getPalette();
 
@@ -100,29 +130,8 @@ void ofxColorManager::setup()
 
     //-
 
-    // CONTROL
-
-    bRandomColor.set("RANDOM COLOR", false);
-    bAddColor.set("ADD COLOR", false);
-    bPaletteEdit.set("EDIT COLOR", false);
-    bRemoveColor.set("REMOVE LAST COLOR", false);
-    bClearPalette.set("CLEAR PALETTE", false);
-
-    params_control.setName("COLOR EDITOR");
-    params_control.add(color_picked);
-    params_control.add(bRandomColor);
-    params_control.add(bPaletteEdit);
-    params_control.add(bAddColor);
-    params_control.add(bRemoveColor);
-    params_control.add(bClearPalette);
-
-    ofAddListener(params_control.parameterChangedE(), this, &ofxColorManager::Changed_control);
-
-    //-
-
     // ALGORITHMIC PALETTE
 
-    SHOW_AlgoPalettes.set("SHOW PALETTES", false);
     MODE_Palette.set("FROM COLOR", false);
     SATURATION.set("SATURATION", 200, 0, 255 );
     BRIGHTNESS.set("BRIGHTNESS", 200, 0, 255 );
@@ -132,7 +141,7 @@ void ofxColorManager::setup()
 
     NUM_ALGO_PALETTES.set("SIZE", 6, 2, 8);
     params_palette.setName("ALGORITHMIC PALETTES");
-    params_palette.add(SHOW_AlgoPalettes);
+//    params_palette.add(SHOW_AlgoPalettes);
     params_palette.add(MODE_Palette);
     params_palette.add(SATURATION);
     params_palette.add(BRIGHTNESS);
@@ -177,6 +186,46 @@ void ofxColorManager::setup()
 
     curveTool_setup();
 
+    //-
+
+    // CONTROL
+
+    bRandomColor.set("RANDOM COLOR", false);
+    bAddColor.set("ADD COLOR", false);
+    bPaletteEdit.set("EDIT COLOR", false);
+    bRemoveColor.set("REMOVE LAST COLOR", false);
+    bClearPalette.set("CLEAR PALETTE", false);
+
+    params_control.setName("COLOR EDITOR");
+    params_control.add(color_picked);
+    params_control.add(bRandomColor);
+    params_control.add(bPaletteEdit);
+    params_control.add(bAddColor);
+    params_control.add(bRemoveColor);
+    params_control.add(bClearPalette);
+
+    //-
+
+    // CONTROL WINDOWS
+
+    SHOW_ColourLovers.set("SHOW COLOUR LOVERS", true);
+    SHOW_AlgoPalettes.set("SHOW PALETTES", true);
+    SHOW_BrowserColors.set("SHOW BROWSER COLORS", true);
+    SHOW_Curve.set("SHOW CURVE", true);
+
+    params_control.add(SHOW_ColourLovers);
+    params_control.add(SHOW_AlgoPalettes);
+    params_control.add(SHOW_BrowserColors);
+    params_control.add(SHOW_Curve);
+
+    SHOW_ALL_GUI = true;
+    SHOW_debugText = false;
+    SHOW_GUI_MINI = false;
+
+    //-
+
+    ofAddListener(params_control.parameterChangedE(), this, &ofxColorManager::Changed_control);
+
     //--
 
     // GUI
@@ -217,11 +266,15 @@ void ofxColorManager::setup()
     // STARTUP SETTINGS
 
     XML_params.setName("ofxColorManager");
+
+    XML_params.add(SHOW_ColourLovers);
     XML_params.add(SHOW_AlgoPalettes);
     XML_params.add(SHOW_Curve);
     XML_params.add(SHOW_BrowserColors);
+
     XML_params.add(color_backGround);
     XML_params.add(color_picked);
+
     XML_params.add(bPaletteEdit);//user palette
     XML_params.add(MODE_Palette);//algorithmic palette
     XML_params.add(NUM_ALGO_PALETTES);
@@ -230,6 +283,7 @@ void ofxColorManager::setup()
     XML_params.add(bAuto_palette_recall);
     XML_params.add(gradient_hard);//gradient
     XML_params.add(bCurveSlider);//curve tool
+
     load_group_XML(XML_params, XML_path);
     palette_load("myPalette");
 
@@ -917,13 +971,14 @@ bool ofxColorManager::gui_imGui()
         if (ofxImGui::BeginTree("GLOBAL", mainSettings))
         {
             ofxImGui::AddParameter(this->color_backGround, true);
-            ofxImGui::AddParameter(this->SHOW_BrowserColors);
+            ofxImGui::AddParameter(this->SHOW_ColourLovers);
             ofxImGui::AddParameter(this->SHOW_AlgoPalettes);
             ofxImGui::AddParameter(this->SHOW_Curve);
+            ofxImGui::AddParameter(this->SHOW_BrowserColors);
             ofxImGui::EndTree(mainSettings);
         }
 
-        //-
+        //--
 
         // CURVE TOOL
 
@@ -996,6 +1051,12 @@ bool ofxColorManager::gui_imGui()
 //--------------------------------------------------------------
 void ofxColorManager::update()
 {
+    //-
+
+    // COLOUR LOVERS
+
+    ColourLoversHelper.update();
+
     //--
 
     // handle last selected algorithmic palette
@@ -1069,7 +1130,6 @@ void ofxColorManager::curveTool_setup()
     curvesTool.setup(curveTool_amount);
     curvesTool.load("curves.yml"); //needed because it fills polyline
 
-    SHOW_Curve.set("SHOW CURVE", false);
     curve_pos.set("INPUT", 0., 0., 1.);
     curve_pos_out.set("OUTPUT", 0., 0., 1.);
     bResetCurve.set("RESET CURVE", false);
@@ -1723,9 +1783,9 @@ void ofxColorManager::draw()
 
         //-
 
-        // TODO: should hide in groups not all
 
         // INTERFACE
+        // TODO: should hide in groups not all
         if (SHOW_AlgoPalettes)
         {
             interface_draw();
@@ -1886,6 +1946,27 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
     //TODO: should reduce callbacks in output..
     if (name!="INPUT" && name!="COLOR" && name!="OUTPUT")
         ofLogNotice("ofxColorManager") << "Changed_control: " << name << ":" << e;
+
+    //--
+
+    // CONTROL
+
+    if (name == "SHOW COLOUR LOVERS")
+    {
+        ColourLoversHelper.setVisible(SHOW_ColourLovers);
+    }
+    else if (name == "SHOW PALETTES")
+    {
+//        SHOW_AlgoPalettes
+    }
+    else if (name == "SHOW BROWSER COLORS")
+    {
+        ColorBrowser.setVisible(SHOW_BrowserColors);
+    }
+    else if (name == "SHOW CURVE")
+    {
+//        SHOW_Curve
+    }
 
     //--
 
@@ -2145,6 +2226,24 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 
     if (key == OF_KEY_RETURN)
         ColorBrowser.switch_sorted_Type();
+
+    //-
+
+    // COLOUR LOVERS
+
+    if (key == OF_KEY_DOWN)
+    {
+        ColourLoversHelper.nextPalette();
+    }
+    if (key == OF_KEY_UP)
+    {
+        ColourLoversHelper.prevPalette();
+    }
+    if (key == 'g')
+    {
+        SHOW_ColourLovers = !SHOW_ColourLovers;
+        ColourLoversHelper.setVisible(SHOW_ColourLovers);
+    }
 }
 
 
@@ -2286,23 +2385,6 @@ void ofxColorManager::save_group_XML(ofParameterGroup &g, string path)
 
 
 //--------------------------------------------------------------
-void ofxColorManager::exit()
-{
-    palette_save("myPalette");
-    save_group_XML(XML_params, XML_path);
-
-    ColorBrowser.exit();
-
-    removeKeysListeners();
-    removeMouseListeners();
-    ofRemoveListener(params_control.parameterChangedE(), this, &ofxColorManager::Changed_control);
-    ofRemoveListener(params_color.parameterChangedE(), this, &ofxColorManager::Changed_control);
-    ofRemoveListener(params_palette.parameterChangedE(), this, &ofxColorManager::Changed_control);
-    ofRemoveListener(params_curve.parameterChangedE(), this, &ofxColorManager::Changed_control);
-}
-
-
-//--------------------------------------------------------------
 void ofxColorManager::Changed_color_picked(ofFloatColor &_c)
 {
 //    if (_c != color_picked)
@@ -2433,7 +2515,91 @@ void ofxColorManager::draw_previewGradient(glm::vec2 pos, bool horizontal = true
 
 
 //--------------------------------------------------------------
+void ofxColorManager::exit()
+{
+    palette_save("myPalette");
+    save_group_XML(XML_params, XML_path);
+
+    ColorBrowser.exit();
+    ColourLoversHelper.exit();
+
+    removeKeysListeners();
+    removeMouseListeners();
+    ofRemoveListener(params_control.parameterChangedE(), this, &ofxColorManager::Changed_control);
+    ofRemoveListener(params_color.parameterChangedE(), this, &ofxColorManager::Changed_control);
+    ofRemoveListener(params_palette.parameterChangedE(), this, &ofxColorManager::Changed_control);
+    ofRemoveListener(params_curve.parameterChangedE(), this, &ofxColorManager::Changed_control);
+}
+
+
+//--------------------------------------------------------------
 void ofxColorManager::setVisible_debugText(bool b)
 {
     SHOW_debugText = b;
+}
+
+
+//--------------------------------------------------------------
+void ofxColorManager::draw_ColourLovers(){
+
+    // preview receivers
+
+    if (SHOW_ColourLovers)
+    {
+        int x, y, w, h, pad, lineH;
+        x = 10;
+        y = ofGetHeight() - 200;
+        w = h = 40;
+        pad = 3;
+        lineH = 20;
+
+        ofPushStyle();
+        ofFill();
+
+        ofDrawBitmapStringHighlight("RECEIVERS IN ofApp", x, y, ofColor::black, ofColor::white);
+        y += 3*pad+lineH;
+
+        ofDrawBitmapStringHighlight("myColor:", x, y, ofColor::black, ofColor::white);
+        y += 3*pad;
+
+        ofSetColor(myColor);
+        ofDrawRectangle(ofRectangle(x, y, w, h));
+        y += (h+pad);
+
+        y += (lineH);
+        ofDrawBitmapStringHighlight("myPalette:", x, y, ofColor::black, ofColor::white);
+        y += 3*pad;
+
+        for (int i = 0; i < myPalette.size(); i++) {
+            ofSetColor(myPalette[i]);
+            ofDrawRectangle(ofRectangle(x + i * (w + pad), y, w, h));
+        }
+        y += (h+pad);
+
+        y += (lineH);
+        ofDrawBitmapStringHighlight("myPalette_Name:", x, y, ofColor::black, ofColor::white);
+        y += (lineH);
+        ofDrawBitmapStringHighlight(myPalette_Name, x, y, ofColor::black, ofColor::white);
+
+        ofPopStyle();
+    }
+}
+
+
+//--------------------------------------------------------------
+void ofxColorManager::windowResized(int w, int h)
+{
+    // COLOUR LOVERS
+
+    // set positions and panel sizes
+    glm::vec2 sizeGui(150, 400);
+    glm::vec2 sizeGrid(150, ofGetHeight());
+    glm::vec2 posGui(ofGetWidth()-(sizeGui.x+sizeGrid.x+4), 0);
+    glm::vec2 posGrid(posGui.x+sizeGui.x+2, 0);
+
+    //must be called before setup() to overwrite default settings
+    ColourLoversHelper.setGrid(posGrid, sizeGrid);
+    ColourLoversHelper.setup(posGui, sizeGui);
+
+    ColourLoversHelper.windowResized(w, h);
 }
