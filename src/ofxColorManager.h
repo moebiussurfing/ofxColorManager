@@ -3,18 +3,14 @@
 #include "ofMain.h"
 
 #include "ofxImGui.h"
-
 #include "ofxInterface.h"
-//#include "ofxInterfaceWidgets.h"
 #include "ButtonPaletteSelector.h"
 #include "ButtonExample.h"
-
 #include "ofxColorGradient.h"
 #include "ofxColorPalette.h"
 #include "ofxColorsBrowser.h"
 #include "ofxCurvesTool.h"
 #include "ofxSimpleSlider.h"
-
 #include "ofxCereal.h"
 #include "ofxMouseRuler.h"
 
@@ -23,7 +19,6 @@
 // JSON SERIALIZER
 
 using namespace ofxCereal;
-
 struct CustomData
 {
     string name;
@@ -32,7 +27,6 @@ struct CustomData
 OFX_CEREAL_DEFINE(CEREAL_NVP(name), CEREAL_NVP(palette))
 
 };
-
 struct PresetData
 {
     string name;
@@ -46,23 +40,12 @@ OFX_CEREAL_DEFINE(CEREAL_NVP(name), CEREAL_NVP(curveName), CEREAL_NVP(palette))
 
 class ofxColorManager {
 
-    //-
-
-    // JSON PALETTES SERIALIZER
-    CustomData data;
-    PresetData presetData;
-
-    //-
-
 public:
 
     //--
 
     ofParameter<bool> preview{ "Preview", false };
     bool show_another_window;
-////    static ImVec4 color;
-//    ImVec4 myImColor;
-//    ImVec4 myImColor_PRE;
 
     //--
 
@@ -78,37 +61,35 @@ public:
 
     //--
 
+    bool SHOW_ALL_GUI = true;
+    bool SHOW_GUI_MINI = false;
+    bool SHOW_debugText = false;
+    ofParameter<bool> SHOW_BrowserColors;
+    ofParameter<bool> SHOW_AlgoPalettes;
+    ofParameter<bool> SHOW_Curve;
+
+    void setColor_TARGET(ofColor &c);//backwards pointer ofApp color
+    ofColor *color_TARGET;//backwards pointer ofApp color
+
+    //----
+
     // API
 
     vector<ofColor> getPalette();
     ofColor getColorAtPercent(float control);
-    void setColor_TARGET(ofColor &c);//backwards pointer ofApp color
-    ofColor *color_TARGET;//backwards pointer ofApp color
     void setControl(float control);
-    bool SHOW_ALL_GUI = true;
-    void setVisible(bool b);
-    bool SHOW_GUI_MINI = false;
-    void setVisible_GUI_MINI(bool b);
-    void draw_PaleteMINI();
 
+    void setVisible(bool b);
+    void setVisible_GUI_MINI(bool b);
+    void setVisible_debugText(bool b);
+    
+    void draw_PaleteMINI();
     void draw_previewGradient(glm::vec2 pos, bool horizontal);
 
-    bool SHOW_debugText = false;
-    void setVisible_debugText(bool b);
+    void disableListeners();
+    void enableListeners();
 
-    //--
-
-    // JSON
-
-    void palette_save(string p);
-    void palette_load(string p);
-    string path_palettes = "assets/palettes/";
-
-    void preset_save(string p);
-    void preset_load(string p);
-    string preset_path = "assets/presets/";
-
-    //--
+    //----
 
     ofxMouseRuler mouseRuler;
 
@@ -116,7 +97,6 @@ public:
 
     // COLOR BROWSER
 
-    ofParameter<bool> SHOW_BrowserColors;
     ofxColorsBrowser ColorBrowser;
     ofFloatColor color_BACK;
     ofFloatColor color_BACK_PRE;
@@ -167,14 +147,13 @@ public:
     void palettes_resize();
     void draw_palettes();
     ofParameter<bool> MODE_Palette;
-    ofParameter<bool> SHOW_AlgoPalettes;
 
     //-
 
     // GUI
 
-    bool gui_imGui();
     ofxImGui::Gui gui;
+    bool gui_imGui();
     bool guiVisible;
     bool mouseOverGui;
     void gui_setup_layout();
@@ -209,12 +188,16 @@ public:
 
     //--
 
-    // USER PALETTE
+    // USER PALETTE OF COLORS
 
     vector<ofColor> palette;
     void palette_addColor(ofColor c);
     void palette_removeColorLast();
     void palette_clear();
+    void palette_addColor_toInterface(ofColor c);
+    void palette_rearrenge();//resize boxes when adding removing colors to user palette
+    void palette_touched(string name);
+    void palette_recallFromPalettes(int p);
 
     //-
 
@@ -227,10 +210,6 @@ public:
     void interface_draw();
     bool bShowDebug = false;
 
-    void palette_addColor_toInterface(ofColor c);
-    void palette_rearrenge();//resize boxes when adding removing colors to user palette
-    void palette_touched(string name);
-
     // ALGORITHMIC PALETTES
     vector<ButtonExample*> btns_plt_Triad;       // 1
     vector<ButtonExample*> btns_plt_ComplTriad;  // 2
@@ -240,15 +219,13 @@ public:
     vector<ButtonExample*> btns_plt_MonoBrgt;    // 6
     vector<ButtonExample*> btns_plt_Analog;      // 7
     vector<ButtonExample*> btns_plt_Random;      // 8
+    int NUM_PALETTES = 8;
 
     // pointer back link the outside (ofApp) variable
     vector<ButtonPaletteSelector*> btns_plt_Selector; // 1-8
     int SELECTED_palette = -1;
     int SELECTED_palette_PRE = -1;//to check if changed on update() loop
     int SELECTED_palette_LAST = 3;//default last palette type triggered. compBrg by default
-
-    void palette_recallFromPalettes(int p);
-    int NUM_PALETTES = 8;
 
     //-
 
@@ -261,14 +238,13 @@ public:
 
     // CURVES
 
-    ofParameter<bool> SHOW_Curve;
     ofxCurvesTool curvesTool;
-    ofImage curve_img_gradient;
-    bool curveShow = true;
-    int curveTool_amount = 256;
     void curveTool_setup();
     void curveTool_update();
     void curveTool_draw();
+    ofImage curve_img_gradient;
+    bool curveShow = true;
+    int curveTool_amount = 256;
     ofxSimpleSlider curve_pos_slider;
     ofParameter<float> curve_pos;
     ofParameter<float> curve_pos_out;
@@ -276,6 +252,19 @@ public:
     ofParameter<bool> bResetCurve;
     ofParameter<bool> bCurveSlider;
     string curveTool_name = "curves.yml";
+
+    //--
+
+    // JSON PALETTES SERIALIZER
+
+    CustomData data;
+    PresetData presetData;
+    void palette_save(string p);
+    void palette_load(string p);
+    string path_palettes = "assets/palettes/";
+    void preset_save(string p);
+    void preset_load(string p);
+    string preset_path = "assets/presets/";
 
     //--
 
@@ -295,47 +284,36 @@ private:
     // LAYOUT
 
     int gui_x, gui_y, gui_w, gui_h;
-
     int box_size;
     int pad; //global mini pad
-
     int c_grad_x, c_grad_y, c_grad_w, c_grad_h;
-
     int curveTool_x;
     int curveTool_y;
     int curveTool_w;
     int curveTool_h;
-
     int image_curvedGradient_x;
     int image_curvedGradient_y;
     int image_curvedGradient_w;
     int image_curvedGradient_h;
-
     int slider_x;
     int slider_y;
     int slider_w;
     int slider_h;
-
     int grad_x;
     int grad_y;
     int grad_w;
     int grad_h;
-
     int palettes_x;
     int palettes_y;
-
     int palette_x;
     int palette_y;
-
     int currColor_x;
     int currColor_y;
-
     int colorPick_x, colorPick_y, colorPick_w, colorPick_h;
     int color_x, color_y, color_w, color_h;
-
     glm::vec2 colorBrowserPos;
 
-    //-
+    //--
 
     // LISTENERS
 
@@ -343,16 +321,11 @@ private:
     void keyReleased( ofKeyEventArgs& eventArgs );
     void addKeysListeners();
     void removeKeysListeners();
-
     void mouseDragged( ofMouseEventArgs& eventArgs );
     void mousePressed( ofMouseEventArgs& eventArgs );
     void mouseReleased( ofMouseEventArgs& eventArgs );
     void addMouseListeners();
     void removeMouseListeners();
-
-    void disableListeners();
-    void enableListeners();
-
 
     //--
 };
