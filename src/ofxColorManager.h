@@ -166,6 +166,7 @@ public:
     void palettes_setup_labels();
     void palettes_update();
     void palettes_resize();
+    void palettes_setVisible(bool b);
     void draw_palettes();
     ofParameter<bool> MODE_Palette;
 

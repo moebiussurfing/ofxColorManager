@@ -141,7 +141,6 @@ void ofxColorManager::setup()
 
     NUM_ALGO_PALETTES.set("SIZE", 6, 2, 8);
     params_palette.setName("ALGORITHMIC PALETTES");
-//    params_palette.add(SHOW_AlgoPalettes);
     params_palette.add(MODE_Palette);
     params_palette.add(SATURATION);
     params_palette.add(BRIGHTNESS);
@@ -959,7 +958,7 @@ bool ofxColorManager::gui_imGui()
 
 
     auto COLOR_MANAGER_Settings = ofxImGui::Settings();
-    COLOR_MANAGER_Settings.windowPos = ofVec2f(1000, 520);
+    COLOR_MANAGER_Settings.windowPos = ofVec2f(900, 500);
     COLOR_MANAGER_Settings.windowSize = ofVec2f(100, 100);
 
     if (ofxImGui::BeginWindow("COLOR MANAGER", COLOR_MANAGER_Settings, false))
@@ -1740,6 +1739,55 @@ void ofxColorManager::palettes_resize()
     }
 }
 
+//--------------------------------------------------------------
+void ofxColorManager::palettes_setVisible(bool b)
+{
+    //-
+
+    // 1. ALGORITMIC PALETTES
+
+    for (auto& btn : btns_plt_Triad)
+    {
+        btn->setVisible(b);
+    }
+    for (auto& btn : btns_plt_ComplTriad)
+    {
+        btn->setVisible(b);
+    }
+    for (auto& btn : btns_plt_CompSat)
+    {
+        btn->setVisible(b);
+    }
+    for (auto& btn : btns_plt_ComplBrgt)
+    {
+        btn->setVisible(b);
+    }
+    for (auto& btn : btns_plt_MonoSat)
+    {
+        btn->setVisible(b);
+    }
+    for (auto& btn : btns_plt_MonoBrgt)
+    {
+        btn->setVisible(b);
+    }
+    for (auto& btn : btns_plt_Analog)
+    {
+        btn->setVisible(b);
+    }
+    for (auto& btn : btns_plt_Random)
+    {
+        btn->setVisible(b);
+    }
+
+    //-
+
+    // 2. LABEL BUTTONS
+
+    for (auto& btn : btns_plt_Selector)
+    {
+        btn->setVisible(b);
+    }
+}
 
 //--------------------------------------------------------------
 void ofxColorManager::draw()
@@ -1786,10 +1834,10 @@ void ofxColorManager::draw()
 
         // INTERFACE
         // TODO: should hide in groups not all
-        if (SHOW_AlgoPalettes)
-        {
+//        if (SHOW_AlgoPalettes)
+//        {
             interface_draw();
-        }
+//        }
 
         // CURVE
         if (SHOW_Curve) {
@@ -1955,14 +2003,20 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
     {
         ColourLoversHelper.setVisible(SHOW_ColourLovers);
     }
+
     else if (name == "SHOW PALETTES")
     {
-//        SHOW_AlgoPalettes
+//        if (SHOW_AlgoPalettes)
+//        {
+            palettes_setVisible(SHOW_AlgoPalettes);
+//        }
     }
+
     else if (name == "SHOW BROWSER COLORS")
     {
         ColorBrowser.setVisible(SHOW_BrowserColors);
     }
+
     else if (name == "SHOW CURVE")
     {
 //        SHOW_Curve
