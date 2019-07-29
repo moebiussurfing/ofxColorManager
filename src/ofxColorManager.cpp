@@ -772,6 +772,8 @@ bool ofxColorManager::gui_imGui()
 //        show_another_window ^= 1;
 //    }
 
+    //-
+
     auto COLOR_PICKER_Settings = ofxImGui::Settings();
     COLOR_PICKER_Settings.windowPos = ofVec2f(0, 0);
     COLOR_PICKER_Settings.windowSize = ofVec2f(233, 200);
@@ -850,42 +852,44 @@ bool ofxColorManager::gui_imGui()
         //-
 
         // 0. button color big
+        if (ofxImGui::BeginTree("COLOR WHEEL", mainSettings))//grouped folder
+        {
+//            ImGui::Separator();
+            int colorW = COLOR_PICKER_Settings.windowSize.x;
+            int colorH = 25;
+            int misc_flags = ImGuiColorEditFlags_NoOptions|ImGuiColorEditFlags_NoTooltip;
+            ImGui::ColorButton("MyColor##3c", *(ImVec4 *) &color, misc_flags, ImVec2(colorW, colorH));
 
-//        int guiW = 315;
-        int guiW = 100;
-        ImGui::Separator();
-        int misc_flags = ImGuiColorEditFlags_NoOptions|ImGuiColorEditFlags_NoTooltip;
-        ImGui::ColorButton("MyColor##3c", *(ImVec4 *) &color, misc_flags, ImVec2(guiW, 50));
+            //--
 
-        //--
+            // 1. color picker
+            ImGui::Separator();
 
-        // 1. color picker
+            ImGuiColorEditFlags colorEdiFlags =
+                    ImGuiColorEditFlags_NoSmallPreview |
+                            ImGuiColorEditFlags_NoTooltip |
+                            ImGuiColorEditFlags_NoLabel |
+                            ImGuiColorEditFlags_NoSidePreview |
+                            ImGuiColorEditFlags_HSV |
+                            ImGuiColorEditFlags_RGB |
+                            ImGuiColorEditFlags_NoInputs |
+                            ImGuiColorEditFlags_PickerHueWheel;
+            ImGui::ColorPicker4("Background Color", (float *) &color, colorEdiFlags);
+            //TODO: TEST USE EXTERNAL PICKER COLOR
 
-        ImGui::Separator();
-
-        ImGuiColorEditFlags colorEdiFlags =
-                ImGuiColorEditFlags_NoSmallPreview |
-                        ImGuiColorEditFlags_NoTooltip |
-                        ImGuiColorEditFlags_NoLabel |
-                        ImGuiColorEditFlags_NoSidePreview |
-                        ImGuiColorEditFlags_HSV |
-                        ImGuiColorEditFlags_RGB |
-                        ImGuiColorEditFlags_NoInputs |
-                        ImGuiColorEditFlags_PickerHueWheel;
-        ImGui::ColorPicker4("Background Color", (float *) &color, colorEdiFlags);
-        //TODO: TEST USE EXTERNAL PICKER COLOR
-
-        colorEdiFlags =
-                ImGuiColorEditFlags_NoSmallPreview |
-                        ImGuiColorEditFlags_NoTooltip |
-                        ImGuiColorEditFlags_NoLabel |
-                        ImGuiColorEditFlags_NoSidePreview |
-                        ImGuiColorEditFlags_HSV |
-                        ImGuiColorEditFlags_RGB |
-                        ImGuiColorEditFlags_HDR |
-                        ImGuiColorEditFlags_PickerHueBar;
-        ImGui::ColorPicker4("Background Color", (float *) &color, colorEdiFlags);
-
+            colorEdiFlags =
+                    ImGuiColorEditFlags_NoSmallPreview |
+                            ImGuiColorEditFlags_NoTooltip |
+                            ImGuiColorEditFlags_NoLabel |
+                            ImGuiColorEditFlags_NoSidePreview |
+                            ImGuiColorEditFlags_HSV |
+                            ImGuiColorEditFlags_RGB |
+                            ImGuiColorEditFlags_HDR |
+                            ImGuiColorEditFlags_PickerHueBar;
+            ImGui::ColorPicker4("Background Color", (float *) &color, colorEdiFlags);
+            ofxImGui::EndTree(mainSettings);
+        }
+        
         //--
 
         // 2 Generate palete from colorBrowser
