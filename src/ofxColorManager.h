@@ -140,7 +140,7 @@ public:
     ofParameterGroup params_palette;
     ofParameterGroup params_curve;
     ofParameterGroup params_control;
-    void Changed_control(ofAbstractParameter &e);
+    void Changed_CONTROL(ofAbstractParameter &e);
 
     //--
 

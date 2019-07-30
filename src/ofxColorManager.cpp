@@ -128,7 +128,7 @@ void ofxColorManager::setup()
     params_color.add(color_SAT);
     params_color.add(color_BRG);
 
-    ofAddListener(params_color.parameterChangedE(), this, &ofxColorManager::Changed_control);
+    ofAddListener(params_color.parameterChangedE(), this, &ofxColorManager::Changed_CONTROL);
 
     //-
 
@@ -151,7 +151,7 @@ void ofxColorManager::setup()
     params_palette.add(bAuto_palette_recall);
     params_palette.add(bLock_palette);
 
-    ofAddListener(params_palette.parameterChangedE(), this, &ofxColorManager::Changed_control);
+    ofAddListener(params_palette.parameterChangedE(), this, &ofxColorManager::Changed_CONTROL);
 
     //-
 
@@ -228,7 +228,7 @@ void ofxColorManager::setup()
 
     //-
 
-    ofAddListener(params_control.parameterChangedE(), this, &ofxColorManager::Changed_control);
+    ofAddListener(params_control.parameterChangedE(), this, &ofxColorManager::Changed_CONTROL);
 
     //--
 
@@ -310,7 +310,8 @@ void ofxColorManager::interface_setup()
 //--------------------------------------------------------------
 void ofxColorManager::gui_setup_layout()
 {
-    // LAYOUT
+    // LAYOUT DEFAULT
+    // TODO:: add json saver like ofxGuiPanels
 
     box_size = 40;
 
@@ -322,6 +323,8 @@ void ofxColorManager::gui_setup_layout()
     gui_y = 10;
     gui_w = 200;
     gui_h = 475;//estimate (should measure) height of the panel on window resize
+
+            //-
 
     // curve tool pos (anchor for others)
     curveTool_x = 577;//distance required to not be over the colorpicker
@@ -335,7 +338,7 @@ void ofxColorManager::gui_setup_layout()
     image_curvedGradient_w = box_size;
     image_curvedGradient_h = curveTool_h;
 
-    // slider
+    // curve slider
     slider_x = curveTool_x + pad + curveTool_amount + pad + image_curvedGradient_w;
     slider_y = curveTool_y;
     slider_w = box_size / 2;
@@ -347,26 +350,30 @@ void ofxColorManager::gui_setup_layout()
     grad_y = curveTool_y;
     grad_h = curveTool_h;
 
-    // user palette (pos related to gradient-pre curve)
-    palette_x = grad_x - (grad_w + pad);
-//    palette_y = curveTool_y + grad_h;
-    palette_y = curveTool_y;
-
-    // current color bar (the one afect by slider position. just for testing gradient purpose)
-    currColor_x = slider_x + slider_w + pad;
+    // current color box/bar (the one afect by slider position. just for testing gradient purpose)
+    currColor_x = slider_x + 2*(slider_w+pad);
     currColor_y = curveTool_y;
 
+    //-
+
+    // user palette (pos related to gradient-pre curve)
+    palette_x = grad_x - (grad_w + pad);
+    palette_y = curveTool_y;
+//    palette_y = curveTool_y + grad_h;
+
     // color box monitor picked (same that color picker gui)
-    // box mode
-//    color_x = 320;
-//    color_y = 42;
-//    color_w = color_h = 2*box_size;
     // bar mode
     color_w = (2*box_size);
     color_x = palette_x - (color_w+pad);
     color_y = curveTool_y;
     color_h = curveTool_h;
     r_color_picked = ofRectangle( color_x, color_y, color_w, color_h );
+    // box mode
+//    color_x = 320;
+//    color_y = 42;
+//    color_w = color_h = 2*box_size;
+
+        //-
 
     // all 8 algorithmic palettes
     // down to the gui
@@ -1253,23 +1260,23 @@ void ofxColorManager::curveTool_setup()
     curve_pos.set("INPUT", 0., 0., 1.);
     curve_pos_out.set("OUTPUT", 0., 0., 1.);
     bResetCurve.set("RESET CURVE", false);
-    bCurveSlider.set("DEBUG GRADIENT", false);
+    bCurveSlider.set("TEST CURVE", false);
     params_curve.add(curve_pos);
     params_curve.add(curve_pos_out);
     params_curve.add(bResetCurve);
     params_curve.add(bCurveSlider);
     curveMod.set("CURVE MOD", 0.5, 0., 1.);
-    ofAddListener(params_curve.parameterChangedE(), this, &ofxColorManager::Changed_control);
+    ofAddListener(params_curve.parameterChangedE(), this, &ofxColorManager::Changed_CONTROL);
 
     //-
 
-    // slider
-    curve_pos_slider.setup(slider_x, slider_y, slider_w, slider_h, 0., 1., 0, true, false);
+    // slider live test color out for this input
+    curve_pos_slider.setup(slider_x+(slider_w+pad), slider_y, slider_w, slider_h, 0., 1., 0, true, false);
     curve_pos_slider.setVisible(bCurveSlider);
 
     // curve mod
     curveMod = 0.5;
-    curveMod_Slider.setup(slider_x+2*(slider_w+pad), slider_y, slider_w, slider_h, 0., 1., 0, true, false);
+    curveMod_Slider.setup(slider_x, slider_y, slider_w, slider_h, 0., 1., 0, true, false);
     curveMod_Slider.setPercent(curveMod);
     curveMod_Slider.setVisible(bCurveSlider);
 //    curve_pos_slider.setLabelString("input");
@@ -1960,7 +1967,7 @@ void ofxColorManager::draw()
 
         ofPushStyle();
         ofFill();
-        ofSetColor(ofColor(color_picked.get()));
+        ofSetColor(ofColor( color_picked.get() ));
         ofDrawRectangle(r_color_picked);
         ofPopStyle();
 
@@ -2139,12 +2146,12 @@ void ofxColorManager::palette_clear()
 
 
 //--------------------------------------------------------------
-void ofxColorManager::Changed_control(ofAbstractParameter &e) {
+void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
     string name = e.getName();
 
     //TODO: should reduce callbacks in output..
     if (name!="INPUT" && name!="COLOR" && name!="OUTPUT")
-        ofLogNotice("ofxColorManager") << "Changed_control: " << name << ":" << e;
+        ofLogNotice("ofxColorManager") << "Changed_CONTROL: " << name << ":" << e;
 
     //--
 
@@ -2167,7 +2174,12 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
 
     else if (name == "SHOW CURVE")
     {
-    //        SHOW_Curve
+        if (!SHOW_Curve)
+        {
+            bCurveSlider = false;
+            curve_pos_slider.setVisible(bCurveSlider);
+            curveMod_Slider.setVisible(bCurveSlider);
+        }
     }
 
     //--
@@ -2318,11 +2330,21 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
             curvesTool.add(ofVec2f(255, 255));
         }
     }
-    else if (name == "DEBUG GRADIENT")
+    else if (name == "TEST CURVE")
     {
-        curve_pos_slider.setVisible(bCurveSlider);
-        curveMod_Slider.setVisible(bCurveSlider);
-
+        // workflow:
+        if (bCurveSlider)
+        {
+            SHOW_Curve = true;
+            bCurveSlider = true;
+            curve_pos_slider.setVisible(true);
+            curveMod_Slider.setVisible(true);
+        }
+        else
+        {
+            curve_pos_slider.setVisible(false);
+            curveMod_Slider.setVisible(false);
+        }
     }
     else if (name == "CURVE MOD")
     {
@@ -2835,8 +2857,8 @@ void ofxColorManager::exit()
 
     removeKeysListeners();
     removeMouseListeners();
-    ofRemoveListener(params_control.parameterChangedE(), this, &ofxColorManager::Changed_control);
-    ofRemoveListener(params_color.parameterChangedE(), this, &ofxColorManager::Changed_control);
-    ofRemoveListener(params_palette.parameterChangedE(), this, &ofxColorManager::Changed_control);
-    ofRemoveListener(params_curve.parameterChangedE(), this, &ofxColorManager::Changed_control);
+    ofRemoveListener(params_control.parameterChangedE(), this, &ofxColorManager::Changed_CONTROL);
+    ofRemoveListener(params_color.parameterChangedE(), this, &ofxColorManager::Changed_CONTROL);
+    ofRemoveListener(params_palette.parameterChangedE(), this, &ofxColorManager::Changed_CONTROL);
+    ofRemoveListener(params_curve.parameterChangedE(), this, &ofxColorManager::Changed_CONTROL);
 }
