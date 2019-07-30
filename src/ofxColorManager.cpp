@@ -306,7 +306,7 @@ void ofxColorManager::gui_setup_layout()
     gui_w = 200;
     gui_h = 475;//estimate (should measure) height of the panel on window resize
 
-            //-
+    //-
 
     // curve tool pos (anchor for others)
     curveTool_x = 577;//distance required to not be over the colorpicker
@@ -355,7 +355,7 @@ void ofxColorManager::gui_setup_layout()
 //    color_y = 42;
 //    color_w = color_h = 2*box_size;
 
-        //-
+    //-
 
     // all 8 algorithmic palettes
     // down to the gui
@@ -782,11 +782,33 @@ bool ofxColorManager::gui_imGui()
     COLOR_PICKER_Settings.windowSize = ofVec2f(guiWidth, 200);
     COLOR_PICKER_Settings.lockPosition = true;
 
+//    ImGuiWindowFlags window_flags = 0;
+////    if (no_titlebar)  window_flags |= ImGuiWindowFlags_NoTitleBar;
+////    if (no_scrollbar) window_flags |= ImGuiWindowFlags_NoScrollbar;
+////    if (!no_menu)     window_flags |= ImGuiWindowFlags_MenuBar;
+////    if (true) window_flags |= ImGuiWindowFlags_NoMove;
+////    if (true) window_flags |= ImGuiWindowFlags_NoResize;
+////    if (no_collapse)  window_flags |= ImGuiWindowFlags_NoCollapse;
+////    if (no_nav)       window_flags |= ImGuiWindowFlags_NoNav;
+////    if (no_close)     p_open = NULL; // Don't pass our bool* to Begin
+
     if (ofxImGui::BeginWindow("COLOR PICKER", COLOR_PICKER_Settings, false))
     {
         //-
 
-        // COLOR
+        // USER PALETTE
+
+        if (ImGui::CollapsingHeader("USER PALETTE")) {
+            ofxImGui::AddParameter(this->bPaletteEdit);
+            ofxImGui::AddParameter(this->bAddColor);
+            ImGui::SameLine();
+            ofxImGui::AddParameter(this->bRemoveColor);
+            ofxImGui::AddParameter(this->bClearPalette);
+        }
+
+        //-
+
+        // COLOR PICKER
 
 //        // 1. direct ImGui
 //        ImGui::ColorButton("color_picked", *(ImVec4 *) &color_picked.get());
@@ -811,13 +833,6 @@ bool ofxColorManager::gui_imGui()
             ofxImGui::AddParameter(this->color_BRG);
 
             ofxImGui::AddParameter(this->bRandomColor);
-
-            ImGui::Text("USER PALETTE MANAGER");
-            ofxImGui::AddParameter(this->bPaletteEdit);
-            ofxImGui::AddParameter(this->bAddColor);
-            ImGui::SameLine();
-            ofxImGui::AddParameter(this->bRemoveColor);
-            ofxImGui::AddParameter(this->bClearPalette);
 
             ImGui::PopItemWidth();
             ofxImGui::EndTree(COLOR_PICKER_Settings);
@@ -907,11 +922,11 @@ bool ofxColorManager::gui_imGui()
             }
         saved_palette_inited = true;
 
-        // 2.2 draw palette
-        if (ofxImGui::BeginTree("PALETTE", mainSettings))//grouped folder
-        {
-//            ImGui::PushItemWidth(guiWidth * 0.05);//not affecting..
+        //-
 
+        // 2.2 draw palette
+
+        if (ImGui::CollapsingHeader("PALETTE")) {
             for (int n = 0; n < IM_ARRAYSIZE(saved_palette); n++) {
                 ImGui::PushID(n);
 
@@ -924,15 +939,9 @@ bool ofxColorManager::gui_imGui()
 
                 ImGui::PopID();
             }
-
-//            ImGui::PopItemWidth();
-            ofxImGui::EndTree(mainSettings);
         }
 
         //--
-
-        // TODO: update
-        //        color_picked = color;
     }
     ofxImGui::EndWindow(COLOR_PICKER_Settings);
 
@@ -955,11 +964,12 @@ bool ofxColorManager::gui_imGui()
 
         if (ofxImGui::BeginTree("BACKGROUND", mainSettings))
         {
+            ImGui::PushItemWidth(guiWidth * 0.5);
             ofxImGui::AddParameter(this->color_backGround, true);
             ofxImGui::AddParameter(this->color_backGround_SET);
             ofxImGui::AddParameter(this->color_backGround_SETAUTO);
-
             ofxImGui::EndTree(mainSettings);
+            ImGui::PopItemWidth();
         }
 
         if (ofxImGui::BeginTree("PANELS", mainSettings))
@@ -969,7 +979,6 @@ bool ofxColorManager::gui_imGui()
             ofxImGui::AddParameter(this->SHOW_Gradient);
             ofxImGui::AddParameter(this->SHOW_Curve);
             ofxImGui::AddParameter(this->SHOW_BrowserColors);
-
             ofxImGui::EndTree(mainSettings);
         }
 
@@ -977,8 +986,7 @@ bool ofxColorManager::gui_imGui()
 
         // CURVE TOOL
 
-        if (ofxImGui::BeginTree("CURVE TOOL", mainSettings))
-        {
+        if (ImGui::CollapsingHeader("CURVE TOOL")) {
             ofxImGui::AddParameter(this->bResetCurve);
             if (ofxImGui::AddParameter(this->curve_pos))
             {
@@ -988,16 +996,15 @@ bool ofxColorManager::gui_imGui()
             ofxImGui::AddParameter(this->gradient_hard);
             ImGui::SameLine();
             ofxImGui::AddParameter(this->bCurveSlider);
-//            ofxImGui::AddParameter(this->curveMod);
-
-            ofxImGui::EndTree(mainSettings);
+            // ofxImGui::AddParameter(this->curveMod);
         }
 
         //-
 
-        // ALGORITHMIC PALETTE
-        if (ofxImGui::BeginTree("ALGORITHMIC PALETTE", mainSettings))
-        {
+        // ALGORITHMIC PALETTES
+
+        if (ImGui::CollapsingHeader("ALGORITHMIC PALETTES")) {
+            ImGui::PushItemWidth(guiWidth * 0.5);
             ofxImGui::AddParameter(this->MODE_Palette);
             if (!MODE_Palette) {
                 ofxImGui::AddParameter(this->SATURATION);
@@ -1007,8 +1014,7 @@ bool ofxColorManager::gui_imGui()
             ofxImGui::AddParameter(this->bRandomPalette);
             ofxImGui::AddParameter(this->bAuto_palette_recall);ImGui::SameLine();
             ofxImGui::AddParameter(this->bLock_palette);ImGui::SameLine();
-
-            ofxImGui::EndTree(mainSettings);
+            ImGui::PopItemWidth();
         }
 
         //-
@@ -2224,9 +2230,9 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
         }
     }
 
-    //-
+        //-
 
-    // ALGORITHMIC PALETTES
+        // ALGORITHMIC PALETTES
 
     else if (name == "RANDOM PALETTE")
     {
@@ -2305,7 +2311,7 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
         gradient.setHardMode(gradient_hard);
     }
 
-    // BACKGROUND
+        // BACKGROUND
     else if (name == "SET FROM COLOR")
     {
         if (color_backGround_SET)
