@@ -108,9 +108,11 @@ void ofxColorManager::setup()
     setBackground_ENABLE(true);
     color_backGround.set("BACKGROUND", ofFloatColor::white);
     color_backGround_SET.set("SET FROM COLOR", false);
+    color_backGround_SETAUTO.set("AUTO SET", false);
     params_data.setName("GENERAL");
     params_data.add(color_backGround);
     params_data.add(color_backGround_SET);
+    params_data.add(color_backGround_SETAUTO);
 
     //--
 
@@ -218,6 +220,7 @@ void ofxColorManager::setup()
     params_control.add(SHOW_Curve);
 
     params_control.add(color_backGround_SET);
+    params_control.add(color_backGround_SETAUTO);
 
     SHOW_ALL_GUI = true;
     SHOW_debugText = false;
@@ -273,8 +276,10 @@ void ofxColorManager::setup()
     XML_params.add(SHOW_Curve);
     XML_params.add(SHOW_BrowserColors);
 
-    XML_params.add(color_backGround);
     XML_params.add(color_picked);
+
+    XML_params.add(color_backGround);
+    XML_params.add(color_backGround_SETAUTO);
 
     XML_params.add(bPaletteEdit);//user palette
     XML_params.add(MODE_Palette);//algorithmic palette
@@ -947,7 +952,7 @@ bool ofxColorManager::gui_imGui()
 
 
     auto COLOR_MANAGER_Settings = ofxImGui::Settings();
-    COLOR_MANAGER_Settings.windowPos = ofVec2f(980, 480);
+    COLOR_MANAGER_Settings.windowPos = ofVec2f(990, 460);
     COLOR_MANAGER_Settings.windowSize = ofVec2f(100, 100);
 
     if (ofxImGui::BeginWindow("COLOR MANAGER", COLOR_MANAGER_Settings, false))
@@ -956,10 +961,16 @@ bool ofxColorManager::gui_imGui()
 
         // GENERAL DATA
 
-        if (ofxImGui::BeginTree("GLOBAL", mainSettings))
+        if (ofxImGui::BeginTree("BACKGROUND", mainSettings))
         {
             ofxImGui::AddParameter(this->color_backGround, true);
             ofxImGui::AddParameter(this->color_backGround_SET);
+            ofxImGui::AddParameter(this->color_backGround_SETAUTO);
+            ofxImGui::EndTree(mainSettings);
+        }
+
+        if (ofxImGui::BeginTree("PANELS", mainSettings))
+        {
             ofxImGui::AddParameter(this->SHOW_ColourLovers);
             ofxImGui::AddParameter(this->SHOW_AlgoPalettes);
             ofxImGui::AddParameter(this->SHOW_Curve);
@@ -1064,6 +1075,22 @@ void ofxColorManager::palette_load_ColourLovers()
 
 //    // 2. get color from colour lovers
 //    color_clicked = ofColor(myColor);
+
+    //-
+
+    // workflow: set background color from first/last palette color
+    if (color_backGround_SETAUTO)
+    {
+        if (palette.size() >0)
+        {
+            int size = palette.size();
+            ofColor c;
+            c = palette[0];//get first color
+            color_backGround.set( c );
+        }
+    }
+
+    //-
 }
 
 
@@ -1621,6 +1648,20 @@ void ofxColorManager::palette_recallFromPalettes(int p)
             }
             break;
     }
+
+    //-
+
+    // workflow: set background color from first/last palette color
+    if (color_backGround_SETAUTO)
+    {
+        int size = palette.size();
+        ofColor c;
+        c = palette[0];//get first color
+        color_backGround.set( c );
+    }
+
+    //-
+
 }
 
 
@@ -2262,6 +2303,11 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
             color_backGround_SET = false;
             color_backGround.set (ofColor(color_picked.get()));
         }
+    }
+
+    else if (name == "AUTO SET")
+    {
+
     }
 
     //--

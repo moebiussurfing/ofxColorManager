@@ -188,6 +188,7 @@ public:
 
     ofParameter<ofFloatColor> color_backGround;
     ofParameter<bool> color_backGround_SET;
+    ofParameter<bool> color_backGround_SETAUTO;
     bool backgroundENABLE = false;
     void setBackground_ENABLE(bool b);
 
