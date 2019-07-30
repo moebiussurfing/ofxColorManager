@@ -1090,6 +1090,9 @@ void ofxColorManager::update()
         ofLogWarning("ofxColorManager") << "update:bUpdated_Palette_BACK: " << bUpdated_Palette_BACK;
         bUpdated_Palette_BACK = false;
 
+        // TODO: workflow: if mode is palette&color should load first palette color
+        // and forget the clicked color
+
         // 1. get palette colors from colour lovers
         palette_load_ColourLovers();
 
@@ -1108,9 +1111,11 @@ void ofxColorManager::update()
         bUpdated_Color_BACK = false;
 
         // workflow: TODO: disable to avoid overwrite the selected color into the palette just created
-        if (ColourLoversHelper.MODE_PickPalette_BACK && ColourLoversHelper.MODE_PickColor_BACK) {
-            if (!bPaletteEdit) {
-                bPaletteEdit = true;
+        if (ColourLoversHelper.MODE_PickPalette_BACK &&
+                ColourLoversHelper.MODE_PickColor_BACK)
+        {
+            if (bPaletteEdit) {
+                bPaletteEdit = false;
             }
         }
 
