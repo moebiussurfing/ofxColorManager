@@ -81,6 +81,7 @@ public:
     ofParameter<bool> SHOW_ColourLovers;
     ofParameter<bool> SHOW_AlgoPalettes;
     ofParameter<bool> SHOW_BrowserColors;
+    ofParameter<bool> SHOW_Gradient;
     ofParameter<bool> SHOW_Curve;
     ofParameter<bool> SHOW_ALL_GUI;
     ofParameter<bool> SHOW_GUI_MINI;
@@ -261,6 +262,7 @@ public:
 
     ofxColorGradient<ofColor> gradient;//unmodified gradient with curveTool
     ofParameter<bool> gradient_hard;//stepped
+    void gradient_draw();
 
     //-
 

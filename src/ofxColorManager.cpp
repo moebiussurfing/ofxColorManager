@@ -210,11 +210,13 @@ void ofxColorManager::setup()
     SHOW_ColourLovers.set("SHOW COLOUR LOVERS", true);
     SHOW_AlgoPalettes.set("SHOW PALETTES", true);
     SHOW_BrowserColors.set("SHOW BROWSER COLORS", true);
+    SHOW_Gradient.set("SHOW GRADIENT", true);
     SHOW_Curve.set("SHOW CURVE", true);
 
     params_control.add(SHOW_ColourLovers);
     params_control.add(SHOW_AlgoPalettes);
     params_control.add(SHOW_BrowserColors);
+    params_control.add(SHOW_Gradient);
     params_control.add(SHOW_Curve);
 
     SHOW_ALL_GUI = true;
@@ -275,6 +277,7 @@ void ofxColorManager::setup()
 
     XML_params.add(SHOW_ColourLovers);
     XML_params.add(SHOW_AlgoPalettes);
+    XML_params.add(SHOW_Gradient);
     XML_params.add(SHOW_Curve);
     XML_params.add(SHOW_BrowserColors);
 
@@ -989,6 +992,7 @@ bool ofxColorManager::gui_imGui()
         {
             ofxImGui::AddParameter(this->SHOW_ColourLovers);
             ofxImGui::AddParameter(this->SHOW_AlgoPalettes);
+            ofxImGui::AddParameter(this->SHOW_Gradient);
             ofxImGui::AddParameter(this->SHOW_Curve);
             ofxImGui::AddParameter(this->SHOW_BrowserColors);
 
@@ -1010,7 +1014,7 @@ bool ofxColorManager::gui_imGui()
             ofxImGui::AddParameter(this->gradient_hard);
             ImGui::SameLine();
             ofxImGui::AddParameter(this->bCurveSlider);
-            ofxImGui::AddParameter(this->curveMod);
+//            ofxImGui::AddParameter(this->curveMod);
 
             ofxImGui::EndTree(mainSettings);
         }
@@ -1318,20 +1322,7 @@ void ofxColorManager::curveTool_update()
 
 
 //--------------------------------------------------------------
-void ofxColorManager::curveTool_draw() {
-
-//    if (SHOW_Curve)
-//    {
-    ofPushMatrix();
-    ofPushStyle();
-
-    //-
-
-    // COLOR MONITORING SLIDER POSITION ON CURVED GRADIENT
-    ofRectangle r;
-    r = ofRectangle( currColor_x, currColor_y, box_size/2, slider_h );
-
-    //-
+void ofxColorManager::gradient_draw() {
 
     // GRADIENT
 
@@ -1350,6 +1341,39 @@ void ofxColorManager::curveTool_draw() {
         ofDrawRectangle(r);
         ofPopStyle();
     }
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::curveTool_draw() {
+
+    ofPushMatrix();
+    ofPushStyle();
+
+    //-
+
+    // COLOR MONITORING SLIDER POSITION ON CURVED GRADIENT
+    ofRectangle r;
+    r = ofRectangle( currColor_x, currColor_y, box_size/2, slider_h );
+
+//    //-
+//
+//    // GRADIENT
+//
+//    // 1. un-curved gradient rectangle (left positioned)
+//    gradient.drawDebug(grad_x, grad_y, grad_w, grad_h);
+//
+//    if (bCurveSlider)
+//    {
+//        // 2. current box color at input curve point (right positioned)
+//        float out = ofMap( curvesTool.getAtPercent(1.0-curve_pos), 0, curveTool_amount-1, 1., 0.) ;
+//        ofColor c = gradient.getColorAtPercent( out );
+//
+//        ofPushStyle();
+//        ofFill();
+//        ofSetColor(c);
+//        ofDrawRectangle(r);
+//        ofPopStyle();
+//    }
 
     // NOTE: sometimes we need some tricky hacking to avoid rare fliping from gradients
     curve_pos_out = ofMap( curvesTool.getAtPercent(curve_pos), 0, curveTool_amount-1, 0., 1.);
@@ -1380,6 +1404,8 @@ void ofxColorManager::curveTool_draw() {
 
     ofPopMatrix();
     ofPopStyle();
+
+    //-
 
 //    // debug curve values
 //    int posx, posy;
@@ -1971,10 +1997,14 @@ void ofxColorManager::draw()
 //    ofPopStyle();
 
         //-
-
-
+        
         // INTERFACE
         interface_draw();
+
+        // CURVE
+        if (SHOW_Gradient) {
+            gradient_draw();
+        }
 
         // CURVE
         if (SHOW_Curve) {
@@ -2332,10 +2362,10 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
             curveMod_Slider.setVisible(false);
         }
     }
-    else if (name == "CURVE MOD")
-    {
-        curveMod_Slider.setPercent(curveMod);
-    }
+//    else if (name == "CURVE MOD")
+//    {
+//        curveMod_Slider.setPercent(curveMod);
+//    }
     else if (name == "GRADIENT HARD")
     {
         gradient.setHardMode(gradient_hard);
