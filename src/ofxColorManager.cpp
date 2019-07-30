@@ -1368,9 +1368,6 @@ void ofxColorManager::curveTool_draw() {
     curve_img_gradient.draw(image_curvedGradient_x, image_curvedGradient_y);
 
     // 3.2 curve splines editor
-//        ofPushMatrix();
-    ofPushStyle();
-
     ofSetColor(255);
     curvesTool.draw(0, 0, curve_pos_LUT);
 
@@ -1381,13 +1378,11 @@ void ofxColorManager::curveTool_draw() {
         float y = curveTool_amount - curvesTool[curve_pos_LUT];
         ofDrawLine(0, y, curveTool_amount, y);
 
-        // 3.4 current circle point
-        ofSetColor(25);
-        ofDrawCircle(curve_pos_LUT, y, 3);
+//        // 3.4 current pos circle point
+//        ofSetColor(25);
+//        ofDrawCircle(curve_pos_LUT, y, 3);
     }
 
-//        ofPopMatrix();
-    ofPopStyle();
     //-
 
     ofPopMatrix();
