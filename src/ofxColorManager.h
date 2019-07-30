@@ -278,6 +278,8 @@ public:
     ofParameter<float> curve_pos_out;
     ofParameter<bool> bResetCurve;
     ofParameter<bool> bCurveSlider;
+    ofParameter<float> curveMod;
+    ofxSimpleSlider curveMod_Slider;
     int curve_pos_LUT = 0;
 
     //--
