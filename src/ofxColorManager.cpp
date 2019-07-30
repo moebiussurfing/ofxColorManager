@@ -186,7 +186,7 @@ void ofxColorManager::setup()
     SHOW_AlgoPalettes.set("SHOW PALETTES", true);
     SHOW_BrowserColors.set("SHOW BROWSER COLORS", true);
     SHOW_Gradient.set("SHOW GRADIENT", true);
-    SHOW_Curve.set("SHOW CURVE", true);
+    SHOW_Curve.set("SHOW CURVE TOOL", true);
 
     params_control.add(SHOW_ColourLovers);
     params_control.add(SHOW_AlgoPalettes);
@@ -1012,10 +1012,10 @@ bool ofxColorManager::gui_imGui()
 
         if (ofxImGui::BeginTree("PANELS", mainSettings))
         {
-            ofxImGui::AddParameter(this->SHOW_ColourLovers);
-            ofxImGui::AddParameter(this->SHOW_AlgoPalettes);
             ofxImGui::AddParameter(this->SHOW_Gradient);
             ofxImGui::AddParameter(this->SHOW_Curve);
+            ofxImGui::AddParameter(this->SHOW_ColourLovers);
+            ofxImGui::AddParameter(this->SHOW_AlgoPalettes);
             ofxImGui::AddParameter(this->SHOW_TEST_Curve);
             ofxImGui::AddParameter(this->SHOW_BrowserColors);
             ofxImGui::EndTree(mainSettings);
@@ -2199,7 +2199,7 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
         ColorBrowser.setVisible(SHOW_BrowserColors);
     }
 
-    else if (name == "SHOW CURVE")
+    else if (name == "SHOW CURVE TOOL")
     {
 //        curveMod_Slider.setVisible(SHOW_Curve);
         // workflow:
