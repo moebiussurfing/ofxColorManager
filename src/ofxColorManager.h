@@ -187,6 +187,7 @@ public:
     // COLORS
 
     ofParameter<ofFloatColor> color_backGround;
+    ofParameter<bool> color_backGround_SET;
     bool backgroundENABLE = false;
     void setBackground_ENABLE(bool b);
 
@@ -196,6 +197,7 @@ public:
     ofParameter<int> color_SAT;
     ofParameter<int> color_BRG;
 
+    // ?color clicked comes from algo palette colors
     //TODO: pointer color to get click from button class
     ofFloatColor color_clicked;
     ofFloatColor color_clicked_PRE;

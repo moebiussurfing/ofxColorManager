@@ -107,9 +107,10 @@ void ofxColorManager::setup()
 
     setBackground_ENABLE(true);
     color_backGround.set("BACKGROUND", ofFloatColor::white);
-
+    color_backGround_SET.set("SET FROM COLOR", false);
     params_data.setName("GENERAL");
     params_data.add(color_backGround);
+    params_data.add(color_backGround_SET);
 
     //--
 
@@ -135,10 +136,10 @@ void ofxColorManager::setup()
     SATURATION.set("SATURATION", 200, 0, 255 );
     BRIGHTNESS.set("BRIGHTNESS", 200, 0, 255 );
     bRandomPalette.set("RANDOM PALETTE", false);
-    bAuto_palette_recall.set("AUTO CREATED", false);
+    bAuto_palette_recall.set("AUTO CREATE!", false);
     bLock_palette.set("LOCK PALETTES", false);
 
-    NUM_ALGO_PALETTES.set("SIZE", 6, 2, 8);
+    NUM_ALGO_PALETTES.set("SIZE COLORS", 6, 2, 8);
     params_palette.setName("ALGORITHMIC PALETTES");
     params_palette.add(MODE_Palette);
     params_palette.add(SATURATION);
@@ -215,6 +216,8 @@ void ofxColorManager::setup()
     params_control.add(SHOW_AlgoPalettes);
     params_control.add(SHOW_BrowserColors);
     params_control.add(SHOW_Curve);
+
+    params_control.add(color_backGround_SET);
 
     SHOW_ALL_GUI = true;
     SHOW_debugText = false;
@@ -856,7 +859,7 @@ bool ofxColorManager::gui_imGui()
         // 0. button color big
         if (ofxImGui::BeginTree("COLOR WHEEL", mainSettings))//grouped folder
         {
-//            ImGui::Separator();
+            //            ImGui::Separator();
             int colorW = COLOR_PICKER_Settings.windowSize.x - 20;//make inner
             int colorH = 25;
             int misc_flags = ImGuiColorEditFlags_NoOptions|ImGuiColorEditFlags_NoTooltip;
@@ -911,8 +914,8 @@ bool ofxColorManager::gui_imGui()
         // 2.2 draw palette
         if (ofxImGui::BeginTree("PALETTE", mainSettings))//grouped folder
         {
-//            ImGui::Separator();
-//            ImGui::Text("PALETTE");
+            //            ImGui::Separator();
+            //            ImGui::Text("PALETTE");
             for (int n = 0; n < IM_ARRAYSIZE(saved_palette); n++) {
                 ImGui::PushID(n);
 
@@ -931,30 +934,17 @@ bool ofxColorManager::gui_imGui()
 
         //--
 
-//        // TODO: colorPicked BACK
-//        //check changes..
-//        ofFloatColor colorOf( color );//convert ImColor ot ofColor
-//        if (colorOf != color_picked)
-//        {
-//            color_picked = colorOf;
-//        }
-//        //check changes..
-////        myImColor_PRE = color;
-
-        //*****************
-
         // TODO: update
-//        color_picked = color;
-
-//    ImGui::EndGroup();
-//    ImGui::End();
+        //        color_picked = color;
     }
     ofxImGui::EndWindow(COLOR_PICKER_Settings);
 
 
     //-------------------------------------------------------------------
 
+
     // 2ND WINDOW
+
 
     auto COLOR_MANAGER_Settings = ofxImGui::Settings();
     COLOR_MANAGER_Settings.windowPos = ofVec2f(980, 480);
@@ -969,6 +959,7 @@ bool ofxColorManager::gui_imGui()
         if (ofxImGui::BeginTree("GLOBAL", mainSettings))
         {
             ofxImGui::AddParameter(this->color_backGround, true);
+            ofxImGui::AddParameter(this->color_backGround_SET);
             ofxImGui::AddParameter(this->SHOW_ColourLovers);
             ofxImGui::AddParameter(this->SHOW_AlgoPalettes);
             ofxImGui::AddParameter(this->SHOW_Curve);
@@ -1087,8 +1078,8 @@ void ofxColorManager::update()
 
     if (bUpdated_Palette_BACK)
     {
-        ofLogWarning("ofxColorManager") << "update:bUpdated_Palette_BACK: " << bUpdated_Palette_BACK;
         bUpdated_Palette_BACK = false;
+        ofLogWarning("ofxColorManager") << "update:bUpdated_Palette_BACK: " << bUpdated_Palette_BACK;
 
         // TODO: workflow: if mode is palette&color should load first palette color
         // and forget the clicked color
@@ -1107,8 +1098,8 @@ void ofxColorManager::update()
 
     if (bUpdated_Color_BACK)
     {
-        ofLogWarning("ofxColorManager") << "update:bUpdated_Color_BACK: " << bUpdated_Color_BACK;
         bUpdated_Color_BACK = false;
+        ofLogWarning("ofxColorManager") << "update:bUpdated_Color_BACK: " << bUpdated_Color_BACK;
 
         // workflow: TODO: disable to avoid overwrite the selected color into the palette just created
         if (ColourLoversHelper.MODE_PickPalette_BACK &&
@@ -1131,8 +1122,6 @@ void ofxColorManager::update()
                 palette_recallFromPalettes(SELECTED_palette_LAST);//trig last choice
             }
         }
-
-
     }
 
     //--
@@ -2088,7 +2077,7 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
 
     //--
 
-    // CONTROL
+    // CONTROL WINDOWS PANELS
 
     if (name == "SHOW COLOUR LOVERS")
     {
@@ -2107,7 +2096,7 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
 
     else if (name == "SHOW CURVE")
     {
-//        SHOW_Curve
+    //        SHOW_Curve
     }
 
     //--
@@ -2201,6 +2190,11 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
             palette_clear();
         }
     }
+
+    //-
+
+    // ALGORITHMIC PALETTES
+
     else if (name == "RANDOM PALETTE")
     {
         if (bRandomPalette)
@@ -2215,12 +2209,11 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
             }
         }
     }
-    else if (name == "SIZE")
+    else if (name == "SIZE COLORS")
     {
         palettes_resize();
     }
-
-    else if (name == "AUTO CREATED")
+    else if (name == "AUTO CREATE!")
     {
         if (bAuto_palette_recall)
             bLock_palette = false;
@@ -2229,6 +2222,11 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
     {
         if (bLock_palette)
             bAuto_palette_recall = false;
+    }
+    else if (name=="BRIGHTNESS" || name=="SATURATION")
+    {
+        palettes_update();
+//        cout << name << endl;
     }
 
         //--
@@ -2255,6 +2253,15 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
     else if (name == "GRADIENT HARD")
     {
         gradient.setHardMode(gradient_hard);
+    }
+
+    else if (name == "SET FROM COLOR")
+    {
+        if (color_backGround_SET)
+        {
+            color_backGround_SET = false;
+            color_backGround.set (ofColor(color_picked.get()));
+        }
     }
 
     //--
