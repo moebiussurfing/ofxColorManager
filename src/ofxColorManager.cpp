@@ -76,31 +76,6 @@ void ofxColorManager::setup()
 
     ColorBrowser_palette = ColorBrowser.getPalette();
 
-//    // 2.2 Generate palette
-//    saved_palette_inited = false;
-//    if (!saved_palette_inited)
-////        for (int n = 0; n < IM_ARRAYSIZE(saved_palette); n++)
-//        for (int n = 0; n < ColorBrowser_palette.size(); n++)
-//        {
-//            ImVec4 myImColor;
-//
-//            ofFloatColor myOfColor;
-//            myOfColor = ofFloatColor( ColorBrowser_palette[n] );
-//
-//            saved_palette[n].x = myOfColor.r;
-//            saved_palette[n].y = myOfColor.g;
-//            saved_palette[n].z = myOfColor.b;
-//            saved_palette[n].w = myOfColor.a;
-//
-////            myImColor = ColorBrowser_palette[n];
-////            saved_palette[n] = myImColor;
-//
-////            saved_palette[n].x =
-////            ImGui::ColorConvertHSVtoRGB(myHue, n / 10., 0.5f, saved_palette[n].x, saved_palette[n].y, saved_palette[n].z);
-////            saved_palette[n].w = 1.0f; // Alpha
-//        }
-//    saved_palette_inited = true;
-
     //-
 
     // GENERAL DATA
@@ -899,7 +874,6 @@ bool ofxColorManager::gui_imGui()
                             ImGuiColorEditFlags_NoInputs |
                             ImGuiColorEditFlags_PickerHueWheel;
             ImGui::ColorPicker4("Background Color", (float *) &color, colorEdiFlags);
-            //TODO: TEST USE EXTERNAL PICKER COLOR
 
             colorEdiFlags =
                     ImGuiColorEditFlags_NoSmallPreview |
@@ -920,6 +894,7 @@ bool ofxColorManager::gui_imGui()
 
         // 2 load/create palete from colorBrowser
         static bool saved_palette_inited = false;
+//        const int PaletteSIZE = ColorBrowser_palette.size();//error
         static ImVec4 saved_palette[130];//same than openColor palettes
         if (!saved_palette_inited)
             for (int n = 0; n < IM_ARRAYSIZE(saved_palette); n++)
@@ -928,17 +903,16 @@ bool ofxColorManager::gui_imGui()
                 saved_palette[n].x = c.r;
                 saved_palette[n].y = c.g;
                 saved_palette[n].z = c.b;
-                saved_palette[n].w = 1.0f; //alpha
+                saved_palette[n].w = 1.0f;//alpha
             }
         saved_palette_inited = true;
 
         // 2.2 draw palette
         if (ofxImGui::BeginTree("PALETTE", mainSettings))//grouped folder
         {
-            ImGui::PushItemWidth(guiWidth * widgetFactor);
+//            ImGui::PushItemWidth(guiWidth * 0.05);//not affecting..
 
             for (int n = 0; n < IM_ARRAYSIZE(saved_palette); n++) {
-
                 ImGui::PushID(n);
 
                 if ((n % 10) != 0) {//10 colors per row
@@ -951,7 +925,7 @@ bool ofxColorManager::gui_imGui()
                 ImGui::PopID();
             }
 
-            ImGui::PopItemWidth();
+//            ImGui::PopItemWidth();
             ofxImGui::EndTree(mainSettings);
         }
 
@@ -1041,37 +1015,18 @@ bool ofxColorManager::gui_imGui()
     }
     ofxImGui::EndWindow(COLOR_MANAGER_Settings);
 
-
-//    //TODO: TESTINGS WINDOWS SETTINGS
-//    if (this->preview)
-//    {
-//        static const float kPreviewSize = 600.0f;
-//        auto previewSettings = ofxImGui::Settings();
-//        previewSettings.windowPos = ofVec2f(kPreviewSize,400);
-//        previewSettings.windowSize = ofVec2f(600,200);
-////        previewSettings.lockPosition = true;
-////        previewSettings.windowBlock = true;
-//
-////        ImGuiStyle *style = &ImGui::GetStyle();
-////        style->WindowBorderSize(10.);
-//
-//        if (ofxImGui::BeginWindow(this->preview, previewSettings, false))
-//        {
-//            ImGui::Text("preview PALETTE preview");
-//            ImGui::Text("USER preview preview");
-//            ofxImGui::AddParameter(this->bPaletteEdit);
-//            ImGui::Text("preview preview MANAGER");
-//            ImGui::Text("USER preview MANAGER");
-//        }
-//        ofxImGui::EndWindow(previewSettings);
-//    }
+    //-
 
     this->gui.end();
     return mainSettings.mouseOverGui;
 
-    //    I wrongly supposed that the begin() and end() methods of OfxImGui were related with ImGui::Begin and ImGui::End methods which is not the case…
-    //    The right calling sequence is
-    //    im_gui.begin();
+    //-
+
+    // NOTE:
+    // I wrongly supposed that the begin() and end() methods of OfxImGui were related with ImGui::Begin
+    // and ImGui::End methods which is not the case…
+    // The right calling sequence is
+    // im_gui.begin();
     // Addon begin ImGui::SetNextWindowPos(ImVec2(0,0));
     // ImGui::SetNextWindowSize(ImVec2(1200,800),
     // ImGuiSetCond_Once);
@@ -1242,6 +1197,7 @@ void ofxColorManager::update()
 //--------------------------------------------------------------
 void ofxColorManager::curveTool_setup()
 {
+    //gradient here too
     curve_img_gradient.allocate(image_curvedGradient_w, image_curvedGradient_h, OF_IMAGE_COLOR);
 
     curvesTool.setup(curveTool_amount);
@@ -1283,7 +1239,6 @@ void ofxColorManager::curveTool_update()
     // curve modifier
     curveMod = curveMod_Slider.getValue();
     curvesTool.set(1, ofVec2f(curveTool_amount/2., ofMap(curveMod,0.,1.,0,curveTool_amount)));
-//    curvesTool.set(1, ofVec2f(ofMap(curveMod,0.,1.,0,curveTool_amount), 0));
 
     //--
 
@@ -1316,8 +1271,6 @@ void ofxColorManager::curveTool_update()
         ofColor c = gradient.getColorAtPercent( out );
         color_TARGET->set(c);//TODO: should reduce calls
     }
-
-    //-
 }
 
 
@@ -1325,9 +1278,23 @@ void ofxColorManager::curveTool_update()
 void ofxColorManager::gradient_draw() {
 
     // GRADIENT
-
     // 1. un-curved gradient rectangle (left positioned)
     gradient.drawDebug(grad_x, grad_y, grad_w, grad_h);
+}
+
+
+//--------------------------------------------------------------
+void ofxColorManager::curveTool_draw() {
+
+    ofPushMatrix();
+    ofPushStyle();
+
+    //-
+
+    // COLOR MONITORING SLIDER POSITION ON CURVED GRADIENT
+
+    ofRectangle r;
+    r = ofRectangle( currColor_x, currColor_y, box_size/2, slider_h );
 
     if (bCurveSlider)
     {
@@ -1341,39 +1308,6 @@ void ofxColorManager::gradient_draw() {
         ofDrawRectangle(r);
         ofPopStyle();
     }
-}
-
-//--------------------------------------------------------------
-void ofxColorManager::curveTool_draw() {
-
-    ofPushMatrix();
-    ofPushStyle();
-
-    //-
-
-    // COLOR MONITORING SLIDER POSITION ON CURVED GRADIENT
-    ofRectangle r;
-    r = ofRectangle( currColor_x, currColor_y, box_size/2, slider_h );
-
-//    //-
-//
-//    // GRADIENT
-//
-//    // 1. un-curved gradient rectangle (left positioned)
-//    gradient.drawDebug(grad_x, grad_y, grad_w, grad_h);
-//
-//    if (bCurveSlider)
-//    {
-//        // 2. current box color at input curve point (right positioned)
-//        float out = ofMap( curvesTool.getAtPercent(1.0-curve_pos), 0, curveTool_amount-1, 1., 0.) ;
-//        ofColor c = gradient.getColorAtPercent( out );
-//
-//        ofPushStyle();
-//        ofFill();
-//        ofSetColor(c);
-//        ofDrawRectangle(r);
-//        ofPopStyle();
-//    }
 
     // NOTE: sometimes we need some tricky hacking to avoid rare fliping from gradients
     curve_pos_out = ofMap( curvesTool.getAtPercent(curve_pos), 0, curveTool_amount-1, 0., 1.);
@@ -1997,7 +1931,7 @@ void ofxColorManager::draw()
 //    ofPopStyle();
 
         //-
-        
+
         // INTERFACE
         interface_draw();
 
