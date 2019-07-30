@@ -135,7 +135,7 @@ void ofxColorManager::setup()
     SATURATION.set("SATURATION", 200, 0, 255 );
     BRIGHTNESS.set("BRIGHTNESS", 200, 0, 255 );
     bRandomPalette.set("RANDOM PALETTE", false);
-    bAuto_palette_recall.set("AUTO ERASE USER PALETTE", false);
+    bAuto_palette_recall.set("AUTO CREATED", false);
     bLock_palette.set("LOCK PALETTES", false);
 
     NUM_ALGO_PALETTES.set("SIZE", 6, 2, 8);
@@ -857,7 +857,7 @@ bool ofxColorManager::gui_imGui()
         if (ofxImGui::BeginTree("COLOR WHEEL", mainSettings))//grouped folder
         {
 //            ImGui::Separator();
-            int colorW = COLOR_PICKER_Settings.windowSize.x;
+            int colorW = COLOR_PICKER_Settings.windowSize.x - 20;//make inner
             int colorH = 25;
             int misc_flags = ImGuiColorEditFlags_NoOptions|ImGuiColorEditFlags_NoTooltip;
             ImGui::ColorButton("MyColor##3c", *(ImVec4 *) &color, misc_flags, ImVec2(colorW, colorH));
@@ -1079,11 +1079,12 @@ void ofxColorManager::palette_load_ColourLovers()
 //--------------------------------------------------------------
 void ofxColorManager::update()
 {
-    //-
+    //--
 
     // COLOUR LOVERS
 
     ColourLoversHelper.update();
+
     if (bUpdated_Palette_BACK)
     {
         ofLogWarning("ofxColorManager") << "update:bUpdated_Palette_BACK: " << bUpdated_Palette_BACK;
@@ -1091,6 +1092,14 @@ void ofxColorManager::update()
 
         // 1. get palette colors from colour lovers
         palette_load_ColourLovers();
+
+        //-
+
+        // workflow: when loading a colour lover palette we disable auto create from algo palettes
+        if (bAuto_palette_recall)
+        {
+            bAuto_palette_recall = false;
+        }
     }
 
     if (bUpdated_Color_BACK)
@@ -1098,8 +1107,27 @@ void ofxColorManager::update()
         ofLogWarning("ofxColorManager") << "update:bUpdated_Color_BACK: " << bUpdated_Color_BACK;
         bUpdated_Color_BACK = false;
 
+        // workflow: TODO: disable to avoid overwrite the selected color into the palette just created
+        if (ColourLoversHelper.MODE_PickPalette_BACK && ColourLoversHelper.MODE_PickColor_BACK) {
+            if (!bPaletteEdit) {
+                bPaletteEdit = true;
+            }
+        }
+
         // 2. get color from colour lovers
         color_clicked = ofColor(myColor);
+
+        // 3. auto create user palette from algo palette from colour lover picked color
+        if (!ColourLoversHelper.MODE_PickPalette_BACK && ColourLoversHelper.MODE_PickColor_BACK)
+        {
+            if (bAuto_palette_recall)
+            {
+                palette_clear();
+                palette_recallFromPalettes(SELECTED_palette_LAST);//trig last choice
+            }
+        }
+
+
     }
 
     //--
@@ -2187,7 +2215,7 @@ void ofxColorManager::Changed_control(ofAbstractParameter &e) {
         palettes_resize();
     }
 
-    else if (name == "AUTO ERASE USER PALETTE")
+    else if (name == "AUTO CREATED")
     {
         if (bAuto_palette_recall)
             bLock_palette = false;
