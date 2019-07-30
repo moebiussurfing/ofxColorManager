@@ -279,10 +279,20 @@ public:
     ofParameter<float> curve_pos;
     ofParameter<float> curve_pos_out;
     ofParameter<bool> bResetCurve;
-    ofParameter<bool> bCurveSlider;
     ofParameter<float> curveMod;
     ofxSimpleSlider curveMod_Slider;
     int curve_pos_LUT = 0;
+    ofParameter<bool> SHOW_TEST_Curve;
+
+    //-
+
+    // TEST CURVE
+
+    bool TEST_MODE = false;
+    float TEST_Speed = .75;
+    bool TEST_CycleMODE = false;
+    int TEST_maxFrames = 300;//slowest period
+    bool TEST_toBackground = false;
 
     //--
 
