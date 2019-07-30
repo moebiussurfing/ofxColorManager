@@ -177,7 +177,6 @@ void ofxColorManager::setup()
     gradient.setHardMode(gradient_hard);
     gradient.setDrawVertical(true);
     gradient.setDrawDirFlip(true);
-
     params_curve.setName("GRADIENT CURVE");
     params_curve.add(gradient_hard);
 
@@ -196,7 +195,6 @@ void ofxColorManager::setup()
     bPaletteEdit.set("EDIT COLOR", false);
     bRemoveColor.set("REMOVE COLOR", false);
     bClearPalette.set("CLEAR PALETTE", false);
-
     params_control.setName("COLOR EDITOR");
     params_control.add(color_picked);
     params_control.add(bRandomColor);
@@ -219,12 +217,16 @@ void ofxColorManager::setup()
     params_control.add(SHOW_BrowserColors);
     params_control.add(SHOW_Curve);
 
-    params_control.add(color_backGround_SET);
-    params_control.add(color_backGround_SETAUTO);
-
     SHOW_ALL_GUI = true;
     SHOW_debugText = false;
     SHOW_GUI_MINI = false;
+
+    //-
+
+    // BACKGROUND
+
+    params_control.add(color_backGround_SET);
+    params_control.add(color_backGround_SETAUTO);
 
     //-
 
@@ -294,6 +296,8 @@ void ofxColorManager::setup()
     palette_load("myPalette");
 
     //-
+
+    palettes_setVisible(SHOW_AlgoPalettes);
 }
 
 
@@ -786,7 +790,8 @@ bool ofxColorManager::gui_imGui()
     auto mainSettings = ofxImGui::Settings();
     this->gui.begin();
 
-//    ofxImGui::AddParameter(this->preview);
+    int guiWidth = 250;
+    float widgetFactor = 0.9;
 
     //--
 
@@ -794,30 +799,19 @@ bool ofxColorManager::gui_imGui()
 
     // COLOR PICKER CUSTOM
 
-//    if (ImGui::Button("Another Window"))
-//    {
-//        //bitwise OR
-//        show_another_window ^= 1;
-//    }
-
-    //-
-
     auto COLOR_PICKER_Settings = ofxImGui::Settings();
     COLOR_PICKER_Settings.windowPos = ofVec2f(0, 0);
-    COLOR_PICKER_Settings.windowSize = ofVec2f(233, 200);
+    COLOR_PICKER_Settings.windowSize = ofVec2f(guiWidth, 200);
     COLOR_PICKER_Settings.lockPosition = true;
 
     if (ofxImGui::BeginWindow("COLOR PICKER", COLOR_PICKER_Settings, false))
     {
-//        ofxImGui::AddParameter(this->preview);
-
         //-
 
         // COLOR
 
 //        // 1. direct ImGui
 //        ImGui::ColorButton("color_picked", *(ImVec4 *) &color_picked.get());
-//
 //        ImGui::Button("bRandomColor");
 //        ImGui::SliderInt("H", (int*) &color_HUE.get(), 0, 255);
 //        ImGui::SliderInt("S", (int*) &color_SAT.get(), 0, 255);
@@ -830,14 +824,15 @@ bool ofxColorManager::gui_imGui()
         // 2. OFXIMGUI MODE
         if (ofxImGui::BeginTree("COLOR", COLOR_PICKER_Settings))
         {
-            ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.5f);
+            //ImGui::PushItemWidth(ImGui::GetWindowWidth() * widgetFactor);
+            ImGui::PushItemWidth(guiWidth * 0.77);
 
-            ofxImGui::AddParameter(this->bRandomColor);
             ofxImGui::AddParameter(this->color_picked, true);
-//            ImGui::DragFloat("float##2", &f);
             ofxImGui::AddParameter(this->color_HUE);
             ofxImGui::AddParameter(this->color_SAT);
             ofxImGui::AddParameter(this->color_BRG);
+
+            ofxImGui::AddParameter(this->bRandomColor);
 
             ImGui::Text("USER PALETTE MANAGER");
             ofxImGui::AddParameter(this->bPaletteEdit);
@@ -847,17 +842,8 @@ bool ofxColorManager::gui_imGui()
             ofxImGui::AddParameter(this->bClearPalette);
 
             ImGui::PopItemWidth();
-
             ofxImGui::EndTree(COLOR_PICKER_Settings);
         }
-
-
-//note: ofVec2f and ImVec2f are interchangeable
-//    ImGui::SetNextWindowSize(ofVec2f(800,900), ImGuiSetCond_FirstUseEver);
-//    ImGui::SetNextWindowPos(ofVec2f(0,0));
-//
-//    //___________________________
-//    ImGui::Begin("Another Window", &show_another_window);
 
         //-
 
@@ -885,13 +871,12 @@ bool ofxColorManager::gui_imGui()
 
         //-
 
-        // 0. button color big
         if (ofxImGui::BeginTree("COLOR WHEEL", mainSettings))//grouped folder
         {
-            ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.5f);
-            //            ImGui::Separator();
+            // 0. button color big
+            ImGui::PushItemWidth(guiWidth * widgetFactor);
 
-            int colorW = COLOR_PICKER_Settings.windowSize.x - 20;//make inner
+            int colorW = ImGui::GetWindowWidth() * widgetFactor;
             int colorH = 25;
             int misc_flags = ImGuiColorEditFlags_NoOptions|ImGuiColorEditFlags_NoTooltip;
             ImGui::ColorButton("MyColor##3c", *(ImVec4 *) &color, misc_flags, ImVec2(colorW, colorH));
@@ -923,9 +908,9 @@ bool ofxColorManager::gui_imGui()
                             ImGuiColorEditFlags_HDR |
                             ImGuiColorEditFlags_PickerHueBar;
             ImGui::ColorPicker4("Background Color", (float *) &color, colorEdiFlags);
-            ofxImGui::EndTree(mainSettings);
 
             ImGui::PopItemWidth();
+            ofxImGui::EndTree(mainSettings);
         }
 
         //--
@@ -947,10 +932,7 @@ bool ofxColorManager::gui_imGui()
         // 2.2 draw palette
         if (ofxImGui::BeginTree("PALETTE", mainSettings))//grouped folder
         {
-            ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.5f);
-
-            //            ImGui::Separator();
-            //            ImGui::Text("PALETTE");
+            ImGui::PushItemWidth(guiWidth * widgetFactor);
 
             for (int n = 0; n < IM_ARRAYSIZE(saved_palette); n++) {
 
@@ -966,8 +948,8 @@ bool ofxColorManager::gui_imGui()
                 ImGui::PopID();
             }
 
-            ofxImGui::EndTree(mainSettings);
             ImGui::PopItemWidth();
+            ofxImGui::EndTree(mainSettings);
         }
 
         //--
@@ -985,8 +967,8 @@ bool ofxColorManager::gui_imGui()
 
 
     auto COLOR_MANAGER_Settings = ofxImGui::Settings();
-    COLOR_MANAGER_Settings.windowPos = ofVec2f(980, 440);
-    COLOR_MANAGER_Settings.windowSize = ofVec2f(100, 100);
+    COLOR_MANAGER_Settings.windowPos = ofVec2f(980, 400);
+    COLOR_MANAGER_Settings.windowSize = ofVec2f(guiWidth, 100);
 
     if (ofxImGui::BeginWindow("COLOR MANAGER", COLOR_MANAGER_Settings, false))
     {
