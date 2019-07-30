@@ -2361,6 +2361,8 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
             curvesTool.add(ofVec2f(0, 0));
             curvesTool.add(ofVec2f(127, 127));
             curvesTool.add(ofVec2f(255, 255));
+            curveMod = 0.5;
+            curveMod_Slider.setPercent(curveMod);
         }
     }
     else if (name == "SHOW TEST CURVE")
