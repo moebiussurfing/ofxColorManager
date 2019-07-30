@@ -311,20 +311,8 @@ void ofxColorManager::gui_setup_layout()
     // curve tool pos (anchor for others)
     curveTool_x = 577;//distance required to not be over the colorpicker
     curveTool_y = 25;
-    curveTool_w = curveTool_amount;//TODO: shoul can resize curve tool besides amount
+    curveTool_w = curveTool_amount;//TODO: should can resize curve tool editor box besides amount
     curveTool_h = curveTool_amount;
-
-    // gradient curved image LUT [referenced to curve pos (vertical)]
-    image_curvedGradient_x = curveTool_amount + pad;//curveTool +
-    image_curvedGradient_y = 0;//curveTool +
-    image_curvedGradient_w = box_size;
-    image_curvedGradient_h = curveTool_h;
-
-    // curve slider
-    slider_x = curveTool_x + pad + curveTool_amount + pad + image_curvedGradient_w;
-    slider_y = curveTool_y;
-    slider_w = box_size / 2;
-    slider_h = curveTool_h;
 
     // gradient-pre curve (bad sorted to the left but anchored to curve..)
     grad_w = box_size;
@@ -332,8 +320,27 @@ void ofxColorManager::gui_setup_layout()
     grad_y = curveTool_y;
     grad_h = curveTool_h;
 
+    // curve mod slider
+    sliderMod_x = curveTool_x+curveTool_w+pad;
+    sliderMod_y = curveTool_y;
+    sliderMod_w = box_size/2;
+    sliderMod_h = curveTool_h;
+
+    // gradient-curved image LUT [referenced to curve pos (vertical)]
+    image_curvedGradient_x = curveTool_w+pad+sliderMod_w+pad;//curveTool +
+    image_curvedGradient_y = 0;//curveTool +
+    image_curvedGradient_w = box_size;
+    image_curvedGradient_h = curveTool_h;
+
+    // curve slider
+    //slider_x = curveTool_x+pad+curveTool_w+pad+image_curvedGradient_w;
+    slider_x = sliderMod_x+pad+image_curvedGradient_w;
+    slider_y = curveTool_y;
+    slider_w = box_size/2;
+    slider_h = curveTool_h;
+
     // current color box/bar (the one afect by slider position. just for testing gradient purpose)
-    currColor_x = slider_x + 2*(slider_w+pad);
+    currColor_x = slider_x+2*(slider_w+pad);
     currColor_y = curveTool_y;
 
     //-
@@ -1260,7 +1267,7 @@ void ofxColorManager::curveTool_setup()
 
     // curve mod
     curveMod = 0.5;
-    curveMod_Slider.setup(slider_x, slider_y, slider_w, slider_h, 0., 1., 0, true, false);
+    curveMod_Slider.setup(sliderMod_x, sliderMod_y, sliderMod_w, sliderMod_h, 0., 1., 0, true, false);
     curveMod_Slider.setPercent(curveMod);
     curveMod_Slider.setVisible(bCurveSlider);
 //    curve_pos_slider.setLabelString("input");
@@ -2162,11 +2169,15 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
 
     else if (name == "SHOW CURVE")
     {
-        if (!SHOW_Curve)
+        if (SHOW_Curve)
+        {
+            curveMod_Slider.setVisible(true);
+        }
+        else
         {
             bCurveSlider = false;
-            curve_pos_slider.setVisible(bCurveSlider);
-            curveMod_Slider.setVisible(bCurveSlider);
+            curve_pos_slider.setVisible(false);
+            curveMod_Slider.setVisible(false);
         }
     }
 
@@ -2324,14 +2335,11 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
         if (bCurveSlider)
         {
             SHOW_Curve = true;
-            bCurveSlider = true;
             curve_pos_slider.setVisible(true);
-            curveMod_Slider.setVisible(true);
         }
         else
         {
             curve_pos_slider.setVisible(false);
-            curveMod_Slider.setVisible(false);
         }
     }
 //    else if (name == "CURVE MOD")
@@ -2343,7 +2351,7 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
         gradient.setHardMode(gradient_hard);
     }
 
-        // BACKGROUND
+    // BACKGROUND
     else if (name == "SET FROM COLOR")
     {
         if (color_backGround_SET)

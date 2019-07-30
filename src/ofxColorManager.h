@@ -332,6 +332,10 @@ private:
     int slider_y;
     int slider_w;
     int slider_h;
+    int sliderMod_x;
+    int sliderMod_y;
+    int sliderMod_w;
+    int sliderMod_h;
     int grad_x;
     int grad_y;
     int grad_w;
