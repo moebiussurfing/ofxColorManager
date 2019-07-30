@@ -915,7 +915,7 @@ bool ofxColorManager::gui_imGui()
 
         //--
 
-        // 2 Generate palete from colorBrowser
+        // 2 load/create palete from colorBrowser
         static bool saved_palette_inited = false;
         static ImVec4 saved_palette[130];//same than openColor palettes
         if (!saved_palette_inited)
@@ -981,6 +981,7 @@ bool ofxColorManager::gui_imGui()
             ofxImGui::AddParameter(this->color_backGround, true);
             ofxImGui::AddParameter(this->color_backGround_SET);
             ofxImGui::AddParameter(this->color_backGround_SETAUTO);
+
             ofxImGui::EndTree(mainSettings);
         }
 
@@ -990,6 +991,7 @@ bool ofxColorManager::gui_imGui()
             ofxImGui::AddParameter(this->SHOW_AlgoPalettes);
             ofxImGui::AddParameter(this->SHOW_Curve);
             ofxImGui::AddParameter(this->SHOW_BrowserColors);
+
             ofxImGui::EndTree(mainSettings);
         }
 
@@ -1009,6 +1011,7 @@ bool ofxColorManager::gui_imGui()
             ImGui::SameLine();
             ofxImGui::AddParameter(this->bCurveSlider);
             ofxImGui::AddParameter(this->curveMod);
+
             ofxImGui::EndTree(mainSettings);
         }
 
@@ -1026,6 +1029,7 @@ bool ofxColorManager::gui_imGui()
             ofxImGui::AddParameter(this->bRandomPalette);
             ofxImGui::AddParameter(this->bAuto_palette_recall);ImGui::SameLine();
             ofxImGui::AddParameter(this->bLock_palette);ImGui::SameLine();
+
             ofxImGui::EndTree(mainSettings);
         }
 
@@ -1034,29 +1038,29 @@ bool ofxColorManager::gui_imGui()
     ofxImGui::EndWindow(COLOR_MANAGER_Settings);
 
 
-    //TODO: TESTINGS WINDOWS SETTINGS
-    if (this->preview)
-    {
-        static const float kPreviewSize = 600.0f;
-        auto previewSettings = ofxImGui::Settings();
-        previewSettings.windowPos = ofVec2f(kPreviewSize,400);
-        previewSettings.windowSize = ofVec2f(600,200);
-//        previewSettings.lockPosition = true;
-//        previewSettings.windowBlock = true;
-
-//        ImGuiStyle *style = &ImGui::GetStyle();
-//        style->WindowBorderSize(10.);
-
-        if (ofxImGui::BeginWindow(this->preview, previewSettings, false))
-        {
-            ImGui::Text("preview PALETTE preview");
-            ImGui::Text("USER preview preview");
-            ofxImGui::AddParameter(this->bPaletteEdit);
-            ImGui::Text("preview preview MANAGER");
-            ImGui::Text("USER preview MANAGER");
-        }
-        ofxImGui::EndWindow(previewSettings);
-    }
+//    //TODO: TESTINGS WINDOWS SETTINGS
+//    if (this->preview)
+//    {
+//        static const float kPreviewSize = 600.0f;
+//        auto previewSettings = ofxImGui::Settings();
+//        previewSettings.windowPos = ofVec2f(kPreviewSize,400);
+//        previewSettings.windowSize = ofVec2f(600,200);
+////        previewSettings.lockPosition = true;
+////        previewSettings.windowBlock = true;
+//
+////        ImGuiStyle *style = &ImGui::GetStyle();
+////        style->WindowBorderSize(10.);
+//
+//        if (ofxImGui::BeginWindow(this->preview, previewSettings, false))
+//        {
+//            ImGui::Text("preview PALETTE preview");
+//            ImGui::Text("USER preview preview");
+//            ofxImGui::AddParameter(this->bPaletteEdit);
+//            ImGui::Text("preview preview MANAGER");
+//            ImGui::Text("USER preview MANAGER");
+//        }
+//        ofxImGui::EndWindow(previewSettings);
+//    }
 
     this->gui.end();
     return mainSettings.mouseOverGui;
