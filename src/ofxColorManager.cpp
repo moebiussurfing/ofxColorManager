@@ -33,7 +33,7 @@ void ofxColorManager::setup()
     // COLOUR LOVERS
 
     // set positions and panel sizes
-    glm::vec2 sizeGui(150, 400);
+    glm::vec2 sizeGui(150, 375);
     glm::vec2 sizeGrid(150, ofGetHeight());
     glm::vec2 posGui(ofGetWidth()-(sizeGui.x+sizeGrid.x+4), 0);
     glm::vec2 posGrid(posGui.x+sizeGui.x+2, 0);
@@ -798,15 +798,16 @@ bool ofxColorManager::gui_imGui()
 
         // USER PALETTE
 
-        if (ImGui::CollapsingHeader("USER PALETTE")) {
+        if (ofxImGui::BeginTree("USER PALETTE", COLOR_PICKER_Settings)){
             ofxImGui::AddParameter(this->bPaletteEdit);
             ofxImGui::AddParameter(this->bAddColor);
             ImGui::SameLine();
             ofxImGui::AddParameter(this->bRemoveColor);
             ofxImGui::AddParameter(this->bClearPalette);
+            ofxImGui::EndTree(COLOR_PICKER_Settings);
         }
 
-        //-
+    //-
 
         // COLOR PICKER
 
@@ -879,6 +880,7 @@ bool ofxColorManager::gui_imGui()
             // 1. color picker
             ImGui::Separator();
 
+            // circled & triangle
             ImGuiColorEditFlags colorEdiFlags =
                     ImGuiColorEditFlags_NoSmallPreview |
                             ImGuiColorEditFlags_NoTooltip |
@@ -890,6 +892,7 @@ bool ofxColorManager::gui_imGui()
                             ImGuiColorEditFlags_PickerHueWheel;
             ImGui::ColorPicker4("Background Color", (float *) &color, colorEdiFlags);
 
+            // squared box
             colorEdiFlags =
                     ImGuiColorEditFlags_NoSmallPreview |
                             ImGuiColorEditFlags_NoTooltip |
@@ -964,8 +967,37 @@ bool ofxColorManager::gui_imGui()
 
         if (ofxImGui::BeginTree("BACKGROUND", mainSettings))
         {
+//            ImGui::PushItemWidth(guiWidth * 0.5);
+//            ofxImGui::AddParameter(this->color_backGround, true);
+
+            //--TEST
+            ImGui::PushItemWidth(80);
+            static ImVec4 color;
+            color.x = color_backGround.get().r;
+            color.y = color_backGround.get().g;
+            color.z = color_backGround.get().b;
+            color.w = color_backGround.get().a;
+
+            // squared box
+            ImGuiColorEditFlags colorEdiFlags =
+                ImGuiColorEditFlags_NoSmallPreview |
+                ImGuiColorEditFlags_NoTooltip |
+                ImGuiColorEditFlags_NoLabel |
+                ImGuiColorEditFlags_NoSidePreview |
+                ImGuiColorEditFlags_NoInputs |
+                ImGuiColorEditFlags_NoAlpha |
+                ImGuiColorEditFlags_PickerHueBar;
+
+            ImGui::ColorPicker4("Background Color", (float *) &color, colorEdiFlags);
+//            ImGui::ColorPicker4("Background Color", color_backGround.get(), colorEdiFlags);
+
+            color_backGround = color;
+
+            ImGui::PopItemWidth();
+
+            //-
+
             ImGui::PushItemWidth(guiWidth * 0.5);
-            ofxImGui::AddParameter(this->color_backGround, true);
             ofxImGui::AddParameter(this->color_backGround_SET);
             ofxImGui::AddParameter(this->color_backGround_SETAUTO);
             ofxImGui::EndTree(mainSettings);
@@ -2789,7 +2821,7 @@ void ofxColorManager::windowResized(int w, int h)
     // COLOUR LOVERS
 
     // set positions and panel sizes
-    glm::vec2 sizeGui(150, 400);
+    glm::vec2 sizeGui(150, 375);
     glm::vec2 sizeGrid(150, ofGetHeight());
     glm::vec2 posGui(ofGetWidth()-(sizeGui.x+sizeGrid.x+4), 0);
     glm::vec2 posGrid(posGui.x+sizeGui.x+2, 0);
@@ -2797,7 +2829,6 @@ void ofxColorManager::windowResized(int w, int h)
     //must be called before setup() to overwrite default settings
     ColourLoversHelper.setGrid(posGrid, sizeGrid);
     ColourLoversHelper.setup(posGui, sizeGui);
-
     ColourLoversHelper.windowResized(w, h);
 }
 
