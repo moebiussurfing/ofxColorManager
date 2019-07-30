@@ -952,7 +952,7 @@ bool ofxColorManager::gui_imGui()
 
 
     auto COLOR_MANAGER_Settings = ofxImGui::Settings();
-    COLOR_MANAGER_Settings.windowPos = ofVec2f(990, 460);
+    COLOR_MANAGER_Settings.windowPos = ofVec2f(980, 440);
     COLOR_MANAGER_Settings.windowSize = ofVec2f(100, 100);
 
     if (ofxImGui::BeginWindow("COLOR MANAGER", COLOR_MANAGER_Settings, false))
@@ -1000,7 +1000,6 @@ bool ofxColorManager::gui_imGui()
 
         // ALGORITHMIC PALETTE
         if (ofxImGui::BeginTree("ALGORITHMIC PALETTE", mainSettings))
-//        if (ofxImGui::BeginTree(this->params_palette, mainSettings))
         {
             ofxImGui::AddParameter(this->MODE_Palette);
             if (!MODE_Palette) {
@@ -1965,7 +1964,7 @@ void ofxColorManager::draw()
         }
 
         // COLOUR LOVERS
-        if (SHOW_ColourLovers)
+        if (SHOW_ColourLovers && false)
         {
             draw_ColourLovers();
         }
