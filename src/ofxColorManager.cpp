@@ -309,8 +309,8 @@ void ofxColorManager::gui_setup_layout()
     //-
 
     // curve tool pos (anchor for others)
-    curveTool_x = 577;//distance required to not be over the colorpicker
-    curveTool_y = 25;
+    curveTool_x = 590;//distance required to not be over the colorpicker
+    curveTool_y = 15;
     curveTool_w = curveTool_amount;//TODO: should can resize curve tool editor box besides amount
     curveTool_h = curveTool_amount;
 
@@ -901,7 +901,7 @@ bool ofxColorManager::gui_imGui()
     // 2ND WINDOW
 
     auto COLOR_MANAGER_Settings = ofxImGui::Settings();
-    COLOR_MANAGER_Settings.windowPos = ofVec2f(252, 300);
+    COLOR_MANAGER_Settings.windowPos = ofVec2f(guiWidth-2, 0);
     COLOR_MANAGER_Settings.windowSize = ofVec2f(guiWidth, 100);
 
     if (ofxImGui::BeginWindow("COLOR MANAGER", COLOR_MANAGER_Settings, false))
