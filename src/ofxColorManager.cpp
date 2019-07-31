@@ -365,12 +365,8 @@ void ofxColorManager::gui_setup_layout()
     //-
 
     // all 8 algorithmic palettes
-    // down to the gui
-    //    palettes_x = gui_x + 10;
-    //    palettes_y = (gui_y + gui_h + pad) + box_size + 10;
-    // down to the color/curve/gradient editor
-    palettes_x = color_x;
-    palettes_y = color_y + color_h + 40;
+    palettes_x = 500;
+    palettes_y = 320;
 
     // color box clicked on palettes(hidden)
     colorPick_x = 390;
@@ -379,7 +375,7 @@ void ofxColorManager::gui_setup_layout()
     r_color_clicked = ofRectangle( colorPick_x, colorPick_y, colorPick_w, colorPick_h );
 
     // colors palettes browser
-    colorBrowserPos = glm::vec2(920, 320);
+    colorBrowserPos = glm::vec2(1000, 500);
 }
 
 
@@ -963,7 +959,7 @@ bool ofxColorManager::gui_imGui()
 
 
     auto COLOR_MANAGER_Settings = ofxImGui::Settings();
-    COLOR_MANAGER_Settings.windowPos = ofVec2f(980, 400);
+    COLOR_MANAGER_Settings.windowPos = ofVec2f(252, 300);
     COLOR_MANAGER_Settings.windowSize = ofVec2f(guiWidth, 100);
 
     if (ofxImGui::BeginWindow("COLOR MANAGER", COLOR_MANAGER_Settings, false))
@@ -1026,6 +1022,7 @@ bool ofxColorManager::gui_imGui()
         // CURVE TOOL
 
         if (ImGui::CollapsingHeader("CURVE TOOL")) {
+            ImGui::PushItemWidth(guiWidth * 0.5);
             ofxImGui::AddParameter(this->gradient_hard);
             if (ofxImGui::AddParameter(this->curve_pos))
             {
@@ -1033,9 +1030,9 @@ bool ofxColorManager::gui_imGui()
             }
             ofxImGui::AddParameter(this->curve_pos_out);
             ofxImGui::AddParameter(this->bResetCurve);
-
 //            ImGui::SameLine();
             // ofxImGui::AddParameter(this->curveMod);
+            ImGui::PopItemWidth();
         }
 
         //-
@@ -1043,10 +1040,12 @@ bool ofxColorManager::gui_imGui()
         // TEST CURVE
 
         if (ImGui::CollapsingHeader("TEST CURVE")) {
+            ImGui::PushItemWidth(guiWidth * 0.5);
             ImGui::Checkbox("ENABLE TEST", &TEST_MODE);
             ImGui::Checkbox("CYCLE", &TEST_CycleMODE);
             ImGui::Checkbox("TO BACKGROUND", &TEST_toBackground);
             ImGui::SliderFloat("SPEED", &TEST_Speed, 0.0f, 1.0f);
+            ImGui::PopItemWidth();
         }
         //--
 
