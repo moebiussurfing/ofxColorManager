@@ -298,7 +298,8 @@ public:
     float TEST_Speed = .75;
     bool TEST_CycleMODE = false;
     int TEST_maxFrames = 300;//slowest period
-    bool TEST_toBackground = false;
+    bool TEST_toBackground = true;
+    float framePrc;
 
     //--
 
