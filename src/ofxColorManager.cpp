@@ -912,7 +912,7 @@ bool ofxColorManager::gui_imGui()
 
         if (ofxImGui::BeginTree("BACKGROUND", mainSettings))
         {
-            //--TEST
+            //--TEST. can't do with pointers to ofParameter...
             ImGui::PushItemWidth(80);
             static ImVec4 color;
             color.x = color_backGround.get().r;
