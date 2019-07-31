@@ -193,6 +193,8 @@ public:
     bool backgroundENABLE = false;
     void setBackground_ENABLE(bool b);
 
+    bool LISTEN_isEnabled = true;
+
     ofParameter<ofFloatColor> color_picked;
     ofRectangle r_color_picked;
     ofParameter<int> color_HUE;

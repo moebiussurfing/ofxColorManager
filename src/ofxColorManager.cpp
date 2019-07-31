@@ -688,6 +688,10 @@ void ofxColorManager::interface_draw(){
 //--------------------------------------------------------------
 bool ofxColorManager::gui_imGui()
 {
+    // TEST
+    LISTEN_isEnabled = false;
+
+
     auto mainSettings = ofxImGui::Settings();
     this->gui.begin();
 
@@ -695,26 +699,8 @@ bool ofxColorManager::gui_imGui()
     float widgetFactor = 0.9;
 
     //-
-            
-    static ImVec4 color;
-    color.x = color_backGround.get().r;
-    color.y = color_backGround.get().g;
-    color.z = color_backGround.get().b;
-    color.w = color_backGround.get().a;
 
-    // squared box
-    ImGuiColorEditFlags colorEdiFlags =
-            ImGuiColorEditFlags_NoSmallPreview |
-                    ImGuiColorEditFlags_NoTooltip |
-                    ImGuiColorEditFlags_NoLabel |
-                    ImGuiColorEditFlags_NoSidePreview |
-                    ImGuiColorEditFlags_NoInputs |
-                    ImGuiColorEditFlags_NoAlpha |
-                    ImGuiColorEditFlags_PickerHueBar;
 
-    ImGui::ColorPicker4("Background Color", (float *) &color, colorEdiFlags);
-
-    color_backGround = color;
 
     //--
 
@@ -776,27 +762,30 @@ bool ofxColorManager::gui_imGui()
 
         //-
 
-        // the target/source color
-
-//        ImVec4 color = ImColor(114, 144, 154, 200);
-//        static ImVec4 color = myImColor;
-
-//        // 0.
-//        // not linked outside (but works in palette clicks)
-//        static ImVec4 color = ImColor(114, 144, 154, 200);
-
         // 1.
         // get color from outside colorPicker (not working with palette clicks)
+
+        // TEST
         static ImVec4 color;
         color.x = color_picked.get().r;
         color.y = color_picked.get().g;
         color.z = color_picked.get().b;
         color.w = color_picked.get().a;
 
-//        // 2.  //not working
-//        static ImVec4 color = ImColor(color_picked.get().r, color_picked.get().g, color_picked.get().b, color_picked.get().a);
-//////        static ImVec4 color = *(ImVec4 *) &color_picked.get();
-//////        static ImVec4 color = (ImVec4 ) color_picked.get();
+//        // squared box
+//        ImGuiColorEditFlags colorEdiFlags =
+//                ImGuiColorEditFlags_NoSmallPreview |
+//                        ImGuiColorEditFlags_NoTooltip |
+//                        ImGuiColorEditFlags_NoLabel |
+//                        ImGuiColorEditFlags_NoSidePreview |
+//                        ImGuiColorEditFlags_NoInputs |
+//                        ImGuiColorEditFlags_NoAlpha |
+//                        ImGuiColorEditFlags_PickerHueBar;
+
+//        //ImGui::ColorPicker4("Background Color", (float *) &color, colorEdiFlags);
+//
+//        color_picked = color;
+
 
         //-
 
@@ -880,7 +869,18 @@ bool ofxColorManager::gui_imGui()
         }
 
         //--
+
+    // TEST
+
+    //ImGui::ColorPicker4("Background Color", (float *) &color, colorEdiFlags);
+
+    color_picked = color;
     }
+
+    //-
+
+    //-
+
     ofxImGui::EndWindow(COLOR_PICKER_Settings);
 
 
@@ -1019,6 +1019,9 @@ bool ofxColorManager::gui_imGui()
     // ImGui::Begin("Funky Window"); /* Here your ImGui stuff
     // */ ImGui::End();
     // im_gui.end(); // Addon end
+
+    // TEST
+    LISTEN_isEnabled = true;
 }
 
 
@@ -2107,237 +2110,185 @@ void ofxColorManager::palette_clear()
 
 //--------------------------------------------------------------
 void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
-    string name = e.getName();
+//    // TEST
+//    if (LISTEN_isEnabled == true) {
 
-    //TODO: should reduce callbacks in output..
-    if (name!="INPUT" && name!="COLOR" && name!="OUTPUT")
-        ofLogNotice("ofxColorManager") << "Changed_CONTROL: " << name << ":" << e;
 
-    //--
+        string name = e.getName();
 
-    // CONTROL WINDOWS PANELS
+        //TODO: should reduce callbacks in output..
+        if (name != "INPUT" && name != "COLOR" && name != "OUTPUT")
+            ofLogNotice("ofxColorManager") << "Changed_CONTROL: " << name << ":" << e;
 
-    if (name == "SHOW COLOUR LOVERS")
-    {
-        ColourLoversHelper.setVisible(SHOW_ColourLovers);
-    }
+        //--
 
-    else if (name == "SHOW PALETTES")
-    {
-        palettes_setVisible(SHOW_AlgoPalettes);
-    }
+        // CONTROL WINDOWS PANELS
 
-    else if (name == "SHOW BROWSER COLORS")
-    {
-        ColorBrowser.setVisible(SHOW_BrowserColors);
-    }
-
-    else if (name == "SHOW CURVE TOOL")
-    {
+        if (name == "SHOW COLOUR LOVERS") {
+            ColourLoversHelper.setVisible(SHOW_ColourLovers);
+        } else if (name == "SHOW PALETTES") {
+            palettes_setVisible(SHOW_AlgoPalettes);
+        } else if (name == "SHOW BROWSER COLORS") {
+            ColorBrowser.setVisible(SHOW_BrowserColors);
+        } else if (name == "SHOW CURVE TOOL") {
 //        curveMod_Slider.setVisible(SHOW_Curve);
-        // workflow:
-        if (SHOW_Curve)
-        {
-            curveMod_Slider.setVisible(true);
-        }
-        else
-        {
-            curveMod_Slider.setVisible(false);
+            // workflow:
+            if (SHOW_Curve) {
+                curveMod_Slider.setVisible(true);
+            } else {
+                curveMod_Slider.setVisible(false);
 //            SHOW_TEST_Curve = false;
 //            curve_pos_slider.setVisible(false);
+            }
         }
-    }
-
-    //--
-
-    // COLOR
-
-    if (name == "COLOR") // color picked
-    {
-        color_HUE = 255 * color_picked.get().getHue();
-        color_SAT = 255 * color_picked.get().getSaturation();
-        color_BRG = 255 * color_picked.get().getBrightness();
-    }
-    else if (name == "H")
-    {
-        ofColor c;
-        c.set(ofColor( color_picked.get() ));
-        c.setHue(color_HUE);
-        color_picked.set(c);
-
-    }
-    else if (name == "S")
-    {
-        ofColor c;
-        c.set(ofColor( color_picked.get() ));
-        c.setSaturation(color_SAT);
-        color_picked.set(c);
-    }
-    else if (name == "V")
-    {
-        ofColor c;
-        c.set(ofColor( color_picked.get() ));
-        c.setBrightness(color_BRG);
-        color_picked.set(c);
-    }
 
         //--
 
-        // PALLETE
+        // COLOR
 
-    else if (name == "RANDOM COLOR")
-    {
-        if (bRandomColor)
+    // TEST
+    if (LISTEN_isEnabled == true) {
+        if (name == "COLOR") // color picked
         {
-            bRandomColor = false;
-            color_picked = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
+            color_HUE = 255 * color_picked.get().getHue();
+            color_SAT = 255 * color_picked.get().getSaturation();
+            color_BRG = 255 * color_picked.get().getBrightness();
+        } else if (name == "H") {
+            ofColor c;
+            c.set(ofColor(color_picked.get()));
+            c.setHue(color_HUE);
+            color_picked.set(c);
+        } else if (name == "S") {
+            ofColor c;
+            c.set(ofColor(color_picked.get()));
+            c.setSaturation(color_SAT);
+            color_picked.set(c);
+        } else if (name == "V") {
+            ofColor c;
+            c.set(ofColor(color_picked.get()));
+            c.setBrightness(color_BRG);
+            color_picked.set(c);
         }
     }
-    else if (name == "ADD COLOR")
-    {
-        if (bAddColor)
-        {
-            bAddColor= false;
-            palette_addColor(ofColor(color_picked.get()));
-        }
-    }
-    else if (name == "EDIT COLOR")
-    {
-        for (int i=0; i<btns_palette.size(); i++)
-        {
-            if (!bPaletteEdit)
-            {
-                btns_palette[i]->setSelectable(false);
-                btns_palette[i]->setSelected(false);//deselect each
-                palette_colorSelected = -1;
+    // TEST
+    // LISTEN_isEnabled
+
+            //--
+
+            // PALLETE
+
+        else if (name == "RANDOM COLOR") {
+            if (bRandomColor) {
+                bRandomColor = false;
+                color_picked = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
             }
-            else if (bPaletteEdit)
-            {
-                btns_palette[i]->setSelectable(true);
-                btns_palette[i]->setSelected(false);
+        } else if (name == "ADD COLOR") {
+            if (bAddColor) {
+                bAddColor = false;
+                palette_addColor(ofColor(color_picked.get()));
+            }
+        } else if (name == "EDIT COLOR") {
+            for (int i = 0; i < btns_palette.size(); i++) {
+                if (!bPaletteEdit) {
+                    btns_palette[i]->setSelectable(false);
+                    btns_palette[i]->setSelected(false);//deselect each
+                    palette_colorSelected = -1;
+                } else if (bPaletteEdit) {
+                    btns_palette[i]->setSelectable(true);
+                    btns_palette[i]->setSelected(false);
+                }
+            }
+            if (bPaletteEdit && btns_palette.size() > 0) {
+                palette_colorSelected = 0;
+                btns_palette[0]->setSelected(true);
+            }
+        } else if (name == "REMOVE COLOR") {
+            if (bRemoveColor) {
+                bRemoveColor = false;
+                palette_removeColorLast();
+            }
+        } else if (name == "CLEAR PALETTE") {
+            if (bClearPalette) {
+                bClearPalette = false;
+                palette_clear();
             }
         }
-        if (bPaletteEdit && btns_palette.size()>0)
-        {
-            palette_colorSelected = 0;
-            btns_palette[0]->setSelected(true);
-        }
-    }
-    else if (name == "REMOVE COLOR")
-    {
-        if (bRemoveColor)
-        {
-            bRemoveColor= false;
-            palette_removeColorLast();
-        }
-    }
-    else if (name == "CLEAR PALETTE")
-    {
-        if (bClearPalette)
-        {
-            bClearPalette = false;
-            palette_clear();
-        }
-    }
 
-        //-
+            //-
 
-        // ALGORITHMIC PALETTES
+            // ALGORITHMIC PALETTES
 
-    else if (name == "RANDOM PALETTE")
-    {
-        if (bRandomPalette)
-        {
-            bRandomPalette = false;
+        else if (name == "RANDOM PALETTE") {
+            if (bRandomPalette) {
+                bRandomPalette = false;
 
-            random.generateRandom(NUM_ALGO_PALETTES);
+                random.generateRandom(NUM_ALGO_PALETTES);
+                palettes_update();
+                if (bAuto_palette_recall) {
+                    //set random palette to user palette
+                    palette_recallFromPalettes(7);
+                }
+            }
+        } else if (name == "SIZE COLORS") {
+            palettes_resize();
+        } else if (name == "AUTO CREATE!") {
+            if (bAuto_palette_recall)
+                bLock_palette = false;
+        } else if (name == "LOCK PALETTES") {
+            if (bLock_palette)
+                bAuto_palette_recall = false;
+        } else if (name == "BRIGHTNESS" || name == "SATURATION") {
             palettes_update();
-            if (bAuto_palette_recall) {
-                //set random palette to user palette
-                palette_recallFromPalettes(7);
+//        cout << name << endl;
+        }
+
+            //--
+
+            // CURVE
+
+        else if (name == "INPUT") {
+        } else if (name == "RESET CURVE") {
+            if (bResetCurve) {
+                bResetCurve = false;
+                curvesTool.clear();
+                curvesTool.add(ofVec2f(0, 0));
+                curvesTool.add(ofVec2f(127, 127));
+                curvesTool.add(ofVec2f(255, 255));
+                curveMod = 0.5;
+                curveMod_Slider.setPercent(curveMod);
+            }
+        } else if (name == "SHOW TEST CURVE") {
+//        curve_pos_slider.setVisible(SHOW_TEST_Curve);
+            // workflow:
+            if (SHOW_TEST_Curve) {
+                SHOW_Curve = true;
+                curve_pos_slider.setVisible(true);
+            } else {
+                curve_pos_slider.setVisible(false);
             }
         }
-    }
-    else if (name == "SIZE COLORS")
-    {
-        palettes_resize();
-    }
-    else if (name == "AUTO CREATE!")
-    {
-        if (bAuto_palette_recall)
-            bLock_palette = false;
-    }
-    else if (name == "LOCK PALETTES")
-    {
-        if (bLock_palette)
-            bAuto_palette_recall = false;
-    }
-    else if (name=="BRIGHTNESS" || name=="SATURATION")
-    {
-        palettes_update();
-//        cout << name << endl;
-    }
-
-        //--
-
-        // CURVE
-
-    else if (name == "INPUT")
-    {
-    }
-    else if (name == "RESET CURVE")
-    {
-        if (bResetCurve)
-        {
-            bResetCurve = false;
-            curvesTool.clear();
-            curvesTool.add(ofVec2f(0, 0));
-            curvesTool.add(ofVec2f(127, 127));
-            curvesTool.add(ofVec2f(255, 255));
-            curveMod = 0.5;
-            curveMod_Slider.setPercent(curveMod);
-        }
-    }
-    else if (name == "SHOW TEST CURVE")
-    {
-//        curve_pos_slider.setVisible(SHOW_TEST_Curve);
-        // workflow:
-        if (SHOW_TEST_Curve)
-        {
-            SHOW_Curve = true;
-            curve_pos_slider.setVisible(true);
-        }
-        else
-        {
-            curve_pos_slider.setVisible(false);
-        }
-    }
 //    else if (name == "CURVE MOD")
 //    {
 //        curveMod_Slider.setPercent(curveMod);
 //    }
-    else if (name == "GRADIENT HARD")
-    {
-        gradient.setHardMode(gradient_hard);
-    }
-
-        // BACKGROUND
-    else if (name == "SET FROM COLOR")
-    {
-        if (color_backGround_SET)
-        {
-            color_backGround_SET = false;
-            color_backGround.set (ofColor(color_picked.get()));
+        else if (name == "GRADIENT HARD") {
+            gradient.setHardMode(gradient_hard);
         }
-    }
 
-    else if (name == "AUTO SET")
-    {
+            // BACKGROUND
+        else if (name == "SET FROM COLOR") {
+            if (color_backGround_SET) {
+                color_backGround_SET = false;
+                color_backGround.set(ofColor(color_picked.get()));
+            }
+        } else if (name == "AUTO SET") {
 
-    }
+        }
 
-    //--
+        //--
 
+//    // TEST
+//    }// LISTEN_isEnabled
 }
 
 
@@ -2604,45 +2555,49 @@ void ofxColorManager::save_group_XML(ofParameterGroup &g, string path)
 //--------------------------------------------------------------
 void ofxColorManager::Changed_color_picked(ofFloatColor &_c)
 {
+    // TEST
+    if (LISTEN_isEnabled == true) {
+
+
 //    if (_c != color_picked)
 //    {
-    ofLogNotice("ofxColorManager") << "Changed_color_picked: " << ofToString(_c);
+        ofLogNotice("ofxColorManager") << "Changed_color_picked: " << ofToString(_c);
 
-    color_clicked.set(_c);//TODO: mirror clicked/picked colors
+        color_clicked.set(_c);//TODO: mirror clicked/picked colors
 //    }
 
-    //---
+        //---
 
-    // TODO: update imGui
+        // TODO: update imGui
 //    ImColor = _c;
 
-    //---
+        //---
 
-    // autosave edited color
-    if (bPaletteEdit && palette_colorSelected!=-1 && btns_palette.size()>palette_colorSelected)
-    {
-        // update user palette color with recently picked color
-        btns_palette[palette_colorSelected]->setColor(color_clicked);
+        // autosave edited color
+        if (bPaletteEdit && palette_colorSelected != -1 && btns_palette.size() > palette_colorSelected) {
+            // update user palette color with recently picked color
+            btns_palette[palette_colorSelected]->setColor(color_clicked);
 
-        // update gradient for selected index color
-        if (gradient.getNumColors() > palette_colorSelected)
-        {
-            gradient.replaceColorAtIndex( palette_colorSelected, btns_palette[palette_colorSelected]->getColor() );
+            // update gradient for selected index color
+            if (gradient.getNumColors() > palette_colorSelected) {
+                gradient.replaceColorAtIndex(palette_colorSelected, btns_palette[palette_colorSelected]->getColor());
+            }
         }
-    }
 
-    // when color picked changes, auto trig and put generated palette to user palette
-    if (bAuto_palette_recall)
-    {
-        palettes_update();
-        palette_recallFromPalettes(SELECTED_palette_LAST);//trig last choiced algorithmic palette
-    }
+        // when color picked changes, auto trig and put generated palette to user palette
+        if (bAuto_palette_recall) {
+            palettes_update();
+            palette_recallFromPalettes(SELECTED_palette_LAST);//trig last choiced algorithmic palette
+        }
 
-    // recreate algorithmic palettes if locking is disable
-    if (!bLock_palette)
-    {
-        palettes_update();
+        // recreate algorithmic palettes if locking is disable
+        if (!bLock_palette) {
+            palettes_update();
+        }
+
     }
+    // TEST
+    // LISTEN_isEnabled
 }
 
 
