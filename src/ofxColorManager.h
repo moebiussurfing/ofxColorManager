@@ -193,7 +193,9 @@ public:
     bool backgroundENABLE = false;
     void setBackground_ENABLE(bool b);
 
+    // TEST
     bool LISTEN_isEnabled = true;
+    void color_picked_Update_To_HSV();
 
     ofParameter<ofFloatColor> color_picked;
     ofRectangle r_color_picked;

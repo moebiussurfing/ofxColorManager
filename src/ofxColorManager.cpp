@@ -688,8 +688,8 @@ void ofxColorManager::interface_draw(){
 //--------------------------------------------------------------
 bool ofxColorManager::gui_imGui()
 {
-    // TEST
-    LISTEN_isEnabled = false;
+//    // TEST
+//    LISTEN_isEnabled = false;
 
 
     auto mainSettings = ofxImGui::Settings();
@@ -713,6 +713,7 @@ bool ofxColorManager::gui_imGui()
     COLOR_PICKER_Settings.windowSize = ofVec2f(guiWidth, 200);
     COLOR_PICKER_Settings.lockPosition = true;
 
+
     if (ofxImGui::BeginWindow("COLOR PICKER", COLOR_PICKER_Settings, false))
     {
         //-
@@ -729,6 +730,9 @@ bool ofxColorManager::gui_imGui()
         }
 
         //-
+
+        // TEST
+        LISTEN_isEnabled = false;
 
         // COLOR PICKER
 
@@ -749,7 +753,7 @@ bool ofxColorManager::gui_imGui()
             //ImGui::PushItemWidth(ImGui::GetWindowWidth() * widgetFactor);
             ImGui::PushItemWidth(guiWidth * 0.77);
 
-            ofxImGui::AddParameter(this->color_picked, true);
+//            ofxImGui::AddParameter(this->color_picked, true);//not required
             ofxImGui::AddParameter(this->color_HUE);
             ofxImGui::AddParameter(this->color_SAT);
             ofxImGui::AddParameter(this->color_BRG);
@@ -870,11 +874,15 @@ bool ofxColorManager::gui_imGui()
 
         //--
 
-    // TEST
+        // TEST
+        //ImGui::ColorPicker4("Background Color", (float *) &color, colorEdiFlags);
+        color_picked = color;
 
-    //ImGui::ColorPicker4("Background Color", (float *) &color, colorEdiFlags);
 
-    color_picked = color;
+        color_picked_Update_To_HSV();
+        // TEST
+        LISTEN_isEnabled = true;
+
     }
 
     //-
@@ -953,6 +961,9 @@ bool ofxColorManager::gui_imGui()
 
         // CURVE TOOL
 
+//        // TEST
+//        LISTEN_isEnabled = false;
+
         if (ImGui::CollapsingHeader("CURVE TOOL")) {
             ImGui::PushItemWidth(guiWidth * 0.5);
             ofxImGui::AddParameter(this->gradient_hard);
@@ -966,6 +977,9 @@ bool ofxColorManager::gui_imGui()
             // ofxImGui::AddParameter(this->curveMod);
             ImGui::PopItemWidth();
         }
+
+//        // TEST
+//        LISTEN_isEnabled = true;
 
         //--
 
@@ -1020,8 +1034,6 @@ bool ofxColorManager::gui_imGui()
     // */ ImGui::End();
     // im_gui.end(); // Addon end
 
-    // TEST
-    LISTEN_isEnabled = true;
 }
 
 
@@ -2107,188 +2119,211 @@ void ofxColorManager::palette_clear()
     btns_palette.clear();
 }
 
+//--------------------------------------------------------------
+void ofxColorManager::color_picked_Update_To_HSV(){
+    color_HUE = 255 * color_picked.get().getHue();
+    color_SAT = 255 * color_picked.get().getSaturation();
+    color_BRG = 255 * color_picked.get().getBrightness();
+}
 
 //--------------------------------------------------------------
 void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
 //    // TEST
 //    if (LISTEN_isEnabled == true) {
 
+    string name = e.getName();
 
-        string name = e.getName();
+    //TODO: should reduce callbacks in output..
+//    if (name != "INPUT" && name != "OUTPUT")
+//
+    if (name!="INPUT" && name!="COLOR" && name!="OUTPUT" &&
+        name!="H" && name!="S" && name!="V")
+    {
+        ofLogNotice("ofxColorManager") << "Changed_CONTROL: " << name << ":" << e;
+    }
 
-        //TODO: should reduce callbacks in output..
-        if (name != "INPUT" && name != "COLOR" && name != "OUTPUT")
-            ofLogNotice("ofxColorManager") << "Changed_CONTROL: " << name << ":" << e;
+    //--
 
-        //--
+    // CONTROL WINDOWS PANELS
 
-        // CONTROL WINDOWS PANELS
-
-        if (name == "SHOW COLOUR LOVERS") {
-            ColourLoversHelper.setVisible(SHOW_ColourLovers);
-        } else if (name == "SHOW PALETTES") {
-            palettes_setVisible(SHOW_AlgoPalettes);
-        } else if (name == "SHOW BROWSER COLORS") {
-            ColorBrowser.setVisible(SHOW_BrowserColors);
-        } else if (name == "SHOW CURVE TOOL") {
+    if (name == "SHOW COLOUR LOVERS") {
+        ColourLoversHelper.setVisible(SHOW_ColourLovers);
+    }
+    else if (name == "SHOW PALETTES") {
+        palettes_setVisible(SHOW_AlgoPalettes);
+    }
+    else if (name == "SHOW BROWSER COLORS") {
+        ColorBrowser.setVisible(SHOW_BrowserColors);
+    }
+    else if (name == "SHOW CURVE TOOL") {
 //        curveMod_Slider.setVisible(SHOW_Curve);
-            // workflow:
-            if (SHOW_Curve) {
-                curveMod_Slider.setVisible(true);
-            } else {
-                curveMod_Slider.setVisible(false);
+        // workflow:
+        if (SHOW_Curve) {
+            curveMod_Slider.setVisible(true);
+        }
+        else {
+            curveMod_Slider.setVisible(false);
 //            SHOW_TEST_Curve = false;
 //            curve_pos_slider.setVisible(false);
-            }
         }
+    }
 
-        //--
+    //--
 
-        // COLOR
+    // COLOR
 
     // TEST
     if (LISTEN_isEnabled == true) {
+        if (name=="COLOR" && name=="H" && name=="S" && name=="V")
+        {
+            ofLogNotice("ofxColorManager") << "Changed_CONTROL:LISTEN_isEnabled: " << name << ":" << e;
+        }
         if (name == "COLOR") // color picked
         {
-            color_HUE = 255 * color_picked.get().getHue();
-            color_SAT = 255 * color_picked.get().getSaturation();
-            color_BRG = 255 * color_picked.get().getBrightness();
-        } else if (name == "H") {
+            color_picked_Update_To_HSV();
+//            color_HUE = 255 * color_picked.get().getHue();
+//            color_SAT = 255 * color_picked.get().getSaturation();
+//            color_BRG = 255 * color_picked.get().getBrightness();
+        }
+        else if (name == "H") {
             ofColor c;
             c.set(ofColor(color_picked.get()));
             c.setHue(color_HUE);
             color_picked.set(c);
-        } else if (name == "S") {
+        }
+        else if (name == "S") {
             ofColor c;
             c.set(ofColor(color_picked.get()));
             c.setSaturation(color_SAT);
             color_picked.set(c);
-        } else if (name == "V") {
+        }
+        else if (name == "V") {
             ofColor c;
             c.set(ofColor(color_picked.get()));
             c.setBrightness(color_BRG);
             color_picked.set(c);
         }
     }
-    // TEST
-    // LISTEN_isEnabled
+        // TEST
+        // LISTEN_isEnabled
 
-            //--
+        //--
 
-            // PALLETE
+        // PALLETE
 
-        else if (name == "RANDOM COLOR") {
-            if (bRandomColor) {
-                bRandomColor = false;
-                color_picked = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
-            }
-        } else if (name == "ADD COLOR") {
-            if (bAddColor) {
-                bAddColor = false;
-                palette_addColor(ofColor(color_picked.get()));
-            }
-        } else if (name == "EDIT COLOR") {
-            for (int i = 0; i < btns_palette.size(); i++) {
-                if (!bPaletteEdit) {
-                    btns_palette[i]->setSelectable(false);
-                    btns_palette[i]->setSelected(false);//deselect each
-                    palette_colorSelected = -1;
-                } else if (bPaletteEdit) {
-                    btns_palette[i]->setSelectable(true);
-                    btns_palette[i]->setSelected(false);
-                }
-            }
-            if (bPaletteEdit && btns_palette.size() > 0) {
-                palette_colorSelected = 0;
-                btns_palette[0]->setSelected(true);
-            }
-        } else if (name == "REMOVE COLOR") {
-            if (bRemoveColor) {
-                bRemoveColor = false;
-                palette_removeColorLast();
-            }
-        } else if (name == "CLEAR PALETTE") {
-            if (bClearPalette) {
-                bClearPalette = false;
-                palette_clear();
+    else if (name == "RANDOM COLOR") {
+        if (bRandomColor) {
+            bRandomColor = false;
+            color_picked = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
+        }
+    } else if (name == "ADD COLOR") {
+        if (bAddColor) {
+            bAddColor = false;
+            palette_addColor(ofColor(color_picked.get()));
+        }
+    } else if (name == "EDIT COLOR") {
+        for (int i = 0; i < btns_palette.size(); i++) {
+            if (!bPaletteEdit) {
+                btns_palette[i]->setSelectable(false);
+                btns_palette[i]->setSelected(false);//deselect each
+                palette_colorSelected = -1;
+            } else if (bPaletteEdit) {
+                btns_palette[i]->setSelectable(true);
+                btns_palette[i]->setSelected(false);
             }
         }
+        if (bPaletteEdit && btns_palette.size() > 0) {
+            palette_colorSelected = 0;
+            btns_palette[0]->setSelected(true);
+        }
+    } else if (name == "REMOVE COLOR") {
+        if (bRemoveColor) {
+            bRemoveColor = false;
+            palette_removeColorLast();
+        }
+    } else if (name == "CLEAR PALETTE") {
+        if (bClearPalette) {
+            bClearPalette = false;
+            palette_clear();
+        }
+    }
 
-            //-
+        //-
 
-            // ALGORITHMIC PALETTES
+        // ALGORITHMIC PALETTES
 
-        else if (name == "RANDOM PALETTE") {
-            if (bRandomPalette) {
-                bRandomPalette = false;
+    else if (name == "RANDOM PALETTE") {
+        if (bRandomPalette) {
+            bRandomPalette = false;
 
-                random.generateRandom(NUM_ALGO_PALETTES);
-                palettes_update();
-                if (bAuto_palette_recall) {
-                    //set random palette to user palette
-                    palette_recallFromPalettes(7);
-                }
-            }
-        } else if (name == "SIZE COLORS") {
-            palettes_resize();
-        } else if (name == "AUTO CREATE!") {
-            if (bAuto_palette_recall)
-                bLock_palette = false;
-        } else if (name == "LOCK PALETTES") {
-            if (bLock_palette)
-                bAuto_palette_recall = false;
-        } else if (name == "BRIGHTNESS" || name == "SATURATION") {
+            random.generateRandom(NUM_ALGO_PALETTES);
             palettes_update();
+            if (bAuto_palette_recall) {
+                //set random palette to user palette
+                palette_recallFromPalettes(7);
+            }
+        }
+    } else if (name == "SIZE COLORS") {
+        palettes_resize();
+    } else if (name == "AUTO CREATE!") {
+        if (bAuto_palette_recall)
+            bLock_palette = false;
+    } else if (name == "LOCK PALETTES") {
+        if (bLock_palette)
+            bAuto_palette_recall = false;
+    } else if (name == "BRIGHTNESS" || name == "SATURATION") {
+        palettes_update();
 //        cout << name << endl;
+    }
+
+        //--
+
+        // CURVE
+
+    else if (name == "INPUT") {
+    } else if (name == "RESET CURVE") {
+        if (bResetCurve) {
+            bResetCurve = false;
+            curvesTool.clear();
+            curvesTool.add(ofVec2f(0, 0));
+            curvesTool.add(ofVec2f(127, 127));
+            curvesTool.add(ofVec2f(255, 255));
+            curveMod = 0.5;
+            curveMod_Slider.setPercent(curveMod);
         }
-
-            //--
-
-            // CURVE
-
-        else if (name == "INPUT") {
-        } else if (name == "RESET CURVE") {
-            if (bResetCurve) {
-                bResetCurve = false;
-                curvesTool.clear();
-                curvesTool.add(ofVec2f(0, 0));
-                curvesTool.add(ofVec2f(127, 127));
-                curvesTool.add(ofVec2f(255, 255));
-                curveMod = 0.5;
-                curveMod_Slider.setPercent(curveMod);
-            }
-        } else if (name == "SHOW TEST CURVE") {
+    } else if (name == "SHOW TEST CURVE") {
 //        curve_pos_slider.setVisible(SHOW_TEST_Curve);
-            // workflow:
-            if (SHOW_TEST_Curve) {
-                SHOW_Curve = true;
-                curve_pos_slider.setVisible(true);
-            } else {
-                curve_pos_slider.setVisible(false);
-            }
+        // workflow:
+        if (SHOW_TEST_Curve) {
+            SHOW_Curve = true;
+            curve_pos_slider.setVisible(true);
+        } else {
+            curve_pos_slider.setVisible(false);
         }
+    }
 //    else if (name == "CURVE MOD")
 //    {
 //        curveMod_Slider.setPercent(curveMod);
 //    }
-        else if (name == "GRADIENT HARD") {
-            gradient.setHardMode(gradient_hard);
+    else if (name == "GRADIENT HARD") {
+        gradient.setHardMode(gradient_hard);
+    }
+
+        // BACKGROUND
+    else if (name == "SET FROM COLOR") {
+        if (color_backGround_SET) {
+            color_backGround_SET = false;
+            color_backGround.set(ofColor(color_picked.get()));
         }
+    } else if (name == "AUTO SET") {
 
-            // BACKGROUND
-        else if (name == "SET FROM COLOR") {
-            if (color_backGround_SET) {
-                color_backGround_SET = false;
-                color_backGround.set(ofColor(color_picked.get()));
-            }
-        } else if (name == "AUTO SET") {
+    }
 
-        }
+    //--
 
-        //--
-
+//    }
 //    // TEST
-//    }// LISTEN_isEnabled
+//    // LISTEN_isEnabled
 }
 
 
