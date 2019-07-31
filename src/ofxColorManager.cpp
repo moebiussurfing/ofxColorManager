@@ -710,6 +710,38 @@ bool ofxColorManager::gui_imGui()
 
     if (ofxImGui::BeginWindow("COLOR PICKER", COLOR_PICKER_Settings, false))
     {
+        //--
+
+        // GET COLOR FROM OUTSIDE COLOR PICKED
+
+        // TEST
+        LISTEN_isEnabled = false;//maybe required because get() causes callbacks too (?)
+
+        // TEST
+        static ImVec4 color;
+        color.x = color_picked.get().r;
+        color.y = color_picked.get().g;
+        color.z = color_picked.get().b;
+        color.w = color_picked.get().a;
+
+        // TEST
+        LISTEN_isEnabled = true;
+
+        //--
+
+        // 0. CUSTOM BUTTON COLOR BIG
+
+        ImGui::PushItemWidth(guiWidth * widgetFactor);
+
+        int colorW = ImGui::GetWindowWidth() * widgetFactor;
+        int colorH = 50;
+        int misc_flags = ImGuiColorEditFlags_NoOptions|ImGuiColorEditFlags_NoTooltip;
+        ImGui::ColorButton("MyColor##3", *(ImVec4 *) &color, misc_flags, ImVec2(colorW, colorH));
+
+        ImGui::PopItemWidth();
+
+        //-
+
         // 1. USER PALETTE
 
         if (ofxImGui::BeginTree("USER PALETTE", COLOR_PICKER_Settings)){
@@ -774,20 +806,20 @@ bool ofxColorManager::gui_imGui()
 
         //-
 
-        // get color from outside color picked
-
-        // TEST
-        LISTEN_isEnabled = false;//maybe required because get() causes callbacks too (?)
-
-        // TEST
-        static ImVec4 color;
-        color.x = color_picked.get().r;
-        color.y = color_picked.get().g;
-        color.z = color_picked.get().b;
-        color.w = color_picked.get().a;
-
-        // TEST
-        LISTEN_isEnabled = true;
+//        // get color from outside color picked
+//
+//        // TEST
+//        LISTEN_isEnabled = false;//maybe required because get() causes callbacks too (?)
+//
+//        // TEST
+//        static ImVec4 color;
+//        color.x = color_picked.get().r;
+//        color.y = color_picked.get().g;
+//        color.z = color_picked.get().b;
+//        color.w = color_picked.get().a;
+//
+//        // TEST
+//        LISTEN_isEnabled = true;
 
         //-
 
@@ -797,10 +829,10 @@ bool ofxColorManager::gui_imGui()
 
             ImGui::PushItemWidth(guiWidth * widgetFactor);
 
-            int colorW = ImGui::GetWindowWidth() * widgetFactor;
-            int colorH = 30;
-            int misc_flags = ImGuiColorEditFlags_NoOptions|ImGuiColorEditFlags_NoTooltip;
-            ImGui::ColorButton("MyColor##3", *(ImVec4 *) &color, misc_flags, ImVec2(colorW, colorH));
+//            int colorW = ImGui::GetWindowWidth() * widgetFactor;
+//            int colorH = 30;
+//            int misc_flags = ImGuiColorEditFlags_NoOptions|ImGuiColorEditFlags_NoTooltip;
+//            ImGui::ColorButton("MyColor##3", *(ImVec4 *) &color, misc_flags, ImVec2(colorW, colorH));
 
             //--
 
@@ -1258,13 +1290,7 @@ void ofxColorManager::curveTool_update()
         pointToModify = pointsSize/2;
     else if (pointsSize%2==0 && pointsSize>=3)
         pointToModify = pointsSize/2-1;
-    //cout << "pointToModify:"<<pointToModify << endl;
-
-    if (pointsSize==3)
-        pointY = curveTool_amount/2.;
-    else
-        pointY = (curvesTool.getPoint(pointToModify)).x;
-    //cout << "pointY:" << pointY << endl;
+    pointY = (curvesTool.getPoint(pointToModify)).x;
     curvesTool.set(pointToModify, ofVec2f(pointY, ofMap(curveMod,0.,1.,0,curveTool_amount)));
 
     //--
@@ -2279,7 +2305,6 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
 
     else if (name == "RESET CURVE")
     {
-        cout << "!";
         if (bResetCurve)
         {
             bResetCurve = false;
