@@ -503,12 +503,8 @@ void ofxColorManager::gui_imGui_theme()
 
     ImGuiStyle *style = &ImGui::GetStyle();
 
-//    style->WindowRounding = (3.0f);
-
-    //-
-
-    // 1. my dark theme
-//    ImVec4* colors = ImGui::GetStyle().Colors;
+    // my dark theme
+    //    ImVec4* colors = ImGui::GetStyle().Colors;
     style->Colors[ImGuiCol_Text]                   = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
     style->Colors[ImGuiCol_TextDisabled]           = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
     style->Colors[ImGuiCol_WindowBg]               = ImVec4(0.15f, 0.15f, 0.15f, 1.00f);
@@ -568,51 +564,6 @@ void ofxColorManager::gui_imGui_theme()
 //    style->GrabRounding = 0.0f;
 //    style->ScrollbarSize = 12.0f;
 //    style->ScrollbarRounding = 0.0f;
-//
-//    style->Colors[ImGuiCol_Text]                   = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
-//    style->Colors[ImGuiCol_TextDisabled]           = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
-//    style->Colors[ImGuiCol_WindowBg]               = ImVec4(0.06f, 0.06f, 0.06f, 0.94f);
-//    style->Colors[ImGuiCol_ChildBg]                = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
-//    style->Colors[ImGuiCol_PopupBg]                = ImVec4(0.08f, 0.08f, 0.08f, 0.94f);
-//    style->Colors[ImGuiCol_Border]                 = ImVec4(0.43f, 0.43f, 0.50f, 0.50f);
-//    style->Colors[ImGuiCol_BorderShadow]           = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-//    style->Colors[ImGuiCol_FrameBg]                = ImVec4(0.16f, 0.29f, 0.48f, 0.54f);
-//    style->Colors[ImGuiCol_FrameBgHovered]         = ImVec4(0.26f, 0.59f, 0.98f, 0.40f);
-//    style->Colors[ImGuiCol_FrameBgActive]          = ImVec4(0.26f, 0.59f, 0.98f, 0.67f);
-//    style->Colors[ImGuiCol_TitleBg]                = ImVec4(0.04f, 0.04f, 0.04f, 1.00f);
-//    style->Colors[ImGuiCol_TitleBgActive]          = ImVec4(0.16f, 0.29f, 0.48f, 1.00f);
-//    style->Colors[ImGuiCol_TitleBgCollapsed]       = ImVec4(0.00f, 0.00f, 0.00f, 0.51f);
-//    style->Colors[ImGuiCol_MenuBarBg]              = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
-//    style->Colors[ImGuiCol_ScrollbarBg]            = ImVec4(0.02f, 0.02f, 0.02f, 0.53f);
-//    style->Colors[ImGuiCol_ScrollbarGrab]          = ImVec4(0.31f, 0.31f, 0.31f, 1.00f);
-//    style->Colors[ImGuiCol_ScrollbarGrabHovered]   = ImVec4(0.41f, 0.41f, 0.41f, 1.00f);
-//    style->Colors[ImGuiCol_ScrollbarGrabActive]    = ImVec4(0.51f, 0.51f, 0.51f, 1.00f);
-//    style->Colors[ImGuiCol_CheckMark]              = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
-//    style->Colors[ImGuiCol_SliderGrab]             = ImVec4(0.24f, 0.52f, 0.88f, 1.00f);
-//    style->Colors[ImGuiCol_SliderGrabActive]       = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
-//    style->Colors[ImGuiCol_Button]                 = ImVec4(0.26f, 0.59f, 0.98f, 0.40f);
-//    style->Colors[ImGuiCol_ButtonHovered]          = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
-//    style->Colors[ImGuiCol_ButtonActive]           = ImVec4(0.06f, 0.53f, 0.98f, 1.00f);
-//    style->Colors[ImGuiCol_Header]                 = ImVec4(0.26f, 0.59f, 0.98f, 0.31f);
-//    style->Colors[ImGuiCol_HeaderHovered]          = ImVec4(0.26f, 0.59f, 0.98f, 0.80f);
-//    style->Colors[ImGuiCol_HeaderActive]           = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
-//    style->Colors[ImGuiCol_Separator]              = ImVec4(0.43f, 0.43f, 0.50f, 0.50f);
-//    style->Colors[ImGuiCol_SeparatorHovered]       = ImVec4(0.10f, 0.40f, 0.75f, 0.78f);
-//    style->Colors[ImGuiCol_SeparatorActive]        = ImVec4(0.10f, 0.40f, 0.75f, 1.00f);
-//    style->Colors[ImGuiCol_ResizeGrip]             = ImVec4(0.26f, 0.59f, 0.98f, 0.25f);
-//    style->Colors[ImGuiCol_ResizeGripHovered]      = ImVec4(0.26f, 0.59f, 0.98f, 0.67f);
-//    style->Colors[ImGuiCol_ResizeGripActive]       = ImVec4(0.26f, 0.59f, 0.98f, 0.95f);
-//    style->Colors[ImGuiCol_PlotLines]              = ImVec4(0.61f, 0.61f, 0.61f, 1.00f);
-//    style->Colors[ImGuiCol_PlotLinesHovered]       = ImVec4(1.00f, 0.43f, 0.35f, 1.00f);
-//    style->Colors[ImGuiCol_PlotHistogram]          = ImVec4(0.90f, 0.70f, 0.00f, 1.00f);
-//    style->Colors[ImGuiCol_PlotHistogramHovered]   = ImVec4(1.00f, 0.60f, 0.00f, 1.00f);
-//    style->Colors[ImGuiCol_TextSelectedBg]         = ImVec4(0.26f, 0.59f, 0.98f, 0.35f);
-//    style->Colors[ImGuiCol_DragDropTarget]         = ImVec4(1.00f, 1.00f, 0.00f, 0.90f);
-//    style->Colors[ImGuiCol_NavHighlight]           = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
-//    style->Colors[ImGuiCol_NavWindowingHighlight]  = ImVec4(1.00f, 1.00f, 1.00f, 0.70f);
-//    style->Colors[ImGuiCol_NavWindowingDimBg]      = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
-//    style->Colors[ImGuiCol_ModalWindowDimBg]       = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
-
 }
 
 
@@ -656,37 +607,6 @@ void ofxColorManager::palette_addColor_toInterface(ofColor c)
     btns_palette.push_back(btn);
 
     palette_rearrenge();//make resizes to fill bar
-
-    //-
-
-////     horizontal palette
-//    palette_x = gui_x;
-//    int perRow = 5;
-//    int i = btns_palette.size();
-//    palette_x += i * ( box_size + pad );
-//
-//    ButtonExample *btn = new ButtonExample();
-//    btn->setup(palette_x, palette_y, box_size, box_size);
-//    btn->setColor(c);
-//    btn->setup_colorBACK( color_clicked );
-//    btn->setLocked(true);
-//    btn->setName("btn" + ofToString(i));
-//    scene->addChild(btn);
-//    btns_palette.push_back(btn);
-
-//    // vertical palette
-//    int i = btns_palette.size();
-//    float y = palette_y - box_size;
-//    y = y - i * (box_size + pad);
-//
-//    ButtonExample *btn = new ButtonExample();
-//    btn->setup(palette_x, y, box_size, box_size);
-//    btn->setColor(c);
-//    btn->setup_colorBACK( color_clicked );
-//    btn->setLocked(true);
-//    btn->setName("btn" + ofToString(i));
-//    scene->addChild(btn);
-//    btns_palette.push_back(btn);
 }
 
 
@@ -774,6 +694,28 @@ bool ofxColorManager::gui_imGui()
     int guiWidth = 250;
     float widgetFactor = 0.9;
 
+    //-
+            
+    static ImVec4 color;
+    color.x = color_backGround.get().r;
+    color.y = color_backGround.get().g;
+    color.z = color_backGround.get().b;
+    color.w = color_backGround.get().a;
+
+    // squared box
+    ImGuiColorEditFlags colorEdiFlags =
+            ImGuiColorEditFlags_NoSmallPreview |
+                    ImGuiColorEditFlags_NoTooltip |
+                    ImGuiColorEditFlags_NoLabel |
+                    ImGuiColorEditFlags_NoSidePreview |
+                    ImGuiColorEditFlags_NoInputs |
+                    ImGuiColorEditFlags_NoAlpha |
+                    ImGuiColorEditFlags_PickerHueBar;
+
+    ImGui::ColorPicker4("Background Color", (float *) &color, colorEdiFlags);
+
+    color_backGround = color;
+
     //--
 
     // 1ST WINDOW
@@ -784,16 +726,6 @@ bool ofxColorManager::gui_imGui()
     COLOR_PICKER_Settings.windowPos = ofVec2f(0, 0);
     COLOR_PICKER_Settings.windowSize = ofVec2f(guiWidth, 200);
     COLOR_PICKER_Settings.lockPosition = true;
-
-//    ImGuiWindowFlags window_flags = 0;
-////    if (no_titlebar)  window_flags |= ImGuiWindowFlags_NoTitleBar;
-////    if (no_scrollbar) window_flags |= ImGuiWindowFlags_NoScrollbar;
-////    if (!no_menu)     window_flags |= ImGuiWindowFlags_MenuBar;
-////    if (true) window_flags |= ImGuiWindowFlags_NoMove;
-////    if (true) window_flags |= ImGuiWindowFlags_NoResize;
-////    if (no_collapse)  window_flags |= ImGuiWindowFlags_NoCollapse;
-////    if (no_nav)       window_flags |= ImGuiWindowFlags_NoNav;
-////    if (no_close)     p_open = NULL; // Don't pass our bool* to Begin
 
     if (ofxImGui::BeginWindow("COLOR PICKER", COLOR_PICKER_Settings, false))
     {
