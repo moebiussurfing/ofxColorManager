@@ -700,10 +700,6 @@ bool ofxColorManager::gui_imGui()
 
     //-
 
-
-
-    //--
-
     // 1ST WINDOW
 
     // COLOR PICKER CUSTOM
@@ -731,8 +727,8 @@ bool ofxColorManager::gui_imGui()
 
         //-
 
-        // TEST
-        LISTEN_isEnabled = false;
+//        // TEST
+//        LISTEN_isEnabled = false;
 
         // COLOR PICKER
 
@@ -758,6 +754,28 @@ bool ofxColorManager::gui_imGui()
             ofxImGui::AddParameter(this->color_SAT);
             ofxImGui::AddParameter(this->color_BRG);
 
+            //-
+
+//            //working but tricky..
+//            //should check if it's changed...
+//            // TEST
+////            color_picked->setHsb( color_HUE.get(), color_SAT.get(), color_BRG.get(), 1.0 );
+////            color_picked.get().setHsb(0.5, 0.5, 0.5, 1.);
+////            color_picked->setHue(const color_HUE.get());
+//
+//            ofColor c;
+//            c.set(color_picked.get());
+//            c.setHue(color_HUE);
+//            color_picked.set(c);
+//            c.set(color_picked.get());
+//            c.setSaturation(color_SAT);
+//            color_picked.set(c);
+//            c.set(color_picked.get());
+//            c.setBrightness(color_BRG);
+//            color_picked.set(c);
+
+            //-
+
             ofxImGui::AddParameter(this->bRandomColor);
 
             ImGui::PopItemWidth();
@@ -770,11 +788,17 @@ bool ofxColorManager::gui_imGui()
         // get color from outside colorPicker (not working with palette clicks)
 
         // TEST
+        LISTEN_isEnabled = false;
+
+        // TEST
         static ImVec4 color;
         color.x = color_picked.get().r;
         color.y = color_picked.get().g;
         color.z = color_picked.get().b;
         color.w = color_picked.get().a;
+
+        // TEST
+        LISTEN_isEnabled = true;
 
 //        // squared box
 //        ImGuiColorEditFlags colorEdiFlags =
@@ -875,17 +899,17 @@ bool ofxColorManager::gui_imGui()
         //--
 
         // TEST
+        LISTEN_isEnabled = false;
+
+        // TEST
         //ImGui::ColorPicker4("Background Color", (float *) &color, colorEdiFlags);
         color_picked = color;
-
 
         color_picked_Update_To_HSV();
         // TEST
         LISTEN_isEnabled = true;
 
     }
-
-    //-
 
     //-
 
