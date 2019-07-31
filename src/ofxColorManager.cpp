@@ -744,6 +744,9 @@ bool ofxColorManager::gui_imGui()
             ofxImGui::AddParameter(this->color_SAT);
             ofxImGui::AddParameter(this->color_BRG);
 
+            // TODO: SHOULD APPLY HSV HERE, NOT INTO CALLBACK, BECAUSE IT WILL TRIG
+            // THE COLOR PICKED UPDATING CALLBACK!!!
+
             //-
 
             ofxImGui::AddParameter(this->bRandomColor);
@@ -799,7 +802,11 @@ bool ofxColorManager::gui_imGui()
                             ImGuiColorEditFlags_NoInputs |
                             ImGuiColorEditFlags_NoAlpha |
                             ImGuiColorEditFlags_PickerHueWheel;
-            ImGui::ColorPicker4("MyColor##4", (float *) &color, colorEdiFlags);
+            if (ImGui::ColorPicker4("MyColor##4", (float *) &color, colorEdiFlags))
+            {
+                cout << "PICKER 1 MOVED !" << endl;
+            }
+
 
             // 1.2 squared box
             colorEdiFlags =
@@ -812,7 +819,10 @@ bool ofxColorManager::gui_imGui()
                             ImGuiColorEditFlags_HDR |
                             ImGuiColorEditFlags_NoAlpha |
                             ImGuiColorEditFlags_PickerHueBar;
-            ImGui::ColorPicker4("MyColor##5", (float *) &color, colorEdiFlags);
+            if (ImGui::ColorPicker4("MyColor##5", (float *) &color, colorEdiFlags))
+            {
+                cout << "PICKER 2 MOVED !" << endl;
+            }
 
             ImGui::PopItemWidth();
             ofxImGui::EndTree(mainSettings);
