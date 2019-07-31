@@ -295,12 +295,10 @@ void ofxColorManager::gui_setup_layout()
     // LAYOUT DEFAULT
     // TODO:: add layout json saver like ofxGuiPanels
 
-    box_size = 40;
-
     // global mini pad between panels/objects
     pad = 2;
-
     guiWidth = 250;
+    box_size = 40;
 
     // gui 1 ImGui
     gui_x = 0;
@@ -309,7 +307,7 @@ void ofxColorManager::gui_setup_layout()
     gui_h = 200;
 
     // gui 2 ImGui
-    gui2_x = guiWidth-2;
+    gui2_x = guiWidth-3;
     gui2_y = 0;
     gui2_w = guiWidth;
     gui2_h = 100;
@@ -317,14 +315,14 @@ void ofxColorManager::gui_setup_layout()
     //-
 
     // curve tool pos (anchor for others)
-    curveTool_x = 600;//distance required to not be over the colorpicker
+    curveTool_x = 650;//distance required to not be over the colorpicker
     curveTool_y = 15;
     curveTool_w = curveTool_amount;//TODO: should can resize curve tool editor box besides amount
     curveTool_h = curveTool_amount;
 
     // gradient-pre curve (bad sorted to the left but anchored to curve..)
     grad_w = box_size;
-    grad_x = curveTool_x - (grad_w + pad);
+    grad_x = curveTool_x-(grad_w + pad);
     grad_y = curveTool_y;
     grad_h = curveTool_h;
 
@@ -354,13 +352,13 @@ void ofxColorManager::gui_setup_layout()
     //-
 
     // user palette (pos related to gradient-pre curve)
-    palette_x = grad_x - (grad_w + pad);
+    palette_x = grad_x-(grad_w+pad);
     palette_y = curveTool_y;
 
-    // color box monitor picked (same that color picker gui)
+    // user color box monitor picked (same that color picker gui)
     // bar mode
     color_w = (2*box_size);
-    color_x = palette_x - (color_w+pad);
+    color_x = palette_x-(color_w+pad+box_size+pad);
     color_y = curveTool_y;
     color_h = curveTool_h;
     r_color_picked = ofRectangle( color_x, color_y, color_w, color_h );
@@ -766,6 +764,7 @@ bool ofxColorManager::gui_imGui()
 
             // TEST
             LISTEN_isEnabled = false;
+
             if (ofxImGui::AddParameter(this->color_HUE))
             {
                 ofLogNotice("ofxColorManager") << "ImGui: HUE MOVED !" << endl;
@@ -793,6 +792,7 @@ bool ofxColorManager::gui_imGui()
                 color_picked.set(c);
                 Update_color_picked_CHANGES();
             }
+
             // TEST
             LISTEN_isEnabled = true;
 
@@ -851,9 +851,15 @@ bool ofxColorManager::gui_imGui()
                             ImGuiColorEditFlags_PickerHueWheel;
             if (ImGui::ColorPicker4("MyColor##4", (float *) &color, colorEdiFlags))
             {
+                // TEST
+//                LISTEN_isEnabled = false;
+
                 cout << "PICKER 1 MOVED !" << endl;
                 color_picked = color;
-                color_picked_Update_To_HSV();
+//                color_picked_Update_To_HSV();
+
+                // TEST
+//                LISTEN_isEnabled = true;
             }
 
             //-
@@ -871,9 +877,14 @@ bool ofxColorManager::gui_imGui()
                             ImGuiColorEditFlags_PickerHueBar;
             if (ImGui::ColorPicker4("MyColor##5", (float *) &color, colorEdiFlags))
             {
+                // TEST
+//                LISTEN_isEnabled = false;
+
                 cout << "PICKER 2 MOVED !" << endl;
                 color_picked = color;
-                color_picked_Update_To_HSV();
+//                color_picked_Update_To_HSV();
+
+//                LISTEN_isEnabled = true;
             }
 
             //-
@@ -921,9 +932,15 @@ bool ofxColorManager::gui_imGui()
                 {
                     color = ImVec4(saved_palette[n].x, saved_palette[n].y, saved_palette[n].z, color.w); // Preserve alpha!
 
+                            //-
+
+                    // TEST
+//                    LISTEN_isEnabled = false;
                     ofLogNotice("ofxColorManager") << "ImGui: PALETTE PICKED !" << endl;
                     color_picked = color;
-                    color_picked_Update_To_HSV();
+//                    LISTEN_isEnabled = true;
+
+                    //-
                 }
 
 //                ImGui::PopItemWidth();
@@ -2596,6 +2613,8 @@ void ofxColorManager::save_group_XML(ofParameterGroup &g, string path)
 //--------------------------------------------------------------
 void ofxColorManager::Update_color_picked_CHANGES()
 {
+    // executes workflow app
+
     ofLogNotice("ofxColorManager") << "Update_color_picked_CHANGES: " << ofToString(color_picked);
 
 //    // TEST
@@ -2642,41 +2661,6 @@ void ofxColorManager::Changed_color_picked(ofFloatColor &_c)
         // TEST
         color_picked_Update_To_HSV();//redundant...
     }
-
-//        ofLogNotice("ofxColorManager") << "Changed_color_picked: " << ofToString(_c);
-//
-//        // TEST
-//        color_picked_Update_To_HSV();
-//
-//        color_clicked.set(_c);//TODO: mirror clicked/picked colors
-//
-//        //--
-//
-//        // 1. autosave edited color
-//
-//        if (bPaletteEdit && palette_colorSelected != -1 && btns_palette.size() > palette_colorSelected) {
-//            // update user palette color with recently picked color
-//            btns_palette[palette_colorSelected]->setColor(color_clicked);
-//
-//            // update gradient for selected index color
-//            if (gradient.getNumColors() > palette_colorSelected) {
-//                gradient.replaceColorAtIndex(palette_colorSelected, btns_palette[palette_colorSelected]->getColor());
-//            }
-//        }
-//
-//        // 2. when color picked changes, auto trig and put generated palette to user palette
-//
-//        if (bAuto_palette_recall) {
-//            palettes_update();
-//            palette_recallFromPalettes(SELECTED_palette_LAST);//trig last choiced algorithmic palette
-//        }
-//
-//        // 3. recreate algorithmic palettes if locking is disable
-//
-//        if (!bLock_palette) {
-//            palettes_update();
-//        }
-//    }
 }
 
 
