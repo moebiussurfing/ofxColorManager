@@ -873,6 +873,7 @@ bool ofxColorManager::gui_imGui()
         {
             for (int n = 0; n < IM_ARRAYSIZE(saved_palette); n++)
             {
+//                ImGui::PushItemWidth(guiWidth * 0.2);
                 ImGui::PushID(n);
 
                 if ((n % 10) != 0) {//10 colors per row
@@ -885,11 +886,12 @@ bool ofxColorManager::gui_imGui()
                 {
                     color = ImVec4(saved_palette[n].x, saved_palette[n].y, saved_palette[n].z, color.w); // Preserve alpha!
 
-                    cout << "PALETTE PICKED !" << endl;
+                    ofLogNotice("ofxColorManager") << "ImGui: PALETTE PICKED !" << endl;
                     color_picked = color;
                     color_picked_Update_To_HSV();
                 }
 
+//                ImGui::PopItemWidth();
                 ImGui::PopID();
             }
         }
