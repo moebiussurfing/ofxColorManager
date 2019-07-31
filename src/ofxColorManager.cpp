@@ -293,7 +293,7 @@ void ofxColorManager::interface_setup()
 void ofxColorManager::gui_setup_layout()
 {
     // LAYOUT DEFAULT
-    // TODO:: add json saver like ofxGuiPanels
+    // TODO:: add layout json saver like ofxGuiPanels
 
     box_size = 40;
 
@@ -304,12 +304,13 @@ void ofxColorManager::gui_setup_layout()
     gui_x = 10;
     gui_y = 10;
     gui_w = 200;
-    gui_h = 475;//estimate (should measure) height of the panel on window resize
+    gui_h = 475;
+    //estimate (should measure) height of the panel on window resize
 
     //-
 
     // curve tool pos (anchor for others)
-    curveTool_x = 590;//distance required to not be over the colorpicker
+    curveTool_x = 600;//distance required to not be over the colorpicker
     curveTool_y = 15;
     curveTool_w = curveTool_amount;//TODO: should can resize curve tool editor box besides amount
     curveTool_h = curveTool_amount;
@@ -348,7 +349,6 @@ void ofxColorManager::gui_setup_layout()
     // user palette (pos related to gradient-pre curve)
     palette_x = grad_x - (grad_w + pad);
     palette_y = curveTool_y;
-    //    palette_y = curveTool_y + grad_h;
 
     // color box monitor picked (same that color picker gui)
     // bar mode
@@ -357,10 +357,6 @@ void ofxColorManager::gui_setup_layout()
     color_y = curveTool_y;
     color_h = curveTool_h;
     r_color_picked = ofRectangle( color_x, color_y, color_w, color_h );
-    // box mode
-    //    color_x = 320;
-    //    color_y = 42;
-    //    color_w = color_h = 2*box_size;
 
     //-
 
