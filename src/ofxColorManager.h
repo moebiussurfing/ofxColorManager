@@ -217,6 +217,8 @@ public:
     ofParameter<ofFloatColor> color_clicked_param;
     void Changed_color_picked(ofFloatColor &color);
     void Changed_color_clicked(ofFloatColor &color);
+    // TEST
+    void Update_color_picked_CHANGES();
 
     //--
 
