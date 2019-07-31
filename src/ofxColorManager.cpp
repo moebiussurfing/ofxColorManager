@@ -1035,7 +1035,7 @@ bool ofxColorManager::gui_imGui()
             ImGui::PopItemWidth();
         }
 
-        //-
+        //--
 
         // TEST CURVE
 
@@ -1047,6 +1047,7 @@ bool ofxColorManager::gui_imGui()
             ImGui::SliderFloat("SPEED", &TEST_Speed, 0.0f, 1.0f);
             ImGui::PopItemWidth();
         }
+
         //--
 
         // ALGORITHMIC PALETTES
@@ -1060,8 +1061,9 @@ bool ofxColorManager::gui_imGui()
             }
             ofxImGui::AddParameter(this->NUM_ALGO_PALETTES);
             ofxImGui::AddParameter(this->bRandomPalette);
-            ofxImGui::AddParameter(this->bAuto_palette_recall);ImGui::SameLine();
-            ofxImGui::AddParameter(this->bLock_palette);ImGui::SameLine();
+            ofxImGui::AddParameter(this->bLock_palette);
+            //            ImGui::SameLine();
+            ofxImGui::AddParameter(this->bAuto_palette_recall);
             ImGui::PopItemWidth();
         }
     }
