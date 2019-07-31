@@ -1251,7 +1251,21 @@ void ofxColorManager::curveTool_update()
 
     // curve modifier
     curveMod = curveMod_Slider.getValue();
-    curvesTool.set(1, ofVec2f(curveTool_amount/2., ofMap(curveMod,0.,1.,0,curveTool_amount)));
+    int pointsSize = curvesTool.getPointSize();
+    int pointToModify;//default 1 if size is 3 points
+    int pointY;
+    if (pointsSize%2!=0 && pointsSize>=3)//impar
+        pointToModify = pointsSize/2;
+    else if (pointsSize%2==0 && pointsSize>=3)
+        pointToModify = pointsSize/2-1;
+    //cout << "pointToModify:"<<pointToModify << endl;
+
+    if (pointsSize==3)
+        pointY = curveTool_amount/2.;
+    else
+        pointY = (curvesTool.getPoint(pointToModify)).x;
+    //cout << "pointY:" << pointY << endl;
+    curvesTool.set(pointToModify, ofVec2f(pointY, ofMap(curveMod,0.,1.,0,curveTool_amount)));
 
     //--
 
