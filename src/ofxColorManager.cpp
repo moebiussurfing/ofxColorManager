@@ -707,7 +707,7 @@ bool ofxColorManager::gui_imGui()
 
     if (ofxImGui::BeginWindow("COLOR PICKER", COLOR_PICKER_Settings, false))
     {
-        // USER PALETTE
+        // 1. USER PALETTE
 
         if (ofxImGui::BeginTree("USER PALETTE", COLOR_PICKER_Settings)){
             ofxImGui::AddParameter(this->bPaletteEdit);
@@ -720,32 +720,46 @@ bool ofxColorManager::gui_imGui()
 
         //-
 
-        // COLOR PICKER
+        // 2. COLOR HSB
 
-//        // 1. direct ImGui
-//        ImGui::ColorButton("color_picked", *(ImVec4 *) &color_picked.get());
-//        ImGui::Button("bRandomColor");
-//        ImGui::SliderInt("H", (int*) &color_HUE.get(), 0, 255);
-//        ImGui::SliderInt("S", (int*) &color_SAT.get(), 0, 255);
-//        ImGui::SliderInt("V", (int*) &color_BRG.get(), 0, 255);
-//        ImGui::Button("bPaletteEdit");
-//        ImGui::Button("bAddColor");ImGui::SameLine();
-//        ImGui::Button("bRemoveColor");
-//        ImGui::Button("bClearPalette");
-
-        // 2. OFXIMGUI MODE
         if (ofxImGui::BeginTree("COLOR", COLOR_PICKER_Settings))
         {
             ImGui::PushItemWidth(guiWidth * 0.77);
 
-//            ofxImGui::AddParameter(this->color_picked, true);//not required
-
-            ofxImGui::AddParameter(this->color_HUE);
-            ofxImGui::AddParameter(this->color_SAT);
-            ofxImGui::AddParameter(this->color_BRG);
-
             // TODO: SHOULD APPLY HSV HERE, NOT INTO CALLBACK, BECAUSE IT WILL TRIG
             // THE COLOR PICKED UPDATING CALLBACK!!!
+
+            // TEST
+            LISTEN_isEnabled = false;
+            if (ofxImGui::AddParameter(this->color_HUE))
+            {
+                ofLogNotice("ofxColorManager") << "ImGui: HUE MOVED !" << endl;
+                ofColor c;
+                c.set(color_picked.get());
+                c.setHue(color_HUE);
+                color_picked.set(c);
+                Update_color_picked_CHANGES();
+            }
+            if (ofxImGui::AddParameter(this->color_SAT))
+            {
+                ofLogNotice("ofxColorManager") << "ImGui: SAT MOVED !" << endl;
+                ofColor c;
+                c.set(color_picked.get());
+                c.setSaturation(color_SAT);
+                color_picked.set(c);
+                Update_color_picked_CHANGES();
+            }
+            if (ofxImGui::AddParameter(this->color_BRG))
+            {
+                ofLogNotice("ofxColorManager") << "ImGui: BRG MOVED !" << endl;
+                ofColor c;
+                c.set(color_picked.get());
+                c.setBrightness(color_BRG);
+                color_picked.set(c);
+                Update_color_picked_CHANGES();
+            }
+            // TEST
+            LISTEN_isEnabled = true;
 
             //-
 
@@ -760,7 +774,7 @@ bool ofxColorManager::gui_imGui()
         // get color from outside color picked
 
         // TEST
-        LISTEN_isEnabled = false;
+        LISTEN_isEnabled = false;//maybe required because get() causes callbacks too (?)
 
         // TEST
         static ImVec4 color;
@@ -789,8 +803,6 @@ bool ofxColorManager::gui_imGui()
 
             // 1. color picker
 
-//            ImGui::Separator();
-
             // 1.1 circled & triangle
             ImGuiColorEditFlags colorEdiFlags =
                     ImGuiColorEditFlags_NoSmallPreview |
@@ -805,8 +817,11 @@ bool ofxColorManager::gui_imGui()
             if (ImGui::ColorPicker4("MyColor##4", (float *) &color, colorEdiFlags))
             {
                 cout << "PICKER 1 MOVED !" << endl;
+                color_picked = color;
+                color_picked_Update_To_HSV();
             }
 
+            //-
 
             // 1.2 squared box
             colorEdiFlags =
@@ -822,7 +837,11 @@ bool ofxColorManager::gui_imGui()
             if (ImGui::ColorPicker4("MyColor##5", (float *) &color, colorEdiFlags))
             {
                 cout << "PICKER 2 MOVED !" << endl;
+                color_picked = color;
+                color_picked_Update_To_HSV();
             }
+
+            //-
 
             ImGui::PopItemWidth();
             ofxImGui::EndTree(mainSettings);
@@ -865,24 +884,15 @@ bool ofxColorManager::gui_imGui()
                         ImVec2(20, 20)))
                 {
                     color = ImVec4(saved_palette[n].x, saved_palette[n].y, saved_palette[n].z, color.w); // Preserve alpha!
+
+                    cout << "PALETTE PICKED !" << endl;
+                    color_picked = color;
+                    color_picked_Update_To_HSV();
                 }
 
                 ImGui::PopID();
             }
         }
-
-        //--
-
-        // TEST
-        LISTEN_isEnabled = false;
-
-        color_picked = color;
-        color_picked_Update_To_HSV();//required because callback is disabled here
-
-        // TEST
-        LISTEN_isEnabled = true;
-
-        //--
     }
     ofxImGui::EndWindow(COLOR_PICKER_Settings);
 
@@ -2109,9 +2119,10 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
     string name = e.getName();
 
     // TODO: should reduce callbacks in output..
+//    if (name != "INPUT" && name != "OUTPUT" &&
+//            name!="H" && name!="S" && name!="V")
 
-    if (name != "INPUT" && name != "OUTPUT" &&
-            name!="H" && name!="S" && name!="V" && name!="COLOR" )
+    if (name!="INPUT" && name!="OUTPUT")
     {
         ofLogNotice("ofxColorManager") << "Changed_CONTROL: " << name << ":" << e;
     }
@@ -2140,41 +2151,36 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
 
     // COLOR
 
+    // TODO: should reduce callbacks
     // TEST
     if (LISTEN_isEnabled == true)
     {
-        if (name=="COLOR" && name=="H" && name=="S" && name=="V")
+        if (name=="H" && name=="S" && name=="V")
         {
             ofLogNotice("ofxColorManager") << "Changed_CONTROL:LISTEN_isEnabled: " << name << ":" << e;
         }
-        // TEST
-//        if (name == "COLOR") // color picked
-//        {
-//            color_picked_Update_To_HSV();
-//        }
-        // TODO: should reduce callbacks
+
         if (name == "H") {
-//        else if (name == "H") {
             ofColor c;
-            c.set(ofColor(color_picked.get()));
+            c.set(color_picked.get());
             c.setHue(color_HUE);
             color_picked.set(c);
         }
         else if (name == "S") {
             ofColor c;
-            c.set(ofColor(color_picked.get()));
+            c.set(color_picked.get());
             c.setSaturation(color_SAT);
             color_picked.set(c);
         }
         else if (name == "V") {
             ofColor c;
-            c.set(ofColor(color_picked.get()));
+            c.set(color_picked.get());
             c.setBrightness(color_BRG);
             color_picked.set(c);
         }
     }
-    // TEST
-    // LISTEN_isEnabled
+        // TEST
+        // LISTEN_isEnabled
 
         //--
 
@@ -2274,12 +2280,6 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
     } else if (name == "AUTO SET") {
 
     }
-
-    //--
-
-//    }
-//    // TEST
-//    // LISTEN_isEnabled
 }
 
 
@@ -2547,8 +2547,8 @@ void ofxColorManager::Update_color_picked_CHANGES()
 {
     ofLogNotice("ofxColorManager") << "Update_color_picked_CHANGES: " << ofToString(color_picked);
 
-    // TEST
-    color_picked_Update_To_HSV();
+//    // TEST
+//    color_picked_Update_To_HSV();//redundant...
 
     color_clicked.set(color_picked);//TODO: mirror clicked/picked colors
 
@@ -2587,6 +2587,9 @@ void ofxColorManager::Changed_color_picked(ofFloatColor &_c)
     if (LISTEN_isEnabled == true)
     {
         Update_color_picked_CHANGES();
+
+        // TEST
+        color_picked_Update_To_HSV();//redundant...
     }
 
 //        ofLogNotice("ofxColorManager") << "Changed_color_picked: " << ofToString(_c);
