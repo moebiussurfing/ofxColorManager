@@ -331,8 +331,9 @@ private:
     //--
 
     // LAYOUT
-
+    int guiWidth;
     int gui_x, gui_y, gui_w, gui_h;
+    int gui2_x, gui2_y, gui2_w, gui2_h;
     int box_size;
     int pad; //global mini pad
     int c_grad_x, c_grad_y, c_grad_w, c_grad_h;

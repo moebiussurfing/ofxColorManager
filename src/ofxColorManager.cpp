@@ -300,12 +300,19 @@ void ofxColorManager::gui_setup_layout()
     // global mini pad between panels/objects
     pad = 2;
 
-    // gui ImGui panel
-    gui_x = 10;
-    gui_y = 10;
-    gui_w = 200;
-    gui_h = 475;
-    //estimate (should measure) height of the panel on window resize
+    guiWidth = 250;
+
+    // gui 1 ImGui
+    gui_x = 0;
+    gui_y = 0;
+    gui_w = guiWidth;
+    gui_h = 200;
+
+    // gui 2 ImGui
+    gui2_x = guiWidth-2;
+    gui2_y = 0;
+    gui2_w = guiWidth;
+    gui2_h = 100;
 
     //-
 
@@ -684,7 +691,7 @@ void ofxColorManager::interface_draw(){
 //--------------------------------------------------------------
 bool ofxColorManager::gui_imGui()
 {
-    int guiWidth = 250;
+
     float widgetFactor = 0.9;
 
     auto mainSettings = ofxImGui::Settings();
@@ -697,7 +704,7 @@ bool ofxColorManager::gui_imGui()
     // COLOR PICKER CUSTOM
 
     auto COLOR_PICKER_Settings = ofxImGui::Settings();
-    COLOR_PICKER_Settings.windowPos = ofVec2f(0, 0);
+    COLOR_PICKER_Settings.windowPos = ofVec2f(gui_x, gui_y);
     COLOR_PICKER_Settings.windowSize = ofVec2f(guiWidth, 200);
     COLOR_PICKER_Settings.lockPosition = true;
 
@@ -899,8 +906,8 @@ bool ofxColorManager::gui_imGui()
     // 2ND WINDOW
 
     auto COLOR_MANAGER_Settings = ofxImGui::Settings();
-    COLOR_MANAGER_Settings.windowPos = ofVec2f(guiWidth-2, 0);
-    COLOR_MANAGER_Settings.windowSize = ofVec2f(guiWidth, 100);
+    COLOR_MANAGER_Settings.windowPos = ofVec2f(gui2_x, gui2_y);
+    COLOR_MANAGER_Settings.windowSize = ofVec2f(gui2_w, gui2_h);
 
     if (ofxImGui::BeginWindow("COLOR MANAGER", COLOR_MANAGER_Settings, false))
     {
@@ -2122,7 +2129,7 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
 
     if (name!="INPUT" && name!="OUTPUT")
     {
-        ofLogNotice("ofxColorManager") << "Changed_CONTROL: " << name << ":" << e;
+        ofLogNotice("ofxColorManager") << "Changed_CONTROL: " << name << ": " << e;
     }
 
     //--
@@ -2184,7 +2191,7 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
 
         // PALLETE
 
-    else if (name == "RANDOM COLOR") {
+    if (name == "RANDOM COLOR") {
         if (bRandomColor) {
             bRandomColor = false;
             color_picked = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
@@ -2253,9 +2260,14 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
 
         // CURVE
 
-    else if (name == "INPUT") {
-    } else if (name == "RESET CURVE") {
-        if (bResetCurve) {
+//    else if (name == "INPUT") {
+//    }
+
+    else if (name == "RESET CURVE")
+    {
+        cout << "!";
+        if (bResetCurve)
+        {
             bResetCurve = false;
             curvesTool.clear();
             curvesTool.add(ofVec2f(0, 0));
@@ -2268,6 +2280,8 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
     else if (name == "GRADIENT HARD") {
         gradient.setHardMode(gradient_hard);
     }
+
+    //-
 
         // BACKGROUND
     else if (name == "SET FROM COLOR") {
