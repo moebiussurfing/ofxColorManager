@@ -436,34 +436,44 @@ void ofxColorManager::palette_save(string p)
 //--------------------------------------------------------------
 void ofxColorManager::preset_load(string p)
 {
-    ofLogNotice("ofxColorManager") << "preset_load: " << p;
+    ofLogNotice("ofxColorManager:preset_load") << p;
+    string path = preset_path+p+".json";
 
-    string path = preset_path + p + ".json";
     ofFile file(path);
     if (file.exists())
     {
         jsonin ji(file);
         ji >> presetData;
 
-        ofLogNotice("ofxColorManager") << "preset name: " << presetData.name;
-        ofLogNotice("ofxColorManager") << "curve name : " << presetData.curveName;
+        ofLogNotice("ofxColorManager:preset_load") << "presetData.name      : " << presetData.name;
+        ofLogNotice("ofxColorManager:preset_load") << "presetData.curveName : " << presetData.curveName;
+        ofLogNotice("ofxColorManager:preset_load") << "presetData.background: " << presetData.background;
 
         curvesTool.load(preset_path + presetData.curveName + ".yml");
 
-        palette_clear();
-        ofColor c;
-        for (int i = 0; i< presetData.palette.size(); i++)
+        if (color_backGround_SETAUTO)
         {
-            c = presetData.palette[i];
-            ofLogNotice("ofxColorManager") << "addColor " << i << ": " << ofToString(c);
-            palette_addColor(c);
+            color_backGround = presetData.background;
         }
 
-        ofLogNotice("ofxColorManager") << "DONE! preset_load: " << p;
+        ofLogNotice("ofxColorManager:preset_load") << "presetData.palette.size(): " << presetData.palette.size();
+
+        palette_clear();
+
+        for (int i=0; i<presetData.palette.size(); i++)
+        {
+            ofColor c;
+            c = presetData.palette[i];
+            ofLogNotice("ofxColorManager:preset_load") << "addColor:" << ofToString(c) <<" ["<<i<<"]";
+            palette_addColor(c);
+        }
+        ofLogNotice("ofxColorManager:preset_load") << "DONE! preset_load  : " << p;
+        ofLogNotice("ofxColorManager:preset_load") << "palette.size()     :" << palette.size()<<endl;
+        ofLogNotice("ofxColorManager:preset_load") << "btns_palette.size():" << btns_palette.size()<<endl;
     }
     else
     {
-        ofLogNotice("ofxColorManager") << "FILE '" << path << "' NOT FOUND";
+        ofLogNotice("ofxColorManager:preset_load") << "FILE '" << path << "' NOT FOUND";
     }
 }
 
@@ -471,30 +481,31 @@ void ofxColorManager::preset_load(string p)
 //--------------------------------------------------------------
 void ofxColorManager::preset_save(string p)
 {
-    ofLogNotice("ofxColorManager") << "preset_save: " << p;
-
-    string path = preset_path + p + ".json";
+    ofLogNotice("ofxColorManager:preset_save") << "preset_save: " << p;
+    string path = preset_path+p+".json";
 
     presetData.name = "myPreset";//TODO:
     presetData.curveName = "curve01";//TODO:
+    presetData.background = color_backGround.get();
 
-    ofLogNotice("ofxColorManager") << "preset name: " << presetData.name;
-    ofLogNotice("ofxColorManager") << "curve name : " << presetData.curveName;
+    ofLogNotice("ofxColorManager:preset_save") << "presetData.name      : " << presetData.name;
+    ofLogNotice("ofxColorManager:preset_save") << "presetData.curveName : " << presetData.curveName;
+    ofLogNotice("ofxColorManager:preset_save") << "presetData.background: " << presetData.background;
 
-    curvesTool.save(preset_path + presetData.curveName + ".yml");
+    curvesTool.save(preset_path+presetData.curveName+".yml");
 
     presetData.palette.resize(palette.size());
     for (int i = 0; i< palette.size(); i++)
     {
         presetData.palette[i] = palette[i];
-        ofLogNotice("ofxColorManager") << "palette_" << i << " " << ofToString(presetData.palette[i]);
+        ofLogNotice("ofxColorManager:preset_save") << "presetData.palette[" << i << "]: " << ofToString(presetData.palette[i]);
     }
 
     ofFile file(path, ofFile::WriteOnly);
     jsonout jo(file);
     jo << presetData;
 
-    ofLogNotice("ofxColorManager") << "DONE! preset_save: " << p;
+    ofLogNotice("ofxColorManager:preset_save") << "DONE! preset_save: " << p;
 }
 
 
@@ -572,22 +583,36 @@ void ofxColorManager::gui_imGui_theme()
 //--------------------------------------------------------------
 void ofxColorManager::palette_rearrenge()
 {
+    ofLogNotice("ofxColorManager:palette_rearrenge");
+    ofLogNotice("ofxColorManager:palette_rearrenge") << "btns_palette.size():" << btns_palette.size();
+
     // re-arrenge all resized boxes
-    int boxesNum = btns_palette.size();
-    float boxesX, boxesY, boxesW, boxesH, boxesY_total, boxesH_total;
-    boxesH_total = curveTool_h;
-    boxesH = boxesH_total/boxesNum;
-    boxesY_total = palette_y + boxesH_total - boxesH;
-    boxesX = palette_x;
-    boxesW = box_size;
-    for (int i=0; i<btns_palette.size(); i++)
+
+    std::string name;
+    int x, y, w, h, hTotal;
+    x = palette_x;
+    w = box_size;
+    int numBtns = btns_palette.size();
+    hTotal = curveTool_h;
+    h = hTotal/numBtns;
+    bool flipBtn = true;
+
+    for (int i=0; i<numBtns; i++)
     {
-        std::string n = "btn" + ofToString(i);
-        auto a = scene->getChildWithName(n, 1000);
-        boxesY = boxesY_total - (i*boxesH);
-        a->setPosition(boxesX, boxesY);
-        a->setSize(boxesW, boxesH);
+        name = "btn"+ofToString(i);
+        cout << name << endl;
+        auto a = scene->getChildWithName(name, 1000);
+
+        if (flipBtn)
+            y = palette_y + (numBtns-i-1)*h;
+        else
+            y = palette_y + i*h;
+
+        a->setPosition(x, y);
+        a->setSize(w, h);
     }
+
+    ofLogNotice("ofxColorManager:palette_rearrenge") <<"btns_palette.size():"<<btns_palette.size();
 }
 
 
@@ -595,20 +620,31 @@ void ofxColorManager::palette_rearrenge()
 void ofxColorManager::palette_addColor_toInterface(ofColor c)
 {
     // vertical palette with resize boxes size to fit gradient bar height
-
     // add the new color (current color_clicked) to the user palette
     int i = btns_palette.size();
+
     ButtonExample *btn = new ButtonExample();
     btn->setup(0, 0, 10, 10);//temp
     btn->setColor(c);
     btn->setup_colorBACK( color_clicked );
     btn->setSelectable(false);//to enable border draw
     btn->setLocked(true);//avoid dragging
-    btn->setName("btn" + ofToString(i));
+    btn->setName("btn"+ofToString(i));
+
+    //temp positions
+    btn->setPosition(palette_x, palette_y+box_size+i*(box_size+pad));
+    btn->setSize(box_size, box_size);
+
     scene->addChild(btn);
     btns_palette.push_back(btn);
 
-    palette_rearrenge();//make resizes to fill bar
+    ofLogNotice("ofxColorManager:palette_addColor_toInterface:")<<"added btn";
+    ofLogNotice("ofxColorManager:palette_addColor_toInterface:")<<"btns_palette.size():["<<btns_palette.size()<<"]";
+
+    //-
+
+    // make positions & resizes to fill bar
+    palette_rearrenge();
 }
 
 
@@ -2092,7 +2128,7 @@ void ofxColorManager::draw_PaleteMINI()
 //--------------------------------------------------------------
 void ofxColorManager::palette_addColor(ofColor c)
 {
-    ofLogNotice("ofxColorManager") << "palette_addColor" << " (" << ofToString(c) << ") to user palette";
+    ofLogNotice("ofxColorManager:palette_addColor") << ofToString(c);
     palette.push_back( c );
     gradient.addColor( c );
     palette_addColor_toInterface( c );
@@ -2156,6 +2192,8 @@ void ofxColorManager::palette_touched(string name)
 //--------------------------------------------------------------
 void ofxColorManager::palette_clear()
 {
+    // remove all colors of user palette
+
     ofLogNotice("ofxColorManager") << "palette_clear";
 
     palette.clear();
@@ -2370,28 +2408,28 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
         SHOW_ALL_GUI = !SHOW_ALL_GUI;
         setVisible(SHOW_ALL_GUI);
     }
-    if (key == 'e')
+    else if (key == 'e')
     {
         bPaletteEdit = !bPaletteEdit;
     }
-    if (key == 'l')
+    else if (key == 'l')
     {
         bLock_palette = !bLock_palette;
     }
 
-    if (key == 'm')
+    else if (key == 'm')
     {
         mouseRuler.toggleVisibility();
     }
 
-    if (key == 'd')
+    else if (key == 'd')
     {
         bShowDebug = !bShowDebug;
     }
 
     //-
 
-    if (key == 'o')
+    else if (key == 'o')
     {
         //TODO: bug because some trigs are flags. we need direct functions
 //        bRandomColor = true;
@@ -2403,7 +2441,7 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
         }
     }
 
-    if (key == 'p')
+    else if (key == 'p')
     {
         random.generateRandom(NUM_ALGO_PALETTES);
         palettes_update();
@@ -2415,10 +2453,10 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 
     //-
 
-    if (key == 'z') {
+    else if (key == 'z') {
         preset_save("myPreset");
     }
-    if (key == 'x') {
+    else if (key == 'x') {
         preset_load("myPreset");
     }
 
@@ -2438,15 +2476,15 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 //        palette_load("myPalette");
 //    }
 
-    if (key == 'c')
+    else if (key == 'c')
     {
         palette_clear();
     }
-    if (key == 'x')
+    else if (key == 'x')
     {
         palette_removeColorLast();
     }
-    if (key == 'a')
+    else if (key == 'a')
     {
         color_picked = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
         palette_addColor(ofColor(color_picked.get()));
@@ -2458,21 +2496,21 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 
 //    ColorBrowser.keyPressed( eventArgs );
 
-    if (key == ' ')
+    else if (key == ' ')
         ColorBrowser.switch_palette_Type();
 
-    if (key == OF_KEY_RETURN)
+    else if (key == OF_KEY_RETURN)
         ColorBrowser.switch_sorted_Type();
 
     //-
 
     // COLOUR LOVERS
 
-    if (key == OF_KEY_DOWN)
+    else if (key == OF_KEY_DOWN)
     {
         ColourLoversHelper.nextPalette();
     }
-    if (key == OF_KEY_UP)
+    else if (key == OF_KEY_UP)
     {
         ColourLoversHelper.prevPalette();
     }

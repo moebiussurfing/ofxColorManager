@@ -32,10 +32,10 @@ struct PresetData
 {
     string name;
     vector<ofColor> palette;
-    ofColor backgroundColor;
     string curveName;
+    ofColor background;
 
-OFX_CEREAL_DEFINE(CEREAL_NVP(name), CEREAL_NVP(curveName), CEREAL_NVP(palette), CEREAL_NVP(backgroundColor))
+OFX_CEREAL_DEFINE(CEREAL_NVP(name), CEREAL_NVP(curveName), CEREAL_NVP(palette), CEREAL_NVP(background))
 };
 
 //--
