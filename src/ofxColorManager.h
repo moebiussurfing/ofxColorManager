@@ -13,6 +13,7 @@
 #include "ofxCereal.h"
 #include "ofxMouseRuler.h"
 #include "ofxColourLoversHelper.h"
+#include "PresetPalette.h"
 
 //--
 
@@ -44,6 +45,9 @@ class ofxColorManager {
 
 public:
 
+    PresetPalette myPresetPalette;
+    string PRESET_name = "myPreset";
+    string PRESET_curveName = "curve01";
     //-
 
     // COLOUR LOVERS

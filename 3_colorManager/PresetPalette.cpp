@@ -1,13 +1,43 @@
-////
-//// Created by moebiussurfing on 7/31/19.
-////
 //
+// Created by moebiussurfing on 7/31/19.
+//
+
 #include "PresetPalette.h"
-//
+
+
+//--------------------------------------------------------------
+void PresetPalette::setName(string &_name)
+{
+    name_BACK = &_name;
+}
+
+
+//--------------------------------------------------------------
+void PresetPalette::setCurveName(string &_curve)
+{
+    curveName_BACK = &_curve;
+}
+
+
+////--------------------------------------------------------------
+//void PresetPalette::setBackgroundColor(ofParameter<ofFloatColor> &_background)
+////void PresetPalette::setBackgroundColor(ofColor &_background)
+//{
+//    background_BACK = &_background;
+//}
+
+
+//--------------------------------------------------------------
+void PresetPalette::setPalette(vector<ofColor> &_palette)
+{
+    palette_BACK = &_palette;
+}
+
+
 //--------------------------------------------------------------
 void PresetPalette::preset_load(string p)
 {
-//    ofLogNotice("ofxColorManager:preset_load") << p;
+//    ofLogNotice("PresetPalette:preset_load") << p;
 //    string path = preset_path+p+".json";
 //
 //    ofFile file(path);
@@ -16,9 +46,9 @@ void PresetPalette::preset_load(string p)
 //        jsonin ji(file);
 //        ji >> presetData;
 //
-//        ofLogNotice("ofxColorManager:preset_load") << "presetData.name      : " << presetData.name;
-//        ofLogNotice("ofxColorManager:preset_load") << "presetData.curveName : " << presetData.curveName;
-//        ofLogNotice("ofxColorManager:preset_load") << "presetData.background: " << presetData.background;
+//        ofLogNotice("PresetPalette:preset_load") << "presetData.name      : " << presetData.name;
+//        ofLogNotice("PresetPalette:preset_load") << "presetData.curveName : " << presetData.curveName;
+//        ofLogNotice("PresetPalette:preset_load") << "presetData.background: " << presetData.background;
 //
 //        curvesTool.load(preset_path + presetData.curveName + ".yml");
 //
@@ -27,7 +57,7 @@ void PresetPalette::preset_load(string p)
 //            color_backGround = presetData.background;
 //        }
 //
-//        ofLogNotice("ofxColorManager:preset_load") << "presetData.palette.size(): " << presetData.palette.size();
+//        ofLogNotice("PresetPalette:preset_load") << "presetData.palette.size(): " << presetData.palette.size();
 //
 //        palette_clear();
 //
@@ -35,16 +65,16 @@ void PresetPalette::preset_load(string p)
 //        {
 //            ofColor c;
 //            c = presetData.palette[i];
-//            ofLogNotice("ofxColorManager:preset_load") << "addColor:" << ofToString(c) <<" ["<<i<<"]";
+//            ofLogNotice("PresetPalette:preset_load") << "addColor:" << ofToString(c) <<" ["<<i<<"]";
 //            palette_addColor(c);
 //        }
-//        ofLogNotice("ofxColorManager:preset_load") << "DONE! preset_load  : " << p;
-//        ofLogNotice("ofxColorManager:preset_load") << "palette.size()     :" << palette.size()<<endl;
-//        ofLogNotice("ofxColorManager:preset_load") << "btns_palette.size():" << btns_palette.size()<<endl;
+//        ofLogNotice("PresetPalette:preset_load") << "DONE! preset_load  : " << p;
+//        ofLogNotice("PresetPalette:preset_load") << "palette.size()     :" << palette.size()<<endl;
+//        ofLogNotice("PresetPalette:preset_load") << "btns_palette.size():" << btns_palette.size()<<endl;
 //    }
 //    else
 //    {
-//        ofLogNotice("ofxColorManager:preset_load") << "FILE '" << path << "' NOT FOUND";
+//        ofLogNotice("PresetPalette:preset_load") << "FILE '" << path << "' NOT FOUND";
 //    }
 }
 
@@ -52,29 +82,25 @@ void PresetPalette::preset_load(string p)
 //--------------------------------------------------------------
 void PresetPalette::preset_save(string p)
 {
-//    ofLogNotice("ofxColorManager:preset_save") << "preset_save: " << p;
-//    string path = preset_path+p+".json";
-//
-//    presetData.name = "myPreset";//TODO:
-//    presetData.curveName = "curve01";//TODO:
-//    presetData.background = color_backGround.get();
-//
-//    ofLogNotice("ofxColorManager:preset_save") << "presetData.name      : " << presetData.name;
-//    ofLogNotice("ofxColorManager:preset_save") << "presetData.curveName : " << presetData.curveName;
-//    ofLogNotice("ofxColorManager:preset_save") << "presetData.background: " << presetData.background;
-//
+    ofLogNotice("PresetPalette:preset_save") << "preset_save: " << p;
+    string path = preset_path+p+".json";
+
+//    presetData.background = (*background_BACK);
+    presetData.name = (*name_BACK);
+    presetData.curveName = (*curveName_BACK);
+    presetData.palette = (*palette_BACK);
+
+//    ofLogNotice("PresetPalette:preset_save") << "presetData.background: " << presetData.background;
+    ofLogNotice("PresetPalette:preset_save") << "presetData.name      : " << presetData.name;
+    ofLogNotice("PresetPalette:preset_save") << "presetData.curveName : " << presetData.curveName;
+    ofLogNotice("PresetPalette:preset_save") << "presetData.palette   : " << ofToString(presetData.palette);
+
 //    curvesTool.save(preset_path+presetData.curveName+".yml");
-//
-//    presetData.palette.resize(palette.size());
-//    for (int i = 0; i< palette.size(); i++)
-//    {
-//        presetData.palette[i] = palette[i];
-//        ofLogNotice("ofxColorManager:preset_save") << "presetData.palette[" << i << "]: " << ofToString(presetData.palette[i]);
-//    }
-//
-//    ofFile file(path, ofFile::WriteOnly);
-//    jsonout jo(file);
-//    jo << presetData;
-//
-//    ofLogNotice("ofxColorManager:preset_save") << "DONE! preset_save: " << p;
+
+    ofFile file(path, ofFile::WriteOnly);
+    jsonout jo(file);
+    jo << presetData;
+
+    ofLogNotice("PresetPalette:preset_save") << "DONE! preset_save: " << p;
+    cout << endl;
 }

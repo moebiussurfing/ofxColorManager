@@ -73,7 +73,6 @@ void ofxColorManager::setup()
     ColorBrowser.setup_colorBACK(color_BACK);
     ColorBrowser.setPosition(colorBrowserPos);
     ColorBrowser.setup();
-
     ColorBrowser_palette = ColorBrowser.getPalette();
 
     //-
@@ -346,7 +345,7 @@ void ofxColorManager::gui_setup_layout()
     slider_w = box_size/2;
     slider_h = curveTool_h;
 
-    // current color box/bar (the one afect by slider position. just for testing gradient purpose)
+    // current color box/bar (the one affected by slider position. just for testing gradient purpose)
     currColor_x = slider_x+2*(slider_w+pad);
     currColor_y = curveTool_y;
 
@@ -359,7 +358,7 @@ void ofxColorManager::gui_setup_layout()
     // user color box monitor picked (same that color picker gui)
     // bar mode
     color_w = (2*box_size);
-    color_x = palette_x-(color_w+pad+box_size+pad);
+    color_x = palette_x-(color_w+pad+box_size/2+pad);
     color_y = curveTool_y;
     color_h = curveTool_h;
     r_color_picked = ofRectangle( color_x, color_y, color_w, color_h );
@@ -859,9 +858,13 @@ bool ofxColorManager::gui_imGui()
 
         // 2 load/create palete from colorBrowser
 
+
         static bool saved_palette_inited = false;
         //const int PaletteSIZE = ColorBrowser_palette.size();//error
-        static ImVec4 saved_palette[130];//same than openColor palettes
+
+//        static ImVec4 saved_palette[130];//same than openColor palettes
+        static ImVec4 saved_palette[2310];//same than Pantone palette
+
         if (!saved_palette_inited)
             for (int n = 0; n < IM_ARRAYSIZE(saved_palette); n++)
             {
@@ -884,7 +887,20 @@ bool ofxColorManager::gui_imGui()
 //                ImGui::PushItemWidth(guiWidth * 0.2);
                 ImGui::PushID(n);
 
-                if ((n % 10) != 0) {//10 colors per row
+//                // open colors
+//                if ((n % 10) != 0) {//10 colors per row Open Color
+//                    ImGui::SameLine(0.0f, ImGui::GetStyle().ItemSpacing.y);
+//                }
+//
+//                if (ImGui::ColorButton("##palette", saved_palette[n],
+//                        ImGuiColorEditFlags_NoAlpha | ImGuiColorEditFlags_NoPicker | ImGuiColorEditFlags_NoTooltip,
+//                        ImVec2(20, 20)))
+//                {
+//                    color = ImVec4(saved_palette[n].x, saved_palette[n].y, saved_palette[n].z, color.w); // Preserve alpha!
+
+
+// pantone
+                if ((n%7) != 0) {//7 colors per row Pantone
                     ImGui::SameLine(0.0f, ImGui::GetStyle().ItemSpacing.y);
                 }
 
@@ -893,6 +909,7 @@ bool ofxColorManager::gui_imGui()
                         ImVec2(20, 20)))
                 {
                     color = ImVec4(saved_palette[n].x, saved_palette[n].y, saved_palette[n].z, color.w); // Preserve alpha!
+
 
                             //-
 
@@ -909,6 +926,7 @@ bool ofxColorManager::gui_imGui()
                 ImGui::PopID();
             }
         }
+
     }
     ofxImGui::EndWindow(COLOR_PICKER_Settings);
 
@@ -1225,6 +1243,7 @@ void ofxColorManager::curveTool_setup()
     curve_img_gradient.allocate(image_curvedGradient_w, image_curvedGradient_h, OF_IMAGE_COLOR);
 
     curvesTool.setup(curveTool_amount);
+    //TEMP
     curvesTool.load("curves.yml"); //needed because it fills polyline
 
     curve_pos.set("INPUT", 0., 0., 1.);
@@ -2376,17 +2395,30 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
         }
     }
 
-    //-
+    //--
 
-    else if (key == 'z') {
-        preset_save("myPreset");
-    }
+        // PRESET CLASS
+
+//    else if (key == 'z') {
+//        preset_save(PRESET_name);
+//    }
     else if (key == 'x') {
-        preset_load("myPreset");
+        preset_load(PRESET_name);
     }
+
+    // SAVE
+    else if (key == 'z') {
+        myPresetPalette.setName(PRESET_name);
+        myPresetPalette.setCurveName(PRESET_curveName);
+//        myPresetPalette.setBackgroundColor(color_backGround);//error ofParameter
+        myPresetPalette.setPalette(palette);
+        myPresetPalette.preset_save(PRESET_name);
+    }
+
+//--
 
 //    if (key == 's') {
-//        curvesTool.save("curves.yml");
+//        curvesTool.save("curves  );
 //    }
 //    if (key == 'l') {
 //        curvesTool.load("curves.yml");
@@ -2928,7 +2960,7 @@ void ofxColorManager::preset_save(string p)
     ofLogNotice("ofxColorManager:preset_save") << "preset_save: " << p;
     string path = preset_path+p+".json";
 
-    presetData.name = "myPreset";//TODO:
+    presetData.name = PRESET_name;//TODO:
     presetData.curveName = "curve01";//TODO:
     presetData.background = color_backGround.get();
 
