@@ -665,7 +665,7 @@ bool ofxColorManager::gui_imGui()
     auto COLOR_PICKER_Settings = ofxImGui::Settings();
     COLOR_PICKER_Settings.windowPos = ofVec2f(gui_x, gui_y);
     COLOR_PICKER_Settings.windowSize = ofVec2f(guiWidth, 200);
-    COLOR_PICKER_Settings.lockPosition = true;
+//    COLOR_PICKER_Settings.lockPosition = true;
 
     if (ofxImGui::BeginWindow("COLOR PICKER", COLOR_PICKER_Settings, false))
     {
@@ -854,41 +854,53 @@ bool ofxColorManager::gui_imGui()
             ofxImGui::EndTree(mainSettings);
         }
 
-        //--
-
-        // 2 load/create palete from colorBrowser
-
-
-        static bool saved_palette_inited = false;
-        //const int PaletteSIZE = ColorBrowser_palette.size();//error
-
-//        static ImVec4 saved_palette[130];//same than openColor palettes
-        static ImVec4 saved_palette[2310];//same than Pantone palette
-
-        if (!saved_palette_inited)
-            for (int n = 0; n < IM_ARRAYSIZE(saved_palette); n++)
-            {
-                ofFloatColor c = ofColor(ColorBrowser_palette[n]);
-                saved_palette[n].x = c.r;
-                saved_palette[n].y = c.g;
-                saved_palette[n].z = c.b;
-                saved_palette[n].w = 1.0f;//alpha
-            }
-        saved_palette_inited = true;
-
-        //-
-
-        // 2.2 draw palette
-
-        if (ImGui::CollapsingHeader("PALETTE"))
-        {
-            for (int n = 0; n < IM_ARRAYSIZE(saved_palette); n++)
-            {
-//                ImGui::PushItemWidth(guiWidth * 0.2);
-                ImGui::PushID(n);
-
-//                // open colors
-//                if ((n % 10) != 0) {//10 colors per row Open Color
+//        //--
+//
+//        // 2 load/create palete from colorBrowser
+//
+//
+//        static bool saved_palette_inited = false;
+//        //const int PaletteSIZE = ColorBrowser_palette.size();//error
+//
+////        static ImVec4 saved_palette[130];//same than openColor palettes
+//        static ImVec4 saved_palette[2310];//same than Pantone palette
+//
+//        if (!saved_palette_inited)
+//            for (int n = 0; n < IM_ARRAYSIZE(saved_palette); n++)
+//            {
+//                ofFloatColor c = ofColor(ColorBrowser_palette[n]);
+//                saved_palette[n].x = c.r;
+//                saved_palette[n].y = c.g;
+//                saved_palette[n].z = c.b;
+//                saved_palette[n].w = 1.0f;//alpha
+//            }
+//        saved_palette_inited = true;
+//
+//        //-
+//
+//        // 2.2 draw palette
+//
+//        if (ImGui::CollapsingHeader("PALETTE"))
+//        {
+//            for (int n = 0; n < IM_ARRAYSIZE(saved_palette); n++)
+//            {
+////                ImGui::PushItemWidth(guiWidth * 0.2);
+//                ImGui::PushID(n);
+//
+////                // open colors
+////                if ((n % 10) != 0) {//10 colors per row Open Color
+////                    ImGui::SameLine(0.0f, ImGui::GetStyle().ItemSpacing.y);
+////                }
+////
+////                if (ImGui::ColorButton("##palette", saved_palette[n],
+////                        ImGuiColorEditFlags_NoAlpha | ImGuiColorEditFlags_NoPicker | ImGuiColorEditFlags_NoTooltip,
+////                        ImVec2(20, 20)))
+////                {
+////                    color = ImVec4(saved_palette[n].x, saved_palette[n].y, saved_palette[n].z, color.w); // Preserve alpha!
+//
+//
+//// pantone
+//                if ((n%7) != 0) {//7 colors per row Pantone
 //                    ImGui::SameLine(0.0f, ImGui::GetStyle().ItemSpacing.y);
 //                }
 //
@@ -897,35 +909,23 @@ bool ofxColorManager::gui_imGui()
 //                        ImVec2(20, 20)))
 //                {
 //                    color = ImVec4(saved_palette[n].x, saved_palette[n].y, saved_palette[n].z, color.w); // Preserve alpha!
-
-
-// pantone
-                if ((n%7) != 0) {//7 colors per row Pantone
-                    ImGui::SameLine(0.0f, ImGui::GetStyle().ItemSpacing.y);
-                }
-
-                if (ImGui::ColorButton("##palette", saved_palette[n],
-                        ImGuiColorEditFlags_NoAlpha | ImGuiColorEditFlags_NoPicker | ImGuiColorEditFlags_NoTooltip,
-                        ImVec2(20, 20)))
-                {
-                    color = ImVec4(saved_palette[n].x, saved_palette[n].y, saved_palette[n].z, color.w); // Preserve alpha!
-
-
-                            //-
-
-                    // TEST
-//                    LISTEN_isEnabled = false;
-                    ofLogNotice("ofxColorManager") << "ImGui: PALETTE PICKED !" << endl;
-                    color_picked = color;
-//                    LISTEN_isEnabled = true;
-
-                    //-
-                }
-
-//                ImGui::PopItemWidth();
-                ImGui::PopID();
-            }
-        }
+//
+//
+//                            //-
+//
+//                    // TEST
+////                    LISTEN_isEnabled = false;
+//                    ofLogNotice("ofxColorManager") << "ImGui: PALETTE PICKED !" << endl;
+//                    color_picked = color;
+////                    LISTEN_isEnabled = true;
+//
+//                    //-
+//                }
+//
+////                ImGui::PopItemWidth();
+//                ImGui::PopID();
+//            }
+//        }
 
     }
     ofxImGui::EndWindow(COLOR_PICKER_Settings);
@@ -1039,8 +1039,8 @@ bool ofxColorManager::gui_imGui()
 
     //-
 
-    this->gui.end();
-    return mainSettings.mouseOverGui;
+//    this->gui.end();
+//    return mainSettings.mouseOverGui;
 
     //-
 
@@ -1055,6 +1055,118 @@ bool ofxColorManager::gui_imGui()
     // ImGui::Begin("Funky Window"); /* Here your ImGui stuff
     // */ ImGui::End();
     // im_gui.end(); // Addon end
+
+
+
+
+    //-------------------------------------------------------------------
+
+    // 3rd WINDOW
+
+    auto palette_Settings = ofxImGui::Settings();
+    palette_Settings.windowPos = ofVec2f(300, 300);
+    palette_Settings.windowSize = ofVec2f(gui2_w, 300);
+
+    if (ofxImGui::BeginWindow("PALETTE", palette_Settings, false))
+    {
+        //--
+
+        // GET COLOR FROM OUTSIDE COLOR PICKED
+
+        // TEST
+        LISTEN_isEnabled = false;//maybe required because get() causes callbacks too (?)
+
+        // TEST
+        static ImVec4 color;
+        color.x = color_picked.get().r;
+        color.y = color_picked.get().g;
+        color.z = color_picked.get().b;
+        color.w = color_picked.get().a;
+
+        // TEST
+        LISTEN_isEnabled = true;
+
+        //--
+        //--
+
+        // 2 load/create palete from colorBrowser
+
+
+        static bool saved_palette_inited = false;
+        //const int PaletteSIZE = ColorBrowser_palette.size();//error
+
+//        static ImVec4 saved_palette[130];//same than openColor palettes
+        static ImVec4 saved_palette[2310];//same than Pantone palette
+
+        if (!saved_palette_inited)
+            for (int n = 0; n < IM_ARRAYSIZE(saved_palette); n++)
+            {
+                ofFloatColor c = ofColor(ColorBrowser_palette[n]);
+                saved_palette[n].x = c.r;
+                saved_palette[n].y = c.g;
+                saved_palette[n].z = c.b;
+                saved_palette[n].w = 1.0f;//alpha
+            }
+        saved_palette_inited = true;
+
+        //-
+
+        // 2.2 draw palette
+
+        if (ImGui::CollapsingHeader("PALETTE"))
+        {
+            for (int n = 0; n < IM_ARRAYSIZE(saved_palette); n++)
+            {
+//                ImGui::PushItemWidth(guiWidth * 0.2);
+                ImGui::PushID(n);
+
+//                // open colors
+//                if ((n % 10) != 0) {//10 colors per row Open Color
+//                    ImGui::SameLine(0.0f, ImGui::GetStyle().ItemSpacing.y);
+//                }
+//
+//                if (ImGui::ColorButton("##palette", saved_palette[n],
+//                        ImGuiColorEditFlags_NoAlpha | ImGuiColorEditFlags_NoPicker | ImGuiColorEditFlags_NoTooltip,
+//                        ImVec2(20, 20)))
+//                {
+//                    color = ImVec4(saved_palette[n].x, saved_palette[n].y, saved_palette[n].z, color.w); // Preserve alpha!
+
+
+// pantone
+                if ((n%7) != 0) {//7 colors per row Pantone
+                    ImGui::SameLine(0.0f, ImGui::GetStyle().ItemSpacing.y);
+                }
+
+                if (ImGui::ColorButton("##palette", saved_palette[n],
+                        ImGuiColorEditFlags_NoAlpha | ImGuiColorEditFlags_NoPicker | ImGuiColorEditFlags_NoTooltip,
+                        ImVec2(20, 20)))
+                {
+                    color = ImVec4(saved_palette[n].x, saved_palette[n].y, saved_palette[n].z, color.w); // Preserve alpha!
+
+
+                    //-
+
+                    // TEST
+//                    LISTEN_isEnabled = false;
+                    ofLogNotice("ofxColorManager") << "ImGui: PALETTE PICKED !" << endl;
+                    color_picked = color;
+//                    LISTEN_isEnabled = true;
+
+                    //-
+                }
+
+//                ImGui::PopItemWidth();
+                ImGui::PopID();
+            }
+        }
+    }
+    ofxImGui::EndWindow(palette_Settings);
+
+
+
+
+    this->gui.end();
+    return mainSettings.mouseOverGui;
 }
 
 
