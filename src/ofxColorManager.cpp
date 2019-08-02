@@ -68,8 +68,8 @@ void ofxColorManager::setup()
 
     // COLOR BROWSER
 
-    ColorBrowser.setBoxSize(25);
-    ColorBrowser.setRowsSize(10);
+    ColorBrowser.setBoxSize(7);
+    ColorBrowser.setRowsSize(7*17);//for Pantone palette
     ColorBrowser.setup_colorBACK(color_BACK);
     ColorBrowser.setPosition(colorBrowserPos);
     ColorBrowser.setup();
@@ -369,14 +369,14 @@ void ofxColorManager::gui_setup_layout()
     palettes_x = 500;
     palettes_y = 320;
 
-    // color box clicked on palettes(hidden)
+    // color clicked box on palettes(hidden)
     colorPick_x = 390;
     colorPick_y = color_h + 30;
     colorPick_w = colorPick_h = 2*box_size;
     r_color_clicked = ofRectangle( colorPick_x, colorPick_y, colorPick_w, colorPick_h );
 
-    // colors palettes browser
-    colorBrowserPos = glm::vec2(1000, 500);
+    // browser colors palettes
+    colorBrowserPos = glm::vec2(270, 675);
 }
 
 
