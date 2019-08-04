@@ -14,6 +14,7 @@
 #include "ofxMouseRuler.h"
 #include "ofxColourLoversHelper.h"
 #include "PresetPalette.h"
+#include "ofxUndoSimple.h"
 
 //--
 
@@ -44,6 +45,8 @@ OFX_CEREAL_DEFINE(CEREAL_NVP(name), CEREAL_NVP(curveName), CEREAL_NVP(palette), 
 class ofxColorManager {
 
 public:
+
+
 
     PresetPalette myPresetPalette;
     string PRESET_name = "myPreset";
@@ -201,7 +204,10 @@ public:
     bool LISTEN_isEnabled = true;
     void color_picked_Update_To_HSV();
 
+    // MAIN COLOR
     ofParameter<ofFloatColor> color_picked;
+    ofxUndoSimple<ofFloatColor> color_Undo;
+
     ofRectangle r_color_picked;
     ofParameter<int> color_HUE;
     ofParameter<int> color_SAT;

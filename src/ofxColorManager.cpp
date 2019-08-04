@@ -398,7 +398,7 @@ void ofxColorManager::palette_load(string p)
         for (int i = 0; i< data.palette.size(); i++)
         {
             c = data.palette[i];
-            ofLogNotice("ofxColorManager") << "color_" << i << ": " << ofToString(c);
+            ofLogNotice("ofxColorManager") << "color_picked" << i << ": " << ofToString(c);
             palette_addColor(c);
         }
     }
@@ -423,7 +423,7 @@ void ofxColorManager::palette_save(string p)
     for (int i = 0; i< palette.size(); i++)
     {
         data.palette[i] = palette[i];
-        ofLogNotice("ofxColorManager") << "color_" << i << " " << ofToString(data.palette[i]);
+        ofLogNotice("ofxColorManager") << "color_picked" << i << " " << ofToString(data.palette[i]);
     }
 
     ofFile file(path, ofFile::WriteOnly);
@@ -2468,10 +2468,10 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
     {
         bPaletteEdit = !bPaletteEdit;
     }
-    else if (key == 'l')
-    {
-        bLock_palette = !bLock_palette;
-    }
+//    else if (key == 'l')
+//    {
+//        bLock_palette = !bLock_palette;
+//    }
 
     else if (key == 'm')
     {
@@ -2495,8 +2495,26 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
             palettes_update();
             palette_recallFromPalettes(SELECTED_palette_LAST);//trig last choice
         }
-    }
 
+        // undo
+        color_Undo = color_picked.get();
+        color_Undo.store();
+    }
+    else if (key == 'z')
+    {
+        color_Undo.undo();
+        color_picked = color_Undo;
+
+    }
+    else if (key == 'y')
+    {
+        color_Undo.redo();
+        color_picked = color_Undo;
+    }
+//    else if()
+//        color_Undo.clearRedo();
+
+        //random palette
     else if (key == 'p')
     {
         random.generateRandom(NUM_ALGO_PALETTES);
@@ -2514,12 +2532,12 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 //    else if (key == 'z') {
 //        preset_save(PRESET_name);
 //    }
-    else if (key == 'x') {
+    else if (key == 'l') {
         preset_load(PRESET_name);
     }
 
     // SAVE
-    else if (key == 'z') {
+    else if (key == 's') {
         myPresetPalette.setName(PRESET_name);
         myPresetPalette.setCurveName(PRESET_curveName);
 //        myPresetPalette.setBackgroundColor(color_backGround);//error ofParameter
@@ -2563,13 +2581,13 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 
     // COLOR BROWSER
 
-//    ColorBrowser.keyPressed( eventArgs );
-
-    else if (key == ' ')
-        ColorBrowser.switch_palette_Type();
-
-    else if (key == OF_KEY_RETURN)
-        ColorBrowser.switch_sorted_Type();
+////    ColorBrowser.keyPressed( eventArgs );
+//
+//    else if (key == ' ')
+//        ColorBrowser.switch_palette_Type();
+//
+//    else if (key == OF_KEY_RETURN)
+//        ColorBrowser.switch_sorted_Type();
 
     //-
 
@@ -2781,7 +2799,7 @@ void ofxColorManager::Changed_color_picked(ofFloatColor &_c)
 void ofxColorManager::Changed_color_clicked(ofFloatColor &color)
 {
     //DISABLED
-//    ofLogNotice("ofxColorManager") << "Changed_color_clicked " << ofToString(color);
+    ofLogNotice("ofxColorManager") << "Changed_color_clicked " << ofToString(color);
 //    color_picked.set(color);
 }
 
@@ -2986,7 +3004,7 @@ void ofxColorManager::exit()
 //        for (int i = 0; i< data.palette.size(); i++)
 //        {
 //            c = data.palette[i];
-//            ofLogNotice("ofxColorManager") << "color_" << i << ": " << ofToString(c);
+//            ofLogNotice("ofxColorManager") << "color_picked" << i << ": " << ofToString(c);
 //            palette_addColor(c);
 //        }
 //    }
@@ -3011,7 +3029,7 @@ void ofxColorManager::exit()
 //    for (int i = 0; i< palette.size(); i++)
 //    {
 //        data.palette[i] = palette[i];
-//        ofLogNotice("ofxColorManager") << "color_" << i << " " << ofToString(data.palette[i]);
+//        ofLogNotice("ofxColorManager") << "color_picked" << i << " " << ofToString(data.palette[i]);
 //    }
 //
 //    ofFile file(path, ofFile::WriteOnly);
