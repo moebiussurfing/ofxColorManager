@@ -6,8 +6,11 @@ ofxColorPalette
 ofxColorsBrowser
 ofxColourLovers
 ofxColourLoversHelper
+ofxControlPointManager
 ofxCurvesTool
 ofxFontStash
+ofxGui
+ofxGuiPanelsLayout
 ofxHttpUtils
 ofxImGui
 ofxInterface

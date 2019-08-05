@@ -2678,7 +2678,6 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 
         // clear DEMO1 objects
         bDEMO1_clear = true;
-
         pauseCreate = false;
     }
 
@@ -2706,11 +2705,11 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 
         // clear DEMO1 objects
         bDEMO1_clear = true;
-
         pauseCreate = false;
     }
-
         //-
+
+        // COLOUR LOVERS
 
         // 3. randomly get a palete from colour lovers
 
@@ -2719,10 +2718,27 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 
         // clear DEMO1 objects
         bDEMO1_clear = true;
-
         pauseCreate = false;
     }
 
+    //-
+
+    else if (key == OF_KEY_DOWN)
+    {
+        ColourLoversHelper.nextPalette();
+
+        // clear DEMO1 objects
+        bDEMO1_clear = true;
+        pauseCreate = false;
+    }
+    else if (key == OF_KEY_UP)
+    {
+        ColourLoversHelper.prevPalette();
+
+        // clear DEMO1 objects
+        bDEMO1_clear = true;
+        pauseCreate = false;
+    }
         //--
 
         // UNDO COLOR
@@ -2815,18 +2831,7 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 //    else if (key == OF_KEY_RETURN)
 //        ColorBrowser.switch_sorted_Type();
 
-        //-
 
-        // COLOUR LOVERS
-
-    else if (key == OF_KEY_DOWN)
-    {
-        ColourLoversHelper.nextPalette();
-    }
-    else if (key == OF_KEY_UP)
-    {
-        ColourLoversHelper.prevPalette();
-    }
 
 }
 
