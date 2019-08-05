@@ -6980,6 +6980,70 @@
 				<key>sourceTree</key>
 				<string>SOURCE_ROOT</string>
 			</dict>
+			<key>6D5588D3FAE44B8D0798BA44</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxCameraSaveLoad.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxCameraSaveLoad/src/ofxCameraSaveLoad.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>DD4B7A6B02FE3A9E6EA4776D</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>FEB2058E7166D8CDCFAD557B</string>
+					<string>6D5588D3FAE44B8D0798BA44</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>src</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>CD15E07442C69BE602D98FD7</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>DD4B7A6B02FE3A9E6EA4776D</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>ofxCameraSaveLoad</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>2C1ED88A3466D1D2AC3DA004</key>
+			<dict>
+				<key>fileRef</key>
+				<string>FEB2058E7166D8CDCFAD557B</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>FEB2058E7166D8CDCFAD557B</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxCameraSaveLoad.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxCameraSaveLoad/src/ofxCameraSaveLoad.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
 			<key>6948EE371B920CB800B5AC1A</key>
 			<dict>
 				<key>children</key>
@@ -7146,6 +7210,7 @@ fi
 						<string>$(OF_CORE_HEADERS)</string>
 						<string>src</string>
 						<string>src</string>
+						<string>../../../addons/ofxCameraSaveLoad/src</string>
 						<string>../../../addons/ofxCereal/src/</string>
 						<string>../../../addons/ofxCereal/libs/cereal/include</string>
 						<string>../../../addons/ofxColorGradient/src</string>
@@ -7224,6 +7289,7 @@ fi
 						<string>$(OF_CORE_HEADERS)</string>
 						<string>src</string>
 						<string>src</string>
+						<string>../../../addons/ofxCameraSaveLoad/src</string>
 						<string>../../../addons/ofxCereal/src/</string>
 						<string>../../../addons/ofxCereal/libs/cereal/include</string>
 						<string>../../../addons/ofxColorGradient/src</string>
@@ -7305,6 +7371,7 @@ fi
 			<dict>
 				<key>children</key>
 				<array>
+					<string>CD15E07442C69BE602D98FD7</string>
 					<string>4E794F6F533DC4720BB1D873</string>
 					<string>126B40D5DC6E4508DDE87321</string>
 					<string>01D059B3D9AA705900B182CC</string>
@@ -10091,6 +10158,7 @@ fi
 						<string>$(OF_CORE_HEADERS)</string>
 						<string>src</string>
 						<string>src</string>
+						<string>../../../addons/ofxCameraSaveLoad/src</string>
 						<string>../../../addons/ofxCereal/src/</string>
 						<string>../../../addons/ofxCereal/libs/cereal/include</string>
 						<string>../../../addons/ofxColorGradient/src</string>
@@ -10189,6 +10257,7 @@ fi
 						<string>$(OF_CORE_HEADERS)</string>
 						<string>src</string>
 						<string>src</string>
+						<string>../../../addons/ofxCameraSaveLoad/src</string>
 						<string>../../../addons/ofxCereal/src/</string>
 						<string>../../../addons/ofxCereal/libs/cereal/include</string>
 						<string>../../../addons/ofxColorGradient/src</string>
@@ -10250,6 +10319,7 @@ fi
 				<array>
 					<string>E4B69E200A3A1BDC003C02F2</string>
 					<string>E4B69E210A3A1BDC003C02F2</string>
+					<string>2C1ED88A3466D1D2AC3DA004</string>
 					<string>DC3E64B573BA582B0A3FA78B</string>
 					<string>613EC582778991B6678E2605</string>
 					<string>C84B5431D26C6A55594CF7C0</string>
@@ -10443,6 +10513,7 @@ fi
 						<string>$(OF_CORE_HEADERS)</string>
 						<string>src</string>
 						<string>src</string>
+						<string>../../../addons/ofxCameraSaveLoad/src</string>
 						<string>../../../addons/ofxCereal/src/</string>
 						<string>../../../addons/ofxCereal/libs/cereal/include</string>
 						<string>../../../addons/ofxColorGradient/src</string>
@@ -10541,6 +10612,7 @@ fi
 						<string>$(OF_CORE_HEADERS)</string>
 						<string>src</string>
 						<string>src</string>
+						<string>../../../addons/ofxCameraSaveLoad/src</string>
 						<string>../../../addons/ofxCereal/src/</string>
 						<string>../../../addons/ofxCereal/libs/cereal/include</string>
 						<string>../../../addons/ofxColorGradient/src</string>

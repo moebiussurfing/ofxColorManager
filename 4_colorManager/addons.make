@@ -1,3 +1,4 @@
+ofxCameraSaveLoad
 ofxCereal
 ofxColorGradient
 ofxColorManager

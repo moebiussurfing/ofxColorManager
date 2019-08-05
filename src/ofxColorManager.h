@@ -15,6 +15,7 @@
 #include "ofxColourLoversHelper.h"
 #include "PresetPalette.h"
 #include "ofxUndoSimple.h"
+#include "ofxCameraSaveLoad.h"
 
 //--
 
@@ -46,7 +47,23 @@ class ofxColorManager {
 
 public:
 
+    //-----------------------------------------------------------
 
+
+    // DEMO 1
+
+    vector<glm::vec2> locations;
+    vector<glm::vec2> velocities;
+    vector<ofColor> colors;
+    bool bDEMO1_clear = false;
+    bool bDEMO1_stop = false;
+
+    ofEasyCam cam;
+
+
+    bool ENABLE_DEMO1 = false;
+    bool ENABLE_DEMO2 = true;
+    //-----------------------------------------------------------
 
     PresetPalette myPresetPalette;
     string PRESET_name = "myPreset";
@@ -93,11 +110,13 @@ public:
     ofParameter<bool> SHOW_ALL_GUI;
     ofParameter<bool> SHOW_GUI_MINI;
     ofParameter<bool> SHOW_debugText;
+    ofParameter<bool> SHOW_TEST_Curve;
 
     void setColor_TARGET(ofColor &c);//backwards pointer ofApp color
     ofColor *color_TARGET;//backwards pointer ofApp color
 
-    //----
+
+    //-----------------------------------------------------------
 
     // API
 
@@ -115,7 +134,8 @@ public:
     void disableListeners();
     void enableListeners();
 
-    //----
+    //-----------------------------------------------------------
+
 
     ofxMouseRuler mouseRuler;
 
@@ -298,7 +318,6 @@ public:
     ofParameter<float> curveMod;
     ofxSimpleSlider curveMod_Slider;
     int curve_pos_LUT = 0;
-    ofParameter<bool> SHOW_TEST_Curve;
 
     //-
 
