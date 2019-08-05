@@ -52,16 +52,18 @@ public:
 
     // DEMO 1
 
+    bool ENABLE_DEMO1 = true;
     vector<glm::vec2> locations;
     vector<glm::vec2> velocities;
     vector<ofColor> colors;
     bool bDEMO1_clear = false;
     bool bDEMO1_stop = false;
-
     ofEasyCam cam;
+    int iColor = 0;
+    bool pauseCreate = false;
 
-    bool ENABLE_DEMO1 = true;
-    bool ENABLE_DEMO2 = false;
+    bool ENABLE_DEMO2 = true;
+
     //-----------------------------------------------------------
 
     PresetPalette myPresetPalette;

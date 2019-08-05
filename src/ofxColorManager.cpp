@@ -22,11 +22,13 @@ void ofxColorManager::setup()
 
     // DEMO 1
 
-    ofSetCircleResolution(36);
+    ofSetCircleResolution(50);
 
     ofxLoadCamera(cam, "DEMOcam");
+    cam.disableMouseInput();
+//    cam.enableOrtho();
 
-    //-
+    //--
 
     // MOUSE DEBUGGER
 
@@ -1222,7 +1224,7 @@ void ofxColorManager::palette_load_ColourLovers()
 //--------------------------------------------------------------
 void ofxColorManager::update()
 {
-    ofSetWindowTitle(ofToString(ofGetFrameRate()));
+    ofSetWindowTitle(ofToString((int)ofGetFrameRate()));
 
     //---
 
@@ -1235,22 +1237,30 @@ void ofxColorManager::update()
         locations.clear();
         velocities.clear();
         colors.clear();
-
     }
+
 //        int bloquer = locations.size()>10
     ofColor color;
 
-    if (ofRandom(100) < 10) {
+    if ((ofRandom(100) < 50) && !pauseCreate) {
+//    if ((ofRandom(100) < 5) && !pauseCreate) {
 //        if (ofRandom(100) < 50) {//prob speed?
 //        if (ofRandom(100) < 80) {//prob speed?
 
         this->locations.push_back(glm::vec2());
         this->velocities.push_back(glm::normalize(glm::vec2(ofRandom(-1, 1), ofRandom(-1, 1))) * 2);
 
-//        color.setHsb(ofRandom(255), 255, 255);
+//        // 1. gradient: get random color for all gradient
+//        float RandomNorm = ofRandom(0., 1.);
+//        color.set(getColorAtPercent(RandomNorm));
 
-        float RandomNorm = ofRandom(0., 1.);
-        color.set(getColorAtPercent(RandomNorm));
+        // 2. palette color: get one of the palette colors
+        iColor++;
+        if (iColor==palette.size())
+            pauseCreate = true;
+        iColor=iColor%palette.size();
+        color.set(palette[iColor]);
+
         this->colors.push_back(color);
     }
 
@@ -1258,7 +1268,11 @@ void ofxColorManager::update()
 
         this->locations[i] += this->velocities[i];
 
-        if (glm::length(this->locations[i]) > 720) {
+        // distance to erase circles outside screen
+//        int maxCirclesDist = 720;
+        int maxCirclesDist = 1440;
+
+        if (glm::length(this->locations[i]) > maxCirclesDist) {
 
             this->locations.erase(this->locations.begin() + i);
             this->velocities.erase(this->velocities.begin() + i);
@@ -1312,9 +1326,8 @@ void ofxColorManager::update()
             bAuto_palette_recall = false;
         }
 
-
         // clear DEMO1 objects
-        bDEMO1_clear = true;
+//        bDEMO1_clear = true;
     }
 
     if (bUpdated_Color_BACK)
@@ -1344,9 +1357,8 @@ void ofxColorManager::update()
             }
         }
 
-
         // clear DEMO1 objects
-        bDEMO1_clear = true;
+//        bDEMO1_clear = true;
     }
 
     //--
@@ -2113,22 +2125,22 @@ void ofxColorManager::draw()
 
     // DEMO 1
 
-    if (ENABLE_DEMO1) {
+    if (ENABLE_DEMO1)
+    {
         ofPushMatrix();
         ofPushStyle();
 //    ofEnableBlendMode(ofBlendMode::OF_BLENDMODE_ADD);
+        ofEnableBlendMode(ofBlendMode::OF_BLENDMODE_ALPHA);
 
         ofTranslate(ofGetWidth() * 0.5, ofGetHeight() * 0.5);
-//    ofTranslate(ofGetMouseX(), ofGetMouseY());
 
-        for (int i = 0; i < this->locations.size(); i++) {
-
+        for (int i = 0; i < this->locations.size(); i++)
+        {
             ofSetColor(this->colors[i]);
 
 //        float radius = (2 * PI * glm::length(this->locations[i])) / 360 * 10;
-//        float radius = (2 * PI * glm::length(this->locations[i])) / 360 * 20;
-            float radius = (2 * PI * glm::length(this->locations[i])) / 360 * 40;
-
+        float radius = (2 * PI * glm::length(this->locations[i])) / 360 * 20;
+//        float radius = (2 * PI * glm::length(this->locations[i])) / 360 * 40;
 
             ofDrawCircle(this->locations[i], radius);
         }
@@ -2152,10 +2164,10 @@ void ofxColorManager::draw()
     float scaleRects = 2.f;
 
 //        float radius = 25;
-//    float radius = 300;
-    float radius = 150;
-//        int iDeg = 25;
-        int iDeg = 36;
+    float radius = 300;
+//    float radius = 150;
+        int iDeg = 25;
+//        int iDeg = 36;
 
 //    int iDeg = 360./palette.size();
 
@@ -2171,7 +2183,7 @@ void ofxColorManager::draw()
             ofSetColor(c);
 
 //            ofRotateZ(ofGetFrameNum() * 0.25);
-            ofRotateZ(ofGetFrameNum() * 0.1);
+            ofRotateZ(ofGetFrameNum() * 0.01);
 
             ofPushMatrix();
             ofTranslate(ofVec3f(x, y, 0));
@@ -2416,10 +2428,8 @@ void ofxColorManager::palette_clear()
     }
     btns_palette.clear();
 
-
-
     // clear DEMO1 objects
-    bDEMO1_clear = true;
+//    bDEMO1_clear = true;
 }
 
 //--------------------------------------------------------------
@@ -2639,7 +2649,9 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 
         //-
 
-        // randomize color and build palette if enabled
+        // RANDOM USER PALETTE
+
+        // 1. randomize color and build palette if enabled
 
     else if (key == 'o')
     {
@@ -2663,14 +2675,15 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
         color_Undo = color_picked.get();
         color_Undo.store();
 
-
         // clear DEMO1 objects
         bDEMO1_clear = true;
+
+        pauseCreate = false;
     }
 
         //--
 
-        // trig get algorithmic random palette
+        // 2. trig get algorithmic random palette
 
     else if (key == 'p')
     {
@@ -2679,6 +2692,8 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
         if (!bAuto_palette_recall)
         {
             bAuto_palette_recall = true;
+
+//            pauseCreate = false;
         }
 
         random.generateRandom(NUM_ALGO_PALETTES);
@@ -2690,21 +2705,26 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 
         // clear DEMO1 objects
         bDEMO1_clear = true;
+
+        pauseCreate = false;
     }
 
         //-
 
-        // randomly get a palete from colour lovers
+        // 3. randomly get a palete from colour lovers
 
     else if (key == 'v') {
         ColourLoversHelper.randomPalette();
+
         // clear DEMO1 objects
         bDEMO1_clear = true;
+
+        pauseCreate = false;
     }
 
         //--
 
-        // UNDO
+        // UNDO COLOR
 
     else if (key == 'z')
     {
@@ -2729,6 +2749,8 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 //    }
     else if (key == 'l') {
         preset_load(PRESET_name);
+
+//        ofxLoadCamera(cam, "DEMOCam");
     }
 
         // SAVE
@@ -2738,6 +2760,8 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 //        myPresetPalette.setBackgroundColor(color_backGround);//error ofParameter
         myPresetPalette.setPalette(palette);
         myPresetPalette.preset_save(PRESET_name);
+
+//        ofxSaveCamera(cam, "DEMOCam");
     }
 
 //--
@@ -2866,6 +2890,10 @@ void ofxColorManager::mousePressed(ofMouseEventArgs& eventArgs){
 //    }
 
     //-
+
+    // DEMO 1
+
+    pauseCreate = false;
 }
 
 
@@ -3179,7 +3207,7 @@ void ofxColorManager::exit()
     ofRemoveListener(params_palette.parameterChangedE(), this, &ofxColorManager::Changed_CONTROL);
     ofRemoveListener(params_curve.parameterChangedE(), this, &ofxColorManager::Changed_CONTROL);
 
-    ofxSaveCamera(cam, "DEMOCam");
+//    ofxSaveCamera(cam, "DEMOCam");
 
 //    bool ofxSaveCamera(const ofNode &node, string savePath);
 //    Where you pass the camera or ofNode object that you want to save, and the directory where it is going to be saved
