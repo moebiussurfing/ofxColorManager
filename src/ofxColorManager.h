@@ -331,6 +331,8 @@ public:
     bool TEST_toBackground = true;
     float framePrc;
 
+    bool TEST_DEMO = false;
+
     //--
 
     // JSON PALETTES SERIALIZER
