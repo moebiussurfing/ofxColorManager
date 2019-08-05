@@ -1243,22 +1243,23 @@ void ofxColorManager::update()
     ofColor color;
 
     if ((ofRandom(100) < 50) && !pauseCreate) {
-//    if ((ofRandom(100) < 5) && !pauseCreate) {
+//        if ((ofRandom(100) < 5) && !pauseCreate) {
 //        if (ofRandom(100) < 50) {//prob speed?
 //        if (ofRandom(100) < 80) {//prob speed?
 
         this->locations.push_back(glm::vec2());
         this->velocities.push_back(glm::normalize(glm::vec2(ofRandom(-1, 1), ofRandom(-1, 1))) * 2);
 
+        iColor++;
+        if (iColor==palette.size())
+            pauseCreate = true;
+        iColor=iColor%palette.size();
+
 //        // 1. gradient: get random color for all gradient
 //        float RandomNorm = ofRandom(0., 1.);
 //        color.set(getColorAtPercent(RandomNorm));
 
         // 2. palette color: get one of the palette colors
-        iColor++;
-        if (iColor==palette.size())
-            pauseCreate = true;
-        iColor=iColor%palette.size();
         color.set(palette[iColor]);
 
         this->colors.push_back(color);
@@ -2747,6 +2748,8 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 //    else if (key == 'z') {
 //        preset_save(PRESET_name);
 //    }
+
+        // LOAD
     else if (key == 'l') {
         preset_load(PRESET_name);
 
@@ -2781,6 +2784,10 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 //    {
 //        palette_load("myPalette");
 //    }
+
+        //-
+
+        // USER PALETTE
 
     else if (key == 'c')
     {
