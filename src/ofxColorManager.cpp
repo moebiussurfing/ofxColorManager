@@ -2630,9 +2630,66 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
     const int & key = eventArgs.key;
 //    ofLogNotice("ofxColorManager") << "key: " << key;
 
+    if(false){}
+
+        //--
+
+    // PRESET CLASS
+
+//    else if (key == 'z') {
+//        preset_save(PRESET_name);
+//    }
+
+    // LOAD
+
+    else if (key == 'l') {
+//        preset_load(PRESET_name);
+
+        myPresetPalette.setName(PRESET_name);
+        myPresetPalette.setCurveName(PRESET_curveName);
+//        myPresetPalette.setBackgroundColor(color_backGround);//error ofParameter
+        myPresetPalette.setPalette(palette);
+
+        myPresetPalette.preset_load(PRESET_name);
+        vector<ofColor> palette_TEMP = myPresetPalette.getPalette();
+
+        palette_clear();
+        for (int i=0; i<palette_TEMP.size(); i++)
+        {
+            ofColor c;
+            c = palette_TEMP[i];
+            palette_addColor(c);
+        }
+
+        color_backGround = ofColor( myPresetPalette.getBackground() );
+
+//        PRESET_curveName = curveName_BACK;
+////        string *name_BACK;
+////        vector<ofColor> *palette_BACK;
+////        string *curveName_BACK;
+
+//        ofxLoadCamera(cam, "DEMOCam");
+    }
+
+    // SAVE
+
+    else if (key == 's') {
+        myPresetPalette.setName(PRESET_name);
+        myPresetPalette.setCurveName(PRESET_curveName);
+        ofColor c = color_backGround.get();
+        //error if ofParameter
+        myPresetPalette.setBackgroundColor(c);
+        myPresetPalette.setPalette(palette);
+        myPresetPalette.preset_save(PRESET_name);
+
+//        ofxSaveCamera(cam, "DEMOCam");
+    }
+
+//--
+
     //-
 
-    if (key == 'g')
+    else if (key == 'g')
     {
         SHOW_ALL_GUI = !SHOW_ALL_GUI;
         setVisible(SHOW_ALL_GUI);
@@ -2765,33 +2822,7 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 //    else if()
 //        color_Undo.clearRedo();
 
-        //--
 
-        // PRESET CLASS
-
-//    else if (key == 'z') {
-//        preset_save(PRESET_name);
-//    }
-
-        // LOAD
-    else if (key == 'l') {
-        preset_load(PRESET_name);
-
-//        ofxLoadCamera(cam, "DEMOCam");
-    }
-
-        // SAVE
-    else if (key == 's') {
-        myPresetPalette.setName(PRESET_name);
-        myPresetPalette.setCurveName(PRESET_curveName);
-//        myPresetPalette.setBackgroundColor(color_backGround);//error ofParameter
-        myPresetPalette.setPalette(palette);
-        myPresetPalette.preset_save(PRESET_name);
-
-//        ofxSaveCamera(cam, "DEMOCam");
-    }
-
-//--
 
 //    if (key == 's') {
 //        curvesTool.save("curves  );

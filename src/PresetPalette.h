@@ -56,19 +56,31 @@ public:
     string curveName;
     ofColor background;
 
+    //--
+
     string *name_BACK;
     vector<ofColor> *palette_BACK;
     string *curveName_BACK;
-//    ofColor *background_BACK;
+    ofColor *background_BACK;
 //    ofFloatColor *background_BACK;
+ofColor backCol;
+
+
+//--
 
     void setName(string &name);
     void setCurveName(string &curve);
-//    void setBackgroundColor(ofColor &background);
-//    void setBackgroundColor(ofParameter<ofFloatColor> &background);
     void setPalette(vector<ofColor> &palette);
 
+    void setBackgroundColor(ofColor _background);
+//    void setBackgroundColor(ofColor &background);
+//    void setBackgroundColor(ofParameter<ofFloatColor> &background);
+
     string preset_path = "assets/presetsCLASS/";
+
+
+    vector<ofColor> getPalette();
+    ofColor getBackground();
 
     //--
 
