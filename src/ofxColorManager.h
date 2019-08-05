@@ -60,9 +60,8 @@ public:
 
     ofEasyCam cam;
 
-
-    bool ENABLE_DEMO1 = false;
-    bool ENABLE_DEMO2 = true;
+    bool ENABLE_DEMO1 = true;
+    bool ENABLE_DEMO2 = false;
     //-----------------------------------------------------------
 
     PresetPalette myPresetPalette;

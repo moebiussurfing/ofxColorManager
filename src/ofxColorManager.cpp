@@ -262,10 +262,10 @@ void ofxColorManager::setup()
     XML_params.add(SHOW_AlgoPalettes);
     XML_params.add(SHOW_Gradient);
     XML_params.add(SHOW_Curve);
+    XML_params.add(SHOW_TEST_Curve);//curve tool
     XML_params.add(SHOW_BrowserColors);
 
     XML_params.add(color_picked);
-
     XML_params.add(color_backGround);
     XML_params.add(color_backGround_SETAUTO);
 
@@ -274,14 +274,11 @@ void ofxColorManager::setup()
     XML_params.add(NUM_ALGO_PALETTES);
     XML_params.add(BRIGHTNESS);
     XML_params.add(SATURATION);
-    XML_params.add(bAuto_palette_recall);
     XML_params.add(gradient_hard);//gradient
-    XML_params.add(SHOW_TEST_Curve);//curve tool
+    XML_params.add(bAuto_palette_recall);
 //    XML_params.add(TEST_MODE);
 
-//    XML_params.add(bAuto_palette_recall);
     XML_params.add(color_backGround_SETAUTO);
-//    XML_params.add(SHOW_ColourLovers);
 
 
     load_group_XML(XML_params, XML_path);
@@ -290,6 +287,8 @@ void ofxColorManager::setup()
     //-
 
     palettes_setVisible(SHOW_AlgoPalettes);
+
+//    cam.enableOrtho();
 }
 
 
@@ -1227,7 +1226,7 @@ void ofxColorManager::update()
 
     //---
 
-    // DEMO 1
+    // DEMO 1 - CIRCLES
 
     if (bDEMO1_clear)
 //    if (bDEMO1_clear || locations.size()>10)
@@ -1238,34 +1237,32 @@ void ofxColorManager::update()
         colors.clear();
 
     }
-    {
 //        int bloquer = locations.size()>10
-        ofColor color;
+    ofColor color;
 
-        if (ofRandom(100) < 10) {
+    if (ofRandom(100) < 10) {
 //        if (ofRandom(100) < 50) {//prob speed?
 //        if (ofRandom(100) < 80) {//prob speed?
 
-            this->locations.push_back(glm::vec2());
-            this->velocities.push_back(glm::normalize(glm::vec2(ofRandom(-1, 1), ofRandom(-1, 1))) * 2);
+        this->locations.push_back(glm::vec2());
+        this->velocities.push_back(glm::normalize(glm::vec2(ofRandom(-1, 1), ofRandom(-1, 1))) * 2);
 
 //        color.setHsb(ofRandom(255), 255, 255);
 
-            float RandomNorm = ofRandom(0., 1.);
-            color.set(getColorAtPercent(RandomNorm));
-            this->colors.push_back(color);
-        }
+        float RandomNorm = ofRandom(0., 1.);
+        color.set(getColorAtPercent(RandomNorm));
+        this->colors.push_back(color);
+    }
 
-        for (int i = this->locations.size() - 1; i > -1; i--) {
+    for (int i = this->locations.size() - 1; i > -1; i--) {
 
-            this->locations[i] += this->velocities[i];
+        this->locations[i] += this->velocities[i];
 
-            if (glm::length(this->locations[i]) > 720) {
+        if (glm::length(this->locations[i]) > 720) {
 
-                this->locations.erase(this->locations.begin() + i);
-                this->velocities.erase(this->velocities.begin() + i);
-                this->colors.erase(this->colors.begin() + i);
-            }
+            this->locations.erase(this->locations.begin() + i);
+            this->velocities.erase(this->velocities.begin() + i);
+            this->colors.erase(this->colors.begin() + i);
         }
     }
 
@@ -2143,7 +2140,7 @@ void ofxColorManager::draw()
 
     //--
 
-    // DEMO 2
+    // DEMO 2 - ROTATING RECTANGLES
 
     if (ENABLE_DEMO2) {
         this->cam.begin();
@@ -2152,11 +2149,14 @@ void ofxColorManager::draw()
         ofPushStyle();
 //    ofEnableBlendMode(ofBlendMode::OF_BLENDMODE_ADD);
 
-        float radius = 25;
-//    float radius = 300;
-//    float radius = 150;
+    float scaleRects = 2.f;
 
-        int iDeg = 25;
+//        float radius = 25;
+//    float radius = 300;
+    float radius = 150;
+//        int iDeg = 25;
+        int iDeg = 36;
+
 //    int iDeg = 360./palette.size();
 
         for (int deg = 0; deg < 360; deg += iDeg) {
@@ -2170,7 +2170,8 @@ void ofxColorManager::draw()
             c = getColorAtPercent(cnt);
             ofSetColor(c);
 
-            ofRotateZ(ofGetFrameNum() * 0.25);
+//            ofRotateZ(ofGetFrameNum() * 0.25);
+            ofRotateZ(ofGetFrameNum() * 0.1);
 
             ofPushMatrix();
             ofTranslate(ofVec3f(x, y, 0));
@@ -2179,7 +2180,7 @@ void ofxColorManager::draw()
 
 //        ofRect(ofVec3f(0, 0, 0), 60, 150);
 //        ofRect(ofVec3f(0, 0, 0), 200, 200);
-            ofRect(ofVec3f(0, 0, 0), 1000, 1000);
+            ofRect(ofVec3f(0, 0, 0), scaleRects*1000, scaleRects*1000);
 
             ofPopMatrix();
         }
