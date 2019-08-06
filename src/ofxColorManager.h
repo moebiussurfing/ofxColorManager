@@ -58,8 +58,7 @@ public:
 //    ofParameter<bool> TOGGLE_3;
     ofParameterGroup p_TOGGLES;
     ofxPanel gui_TOGGLES;//preview
-    bool SHOW_Layout_Gui = true;
-
+    ofParameter<bool>  SHOW_Layout_Gui{"SHOW_Layout_Gui", true};
 
     ofParameter<bool> SHOW_ImGui{"SHOW_ImGui", true};
 

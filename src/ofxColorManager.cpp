@@ -278,11 +278,13 @@ void ofxColorManager::setup()
     XML_params.add(gradient_hard);//gradient
     XML_params.add(bAuto_palette_recall);
 //    XML_params.add(TEST_MODE);
-
     XML_params.add(color_backGround_SETAUTO);
+    XML_params.add(SHOW_Layout_Gui);
 
 
     load_group_XML(XML_params, XML_path);
+
+    // TODO
     palette_load("myPalette");
 
     //-
@@ -2407,7 +2409,7 @@ void ofxColorManager::draw_PaleteMINI()
     int boxW = 40;
     int boxPad = 1;
     int boxSize = boxW+boxPad;
-    glm::vec2 palettePos = glm::vec2(ofGetWidth()-palette.size()*boxSize, 2*boxPad);
+    glm::vec2 palettePos = glm::vec2(ofGetWidth() - palette.size()*boxSize, 2*boxPad);
     ofRectangle r;
 
     ofPushMatrix();
@@ -2416,11 +2418,11 @@ void ofxColorManager::draw_PaleteMINI()
 
     for (int col=0; col<palette.size(); col++)
     {
-        ofTranslate ( boxSize, 0);
         r = ofRectangle(0, 0, boxW, boxW);
         ofFill();
         ofSetColor(palette[col]);
         ofDrawRectangle(r);
+        ofTranslate ( boxSize, 0);
     }
 
     ofPopStyle();
@@ -2718,15 +2720,15 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
         panels.SHOW_advanced = !panels.SHOW_advanced;
     }
 
-    else if (key == OF_KEY_LEFT)
-    {
-        panels.group_Selected--;
-    }
-
-    else if (key == OF_KEY_RIGHT)
-    {
-        panels.group_Selected++;
-    }
+//    else if (key == OF_KEY_LEFT)
+//    {
+//        panels.group_Selected--;
+//    }
+//
+//    else if (key == OF_KEY_RIGHT)
+//    {
+//        panels.group_Selected++;
+//    }
 
     else if (key == '0')
     {
@@ -2752,22 +2754,26 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
     {
         panels.group_Selected = 5;
     }
+    else if (key == '6')
+    {
+        panels.group_Selected = 6;
+    }
 
     else if (key == 'g')
     {
         SHOW_Layout_Gui = !SHOW_Layout_Gui;
     }
 
-    else if (key == 's')
-    {
-        panels.savePanels();
-        panels.saveGroups();
-    }
-
-    else if (key == 'l')
-    {
-        panels.loadGroups();
-    }
+//    else if (key == 's')
+//    {
+//        panels.savePanels();
+//        panels.saveGroups();
+//    }
+//
+//    else if (key == 'l')
+//    {
+//        panels.loadGroups();
+//    }
 
         //--
 
