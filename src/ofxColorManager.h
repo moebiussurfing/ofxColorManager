@@ -16,6 +16,8 @@
 #include "PresetPalette.h"
 #include "ofxUndoSimple.h"
 #include "ofxCameraSaveLoad.h"
+#include "ofxGuiPanelsLayout.h"
+#include "ofxGui.h"
 
 //--
 
@@ -46,6 +48,17 @@ OFX_CEREAL_DEFINE(CEREAL_NVP(name), CEREAL_NVP(curveName), CEREAL_NVP(palette), 
 class ofxColorManager {
 
 public:
+
+    ofxGuiPanelsLayout panels;
+
+    // toggles
+
+    ofParameter<bool> TOGGLE_1;
+    ofParameter<bool> TOGGLE_2;
+    ofParameter<bool> TOGGLE_3;
+    ofParameterGroup p_TOGGLES;
+    ofxPanel gui_TOGGLES;//preview
+    bool SHOW_Gui = true;
 
     //-----------------------------------------------------------
 

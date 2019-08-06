@@ -63,7 +63,8 @@ public:
     string *curveName_BACK;
     ofColor *background_BACK;
 //    ofFloatColor *background_BACK;
-ofColor backCol;
+
+    ofColor backCol;
 
 
 //--

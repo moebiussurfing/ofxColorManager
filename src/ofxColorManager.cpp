@@ -17,6 +17,38 @@ ofxColorManager::~ofxColorManager()
 //--------------------------------------------------------------
 void ofxColorManager::setup()
 {
+    //--
+
+    // ofxGuiPanelsLayout
+
+    // 3. toggles
+
+    TOGGLE_1.set("TOGGLE_1", false);
+    TOGGLE_2.set("TOGGLE_2", false);
+    TOGGLE_3.set("TOGGLE_3", false);
+    p_TOGGLES.setName("TOGGLES PREVIEW");
+    p_TOGGLES.add(TOGGLE_1);
+    p_TOGGLES.add(TOGGLE_2);
+    p_TOGGLES.add(TOGGLE_3);
+    gui_TOGGLES.setup(p_TOGGLES);
+    gui_TOGGLES.setPosition(10, 700);
+
+    //-
+
+    // add panels to manager
+
+//    panels.addPanel(&gui1);
+//    panels.addPanel(&gui2);
+//    panels.addPanel(&gui3);
+//    panels.addPanel(DatGui_gui, "USER CONTROL");
+    panels.addToggle(&TOGGLE_1);
+    panels.addToggle(&TOGGLE_2);
+    panels.addToggle(&TOGGLE_3);
+
+    //call after add the panels
+    panels.setup();
+
+    //-
 
     //---
 
@@ -1227,7 +1259,13 @@ void ofxColorManager::update()
 {
     ofSetWindowTitle(ofToString((int)ofGetFrameRate()));
 
-    //---
+    //--
+
+    // ofxGuiPanelsLayout
+
+    panels.update();
+
+    //--
 
     if (TEST_DEMO) {
 
@@ -2120,11 +2158,24 @@ void ofxColorManager::palettes_setVisible(bool b)
 //--------------------------------------------------------------
 void ofxColorManager::draw()
 {
+
+    //--
+
     // BACKGROUND
 
     if (backgroundENABLE)
     {
         ofClear(ofColor(color_backGround.get()));
+    }
+
+    //--
+
+    // ofxGuiPanelsLayout
+
+    if (SHOW_Gui)
+    {
+        gui_TOGGLES.draw();
+        panels.draw();
     }
 
     //--
@@ -2631,6 +2682,66 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 //    ofLogNotice("ofxColorManager") << "key: " << key;
 
     if(false){}
+
+    //--
+
+    // OFX GUI-PANELS-LAYOUT
+
+    else if (key == 'a')
+    {
+        panels.SHOW_advanced = !panels.SHOW_advanced;
+    }
+
+    else if (key == OF_KEY_LEFT)
+    {
+        panels.group_Selected--;
+    }
+
+    else if (key == OF_KEY_RIGHT)
+    {
+        panels.group_Selected++;
+    }
+
+    else if (key == '0')
+    {
+        panels.group_Selected = 0;
+    }
+    else if (key == '1')
+    {
+        panels.group_Selected = 1;
+    }
+    else if (key == '2')
+    {
+        panels.group_Selected = 2;
+    }
+    else if (key == '3')
+    {
+        panels.group_Selected = 3;
+    }
+    else if (key == '4')
+    {
+        panels.group_Selected = 4;
+    }
+    else if (key == '5')
+    {
+        panels.group_Selected = 5;
+    }
+
+    else if (key == 'g')
+    {
+        SHOW_Gui = !SHOW_Gui;
+    }
+
+    else if (key == 's')
+    {
+        panels.savePanels();
+        panels.saveGroups();
+    }
+
+    else if (key == 'l')
+    {
+        panels.loadGroups();
+    }
 
         //--
 
@@ -3245,6 +3356,7 @@ void ofxColorManager::windowResized(int w, int h)
 //--------------------------------------------------------------
 void ofxColorManager::exit()
 {
+
     palette_save("myPalette");
     save_group_XML(XML_params, XML_path);
 
@@ -3265,7 +3377,13 @@ void ofxColorManager::exit()
 //
 //    Loading is quite much the same.
 
+    //--
 
+    // ofxGuiPanelsLayout
+
+    panels.exit();
+
+    //--
 }
 
 //
