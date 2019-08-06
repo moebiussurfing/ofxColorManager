@@ -1311,6 +1311,8 @@ void ofxColorManager::update()
 //        if (ofRandom(100) < 80) {//prob speed?
 
             this->locations.push_back(glm::vec2());
+
+            // randomize each circle/color speed
             this->velocities.push_back(glm::normalize(glm::vec2(ofRandom(-1, 1), ofRandom(-1, 1))) * 2);
 
             if (iColor == palette.size() - 1)
@@ -1324,9 +1326,13 @@ void ofxColorManager::update()
             color.set(palette[iColor]);
 
             iColor++;
-            iColor = iColor % palette.size();
+            int palSize = palette.size();
+            iColor = iColor % palSize;
 
             this->colors.push_back(color);
+
+            // sort each circle/color speed
+//            this->velocities.push_back(glm::normalize( glm::vec2(palSize/(float)iColor * ofRandom(-1, 1), ofRandom(-1, 1)) ));
         }
 
         for (int i = this->locations.size() - 1; i > -1; i--) {
