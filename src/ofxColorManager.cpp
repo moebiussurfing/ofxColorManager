@@ -17,39 +17,6 @@ ofxColorManager::~ofxColorManager()
 //--------------------------------------------------------------
 void ofxColorManager::setup()
 {
-    //--
-
-    // ofxGuiPanelsLayout
-
-    // 3. toggles
-
-    TOGGLE_1.set("TOGGLE_1", false);
-    TOGGLE_2.set("TOGGLE_2", false);
-    TOGGLE_3.set("TOGGLE_3", false);
-    p_TOGGLES.setName("TOGGLES PREVIEW");
-    p_TOGGLES.add(TOGGLE_1);
-    p_TOGGLES.add(TOGGLE_2);
-    p_TOGGLES.add(TOGGLE_3);
-    gui_TOGGLES.setup(p_TOGGLES);
-    gui_TOGGLES.setPosition(10, 700);
-
-    //-
-
-    // add panels to manager
-
-//    panels.addPanel(&gui1);
-//    panels.addPanel(&gui2);
-//    panels.addPanel(&gui3);
-//    panels.addPanel(DatGui_gui, "USER CONTROL");
-    panels.addToggle(&TOGGLE_1);
-    panels.addToggle(&TOGGLE_2);
-    panels.addToggle(&TOGGLE_3);
-
-    //call after add the panels
-    panels.setup();
-
-    //-
-
     //---
 
     // DEMO 1
@@ -323,6 +290,56 @@ void ofxColorManager::setup()
     palettes_setVisible(SHOW_AlgoPalettes);
 
 //    cam.enableOrtho();
+
+    //--
+
+    // ofxGuiPanelsLayout
+
+    SHOW_ALL_GUI.setName("SHOW_ALL_GUI");
+    SHOW_GUI_MINI.setName("SHOW_GUI_MINI");
+    SHOW_debugText.setName("SHOW_debugText");
+    SHOW_TEST_Curve.setName("SHOW_TEST_Curve");
+
+    // ofxGuiPanelsLayout
+
+    // 3. toggles
+
+    p_TOGGLES.setName("TOGGLES PREVIEW");
+    p_TOGGLES.add(SHOW_ColourLovers);
+    p_TOGGLES.add(SHOW_AlgoPalettes);
+    p_TOGGLES.add(SHOW_BrowserColors);
+    p_TOGGLES.add(SHOW_Gradient);
+    p_TOGGLES.add(SHOW_Curve);
+    p_TOGGLES.add(SHOW_ALL_GUI);
+    p_TOGGLES.add(SHOW_GUI_MINI);
+    p_TOGGLES.add(SHOW_debugText);
+    p_TOGGLES.add(SHOW_TEST_Curve);
+    p_TOGGLES.add(TEST_DEMO);
+    p_TOGGLES.add(SHOW_ImGui);
+
+    gui_TOGGLES.setup(p_TOGGLES);
+    gui_TOGGLES.setPosition(10, 700);
+
+    //-
+
+    // add panels to manager
+
+    panels.addToggle(&SHOW_ColourLovers);
+    panels.addToggle(&SHOW_AlgoPalettes);
+    panels.addToggle(&SHOW_BrowserColors);
+    panels.addToggle(&SHOW_Gradient);
+    panels.addToggle(&SHOW_Curve);
+    panels.addToggle(&SHOW_ALL_GUI);
+    panels.addToggle(&SHOW_GUI_MINI);
+    panels.addToggle(&SHOW_debugText);
+    panels.addToggle(&SHOW_TEST_Curve);
+    panels.addToggle(&TEST_DEMO);
+    panels.addToggle(&SHOW_ImGui);
+
+    //call after add the panels
+    panels.setup();
+
+    //--
 }
 
 
@@ -1061,7 +1078,8 @@ bool ofxColorManager::gui_imGui()
             ImGui::Checkbox("CYCLE", &TEST_CycleMODE);
             ImGui::Checkbox("TO BACKGROUND", &TEST_toBackground);
             ImGui::SliderFloat("SPEED", &TEST_Speed, 0.0f, 1.0f);
-            ImGui::Checkbox("ENABLE DEMO", &TEST_DEMO);
+//            ImGui::Checkbox("ENABLE DEMO", &TEST_DEMO);
+            ofxImGui::AddParameter(this->TEST_DEMO);
             ImGui::PopItemWidth();
         }
 
@@ -2158,7 +2176,6 @@ void ofxColorManager::palettes_setVisible(bool b)
 //--------------------------------------------------------------
 void ofxColorManager::draw()
 {
-
     //--
 
     // BACKGROUND
@@ -2170,15 +2187,7 @@ void ofxColorManager::draw()
 
     //--
 
-    // ofxGuiPanelsLayout
-
-    if (SHOW_Gui)
-    {
-        gui_TOGGLES.draw();
-        panels.draw();
-    }
-
-    //--
+    // DEMO
 
     if (TEST_DEMO) {
 
@@ -2348,6 +2357,14 @@ void ofxColorManager::draw()
             draw_ColourLovers();
         }
 
+        ofPopMatrix();
+        ofPopStyle();
+    }
+
+    //--
+
+    if (SHOW_ImGui)
+    {
         //-
 
         // GUI
@@ -2361,17 +2378,26 @@ void ofxColorManager::draw()
         }
 
         //--
-
-        ofPopMatrix();
-        ofPopStyle();
     }
 
-    //-
+    //--
 
     if (SHOW_GUI_MINI)
     {
         draw_PaleteMINI();
     }
+
+    //--
+
+    // ofxGuiPanelsLayout
+
+    if (SHOW_Layout_Gui)
+    {
+        gui_TOGGLES.draw();
+        panels.draw();
+    }
+
+    //--
 }
 
 
@@ -2729,7 +2755,7 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 
     else if (key == 'g')
     {
-        SHOW_Gui = !SHOW_Gui;
+        SHOW_Layout_Gui = !SHOW_Layout_Gui;
     }
 
     else if (key == 's')

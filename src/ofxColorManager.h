@@ -53,12 +53,15 @@ public:
 
     // toggles
 
-    ofParameter<bool> TOGGLE_1;
-    ofParameter<bool> TOGGLE_2;
-    ofParameter<bool> TOGGLE_3;
+//    ofParameter<bool> TOGGLE_1;
+//    ofParameter<bool> TOGGLE_2;
+//    ofParameter<bool> TOGGLE_3;
     ofParameterGroup p_TOGGLES;
     ofxPanel gui_TOGGLES;//preview
-    bool SHOW_Gui = true;
+    bool SHOW_Layout_Gui = true;
+
+
+    ofParameter<bool> SHOW_ImGui{"SHOW_ImGui", true};
 
     //-----------------------------------------------------------
 
@@ -79,9 +82,12 @@ public:
 
     //-----------------------------------------------------------
 
+    // PRESETS
+
     PresetPalette myPresetPalette;
     string PRESET_name = "myPreset";
     string PRESET_curveName = "curve01";
+
     //-
 
     // COLOUR LOVERS
@@ -344,7 +350,7 @@ public:
     bool TEST_toBackground = true;
     float framePrc;
 
-    bool TEST_DEMO = false;
+    ofParameter<bool> TEST_DEMO {"ENABLE DEMO", false};
 
     //--
 
