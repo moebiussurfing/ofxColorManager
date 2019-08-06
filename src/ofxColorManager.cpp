@@ -316,11 +316,8 @@ void ofxColorManager::setup()
     p_TOGGLES.add(SHOW_GUI_MINI);
     p_TOGGLES.add(SHOW_debugText);
     p_TOGGLES.add(SHOW_TEST_Curve);
-    p_TOGGLES.add(TEST_DEMO);
     p_TOGGLES.add(SHOW_ImGui);
-
-    gui_TOGGLES.setup(p_TOGGLES);
-    gui_TOGGLES.setPosition(10, 700);
+    p_TOGGLES.add(TEST_DEMO);
 
     //-
 
@@ -335,8 +332,8 @@ void ofxColorManager::setup()
     panels.addToggle(&SHOW_GUI_MINI);
     panels.addToggle(&SHOW_debugText);
     panels.addToggle(&SHOW_TEST_Curve);
-    panels.addToggle(&TEST_DEMO);
     panels.addToggle(&SHOW_ImGui);
+    panels.addToggle(&TEST_DEMO);
 
     //call after add the panels
     panels.setup();
@@ -1303,7 +1300,12 @@ void ofxColorManager::update()
 //        int bloquer = locations.size()>10
         ofColor color;
 
-        if ((ofRandom(100) < 50) && !pauseCreate) {
+        // 1. create circle every x frames
+        int frameCurrent = ofGetFrameNum()%5;//speed retrig
+        if (frameCurrent==0 && !pauseCreate) {
+
+//            // 2. create circle with randomly frequency
+//        if ((ofRandom(100) < 50) && !pauseCreate) {
 //        if ((ofRandom(100) < 5) && !pauseCreate) {
 //        if (ofRandom(100) < 50) {//prob speed?
 //        if (ofRandom(100) < 80) {//prob speed?
@@ -2395,7 +2397,7 @@ void ofxColorManager::draw()
 
     if (SHOW_Layout_Gui)
     {
-        gui_TOGGLES.draw();
+//        gui_TOGGLES.draw();
         panels.draw();
     }
 

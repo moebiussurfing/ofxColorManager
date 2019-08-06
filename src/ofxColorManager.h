@@ -49,16 +49,16 @@ class ofxColorManager {
 
 public:
 
+    //--
+
+    // ofxGuiPanelsLayout
+
     ofxGuiPanelsLayout panels;
 
     // toggles
-
-//    ofParameter<bool> TOGGLE_1;
-//    ofParameter<bool> TOGGLE_2;
-//    ofParameter<bool> TOGGLE_3;
     ofParameterGroup p_TOGGLES;
-    ofxPanel gui_TOGGLES;//preview
-    ofParameter<bool>  SHOW_Layout_Gui{"SHOW_Layout_Gui", true};
+//    ofxPanel gui_TOGGLES;//preview
+    ofParameter<bool> SHOW_Layout_Gui{"SHOW_Layout_Gui", true};
 
     ofParameter<bool> SHOW_ImGui{"SHOW_ImGui", true};
 
