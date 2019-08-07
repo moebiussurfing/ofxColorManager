@@ -55,34 +55,19 @@ public:
     // ofxGuiPanelsLayout
 
     ofxGuiPanelsLayout panels;
-
-    // toggles
     ofParameterGroup p_TOGGLES;
 //    ofxPanel gui_TOGGLES;//preview
     ofParameter<bool> SHOW_Layout_Gui{"SHOW_Layout_Gui", true};
 
     ofParameter<bool> SHOW_ImGui{"SHOW_ImGui", true};
 
-    //-----------------------------------------------------------
+    //--
 
-
-//    // DEMO 1
-//
-//    bool ENABLE_DEMO1 = true;
-//    vector<glm::vec2> locations;
-//    vector<glm::vec2> velocities;
-//    vector<ofColor> colors;
-//    bool bDEMO1_clear = false;
-//    bool bDEMO1_stop = false;
-//    ofEasyCam cam;
-//    int iColor = 0;
-//    bool pauseCreate = false;
-//
-//    bool ENABLE_DEMO2 = true;
+    // DEMO
 
     DEMO_palette myDEMO_palette;
 
-    //-----------------------------------------------------------
+    //--
 
     // PRESETS
 

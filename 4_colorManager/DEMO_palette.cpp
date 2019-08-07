@@ -49,7 +49,13 @@ void DEMO_palette::update() {
 //        if (ofRandom(100) < 50) {//prob speed?
 //        if (ofRandom(100) < 80) {//prob speed?
 
-        this->locations.push_back(glm::vec2());
+        glm::vec2 startPos;
+//        glm::vec2 mousePos = glm::vec2(ofGetMouseX(), ofGetMouseY()) - glm::vec2(ofGetWidth() * 0.5, ofGetHeight() * 0.5);
+//        startPos = mousePos;
+
+        startPos = glm::vec2(0,0);
+
+        this->locations.push_back(startPos);
 
 // randomize each circle/color speed
         this->velocities.push_back(glm::normalize(glm::vec2(ofRandom(-1, 1), ofRandom(-1, 1))) * 2);
