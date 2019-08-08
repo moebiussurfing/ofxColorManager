@@ -3135,16 +3135,12 @@ void ofxColorManager::draw_ColourLovers(){
 void ofxColorManager::windowResized(int w, int h)
 {
     // COLOUR LOVERS
-
-    // set positions and panel sizes
     glm::vec2 sizeGui(150, 375);
-    glm::vec2 sizeGrid(150, ofGetHeight());
-    glm::vec2 posGui(ofGetWidth()-(sizeGui.x+sizeGrid.x+4), 0);
+    glm::vec2 sizeGrid(150, h);
+    glm::vec2 posGui(w- (sizeGui.x+sizeGrid.x+4), 0);
     glm::vec2 posGrid(posGui.x+sizeGui.x+2, 0);
-
-    //must be called before setup() to overwrite default settings
     ColourLoversHelper.setGrid(posGrid, sizeGrid);
-    ColourLoversHelper.setup(posGui, sizeGui);
+    ColourLoversHelper.setPosition(posGui, sizeGui);
     ColourLoversHelper.windowResized(w, h);
 }
 

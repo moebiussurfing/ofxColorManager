@@ -13,7 +13,6 @@ void ofApp::setup(){
 //--------------------------------------------------------------
 void ofApp::update(){
     ColorManager.update();
-
 }
 
 //--------------------------------------------------------------
@@ -65,7 +64,6 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-
 }
 
 //--------------------------------------------------------------
@@ -75,7 +73,7 @@ void ofApp::mouseReleased(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::windowResized(int w, int h){
-
+    ColorManager.windowResized(w, h);
 }
 
 //--------------------------------------------------------------
