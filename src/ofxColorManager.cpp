@@ -172,7 +172,7 @@ void ofxColorManager::setup()
 
     // CONTROL
 
-    SHOW_PaletteCustom.set("SHOW PALETTE LIB", false);
+//    SHOW_PaletteCustom.set("SHOW PALETTE LIB", false);
     bRandomColor.set("RANDOM COLOR", false);
     bAddColor.set("ADD COLOR", false);
     bPaletteEdit.set("EDIT COLOR", false);
@@ -185,7 +185,7 @@ void ofxColorManager::setup()
     params_control.add(bAddColor);
     params_control.add(bRemoveColor);
     params_control.add(bClearPalette);
-    params_control.add(SHOW_PaletteCustom);
+//    params_control.add(SHOW_PaletteCustom);
 
     //-
 
@@ -265,7 +265,7 @@ void ofxColorManager::setup()
     XML_params.add(SHOW_Curve);
     XML_params.add(SHOW_TEST_Curve);//curve tool
     XML_params.add(SHOW_BrowserColors);
-    XML_params.add(SHOW_PaletteCustom);
+//    XML_params.add(SHOW_PaletteCustom);
 
     XML_params.add(color_picked);
     XML_params.add(color_backGround);
@@ -906,7 +906,7 @@ bool ofxColorManager::gui_imGui()
 
             //-
 
-            ofxImGui::AddParameter(this->SHOW_PaletteCustom);
+//            ofxImGui::AddParameter(this->SHOW_PaletteCustom);
 
             ImGui::PopItemWidth();
             ofxImGui::EndTree(mainSettings);
@@ -916,13 +916,14 @@ bool ofxColorManager::gui_imGui()
 
         // 3. PALETTE LIBRARY
 
-        if (SHOW_PaletteCustom)
-        {
+//        if (SHOW_PaletteCustom)
+//        {
 //            auto palette_Settings = ofxImGui::Settings();
 //            palette_Settings.windowPos = ofVec2f(1100, 10);
 //            palette_Settings.windowSize = ofVec2f(gui2_w, 300);
 //            if (ofxImGui::BeginWindow("PALETTE LIBRARY", palette_Settings, false)) {
-            if (ofxImGui::BeginTree("PALETTE LIBRARY", mainSettings))//grouped folder
+//            if (ofxImGui::BeginTree("PALETTE LIBRARY", mainSettings))//grouped folder
+            if (ImGui::CollapsingHeader("PALETTE LIBRARY"))
             {
                 //--
 
@@ -983,7 +984,7 @@ bool ofxColorManager::gui_imGui()
 
                 // 2.2 draw palette
 
-                if (ofxImGui::BeginTree("COLORS", mainSettings)) {
+//                if (ofxImGui::BeginTree("COLORS", mainSettings)) {
 //            if (ImGui::CollapsingHeader("PALETTE")) {
 
                     for (int n = startColorInPal; n < endColorInPal; n++)
@@ -1014,12 +1015,15 @@ bool ofxColorManager::gui_imGui()
                             ImGui::PopID();
                         }
                     }
-                    ofxImGui::EndTree(mainSettings);
+
+//                    ofxImGui::EndTree(mainSettings);
                 }
-                ofxImGui::EndTree(mainSettings);
-            }
+
+//                ofxImGui::EndTree(mainSettings);
+//
+//            }
 //            ofxImGui::EndWindow(palette_Settings);
-        }
+//        }
     }
     ofxImGui::EndWindow(COLOR_PICKER_Settings);
 
