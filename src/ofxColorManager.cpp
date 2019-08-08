@@ -829,7 +829,6 @@ bool ofxColorManager::gui_imGui()
             //-
 
             ofxImGui::AddParameter(this->bRandomColor);
-            ofxImGui::AddParameter(this->SHOW_PaletteCustom);
 
             ImGui::PopItemWidth();
             ofxImGui::EndTree(COLOR_PICKER_Settings);
@@ -882,15 +881,8 @@ bool ofxColorManager::gui_imGui()
                             ImGuiColorEditFlags_PickerHueWheel;
             if (ImGui::ColorPicker4("MyColor##4", (float *) &color, colorEdiFlags))
             {
-                // TEST
-                //                LISTEN_isEnabled = false;
-
                 cout << "PICKER 1 MOVED !" << endl;
                 color_picked = color;
-                //                color_picked_Update_To_HSV();
-
-                // TEST
-                //                LISTEN_isEnabled = true;
             }
 
             //-
@@ -908,20 +900,125 @@ bool ofxColorManager::gui_imGui()
                             ImGuiColorEditFlags_PickerHueBar;
             if (ImGui::ColorPicker4("MyColor##5", (float *) &color, colorEdiFlags))
             {
-                // TEST
-                //                LISTEN_isEnabled = false;
-
                 cout << "PICKER 2 MOVED !" << endl;
                 color_picked = color;
-                //                color_picked_Update_To_HSV();
-
-                //                LISTEN_isEnabled = true;
             }
 
             //-
 
+            ofxImGui::AddParameter(this->SHOW_PaletteCustom);
+
             ImGui::PopItemWidth();
             ofxImGui::EndTree(mainSettings);
+        }
+
+        //-------------------------------------------------------------------
+
+        // 3. PALETTE LIBRARY
+
+        if (SHOW_PaletteCustom)
+        {
+//            auto palette_Settings = ofxImGui::Settings();
+//            palette_Settings.windowPos = ofVec2f(1100, 10);
+//            palette_Settings.windowSize = ofVec2f(gui2_w, 300);
+//            if (ofxImGui::BeginWindow("PALETTE LIBRARY", palette_Settings, false)) {
+            if (ofxImGui::BeginTree("PALETTE LIBRARY", mainSettings))//grouped folder
+            {
+                //--
+
+                // GET COLOR FROM OUTSIDE COLOR PICKED
+
+                // TEST
+                LISTEN_isEnabled = false;//maybe required because get() causes callbacks too (?)
+
+                // TEST
+                static ImVec4 color;
+                color.x = color_picked.get().r;
+                color.y = color_picked.get().g;
+                color.z = color_picked.get().b;
+                color.w = color_picked.get().a;
+
+                // TEST
+                LISTEN_isEnabled = true;
+
+                //--
+
+                // 2 load/create palete from colorBrowser
+
+                static bool saved_palette_inited = false;
+                //const int PaletteSIZE = ColorBrowser_palette.size();//error
+
+                //static ImVec4 saved_palette[130];//same than openColor palettes
+                static ImVec4 saved_palette[2310];//same than Pantone palette
+
+                if (!saved_palette_inited)
+                    for (int n = 0; n < IM_ARRAYSIZE(saved_palette); n++) {
+                        ofFloatColor c = ofColor(ColorBrowser_palette[n]);
+                        saved_palette[n].x = c.r;
+                        saved_palette[n].y = c.g;
+                        saved_palette[n].z = c.b;
+                        saved_palette[n].w = 1.0f;//alpha
+                    }
+                saved_palette_inited = true;
+
+                //-
+
+                // layout by pages groups
+
+                int palSize = IM_ARRAYSIZE(saved_palette);
+                int rowSizePal = 7;//7 colors per row Pantone lib
+                int numLines = 10;//rows per page
+                int numColorsPage = numLines * rowSizePal;//70
+                int startColorInPal = paletteLibPage * numColorsPage;
+                int endColorInPal = startColorInPal + numColorsPage;
+                int lastColor = 2310;//pantone
+                int maxPages = lastColor / numColorsPage - 1;
+
+                ImGui::Text("PANTONE COLORS");
+                ImGui::PushItemWidth(guiWidth * 0.5);
+                ImGui::SliderInt("PAGE", &paletteLibPage, 0, maxPages);
+                ImGui::PopItemWidth();
+
+                //-
+
+                // 2.2 draw palette
+
+                if (ofxImGui::BeginTree("COLORS", mainSettings)) {
+//            if (ImGui::CollapsingHeader("PALETTE")) {
+
+                    for (int n = startColorInPal; n < endColorInPal; n++)
+                        //for (int n = 0; n < palSize; n++) {
+                    {
+                        if (n<lastColor) //to avoid empty colors at page end...
+                        {
+                            // ImGui::PushItemWidth(guiWidth * 0.2);
+                            ImGui::PushID(n);
+
+                            // pantone
+                            if ((n%rowSizePal) != 0)
+                            {
+                                ImGui::SameLine(0.0f, ImGui::GetStyle().ItemSpacing.y);
+                            }
+
+                            if (ImGui::ColorButton("##palette", saved_palette[n],
+                                    ImGuiColorEditFlags_NoAlpha | ImGuiColorEditFlags_NoPicker | ImGuiColorEditFlags_NoTooltip,
+                                    ImVec2(20, 20)))
+                            {
+                                color = ImVec4(saved_palette[n].x, saved_palette[n].y, saved_palette[n].z, color.w); // Preserve alpha!
+
+                                ofLogNotice("ofxColorManager") << "ImGui: PALETTE PICKED !" << endl;
+                                color_picked = color;
+                            }
+
+                            //ImGui::PopItemWidth();
+                            ImGui::PopID();
+                        }
+                    }
+                    ofxImGui::EndTree(mainSettings);
+                }
+                ofxImGui::EndTree(mainSettings);
+            }
+//            ofxImGui::EndWindow(palette_Settings);
         }
     }
     ofxImGui::EndWindow(COLOR_PICKER_Settings);
@@ -1037,119 +1134,8 @@ bool ofxColorManager::gui_imGui()
 
     //-
 
-    //    this->gui.end();
-    //    return mainSettings.mouseOverGui;
-
-    //-------------------------------------------------------------------
-
-    // 3. PALETTE LIBRARY
-
-    if (SHOW_PaletteCustom)
-    {
-        auto palette_Settings = ofxImGui::Settings();
-        palette_Settings.windowPos = ofVec2f(1100, 10);
-        palette_Settings.windowSize = ofVec2f(gui2_w, 300);
-
-        if (ofxImGui::BeginWindow("PALETTE LIBRARY", palette_Settings, false)) {
-            //--
-
-            // GET COLOR FROM OUTSIDE COLOR PICKED
-
-            // TEST
-            LISTEN_isEnabled = false;//maybe required because get() causes callbacks too (?)
-
-            // TEST
-            static ImVec4 color;
-            color.x = color_picked.get().r;
-            color.y = color_picked.get().g;
-            color.z = color_picked.get().b;
-            color.w = color_picked.get().a;
-
-            // TEST
-            LISTEN_isEnabled = true;
-
-            //--
-
-            // 2 load/create palete from colorBrowser
-
-            static bool saved_palette_inited = false;
-            //const int PaletteSIZE = ColorBrowser_palette.size();//error
-
-            //static ImVec4 saved_palette[130];//same than openColor palettes
-            static ImVec4 saved_palette[2310];//same than Pantone palette
-
-            if (!saved_palette_inited)
-                for (int n = 0; n < IM_ARRAYSIZE(saved_palette); n++) {
-                    ofFloatColor c = ofColor(ColorBrowser_palette[n]);
-                    saved_palette[n].x = c.r;
-                    saved_palette[n].y = c.g;
-                    saved_palette[n].z = c.b;
-                    saved_palette[n].w = 1.0f;//alpha
-                }
-            saved_palette_inited = true;
-
-            //-
-
-            // layout by pages groups
-
-            int palSize = IM_ARRAYSIZE(saved_palette);
-            int rowSizePal = 7;//7 colors per row Pantone lib
-            int numLines = 10;//rows per page
-            int numColorsPage = numLines * rowSizePal;//70
-            int startColorInPal = paletteLibPage * numColorsPage;
-            int endColorInPal = startColorInPal + numColorsPage;
-            int lastColor = 2310;//pantone
-            int maxPages = lastColor / numColorsPage - 1;
-
-            ImGui::Text("PANTONE COLORS");
-            ImGui::PushItemWidth(guiWidth * 0.5);
-            ImGui::SliderInt("PAGE", &paletteLibPage, 0, maxPages);
-            ImGui::PopItemWidth();
-
-            //-
-
-            // 2.2 draw palette
-
-            if (ofxImGui::BeginTree("COLORS", mainSettings)) {
-//            if (ImGui::CollapsingHeader("PALETTE")) {
-
-                for (int n = startColorInPal; n < endColorInPal; n++)
-                        //for (int n = 0; n < palSize; n++) {
-                {
-                    if (n<lastColor) //to avoid empty colors at page end...
-                    {
-                        // ImGui::PushItemWidth(guiWidth * 0.2);
-                        ImGui::PushID(n);
-
-                        // pantone
-                        if ((n%rowSizePal) != 0)
-                        {
-                            ImGui::SameLine(0.0f, ImGui::GetStyle().ItemSpacing.y);
-                        }
-
-                        if (ImGui::ColorButton("##palette", saved_palette[n],
-                                ImGuiColorEditFlags_NoAlpha | ImGuiColorEditFlags_NoPicker | ImGuiColorEditFlags_NoTooltip,
-                                ImVec2(20, 20)))
-                        {
-                            color = ImVec4(saved_palette[n].x, saved_palette[n].y, saved_palette[n].z, color.w); // Preserve alpha!
-
-                            ofLogNotice("ofxColorManager") << "ImGui: PALETTE PICKED !" << endl;
-                            color_picked = color;
-                        }
-
-                        //ImGui::PopItemWidth();
-                        ImGui::PopID();
-                    }
-                }
-            ofxImGui::EndTree(mainSettings);
-            }
-        }
-        ofxImGui::EndWindow(palette_Settings);
-    }
-
     this->gui.end();
     return mainSettings.mouseOverGui;
-
 
     //-
 
@@ -1164,7 +1150,6 @@ bool ofxColorManager::gui_imGui()
     // ImGui::Begin("Funky Window"); /* Here your ImGui stuff
     // */ ImGui::End();
     // im_gui.end(); // Addon end
-
 }
 
 
