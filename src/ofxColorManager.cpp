@@ -265,6 +265,7 @@ void ofxColorManager::setup()
     XML_params.add(SHOW_Curve);
     XML_params.add(SHOW_TEST_Curve);//curve tool
     XML_params.add(SHOW_BrowserColors);
+    XML_params.add(SHOW_PaletteCustom);
 
     XML_params.add(color_picked);
     XML_params.add(color_backGround);
@@ -1039,23 +1040,6 @@ bool ofxColorManager::gui_imGui()
     //    this->gui.end();
     //    return mainSettings.mouseOverGui;
 
-    //-
-
-    // NOTE:
-    // I wrongly supposed that the begin() and end() methods of OfxImGui were related with ImGui::Begin
-    // and ImGui::End methods which is not the case…
-    // The right calling sequence is
-    // im_gui.begin();
-    // Addon begin ImGui::SetNextWindowPos(ImVec2(0,0));
-    // ImGui::SetNextWindowSize(ImVec2(1200,800),
-    // ImGuiSetCond_Once);
-    // ImGui::Begin("Funky Window"); /* Here your ImGui stuff
-    // */ ImGui::End();
-    // im_gui.end(); // Addon end
-
-
-
-
     //-------------------------------------------------------------------
 
     // 3. PALETTE LIBRARY
@@ -1107,6 +1091,7 @@ bool ofxColorManager::gui_imGui()
             //-
 
             // layout by pages groups
+
             int palSize = IM_ARRAYSIZE(saved_palette);
             int rowSizePal = 7;//7 colors per row Pantone lib
             int numLines = 10;//rows per page
@@ -1114,7 +1099,7 @@ bool ofxColorManager::gui_imGui()
             int startColorInPal = paletteLibPage * numColorsPage;
             int endColorInPal = startColorInPal + numColorsPage;
             int lastColor = 2310;//pantone
-            int maxPages = lastColor / numColorsPage;
+            int maxPages = lastColor / numColorsPage - 1;
 
             ImGui::Text("PANTONE COLORS");
             ImGui::PushItemWidth(guiWidth * 0.5);
@@ -1125,15 +1110,14 @@ bool ofxColorManager::gui_imGui()
 
             // 2.2 draw palette
 
-            if (ImGui::CollapsingHeader("PALETTE")) {
+            if (ofxImGui::BeginTree("COLORS", mainSettings)) {
+//            if (ImGui::CollapsingHeader("PALETTE")) {
 
                 for (int n = startColorInPal; n < endColorInPal; n++)
                         //for (int n = 0; n < palSize; n++) {
                 {
-
-                    if (n<lastColor) {//to avoid empty colors at end...
-
-
+                    if (n<lastColor) //to avoid empty colors at page end...
+                    {
                         // ImGui::PushItemWidth(guiWidth * 0.2);
                         ImGui::PushID(n);
 
@@ -1157,6 +1141,7 @@ bool ofxColorManager::gui_imGui()
                         ImGui::PopID();
                     }
                 }
+            ofxImGui::EndTree(mainSettings);
             }
         }
         ofxImGui::EndWindow(palette_Settings);
@@ -1164,6 +1149,22 @@ bool ofxColorManager::gui_imGui()
 
     this->gui.end();
     return mainSettings.mouseOverGui;
+
+
+    //-
+
+    // NOTE:
+    // I wrongly supposed that the begin() and end() methods of OfxImGui were related with ImGui::Begin
+    // and ImGui::End methods which is not the case…
+    // The right calling sequence is
+    // im_gui.begin();
+    // Addon begin ImGui::SetNextWindowPos(ImVec2(0,0));
+    // ImGui::SetNextWindowSize(ImVec2(1200,800),
+    // ImGuiSetCond_Once);
+    // ImGui::Begin("Funky Window"); /* Here your ImGui stuff
+    // */ ImGui::End();
+    // im_gui.end(); // Addon end
+
 }
 
 
