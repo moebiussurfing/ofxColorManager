@@ -50,6 +50,8 @@ class ofxColorManager {
 
 public:
 
+    int paletteLibPage = 0;
+
     //--
 
     // ofxGuiPanelsLayout
@@ -161,6 +163,7 @@ public:
 
     ofParameter<bool> bPaletteEdit;
     ofParameter<bool> bRandomColor;
+    ofParameter<bool> SHOW_PaletteCustom;
     ofParameter<bool> bAddColor;
     ofParameter<bool> bRemoveColor;
     ofParameter<bool> bClearPalette;
