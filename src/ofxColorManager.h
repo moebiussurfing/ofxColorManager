@@ -152,6 +152,7 @@ public:
     ofParameter<bool> SHOW_debugText;
     ofParameter<bool> SHOW_TEST_Curve;
 
+    ofParameter<bool> SHOW_PanelsManager;
     ofParameter<bool> SHOW_PresetManager;
     ofParameter<bool> SHOW_ColorManager;
     ofParameter<bool> SHOW_ColorPicker;
@@ -253,6 +254,7 @@ public:
     void gui_imGui_window1();
     void gui_imGui_window2();
     void gui_imGui_window3();
+    void gui_imGui_window4();
     bool guiVisible;
     bool mouseOverGui;
     void gui_setup_layout();
@@ -435,6 +437,7 @@ private:
     int gui_x, gui_y, gui_w, gui_h;
     int gui2_x, gui2_y, gui2_w, gui2_h;
     int gui3_x, gui3_y, gui3_w, gui3_h;
+    int gui4_x, gui4_y, gui4_w, gui4_h;
     int box_size;
     int pad; //global mini pad
     int c_grad_x, c_grad_y, c_grad_w, c_grad_h;

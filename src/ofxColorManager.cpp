@@ -273,6 +273,7 @@ void ofxColorManager::setup()
     SHOW_PresetManager.set("SHOW PRESET MANAGER", true);
     SHOW_ColorManager.set("SHOW COLOR MANAGER", true);
     SHOW_ColorPicker.set("SHOW COLOR PICKER", true);
+    SHOW_PanelsManager.set("SHOW PANELS MANAGER", true);
 
     params_control.add(SHOW_ColourLovers);
     params_control.add(SHOW_AlgoPalettes);
@@ -283,6 +284,7 @@ void ofxColorManager::setup()
     params_control.add(SHOW_PresetManager);
     params_control.add(SHOW_ColorManager);
     params_control.add(SHOW_ColorPicker);
+    params_control.add(SHOW_PanelsManager);
 
     SHOW_ALL_GUI = true;
     SHOW_debugText = false;
@@ -344,6 +346,7 @@ void ofxColorManager::setup()
     XML_params.add(SHOW_PresetManager);
     XML_params.add(SHOW_ColorManager);
     XML_params.add(SHOW_ColorPicker);
+    XML_params.add(SHOW_PanelsManager);
 
     XML_params.add(SHOW_ColourLovers);
     XML_params.add(SHOW_AlgoPalettes);
@@ -413,6 +416,7 @@ void ofxColorManager::setup()
     p_TOGGLES.add(SHOW_PresetManager);
     p_TOGGLES.add(SHOW_ColorManager);
     p_TOGGLES.add(SHOW_ColorPicker);
+    p_TOGGLES.add(SHOW_PanelsManager);
 
     //-
 
@@ -432,6 +436,7 @@ void ofxColorManager::setup()
     panels.addToggle(&SHOW_PresetManager);
     panels.addToggle(&SHOW_ColorManager);
     panels.addToggle(&SHOW_ColorPicker);
+    panels.addToggle(&SHOW_PanelsManager);
 
     //call after add the panels
     panels.setup();
@@ -478,6 +483,12 @@ void ofxColorManager::gui_setup_layout()
     gui3_y = 10;
     gui3_w = guiWidth;
     gui3_h = 200;
+
+    // gui 4 ImGui PANELS MANAGER
+    gui4_x = 250;
+    gui4_y = 350;
+    gui4_w = guiWidth;
+    gui4_h = 200;
 
     //-
 
@@ -1137,6 +1148,28 @@ void ofxColorManager::gui_imGui_window1(){
     ofxImGui::EndWindow(COLOR_PICKER_Settings);
 }
 
+//--------------------------------------------------------------
+void ofxColorManager::gui_imGui_window4()
+{
+    auto panelsSet = ofxImGui::Settings();
+    panelsSet.windowPos = ofVec2f(gui4_x, gui4_y);
+    panelsSet.windowSize = ofVec2f(gui4_w, gui4_h);
+
+    if (ofxImGui::BeginWindow("PANELS MANAGER", panelsSet, false))
+    {
+//        if (ofxImGui::BeginTree("PANELS", panelsSet))
+//        {
+            ofxImGui::AddParameter(this->SHOW_Gradient);
+            ofxImGui::AddParameter(this->SHOW_Curve);
+            ofxImGui::AddParameter(this->SHOW_TEST_Curve);
+            ofxImGui::AddParameter(this->SHOW_ColourLovers);
+            ofxImGui::AddParameter(this->SHOW_AlgoPalettes);
+            ofxImGui::AddParameter(this->SHOW_BrowserColors);
+//            ofxImGui::EndTree(panelsSet);
+//        }
+    }
+    ofxImGui::EndWindow(panelsSet);
+}
 
 //--------------------------------------------------------------
 void ofxColorManager::gui_imGui_window2()
@@ -1155,6 +1188,7 @@ void ofxColorManager::gui_imGui_window2()
         {
             //--TEST. can't do with pointers to ofParameter...
             ImGui::PushItemWidth(120);
+
             static ImVec4 color;
             color.x = color_backGround.get().r;
             color.y = color_backGround.get().g;
@@ -1184,17 +1218,8 @@ void ofxColorManager::gui_imGui_window2()
             ofxImGui::AddParameter(this->color_backGround_SETAUTO);
             ofxImGui::EndTree(mainSettings);
             ImGui::PopItemWidth();
-        }
 
-        if (ofxImGui::BeginTree("PANELS", mainSettings))
-        {
-            ofxImGui::AddParameter(this->SHOW_Gradient);
-            ofxImGui::AddParameter(this->SHOW_Curve);
-            ofxImGui::AddParameter(this->SHOW_TEST_Curve);
-            ofxImGui::AddParameter(this->SHOW_ColourLovers);
-            ofxImGui::AddParameter(this->SHOW_AlgoPalettes);
-            ofxImGui::AddParameter(this->SHOW_BrowserColors);
-            ofxImGui::EndTree(mainSettings);
+//            ofxImGui::EndTree(mainSettings);
         }
 
         //--
@@ -1464,18 +1489,31 @@ bool ofxColorManager::gui_imGui()
 
     //-
 
+    // COLOR PICKER
+
     if (SHOW_ColorPicker)
         gui_imGui_window1();
 
     //-
+
+    // COLORS MANAGER
 
     if (SHOW_ColorManager)
         gui_imGui_window2();
 
     //-
 
+    // PRESET MANAGER
+
     if (SHOW_PresetManager)
         gui_imGui_window3();
+
+    //-
+
+    // PANELS MANAGER
+
+    if (SHOW_PanelsManager)
+        gui_imGui_window4();
 
     //-
     this->gui.end();
@@ -2867,42 +2905,43 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
 //--------------------------------------------------------------
 void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 {
-    if (ENABLE_keys) {
-
+    if (ENABLE_keys)
+    {
         const int &key = eventArgs.key;
         //    ofLogNotice("ofxColorManager") << "key: " << key;
 
-        if (false) {}
+        //--
 
-            //--
+        // PRESET MANAGER
 
-            // PRESET MANAGER
-
-        else if (key == OF_KEY_LEFT)
+        if (SHOW_PresetManager)
         {
-            if (currentFile>0)
+            if (key == OF_KEY_LEFT)
             {
-                currentFile--;
+                if (currentFile>0)
+                {
+                    currentFile--;
+                }
+                if (currentFile<files.size())
+                {
+                    PRESET_name = fileNames[currentFile];
+                    ofLogNotice() << "OF_KEY_LEFT: PRESET_name: ["+ofToString(currentFile)+"] " << PRESET_name;
+                    preset_load(PRESET_name);
+                }
             }
-            if (currentFile<files.size())
-            {
-                PRESET_name = fileNames[currentFile];
-                ofLogNotice() << "OF_KEY_LEFT: PRESET_name: ["+ofToString(currentFile)+"] " << PRESET_name;
-                preset_load(PRESET_name);
-            }
-        }
 
-        else if (key == OF_KEY_RIGHT)
-        {
-            if (currentFile<files.size()-1)
+            else if (key == OF_KEY_RIGHT)
             {
-                currentFile++;
-            }
-            if (currentFile<files.size())
-            {
-                PRESET_name = fileNames[currentFile];
-                ofLogNotice() << "OF_KEY_RIGHT: PRESET_name: ["+ofToString(currentFile)+"] " << PRESET_name;
-                preset_load(PRESET_name);
+                if (currentFile<files.size()-1)
+                {
+                    currentFile++;
+                }
+                if (currentFile<files.size())
+                {
+                    PRESET_name = fileNames[currentFile];
+                    ofLogNotice() << "OF_KEY_RIGHT: PRESET_name: ["+ofToString(currentFile)+"] " << PRESET_name;
+                    preset_load(PRESET_name);
+                }
             }
         }
 
@@ -2910,7 +2949,7 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 
             // OFX GUI-PANELS-LAYOUT
 
-        else if (key == 'a') {
+        if (key == 'a') {
             panels.SHOW_advanced = !panels.SHOW_advanced;
         }
 
