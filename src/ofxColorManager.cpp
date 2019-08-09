@@ -832,7 +832,7 @@ void ofxColorManager::gui_imGui_window1(){
 
     auto COLOR_PICKER_Settings = ofxImGui::Settings();
     COLOR_PICKER_Settings.windowPos = ofVec2f(gui_x, gui_y);
-    COLOR_PICKER_Settings.windowSize = ofVec2f(guiWidth, 200);
+    COLOR_PICKER_Settings.windowSize = ofVec2f(guiWidth, ofGetWindowHeight()-gui_y);
     //    COLOR_PICKER_Settings.lockPosition = true;
 
     //    static bool no_titlebar = false;
@@ -853,10 +853,8 @@ void ofxColorManager::gui_imGui_window1(){
     ////    if (no_nav)       window_flags |= ImGuiWindowFlags_NoNav;
     ////    if (no_close)     p_open = NULL; // Don't pass our bool* to Begin
 
-
-
     //    if (ofxImGui::BeginWindow("COLOR PICKER", COLOR_PICKER_Settings, window_flags))
-    if (ofxImGui::BeginWindow("COLOR PICKER", COLOR_PICKER_Settings, true))
+    if (ofxImGui::BeginWindow("COLOR PICKER", COLOR_PICKER_Settings, false))
     {
         //--
 
@@ -1159,12 +1157,12 @@ void ofxColorManager::gui_imGui_window4()
     {
 //        if (ofxImGui::BeginTree("PANELS", panelsSet))
 //        {
-            ofxImGui::AddParameter(this->SHOW_Gradient);
-            ofxImGui::AddParameter(this->SHOW_Curve);
-            ofxImGui::AddParameter(this->SHOW_TEST_Curve);
-            ofxImGui::AddParameter(this->SHOW_ColourLovers);
-            ofxImGui::AddParameter(this->SHOW_AlgoPalettes);
-            ofxImGui::AddParameter(this->SHOW_BrowserColors);
+        ofxImGui::AddParameter(this->SHOW_Gradient);
+        ofxImGui::AddParameter(this->SHOW_Curve);
+        ofxImGui::AddParameter(this->SHOW_TEST_Curve);
+        ofxImGui::AddParameter(this->SHOW_ColourLovers);
+        ofxImGui::AddParameter(this->SHOW_AlgoPalettes);
+        ofxImGui::AddParameter(this->SHOW_BrowserColors);
 //            ofxImGui::EndTree(panelsSet);
 //        }
     }
@@ -1626,8 +1624,10 @@ void ofxColorManager::update()
             bAuto_palette_recall = false;
         }
 
+        PRESET_name = myPalette_Name;
+
         // clear DEMO1 objects
-        //        bDEMO1_clear = true;
+        myDEMO_palette.clear();
     }
 
     if (bUpdated_Color_BACK)
@@ -1658,7 +1658,7 @@ void ofxColorManager::update()
         }
 
         // clear DEMO1 objects
-        //        bDEMO1_clear = true;
+        myDEMO_palette.clear();
     }
 
     //--
@@ -2579,11 +2579,17 @@ void ofxColorManager::draw()
 //--------------------------------------------------------------
 void ofxColorManager::draw_Palette_MINI()
 {
+    glm::vec2 palettePos;
     int boxW = 40;
     int boxPad = 1;
     int boxSize = boxW+boxPad;
-    glm::vec2 palettePos = glm::vec2(ofGetWidth() - palette.size()*boxSize, 2*boxPad);
     ofRectangle r;
+
+//    // right top corner
+//    palettePos = glm::vec2(ofGetWidth() - palette.size()*boxSize, 2*boxPad);
+
+    // left top corner
+    palettePos = glm::vec2(2, 2*boxPad);
 
     ofPushMatrix();
     ofPushStyle();
@@ -2945,9 +2951,9 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
             }
         }
 
-            //-
+        //-
 
-            // OFX GUI-PANELS-LAYOUT
+        // OFX GUI-PANELS-LAYOUT
 
         if (key == 'a') {
             panels.SHOW_advanced = !panels.SHOW_advanced;
@@ -3086,8 +3092,6 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
             }
 
             // clear DEMO1 objects
-            //        bDEMO1_clear = true;
-            //        pauseCreate = false;
             myDEMO_palette.clear();
         }
             //-
@@ -3100,27 +3104,26 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
             ColourLoversHelper.randomPalette();
 
             // clear DEMO1 objects
-            //        bDEMO1_clear = true;
-            //        pauseCreate = false;
             myDEMO_palette.clear();
         }
 
-            //-
+        //-
 
-        else if (key == OF_KEY_DOWN) {
-            ColourLoversHelper.nextPalette();
+        if (SHOW_ColourLovers)
+        {
+            else if (key == OF_KEY_DOWN) {
+                ColourLoversHelper.nextPalette();
 
-            // clear DEMO1 objects
-            //        bDEMO1_clear = true;
-            //        pauseCreate = false;
-            myDEMO_palette.clear();
-        } else if (key == OF_KEY_UP) {
-            ColourLoversHelper.prevPalette();
+                // clear DEMO1 objects
+                myDEMO_palette.clear();
 
-            // clear DEMO1 objects
-            //        bDEMO1_clear = true;
-            //        pauseCreate = false;
-            myDEMO_palette.clear();
+            }
+            else if (key == OF_KEY_UP) {
+                ColourLoversHelper.prevPalette();
+
+                // clear DEMO1 objects
+                myDEMO_palette.clear();
+            }
         }
             //--
 
