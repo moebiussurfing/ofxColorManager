@@ -105,7 +105,8 @@ public:
     //TODO
     //BUG: should create a default preset because if myPreset is not detected it crashes
 //    string PRESET_name = "myPreset";
-    std::string PRESET_name = "myPreset";
+    std::string PRESET_name = "myPreset";//default preset
+//    std::string PRESET_name = "";
 
     string PRESET_curveName = "curve01";
 

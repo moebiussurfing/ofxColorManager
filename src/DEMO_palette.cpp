@@ -4,6 +4,9 @@
 
 #include "DEMO_palette.h"
 
+//TODO
+// should check if pointer and palettes size is not null
+
 
 //--------------------------------------------------------------
 void DEMO_palette::setup() {

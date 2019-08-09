@@ -71,6 +71,17 @@ void ofxColorManager::files_refresh()
         fileNames.push_back(files[i].getBaseName());
         //fileNames.push_back(files[i].getFileName());
     }
+
+    //-
+
+    if (fileNames.size()>0)
+    {
+        PRESET_name = fileNames[0];
+    }
+    else
+    {
+        ofLogError("ofxColorManager")<<"DEFAULT PRESET NOT FOUND!";
+    }
 }
 
 //--------------------------------------------------------------
@@ -79,6 +90,8 @@ void ofxColorManager::setup()
     ColorWheel_setup();
 
     //--
+
+    // PRESET MANAGER
 
     files_refresh();
 
