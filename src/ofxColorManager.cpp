@@ -2,6 +2,41 @@
 
 
 //--------------------------------------------------------------
+void ofxColorManager::ColorWheel_setup(){
+    group.setName("Color Theory");
+    group.add(primaryColor.set("Primary Color", ofColor::magenta));
+    group.add(colorScheme.set("Color Scheme", 6, 0, ColorWheelSchemes::colorSchemes.size()-1));
+    group.add(colorSchemeName);
+    group.add(numColors.set("Num Colors", 8, 1, 256));
+
+    panel.setup();
+    panel.add(group);
+    panel.setPosition(600,600);
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::ColorWheel_update() {
+    colorSchemeName.set(ColorWheelSchemes::colorSchemeNames[colorScheme.get()]);
+    scheme = ColorWheelSchemes::colorSchemes[colorScheme.get()];
+    scheme->setPrimaryColor(primaryColor.get());
+    colors = scheme->interpolate(numColors.get());
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::ColorWheel_draw(){
+    ofPushStyle();
+    float w = ofGetWidth() / (float) colors.size();
+    for (int i=0; i<colors.size(); i++) {
+        ofSetColor(colors[i]);
+        ofFill();
+        ofDrawRectangle(w * i, 0, w, ofGetHeight());
+    }
+    ofPopStyle();
+
+    panel.draw();
+}
+
+//--------------------------------------------------------------
 ofxColorManager::ofxColorManager()
 {
 }
@@ -16,6 +51,8 @@ ofxColorManager::~ofxColorManager()
 //--------------------------------------------------------------
 void ofxColorManager::setup()
 {
+    ColorWheel_setup();
+
     ofDirectory dataDirectory(ofToDataPath("assets/presetsCLASS", true));
 
     files = dataDirectory.getFiles();
@@ -1414,6 +1451,8 @@ void ofxColorManager::update()
 {
     ofSetWindowTitle(ofToString((int)ofGetFrameRate()));
 
+    ColorWheel_update();
+
 //    myPresetPalette.update();
     myPresetManager.update();
 
@@ -2264,6 +2303,7 @@ void ofxColorManager::palettes_setVisible(bool b)
 //--------------------------------------------------------------
 void ofxColorManager::draw()
 {
+
     //--
 
     // BACKGROUND
@@ -2271,8 +2311,14 @@ void ofxColorManager::draw()
     if (backgroundENABLE)
     {
         ofClear(ofColor(color_backGround.get()));
-    }
 
+        //-
+
+        // ColorWheelSchemes
+
+//    ColorWheel_draw();
+
+    //-
 
 //    myPresetPalette.draw();
     myPresetManager.draw();

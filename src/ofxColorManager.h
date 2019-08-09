@@ -1,7 +1,6 @@
 #pragma once
 #include "ofMain.h"
 
-#include "ofxImGui.h"
 #include "ofxInterface.h"
 #include "ButtonPaletteSelector.h"
 #include "ButtonExample.h"
@@ -13,12 +12,18 @@
 #include "ofxCereal.h"
 #include "ofxMouseRuler.h"
 #include "ofxColourLoversHelper.h"
-#include "PresetPalette.h"
+#include "ColorWheelScheme.h"
+#include "ColorWheelSchemes.h"
+using namespace ofxColorTheory;
+using namespace std;
+
 #include "ofxUndoSimple.h"
-//#include "ofxCameraSaveLoad.h"
 #include "ofxGuiPanelsLayout.h"
 #include "ofxGui.h"
+#include "ofxImGui.h"
+
 #include "DEMO_palette.h"
+#include "PresetPalette.h"
 #include "PresetManager.h"
 
 //--
@@ -51,9 +56,27 @@ class ofxColorManager {
 
 public:
 
+    //-
+
+    // ColorWheelSchemes
+
+    void ColorWheel_setup();
+    void ColorWheel_update();
+    void ColorWheel_draw();
+
+    shared_ptr<ColorWheelScheme> scheme;
+    vector<ofColor> colors;
+
+    ofxPanel panel;
+    ofParameterGroup group;
+    ofParameter<ofColor> primaryColor;
+    ofParameter<int> colorScheme;
+    ofParameter<string> colorSchemeName;
+    ofParameter<int> numColors;
+
+    //-
+
     PresetManager myPresetManager;
-
-
 
     //--
 

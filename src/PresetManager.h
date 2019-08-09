@@ -7,6 +7,7 @@
 
 #include "ofMain.h"
 #include "PresetPalette.h"
+#include "ofxImGui.h"
 
 class PresetManager {
 
@@ -34,6 +35,10 @@ public:
     void mouseReleased( ofMouseEventArgs& eventArgs );
     void addMouseListeners();
     void removeMouseListeners();
+
+private:
+    ofxImGui::Gui gui;
+    float v;
 };
 
 

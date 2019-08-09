@@ -3,6 +3,7 @@ ofxCereal
 ofxColorGradient
 ofxColorManager
 ofxColorPalette
+ofxColorTheory
 ofxColorsBrowser
 ofxColourLovers
 ofxColourLoversHelper
