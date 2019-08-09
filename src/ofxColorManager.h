@@ -152,6 +152,10 @@ public:
     ofParameter<bool> SHOW_debugText;
     ofParameter<bool> SHOW_TEST_Curve;
 
+    ofParameter<bool> SHOW_PresetManager;
+    ofParameter<bool> SHOW_ColorManager;
+    ofParameter<bool> SHOW_ColorPicker;
+
     void setColor_TARGET(ofColor &c);//backwards pointer ofApp color
     ofColor *color_TARGET;//backwards pointer ofApp color
 
@@ -168,7 +172,7 @@ public:
     void setVisible_GUI_MINI(bool b);
     void setVisible_debugText(bool b);
 
-    void draw_PaleteMINI();
+    void draw_Palette_MINI();
     void draw_previewGradient(glm::vec2 pos, bool horizontal);
 
     void disableListeners();

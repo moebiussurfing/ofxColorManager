@@ -68,8 +68,8 @@ void ofxColorManager::files_refresh()
     files = dataDirectory.getFiles();
     for(size_t i=0; i<files.size(); i++)
     {
-        //fileNames.push_back(files[i].getFileName());
         fileNames.push_back(files[i].getBaseName());
+        //fileNames.push_back(files[i].getFileName());
     }
 }
 
@@ -270,11 +270,19 @@ void ofxColorManager::setup()
     SHOW_Gradient.set("SHOW GRADIENT", true);
     SHOW_Curve.set("SHOW CURVE TOOL", true);
 
+    SHOW_PresetManager.set("SHOW PRESET MANAGER", true);
+    SHOW_ColorManager.set("SHOW COLOR MANAGER", true);
+    SHOW_ColorPicker.set("SHOW COLOR PICKER", true);
+
     params_control.add(SHOW_ColourLovers);
     params_control.add(SHOW_AlgoPalettes);
     params_control.add(SHOW_BrowserColors);
     params_control.add(SHOW_Gradient);
     params_control.add(SHOW_Curve);
+
+    params_control.add(SHOW_PresetManager);
+    params_control.add(SHOW_ColorManager);
+    params_control.add(SHOW_ColorPicker);
 
     SHOW_ALL_GUI = true;
     SHOW_debugText = false;
@@ -332,6 +340,10 @@ void ofxColorManager::setup()
     // STARTUP SETTINGS
 
     XML_params.setName("ofxColorManager");
+
+    XML_params.add(SHOW_PresetManager);
+    XML_params.add(SHOW_ColorManager);
+    XML_params.add(SHOW_ColorPicker);
 
     XML_params.add(SHOW_ColourLovers);
     XML_params.add(SHOW_AlgoPalettes);
@@ -398,6 +410,9 @@ void ofxColorManager::setup()
     p_TOGGLES.add(SHOW_TEST_Curve);
     p_TOGGLES.add(SHOW_ImGui);
     p_TOGGLES.add(TEST_DEMO);
+    p_TOGGLES.add(SHOW_PresetManager);
+    p_TOGGLES.add(SHOW_ColorManager);
+    p_TOGGLES.add(SHOW_ColorPicker);
 
     //-
 
@@ -414,6 +429,9 @@ void ofxColorManager::setup()
     panels.addToggle(&SHOW_TEST_Curve);
     panels.addToggle(&SHOW_ImGui);
     panels.addToggle(&TEST_DEMO);
+    panels.addToggle(&SHOW_PresetManager);
+    panels.addToggle(&SHOW_ColorManager);
+    panels.addToggle(&SHOW_ColorPicker);
 
     //call after add the panels
     panels.setup();
@@ -1329,8 +1347,8 @@ void ofxColorManager::gui_imGui_window3()
         //        ImGui::Text("Size: %.2f", this->cubeSize);
 
         //        static char str0[128] = PRESET_name;
-        static char str0[128] = "palette_name";
-        if (ImGui::InputText("name", str0, IM_ARRAYSIZE(str0)))
+        static char str0[128] = "";
+        if (ImGui::InputText("", str0, IM_ARRAYSIZE(str0)))
         {
             cout << "InputText:" << ofToString(str0) << endl;
             PRESET_name = ofToString(str0);
@@ -1342,12 +1360,10 @@ void ofxColorManager::gui_imGui_window3()
             cout << "SAVE" << endl;
             cout << "PRESET_name: " << PRESET_name << endl;
             preset_save(PRESET_name);
-
             files_refresh();
         }
+
         ImGui::SameLine();
-
-
         if (ImGui::Button("LOAD"))
         {
             cout << "LOAD" << endl;
@@ -1358,19 +1374,22 @@ void ofxColorManager::gui_imGui_window3()
         ImGui::SameLine();
         ImGui::Button("CLEAR");//preset
 
+        //-
+
         ImGui::Separator();
         ImGui::Text("KIT");
 
         // Arrow buttons
-        static int counter = 0;
+        static int counter = currentFile;
         float spacing = ImGui::GetStyle().ItemInnerSpacing.x;
+
         ImGui::PushButtonRepeat(true);
+
         if (ImGui::ArrowButton("##left", ImGuiDir_Left)) {
             if (counter>0)
             {
                 counter--;
                 currentFile = counter;
-
                 if (currentFile<files.size())
                 {
                     PRESET_name = fileNames[currentFile];
@@ -1379,86 +1398,59 @@ void ofxColorManager::gui_imGui_window3()
                 }
             }
         }
+
         ImGui::SameLine(0.0f, spacing);
         if (ImGui::ArrowButton("##right", ImGuiDir_Right)) {
             counter++;
             if (counter>files.size()-1) {
                 counter = files.size() - 1;
             }
-            currentFile = counter;
-
-            if (currentFile<files.size())
+            else
             {
-                PRESET_name = fileNames[currentFile];
-                ofLogNotice() << "ARROW: PRESET_name: ["+ofToString(currentFile)+"] " << PRESET_name;
-                preset_load(PRESET_name);
+                currentFile = counter;
+                if (currentFile<files.size()-1)
+                {
+                    PRESET_name = fileNames[currentFile];
+                    ofLogNotice() << "ARROW: PRESET_name: ["+ofToString(currentFile)+"] " << PRESET_name;
+                    preset_load(PRESET_name);
+                }
             }
-
         }
+
         ImGui::PopButtonRepeat();
         ImGui::SameLine();
         ImGui::Text("%d", counter);
-
-        //        Gui::SameLine(); ShowHelpMarker("You can apply arithmetic operators +,*,/ on numerical values.\n  e.g. [ 100 ], input \'*2\', result becomes [ 200 ]\nUse +- to subtract.\n");
-
-        //        if(ImGui::Button("Demo Window"))
-        //        {
-        //        }
-        //        if (ImGui::Button("Another Window"))
-        //        {
-        //        }
-
-        //            if (ImGui::BeginMenu("Edit"))
-        //            {
-        //                if (ImGui::MenuItem("Undo", "CTRL+Z")) {}
-        //                if (ImGui::MenuItem("Redo", "CTRL+Y", false, false)) {}  // Disabled item
-        //                ImGui::Separator();
-        //                if (ImGui::MenuItem("Cut", "CTRL+X")) {}
-        //                if (ImGui::MenuItem("Copy", "CTRL+C")) {}
-        //                if (ImGui::MenuItem("Paste", "CTRL+V")) {}
-        //                ImGui::EndMenu();
-        //            }
-        //            ImGui::EndMainMenuBar();
-        //        }
 
         //-
 
         if(!fileNames.empty())
         {
             //ofxImGui::VectorCombo allows for the use of a vector<string> as a data source
-            //            static int currentFileIndex = currentFile;
+            static int currentFileIndex = currentFile;
+//            static int currentFileIndex = 0;
 
-            static int currentFileIndex = 0;
-            if(ofxImGui::VectorCombo("", &currentFileIndex, fileNames))
+            if(ofxImGui::VectorCombo(" ", &currentFileIndex, fileNames))
             {
+                ofLog() << "currentFileIndex: "  << ofToString(currentFileIndex);
                 ofLog() << "VectorCombo FILE PATH: "  << files[currentFileIndex].getAbsolutePath();
+
                 if (currentFileIndex<fileNames.size())
                 {
                     currentFile = currentFileIndex;
                     PRESET_name = fileNames[currentFile];
-                    ofLog() << "VectorCombo PRESET_name: "  << PRESET_name;
+                    ofLog() << "PRESET_name: "  << PRESET_name;
                     preset_load(PRESET_name);
                 }
             }
         }
 
-        //        if (ofxImGui::BeginTree("PRESET", mainSettings))
-        //        {
-        //            ImGui::Checkbox("ENABLE TEST", &TEST_MODE);
-        //            ImGui::Checkbox("CYCLE", &TEST_CycleMODE);
-        //            ImGui::Checkbox("TO BACKGROUND", &TEST_toBackground);
-        //            ImGui::SliderFloat("SPEED", &TEST_Speed, 0.0f, 1.0f);
-        //            ofxImGui::EndTree(mainSettings);
-        //        }
+        //TODO
+        if (MANAGER_Set.mouseOverGui)
+            ENABLE_keys = false;
+        else
+            ENABLE_keys = true;
 
     }
-
-    //TODO
-    if (MANAGER_Set.mouseOverGui)
-        ENABLE_keys = false;
-    else
-        ENABLE_keys = true;
-
     ofxImGui::EndWindow(MANAGER_Set);
 }
 
@@ -1472,18 +1464,18 @@ bool ofxColorManager::gui_imGui()
 
     //-
 
-    // 1ST WINDOW
-    gui_imGui_window1();
+    if (SHOW_ColorPicker)
+        gui_imGui_window1();
 
     //-
 
-    // 2ND WINDOW
-    gui_imGui_window2();
+    if (SHOW_ColorManager)
+        gui_imGui_window2();
 
     //-
 
-    // 3. PRESET MANAGER
-    gui_imGui_window3();
+    if (SHOW_PresetManager)
+        gui_imGui_window3();
 
     //-
     this->gui.end();
@@ -2392,14 +2384,20 @@ void ofxColorManager::draw()
 
     // ColorWheelSchemes
 
-    ColorWheel_draw();
+    if (SHOW_AlgoPalettes)
+    {
+        ColorWheel_draw();
+    }
 
     //-
 
-    // MANAGER
+    // PRESET MANAGER
 
-    //    myPresetPalette.draw();
-    myPresetManager.draw();
+    if (SHOW_PresetManager)
+    {
+        //    myPresetPalette.draw();
+        myPresetManager.draw();
+    }
 
     //--
 
@@ -2523,7 +2521,7 @@ void ofxColorManager::draw()
 
     if (SHOW_GUI_MINI)
     {
-        draw_PaleteMINI();
+        draw_Palette_MINI();
     }
 
     //--
@@ -2541,7 +2539,7 @@ void ofxColorManager::draw()
 
 
 //--------------------------------------------------------------
-void ofxColorManager::draw_PaleteMINI()
+void ofxColorManager::draw_Palette_MINI()
 {
     int boxW = 40;
     int boxPad = 1;
@@ -2553,11 +2551,16 @@ void ofxColorManager::draw_PaleteMINI()
     ofPushStyle();
     ofTranslate(palettePos);
 
+    ofDrawBitmapStringHighlight(PRESET_name, glm::vec2(5, boxW+20), ofColor::black, ofColor::white);
+
     for (int col=0; col<palette.size(); col++)
     {
         r = ofRectangle(0, 0, boxW, boxW);
         ofFill();
         ofSetColor(palette[col]);
+        ofDrawRectangle(r);
+        ofNoFill();
+        ofSetColor(ofColor(ofColor::white, 64));
         ofDrawRectangle(r);
         ofTranslate ( boxSize, 0);
     }
@@ -2872,6 +2875,38 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
         if (false) {}
 
             //--
+
+            // PRESET MANAGER
+
+        else if (key == OF_KEY_LEFT)
+        {
+            if (currentFile>0)
+            {
+                currentFile--;
+            }
+            if (currentFile<files.size())
+            {
+                PRESET_name = fileNames[currentFile];
+                ofLogNotice() << "OF_KEY_LEFT: PRESET_name: ["+ofToString(currentFile)+"] " << PRESET_name;
+                preset_load(PRESET_name);
+            }
+        }
+
+        else if (key == OF_KEY_RIGHT)
+        {
+            if (currentFile<files.size()-1)
+            {
+                currentFile++;
+            }
+            if (currentFile<files.size())
+            {
+                PRESET_name = fileNames[currentFile];
+                ofLogNotice() << "OF_KEY_RIGHT: PRESET_name: ["+ofToString(currentFile)+"] " << PRESET_name;
+                preset_load(PRESET_name);
+            }
+        }
+
+            //-
 
             // OFX GUI-PANELS-LAYOUT
 
@@ -3583,6 +3618,9 @@ void ofxColorManager::preset_load(string p)
     ////        string *name_BACK;
     ////        vector<ofColor> *palette_BACK;
     ////        string *curveName_BACK;
+
+
+    myDEMO_palette.clear();
 }
 
 

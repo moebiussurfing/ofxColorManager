@@ -22,9 +22,9 @@ void PresetManager::update() {
 //--------------------------------------------------------------
 void PresetManager::draw()
 {
-        gui.begin();
-        ImGui::SliderFloat("slider", &v, 0.f, 10.f);
-        gui.end();
+//        gui.begin();
+//        ImGui::SliderFloat("slider", &v, 0.f, 10.f);
+//        gui.end();
 }
 
 
