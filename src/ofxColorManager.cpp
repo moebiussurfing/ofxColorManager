@@ -19,7 +19,7 @@ void ofxColorManager::ColorWheel_update() {
     colorSchemeName.set(ColorWheelSchemes::colorSchemeNames[colorScheme.get()]);
     scheme = ColorWheelSchemes::colorSchemes[colorScheme.get()];
 
-//    scheme->setPrimaryColor(primaryColor.get());
+    //    scheme->setPrimaryColor(primaryColor.get());
 
     primaryColor.set(color_picked.get());
     scheme->setPrimaryColor(color_picked.get());
@@ -33,7 +33,7 @@ void ofxColorManager::ColorWheel_draw(){
     ofPushMatrix();
     ofTranslate(711,670);
 
-//    float w = ofGetWidth() / (float) colors.size();
+    //    float w = ofGetWidth() / (float) colors.size();
     float w = 200 / (float) colors.size();
     for (int i=0; i<colors.size(); i++) {
         ofSetColor(colors[i]);
@@ -63,10 +63,13 @@ void ofxColorManager::files_refresh()
     ofDirectory dataDirectory(ofToDataPath("assets/presetsCLASS", true));
 
     files.clear();
+    fileNames.clear();
+
     files = dataDirectory.getFiles();
     for(size_t i=0; i<files.size(); i++)
     {
-        fileNames.push_back(files[i].getFileName());
+        //fileNames.push_back(files[i].getFileName());
+        fileNames.push_back(files[i].getBaseName());
     }
 }
 
@@ -81,7 +84,7 @@ void ofxColorManager::setup()
 
     //--
 
-//    myPresetPalette.setup();
+    //    myPresetPalette.setup();
     myPresetManager.setup();
 
     //-
@@ -241,7 +244,7 @@ void ofxColorManager::setup()
 
     // CONTROL
 
-//    SHOW_PaletteCustom.set("SHOW PALETTE LIB", false);
+    //    SHOW_PaletteCustom.set("SHOW PALETTE LIB", false);
     bRandomColor.set("RANDOM COLOR", false);
     bAddColor.set("ADD COLOR", false);
     bPaletteEdit.set("EDIT COLOR", false);
@@ -254,8 +257,8 @@ void ofxColorManager::setup()
     params_control.add(bAddColor);
     params_control.add(bRemoveColor);
     params_control.add(bClearPalette);
-//    params_control.add(SHOW_PaletteCustom);
-//    params_control.add(color_backGround);
+    //    params_control.add(SHOW_PaletteCustom);
+    //    params_control.add(color_backGround);
 
     //-
 
@@ -283,7 +286,7 @@ void ofxColorManager::setup()
 
     params_control.add(color_backGround_SET);
     params_control.add(color_backGround_SETAUTO);
-//    params_control.add(backgroundDarkness);
+    //    params_control.add(backgroundDarkness);
 
     //-
 
@@ -336,7 +339,7 @@ void ofxColorManager::setup()
     XML_params.add(SHOW_Curve);
     XML_params.add(SHOW_TEST_Curve);//curve tool
     XML_params.add(SHOW_BrowserColors);
-//    XML_params.add(SHOW_PaletteCustom);
+    //    XML_params.add(SHOW_PaletteCustom);
 
     XML_params.add(color_picked);
     XML_params.add(color_backGround);
@@ -454,7 +457,7 @@ void ofxColorManager::gui_setup_layout()
 
     // gui 3 ImGui PRESET MANAGER
     gui3_x = 700;
-    gui3_y = 300;
+    gui3_y = 10;
     gui3_w = guiWidth;
     gui3_h = 200;
 
@@ -794,7 +797,7 @@ void ofxColorManager::interface_draw(){
 
 //--------------------------------------------------------------
 void ofxColorManager::gui_imGui_window1(){
-//    mainSettings = ofxImGui::Settings();
+    //    mainSettings = ofxImGui::Settings();
 
     // COLOR PICKER CUSTOM
 
@@ -803,27 +806,27 @@ void ofxColorManager::gui_imGui_window1(){
     COLOR_PICKER_Settings.windowSize = ofVec2f(guiWidth, 200);
     //    COLOR_PICKER_Settings.lockPosition = true;
 
-//    static bool no_titlebar = false;
-//    static bool no_scrollbar = false;
-//    static bool no_menu = false;
-//    static bool no_move = false;
-//    static bool no_resize = false;
-//    static bool no_collapse = false;
-//    static bool no_close = false;
-//    static bool no_nav = false;
-//    ImGuiWindowFlags window_flags = 0;
-////    if (no_titlebar)  window_flags |= ImGuiWindowFlags_NoTitleBar;
-////    if (no_scrollbar) window_flags |= ImGuiWindowFlags_NoScrollbar;
-////    if (!no_menu)     window_flags |= ImGuiWindowFlags_MenuBar;
-////    if (no_move)      window_flags |= ImGuiWindowFlags_NoMove;
-////    if (no_resize)    window_flags |= ImGuiWindowFlags_NoResize;
-//    if (no_collapse)  window_flags |= ImGuiWindowFlags_NoCollapse;
-////    if (no_nav)       window_flags |= ImGuiWindowFlags_NoNav;
-////    if (no_close)     p_open = NULL; // Don't pass our bool* to Begin
+    //    static bool no_titlebar = false;
+    //    static bool no_scrollbar = false;
+    //    static bool no_menu = false;
+    //    static bool no_move = false;
+    //    static bool no_resize = false;
+    //    static bool no_collapse = false;
+    //    static bool no_close = false;
+    //    static bool no_nav = false;
+    //    ImGuiWindowFlags window_flags = 0;
+    ////    if (no_titlebar)  window_flags |= ImGuiWindowFlags_NoTitleBar;
+    ////    if (no_scrollbar) window_flags |= ImGuiWindowFlags_NoScrollbar;
+    ////    if (!no_menu)     window_flags |= ImGuiWindowFlags_MenuBar;
+    ////    if (no_move)      window_flags |= ImGuiWindowFlags_NoMove;
+    ////    if (no_resize)    window_flags |= ImGuiWindowFlags_NoResize;
+    //    if (no_collapse)  window_flags |= ImGuiWindowFlags_NoCollapse;
+    ////    if (no_nav)       window_flags |= ImGuiWindowFlags_NoNav;
+    ////    if (no_close)     p_open = NULL; // Don't pass our bool* to Begin
 
 
 
-//    if (ofxImGui::BeginWindow("COLOR PICKER", COLOR_PICKER_Settings, window_flags))
+    //    if (ofxImGui::BeginWindow("COLOR PICKER", COLOR_PICKER_Settings, window_flags))
     if (ofxImGui::BeginWindow("COLOR PICKER", COLOR_PICKER_Settings, true))
     {
         //--
@@ -994,7 +997,7 @@ void ofxColorManager::gui_imGui_window1(){
 
             //-
 
-//            ofxImGui::AddParameter(this->SHOW_PaletteCustom);
+            //            ofxImGui::AddParameter(this->SHOW_PaletteCustom);
 
             ImGui::PopItemWidth();
             ofxImGui::EndTree(mainSettings);
@@ -1004,13 +1007,13 @@ void ofxColorManager::gui_imGui_window1(){
 
         // 3. PALETTE LIBRARY
 
-//        if (SHOW_PaletteCustom)
-//        {
-//            auto palette_Settings = ofxImGui::Settings();
-//            palette_Settings.windowPos = ofVec2f(1100, 10);
-//            palette_Settings.windowSize = ofVec2f(gui2_w, 300);
-//            if (ofxImGui::BeginWindow("PALETTE LIBRARY", palette_Settings, false)) {
-//            if (ofxImGui::BeginTree("PALETTE LIBRARY", mainSettings))//grouped folder
+        //        if (SHOW_PaletteCustom)
+        //        {
+        //            auto palette_Settings = ofxImGui::Settings();
+        //            palette_Settings.windowPos = ofVec2f(1100, 10);
+        //            palette_Settings.windowSize = ofVec2f(gui2_w, 300);
+        //            if (ofxImGui::BeginWindow("PALETTE LIBRARY", palette_Settings, false)) {
+        //            if (ofxImGui::BeginTree("PALETTE LIBRARY", mainSettings))//grouped folder
         if (ImGui::CollapsingHeader("PALETTE LIBRARY"))
         {
             //--
@@ -1072,8 +1075,8 @@ void ofxColorManager::gui_imGui_window1(){
 
             // 2.2 draw palette
 
-//                if (ofxImGui::BeginTree("COLORS", mainSettings)) {
-//            if (ImGui::CollapsingHeader("PALETTE")) {
+            //                if (ofxImGui::BeginTree("COLORS", mainSettings)) {
+            //            if (ImGui::CollapsingHeader("PALETTE")) {
 
             for (int n = startColorInPal; n < endColorInPal; n++)
                 //for (int n = 0; n < palSize; n++) {
@@ -1104,14 +1107,14 @@ void ofxColorManager::gui_imGui_window1(){
                 }
             }
 
-//                    ofxImGui::EndTree(mainSettings);
+            //                    ofxImGui::EndTree(mainSettings);
         }
 
-//                ofxImGui::EndTree(mainSettings);
-//
-//            }
-//            ofxImGui::EndWindow(palette_Settings);
-//        }
+        //                ofxImGui::EndTree(mainSettings);
+        //
+        //            }
+        //            ofxImGui::EndWindow(palette_Settings);
+        //        }
     }
     ofxImGui::EndWindow(COLOR_PICKER_Settings);
 }
@@ -1120,7 +1123,7 @@ void ofxColorManager::gui_imGui_window1(){
 //--------------------------------------------------------------
 void ofxColorManager::gui_imGui_window2()
 {
-//    mainSettings = ofxImGui::Settings();
+    //    mainSettings = ofxImGui::Settings();
 
     auto COLOR_MANAGER_Settings = ofxImGui::Settings();
     COLOR_MANAGER_Settings.windowPos = ofVec2f(gui2_x, gui2_y);
@@ -1146,8 +1149,8 @@ void ofxColorManager::gui_imGui_window2()
                             ImGuiColorEditFlags_NoTooltip |
                             ImGuiColorEditFlags_NoLabel |
                             ImGuiColorEditFlags_NoSidePreview |
-//                            ImGuiColorEditFlags_NoInputs |
-                            ImGuiColorEditFlags_NoAlpha |
+                            //                            ImGuiColorEditFlags_NoInputs |
+                                    ImGuiColorEditFlags_NoAlpha |
                             ImGuiColorEditFlags_PickerHueBar;
 
             ImGui::ColorPicker4("Background Color", (float *) &color, colorEdiFlags);
@@ -1158,7 +1161,7 @@ void ofxColorManager::gui_imGui_window2()
             //-
 
             ImGui::PushItemWidth(guiWidth * 0.3);
-//            ofxImGui::AddParameter(this->backgroundDarkness);
+            //            ofxImGui::AddParameter(this->backgroundDarkness);
             ofxImGui::AddParameter(this->color_backGround_SET);
             ofxImGui::AddParameter(this->color_backGround_SETAUTO);
             ofxImGui::EndTree(mainSettings);
@@ -1305,37 +1308,40 @@ void ofxColorManager::gui_imGui_window3()
     {
         ImGui::Text("USER PALETTES");
 
-//        ImGui::Text("PRESET_name:");
-//        ImGui::SameLine();
-//        ImGui::Text(PRESET_name);
+        //        ImGui::Text("PRESET_name:");
+        //        ImGui::SameLine();
+        //        ImGui::Text(PRESET_name);
 
-//        char tab2[128];
-//        strcpy(tab2, PRESET_name.c_str());
-//        ImGui::Text("PRESET_name", tab2);
+        //        char tab2[128];
+        //        strcpy(tab2, PRESET_name.c_str());
+        //        ImGui::Text("PRESET_name", tab2);
 
         string temp = PRESET_name;
         char tab2[128];
         strncpy(tab2, temp.c_str(), sizeof(tab2));
         tab2[sizeof(tab2) - 1] = 0;
         ImGui::Text("PRESET_name", tab2, 20);
-//        ImGui::Text("PRESET_name", PRESET_name);
+        //        ImGui::Text("PRESET_name", PRESET_name);
 
-//        char str1[128];
-//        str1 = ofToString(PRESET_name);
-//        ImGui::Text("PRESET_name", str1);
-//        ImGui::Text("Size: %.2f", this->cubeSize);
+        //        char str1[128];
+        //        str1 = ofToString(PRESET_name);
+        //        ImGui::Text("PRESET_name", str1);
+        //        ImGui::Text("Size: %.2f", this->cubeSize);
 
+        //        static char str0[128] = PRESET_name;
         static char str0[128] = "palette_name";
         if (ImGui::InputText("name", str0, IM_ARRAYSIZE(str0)))
         {
             cout << "InputText:" << ofToString(str0) << endl;
+            PRESET_name = ofToString(str0);
+            cout << "PRESET_name: " << PRESET_name << endl;
         }
 
         if (ImGui::Button("SAVE"))
         {
-            PRESET_name = ofToString(str0);
-            preset_save(ofToString(str0));
+            cout << "SAVE" << endl;
             cout << "PRESET_name: " << PRESET_name << endl;
+            preset_save(PRESET_name);
 
             files_refresh();
         }
@@ -1344,18 +1350,16 @@ void ofxColorManager::gui_imGui_window3()
 
         if (ImGui::Button("LOAD"))
         {
+            cout << "LOAD" << endl;
+            cout << "PRESET_name: " << PRESET_name << endl;
             preset_load(PRESET_name);
         }
 
-
         ImGui::SameLine();
-        ImGui::Button("CLEAR");
+        ImGui::Button("CLEAR");//preset
 
         ImGui::Separator();
-
         ImGui::Text("KIT");
-
-        int currentFile = 0;
 
         // Arrow buttons
         static int counter = 0;
@@ -1369,73 +1373,83 @@ void ofxColorManager::gui_imGui_window3()
 
                 if (currentFile<files.size())
                 {
-                    PRESET_name = files[currentFile].getBaseName();
-                    ofLogNotice() << "PRESET_name: ["+ofToString(currentFile)+"] " << PRESET_name;
+                    PRESET_name = fileNames[currentFile];
+                    ofLogNotice() << "ARROW: PRESET_name: ["+ofToString(currentFile)+"] " << PRESET_name;
+                    preset_load(PRESET_name);
                 }
             }
         }
         ImGui::SameLine(0.0f, spacing);
         if (ImGui::ArrowButton("##right", ImGuiDir_Right)) {
             counter++;
-            if (counter>files.size()-1)
-            {
-                counter = files.size()-1;
-                currentFile = counter;
-
-                if (currentFile<files.size())
-                {
-                    PRESET_name = files[currentFile].getBaseName();
-                    ofLogNotice() << "PRESET_name: ["+ofToString(currentFile)+"] " << PRESET_name;
-                }
+            if (counter>files.size()-1) {
+                counter = files.size() - 1;
             }
+            currentFile = counter;
+
+            if (currentFile<files.size())
+            {
+                PRESET_name = fileNames[currentFile];
+                ofLogNotice() << "ARROW: PRESET_name: ["+ofToString(currentFile)+"] " << PRESET_name;
+                preset_load(PRESET_name);
+            }
+
         }
         ImGui::PopButtonRepeat();
         ImGui::SameLine();
         ImGui::Text("%d", counter);
 
-//        Gui::SameLine(); ShowHelpMarker("You can apply arithmetic operators +,*,/ on numerical values.\n  e.g. [ 100 ], input \'*2\', result becomes [ 200 ]\nUse +- to subtract.\n");
+        //        Gui::SameLine(); ShowHelpMarker("You can apply arithmetic operators +,*,/ on numerical values.\n  e.g. [ 100 ], input \'*2\', result becomes [ 200 ]\nUse +- to subtract.\n");
 
-//        if(ImGui::Button("Demo Window"))
-//        {
-//        }
-//        if (ImGui::Button("Another Window"))
-//        {
-//        }
+        //        if(ImGui::Button("Demo Window"))
+        //        {
+        //        }
+        //        if (ImGui::Button("Another Window"))
+        //        {
+        //        }
 
-//            if (ImGui::BeginMenu("Edit"))
-//            {
-//                if (ImGui::MenuItem("Undo", "CTRL+Z")) {}
-//                if (ImGui::MenuItem("Redo", "CTRL+Y", false, false)) {}  // Disabled item
-//                ImGui::Separator();
-//                if (ImGui::MenuItem("Cut", "CTRL+X")) {}
-//                if (ImGui::MenuItem("Copy", "CTRL+C")) {}
-//                if (ImGui::MenuItem("Paste", "CTRL+V")) {}
-//                ImGui::EndMenu();
-//            }
-//            ImGui::EndMainMenuBar();
-//        }
+        //            if (ImGui::BeginMenu("Edit"))
+        //            {
+        //                if (ImGui::MenuItem("Undo", "CTRL+Z")) {}
+        //                if (ImGui::MenuItem("Redo", "CTRL+Y", false, false)) {}  // Disabled item
+        //                ImGui::Separator();
+        //                if (ImGui::MenuItem("Cut", "CTRL+X")) {}
+        //                if (ImGui::MenuItem("Copy", "CTRL+C")) {}
+        //                if (ImGui::MenuItem("Paste", "CTRL+V")) {}
+        //                ImGui::EndMenu();
+        //            }
+        //            ImGui::EndMainMenuBar();
+        //        }
 
         //-
 
         if(!fileNames.empty())
         {
             //ofxImGui::VectorCombo allows for the use of a vector<string> as a data source
+            //            static int currentFileIndex = currentFile;
+
             static int currentFileIndex = 0;
-            if(ofxImGui::VectorCombo("VectorCombo", &currentFileIndex, fileNames))
+            if(ofxImGui::VectorCombo("", &currentFileIndex, fileNames))
             {
                 ofLog() << "VectorCombo FILE PATH: "  << files[currentFileIndex].getAbsolutePath();
-//                PRESET_name = "myPreset";
+                if (currentFileIndex<fileNames.size())
+                {
+                    currentFile = currentFileIndex;
+                    PRESET_name = fileNames[currentFile];
+                    ofLog() << "VectorCombo PRESET_name: "  << PRESET_name;
+                    preset_load(PRESET_name);
+                }
             }
         }
 
-//        if (ofxImGui::BeginTree("PRESET", mainSettings))
-//        {
-//            ImGui::Checkbox("ENABLE TEST", &TEST_MODE);
-//            ImGui::Checkbox("CYCLE", &TEST_CycleMODE);
-//            ImGui::Checkbox("TO BACKGROUND", &TEST_toBackground);
-//            ImGui::SliderFloat("SPEED", &TEST_Speed, 0.0f, 1.0f);
-//            ofxImGui::EndTree(mainSettings);
-//        }
+        //        if (ofxImGui::BeginTree("PRESET", mainSettings))
+        //        {
+        //            ImGui::Checkbox("ENABLE TEST", &TEST_MODE);
+        //            ImGui::Checkbox("CYCLE", &TEST_CycleMODE);
+        //            ImGui::Checkbox("TO BACKGROUND", &TEST_toBackground);
+        //            ImGui::SliderFloat("SPEED", &TEST_Speed, 0.0f, 1.0f);
+        //            ofxImGui::EndTree(mainSettings);
+        //        }
 
     }
 
@@ -1520,7 +1534,7 @@ void ofxColorManager::update()
 
     ColorWheel_update();
 
-//    myPresetPalette.update();
+    //    myPresetPalette.update();
     myPresetManager.update();
 
     //--
@@ -2384,7 +2398,7 @@ void ofxColorManager::draw()
 
     // MANAGER
 
-//    myPresetPalette.draw();
+    //    myPresetPalette.draw();
     myPresetManager.draw();
 
     //--
@@ -2829,21 +2843,21 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
     }
     else if (name == "BACKGROUND")
     {
-//        if (color_backGround.get().getBrightness()!=backgroundDarkness_PRE)
-//            backgroundDarkness = color_backGround.get().getBrightness();
-//
-////        if (backgroundDarkness_PRE!=backgroundDarkness)
-////            backgroundDarkness = (int)darkness;
+        //        if (color_backGround.get().getBrightness()!=backgroundDarkness_PRE)
+        //            backgroundDarkness = color_backGround.get().getBrightness();
+        //
+        ////        if (backgroundDarkness_PRE!=backgroundDarkness)
+        ////            backgroundDarkness = (int)darkness;
     }
-//    else if (name == "DARKNESS") {
-////        cout << "DARKNESS: " << backgroundDarkness << endl;
-//        ofColor c;
-//        c.set(color_backGround.get());
-//        c.setBrightness(255*backgroundDarkness);
-//        color_backGround = c;
-//
-//        backgroundDarkness_PRE = backgroundDarkness;
-//    }
+    //    else if (name == "DARKNESS") {
+    ////        cout << "DARKNESS: " << backgroundDarkness << endl;
+    //        ofColor c;
+    //        c.set(color_backGround.get());
+    //        c.setBrightness(255*backgroundDarkness);
+    //        color_backGround = c;
+    //
+    //        backgroundDarkness_PRE = backgroundDarkness;
+    //    }
 }
 
 
@@ -3464,7 +3478,7 @@ void ofxColorManager::windowResized(int w, int h)
 void ofxColorManager::exit()
 {
 
-//    palette_save("myPalette");
+    //    palette_save("myPalette");
     save_group_XML(XML_params, XML_path);
 
     ColorBrowser.exit();

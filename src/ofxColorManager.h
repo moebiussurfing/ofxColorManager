@@ -130,7 +130,6 @@ public:
     ofxColorManager();
     ~ofxColorManager();
 
-    void files_refresh();
 
     void setup();
     void update();
@@ -405,8 +404,12 @@ public:
 
 //    static void ShowExampleMenuFile();
 
+        // FILES
+
+    void files_refresh();
     std::vector<std::string> fileNames;
     std::vector<ofFile> files;
+    int currentFile = 0;
 
     //--
 
