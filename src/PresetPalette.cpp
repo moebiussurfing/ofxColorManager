@@ -136,3 +136,55 @@ void PresetPalette::preset_save(string p)
 
 
 
+
+//--------------------------------------------------------------
+void PresetPalette::palette_load(string p)
+{
+//    ofLogNotice("PresetPalette") << "palette_load: " << p;
+//
+//    string path = path_palettes + p + ".json";
+//    ofFile file(path);
+//    if (file.exists())
+//    {
+//        jsonin ji(file);
+//        ji >> data;
+//
+//        ofLogNotice("PresetPalette") << "palette name: " << data.name;
+//        palette_clear();
+//        ofColor c;
+//        for (int i = 0; i< data.palette.size(); i++)
+//        {
+//            c = data.palette[i];
+//            ofLogNotice("PresetPalette") << "color_picked" << i << ": " << ofToString(c);
+//            palette_addColor(c);
+//        }
+//    }
+//    else
+//    {
+//        ofLogNotice("PresetPalette") << "FILE '" << path << "' NOT FOUND";
+//    }
+}
+
+
+//--------------------------------------------------------------
+void PresetPalette::palette_save(string p)
+{
+//    ofLogNotice("PresetPalette") << "palette_save: " << p;
+//
+//    string path = path_palettes + p + ".json";
+//
+//    data.name = "myPalette";
+//    ofLogNotice("PresetPalette") << "palette name: " << data.name;
+//
+//    data.palette.resize(palette.size());
+//    for (int i = 0; i< palette.size(); i++)
+//    {
+//        data.palette[i] = palette[i];
+//        ofLogNotice("PresetPalette") << "color_picked" << i << " " << ofToString(data.palette[i]);
+//    }
+//
+//    ofFile file(path, ofFile::WriteOnly);
+//    jsonout jo(file);
+//    jo << data;
+}
+

@@ -16,6 +16,16 @@ ofxColorManager::~ofxColorManager()
 //--------------------------------------------------------------
 void ofxColorManager::setup()
 {
+    ofDirectory dataDirectory(ofToDataPath("assets/presetsCLASS", true));
+
+    files = dataDirectory.getFiles();
+    for(size_t i=0; i<files.size(); i++)
+    {
+        fileNames.push_back(files[i].getFileName());
+    }
+
+    //--
+
 //    myPresetPalette.setup();
     myPresetManager.setup();
 
@@ -457,58 +467,58 @@ void ofxColorManager::gui_setup_layout()
     colorBrowserPos = glm::vec2(270, 675);
 }
 
-
-//--------------------------------------------------------------
-void ofxColorManager::palette_load(string p)
-{
-    ofLogNotice("ofxColorManager") << "palette_load: " << p;
-
-    string path = path_palettes + p + ".json";
-    ofFile file(path);
-    if (file.exists())
-    {
-        jsonin ji(file);
-        ji >> data;
-
-        ofLogNotice("ofxColorManager") << "palette name: " << data.name;
-        palette_clear();
-        ofColor c;
-        for (int i = 0; i< data.palette.size(); i++)
-        {
-            c = data.palette[i];
-            ofLogNotice("ofxColorManager") << "color_picked" << i << ": " << ofToString(c);
-            palette_addColor(c);
-        }
-    }
-    else
-    {
-        ofLogNotice("ofxColorManager") << "FILE '" << path << "' NOT FOUND";
-    }
-}
-
-
-//--------------------------------------------------------------
-void ofxColorManager::palette_save(string p)
-{
-    ofLogNotice("ofxColorManager") << "palette_save: " << p;
-
-    string path = path_palettes + p + ".json";
-
-    data.name = "myPalette";
-    ofLogNotice("ofxColorManager") << "palette name: " << data.name;
-
-    data.palette.resize(palette.size());
-    for (int i = 0; i< palette.size(); i++)
-    {
-        data.palette[i] = palette[i];
-        ofLogNotice("ofxColorManager") << "color_picked" << i << " " << ofToString(data.palette[i]);
-    }
-
-    ofFile file(path, ofFile::WriteOnly);
-    jsonout jo(file);
-    jo << data;
-}
-
+//
+////--------------------------------------------------------------
+//void ofxColorManager::palette_load(string p)
+//{
+//    ofLogNotice("ofxColorManager") << "palette_load: " << p;
+//
+//    string path = path_palettes + p + ".json";
+//    ofFile file(path);
+//    if (file.exists())
+//    {
+//        jsonin ji(file);
+//        ji >> data;
+//
+//        ofLogNotice("ofxColorManager") << "palette name: " << data.name;
+//        palette_clear();
+//        ofColor c;
+//        for (int i = 0; i< data.palette.size(); i++)
+//        {
+//            c = data.palette[i];
+//            ofLogNotice("ofxColorManager") << "color_picked" << i << ": " << ofToString(c);
+//            palette_addColor(c);
+//        }
+//    }
+//    else
+//    {
+//        ofLogNotice("ofxColorManager") << "FILE '" << path << "' NOT FOUND";
+//    }
+//}
+//
+//
+////--------------------------------------------------------------
+//void ofxColorManager::palette_save(string p)
+//{
+//    ofLogNotice("ofxColorManager") << "palette_save: " << p;
+//
+//    string path = path_palettes + p + ".json";
+//
+//    data.name = "myPalette";
+//    ofLogNotice("ofxColorManager") << "palette name: " << data.name;
+//
+//    data.palette.resize(palette.size());
+//    for (int i = 0; i< palette.size(); i++)
+//    {
+//        data.palette[i] = palette[i];
+//        ofLogNotice("ofxColorManager") << "color_picked" << i << " " << ofToString(data.palette[i]);
+//    }
+//
+//    ofFile file(path, ofFile::WriteOnly);
+//    jsonout jo(file);
+//    jo << data;
+//}
+//
 
 
 //--------------------------------------------------------------
@@ -735,7 +745,28 @@ void ofxColorManager::gui_imGui_window1(){
     COLOR_PICKER_Settings.windowSize = ofVec2f(guiWidth, 200);
     //    COLOR_PICKER_Settings.lockPosition = true;
 
-    if (ofxImGui::BeginWindow("COLOR PICKER", COLOR_PICKER_Settings, false))
+//    static bool no_titlebar = false;
+//    static bool no_scrollbar = false;
+//    static bool no_menu = false;
+//    static bool no_move = false;
+//    static bool no_resize = false;
+//    static bool no_collapse = false;
+//    static bool no_close = false;
+//    static bool no_nav = false;
+//    ImGuiWindowFlags window_flags = 0;
+////    if (no_titlebar)  window_flags |= ImGuiWindowFlags_NoTitleBar;
+////    if (no_scrollbar) window_flags |= ImGuiWindowFlags_NoScrollbar;
+////    if (!no_menu)     window_flags |= ImGuiWindowFlags_MenuBar;
+////    if (no_move)      window_flags |= ImGuiWindowFlags_NoMove;
+////    if (no_resize)    window_flags |= ImGuiWindowFlags_NoResize;
+//    if (no_collapse)  window_flags |= ImGuiWindowFlags_NoCollapse;
+////    if (no_nav)       window_flags |= ImGuiWindowFlags_NoNav;
+////    if (no_close)     p_open = NULL; // Don't pass our bool* to Begin
+
+
+
+//    if (ofxImGui::BeginWindow("COLOR PICKER", COLOR_PICKER_Settings, window_flags))
+    if (ofxImGui::BeginWindow("COLOR PICKER", COLOR_PICKER_Settings, true))
     {
         //--
 
@@ -1140,16 +1171,166 @@ void ofxColorManager::gui_imGui_window2()
     ofxImGui::EndWindow(COLOR_MANAGER_Settings);
 }
 
+static void ShowExampleMenuFile()
+{
+    ImGui::MenuItem("(dummy menu)", NULL, false, false);
+    if (ImGui::MenuItem("New")) {}
+    if (ImGui::MenuItem("Open", "Ctrl+O")) {}
+    if (ImGui::BeginMenu("Open Recent"))
+    {
+        ImGui::MenuItem("fish_hat.c");
+        ImGui::MenuItem("fish_hat.inl");
+        ImGui::MenuItem("fish_hat.h");
+        if (ImGui::BeginMenu("More.."))
+        {
+            ImGui::MenuItem("Hello");
+            ImGui::MenuItem("Sailor");
+            if (ImGui::BeginMenu("Recurse.."))
+            {
+                ShowExampleMenuFile();
+                ImGui::EndMenu();
+            }
+            ImGui::EndMenu();
+        }
+        ImGui::EndMenu();
+    }
+    if (ImGui::MenuItem("Save", "Ctrl+S")) {}
+    if (ImGui::MenuItem("Save As..")) {}
+    ImGui::Separator();
+    if (ImGui::BeginMenu("Options"))
+    {
+        static bool enabled = true;
+        ImGui::MenuItem("Enabled", "", &enabled);
+        ImGui::BeginChild("child", ImVec2(0, 60), true);
+        for (int i = 0; i < 10; i++)
+            ImGui::Text("Scrolling Text %d", i);
+        ImGui::EndChild();
+        static float f = 0.5f;
+        static int n = 0;
+        static bool b = true;
+        ImGui::SliderFloat("Value", &f, 0.0f, 1.0f);
+        ImGui::InputFloat("Input", &f, 0.1f);
+        ImGui::Combo("Combo", &n, "Yes\0No\0Maybe\0\0");
+        ImGui::Checkbox("Check", &b);
+        ImGui::EndMenu();
+    }
+    if (ImGui::BeginMenu("Colors"))
+    {
+        float sz = ImGui::GetTextLineHeight();
+        for (int i = 0; i < ImGuiCol_COUNT; i++)
+        {
+            const char* name = ImGui::GetStyleColorName((ImGuiCol)i);
+            ImVec2 p = ImGui::GetCursorScreenPos();
+            ImGui::GetWindowDrawList()->AddRectFilled(p, ImVec2(p.x+sz, p.y+sz), ImGui::GetColorU32((ImGuiCol)i));
+            ImGui::Dummy(ImVec2(sz, sz));
+            ImGui::SameLine();
+            ImGui::MenuItem(name);
+        }
+        ImGui::EndMenu();
+    }
+    if (ImGui::BeginMenu("Disabled", false)) // Disabled
+    {
+        IM_ASSERT(0);
+    }
+    if (ImGui::MenuItem("Checked", NULL, true)) {}
+    if (ImGui::MenuItem("Quit", "Alt+F4")) {}
+}
 
 //--------------------------------------------------------------
 void ofxColorManager::gui_imGui_window3()
 {
+
     auto MANAGER_Set = ofxImGui::Settings();
     MANAGER_Set.windowPos = ofVec2f(gui3_x, gui3_y);
     MANAGER_Set.windowSize = ofVec2f(gui3_w, gui3_h);
 
     if (ofxImGui::BeginWindow("PRESET MANAGER", MANAGER_Set, false))
     {
+
+        // Color buttons, demonstrate using PushID() to add unique identifier in the ID stack, and changing style.
+        for (int i = 0; i < 7; i++)
+        {
+            if (i > 0) ImGui::SameLine();
+            ImGui::PushID(i);
+            ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(i/7.0f, 0.6f, 0.6f));
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(i/7.0f, 0.7f, 0.7f));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(i/7.0f, 0.8f, 0.8f));
+            ImGui::Button("Click");
+            ImGui::PopStyleColor(3);
+            ImGui::PopID();
+        }
+
+        // Arrow buttons
+        static int counter = 0;
+        float spacing = ImGui::GetStyle().ItemInnerSpacing.x;
+        ImGui::PushButtonRepeat(true);
+        if (ImGui::ArrowButton("##left", ImGuiDir_Left)) { counter--; }
+        ImGui::SameLine(0.0f, spacing);
+        if (ImGui::ArrowButton("##right", ImGuiDir_Right)) { counter++; }
+        ImGui::PopButtonRepeat();
+        ImGui::SameLine();
+        ImGui::Text("%d", counter);
+
+//        if (ImGui::BeginMainMenuBar())
+//        {
+//            if (ImGui::BeginMenu("File"))
+//            {
+////                ShowExampleMenuFile();
+////                ImGui::EndMenu();
+//            }
+
+            ImGui::Text("Hello, world!");
+        static char str0[128] = "Hello, world!";
+        static int i0 = 123;
+        ImGui::InputText("input text", str0, IM_ARRAYSIZE(str0));
+//        ImGui::SameLine(); ShowHelpMarker("USER:\nHold SHIFT or use mouse to select text.\n" "CTRL+Left/Right to word jump.\n" "CTRL+A or double-click to select all.\n" "CTRL+X,CTRL+C,CTRL+V clipboard.\n" "CTRL+Z,CTRL+Y undo/redo.\n" "ESCAPE to revert.\n\nPROGRAMMER:\nYou can use the ImGuiInputTextFlags_CallbackResize facility if you need to wire InputText() to a dynamic string type. See misc/stl/imgui_stl.h for an example (this is not demonstrated in imgui_demo.cpp).");
+
+        ImGui::InputInt("input int", &i0);
+//        ImGui::SameLine(); ShowHelpMarker("You can apply arithmetic operators +,*,/ on numerical values.\n  e.g. [ 100 ], input \'*2\', result becomes [ 200 ]\nUse +- to subtract.\n");
+
+        if(ImGui::Button("Demo Window"))
+            {
+            }
+            if (ImGui::Button("Another Window"))
+            {
+            }
+
+
+//            if (ImGui::BeginMenu("Edit"))
+//            {
+//                if (ImGui::MenuItem("Undo", "CTRL+Z")) {}
+//                if (ImGui::MenuItem("Redo", "CTRL+Y", false, false)) {}  // Disabled item
+//                ImGui::Separator();
+//                if (ImGui::MenuItem("Cut", "CTRL+X")) {}
+//                if (ImGui::MenuItem("Copy", "CTRL+C")) {}
+//                if (ImGui::MenuItem("Paste", "CTRL+V")) {}
+//                ImGui::EndMenu();
+//            }
+//            ImGui::EndMainMenuBar();
+//        }
+
+        //-
+
+        if(!fileNames.empty())
+        {
+
+            //ofxImGui::VectorListBox allows for the use of a vector<string> as a data source
+//            static int currentListBoxIndex = 0;
+//            if(ofxImGui::VectorListBox("VectorListBox", &currentListBoxIndex, fileNames))
+//            {
+//                ofLog() << " VectorListBox FILE PATH: "  << files[currentListBoxIndex].getAbsolutePath();
+//            }
+
+            //ofxImGui::VectorCombo allows for the use of a vector<string> as a data source
+            static int currentFileIndex = 0;
+            if(ofxImGui::VectorCombo("VectorCombo", &currentFileIndex, fileNames))
+            {
+                ofLog() << "VectorCombo FILE PATH: "  << files[currentFileIndex].getAbsolutePath();
+            }
+        }
+
+
+
         if (ofxImGui::BeginTree("PRESET", mainSettings))
         {
             ImGui::Checkbox("ENABLE TEST", &TEST_MODE);
@@ -3206,7 +3387,7 @@ void ofxColorManager::windowResized(int w, int h)
 void ofxColorManager::exit()
 {
 
-    palette_save("myPalette");
+//    palette_save("myPalette");
     save_group_XML(XML_params, XML_path);
 
     ColorBrowser.exit();

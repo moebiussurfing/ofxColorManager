@@ -366,13 +366,18 @@ public:
     CustomData data;//palette
     PresetData presetData;//bundle preset: palette+curve+gradient+background
 
-    void palette_save(string p);
-    void palette_load(string p);
+//    void palette_save(string p);
+//    void palette_load(string p);
     string path_palettes = "assets/palettes/";
 
     void preset_save(string p);
     void preset_load(string p);
     string preset_path = "assets/presets/";
+
+//    static void ShowExampleMenuFile();
+
+    std::vector<std::string> fileNames;
+    std::vector<ofFile> files;
 
     //--
 

@@ -85,6 +85,9 @@ public:
     void preset_load(string p);
 
     //--
+    void palette_save(string p);
+    void palette_load(string p);
+    string path_palettes = "assets/palettes/";
 
 };
 
