@@ -19,6 +19,7 @@
 #include "ofxGuiPanelsLayout.h"
 #include "ofxGui.h"
 #include "DEMO_palette.h"
+#include "PresetManager.h"
 
 //--
 
@@ -50,7 +51,9 @@ class ofxColorManager {
 
 public:
 
-    int paletteLibPage = 0;
+    PresetManager myPresetManager;
+
+
 
     //--
 
@@ -215,18 +218,26 @@ public:
 
     ofxImGui::Gui gui;
     bool gui_imGui();
+    void gui_imGui_window1();
+    void gui_imGui_window2();
+    void gui_imGui_window3();
     bool guiVisible;
     bool mouseOverGui;
     void gui_setup_layout();
     void gui_imGui_theme();
+    float widgetFactor = 0.9;
+    ofxImGui::Settings mainSettings = ofxImGui::Settings();
 
     //--
 
     // COLORS
 
-    ofParameter<ofFloatColor> color_backGround;
+    ofParameter<ofFloatColor> color_backGround;//main color
     ofParameter<bool> color_backGround_SET;
     ofParameter<bool> color_backGround_SETAUTO;
+//    ofParameter<float> backgroundDarkness{"DARKNESS", 0.5, 0., 1.};
+//    float backgroundDarkness_PRE;
+
     bool backgroundENABLE = false;
     void setBackground_ENABLE(bool b);
 
@@ -273,6 +284,12 @@ public:
     void palette_touched(string name);
     void palette_recallFromPalettes(int p);
     void palette_load_ColourLovers();
+
+    //-
+
+    // PALETTE LIBRARY
+
+    int paletteLibPage = 0;
 
     //-
 
@@ -376,6 +393,7 @@ private:
     int guiWidth;
     int gui_x, gui_y, gui_w, gui_h;
     int gui2_x, gui2_y, gui2_w, gui2_h;
+    int gui3_x, gui3_y, gui3_w, gui3_h;
     int box_size;
     int pad; //global mini pad
     int c_grad_x, c_grad_y, c_grad_w, c_grad_h;

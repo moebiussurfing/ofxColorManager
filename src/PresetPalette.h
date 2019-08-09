@@ -7,8 +7,6 @@
 
 #include "ofMain.h"
 
-//#include "ofxColourLoversHelper.h"
-#include "ofxImGui.h"
 #include "ofxColorGradient.h"
 #include "ofxCurvesTool.h"
 #include "ofxCereal.h"
@@ -35,22 +33,7 @@ class PresetPalette {
 
 public:
 
-    void setup();
-    void update();
-    void draw();
-
-    //--
-
-    // GUI
-
-    ofxImGui::Gui gui2;
-    bool gui_imGui();
-    bool guiVisible;
-    bool mouseOverGui;
-    void gui_setup_layout();
-    void gui_imGui_theme();
-
-    //--
+    //-
 
     string name;
     vector<ofColor> palette;
@@ -74,6 +57,7 @@ public:
     void setPalette(vector<ofColor> &palette);
 
     void setBackgroundColor(ofColor _background);
+
 //    void setBackgroundColor(ofColor &background);
 //    void setBackgroundColor(ofParameter<ofFloatColor> &background);
 
@@ -86,7 +70,7 @@ public:
 
     // JSON PALETTES SERIALIZER
 
-    // palette
+    // palette (only colors)
 
 //    CustomData data;//palette
 //    void palette_save(string p);
@@ -94,7 +78,7 @@ public:
 //    string path_palettes = "assets/palettes/";
 
 
-    // preset
+    // preset (colors, gradient, curve)
 
     PresetData_ presetData;//bundle preset: palette+curve+gradient+background
     void preset_save(string p);

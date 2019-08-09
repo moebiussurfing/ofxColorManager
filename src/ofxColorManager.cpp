@@ -16,7 +16,8 @@ ofxColorManager::~ofxColorManager()
 //--------------------------------------------------------------
 void ofxColorManager::setup()
 {
-    myPresetPalette.setup();
+//    myPresetPalette.setup();
+    myPresetManager.setup();
 
     //-
 
@@ -103,7 +104,7 @@ void ofxColorManager::setup()
     color_picked.set("COLOR", ofFloatColor::red);
     color_HUE.set("H", 0, 0, 255);
     color_SAT.set("S", 0, 0, 255);
-    color_BRG.set("V", 0, 0, 255);
+    color_BRG.set("B", 0, 0, 255);
 
     params_color.setName("COLOR");
     params_color.add(color_HUE);
@@ -186,6 +187,7 @@ void ofxColorManager::setup()
     params_control.add(bRemoveColor);
     params_control.add(bClearPalette);
 //    params_control.add(SHOW_PaletteCustom);
+//    params_control.add(color_backGround);
 
     //-
 
@@ -213,6 +215,7 @@ void ofxColorManager::setup()
 
     params_control.add(color_backGround_SET);
     params_control.add(color_backGround_SETAUTO);
+//    params_control.add(backgroundDarkness);
 
     //-
 
@@ -369,17 +372,23 @@ void ofxColorManager::gui_setup_layout()
     guiWidth = 250;
     box_size = 40;
 
-    // gui 1 ImGui
+    // gui 1 ImGui COLOR PANEL
     gui_x = 0;
     gui_y = 0;
     gui_w = guiWidth;
     gui_h = 200;
 
-    // gui 2 ImGui
+    // gui 2 ImGui USER PANEL
     gui2_x = guiWidth-3;
     gui2_y = 0;
     gui2_w = guiWidth;
     gui2_h = 100;
+
+    // gui 3 ImGui PRESET MANAGER
+    gui3_x = 700;
+    gui3_y = 300;
+    gui3_w = guiWidth;
+    gui3_h = 200;
 
     //-
 
@@ -715,19 +724,9 @@ void ofxColorManager::interface_draw(){
     }
 }
 
-
 //--------------------------------------------------------------
-bool ofxColorManager::gui_imGui()
-{
-
-    float widgetFactor = 0.9;
-
-    auto mainSettings = ofxImGui::Settings();
-    this->gui.begin();
-
-    //-
-
-    // 1ST WINDOW
+void ofxColorManager::gui_imGui_window1(){
+//    mainSettings = ofxImGui::Settings();
 
     // COLOR PICKER CUSTOM
 
@@ -923,101 +922,101 @@ bool ofxColorManager::gui_imGui()
 //            palette_Settings.windowSize = ofVec2f(gui2_w, 300);
 //            if (ofxImGui::BeginWindow("PALETTE LIBRARY", palette_Settings, false)) {
 //            if (ofxImGui::BeginTree("PALETTE LIBRARY", mainSettings))//grouped folder
-            if (ImGui::CollapsingHeader("PALETTE LIBRARY"))
-            {
-                //--
+        if (ImGui::CollapsingHeader("PALETTE LIBRARY"))
+        {
+            //--
 
-                // GET COLOR FROM OUTSIDE COLOR PICKED
+            // GET COLOR FROM OUTSIDE COLOR PICKED
 
-                // TEST
-                LISTEN_isEnabled = false;//maybe required because get() causes callbacks too (?)
+            // TEST
+            LISTEN_isEnabled = false;//maybe required because get() causes callbacks too (?)
 
-                // TEST
-                static ImVec4 color;
-                color.x = color_picked.get().r;
-                color.y = color_picked.get().g;
-                color.z = color_picked.get().b;
-                color.w = color_picked.get().a;
+            // TEST
+            static ImVec4 color;
+            color.x = color_picked.get().r;
+            color.y = color_picked.get().g;
+            color.z = color_picked.get().b;
+            color.w = color_picked.get().a;
 
-                // TEST
-                LISTEN_isEnabled = true;
+            // TEST
+            LISTEN_isEnabled = true;
 
-                //--
+            //--
 
-                // 2 load/create palete from colorBrowser
+            // 2 load/create palete from colorBrowser
 
-                static bool saved_palette_inited = false;
-                //const int PaletteSIZE = ColorBrowser_palette.size();//error
+            static bool saved_palette_inited = false;
+            //const int PaletteSIZE = ColorBrowser_palette.size();//error
 
-                //static ImVec4 saved_palette[130];//same than openColor palettes
-                static ImVec4 saved_palette[2310];//same than Pantone palette
+            //static ImVec4 saved_palette[130];//same than openColor palettes
+            static ImVec4 saved_palette[2310];//same than Pantone palette
 
-                if (!saved_palette_inited)
-                    for (int n = 0; n < IM_ARRAYSIZE(saved_palette); n++) {
-                        ofFloatColor c = ofColor(ColorBrowser_palette[n]);
-                        saved_palette[n].x = c.r;
-                        saved_palette[n].y = c.g;
-                        saved_palette[n].z = c.b;
-                        saved_palette[n].w = 1.0f;//alpha
-                    }
-                saved_palette_inited = true;
+            if (!saved_palette_inited)
+                for (int n = 0; n < IM_ARRAYSIZE(saved_palette); n++) {
+                    ofFloatColor c = ofColor(ColorBrowser_palette[n]);
+                    saved_palette[n].x = c.r;
+                    saved_palette[n].y = c.g;
+                    saved_palette[n].z = c.b;
+                    saved_palette[n].w = 1.0f;//alpha
+                }
+            saved_palette_inited = true;
 
-                //-
+            //-
 
-                // layout by pages groups
+            // layout by pages groups
 
-                int palSize = IM_ARRAYSIZE(saved_palette);
-                int rowSizePal = 7;//7 colors per row Pantone lib
-                int numLines = 10;//rows per page
-                int numColorsPage = numLines * rowSizePal;//70
-                int startColorInPal = paletteLibPage * numColorsPage;
-                int endColorInPal = startColorInPal + numColorsPage;
-                int lastColor = 2310;//pantone
-                int maxPages = lastColor / numColorsPage - 1;
+            int palSize = IM_ARRAYSIZE(saved_palette);
+            int rowSizePal = 7;//7 colors per row Pantone lib
+            int numLines = 10;//rows per page
+            int numColorsPage = numLines * rowSizePal;//70
+            int startColorInPal = paletteLibPage * numColorsPage;
+            int endColorInPal = startColorInPal + numColorsPage;
+            int lastColor = 2310;//pantone
+            int maxPages = lastColor / numColorsPage - 1;
 
-                ImGui::Text("PANTONE COLORS");
-                ImGui::PushItemWidth(guiWidth * 0.5);
-                ImGui::SliderInt("PAGE", &paletteLibPage, 0, maxPages);
-                ImGui::PopItemWidth();
+            ImGui::Text("PANTONE COLORS");
+            ImGui::PushItemWidth(guiWidth * 0.5);
+            ImGui::SliderInt("PAGE", &paletteLibPage, 0, maxPages);
+            ImGui::PopItemWidth();
 
-                //-
+            //-
 
-                // 2.2 draw palette
+            // 2.2 draw palette
 
 //                if (ofxImGui::BeginTree("COLORS", mainSettings)) {
 //            if (ImGui::CollapsingHeader("PALETTE")) {
 
-                    for (int n = startColorInPal; n < endColorInPal; n++)
-                        //for (int n = 0; n < palSize; n++) {
+            for (int n = startColorInPal; n < endColorInPal; n++)
+                //for (int n = 0; n < palSize; n++) {
+            {
+                if (n<lastColor) //to avoid empty colors at page end...
+                {
+                    // ImGui::PushItemWidth(guiWidth * 0.2);
+                    ImGui::PushID(n);
+
+                    // pantone
+                    if ((n%rowSizePal) != 0)
                     {
-                        if (n<lastColor) //to avoid empty colors at page end...
-                        {
-                            // ImGui::PushItemWidth(guiWidth * 0.2);
-                            ImGui::PushID(n);
-
-                            // pantone
-                            if ((n%rowSizePal) != 0)
-                            {
-                                ImGui::SameLine(0.0f, ImGui::GetStyle().ItemSpacing.y);
-                            }
-
-                            if (ImGui::ColorButton("##palette", saved_palette[n],
-                                    ImGuiColorEditFlags_NoAlpha | ImGuiColorEditFlags_NoPicker | ImGuiColorEditFlags_NoTooltip,
-                                    ImVec2(20, 20)))
-                            {
-                                color = ImVec4(saved_palette[n].x, saved_palette[n].y, saved_palette[n].z, color.w); // Preserve alpha!
-
-                                ofLogNotice("ofxColorManager") << "ImGui: PALETTE PICKED !" << endl;
-                                color_picked = color;
-                            }
-
-                            //ImGui::PopItemWidth();
-                            ImGui::PopID();
-                        }
+                        ImGui::SameLine(0.0f, ImGui::GetStyle().ItemSpacing.y);
                     }
 
-//                    ofxImGui::EndTree(mainSettings);
+                    if (ImGui::ColorButton("##palette", saved_palette[n],
+                            ImGuiColorEditFlags_NoAlpha | ImGuiColorEditFlags_NoPicker | ImGuiColorEditFlags_NoTooltip,
+                            ImVec2(20, 20)))
+                    {
+                        color = ImVec4(saved_palette[n].x, saved_palette[n].y, saved_palette[n].z, color.w); // Preserve alpha!
+
+                        ofLogNotice("ofxColorManager") << "ImGui: PALETTE PICKED !" << endl;
+                        color_picked = color;
+                    }
+
+                    //ImGui::PopItemWidth();
+                    ImGui::PopID();
                 }
+            }
+
+//                    ofxImGui::EndTree(mainSettings);
+        }
 
 //                ofxImGui::EndTree(mainSettings);
 //
@@ -1026,10 +1025,13 @@ bool ofxColorManager::gui_imGui()
 //        }
     }
     ofxImGui::EndWindow(COLOR_PICKER_Settings);
+}
 
-    //-------------------------------------------------------------------
 
-    // 2ND WINDOW
+//--------------------------------------------------------------
+void ofxColorManager::gui_imGui_window2()
+{
+//    mainSettings = ofxImGui::Settings();
 
     auto COLOR_MANAGER_Settings = ofxImGui::Settings();
     COLOR_MANAGER_Settings.windowPos = ofVec2f(gui2_x, gui2_y);
@@ -1042,7 +1044,7 @@ bool ofxColorManager::gui_imGui()
         if (ofxImGui::BeginTree("BACKGROUND", mainSettings))
         {
             //--TEST. can't do with pointers to ofParameter...
-            ImGui::PushItemWidth(80);
+            ImGui::PushItemWidth(120);
             static ImVec4 color;
             color.x = color_backGround.get().r;
             color.y = color_backGround.get().g;
@@ -1055,7 +1057,7 @@ bool ofxColorManager::gui_imGui()
                             ImGuiColorEditFlags_NoTooltip |
                             ImGuiColorEditFlags_NoLabel |
                             ImGuiColorEditFlags_NoSidePreview |
-                            ImGuiColorEditFlags_NoInputs |
+//                            ImGuiColorEditFlags_NoInputs |
                             ImGuiColorEditFlags_NoAlpha |
                             ImGuiColorEditFlags_PickerHueBar;
 
@@ -1066,7 +1068,8 @@ bool ofxColorManager::gui_imGui()
 
             //-
 
-            ImGui::PushItemWidth(guiWidth * 0.5);
+            ImGui::PushItemWidth(guiWidth * 0.3);
+//            ofxImGui::AddParameter(this->backgroundDarkness);
             ofxImGui::AddParameter(this->color_backGround_SET);
             ofxImGui::AddParameter(this->color_backGround_SETAUTO);
             ofxImGui::EndTree(mainSettings);
@@ -1135,25 +1138,57 @@ bool ofxColorManager::gui_imGui()
         }
     }
     ofxImGui::EndWindow(COLOR_MANAGER_Settings);
+}
+
+
+//--------------------------------------------------------------
+void ofxColorManager::gui_imGui_window3()
+{
+    auto MANAGER_Set = ofxImGui::Settings();
+    MANAGER_Set.windowPos = ofVec2f(gui3_x, gui3_y);
+    MANAGER_Set.windowSize = ofVec2f(gui3_w, gui3_h);
+
+    if (ofxImGui::BeginWindow("PRESET MANAGER", MANAGER_Set, false))
+    {
+        if (ofxImGui::BeginTree("PRESET", mainSettings))
+        {
+            ImGui::Checkbox("ENABLE TEST", &TEST_MODE);
+            ImGui::Checkbox("CYCLE", &TEST_CycleMODE);
+            ImGui::Checkbox("TO BACKGROUND", &TEST_toBackground);
+            ImGui::SliderFloat("SPEED", &TEST_Speed, 0.0f, 1.0f);
+            ofxImGui::EndTree(mainSettings);
+        }
+
+    }
+    ofxImGui::EndWindow(MANAGER_Set);
+}
+
+
+//--------------------------------------------------------------
+bool ofxColorManager::gui_imGui()
+{
+    mainSettings = ofxImGui::Settings();
+
+    this->gui.begin();
 
     //-
 
+    // 1ST WINDOW
+    gui_imGui_window1();
+
+    //-
+
+    // 2ND WINDOW
+    gui_imGui_window2();
+
+    //-
+
+    // 3. PRESET MANAGER
+    gui_imGui_window3();
+
+    //-
     this->gui.end();
     return mainSettings.mouseOverGui;
-
-    //-
-
-    // NOTE:
-    // I wrongly supposed that the begin() and end() methods of OfxImGui were related with ImGui::Begin
-    // and ImGui::End methods which is not the case…
-    // The right calling sequence is
-    // im_gui.begin();
-    // Addon begin ImGui::SetNextWindowPos(ImVec2(0,0));
-    // ImGui::SetNextWindowSize(ImVec2(1200,800),
-    // ImGuiSetCond_Once);
-    // ImGui::Begin("Funky Window"); /* Here your ImGui stuff
-    // */ ImGui::End();
-    // im_gui.end(); // Addon end
 }
 
 
@@ -1198,7 +1233,8 @@ void ofxColorManager::update()
 {
     ofSetWindowTitle(ofToString((int)ofGetFrameRate()));
 
-    myPresetPalette.update();
+//    myPresetPalette.update();
+    myPresetManager.update();
 
     //--
 
@@ -2057,8 +2093,8 @@ void ofxColorManager::draw()
     }
 
 
-    myPresetPalette.draw();
-
+//    myPresetPalette.draw();
+    myPresetManager.draw();
 
     //--
 
@@ -2326,7 +2362,7 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
 
     // TODO: should reduce callbacks in output..
     //    if (name != "INPUT" && name != "OUTPUT" &&
-    //            name!="H" && name!="S" && name!="V")
+    //            name!="H" && name!="S" && name!="B")
 
     if (name!="INPUT" && name!="OUTPUT")
     {
@@ -2361,7 +2397,7 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
     // TEST
     if (LISTEN_isEnabled == true)
     {
-        if (name=="H" && name=="S" && name=="V")
+        if (name=="H" && name=="S" && name=="B")
         {
             ofLogNotice("ofxColorManager") << "Changed_CONTROL:LISTEN_isEnabled: " << name << ":" << e;
         }
@@ -2378,7 +2414,7 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
             c.setSaturation(color_SAT);
             color_picked.set(c);
         }
-        else if (name == "V") {
+        else if (name == "B") {
             ofColor c;
             c.set(color_picked.get());
             c.setBrightness(color_BRG);
@@ -2484,14 +2520,35 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
         //-
 
         // BACKGROUND
-    else if (name == "SET FROM COLOR") {
+
+    else if (name == "SET FROM COLOR")
+    {
         if (color_backGround_SET) {
             color_backGround_SET = false;
             color_backGround.set(ofColor(color_picked.get()));
         }
-    } else if (name == "AUTO SET") {
+    }
+    else if (name == "AUTO SET")
+    {
 
     }
+    else if (name == "BACKGROUND")
+    {
+//        if (color_backGround.get().getBrightness()!=backgroundDarkness_PRE)
+//            backgroundDarkness = color_backGround.get().getBrightness();
+//
+////        if (backgroundDarkness_PRE!=backgroundDarkness)
+////            backgroundDarkness = (int)darkness;
+    }
+//    else if (name == "DARKNESS") {
+////        cout << "DARKNESS: " << backgroundDarkness << endl;
+//        ofColor c;
+//        c.set(color_backGround.get());
+//        c.setBrightness(255*backgroundDarkness);
+//        color_backGround = c;
+//
+//        backgroundDarkness_PRE = backgroundDarkness;
+//    }
 }
 
 
