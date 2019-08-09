@@ -21,7 +21,7 @@ public:
         pauseCreate = false;
     }
 
-    void setPause(){
+    void start(){
         pauseCreate = false;
     }
 

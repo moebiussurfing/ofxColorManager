@@ -265,6 +265,7 @@ void ofxColorManager::setup()
     // CONTROL WINDOWS
 
     SHOW_ColourLovers.set("SHOW COLOUR LOVERS", true);
+    SHOW_ColourLovers_searcher.set("SHOW COLOUR LOVERS SEARCHER", true);
     SHOW_AlgoPalettes.set("SHOW PALETTES", true);
     SHOW_BrowserColors.set("SHOW BROWSER COLORS", true);
     SHOW_Gradient.set("SHOW GRADIENT", true);
@@ -275,6 +276,7 @@ void ofxColorManager::setup()
     SHOW_ColorPicker.set("SHOW COLOR PICKER", true);
     SHOW_PanelsManager.set("SHOW PANELS MANAGER", true);
 
+    params_control.add(SHOW_ColourLovers_searcher);
     params_control.add(SHOW_ColourLovers);
     params_control.add(SHOW_AlgoPalettes);
     params_control.add(SHOW_BrowserColors);
@@ -348,6 +350,7 @@ void ofxColorManager::setup()
     XML_params.add(SHOW_ColorPicker);
     XML_params.add(SHOW_PanelsManager);
 
+    XML_params.add(SHOW_ColourLovers_searcher);
     XML_params.add(SHOW_ColourLovers);
     XML_params.add(SHOW_AlgoPalettes);
     XML_params.add(SHOW_Gradient);
@@ -417,6 +420,7 @@ void ofxColorManager::setup()
     p_TOGGLES.add(SHOW_ColorManager);
     p_TOGGLES.add(SHOW_ColorPicker);
     p_TOGGLES.add(SHOW_PanelsManager);
+    p_TOGGLES.add(SHOW_ColourLovers_searcher);
 
     //-
 
@@ -437,6 +441,7 @@ void ofxColorManager::setup()
     panels.addToggle(&SHOW_ColorManager);
     panels.addToggle(&SHOW_ColorPicker);
     panels.addToggle(&SHOW_PanelsManager);
+    panels.addToggle(&SHOW_ColourLovers_searcher);
 
     //call after add the panels
     panels.setup();
@@ -1149,6 +1154,8 @@ void ofxColorManager::gui_imGui_window1(){
 //--------------------------------------------------------------
 void ofxColorManager::gui_imGui_window4()
 {
+    // 4. PANELS MANAGER
+
     auto panelsSet = ofxImGui::Settings();
     panelsSet.windowPos = ofVec2f(gui4_x, gui4_y);
     panelsSet.windowSize = ofVec2f(gui4_w, gui4_h);
@@ -1161,6 +1168,7 @@ void ofxColorManager::gui_imGui_window4()
         ofxImGui::AddParameter(this->SHOW_Curve);
         ofxImGui::AddParameter(this->SHOW_TEST_Curve);
         ofxImGui::AddParameter(this->SHOW_ColourLovers);
+        ofxImGui::AddParameter(this->SHOW_ColourLovers_searcher);
         ofxImGui::AddParameter(this->SHOW_AlgoPalettes);
         ofxImGui::AddParameter(this->SHOW_BrowserColors);
 //            ofxImGui::EndTree(panelsSet);
@@ -1172,6 +1180,8 @@ void ofxColorManager::gui_imGui_window4()
 //--------------------------------------------------------------
 void ofxColorManager::gui_imGui_window2()
 {
+    // 2. COLOR MANAGER
+
     //    mainSettings = ofxImGui::Settings();
 
     auto COLOR_MANAGER_Settings = ofxImGui::Settings();
@@ -1273,108 +1283,101 @@ void ofxColorManager::gui_imGui_window2()
     ofxImGui::EndWindow(COLOR_MANAGER_Settings);
 }
 
-static void ShowExampleMenuFile()
-{
-    ImGui::MenuItem("(dummy menu)", NULL, false, false);
-    if (ImGui::MenuItem("New")) {}
-    if (ImGui::MenuItem("Open", "Ctrl+O")) {}
-    if (ImGui::BeginMenu("Open Recent"))
-    {
-        ImGui::MenuItem("fish_hat.c");
-        ImGui::MenuItem("fish_hat.inl");
-        ImGui::MenuItem("fish_hat.h");
-        if (ImGui::BeginMenu("More.."))
-        {
-            ImGui::MenuItem("Hello");
-            ImGui::MenuItem("Sailor");
-            if (ImGui::BeginMenu("Recurse.."))
-            {
-                ShowExampleMenuFile();
-                ImGui::EndMenu();
-            }
-            ImGui::EndMenu();
-        }
-        ImGui::EndMenu();
-    }
-    if (ImGui::MenuItem("Save", "Ctrl+S")) {}
-    if (ImGui::MenuItem("Save As..")) {}
-    ImGui::Separator();
-    if (ImGui::BeginMenu("Options"))
-    {
-        static bool enabled = true;
-        ImGui::MenuItem("Enabled", "", &enabled);
-        ImGui::BeginChild("child", ImVec2(0, 60), true);
-        for (int i = 0; i < 10; i++)
-            ImGui::Text("Scrolling Text %d", i);
-        ImGui::EndChild();
-        static float f = 0.5f;
-        static int n = 0;
-        static bool b = true;
-        ImGui::SliderFloat("Value", &f, 0.0f, 1.0f);
-        ImGui::InputFloat("Input", &f, 0.1f);
-        ImGui::Combo("Combo", &n, "Yes\0No\0Maybe\0\0");
-        ImGui::Checkbox("Check", &b);
-        ImGui::EndMenu();
-    }
-    if (ImGui::BeginMenu("Colors"))
-    {
-        float sz = ImGui::GetTextLineHeight();
-        for (int i = 0; i < ImGuiCol_COUNT; i++)
-        {
-            const char* name = ImGui::GetStyleColorName((ImGuiCol)i);
-            ImVec2 p = ImGui::GetCursorScreenPos();
-            ImGui::GetWindowDrawList()->AddRectFilled(p, ImVec2(p.x+sz, p.y+sz), ImGui::GetColorU32((ImGuiCol)i));
-            ImGui::Dummy(ImVec2(sz, sz));
-            ImGui::SameLine();
-            ImGui::MenuItem(name);
-        }
-        ImGui::EndMenu();
-    }
-    if (ImGui::BeginMenu("Disabled", false)) // Disabled
-    {
-        IM_ASSERT(0);
-    }
-    if (ImGui::MenuItem("Checked", NULL, true)) {}
-    if (ImGui::MenuItem("Quit", "Alt+F4")) {}
-}
+//static void ShowExampleMenuFile()
+//{
+//    ImGui::MenuItem("(dummy menu)", NULL, false, false);
+//    if (ImGui::MenuItem("New")) {}
+//    if (ImGui::MenuItem("Open", "Ctrl+O")) {}
+//    if (ImGui::BeginMenu("Open Recent"))
+//    {
+//        ImGui::MenuItem("fish_hat.c");
+//        ImGui::MenuItem("fish_hat.inl");
+//        ImGui::MenuItem("fish_hat.h");
+//        if (ImGui::BeginMenu("More.."))
+//        {
+//            ImGui::MenuItem("Hello");
+//            ImGui::MenuItem("Sailor");
+//            if (ImGui::BeginMenu("Recurse.."))
+//            {
+//                ShowExampleMenuFile();
+//                ImGui::EndMenu();
+//            }
+//            ImGui::EndMenu();
+//        }
+//        ImGui::EndMenu();
+//    }
+//    if (ImGui::MenuItem("Save", "Ctrl+S")) {}
+//    if (ImGui::MenuItem("Save As..")) {}
+//    ImGui::Separator();
+//    if (ImGui::BeginMenu("Options"))
+//    {
+//        static bool enabled = true;
+//        ImGui::MenuItem("Enabled", "", &enabled);
+//        ImGui::BeginChild("child", ImVec2(0, 60), true);
+//        for (int i = 0; i < 10; i++)
+//            ImGui::Text("Scrolling Text %d", i);
+//        ImGui::EndChild();
+//        static float f = 0.5f;
+//        static int n = 0;
+//        static bool b = true;
+//        ImGui::SliderFloat("Value", &f, 0.0f, 1.0f);
+//        ImGui::InputFloat("Input", &f, 0.1f);
+//        ImGui::Combo("Combo", &n, "Yes\0No\0Maybe\0\0");
+//        ImGui::Checkbox("Check", &b);
+//        ImGui::EndMenu();
+//    }
+//    if (ImGui::BeginMenu("Colors"))
+//    {
+//        float sz = ImGui::GetTextLineHeight();
+//        for (int i = 0; i < ImGuiCol_COUNT; i++)
+//        {
+//            const char* name = ImGui::GetStyleColorName((ImGuiCol)i);
+//            ImVec2 p = ImGui::GetCursorScreenPos();
+//            ImGui::GetWindowDrawList()->AddRectFilled(p, ImVec2(p.x+sz, p.y+sz), ImGui::GetColorU32((ImGuiCol)i));
+//            ImGui::Dummy(ImVec2(sz, sz));
+//            ImGui::SameLine();
+//            ImGui::MenuItem(name);
+//        }
+//        ImGui::EndMenu();
+//    }
+//    if (ImGui::BeginMenu("Disabled", false)) // Disabled
+//    {
+//        IM_ASSERT(0);
+//    }
+//    if (ImGui::MenuItem("Checked", NULL, true)) {}
+//    if (ImGui::MenuItem("Quit", "Alt+F4")) {}
+//}
 
 //--------------------------------------------------------------
 void ofxColorManager::gui_imGui_window3()
 {
+    // 3. PRESET MANAGER
+
     auto MANAGER_Set = ofxImGui::Settings();
     MANAGER_Set.windowPos = ofVec2f(gui3_x, gui3_y);
     MANAGER_Set.windowSize = ofVec2f(gui3_w, gui3_h);
 
     if (ofxImGui::BeginWindow("PRESET MANAGER", MANAGER_Set, false))
     {
-        ImGui::Text("USER PALETTES");
+        ImGui::Text("USER PALETTE");
 
-        //        ImGui::Text("PRESET_name:");
-        //        ImGui::SameLine();
-        //        ImGui::Text(PRESET_name);
-
-        //        char tab2[128];
-        //        strcpy(tab2, PRESET_name.c_str());
-        //        ImGui::Text("PRESET_name", tab2);
-
+        // load string into char array
         string temp = PRESET_name;
-        char tab2[128];
+        char tab2[32];
         strncpy(tab2, temp.c_str(), sizeof(tab2));
         tab2[sizeof(tab2) - 1] = 0;
-        ImGui::Text("PRESET_name", tab2, 20);
-        //        ImGui::Text("PRESET_name", PRESET_name);
 
-        //        char str1[128];
-        //        str1 = ofToString(PRESET_name);
-        //        ImGui::Text("PRESET_name", str1);
-        //        ImGui::Text("Size: %.2f", this->cubeSize);
+//        static char str0[128] = "";
+//        if (ImGui::InputText("", str0, IM_ARRAYSIZE(str0)))
+//        {
+//            cout << "InputText:" << ofToString(str0) << endl;
+//            PRESET_name = ofToString(str0);
 
-        //        static char str0[128] = PRESET_name;
-        static char str0[128] = "";
-        if (ImGui::InputText("", str0, IM_ARRAYSIZE(str0)))
+        if (ImGui::InputText("", tab2, IM_ARRAYSIZE(tab2)))
         {
-            cout << "InputText:" << ofToString(str0) << endl;
-            PRESET_name = ofToString(str0);
+            cout << "InputText:" << ofToString(tab2) << endl;
+            PRESET_name = ofToString(tab2);
+
             cout << "PRESET_name: " << PRESET_name << endl;
         }
 
@@ -1383,6 +1386,7 @@ void ofxColorManager::gui_imGui_window3()
             cout << "SAVE" << endl;
             cout << "PRESET_name: " << PRESET_name << endl;
             preset_save(PRESET_name);
+
             files_refresh();
         }
 
@@ -1400,7 +1404,7 @@ void ofxColorManager::gui_imGui_window3()
         //-
 
         ImGui::Separator();
-        ImGui::Text("KIT");
+        ImGui::Text("PALETTES KIT");
 
         // Arrow buttons
         static int counter = currentFile;
@@ -1408,6 +1412,7 @@ void ofxColorManager::gui_imGui_window3()
 
         ImGui::PushButtonRepeat(true);
 
+        // prev
         if (ImGui::ArrowButton("##left", ImGuiDir_Left)) {
             if (counter>0)
             {
@@ -1422,16 +1427,13 @@ void ofxColorManager::gui_imGui_window3()
             }
         }
 
+        // next
         ImGui::SameLine(0.0f, spacing);
         if (ImGui::ArrowButton("##right", ImGuiDir_Right)) {
-            counter++;
-            if (counter>files.size()-1) {
-                counter = files.size() - 1;
-            }
-            else
-            {
+            if (counter<files.size()-2) {
+                counter++;
                 currentFile = counter;
-                if (currentFile<files.size()-1)
+                if (currentFile<files.size())
                 {
                     PRESET_name = fileNames[currentFile];
                     ofLogNotice() << "ARROW: PRESET_name: ["+ofToString(currentFile)+"] " << PRESET_name;
@@ -1442,7 +1444,8 @@ void ofxColorManager::gui_imGui_window3()
 
         ImGui::PopButtonRepeat();
         ImGui::SameLine();
-        ImGui::Text("%d", counter);
+//        ImGui::Text("%d", counter);
+        ImGui::Text("%d", currentFile);
 
         //-
 
@@ -1467,12 +1470,16 @@ void ofxColorManager::gui_imGui_window3()
             }
         }
 
-        //TODO
+        //-
+
+        //TODO: must disable key sortcuts when typing...
+
         if (MANAGER_Set.mouseOverGui)
             ENABLE_keys = false;
         else
             ENABLE_keys = true;
 
+        //-
     }
     ofxImGui::EndWindow(MANAGER_Set);
 }
@@ -2732,6 +2739,9 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
     if (name == "SHOW COLOUR LOVERS") {
         ColourLoversHelper.setVisible(SHOW_ColourLovers);
     }
+    else if (name == "SHOW COLOUR LOVERS SEARCHER") {
+        ColourLoversHelper.setVisibleSearcher(SHOW_ColourLovers_searcher);
+    }
     else if (name == "SHOW PALETTES") {
         palettes_setVisible(SHOW_AlgoPalettes);
     }
@@ -3094,23 +3104,23 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
             // clear DEMO1 objects
             myDEMO_palette.clear();
         }
-            //-
-
-            // COLOUR LOVERS
-
-            // 3. randomly get a palete from colour lovers
-
-        else if (key == 'v') {
-            ColourLoversHelper.randomPalette();
-
-            // clear DEMO1 objects
-            myDEMO_palette.clear();
-        }
-
         //-
+
+        // COLOUR LOVERS
 
         if (SHOW_ColourLovers)
         {
+            // 3. randomly get a palete from colour lovers
+            if (key == 'v') {
+                ColourLoversHelper.randomPalette();
+
+                // clear DEMO1 objects
+                myDEMO_palette.clear();
+            }
+
+                //-
+
+                // browse presets
             else if (key == OF_KEY_DOWN) {
                 ColourLoversHelper.nextPalette();
 
@@ -3125,29 +3135,23 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
                 myDEMO_palette.clear();
             }
         }
-            //--
 
-            // UNDO COLOR
+        //--
 
-        else if (key == 'z') {
+        // UNDO COLOR
+
+        if (key == 'z') {
             color_Undo.undo();
             color_picked = color_Undo;
-
-        } else if (key == 'y') {
+        }
+        else if (key == 'y') {
             color_Undo.redo();
             color_picked = color_Undo;
         }
             //    else if()
             //        color_Undo.clearRedo();
 
-
-
-            //    if (key == 's') {
-            //        curvesTool.save("curves  );
-            //    }
-            //    if (key == 'l') {
-            //        curvesTool.load("curves.yml");
-            //    }
+            //-
 
             //    if (key == 's')
             //    {
@@ -3255,9 +3259,8 @@ void ofxColorManager::mousePressed(ofMouseEventArgs& eventArgs){
 
     //-
 
-    // DEMO 1
-    myDEMO_palette.setPause();
-    //    pauseCreate = false;
+    // DEMO
+    myDEMO_palette.start();
 }
 
 
@@ -3431,6 +3434,7 @@ void ofxColorManager::setVisible(bool b)
         SHOW_AlgoPalettes = SHOW_ALL_GUI;
         SHOW_TEST_Curve = SHOW_ALL_GUI;
         SHOW_ColourLovers = SHOW_ALL_GUI;
+        SHOW_ColourLovers_searcher = SHOW_ALL_GUI;
     }
 
     this->guiVisible = SHOW_ALL_GUI;

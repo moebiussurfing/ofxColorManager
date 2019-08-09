@@ -143,6 +143,7 @@ public:
     float dt;
 
     ofParameter<bool> SHOW_ColourLovers;
+    ofParameter<bool> SHOW_ColourLovers_searcher;
     ofParameter<bool> SHOW_AlgoPalettes;
     ofParameter<bool> SHOW_BrowserColors;
     ofParameter<bool> SHOW_Gradient;
