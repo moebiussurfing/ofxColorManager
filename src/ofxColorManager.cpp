@@ -57,21 +57,27 @@ ofxColorManager::~ofxColorManager()
 {
 }
 
+//--------------------------------------------------------------
+void ofxColorManager::files_refresh()
+{
+    ofDirectory dataDirectory(ofToDataPath("assets/presetsCLASS", true));
+
+    files.clear();
+    files = dataDirectory.getFiles();
+    for(size_t i=0; i<files.size(); i++)
+    {
+        fileNames.push_back(files[i].getFileName());
+    }
+}
 
 //--------------------------------------------------------------
 void ofxColorManager::setup()
 {
     ColorWheel_setup();
 
-    //-
+    //--
 
-    ofDirectory dataDirectory(ofToDataPath("assets/presetsCLASS", true));
-
-    files = dataDirectory.getFiles();
-    for(size_t i=0; i<files.size(); i++)
-    {
-        fileNames.push_back(files[i].getFileName());
-    }
+    files_refresh();
 
     //--
 
@@ -1291,62 +1297,110 @@ static void ShowExampleMenuFile()
 //--------------------------------------------------------------
 void ofxColorManager::gui_imGui_window3()
 {
-
     auto MANAGER_Set = ofxImGui::Settings();
     MANAGER_Set.windowPos = ofVec2f(gui3_x, gui3_y);
     MANAGER_Set.windowSize = ofVec2f(gui3_w, gui3_h);
 
     if (ofxImGui::BeginWindow("PRESET MANAGER", MANAGER_Set, false))
     {
+        ImGui::Text("USER PALETTES");
 
-        // Color buttons, demonstrate using PushID() to add unique identifier in the ID stack, and changing style.
-        for (int i = 0; i < 7; i++)
+//        ImGui::Text("PRESET_name:");
+//        ImGui::SameLine();
+//        ImGui::Text(PRESET_name);
+
+//        char tab2[128];
+//        strcpy(tab2, PRESET_name.c_str());
+//        ImGui::Text("PRESET_name", tab2);
+
+        string temp = PRESET_name;
+        char tab2[128];
+        strncpy(tab2, temp.c_str(), sizeof(tab2));
+        tab2[sizeof(tab2) - 1] = 0;
+        ImGui::Text("PRESET_name", tab2, 20);
+//        ImGui::Text("PRESET_name", PRESET_name);
+
+//        char str1[128];
+//        str1 = ofToString(PRESET_name);
+//        ImGui::Text("PRESET_name", str1);
+//        ImGui::Text("Size: %.2f", this->cubeSize);
+
+        static char str0[128] = "palette_name";
+        if (ImGui::InputText("name", str0, IM_ARRAYSIZE(str0)))
         {
-            if (i > 0) ImGui::SameLine();
-            ImGui::PushID(i);
-            ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(i/7.0f, 0.6f, 0.6f));
-            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, (ImVec4)ImColor::HSV(i/7.0f, 0.7f, 0.7f));
-            ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(i/7.0f, 0.8f, 0.8f));
-            ImGui::Button("Click");
-            ImGui::PopStyleColor(3);
-            ImGui::PopID();
+            cout << "InputText:" << ofToString(str0) << endl;
         }
+
+        if (ImGui::Button("SAVE"))
+        {
+            PRESET_name = ofToString(str0);
+            preset_save(ofToString(str0));
+            cout << "PRESET_name: " << PRESET_name << endl;
+
+            files_refresh();
+        }
+        ImGui::SameLine();
+
+
+        if (ImGui::Button("LOAD"))
+        {
+            preset_load(PRESET_name);
+        }
+
+
+        ImGui::SameLine();
+        ImGui::Button("CLEAR");
+
+        ImGui::Separator();
+
+        ImGui::Text("KIT");
+
+        int currentFile = 0;
 
         // Arrow buttons
         static int counter = 0;
         float spacing = ImGui::GetStyle().ItemInnerSpacing.x;
         ImGui::PushButtonRepeat(true);
-        if (ImGui::ArrowButton("##left", ImGuiDir_Left)) { counter--; }
+        if (ImGui::ArrowButton("##left", ImGuiDir_Left)) {
+            if (counter>0)
+            {
+                counter--;
+                currentFile = counter;
+
+                if (currentFile<files.size())
+                {
+                    PRESET_name = files[currentFile].getBaseName();
+                    ofLogNotice() << "PRESET_name: ["+ofToString(currentFile)+"] " << PRESET_name;
+                }
+            }
+        }
         ImGui::SameLine(0.0f, spacing);
-        if (ImGui::ArrowButton("##right", ImGuiDir_Right)) { counter++; }
+        if (ImGui::ArrowButton("##right", ImGuiDir_Right)) {
+            counter++;
+            if (counter>files.size()-1)
+            {
+                counter = files.size()-1;
+                currentFile = counter;
+
+                if (currentFile<files.size())
+                {
+                    PRESET_name = files[currentFile].getBaseName();
+                    ofLogNotice() << "PRESET_name: ["+ofToString(currentFile)+"] " << PRESET_name;
+                }
+            }
+        }
         ImGui::PopButtonRepeat();
         ImGui::SameLine();
         ImGui::Text("%d", counter);
 
-//        if (ImGui::BeginMainMenuBar())
+//        Gui::SameLine(); ShowHelpMarker("You can apply arithmetic operators +,*,/ on numerical values.\n  e.g. [ 100 ], input \'*2\', result becomes [ 200 ]\nUse +- to subtract.\n");
+
+//        if(ImGui::Button("Demo Window"))
 //        {
-//            if (ImGui::BeginMenu("File"))
-//            {
-////                ShowExampleMenuFile();
-////                ImGui::EndMenu();
-//            }
-
-        ImGui::Text("Hello, world!");
-        static char str0[128] = "Hello, world!";
-        static int i0 = 123;
-        ImGui::InputText("input text", str0, IM_ARRAYSIZE(str0));
-//        ImGui::SameLine(); ShowHelpMarker("USER:\nHold SHIFT or use mouse to select text.\n" "CTRL+Left/Right to word jump.\n" "CTRL+A or double-click to select all.\n" "CTRL+X,CTRL+C,CTRL+V clipboard.\n" "CTRL+Z,CTRL+Y undo/redo.\n" "ESCAPE to revert.\n\nPROGRAMMER:\nYou can use the ImGuiInputTextFlags_CallbackResize facility if you need to wire InputText() to a dynamic string type. See misc/stl/imgui_stl.h for an example (this is not demonstrated in imgui_demo.cpp).");
-
-        ImGui::InputInt("input int", &i0);
-//        ImGui::SameLine(); ShowHelpMarker("You can apply arithmetic operators +,*,/ on numerical values.\n  e.g. [ 100 ], input \'*2\', result becomes [ 200 ]\nUse +- to subtract.\n");
-
-        if(ImGui::Button("Demo Window"))
-        {
-        }
-        if (ImGui::Button("Another Window"))
-        {
-        }
-
+//        }
+//        if (ImGui::Button("Another Window"))
+//        {
+//        }
 
 //            if (ImGui::BeginMenu("Edit"))
 //            {
@@ -1365,34 +1419,32 @@ void ofxColorManager::gui_imGui_window3()
 
         if(!fileNames.empty())
         {
-
-            //ofxImGui::VectorListBox allows for the use of a vector<string> as a data source
-//            static int currentListBoxIndex = 0;
-//            if(ofxImGui::VectorListBox("VectorListBox", &currentListBoxIndex, fileNames))
-//            {
-//                ofLog() << " VectorListBox FILE PATH: "  << files[currentListBoxIndex].getAbsolutePath();
-//            }
-
             //ofxImGui::VectorCombo allows for the use of a vector<string> as a data source
             static int currentFileIndex = 0;
             if(ofxImGui::VectorCombo("VectorCombo", &currentFileIndex, fileNames))
             {
                 ofLog() << "VectorCombo FILE PATH: "  << files[currentFileIndex].getAbsolutePath();
+//                PRESET_name = "myPreset";
             }
         }
 
-
-
-        if (ofxImGui::BeginTree("PRESET", mainSettings))
-        {
-            ImGui::Checkbox("ENABLE TEST", &TEST_MODE);
-            ImGui::Checkbox("CYCLE", &TEST_CycleMODE);
-            ImGui::Checkbox("TO BACKGROUND", &TEST_toBackground);
-            ImGui::SliderFloat("SPEED", &TEST_Speed, 0.0f, 1.0f);
-            ofxImGui::EndTree(mainSettings);
-        }
+//        if (ofxImGui::BeginTree("PRESET", mainSettings))
+//        {
+//            ImGui::Checkbox("ENABLE TEST", &TEST_MODE);
+//            ImGui::Checkbox("CYCLE", &TEST_CycleMODE);
+//            ImGui::Checkbox("TO BACKGROUND", &TEST_toBackground);
+//            ImGui::SliderFloat("SPEED", &TEST_Speed, 0.0f, 1.0f);
+//            ofxImGui::EndTree(mainSettings);
+//        }
 
     }
+
+    //TODO
+    if (MANAGER_Set.mouseOverGui)
+        ENABLE_keys = false;
+    else
+        ENABLE_keys = true;
+
     ofxImGui::EndWindow(MANAGER_Set);
 }
 
@@ -2439,11 +2491,15 @@ void ofxColorManager::draw()
         // GUI
 
         this->mouseOverGui = false;
-        if (this->guiVisible) {
+        if (this->guiVisible)
+        {
             this->mouseOverGui = this->gui_imGui();
         }
-        if (this->mouseOverGui) {
-        } else {
+        if (this->mouseOverGui)
+        {
+        }
+        else
+        {
         }
 
         //--
@@ -2794,286 +2850,249 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
 //--------------------------------------------------------------
 void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 {
-    const int & key = eventArgs.key;
-    //    ofLogNotice("ofxColorManager") << "key: " << key;
+    if (ENABLE_keys) {
 
-    if(false){}
+        const int &key = eventArgs.key;
+        //    ofLogNotice("ofxColorManager") << "key: " << key;
 
-        //--
+        if (false) {}
 
-        // OFX GUI-PANELS-LAYOUT
+            //--
 
-    else if (key == 'a')
-    {
-        panels.SHOW_advanced = !panels.SHOW_advanced;
-    }
+            // OFX GUI-PANELS-LAYOUT
 
-        //    else if (key == OF_KEY_LEFT)
-        //    {
-        //        panels.group_Selected--;
-        //    }
-        //
-        //    else if (key == OF_KEY_RIGHT)
-        //    {
-        //        panels.group_Selected++;
-        //    }
-
-    else if (key == '0')
-    {
-        panels.group_Selected = 0;
-    }
-    else if (key == '1')
-    {
-        panels.group_Selected = 1;
-    }
-    else if (key == '2')
-    {
-        panels.group_Selected = 2;
-    }
-    else if (key == '3')
-    {
-        panels.group_Selected = 3;
-    }
-    else if (key == '4')
-    {
-        panels.group_Selected = 4;
-    }
-    else if (key == '5')
-    {
-        panels.group_Selected = 5;
-    }
-    else if (key == '6')
-    {
-        panels.group_Selected = 6;
-    }
-
-    else if (key == 'g')
-    {
-        SHOW_Layout_Gui = !SHOW_Layout_Gui;
-    }
-
-        //    else if (key == 's')
-        //    {
-        //        panels.savePanels();
-        //        panels.saveGroups();
-        //    }
-        //
-        //    else if (key == 'l')
-        //    {
-        //        panels.loadGroups();
-        //    }
-
-        //--
-
-        // PRESET CLASS
-
-        //    else if (key == 'z') {
-        //        preset_save(PRESET_name);
-        //    }
-
-        // LOAD
-
-    else if (key == 'l') {
-        preset_load(PRESET_name);
-    }
-
-        // SAVE
-
-    else if (key == 's') {
-        preset_save(PRESET_name);
-    }
-
-        //--
-
-        //-
-
-    else if (key == 'g')
-    {
-        SHOW_ALL_GUI = !SHOW_ALL_GUI;
-        setVisible(SHOW_ALL_GUI);
-    }
-    else if (key == 'e')
-    {
-        bPaletteEdit = !bPaletteEdit;
-    }
-        //    else if (key == 'l')
-        //    {
-        //        bLock_palette = !bLock_palette;
-        //    }
-
-    else if (key == 'm')
-    {
-        mouseRuler.toggleVisibility();
-    }
-
-    else if (key == 'd')
-    {
-        bShowDebug = !bShowDebug;
-    }
-
-        //-
-
-        // RANDOM USER PALETTE
-
-        // 1. randomize color and build palette if enabled
-
-    else if (key == 'o')
-    {
-        //TODO
-        // workflow: when loading a colour lover palette we disable auto create from algo palettes
-        if (!bAuto_palette_recall)
-        {
-            bAuto_palette_recall = true;
+        else if (key == 'a') {
+            panels.SHOW_advanced = !panels.SHOW_advanced;
         }
 
-        //TODO: bug because some trigs are flags. we need direct functions
-        //        bRandomColor = true;
-        color_picked = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
+            //    else if (key == OF_KEY_LEFT)
+            //    {
+            //        panels.group_Selected--;
+            //    }
+            //
+            //    else if (key == OF_KEY_RIGHT)
+            //    {
+            //        panels.group_Selected++;
+            //    }
 
-        if (bAuto_palette_recall) {
+        else if (key == '0') {
+            panels.group_Selected = 0;
+        } else if (key == '1') {
+            panels.group_Selected = 1;
+        } else if (key == '2') {
+            panels.group_Selected = 2;
+        } else if (key == '3') {
+            panels.group_Selected = 3;
+        } else if (key == '4') {
+            panels.group_Selected = 4;
+        } else if (key == '5') {
+            panels.group_Selected = 5;
+        } else if (key == '6') {
+            panels.group_Selected = 6;
+        } else if (key == 'g') {
+            SHOW_Layout_Gui = !SHOW_Layout_Gui;
+        }
+
+            //    else if (key == 's')
+            //    {
+            //        panels.savePanels();
+            //        panels.saveGroups();
+            //    }
+            //
+            //    else if (key == 'l')
+            //    {
+            //        panels.loadGroups();
+            //    }
+
+            //--
+
+            // PRESET CLASS
+
+            //    else if (key == 'z') {
+            //        preset_save(PRESET_name);
+            //    }
+
+            // LOAD
+
+        else if (key == 'l') {
+            preset_load(PRESET_name);
+        }
+
+            // SAVE
+
+        else if (key == 's') {
+            preset_save(PRESET_name);
+        }
+
+            //--
+
+            //-
+
+        else if (key == 'g') {
+            SHOW_ALL_GUI = !SHOW_ALL_GUI;
+            setVisible(SHOW_ALL_GUI);
+        } else if (key == 'e') {
+            bPaletteEdit = !bPaletteEdit;
+        }
+            //    else if (key == 'l')
+            //    {
+            //        bLock_palette = !bLock_palette;
+            //    }
+
+        else if (key == 'm') {
+            mouseRuler.toggleVisibility();
+        } else if (key == 'd') {
+            bShowDebug = !bShowDebug;
+        }
+
+            //-
+
+            // RANDOM USER PALETTE
+
+            // 1. randomize color and build palette if enabled
+
+        else if (key == 'o') {
+            //TODO
+            // workflow: when loading a colour lover palette we disable auto create from algo palettes
+            if (!bAuto_palette_recall) {
+                bAuto_palette_recall = true;
+            }
+
+            //TODO: bug because some trigs are flags. we need direct functions
+            //        bRandomColor = true;
+            color_picked = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
+
+            if (bAuto_palette_recall) {
+                palettes_update();
+                palette_recallFromPalettes(SELECTED_palette_LAST);//trig last choice
+            }
+
+            // undo
+            color_Undo = color_picked.get();
+            color_Undo.store();
+
+            myDEMO_palette.clear();
+            //        // clear DEMO1 objects
+            //        bDEMO1_clear = true;
+            //        pauseCreate = false;
+        }
+
+            //--
+
+            // 2. trig get algorithmic random palette
+
+        else if (key == 'p') {
+            //TODO
+            // workflow: when loading a colour lover palette we disable auto create from algo palettes
+            if (!bAuto_palette_recall) {
+                bAuto_palette_recall = true;
+
+                //            pauseCreate = false;
+            }
+
+            random.generateRandom(NUM_ALGO_PALETTES);
             palettes_update();
-            palette_recallFromPalettes(SELECTED_palette_LAST);//trig last choice
+            if (bAuto_palette_recall) {
+                //set random palette to user palette
+                palette_recallFromPalettes(7);
+            }
+
+            // clear DEMO1 objects
+            //        bDEMO1_clear = true;
+            //        pauseCreate = false;
+            myDEMO_palette.clear();
+        }
+            //-
+
+            // COLOUR LOVERS
+
+            // 3. randomly get a palete from colour lovers
+
+        else if (key == 'v') {
+            ColourLoversHelper.randomPalette();
+
+            // clear DEMO1 objects
+            //        bDEMO1_clear = true;
+            //        pauseCreate = false;
+            myDEMO_palette.clear();
         }
 
-        // undo
-        color_Undo = color_picked.get();
-        color_Undo.store();
+            //-
 
-        myDEMO_palette.clear();
-        //        // clear DEMO1 objects
-        //        bDEMO1_clear = true;
-        //        pauseCreate = false;
-    }
+        else if (key == OF_KEY_DOWN) {
+            ColourLoversHelper.nextPalette();
 
-        //--
+            // clear DEMO1 objects
+            //        bDEMO1_clear = true;
+            //        pauseCreate = false;
+            myDEMO_palette.clear();
+        } else if (key == OF_KEY_UP) {
+            ColourLoversHelper.prevPalette();
 
-        // 2. trig get algorithmic random palette
-
-    else if (key == 'p')
-    {
-        //TODO
-        // workflow: when loading a colour lover palette we disable auto create from algo palettes
-        if (!bAuto_palette_recall)
-        {
-            bAuto_palette_recall = true;
-
-            //            pauseCreate = false;
+            // clear DEMO1 objects
+            //        bDEMO1_clear = true;
+            //        pauseCreate = false;
+            myDEMO_palette.clear();
         }
+            //--
 
-        random.generateRandom(NUM_ALGO_PALETTES);
-        palettes_update();
-        if (bAuto_palette_recall) {
-            //set random palette to user palette
-            palette_recallFromPalettes(7);
+            // UNDO COLOR
+
+        else if (key == 'z') {
+            color_Undo.undo();
+            color_picked = color_Undo;
+
+        } else if (key == 'y') {
+            color_Undo.redo();
+            color_picked = color_Undo;
         }
-
-        // clear DEMO1 objects
-        //        bDEMO1_clear = true;
-        //        pauseCreate = false;
-        myDEMO_palette.clear();
-    }
-        //-
-
-        // COLOUR LOVERS
-
-        // 3. randomly get a palete from colour lovers
-
-    else if (key == 'v') {
-        ColourLoversHelper.randomPalette();
-
-        // clear DEMO1 objects
-        //        bDEMO1_clear = true;
-        //        pauseCreate = false;
-        myDEMO_palette.clear();
-    }
-
-        //-
-
-    else if (key == OF_KEY_DOWN)
-    {
-        ColourLoversHelper.nextPalette();
-
-        // clear DEMO1 objects
-        //        bDEMO1_clear = true;
-        //        pauseCreate = false;
-        myDEMO_palette.clear();
-    }
-    else if (key == OF_KEY_UP)
-    {
-        ColourLoversHelper.prevPalette();
-
-        // clear DEMO1 objects
-        //        bDEMO1_clear = true;
-        //        pauseCreate = false;
-        myDEMO_palette.clear();
-    }
-        //--
-
-        // UNDO COLOR
-
-    else if (key == 'z')
-    {
-        color_Undo.undo();
-        color_picked = color_Undo;
-
-    }
-    else if (key == 'y')
-    {
-        color_Undo.redo();
-        color_picked = color_Undo;
-    }
-        //    else if()
-        //        color_Undo.clearRedo();
+            //    else if()
+            //        color_Undo.clearRedo();
 
 
 
-        //    if (key == 's') {
-        //        curvesTool.save("curves  );
-        //    }
-        //    if (key == 'l') {
-        //        curvesTool.load("curves.yml");
-        //    }
+            //    if (key == 's') {
+            //        curvesTool.save("curves  );
+            //    }
+            //    if (key == 'l') {
+            //        curvesTool.load("curves.yml");
+            //    }
 
-        //    if (key == 's')
-        //    {
-        //        palette_save("myPalette");
-        //    }
-        //    if (key == 'l')
-        //    {
-        //        palette_load("myPalette");
-        //    }
+            //    if (key == 's')
+            //    {
+            //        palette_save("myPalette");
+            //    }
+            //    if (key == 'l')
+            //    {
+            //        palette_load("myPalette");
+            //    }
+
+            //-
+
+            // USER PALETTE
+
+        else if (key == 'c') {
+            palette_clear();
+        } else if (key == 'x') {
+            palette_removeColorLast();
+        } else if (key == 'a') {
+            color_picked = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
+            palette_addColor(ofColor(color_picked.get()));
+        }
 
         //-
 
-        // USER PALETTE
+        // COLOR BROWSER
 
-    else if (key == 'c')
-    {
-        palette_clear();
+        ////    ColorBrowser.keyPressed( eventArgs );
+        //
+        //    else if (key == ' ')
+        //        ColorBrowser.switch_palette_Type();
+        //
+        //    else if (key == OF_KEY_RETURN)
+        //        ColorBrowser.switch_sorted_Type();
+
     }
-    else if (key == 'x')
-    {
-        palette_removeColorLast();
-    }
-    else if (key == 'a')
-    {
-        color_picked = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
-        palette_addColor(ofColor(color_picked.get()));
-    }
-
-    //-
-
-    // COLOR BROWSER
-
-    ////    ColorBrowser.keyPressed( eventArgs );
-    //
-    //    else if (key == ' ')
-    //        ColorBrowser.switch_palette_Type();
-    //
-    //    else if (key == OF_KEY_RETURN)
-    //        ColorBrowser.switch_sorted_Type();
-
-
 
 }
 
@@ -3520,7 +3539,6 @@ void ofxColorManager::exit()
 //}
 
 
-
 //--------------------------------------------------------------
 void ofxColorManager::preset_load(string p)
 {
@@ -3533,6 +3551,7 @@ void ofxColorManager::preset_load(string p)
     //        myPresetPalette.setBackgroundColor(color_backGround);//error ofParameter
     myPresetPalette.setPalette(palette);
 
+    //TODO should use p..
     myPresetPalette.preset_load(PRESET_name);
     vector<ofColor> palette_TEMP = myPresetPalette.getPalette();
 
@@ -3550,47 +3569,6 @@ void ofxColorManager::preset_load(string p)
     ////        string *name_BACK;
     ////        vector<ofColor> *palette_BACK;
     ////        string *curveName_BACK;
-
-    //        ofxLoadCamera(cam, "DEMOCam");
-
-
-
-    //    ofFile file(path);
-    //    if (file.exists())
-    //    {
-    //        jsonin ji(file);
-    //        ji >> presetData;
-    //
-    //        ofLogNotice("ofxColorManager:preset_load") << "presetData.name      : " << presetData.name;
-    //        ofLogNotice("ofxColorManager:preset_load") << "presetData.curveName : " << presetData.curveName;
-    //        ofLogNotice("ofxColorManager:preset_load") << "presetData.background: " << presetData.background;
-    //
-    //        curvesTool.load(preset_path + presetData.curveName + ".yml");
-    //
-    //        if (color_backGround_SETAUTO)
-    //        {
-    //            color_backGround = presetData.background;
-    //        }
-    //
-    //        ofLogNotice("ofxColorManager:preset_load") << "presetData.palette.size(): " << presetData.palette.size();
-    //
-    //        palette_clear();
-    //
-    //        for (int i=0; i<presetData.palette.size(); i++)
-    //        {
-    //            ofColor c;
-    //            c = presetData.palette[i];
-    //            ofLogNotice("ofxColorManager:preset_load") << "addColor:" << ofToString(c) <<" ["<<i<<"]";
-    //            palette_addColor(c);
-    //        }
-    //        ofLogNotice("ofxColorManager:preset_load") << "DONE! preset_load  : " << p;
-    //        ofLogNotice("ofxColorManager:preset_load") << "palette.size()     :" << palette.size()<<endl;
-    //        ofLogNotice("ofxColorManager:preset_load") << "btns_palette.size():" << btns_palette.size()<<endl;
-    //    }
-    //    else
-    //    {
-    //        ofLogNotice("ofxColorManager:preset_load") << "FILE '" << path << "' NOT FOUND";
-    //    }
 }
 
 

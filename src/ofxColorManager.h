@@ -56,6 +56,8 @@ class ofxColorManager {
 
 public:
 
+    bool ENABLE_keys = true;
+
     //-
 
     // ColorWheelSchemes
@@ -100,7 +102,9 @@ public:
     // PRESETS
 
     PresetPalette myPresetPalette;
-    string PRESET_name = "myPreset";
+//    string PRESET_name = "myPreset";
+    std::string PRESET_name = "myPreset";
+
     string PRESET_curveName = "curve01";
 
     //-
@@ -125,6 +129,8 @@ public:
 
     ofxColorManager();
     ~ofxColorManager();
+
+    void files_refresh();
 
     void setup();
     void update();
