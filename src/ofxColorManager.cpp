@@ -11,7 +11,7 @@ void ofxColorManager::ColorWheel_setup(){
 
     panel.setup();
     panel.add(group);
-    panel.setPosition(800,600);
+    panel.setPosition(711+220,670);
 }
 
 //--------------------------------------------------------------
@@ -31,7 +31,7 @@ void ofxColorManager::ColorWheel_update() {
 void ofxColorManager::ColorWheel_draw(){
     ofPushStyle();
     ofPushMatrix();
-    ofTranslate(600,600);
+    ofTranslate(711,670);
 
 //    float w = ofGetWidth() / (float) colors.size();
     float w = 200 / (float) colors.size();
