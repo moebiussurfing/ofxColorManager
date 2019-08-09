@@ -7,30 +7,40 @@ void ofxColorManager::ColorWheel_setup(){
     group.add(primaryColor.set("Primary Color", ofColor::magenta));
     group.add(colorScheme.set("Color Scheme", 6, 0, ColorWheelSchemes::colorSchemes.size()-1));
     group.add(colorSchemeName);
-    group.add(numColors.set("Num Colors", 8, 1, 256));
+    group.add(numColors.set("Num Colors", 8, 1, 10));
 
     panel.setup();
     panel.add(group);
-    panel.setPosition(600,600);
+    panel.setPosition(800,600);
 }
 
 //--------------------------------------------------------------
 void ofxColorManager::ColorWheel_update() {
     colorSchemeName.set(ColorWheelSchemes::colorSchemeNames[colorScheme.get()]);
     scheme = ColorWheelSchemes::colorSchemes[colorScheme.get()];
-    scheme->setPrimaryColor(primaryColor.get());
+
+//    scheme->setPrimaryColor(primaryColor.get());
+
+    primaryColor.set(color_picked.get());
+    scheme->setPrimaryColor(color_picked.get());
+
     colors = scheme->interpolate(numColors.get());
 }
 
 //--------------------------------------------------------------
 void ofxColorManager::ColorWheel_draw(){
     ofPushStyle();
-    float w = ofGetWidth() / (float) colors.size();
+    ofPushMatrix();
+    ofTranslate(600,600);
+
+//    float w = ofGetWidth() / (float) colors.size();
+    float w = 200 / (float) colors.size();
     for (int i=0; i<colors.size(); i++) {
         ofSetColor(colors[i]);
         ofFill();
-        ofDrawRectangle(w * i, 0, w, ofGetHeight());
+        ofDrawRectangle(w * i, 0, w, 50);
     }
+    ofPopMatrix();
     ofPopStyle();
 
     panel.draw();
@@ -52,6 +62,8 @@ ofxColorManager::~ofxColorManager()
 void ofxColorManager::setup()
 {
     ColorWheel_setup();
+
+    //-
 
     ofDirectory dataDirectory(ofToDataPath("assets/presetsCLASS", true));
 
@@ -182,6 +194,9 @@ void ofxColorManager::setup()
     params_palette.add(bLock_palette);
 
     ofAddListener(params_palette.parameterChangedE(), this, &ofxColorManager::Changed_CONTROL);
+
+
+    //TODO: add ColorWheelSchemes alternative
 
     //-
 
@@ -1316,7 +1331,7 @@ void ofxColorManager::gui_imGui_window3()
 ////                ImGui::EndMenu();
 //            }
 
-            ImGui::Text("Hello, world!");
+        ImGui::Text("Hello, world!");
         static char str0[128] = "Hello, world!";
         static int i0 = 123;
         ImGui::InputText("input text", str0, IM_ARRAYSIZE(str0));
@@ -1326,11 +1341,11 @@ void ofxColorManager::gui_imGui_window3()
 //        ImGui::SameLine(); ShowHelpMarker("You can apply arithmetic operators +,*,/ on numerical values.\n  e.g. [ 100 ], input \'*2\', result becomes [ 200 ]\nUse +- to subtract.\n");
 
         if(ImGui::Button("Demo Window"))
-            {
-            }
-            if (ImGui::Button("Another Window"))
-            {
-            }
+        {
+        }
+        if (ImGui::Button("Another Window"))
+        {
+        }
 
 
 //            if (ImGui::BeginMenu("Edit"))
@@ -2303,22 +2318,19 @@ void ofxColorManager::palettes_setVisible(bool b)
 //--------------------------------------------------------------
 void ofxColorManager::draw()
 {
-
-    //--
-
     // BACKGROUND
-
     if (backgroundENABLE)
-    {
         ofClear(ofColor(color_backGround.get()));
 
-        //-
+    //-
 
-        // ColorWheelSchemes
+    // ColorWheelSchemes
 
-//    ColorWheel_draw();
+    ColorWheel_draw();
 
     //-
+
+    // MANAGER
 
 //    myPresetPalette.draw();
     myPresetManager.draw();
