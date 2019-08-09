@@ -707,7 +707,7 @@ void ofxColorManager::palette_rearrenge()
     for (int i=0; i<numBtns; i++)
     {
         name = "btn"+ofToString(i);
-        cout << name << endl;
+        //cout << name << endl;
         auto a = scene->getChildWithName(name, 1000);
 
         if (flipBtn)
@@ -1354,18 +1354,22 @@ void ofxColorManager::gui_imGui_window3()
     // 3. PRESET MANAGER
 
     auto MANAGER_Set = ofxImGui::Settings();
-    MANAGER_Set.windowPos = ofVec2f(gui3_x, gui3_y);
     MANAGER_Set.windowSize = ofVec2f(gui3_w, gui3_h);
+    MANAGER_Set.windowPos = ofVec2f(ofGetWindowWidth()*0.5-gui3_w*0.5, gui3_y);
+//    MANAGER_Set.windowPos = ofVec2f(gui3_x, gui3_y);
 
     if (ofxImGui::BeginWindow("PRESET MANAGER", MANAGER_Set, false))
     {
-        ImGui::Text("USER PALETTE");
+        ImGui::Text("PALETTE");
 
         // load string into char array
         string temp = PRESET_name;
         char tab2[32];
         strncpy(tab2, temp.c_str(), sizeof(tab2));
         tab2[sizeof(tab2) - 1] = 0;
+
+        //TODO
+        //bug doubled keys...
 
 //        static char str0[128] = "";
 //        if (ImGui::InputText("", str0, IM_ARRAYSIZE(str0)))
@@ -1391,6 +1395,21 @@ void ofxColorManager::gui_imGui_window3()
         }
 
         ImGui::SameLine();
+        if (ImGui::Button("UPDATE"))
+        {
+            cout << "UPDATE" << endl;
+            cout << "PRESET_name: " << PRESET_name << endl;
+
+            //delete old file
+            files[currentFile].remove();
+//            files_refresh();
+
+            //save new one
+            preset_save(PRESET_name);
+            files_refresh();
+        }
+
+        ImGui::SameLine();
         if (ImGui::Button("LOAD"))
         {
             cout << "LOAD" << endl;
@@ -1399,14 +1418,21 @@ void ofxColorManager::gui_imGui_window3()
         }
 
         ImGui::SameLine();
-        ImGui::Button("CLEAR");//preset
+        if (ImGui::Button("DELETE"))//preset
+        {
+            files[currentFile].remove();
+            files_refresh();
+        }
 
         //-
 
         ImGui::Separator();
-        ImGui::Text("PALETTES KIT");
+        ImGui::Text("KIT");
 
-        // Arrow buttons
+        int numPalettes = fileNames.size();
+        ImGui::Text("Total palettes: %d", numPalettes);
+
+        // arrow buttons
         static int counter = currentFile;
         float spacing = ImGui::GetStyle().ItemInnerSpacing.x;
 
@@ -1444,22 +1470,17 @@ void ofxColorManager::gui_imGui_window3()
 
         ImGui::PopButtonRepeat();
         ImGui::SameLine();
-//        ImGui::Text("%d", counter);
         ImGui::Text("%d", currentFile);
 
         //-
 
+        // scrollable list
         if(!fileNames.empty())
         {
-            //ofxImGui::VectorCombo allows for the use of a vector<string> as a data source
-            static int currentFileIndex = currentFile;
-//            static int currentFileIndex = 0;
-
+            int currentFileIndex = currentFile;
             if(ofxImGui::VectorCombo(" ", &currentFileIndex, fileNames))
             {
                 ofLog() << "currentFileIndex: "  << ofToString(currentFileIndex);
-                ofLog() << "VectorCombo FILE PATH: "  << files[currentFileIndex].getAbsolutePath();
-
                 if (currentFileIndex<fileNames.size())
                 {
                     currentFile = currentFileIndex;
@@ -1473,7 +1494,6 @@ void ofxColorManager::gui_imGui_window3()
         //-
 
         //TODO: must disable key sortcuts when typing...
-
         if (MANAGER_Set.mouseOverGui)
             ENABLE_keys = false;
         else
@@ -1494,33 +1514,34 @@ bool ofxColorManager::gui_imGui()
 
     //-
 
-    // COLOR PICKER
+    // 1. COLOR PICKER
 
     if (SHOW_ColorPicker)
         gui_imGui_window1();
 
     //-
 
-    // COLORS MANAGER
+    // 2. COLORS MANAGER
 
     if (SHOW_ColorManager)
         gui_imGui_window2();
 
     //-
 
-    // PRESET MANAGER
+    // 3. PRESET MANAGER
 
     if (SHOW_PresetManager)
         gui_imGui_window3();
 
     //-
 
-    // PANELS MANAGER
+    // 4. PANELS MANAGER
 
     if (SHOW_PanelsManager)
         gui_imGui_window4();
 
     //-
+
     this->gui.end();
     return mainSettings.mouseOverGui;
 }
@@ -2736,6 +2757,8 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
 
     // CONTROL WINDOWS PANELS
 
+//        if(false){}
+
     if (name == "SHOW COLOUR LOVERS") {
         ColourLoversHelper.setVisible(SHOW_ColourLovers);
     }
@@ -3665,6 +3688,7 @@ void ofxColorManager::preset_load(string p)
     ////        vector<ofColor> *palette_BACK;
     ////        string *curveName_BACK;
 
+    //-
 
     myDEMO_palette.clear();
 }

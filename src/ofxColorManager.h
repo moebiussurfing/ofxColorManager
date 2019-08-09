@@ -102,6 +102,8 @@ public:
     // PRESETS
 
     PresetPalette myPresetPalette;
+    //TODO
+    //BUG: should create a default preset because if myPreset is not detected it crashes
 //    string PRESET_name = "myPreset";
     std::string PRESET_name = "myPreset";
 
