@@ -63,8 +63,9 @@ namespace ofxInterface
 
     void ButtonPaletteSelector::onTouchDown(ofxInterface::TouchEvent &event)
     {
+        if (!isLocked)
+        {
         ofVec2f local = toLocal(event.position);
-
         ofLogNotice("ButtonPaletteSelector") << "onTouchDown: thisPaletteType: " << thisPaletteType;
 
 //        & : reference operator : gives the memory address of variable
@@ -76,12 +77,14 @@ namespace ofxInterface
             // pointer back link the outside (ofApp) variable
             (*SELECTED_palette_pointer) = thisPaletteType;
 //        }
+        }
     }
 
-    void ButtonPaletteSelector::onTouchUp(ofxInterface::TouchEvent &event)
-    {
-        ofVec2f local = toLocal(event.position);
+    void ButtonPaletteSelector::onTouchUp(ofxInterface::TouchEvent &event) {
+        if (!isLocked) {
+            ofVec2f local = toLocal(event.position);
 //        ofLogNotice("ButtonPaletteSelector") << "onTouchUp: ";
+        }
     }
 
     void ButtonPaletteSelector::onTouchMove(ofxInterface::TouchEvent &event)

@@ -34,11 +34,11 @@ public:
     ofVec2f touchAnchor;
 	bool bTouched;
 
-	bool bLocked = false;
     void setLocked(bool b);
-
     void setColor(ofColor c);
+
     ofColor getColor();
+    bool bLocked = false;
 
     bool bIsSelected = false;
     void setSelected(bool b);

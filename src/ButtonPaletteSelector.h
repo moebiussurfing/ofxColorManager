@@ -7,61 +7,85 @@
 #include "ofxInterface.h"
 #include "ofxFontStash.h"
 
-namespace ofxInterface
-{
+namespace ofxInterface {
 
-class ButtonPaletteSelector : public Node
-{
-public:
+    class ButtonPaletteSelector : public Node {
+    public:
 
-	void setup(const string& label);
-	void draw();
+        void setup(const string &label);
 
-    void onTouchDown(TouchEvent& event);
-    void onTouchMove(TouchEvent& event);
-    void onTouchUp(TouchEvent& event);
+        void draw();
 
-	void setBackground(bool set) { bDrawBackground = set; }
-	void setBorder(bool set) { bDrawBorder = set; }
+        void onTouchDown(TouchEvent &event);
 
-	void setLabelColor(const ofColor& c) { labelColor = c; }
-	void setBGColor(const ofColor& c) { bgColor = c; }
-	void setBorderColor(const ofColor& c) { borderColor = c; }
+        void onTouchMove(TouchEvent &event);
 
-	//-
+        void onTouchUp(TouchEvent &event);
 
-    // pointer back link the outside (ofApp) variable
-    void set_SELECTED_palette(int &palette);
-    int *SELECTED_palette_pointer;
+        void setBackground(bool set) {
+            bDrawBackground = set;
+        }
 
-    //-
+        void setBorder(bool set) {
+            bDrawBorder = set;
+        }
 
-    //0:triad, 1:compTriad ... 7:random
-    int thisPaletteType = -1;//undefined
-    void setThisPaletteType(int palette);
+        void setLabelColor(const ofColor &c) {
+            labelColor = c;
+        }
 
-    // font
-    void setInset(float x, float y);
-    float _x = 1;
-    float _y = 1;
-    void setFontSize(float s);
-    float fontSize = 10;
-    bool loadFont(string file);
-    //TODO: Add pointer support to save font loads
-    ofxFontStash font;
+        void setBGColor(const ofColor &c) {
+            bgColor = c;
+        }
 
-private:
+        void setBorderColor(const ofColor &c) {
+            borderColor = c;
+        }
 
-	bool bDrawBackground;
-	bool bDrawBorder;
+        //-
 
-	ofColor borderColor;
-	ofColor bgColor;
-	ofColor labelColor;
+        // pointer back link the outside (ofApp) variable
+        void set_SELECTED_palette(int &palette);
 
-	string label;
-};
+        int *SELECTED_palette_pointer;
 
-}	// namespace
+        //-
+
+        //0:triad, 1:compTriad ... 7:random
+        int thisPaletteType = -1;//undefined
+        void setThisPaletteType(int palette);
+
+        // font
+        void setInset(float x, float y);
+
+        float _x = 1;
+        float _y = 1;
+
+        void setFontSize(float s);
+
+        float fontSize = 10;
+
+        bool loadFont(string file);
+
+        //TODO: Add pointer support to save font loads
+        ofxFontStash font;
+
+        void setLocked(bool b) {
+            isLocked = b;
+        }
+
+    private:
+        bool isLocked = false;
+        bool bDrawBackground;
+        bool bDrawBorder;
+
+        ofColor borderColor;
+        ofColor bgColor;
+        ofColor labelColor;
+
+        string label;
+    };
+
+}    // namespace
 
 #endif /* defined(__ofxUINode__ButtonPaletteSelector__) */

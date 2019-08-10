@@ -2460,6 +2460,7 @@ void ofxColorManager::palettes_setVisible(bool b)
     for (auto& btn : btns_plt_Selector)
     {
         btn->setVisible(b);
+        btn->setLocked(!b);
     }
 }
 
@@ -2472,7 +2473,7 @@ void ofxColorManager::draw()
 
     //-
 
-    // ColorWheelSchemes
+    // COLORWHEELSCHEMES
 
     if (SHOW_AlgoPalettes)
     {
