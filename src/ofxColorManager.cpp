@@ -60,7 +60,7 @@ ofxColorManager::~ofxColorManager()
 //--------------------------------------------------------------
 void ofxColorManager::files_refresh()
 {
-    ofDirectory dataDirectory(ofToDataPath("assets/presetsCLASS", true));
+    ofDirectory dataDirectory(ofToDataPath("user_kits/presets", true));
 
     files.clear();
     fileNames.clear();
@@ -97,8 +97,11 @@ void ofxColorManager::files_refresh()
 //--------------------------------------------------------------
 void ofxColorManager::setup()
 {
-    ColorWheel_setup();
+    //--
 
+    // ColorWheel
+
+    ColorWheel_setup();
 
     //--
 
@@ -1484,6 +1487,7 @@ void ofxColorManager::gui_imGui_window3()
         }
 
         ImGui::PopButtonRepeat();
+
         ImGui::SameLine();
 //        ImGui::Text("%d", currentFile);
         int numPalettes = fileNames.size()-1;
@@ -2605,6 +2609,7 @@ void ofxColorManager::draw()
         {
             this->mouseOverGui = this->gui_imGui();
         }
+        //disable things to avoid move by mouse when editing gui
         if (this->mouseOverGui)
         {
             ENABLE_keys = false;
@@ -2649,7 +2654,6 @@ void ofxColorManager::draw_Palette_MINI()
 
 //    // right top corner
 //    palettePos = glm::vec2(ofGetWidth() - palette.size()*boxSize, 2*boxPad);
-
     // left top corner
     palettePos = glm::vec2(2, 2*boxPad);
 
@@ -2657,7 +2661,7 @@ void ofxColorManager::draw_Palette_MINI()
     ofPushStyle();
     ofTranslate(palettePos);
 
-    ofDrawBitmapStringHighlight(PRESET_name, glm::vec2(5, boxW+20), ofColor::black, ofColor::white);
+    ofDrawBitmapStringHighlight(PRESET_name, glm::vec2(4, boxW+15), ofColor::black, ofColor::white);
 
     for (int col=0; col<palette.size(); col++)
     {

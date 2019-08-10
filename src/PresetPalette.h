@@ -61,7 +61,7 @@ public:
 //    void setBackgroundColor(ofColor &background);
 //    void setBackgroundColor(ofParameter<ofFloatColor> &background);
 
-    string preset_path = "assets/presetsCLASS/";
+    string preset_path = "user_kits/presets/";
 
     vector<ofColor> getPalette();
     ofColor getBackground();
