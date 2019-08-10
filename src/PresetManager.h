@@ -7,18 +7,18 @@
 
 #include "ofMain.h"
 #include "PresetPalette.h"
-#include "ofxImGui.h"
+//#include "ofxImGui.h"
 
 class PresetManager {
 
 public:
 
     PresetManager(){
-        addMouseListeners();
+//        addMouseListeners();
     };
 
     ~PresetManager(){
-        removeMouseListeners();
+//        removeMouseListeners();
     };
 
     void setup();
@@ -37,8 +37,8 @@ public:
     void removeMouseListeners();
 
 private:
-    ofxImGui::Gui gui;
-    float v;
+//    ofxImGui::Gui gui;
+//    float v;
 };
 
 

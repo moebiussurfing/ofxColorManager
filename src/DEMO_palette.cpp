@@ -27,7 +27,6 @@ void DEMO_palette::setup() {
 //--------------------------------------------------------------
 void DEMO_palette::update() {
 
-
 // DEMO 1 - CIRCLES
 
     if (bDEMO1_clear)
