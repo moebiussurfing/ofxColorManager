@@ -105,7 +105,7 @@ public:
     //TODO
     //BUG: should create a default preset because if myPreset is not detected it crashes
 //    string PRESET_name = "myPreset";
-    std::string PRESET_name = "myPreset";//default preset
+    std::string PRESET_name = "_emptyPreset";//default preset
 //    std::string PRESET_name = "";
 
     string PRESET_curveName = "curve01";
@@ -420,6 +420,8 @@ public:
     std::vector<std::string> fileNames;
     std::vector<ofFile> files;
     int currentFile = 0;
+
+    string textInput_temp = "type name";
 
     //--
 

@@ -65,22 +65,32 @@ void ofxColorManager::files_refresh()
     files.clear();
     fileNames.clear();
 
+    //TODO
+    //there is not any sorting of files..
+
     files = dataDirectory.getFiles();
     for(size_t i=0; i<files.size(); i++)
     {
         fileNames.push_back(files[i].getBaseName());
-        //fileNames.push_back(files[i].getFileName());
     }
 
     //-
 
+    //TODO
+    //void to go to 1st...
+    //always goes to 1st preset 0
+    //thats because saving re sort the files
+    //and we don't know the position of las saves preset
+
     if (fileNames.size()>0)
     {
-        PRESET_name = fileNames[0];
+        currentFile = 0;
+        PRESET_name = fileNames[currentFile];
+        preset_load(PRESET_name);
     }
     else
     {
-        ofLogError("ofxColorManager")<<"DEFAULT PRESET NOT FOUND!";
+        ofLogError("ofxColorManager")<<"NOT FOUND ANY FILE PRESET!";
     }
 }
 
@@ -89,11 +99,6 @@ void ofxColorManager::setup()
 {
     ColorWheel_setup();
 
-    //--
-
-    // PRESET MANAGER
-
-    files_refresh();
 
     //--
 
@@ -352,7 +357,7 @@ void ofxColorManager::setup()
     color_picked.addListener(this, &ofxColorManager::Changed_color_picked);
     color_clicked_param.addListener(this, &ofxColorManager::Changed_color_clicked);
 
-    //--
+    //------------------------------------------------------
 
     // STARTUP SETTINGS
 
@@ -390,19 +395,22 @@ void ofxColorManager::setup()
 
     load_group_XML(XML_params, XML_path);
 
-    //-
+    //------------------------------------------------
 
     // STARTUP
 
+    //--
+
+    // PRESET MANAGER
+
+    files_refresh();
+
     // TODO
-    //    palette_load("myPalette");
     preset_load(PRESET_name);
 
     //-
 
     palettes_setVisible(SHOW_AlgoPalettes);
-
-    //    cam.enableOrtho();
 
     //--
 
@@ -459,6 +467,8 @@ void ofxColorManager::setup()
     //call after add the panels
     panels.setup();
 
+    panels.group_Selected = 1;
+
     //--
 }
 
@@ -481,7 +491,7 @@ void ofxColorManager::gui_setup_layout()
 
     // global mini pad between panels/objects
     pad = 2;
-    guiWidth = 250;
+    guiWidth = 200;
     box_size = 40;
 
     // gui 1 ImGui COLOR PANEL
@@ -490,21 +500,21 @@ void ofxColorManager::gui_setup_layout()
     gui_w = guiWidth;
     gui_h = 200;
 
-    // gui 2 ImGui USER PANEL
-    gui2_x = guiWidth-3;
+    // gui 2 ImGui COLOR MANAGER
+    gui2_x = 230;
     gui2_y = 0;
     gui2_w = guiWidth;
     gui2_h = 100;
 
     // gui 3 ImGui PRESET MANAGER
     gui3_x = 700;
-    gui3_y = 10;
+    gui3_y = 0;
     gui3_w = guiWidth;
     gui3_h = 200;
 
     // gui 4 ImGui PANELS MANAGER
-    gui4_x = 250;
-    gui4_y = 350;
+    gui4_x = gui2_x;
+    gui4_y = 575;
     gui4_w = guiWidth;
     gui4_h = 200;
 
@@ -844,14 +854,12 @@ void ofxColorManager::interface_draw(){
 
 //--------------------------------------------------------------
 void ofxColorManager::gui_imGui_window1(){
-    //    mainSettings = ofxImGui::Settings();
 
     // COLOR PICKER CUSTOM
 
-    auto COLOR_PICKER_Settings = ofxImGui::Settings();
-    COLOR_PICKER_Settings.windowPos = ofVec2f(gui_x, gui_y);
-    COLOR_PICKER_Settings.windowSize = ofVec2f(guiWidth, ofGetWindowHeight()-gui_y);
-    //    COLOR_PICKER_Settings.lockPosition = true;
+    mainSettings = ofxImGui::Settings();
+    mainSettings.windowPos = ofVec2f(gui_x, gui_y);
+    mainSettings.windowSize = ofVec2f(guiWidth, ofGetWindowHeight()-gui_y);
 
     //    static bool no_titlebar = false;
     //    static bool no_scrollbar = false;
@@ -870,9 +878,9 @@ void ofxColorManager::gui_imGui_window1(){
     //    if (no_collapse)  window_flags |= ImGuiWindowFlags_NoCollapse;
     ////    if (no_nav)       window_flags |= ImGuiWindowFlags_NoNav;
     ////    if (no_close)     p_open = NULL; // Don't pass our bool* to Begin
+    //    if (ofxImGui::BeginWindow("COLOR PICKER", mainSettings, window_flags))
 
-    //    if (ofxImGui::BeginWindow("COLOR PICKER", COLOR_PICKER_Settings, window_flags))
-    if (ofxImGui::BeginWindow("COLOR PICKER", COLOR_PICKER_Settings, false))
+    if (ofxImGui::BeginWindow("COLOR PICKER", mainSettings, false))
     {
         //--
 
@@ -895,35 +903,37 @@ void ofxColorManager::gui_imGui_window1(){
 
         // 0. CUSTOM BUTTON COLOR BIG
 
-        ImGui::PushItemWidth(guiWidth * widgetFactor);
+//        ImGui::PushItemWidth(guiWidth * widgetFactor);
+        int colorW = guiWidth;
+        int colorH = 90;
+        int misc_flags = ImGuiColorEditFlags_NoOptions|
+                         ImGuiColorEditFlags_NoTooltip;
 
-        int colorW = ImGui::GetWindowWidth() * widgetFactor;
-        int colorH = 50;
-        int misc_flags = ImGuiColorEditFlags_NoOptions|ImGuiColorEditFlags_NoTooltip;
-        ImGui::ColorButton("MyColor##3", *(ImVec4 *) &color, misc_flags, ImVec2(colorW, colorH));
-
-        ImGui::PopItemWidth();
+        ImGui::ColorButton("MyColor##3", *(ImVec4 *) &color, misc_flags,
+                ImVec2(colorW, colorH));
+//        ImGui::PopItemWidth();
 
         //-
 
         // 1. USER PALETTE
 
-        if (ofxImGui::BeginTree("USER PALETTE", COLOR_PICKER_Settings)){
+        if (ofxImGui::BeginTree("USER PALETTE", mainSettings)){
             ofxImGui::AddParameter(this->bPaletteEdit);
             ofxImGui::AddParameter(this->bAddColor);
             ImGui::SameLine();
             ofxImGui::AddParameter(this->bRemoveColor);
             ofxImGui::AddParameter(this->bClearPalette);
-            ofxImGui::EndTree(COLOR_PICKER_Settings);
+            ofxImGui::EndTree(mainSettings);
         }
 
         //-
 
         // 2. COLOR HSB
 
-        if (ofxImGui::BeginTree("COLOR", COLOR_PICKER_Settings))
+//        if (ofxImGui::BeginTree("COLOR", mainSettings))
+        if (ImGui::CollapsingHeader("COLOR"))
         {
-            ImGui::PushItemWidth(guiWidth * 0.77);
+//            ImGui::PushItemWidth(guiWidth * 0.77);
 
             // TODO: SHOULD APPLY HSV HERE, NOT INTO CALLBACK, BECAUSE IT WILL TRIG
             // THE COLOR PICKED UPDATING CALLBACK!!!
@@ -966,26 +976,9 @@ void ofxColorManager::gui_imGui_window1(){
 
             ofxImGui::AddParameter(this->bRandomColor);
 
-            ImGui::PopItemWidth();
-            ofxImGui::EndTree(COLOR_PICKER_Settings);
+//            ImGui::PopItemWidth();
+//            ofxImGui::EndTree(mainSettings);
         }
-
-        //-
-
-        //        // get color from outside color picked
-        //
-        //        // TEST
-        //        LISTEN_isEnabled = false;//maybe required because get() causes callbacks too (?)
-        //
-        //        // TEST
-        //        static ImVec4 color;
-        //        color.x = color_picked.get().r;
-        //        color.y = color_picked.get().g;
-        //        color.z = color_picked.get().b;
-        //        color.w = color_picked.get().a;
-        //
-        //        // TEST
-        //        LISTEN_isEnabled = true;
 
         //-
 
@@ -994,11 +987,6 @@ void ofxColorManager::gui_imGui_window1(){
             // 0. custom button color big
 
             ImGui::PushItemWidth(guiWidth * widgetFactor);
-
-            //            int colorW = ImGui::GetWindowWidth() * widgetFactor;
-            //            int colorH = 30;
-            //            int misc_flags = ImGuiColorEditFlags_NoOptions|ImGuiColorEditFlags_NoTooltip;
-            //            ImGui::ColorButton("MyColor##3", *(ImVec4 *) &color, misc_flags, ImVec2(colorW, colorH));
 
             //--
 
@@ -1052,13 +1040,6 @@ void ofxColorManager::gui_imGui_window1(){
 
         // 3. PALETTE LIBRARY
 
-        //        if (SHOW_PaletteCustom)
-        //        {
-        //            auto palette_Settings = ofxImGui::Settings();
-        //            palette_Settings.windowPos = ofVec2f(1100, 10);
-        //            palette_Settings.windowSize = ofVec2f(gui2_w, 300);
-        //            if (ofxImGui::BeginWindow("PALETTE LIBRARY", palette_Settings, false)) {
-        //            if (ofxImGui::BeginTree("PALETTE LIBRARY", mainSettings))//grouped folder
         if (ImGui::CollapsingHeader("PALETTE LIBRARY"))
         {
             //--
@@ -1120,9 +1101,6 @@ void ofxColorManager::gui_imGui_window1(){
 
             // 2.2 draw palette
 
-            //                if (ofxImGui::BeginTree("COLORS", mainSettings)) {
-            //            if (ImGui::CollapsingHeader("PALETTE")) {
-
             for (int n = startColorInPal; n < endColorInPal; n++)
                 //for (int n = 0; n < palSize; n++) {
             {
@@ -1151,17 +1129,9 @@ void ofxColorManager::gui_imGui_window1(){
                     ImGui::PopID();
                 }
             }
-
-            //                    ofxImGui::EndTree(mainSettings);
         }
-
-        //                ofxImGui::EndTree(mainSettings);
-        //
-        //            }
-        //            ofxImGui::EndWindow(palette_Settings);
-        //        }
     }
-    ofxImGui::EndWindow(COLOR_PICKER_Settings);
+    ofxImGui::EndWindow(mainSettings);
 }
 
 //--------------------------------------------------------------
@@ -1222,8 +1192,9 @@ void ofxColorManager::gui_imGui_window2()
                             ImGuiColorEditFlags_NoTooltip |
                             ImGuiColorEditFlags_NoLabel |
                             ImGuiColorEditFlags_NoSidePreview |
-                            //                            ImGuiColorEditFlags_NoInputs |
-                                    ImGuiColorEditFlags_NoAlpha |
+                            ImGuiColorEditFlags_NoOptions|
+                            //ImGuiColorEditFlags_NoInputs |
+                            ImGuiColorEditFlags_NoAlpha |
                             ImGuiColorEditFlags_PickerHueBar;
 
             ImGui::ColorPicker4("Background Color", (float *) &color, colorEdiFlags);
@@ -1369,44 +1340,64 @@ void ofxColorManager::gui_imGui_window3()
     mainSettings = ofxImGui::Settings();
     mainSettings.windowSize = ofVec2f(gui3_w, gui3_h);
     mainSettings.windowPos = ofVec2f(ofGetWindowWidth()*0.5-gui3_w*0.5, gui3_y);
-//    MANAGER_Set.windowPos = ofVec2f(gui3_x, gui3_y);
-
-//    auto MANAGER_Set = ofxImGui::Settings();
-//    MANAGER_Set.windowSize = ofVec2f(gui3_w, gui3_h);
-//    MANAGER_Set.windowPos = ofVec2f(ofGetWindowWidth()*0.5-gui3_w*0.5, gui3_y);
-////    MANAGER_Set.windowPos = ofVec2f(gui3_x, gui3_y);
+//    mainSettings.windowPos = ofVec2f(gui3_x, gui3_y);
 
     if (ofxImGui::BeginWindow("PRESET MANAGER", mainSettings, false))
     {
         ImGui::Text("PALETTE");
 
-        // load string into char array
-        string temp = PRESET_name;
-        char tab2[32];
-        strncpy(tab2, temp.c_str(), sizeof(tab2));
-        tab2[sizeof(tab2) - 1] = 0;
-
         //TODO
         //bug doubled keys...
 
-//        static char str0[128] = "";
+//        // 0
+//        static char str0[128] = "Hello, world!";
+//        ImGui::InputText("input text", str0, IM_ARRAYSIZE(str0));
+
+//        // A
+//        static char str0[128] = "type";
 //        if (ImGui::InputText("", str0, IM_ARRAYSIZE(str0)))
 //        {
 //            cout << "InputText:" << ofToString(str0) << endl;
-//            PRESET_name = ofToString(str0);
+//
+////            textInput_temp = ofToString(str0);
+//            cout << "textInput_temp:" << textInput_temp << endl;
+//        }
+
+        // B
+//        string textInput_temp = PRESET_name;
+//        static char tab2[32];
+        char tab2[32];
+
+        // load tab2 with textInput_temp
+        // load string into char array
+        strncpy(tab2, textInput_temp.c_str(), sizeof(tab2));
+        tab2[sizeof(tab2) - 1] = 0;
+
+        //TODO
+        //maybe should use 2 different names to presets from kit
+        //or loaded from colour lovers
 
         if (ImGui::InputText("", tab2, IM_ARRAYSIZE(tab2)))
         {
             cout << "InputText:" << ofToString(tab2) << endl;
-            PRESET_name = ofToString(tab2);
 
-            cout << "PRESET_name: " << PRESET_name << endl;
+            textInput_temp = ofToString(tab2);
+            cout << "textInput_temp:" << textInput_temp << endl;
         }
 
         if (ImGui::Button("SAVE"))
         {
             cout << "SAVE" << endl;
+
+            //TODO
+            //should re load by same name and get what position on vector
+            //is to reloaad current preset number
+//            textInput_temp = ofToString(tab2);
+//            cout << "textInput_temp:" << textInput_temp << endl;
+
+            PRESET_name = textInput_temp;
             cout << "PRESET_name: " << PRESET_name << endl;
+
             preset_save(PRESET_name);
 
             files_refresh();
@@ -1416,19 +1407,22 @@ void ofxColorManager::gui_imGui_window3()
         if (ImGui::Button("UPDATE"))
         {
             cout << "UPDATE" << endl;
+
+            PRESET_name = textInput_temp;
             cout << "PRESET_name: " << PRESET_name << endl;
 
             //delete old file
             files[currentFile].remove();
-//            files_refresh();
+            // files_refresh();
 
             //save new one
             preset_save(PRESET_name);
+
             files_refresh();
         }
 
         ImGui::SameLine();
-        if (ImGui::Button("LOAD"))
+        if (ImGui::Button("LOAD"))//not required..
         {
             cout << "LOAD" << endl;
             cout << "PRESET_name: " << PRESET_name << endl;
@@ -1436,9 +1430,12 @@ void ofxColorManager::gui_imGui_window3()
         }
 
         ImGui::SameLine();
-        if (ImGui::Button("DELETE"))//preset
+        if (ImGui::Button("DELETE"))//current preset
         {
+            cout << "DELETE" << endl;
+
             files[currentFile].remove();
+
             files_refresh();
         }
 
@@ -1670,7 +1667,10 @@ void ofxColorManager::update()
             bAuto_palette_recall = false;
         }
 
+        //TODO
         PRESET_name = myPalette_Name;
+        textInput_temp = PRESET_name;
+
 
         // clear DEMO1 objects
         myDEMO_palette.clear();
@@ -2501,11 +2501,11 @@ void ofxColorManager::draw()
 
         // COLOR BOX PICKER (CURRENT)
 
-        ofPushStyle();
-        ofFill();
-        ofSetColor(ofColor( color_picked.get() ));
-        ofDrawRectangle(r_color_picked);
-        ofPopStyle();
+//        ofPushStyle();
+//        ofFill();
+//        ofSetColor(ofColor( color_picked.get() ));
+//        ofDrawRectangle(r_color_picked);
+//        ofPopStyle();
 
         //-
 
@@ -2524,6 +2524,8 @@ void ofxColorManager::draw()
 
         // INTERFACE
         interface_draw();
+
+        //-
 
         // CURVE
         if (SHOW_Gradient) {
@@ -2974,12 +2976,17 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
 //--------------------------------------------------------------
 void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 {
+    const int &key = eventArgs.key;
+
+    // un-blockeable keys goes here
+
+    //--
+
     if (ENABLE_keys)
     {
-        const int &key = eventArgs.key;
         //    ofLogNotice("ofxColorManager") << "key: " << key;
 
-        //--
+        //-
 
         // PRESET MANAGER
 
@@ -3167,6 +3174,8 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
             if (key == 'v') {
                 ColourLoversHelper.randomPalette();
 
+                textInput_temp = PRESET_name;
+
                 // clear DEMO1 objects
                 myDEMO_palette.clear();
             }
@@ -3177,12 +3186,16 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
             else if (key == OF_KEY_DOWN) {
                 ColourLoversHelper.nextPalette();
 
+//                textInput_temp = PRESET_name;
+
                 // clear DEMO1 objects
                 myDEMO_palette.clear();
 
             }
             else if (key == OF_KEY_UP) {
                 ColourLoversHelper.prevPalette();
+
+//                textInput_temp = PRESET_name;
 
                 // clear DEMO1 objects
                 myDEMO_palette.clear();
@@ -3690,6 +3703,9 @@ void ofxColorManager::exit()
 //--------------------------------------------------------------
 void ofxColorManager::preset_load(string p)
 {
+    //TODO
+    textInput_temp = PRESET_name;
+
     ofLogNotice("ofxColorManager:preset_load") << p;
     //    string path = preset_path+p+".json";
 
