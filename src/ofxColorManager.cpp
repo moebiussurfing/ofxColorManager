@@ -1444,8 +1444,8 @@ void ofxColorManager::gui_imGui_window3()
         ImGui::Separator();
         ImGui::Text("KIT");
 
-        int numPalettes = fileNames.size();
-        ImGui::Text("Total palettes: %d", numPalettes);
+//        int numPalettes = fileNames.size();
+//        ImGui::Text("Total palettes: %d", numPalettes);
 
         // arrow buttons
         static int counter = currentFile;
@@ -1485,7 +1485,9 @@ void ofxColorManager::gui_imGui_window3()
 
         ImGui::PopButtonRepeat();
         ImGui::SameLine();
-        ImGui::Text("%d", currentFile);
+//        ImGui::Text("%d", currentFile);
+        int numPalettes = fileNames.size()-1;
+        ImGui::Text("%d/%d", currentFile, numPalettes);
 
         //-
 
