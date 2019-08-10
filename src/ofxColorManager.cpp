@@ -2,17 +2,18 @@
 
 
 //--------------------------------------------------------------
-void ofxColorManager::ColorWheel_setup(){
+void ofxColorManager::ColorWheel_setup() {
     group.setName("Color Theory");
     group.add(primaryColor.set("Primary Color", ofColor::magenta));
-    group.add(colorScheme.set("Color Scheme", 6, 0, ColorWheelSchemes::colorSchemes.size()-1));
+    group.add(colorScheme.set("Color Scheme", 6, 0, ColorWheelSchemes::colorSchemes.size() - 1));
     group.add(colorSchemeName);
     group.add(numColors.set("Num Colors", 8, 1, 10));
 
     panel.setup();
     panel.add(group);
-    panel.setPosition(711+220,670);
+    panel.setPosition(711 + 220, 670);
 }
+
 
 //--------------------------------------------------------------
 void ofxColorManager::ColorWheel_update() {
@@ -27,15 +28,16 @@ void ofxColorManager::ColorWheel_update() {
     colors = scheme->interpolate(numColors.get());
 }
 
+
 //--------------------------------------------------------------
-void ofxColorManager::ColorWheel_draw(){
+void ofxColorManager::ColorWheel_draw() {
     ofPushStyle();
     ofPushMatrix();
-    ofTranslate(711,670);
+    ofTranslate(711, 670);
 
     //    float w = ofGetWidth() / (float) colors.size();
     float w = 200 / (float) colors.size();
-    for (int i=0; i<colors.size(); i++) {
+    for (int i = 0; i < colors.size(); i++) {
         ofSetColor(colors[i]);
         ofFill();
         ofDrawRectangle(w * i, 0, w, 50);
@@ -46,20 +48,19 @@ void ofxColorManager::ColorWheel_draw(){
     panel.draw();
 }
 
+
 //--------------------------------------------------------------
-ofxColorManager::ofxColorManager()
-{
+ofxColorManager::ofxColorManager() {
 }
 
 
 //--------------------------------------------------------------
-ofxColorManager::~ofxColorManager()
-{
+ofxColorManager::~ofxColorManager() {
 }
 
+
 //--------------------------------------------------------------
-void ofxColorManager::files_refresh()
-{
+void ofxColorManager::files_refresh() {
     ofDirectory dataDirectory(ofToDataPath("user_kits/presets", true));
 
     files.clear();
@@ -69,8 +70,7 @@ void ofxColorManager::files_refresh()
     //there is not any sorting of files..
 
     files = dataDirectory.getFiles();
-    for(size_t i=0; i<files.size(); i++)
-    {
+    for (size_t i = 0; i < files.size(); i++) {
         fileNames.push_back(files[i].getBaseName());
     }
 
@@ -82,21 +82,18 @@ void ofxColorManager::files_refresh()
     //thats because saving re sort the files
     //and we don't know the position of las saves preset
 
-    if (fileNames.size()>0)
-    {
+    if (fileNames.size() > 0) {
         currentFile = 0;
         PRESET_name = fileNames[currentFile];
         preset_load(PRESET_name);
-    }
-    else
-    {
-        ofLogError("ofxColorManager")<<"NOT FOUND ANY FILE PRESET!";
+    } else {
+        ofLogError("ofxColorManager") << "NOT FOUND ANY FILE PRESET!";
     }
 }
 
+
 //--------------------------------------------------------------
-void ofxColorManager::setup()
-{
+void ofxColorManager::setup() {
     //--
 
     // ColorWheel
@@ -110,7 +107,7 @@ void ofxColorManager::setup()
 
     //-
 
-    dt = 1/30.0f;//TODO: should be setted externally
+    dt = 1 / 30.0f;//TODO: should be setted externally
 
     //--
 
@@ -133,8 +130,8 @@ void ofxColorManager::setup()
     // set positions and panel sizes
     glm::vec2 sizeGui(150, 375);
     glm::vec2 sizeGrid(150, ofGetHeight());
-    glm::vec2 posGui(ofGetWidth()-(sizeGui.x+sizeGrid.x+4), 0);
-    glm::vec2 posGrid(posGui.x+sizeGui.x+2, 0);
+    glm::vec2 posGui(ofGetWidth() - (sizeGui.x + sizeGrid.x + 4), 0);
+    glm::vec2 posGrid(posGui.x + sizeGui.x + 2, 0);
 
     // must be called before setup() to overwrite default settings
     ColourLoversHelper.setGrid(posGrid, sizeGrid);
@@ -167,7 +164,7 @@ void ofxColorManager::setup()
     // COLOR BROWSER
 
     ColorBrowser.setBoxSize(7);
-    ColorBrowser.setRowsSize(7*17);//for Pantone palette
+    ColorBrowser.setRowsSize(7 * 17);//for Pantone palette
     ColorBrowser.setup_colorBACK(color_BACK);
     ColorBrowser.setPosition(colorBrowserPos);
     ColorBrowser.setup();
@@ -207,8 +204,8 @@ void ofxColorManager::setup()
     // ALGORITHMIC PALETTE
 
     MODE_Palette.set("FROM COLOR", false);
-    SATURATION.set("SATURATION", 200, 0, 255 );
-    BRIGHTNESS.set("BRIGHTNESS", 200, 0, 255 );
+    SATURATION.set("SATURATION", 200, 0, 255);
+    BRIGHTNESS.set("BRIGHTNESS", 200, 0, 255);
     bRandomPalette.set("RANDOM PALETTE", false);
     bAuto_palette_recall.set("AUTO CREATE!", false);
     bLock_palette.set("LOCK PALETTES", false);
@@ -333,10 +330,10 @@ void ofxColorManager::setup()
 
     // font
 
-    ImGuiIO& io = ImGui::GetIO();
+    ImGuiIO &io = ImGui::GetIO();
     string inputPath;
     inputPath = ofFilePath::getAbsolutePath("assets/fonts/PragmataProR_0822.ttf");
-    const char* myPath = inputPath.c_str();
+    const char *myPath = inputPath.c_str();
     ImFontConfig config;
     //    config.OversampleH = 3;
     //    config.OversampleV = 1;
@@ -477,8 +474,7 @@ void ofxColorManager::setup()
 
 
 //--------------------------------------------------------------
-void ofxColorManager::interface_setup()
-{
+void ofxColorManager::interface_setup() {
     scene = new Node();
     scene->setSize(ofGetWidth(), ofGetHeight());
     scene->setName("Scene");
@@ -487,8 +483,7 @@ void ofxColorManager::interface_setup()
 
 
 //--------------------------------------------------------------
-void ofxColorManager::gui_setup_layout()
-{
+void ofxColorManager::gui_setup_layout() {
     // LAYOUT DEFAULT
     // TODO:: add layout json saver like ofxGuiPanels
 
@@ -531,46 +526,46 @@ void ofxColorManager::gui_setup_layout()
 
     // gradient-pre curve (bad sorted to the left but anchored to curve..)
     grad_w = box_size;
-    grad_x = curveTool_x-(grad_w + pad);
+    grad_x = curveTool_x - (grad_w + pad);
     grad_y = curveTool_y;
     grad_h = curveTool_h;
 
     // curve mod slider
-    sliderMod_x = curveTool_x+curveTool_w+pad;
+    sliderMod_x = curveTool_x + curveTool_w + pad;
     sliderMod_y = curveTool_y;
-    sliderMod_w = box_size/2;
+    sliderMod_w = box_size / 2;
     sliderMod_h = curveTool_h;
 
     // gradient-curved image LUT [referenced to curve pos (vertical)]
-    image_curvedGradient_x = curveTool_w+pad+sliderMod_w+pad;//curveTool +
+    image_curvedGradient_x = curveTool_w + pad + sliderMod_w + pad;//curveTool +
     image_curvedGradient_y = 0;//curveTool +
     image_curvedGradient_w = box_size;
     image_curvedGradient_h = curveTool_h;
 
     // testing curve widgets
     // curve out slider
-    slider_x = sliderMod_x+pad+image_curvedGradient_w+box_size/2;
+    slider_x = sliderMod_x + pad + image_curvedGradient_w + box_size / 2;
     slider_y = curveTool_y;
-    slider_w = box_size/2;
+    slider_w = box_size / 2;
     slider_h = curveTool_h;
 
     // current color box/bar (the one affected by slider position. just for testing gradient purpose)
-    currColor_x = slider_x+2*(slider_w+pad);
+    currColor_x = slider_x + 2 * (slider_w + pad);
     currColor_y = curveTool_y;
 
     //-
 
     // user palette (pos related to gradient-pre curve)
-    palette_x = grad_x-(grad_w+pad);
+    palette_x = grad_x - (grad_w + pad);
     palette_y = curveTool_y;
 
     // user color box monitor picked (same that color picker gui)
     // bar mode
-    color_w = (2*box_size);
-    color_x = palette_x-(color_w+pad+box_size/2+pad);
+    color_w = (2 * box_size);
+    color_x = palette_x - (color_w + pad + box_size / 2 + pad);
     color_y = curveTool_y;
     color_h = curveTool_h;
-    r_color_picked = ofRectangle( color_x, color_y, color_w, color_h );
+    r_color_picked = ofRectangle(color_x, color_y, color_w, color_h);
 
     //-
 
@@ -581,8 +576,8 @@ void ofxColorManager::gui_setup_layout()
     // color clicked box on palettes(hidden)
     colorPick_x = 390;
     colorPick_y = color_h + 30;
-    colorPick_w = colorPick_h = 2*box_size;
-    r_color_clicked = ofRectangle( colorPick_x, colorPick_y, colorPick_w, colorPick_h );
+    colorPick_w = colorPick_h = 2 * box_size;
+    r_color_clicked = ofRectangle(colorPick_x, colorPick_y, colorPick_w, colorPick_h);
 
     // browser colors palettes
     colorBrowserPos = glm::vec2(270, 675);
@@ -643,57 +638,56 @@ void ofxColorManager::gui_setup_layout()
 
 
 //--------------------------------------------------------------
-void ofxColorManager::gui_imGui_theme()
-{
+void ofxColorManager::gui_imGui_theme() {
     // must be done after setup the gui
 
     ImGuiStyle *style = &ImGui::GetStyle();
 
     // my dark theme
     //    ImVec4* colors = ImGui::GetStyle().Colors;
-    style->Colors[ImGuiCol_Text]                   = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
-    style->Colors[ImGuiCol_TextDisabled]           = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
-    style->Colors[ImGuiCol_WindowBg]               = ImVec4(0.15f, 0.15f, 0.15f, 1.00f);
-    style->Colors[ImGuiCol_ChildBg]                = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
-    style->Colors[ImGuiCol_PopupBg]                = ImVec4(0.08f, 0.08f, 0.08f, 0.94f);
-    style->Colors[ImGuiCol_Border]                 = ImVec4(0.00f, 0.00f, 0.00f, 0.50f);
-    style->Colors[ImGuiCol_BorderShadow]           = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-    style->Colors[ImGuiCol_FrameBg]                = ImVec4(0.02f, 0.02f, 0.02f, 0.54f);
-    style->Colors[ImGuiCol_FrameBgHovered]         = ImVec4(0.26f, 0.26f, 0.26f, 0.68f);
-    style->Colors[ImGuiCol_FrameBgActive]          = ImVec4(0.25f, 0.25f, 0.25f, 0.67f);
-    style->Colors[ImGuiCol_TitleBg]                = ImVec4(0.04f, 0.04f, 0.04f, 1.00f);
-    style->Colors[ImGuiCol_TitleBgActive]          = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
-    style->Colors[ImGuiCol_TitleBgCollapsed]       = ImVec4(0.00f, 0.00f, 0.00f, 0.51f);
-    style->Colors[ImGuiCol_MenuBarBg]              = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
-    style->Colors[ImGuiCol_ScrollbarBg]            = ImVec4(0.02f, 0.02f, 0.02f, 0.53f);
-    style->Colors[ImGuiCol_ScrollbarGrab]          = ImVec4(0.12f, 0.11f, 0.11f, 1.00f);
-    style->Colors[ImGuiCol_ScrollbarGrabHovered]   = ImVec4(0.19f, 0.19f, 0.19f, 1.00f);
-    style->Colors[ImGuiCol_ScrollbarGrabActive]    = ImVec4(0.39f, 0.39f, 0.39f, 1.00f);
-    style->Colors[ImGuiCol_CheckMark]              = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
-    style->Colors[ImGuiCol_SliderGrab]             = ImVec4(0.40f, 0.40f, 0.40f, 1.00f);
-    style->Colors[ImGuiCol_SliderGrabActive]       = ImVec4(0.74f, 0.75f, 0.77f, 0.79f);
-    style->Colors[ImGuiCol_Button]                 = ImVec4(0.28f, 0.28f, 0.28f, 1.00f);
-    style->Colors[ImGuiCol_ButtonHovered]          = ImVec4(0.19f, 0.19f, 0.19f, 0.79f);
-    style->Colors[ImGuiCol_ButtonActive]           = ImVec4(0.00f, 0.00f, 0.00f, 0.70f);
-    style->Colors[ImGuiCol_Header]                 = ImVec4(0.00f, 0.00f, 0.00f, 0.31f);
-    style->Colors[ImGuiCol_HeaderHovered]          = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
-    style->Colors[ImGuiCol_HeaderActive]           = ImVec4(0.26f, 0.26f, 0.26f, 1.00f);
-    style->Colors[ImGuiCol_Separator]              = ImVec4(0.43f, 0.43f, 0.50f, 0.50f);
-    style->Colors[ImGuiCol_SeparatorHovered]       = ImVec4(0.29f, 0.29f, 0.29f, 0.78f);
-    style->Colors[ImGuiCol_SeparatorActive]        = ImVec4(0.37f, 0.37f, 0.37f, 1.00f);
-    style->Colors[ImGuiCol_ResizeGrip]             = ImVec4(0.44f, 0.44f, 0.44f, 0.25f);
-    style->Colors[ImGuiCol_ResizeGripHovered]      = ImVec4(0.68f, 0.68f, 0.68f, 0.67f);
-    style->Colors[ImGuiCol_ResizeGripActive]       = ImVec4(0.68f, 0.68f, 0.68f, 0.95f);
-    style->Colors[ImGuiCol_PlotLines]              = ImVec4(0.81f, 0.79f, 0.79f, 1.00f);
-    style->Colors[ImGuiCol_PlotLinesHovered]       = ImVec4(0.58f, 0.58f, 0.58f, 1.00f);
-    style->Colors[ImGuiCol_PlotHistogram]          = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
-    style->Colors[ImGuiCol_PlotHistogramHovered]   = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
-    style->Colors[ImGuiCol_TextSelectedBg]         = ImVec4(0.00f, 0.00f, 0.00f, 0.35f);
-    style->Colors[ImGuiCol_DragDropTarget]         = ImVec4(0.50f, 0.50f, 0.50f, 0.90f);
-    style->Colors[ImGuiCol_NavHighlight]           = ImVec4(0.79f, 0.79f, 0.79f, 1.00f);
-    style->Colors[ImGuiCol_NavWindowingHighlight]  = ImVec4(1.00f, 1.00f, 1.00f, 0.70f);
-    style->Colors[ImGuiCol_NavWindowingDimBg]      = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
-    style->Colors[ImGuiCol_ModalWindowDimBg]       = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
+    style->Colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
+    style->Colors[ImGuiCol_TextDisabled] = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
+    style->Colors[ImGuiCol_WindowBg] = ImVec4(0.15f, 0.15f, 0.15f, 1.00f);
+    style->Colors[ImGuiCol_ChildBg] = ImVec4(1.00f, 1.00f, 1.00f, 0.00f);
+    style->Colors[ImGuiCol_PopupBg] = ImVec4(0.08f, 0.08f, 0.08f, 0.94f);
+    style->Colors[ImGuiCol_Border] = ImVec4(0.00f, 0.00f, 0.00f, 0.50f);
+    style->Colors[ImGuiCol_BorderShadow] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
+    style->Colors[ImGuiCol_FrameBg] = ImVec4(0.02f, 0.02f, 0.02f, 0.54f);
+    style->Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.26f, 0.26f, 0.26f, 0.68f);
+    style->Colors[ImGuiCol_FrameBgActive] = ImVec4(0.25f, 0.25f, 0.25f, 0.67f);
+    style->Colors[ImGuiCol_TitleBg] = ImVec4(0.04f, 0.04f, 0.04f, 1.00f);
+    style->Colors[ImGuiCol_TitleBgActive] = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
+    style->Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.00f, 0.00f, 0.00f, 0.51f);
+    style->Colors[ImGuiCol_MenuBarBg] = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
+    style->Colors[ImGuiCol_ScrollbarBg] = ImVec4(0.02f, 0.02f, 0.02f, 0.53f);
+    style->Colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.12f, 0.11f, 0.11f, 1.00f);
+    style->Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.19f, 0.19f, 0.19f, 1.00f);
+    style->Colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.39f, 0.39f, 0.39f, 1.00f);
+    style->Colors[ImGuiCol_CheckMark] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
+    style->Colors[ImGuiCol_SliderGrab] = ImVec4(0.40f, 0.40f, 0.40f, 1.00f);
+    style->Colors[ImGuiCol_SliderGrabActive] = ImVec4(0.74f, 0.75f, 0.77f, 0.79f);
+    style->Colors[ImGuiCol_Button] = ImVec4(0.28f, 0.28f, 0.28f, 1.00f);
+    style->Colors[ImGuiCol_ButtonHovered] = ImVec4(0.19f, 0.19f, 0.19f, 0.79f);
+    style->Colors[ImGuiCol_ButtonActive] = ImVec4(0.00f, 0.00f, 0.00f, 0.70f);
+    style->Colors[ImGuiCol_Header] = ImVec4(0.00f, 0.00f, 0.00f, 0.31f);
+    style->Colors[ImGuiCol_HeaderHovered] = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
+    style->Colors[ImGuiCol_HeaderActive] = ImVec4(0.26f, 0.26f, 0.26f, 1.00f);
+    style->Colors[ImGuiCol_Separator] = ImVec4(0.43f, 0.43f, 0.50f, 0.50f);
+    style->Colors[ImGuiCol_SeparatorHovered] = ImVec4(0.29f, 0.29f, 0.29f, 0.78f);
+    style->Colors[ImGuiCol_SeparatorActive] = ImVec4(0.37f, 0.37f, 0.37f, 1.00f);
+    style->Colors[ImGuiCol_ResizeGrip] = ImVec4(0.44f, 0.44f, 0.44f, 0.25f);
+    style->Colors[ImGuiCol_ResizeGripHovered] = ImVec4(0.68f, 0.68f, 0.68f, 0.67f);
+    style->Colors[ImGuiCol_ResizeGripActive] = ImVec4(0.68f, 0.68f, 0.68f, 0.95f);
+    style->Colors[ImGuiCol_PlotLines] = ImVec4(0.81f, 0.79f, 0.79f, 1.00f);
+    style->Colors[ImGuiCol_PlotLinesHovered] = ImVec4(0.58f, 0.58f, 0.58f, 1.00f);
+    style->Colors[ImGuiCol_PlotHistogram] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
+    style->Colors[ImGuiCol_PlotHistogramHovered] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
+    style->Colors[ImGuiCol_TextSelectedBg] = ImVec4(0.00f, 0.00f, 0.00f, 0.35f);
+    style->Colors[ImGuiCol_DragDropTarget] = ImVec4(0.50f, 0.50f, 0.50f, 0.90f);
+    style->Colors[ImGuiCol_NavHighlight] = ImVec4(0.79f, 0.79f, 0.79f, 1.00f);
+    style->Colors[ImGuiCol_NavWindowingHighlight] = ImVec4(1.00f, 1.00f, 1.00f, 0.70f);
+    style->Colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
+    style->Colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.80f, 0.80f, 0.80f, 0.35f);
 
     //    // 2. defaut dark theme exported
     //    style->WindowMinSize = ImVec2(160, 65);
@@ -714,8 +708,7 @@ void ofxColorManager::gui_imGui_theme()
 
 
 //--------------------------------------------------------------
-void ofxColorManager::palette_rearrenge()
-{
+void ofxColorManager::palette_rearrenge() {
     ofLogNotice("ofxColorManager:palette_rearrenge");
     ofLogNotice("ofxColorManager:palette_rearrenge") << "btns_palette.size():" << btns_palette.size();
 
@@ -727,31 +720,29 @@ void ofxColorManager::palette_rearrenge()
     w = box_size;
     int numBtns = btns_palette.size();
     hTotal = curveTool_h;
-    h = hTotal/numBtns;
+    h = hTotal / numBtns;
     bool flipBtn = true;
 
-    for (int i=0; i<numBtns; i++)
-    {
-        name = "btn"+ofToString(i);
+    for (int i = 0; i < numBtns; i++) {
+        name = "btn" + ofToString(i);
         //cout << name << endl;
         auto a = scene->getChildWithName(name, 1000);
 
         if (flipBtn)
-            y = palette_y + (numBtns-i-1)*h;
+            y = palette_y + (numBtns - i - 1) * h;
         else
-            y = palette_y + i*h;
+            y = palette_y + i * h;
 
         a->setPosition(x, y);
         a->setSize(w, h);
     }
 
-    ofLogNotice("ofxColorManager:palette_rearrenge") <<"btns_palette.size():"<<btns_palette.size();
+    ofLogNotice("ofxColorManager:palette_rearrenge") << "btns_palette.size():" << btns_palette.size();
 }
 
 
 //--------------------------------------------------------------
-void ofxColorManager::palette_addColor_toInterface(ofColor c)
-{
+void ofxColorManager::palette_addColor_toInterface(ofColor c) {
     // vertical palette with resize boxes size to fit gradient bar height
     // add the new color (current color_clicked) to the user palette
     int i = btns_palette.size();
@@ -759,20 +750,21 @@ void ofxColorManager::palette_addColor_toInterface(ofColor c)
     ButtonExample *btn = new ButtonExample();
     btn->setup(0, 0, 10, 10);//temp
     btn->setColor(c);
-    btn->setup_colorBACK( color_clicked );
+    btn->setup_colorBACK(color_clicked);
     btn->setSelectable(false);//to enable border draw
     btn->setLocked(true);//avoid dragging
-    btn->setName("btn"+ofToString(i));
+    btn->setName("btn" + ofToString(i));
 
     //temp positions
-    btn->setPosition(palette_x, palette_y+box_size+i*(box_size+pad));
+    btn->setPosition(palette_x, palette_y + box_size + i * (box_size + pad));
     btn->setSize(box_size, box_size);
 
     scene->addChild(btn);
     btns_palette.push_back(btn);
 
-    ofLogNotice("ofxColorManager:palette_addColor_toInterface:")<<"added btn";
-    ofLogNotice("ofxColorManager:palette_addColor_toInterface:")<<"btns_palette.size():["<<btns_palette.size()<<"]";
+    ofLogNotice("ofxColorManager:palette_addColor_toInterface:") << "added btn";
+    ofLogNotice("ofxColorManager:palette_addColor_toInterface:") << "btns_palette.size():[" << btns_palette.size()
+                                                                 << "]";
 
     //-
 
@@ -782,19 +774,17 @@ void ofxColorManager::palette_addColor_toInterface(ofColor c)
 
 
 //--------------------------------------------------------------
-void ofxColorManager::interface_update(){
+void ofxColorManager::interface_update() {
 
     TouchManager::one().update();
 
     // 1. EACH COLOR OF CURRENT USER PALETTE
-    for (int i=0; i<btns_palette.size(); i++)
-    {
+    for (int i = 0; i < btns_palette.size(); i++) {
         btns_palette[i]->update();
     }
 
     // 2. ALGORITHMIC PALETTES SELECTORS
-    for (int i=0; i<btns_plt_Selector.size(); i++)
-    {
+    for (int i = 0; i < btns_plt_Selector.size(); i++) {
         btns_plt_Selector[i]->update(dt);
     }
 
@@ -803,66 +793,58 @@ void ofxColorManager::interface_update(){
     // 3. ALGORITHMIC PALETTES COLORS
 
     // 1. triad
-    for (int i = 0 ; i < btns_plt_Triad.size(); i++)
-    {
+    for (int i = 0; i < btns_plt_Triad.size(); i++) {
         btns_plt_Triad[i]->update();
     }
     // 2. complement triad
-    for (int i = 0 ; i < btns_plt_ComplTriad.size(); i++)
-    {
+    for (int i = 0; i < btns_plt_ComplTriad.size(); i++) {
         btns_plt_ComplTriad[i]->update();
     }
     // 3. complement sat
-    for (int i = 0 ; i < btns_plt_CompSat.size(); i++)
-    {
+    for (int i = 0; i < btns_plt_CompSat.size(); i++) {
         btns_plt_CompSat[i]->update();
     }
     // 4. complement brgt
-    for (int i = 0 ; i < btns_plt_ComplBrgt.size(); i++)
-    {
+    for (int i = 0; i < btns_plt_ComplBrgt.size(); i++) {
         btns_plt_ComplBrgt[i]->update();
     }
     // 5. mono sat
-    for (int i = 0 ; i < btns_plt_MonoSat.size(); i++)
-    {
+    for (int i = 0; i < btns_plt_MonoSat.size(); i++) {
         btns_plt_MonoSat[i]->update();
     }
     // 6. mono brgt
-    for (int i = 0 ; i < btns_plt_MonoBrgt.size(); i++)
-    {
+    for (int i = 0; i < btns_plt_MonoBrgt.size(); i++) {
         btns_plt_MonoBrgt[i]->update();
     }
     // 7. analogue
-    for (int i=0; i<btns_plt_Analog.size(); i++)
-    {
+    for (int i = 0; i < btns_plt_Analog.size(); i++) {
         btns_plt_Analog[i]->update();
     }
     // 8. random
-    for (int i = 0 ; i < btns_plt_Random.size(); i++)
-    {
+    for (int i = 0; i < btns_plt_Random.size(); i++) {
         btns_plt_Random[i]->update();
     }
 }
 
 
 //--------------------------------------------------------------
-void ofxColorManager::interface_draw(){
+void ofxColorManager::interface_draw() {
     scene->render();
 
-    if (bShowDebug)
-    {
+    if (bShowDebug) {
         scene->renderDebug();
     }
 }
 
+
 //--------------------------------------------------------------
-void ofxColorManager::gui_imGui_window1(){
+void ofxColorManager::gui_imGui_window1() {
 
     // COLOR PICKER CUSTOM
 
     mainSettings = ofxImGui::Settings();
     mainSettings.windowPos = ofVec2f(gui_x, gui_y);
-    mainSettings.windowSize = ofVec2f(guiWidth, ofGetWindowHeight()-gui_y);
+    mainSettings.windowSize = ofVec2f(guiWidth, ofGetWindowHeight() - gui_y);
 
     //    static bool no_titlebar = false;
     //    static bool no_scrollbar = false;
@@ -883,8 +865,7 @@ void ofxColorManager::gui_imGui_window1(){
     ////    if (no_close)     p_open = NULL; // Don't pass our bool* to Begin
     //    if (ofxImGui::BeginWindow("COLOR PICKER", mainSettings, window_flags))
 
-    if (ofxImGui::BeginWindow("COLOR PICKER", mainSettings, false))
-    {
+    if (ofxImGui::BeginWindow("COLOR PICKER", mainSettings, false)) {
         //--
 
         // GET COLOR FROM OUTSIDE COLOR PICKED
@@ -909,18 +890,18 @@ void ofxColorManager::gui_imGui_window1(){
 //        ImGui::PushItemWidth(guiWidth * widgetFactor);
         int colorW = guiWidth;
         int colorH = 90;
-        int misc_flags = ImGuiColorEditFlags_NoOptions|
-                         ImGuiColorEditFlags_NoTooltip;
+        int misc_flags = ImGuiColorEditFlags_NoOptions |
+            ImGuiColorEditFlags_NoTooltip;
 
         ImGui::ColorButton("MyColor##3", *(ImVec4 *) &color, misc_flags,
-                ImVec2(colorW, colorH));
+            ImVec2(colorW, colorH));
 //        ImGui::PopItemWidth();
 
         //-
 
         // 1. USER PALETTE
 
-        if (ofxImGui::BeginTree("USER PALETTE", mainSettings)){
+        if (ofxImGui::BeginTree("USER PALETTE", mainSettings)) {
             ofxImGui::AddParameter(this->bPaletteEdit);
             ofxImGui::AddParameter(this->bAddColor);
             ImGui::SameLine();
@@ -934,8 +915,7 @@ void ofxColorManager::gui_imGui_window1(){
         // 2. COLOR HSB
 
 //        if (ofxImGui::BeginTree("COLOR", mainSettings))
-        if (ImGui::CollapsingHeader("COLOR"))
-        {
+        if (ImGui::CollapsingHeader("COLOR")) {
 //            ImGui::PushItemWidth(guiWidth * 0.77);
 
             // TODO: SHOULD APPLY HSV HERE, NOT INTO CALLBACK, BECAUSE IT WILL TRIG
@@ -944,32 +924,29 @@ void ofxColorManager::gui_imGui_window1(){
             // TEST
             LISTEN_isEnabled = false;
 
-            if (ofxImGui::AddParameter(this->color_HUE))
-            {
+            if (ofxImGui::AddParameter(this->color_HUE)) {
                 ofLogNotice("ofxColorManager") << "ImGui: HUE MOVED !" << endl;
                 ofColor c;
                 c.set(color_picked.get());
                 c.setHue(color_HUE);
                 color_picked.set(c);
-                Update_color_picked_CHANGES();
+                update_color_picked_CHANGES();
             }
-            if (ofxImGui::AddParameter(this->color_SAT))
-            {
+            if (ofxImGui::AddParameter(this->color_SAT)) {
                 ofLogNotice("ofxColorManager") << "ImGui: SAT MOVED !" << endl;
                 ofColor c;
                 c.set(color_picked.get());
                 c.setSaturation(color_SAT);
                 color_picked.set(c);
-                Update_color_picked_CHANGES();
+                update_color_picked_CHANGES();
             }
-            if (ofxImGui::AddParameter(this->color_BRG))
-            {
+            if (ofxImGui::AddParameter(this->color_BRG)) {
                 ofLogNotice("ofxColorManager") << "ImGui: BRG MOVED !" << endl;
                 ofColor c;
                 c.set(color_picked.get());
                 c.setBrightness(color_BRG);
                 color_picked.set(c);
-                Update_color_picked_CHANGES();
+                update_color_picked_CHANGES();
             }
 
             // TEST
@@ -997,17 +974,16 @@ void ofxColorManager::gui_imGui_window1(){
 
             // 1.1 circled & triangle
             ImGuiColorEditFlags colorEdiFlags =
-                    ImGuiColorEditFlags_NoSmallPreview |
-                            ImGuiColorEditFlags_NoTooltip |
-                            ImGuiColorEditFlags_NoLabel |
-                            ImGuiColorEditFlags_NoSidePreview |
-                            ImGuiColorEditFlags_HSV |
-                            ImGuiColorEditFlags_RGB |
-                            ImGuiColorEditFlags_NoInputs |
-                            ImGuiColorEditFlags_NoAlpha |
-                            ImGuiColorEditFlags_PickerHueWheel;
-            if (ImGui::ColorPicker4("MyColor##4", (float *) &color, colorEdiFlags))
-            {
+                ImGuiColorEditFlags_NoSmallPreview |
+                    ImGuiColorEditFlags_NoTooltip |
+                    ImGuiColorEditFlags_NoLabel |
+                    ImGuiColorEditFlags_NoSidePreview |
+                    ImGuiColorEditFlags_HSV |
+                    ImGuiColorEditFlags_RGB |
+                    ImGuiColorEditFlags_NoInputs |
+                    ImGuiColorEditFlags_NoAlpha |
+                    ImGuiColorEditFlags_PickerHueWheel;
+            if (ImGui::ColorPicker4("MyColor##4", (float *) &color, colorEdiFlags)) {
                 cout << "PICKER 1 MOVED !" << endl;
                 color_picked = color;
             }
@@ -1016,17 +992,16 @@ void ofxColorManager::gui_imGui_window1(){
 
             // 1.2 squared box
             colorEdiFlags =
-                    ImGuiColorEditFlags_NoSmallPreview |
-                            ImGuiColorEditFlags_NoTooltip |
-                            ImGuiColorEditFlags_NoLabel |
-                            ImGuiColorEditFlags_NoSidePreview |
-                            ImGuiColorEditFlags_HSV |
-                            ImGuiColorEditFlags_RGB |
-                            ImGuiColorEditFlags_HDR |
-                            ImGuiColorEditFlags_NoAlpha |
-                            ImGuiColorEditFlags_PickerHueBar;
-            if (ImGui::ColorPicker4("MyColor##5", (float *) &color, colorEdiFlags))
-            {
+                ImGuiColorEditFlags_NoSmallPreview |
+                    ImGuiColorEditFlags_NoTooltip |
+                    ImGuiColorEditFlags_NoLabel |
+                    ImGuiColorEditFlags_NoSidePreview |
+                    ImGuiColorEditFlags_HSV |
+                    ImGuiColorEditFlags_RGB |
+                    ImGuiColorEditFlags_HDR |
+                    ImGuiColorEditFlags_NoAlpha |
+                    ImGuiColorEditFlags_PickerHueBar;
+            if (ImGui::ColorPicker4("MyColor##5", (float *) &color, colorEdiFlags)) {
                 cout << "PICKER 2 MOVED !" << endl;
                 color_picked = color;
             }
@@ -1043,8 +1018,7 @@ void ofxColorManager::gui_imGui_window1(){
 
         // 3. PALETTE LIBRARY
 
-        if (ImGui::CollapsingHeader("PALETTE LIBRARY"))
-        {
+        if (ImGui::CollapsingHeader("PALETTE LIBRARY")) {
             //--
 
             // GET COLOR FROM OUTSIDE COLOR PICKED
@@ -1107,21 +1081,19 @@ void ofxColorManager::gui_imGui_window1(){
             for (int n = startColorInPal; n < endColorInPal; n++)
                 //for (int n = 0; n < palSize; n++) {
             {
-                if (n<lastColor) //to avoid empty colors at page end...
+                if (n < lastColor) //to avoid empty colors at page end...
                 {
                     // ImGui::PushItemWidth(guiWidth * 0.2);
                     ImGui::PushID(n);
 
                     // pantone
-                    if ((n%rowSizePal) != 0)
-                    {
+                    if ((n % rowSizePal) != 0) {
                         ImGui::SameLine(0.0f, ImGui::GetStyle().ItemSpacing.y);
                     }
 
                     if (ImGui::ColorButton("##palette", saved_palette[n],
-                            ImGuiColorEditFlags_NoAlpha | ImGuiColorEditFlags_NoPicker | ImGuiColorEditFlags_NoTooltip,
-                            ImVec2(20, 20)))
-                    {
+                        ImGuiColorEditFlags_NoAlpha | ImGuiColorEditFlags_NoPicker | ImGuiColorEditFlags_NoTooltip,
+                        ImVec2(20, 20))) {
                         color = ImVec4(saved_palette[n].x, saved_palette[n].y, saved_palette[n].z, color.w); // Preserve alpha!
 
                         ofLogNotice("ofxColorManager") << "ImGui: PALETTE PICKED !" << endl;
@@ -1137,17 +1109,16 @@ void ofxColorManager::gui_imGui_window1(){
     ofxImGui::EndWindow(mainSettings);
 }
 
+
 //--------------------------------------------------------------
-void ofxColorManager::gui_imGui_window4()
-{
+void ofxColorManager::gui_imGui_window4() {
     // 4. PANELS MANAGER
 
     auto panelsSet = ofxImGui::Settings();
     panelsSet.windowPos = ofVec2f(gui4_x, gui4_y);
     panelsSet.windowSize = ofVec2f(gui4_w, gui4_h);
 
-    if (ofxImGui::BeginWindow("PANELS MANAGER", panelsSet, false))
-    {
+    if (ofxImGui::BeginWindow("PANELS MANAGER", panelsSet, false)) {
 //        if (ofxImGui::BeginTree("PANELS", panelsSet))
 //        {
         ofxImGui::AddParameter(this->SHOW_Gradient);
@@ -1163,9 +1134,9 @@ void ofxColorManager::gui_imGui_window4()
     ofxImGui::EndWindow(panelsSet);
 }
 
+
 //--------------------------------------------------------------
-void ofxColorManager::gui_imGui_window2()
-{
+void ofxColorManager::gui_imGui_window2() {
     // 2. COLOR MANAGER
 
     //    mainSettings = ofxImGui::Settings();
@@ -1174,12 +1145,10 @@ void ofxColorManager::gui_imGui_window2()
     COLOR_MANAGER_Settings.windowPos = ofVec2f(gui2_x, gui2_y);
     COLOR_MANAGER_Settings.windowSize = ofVec2f(gui2_w, gui2_h);
 
-    if (ofxImGui::BeginWindow("COLOR MANAGER", COLOR_MANAGER_Settings, false))
-    {
+    if (ofxImGui::BeginWindow("COLOR MANAGER", COLOR_MANAGER_Settings, false)) {
         // GENERAL DATA
 
-        if (ofxImGui::BeginTree("BACKGROUND", mainSettings))
-        {
+        if (ofxImGui::BeginTree("BACKGROUND", mainSettings)) {
             //--TEST. can't do with pointers to ofParameter...
             ImGui::PushItemWidth(120);
 
@@ -1191,14 +1160,14 @@ void ofxColorManager::gui_imGui_window2()
 
             // squared box
             ImGuiColorEditFlags colorEdiFlags =
-                    ImGuiColorEditFlags_NoSmallPreview |
-                            ImGuiColorEditFlags_NoTooltip |
-                            ImGuiColorEditFlags_NoLabel |
-                            ImGuiColorEditFlags_NoSidePreview |
-                            ImGuiColorEditFlags_NoOptions|
-                            //ImGuiColorEditFlags_NoInputs |
-                            ImGuiColorEditFlags_NoAlpha |
-                            ImGuiColorEditFlags_PickerHueBar;
+                ImGuiColorEditFlags_NoSmallPreview |
+                    ImGuiColorEditFlags_NoTooltip |
+                    ImGuiColorEditFlags_NoLabel |
+                    ImGuiColorEditFlags_NoSidePreview |
+                    ImGuiColorEditFlags_NoOptions |
+                    //ImGuiColorEditFlags_NoInputs |
+                        ImGuiColorEditFlags_NoAlpha |
+                    ImGuiColorEditFlags_PickerHueBar;
 
             ImGui::ColorPicker4("Background Color", (float *) &color, colorEdiFlags);
             color_backGround = color;
@@ -1224,8 +1193,7 @@ void ofxColorManager::gui_imGui_window2()
         if (ImGui::CollapsingHeader("CURVE TOOL")) {
             ImGui::PushItemWidth(guiWidth * 0.5);
             ofxImGui::AddParameter(this->gradient_hard);
-            if (ofxImGui::AddParameter(this->curve_pos))
-            {
+            if (ofxImGui::AddParameter(this->curve_pos)) {
                 curve_pos_slider.setPercent(curve_pos.get());
             }
             ofxImGui::AddParameter(this->curve_pos_out);
@@ -1335,18 +1303,17 @@ void ofxColorManager::gui_imGui_window2()
 //    if (ImGui::MenuItem("Quit", "Alt+F4")) {}
 //}
 
+
 //--------------------------------------------------------------
-void ofxColorManager::gui_imGui_window3()
-{
+void ofxColorManager::gui_imGui_window3() {
     // 3. PRESET MANAGER
 
     mainSettings = ofxImGui::Settings();
     mainSettings.windowSize = ofVec2f(gui3_w, gui3_h);
-    mainSettings.windowPos = ofVec2f(ofGetWindowWidth()*0.5-gui3_w*0.5, gui3_y);
+    mainSettings.windowPos = ofVec2f(ofGetWindowWidth() * 0.5 - gui3_w * 0.5, gui3_y);
 //    mainSettings.windowPos = ofVec2f(gui3_x, gui3_y);
 
-    if (ofxImGui::BeginWindow("PRESET MANAGER", mainSettings, false))
-    {
+    if (ofxImGui::BeginWindow("PRESET MANAGER", mainSettings, false)) {
         ImGui::Text("PALETTE");
 
         //TODO
@@ -1380,16 +1347,14 @@ void ofxColorManager::gui_imGui_window3()
         //maybe should use 2 different names to presets from kit
         //or loaded from colour lovers
 
-        if (ImGui::InputText("", tab2, IM_ARRAYSIZE(tab2)))
-        {
+        if (ImGui::InputText("", tab2, IM_ARRAYSIZE(tab2))) {
             cout << "InputText:" << ofToString(tab2) << endl;
 
             textInput_temp = ofToString(tab2);
             cout << "textInput_temp:" << textInput_temp << endl;
         }
 
-        if (ImGui::Button("SAVE"))
-        {
+        if (ImGui::Button("SAVE")) {
             cout << "SAVE" << endl;
 
             //TODO
@@ -1407,8 +1372,7 @@ void ofxColorManager::gui_imGui_window3()
         }
 
         ImGui::SameLine();
-        if (ImGui::Button("UPDATE"))
-        {
+        if (ImGui::Button("UPDATE")) {
             cout << "UPDATE" << endl;
 
             PRESET_name = textInput_temp;
@@ -1458,14 +1422,12 @@ void ofxColorManager::gui_imGui_window3()
 
         // prev
         if (ImGui::ArrowButton("##left", ImGuiDir_Left)) {
-            if (counter>0)
-            {
+            if (counter > 0) {
                 counter--;
                 currentFile = counter;
-                if (currentFile<files.size())
-                {
+                if (currentFile < files.size()) {
                     PRESET_name = fileNames[currentFile];
-                    ofLogNotice() << "ARROW: PRESET_name: ["+ofToString(currentFile)+"] " << PRESET_name;
+                    ofLogNotice() << "ARROW: PRESET_name: [" + ofToString(currentFile) + "] " << PRESET_name;
                     preset_load(PRESET_name);
                 }
             }
@@ -1474,13 +1436,12 @@ void ofxColorManager::gui_imGui_window3()
         // next
         ImGui::SameLine(0.0f, spacing);
         if (ImGui::ArrowButton("##right", ImGuiDir_Right)) {
-            if (counter<files.size()-2) {
+            if (counter < files.size() - 2) {
                 counter++;
                 currentFile = counter;
-                if (currentFile<files.size())
-                {
+                if (currentFile < files.size()) {
                     PRESET_name = fileNames[currentFile];
-                    ofLogNotice() << "ARROW: PRESET_name: ["+ofToString(currentFile)+"] " << PRESET_name;
+                    ofLogNotice() << "ARROW: PRESET_name: [" + ofToString(currentFile) + "] " << PRESET_name;
                     preset_load(PRESET_name);
                 }
             }
@@ -1490,23 +1451,20 @@ void ofxColorManager::gui_imGui_window3()
 
         ImGui::SameLine();
 //        ImGui::Text("%d", currentFile);
-        int numPalettes = fileNames.size()-1;
+        int numPalettes = fileNames.size() - 1;
         ImGui::Text("%d/%d", currentFile, numPalettes);
 
         //-
 
         // scrollable list
-        if(!fileNames.empty())
-        {
+        if (!fileNames.empty()) {
             int currentFileIndex = currentFile;
-            if(ofxImGui::VectorCombo(" ", &currentFileIndex, fileNames))
-            {
-                ofLog() << "currentFileIndex: "  << ofToString(currentFileIndex);
-                if (currentFileIndex<fileNames.size())
-                {
+            if (ofxImGui::VectorCombo(" ", &currentFileIndex, fileNames)) {
+                ofLog() << "currentFileIndex: " << ofToString(currentFileIndex);
+                if (currentFileIndex < fileNames.size()) {
                     currentFile = currentFileIndex;
                     PRESET_name = fileNames[currentFile];
-                    ofLog() << "PRESET_name: "  << PRESET_name;
+                    ofLog() << "PRESET_name: " << PRESET_name;
                     preset_load(PRESET_name);
                 }
             }
@@ -1527,8 +1485,7 @@ void ofxColorManager::gui_imGui_window3()
 
 
 //--------------------------------------------------------------
-bool ofxColorManager::gui_imGui()
-{
+bool ofxColorManager::gui_imGui() {
     mainSettings = ofxImGui::Settings();
 
     this->gui.begin();
@@ -1569,15 +1526,13 @@ bool ofxColorManager::gui_imGui()
 
 
 //--------------------------------------------------------------
-void ofxColorManager::palette_load_ColourLovers()
-{
+void ofxColorManager::palette_load_ColourLovers() {
     ofLogNotice("ofxColorManager") << "palette_load_ColourLovers";
 
     // 1. erase user palette and fill a new one with just update/received colour lovers
     palette_clear();
     ofColor c;
-    for (int i = 0; i< myPalette.size(); i++)
-    {
+    for (int i = 0; i < myPalette.size(); i++) {
         c = myPalette[i];
         ofLogNotice("ofxColorManager") << "color [" << i << "] " << ofToString(c);
         palette_addColor(c);
@@ -1589,14 +1544,12 @@ void ofxColorManager::palette_load_ColourLovers()
     //-
 
     // workflow: set background color from first/last palette color
-    if (color_backGround_SETAUTO)
-    {
-        if (palette.size() >0)
-        {
+    if (color_backGround_SETAUTO) {
+        if (palette.size() > 0) {
             int size = palette.size();
             ofColor c;
             c = palette[0];//get first color
-            color_backGround.set( c );
+            color_backGround.set(c);
         }
     }
 
@@ -1605,9 +1558,8 @@ void ofxColorManager::palette_load_ColourLovers()
 
 
 //--------------------------------------------------------------
-void ofxColorManager::update()
-{
-    ofSetWindowTitle(ofToString((int)ofGetFrameRate()));
+void ofxColorManager::update() {
+    ofSetWindowTitle(ofToString((int) ofGetFrameRate()));
 
     ColorWheel_update();
 
@@ -1632,18 +1584,18 @@ void ofxColorManager::update()
     // TEST CURVE
 
     if (TEST_MODE) {
-        int frameBuffer = (int)ofMap(TEST_Speed, 0., 1., TEST_maxFrames, 30);
-        int frameCurrent = ofGetFrameNum()%frameBuffer;//0 to maxFrames
+        int frameBuffer = (int) ofMap(TEST_Speed, 0., 1., TEST_maxFrames, 30);
+        int frameCurrent = ofGetFrameNum() % frameBuffer;//0 to maxFrames
         framePrc = ofMap(frameCurrent, 0, frameBuffer, 0., 1.);
         float control;
         if (!TEST_CycleMODE)
             control = ofClamp(framePrc, 0., 1.);
-        else{
+        else {
             float mySin = std::sin(PI * framePrc);
             control = ofClamp(mySin, 0., 1.);
         }
         if (TEST_toBackground)
-            color_backGround.set( getColorAtPercent(control) );
+            color_backGround.set(getColorAtPercent(control));
         setControl(control);
     }
 
@@ -1653,8 +1605,7 @@ void ofxColorManager::update()
 
     ColourLoversHelper.update();
 
-    if (bUpdated_Palette_BACK)
-    {
+    if (bUpdated_Palette_BACK) {
         bUpdated_Palette_BACK = false;
         ofLogWarning("ofxColorManager") << "update:bUpdated_Palette_BACK: " << bUpdated_Palette_BACK;
 
@@ -1668,8 +1619,7 @@ void ofxColorManager::update()
 
         //TODO
         // workflow: when loading a colour lover palette we disable auto create from algo palettes
-        if (bAuto_palette_recall)
-        {
+        if (bAuto_palette_recall) {
             bAuto_palette_recall = false;
         }
 
@@ -1682,15 +1632,13 @@ void ofxColorManager::update()
         myDEMO_palette.clear();
     }
 
-    if (bUpdated_Color_BACK)
-    {
+    if (bUpdated_Color_BACK) {
         bUpdated_Color_BACK = false;
         ofLogWarning("ofxColorManager") << "update:bUpdated_Color_BACK: " << bUpdated_Color_BACK;
 
         // workflow: TODO: disable to avoid overwrite the selected color into the palette just created
         if (ColourLoversHelper.MODE_PickPalette_BACK &&
-                ColourLoversHelper.MODE_PickColor_BACK)
-        {
+            ColourLoversHelper.MODE_PickColor_BACK) {
             if (bPaletteEdit) {
                 bPaletteEdit = false;
             }
@@ -1700,10 +1648,8 @@ void ofxColorManager::update()
         color_clicked = ofColor(myColor);
 
         // 3. auto create user palette from algo palette from colour lover picked color
-        if (!ColourLoversHelper.MODE_PickPalette_BACK && ColourLoversHelper.MODE_PickColor_BACK)
-        {
-            if (bAuto_palette_recall)
-            {
+        if (!ColourLoversHelper.MODE_PickPalette_BACK && ColourLoversHelper.MODE_PickColor_BACK) {
+            if (bAuto_palette_recall) {
                 palette_clear();
                 palette_recallFromPalettes(SELECTED_palette_LAST);//trig last choice
             }
@@ -1716,8 +1662,7 @@ void ofxColorManager::update()
     //--
 
     // handle last selected algorithmic palette
-    if (SELECTED_palette != SELECTED_palette_PRE)
-    {
+    if (SELECTED_palette != SELECTED_palette_PRE) {
         ofLogNotice("ofxColorManager") << "update:CHANGED SELECTED_palette: " << SELECTED_palette;
 
         // when a label palette is clicked, will always trig and load the palette
@@ -1728,14 +1673,12 @@ void ofxColorManager::update()
         SELECTED_palette_PRE = SELECTED_palette = -1;//bug if not if pressed same button
 
         // hide all borders
-        for (int p = 0; p< btns_plt_Selector.size() && p< NUM_PALETTES; p++)
-        {
+        for (int p = 0; p < btns_plt_Selector.size() && p < NUM_PALETTES; p++) {
             btns_plt_Selector[p]->setBorder(false);
         }
 
         // set to draw border to selected palette
-        if (btns_plt_Selector.size()>0)
-        {
+        if (btns_plt_Selector.size() > 0) {
             btns_plt_Selector[SELECTED_palette_LAST]->setBorder(true);
         }
     }
@@ -1748,8 +1691,7 @@ void ofxColorManager::update()
 
     //-
 
-    if (color_clicked != color_clicked_PRE )
-    {
+    if (color_clicked != color_clicked_PRE) {
         color_clicked_PRE = color_clicked;
         ofLogNotice("ofxColorManager") << "update:CHANGED color_clicked";
         color_picked.set(color_clicked);
@@ -1758,16 +1700,13 @@ void ofxColorManager::update()
     //-
 
     // set the local scope color pointer that is into ofxColorBrowser that whill be used as color picked too
-    if (color_BACK != color_BACK_PRE )
-    {
+    if (color_BACK != color_BACK_PRE) {
         color_BACK_PRE = color_BACK;
         ofLogNotice("ofxColorManager") << "update:CHANGED color_BACK pointer";
         color_picked.set(color_BACK);
 
-        if (!bPaletteEdit)
-        {
-            if (bAuto_palette_recall)
-            {
+        if (!bPaletteEdit) {
+            if (bAuto_palette_recall) {
                 palettes_update();
                 palette_recallFromPalettes(SELECTED_palette_LAST);//trig last choice
             }
@@ -1779,8 +1718,7 @@ void ofxColorManager::update()
 
 
 //--------------------------------------------------------------
-void ofxColorManager::curveTool_setup()
-{
+void ofxColorManager::curveTool_setup() {
     //gradient here too
     curve_img_gradient.allocate(image_curvedGradient_w, image_curvedGradient_h, OF_IMAGE_COLOR);
 
@@ -1802,7 +1740,7 @@ void ofxColorManager::curveTool_setup()
     //-
 
     // slider live test color out for this input
-    curve_pos_slider.setup(slider_x+(slider_w+pad), slider_y, slider_w, slider_h, 0., 1., 0, true, false);
+    curve_pos_slider.setup(slider_x + (slider_w + pad), slider_y, slider_w, slider_h, 0., 1., 0, true, false);
     curve_pos_slider.setVisible(SHOW_TEST_Curve);
 
     // curve mod
@@ -1815,40 +1753,37 @@ void ofxColorManager::curveTool_setup()
 
 
 //--------------------------------------------------------------
-void ofxColorManager::curveTool_update()
-{
+void ofxColorManager::curveTool_update() {
     // update values
     curve_pos = curve_pos_slider.getValue();
-    curve_pos_LUT = (int) ofMap( curve_pos.get(), 0., 1., 0, curveTool_amount-1 );
+    curve_pos_LUT = (int) ofMap(curve_pos.get(), 0., 1., 0, curveTool_amount - 1);
 
     // curve modifier
     curveMod = curveMod_Slider.getValue();
     int pointsSize = curvesTool.getPointSize();
     int pointToModify;//default 1 if size is 3 points
     int pointY;
-    if (pointsSize%2!=0 && pointsSize>=3)//impar
-        pointToModify = pointsSize/2;
-    else if (pointsSize%2==0 && pointsSize>=3)
-        pointToModify = pointsSize/2-1;
+    if (pointsSize % 2 != 0 && pointsSize >= 3)//impar
+        pointToModify = pointsSize / 2;
+    else if (pointsSize % 2 == 0 && pointsSize >= 3)
+        pointToModify = pointsSize / 2 - 1;
     pointY = (curvesTool.getPoint(pointToModify)).x;
-    curvesTool.set(pointToModify, ofVec2f(pointY, ofMap(curveMod,0.,1.,0,curveTool_amount)));
+    curvesTool.set(pointToModify, ofVec2f(pointY, ofMap(curveMod, 0., 1., 0, curveTool_amount)));
 
     //--
 
     // vertical palette clors gradient rectangle modified by curveTool
 
     // every y point has different color
-    for (int y=0; y<image_curvedGradient_h; y++)
-    {
-        float input_LUT = ofMap( y, 0, image_curvedGradient_h, 0, curveTool_amount-1 );
+    for (int y = 0; y < image_curvedGradient_h; y++) {
+        float input_LUT = ofMap(y, 0, image_curvedGradient_h, 0, curveTool_amount - 1);
         float output_LUT = curvesTool[input_LUT];
         float output;
-        output = ofMap( output_LUT, 0, curveTool_amount-1, 1., 0.) ;
-        ofColor c = gradient.getColorAtPercent( output );
+        output = ofMap(output_LUT, 0, curveTool_amount - 1, 1., 0.);
+        ofColor c = gradient.getColorAtPercent(output);
 
         // all x point has the same color
-        for (int x = 0; x < image_curvedGradient_w; x++)
-        {
+        for (int x = 0; x < image_curvedGradient_w; x++) {
             curve_img_gradient.setColor(x, y, c);
         }
     }
@@ -1860,8 +1795,8 @@ void ofxColorManager::curveTool_update()
 
     if (color_TARGET != nullptr)//only if pointer is setted
     {
-        float out = ofMap( curvesTool.getAtPercent(1.0-curve_pos), 0, curveTool_amount-1, 1., 0.) ;
-        ofColor c = gradient.getColorAtPercent( out );
+        float out = ofMap(curvesTool.getAtPercent(1.0 - curve_pos), 0, curveTool_amount - 1, 1., 0.);
+        ofColor c = gradient.getColorAtPercent(out);
         color_TARGET->set(c);//TODO: should reduce calls
     }
 }
@@ -1883,7 +1818,7 @@ void ofxColorManager::curveTool_draw() {
     ofPushStyle();
 
     // NOTE: sometimes we need some tricky hacking to avoid rare fliping from gradients
-    curve_pos_out = ofMap( curvesTool.getAtPercent(curve_pos), 0, curveTool_amount-1, 0., 1.);
+    curve_pos_out = ofMap(curvesTool.getAtPercent(curve_pos), 0, curveTool_amount - 1, 0., 1.);
 
     // 3. curve tool
     ofTranslate(curveTool_x, curveTool_y);
@@ -1895,8 +1830,7 @@ void ofxColorManager::curveTool_draw() {
     ofSetColor(255);
     curvesTool.draw(0, 0, curve_pos_LUT);
 
-    if (SHOW_TEST_Curve)
-    {
+    if (SHOW_TEST_Curve) {
         // 3.3 horizontal line
         ofSetColor(ofColor::white);
         float y = curveTool_amount - curvesTool[curve_pos_LUT];
@@ -2057,8 +1991,7 @@ void ofxColorManager::palettes_setup() {
 
 
 //--------------------------------------------------------------
-void ofxColorManager::palettes_setup_labels()
-{
+void ofxColorManager::palettes_setup_labels() {
     int x0 = palettes_x;
     int padH = 11;
     int y0 = palettes_y + padH;
@@ -2081,11 +2014,9 @@ void ofxColorManager::palettes_setup_labels()
     //TODO: BUG
     btns_plt_Selector.clear();
 
-    for (int p = 0; p< NUM_PALETTES; p++)
-    {
+    for (int p = 0; p < NUM_PALETTES; p++) {
         ButtonPaletteSelector *btn = new ButtonPaletteSelector();
-        switch (p)
-        {
+        switch (p) {
             case 0:
                 btn->setup("TRIAD");
                 btn->setThisPaletteType(0);
@@ -2128,7 +2059,7 @@ void ofxColorManager::palettes_setup_labels()
                 break;
         }
 
-        btn->setPosition(x0, y0 + p*btn_plt_h);
+        btn->setPosition(x0, y0 + p * btn_plt_h);
         btn->setBGColor(btn_plt_c);
         btn->setLabelColor(ofColor::white);
         btn->setBorderColor(ofColor::white);
@@ -2138,23 +2069,20 @@ void ofxColorManager::palettes_setup_labels()
     }
 
     // set to draw border to selected palette
-    if ((btns_plt_Selector.size()>0) && (btns_plt_Selector.size()>SELECTED_palette_LAST))
-    {
+    if ((btns_plt_Selector.size() > 0) && (btns_plt_Selector.size() > SELECTED_palette_LAST)) {
         btns_plt_Selector[SELECTED_palette_LAST]->setBorder(true);
     }
 }
 
 
 //--------------------------------------------------------------
-void ofxColorManager::palette_recallFromPalettes(int p)
-{
+void ofxColorManager::palette_recallFromPalettes(int p) {
     ofLogNotice("ofxColorManager") << "palette_recallFromPalettes: " << p;
 
     palette_clear();
     ofColor color;
 
-    switch (p)
-    {
+    switch (p) {
         case 0:
             for (int i = 0; i < btns_plt_Triad.size(); i++) {
                 color = btns_plt_Triad[i]->getColor();
@@ -2208,12 +2136,11 @@ void ofxColorManager::palette_recallFromPalettes(int p)
     //-
 
     // workflow: set background color from first/last palette color
-    if (color_backGround_SETAUTO)
-    {
+    if (color_backGround_SETAUTO) {
         int size = palette.size();
         ofColor c;
         c = palette[0];//get first color
-        color_backGround.set( c );
+        color_backGround.set(c);
     }
 
     //-
@@ -2222,16 +2149,12 @@ void ofxColorManager::palette_recallFromPalettes(int p)
 
 
 //--------------------------------------------------------------
-void ofxColorManager::palettes_update()
-{
+void ofxColorManager::palettes_update() {
     ofColor base;
-    if (!MODE_Palette)
-    {
+    if (!MODE_Palette) {
         // using hue only from picked color and sat/(brg from sliders
         base = ofColor::fromHsb(ofMap(color_picked.get().getHue(), 0., 1., 0, 255), SATURATION, BRIGHTNESS);
-    }
-    else
-    {
+    } else {
         // check using hue + sat/brg from color
         base = ofColor::fromHsb(ofMap(color_picked.get().getHue(), 0., 1., 0, 255), color_SAT, color_BRG);
     }
@@ -2260,57 +2183,47 @@ void ofxColorManager::palettes_update()
     // PALETTES
 
     // 1. triad
-    for (int i = 0 ; i < btns_plt_Triad.size(); i++)
-    {
+    for (int i = 0; i < btns_plt_Triad.size(); i++) {
         btns_plt_Triad[i]->setColor(triad[i]);
     }
     // 2. complement triad
-    for (int i = 0 ; i < btns_plt_ComplTriad.size(); i++)
-    {
+    for (int i = 0; i < btns_plt_ComplTriad.size(); i++) {
         btns_plt_ComplTriad[i]->setColor(complementTriad[i]);
     }
     // 3. complement sat
-    for (int i = 0 ; i < btns_plt_CompSat.size(); i++)
-    {
+    for (int i = 0; i < btns_plt_CompSat.size(); i++) {
         btns_plt_CompSat[i]->setColor(complement[i]);
     }
     // 4. complement brgt
-    for (int i = 0 ; i < btns_plt_ComplBrgt.size(); i++)
-    {
+    for (int i = 0; i < btns_plt_ComplBrgt.size(); i++) {
         btns_plt_ComplBrgt[i]->setColor(complementBrightness[i]);
     }
     // 5. mono sat
-    for (int i = 0 ; i < btns_plt_MonoSat.size(); i++)
-    {
+    for (int i = 0; i < btns_plt_MonoSat.size(); i++) {
         btns_plt_MonoSat[i]->setColor(monochrome[i]);
     }
     // 6. mono brgt
-    for (int i = 0 ; i < btns_plt_MonoBrgt.size(); i++)
-    {
+    for (int i = 0; i < btns_plt_MonoBrgt.size(); i++) {
         btns_plt_MonoBrgt[i]->setColor(monochromeBrightness[i]);
     }
     // 7. analogue
-    for (int i=0; i<btns_plt_Analog.size(); i++)
-    {
+    for (int i = 0; i < btns_plt_Analog.size(); i++) {
         btns_plt_Analog[i]->setColor(analogue[i]);
     }
     // 8. random
-    for (int i = 0 ; i < btns_plt_Random.size(); i++)
-    {
+    for (int i = 0; i < btns_plt_Random.size(); i++) {
         btns_plt_Random[i]->setColor(random[i]);
     }
 }
 
 
 //--------------------------------------------------------------
-void ofxColorManager::palettes_resize()
-{
+void ofxColorManager::palettes_resize() {
     //-
 
     // ALGORITMIC PALETTE
 
-    for (int i=0; i< btns_plt_Triad.size(); i++)
-    {
+    for (int i = 0; i < btns_plt_Triad.size(); i++) {
         std::string n = ("triad" + ofToString(i));
         auto a = scene->getChildWithName(n, 1000);
         auto b = a->getName();
@@ -2319,8 +2232,7 @@ void ofxColorManager::palettes_resize()
     }
     btns_plt_Triad.clear();
 
-    for (int i=0; i< btns_plt_ComplTriad.size(); i++)
-    {
+    for (int i = 0; i < btns_plt_ComplTriad.size(); i++) {
         std::string n = ("compTriad" + ofToString(i));
         auto a = scene->getChildWithName(n, 1000);
         auto b = a->getName();
@@ -2329,8 +2241,7 @@ void ofxColorManager::palettes_resize()
     }
     btns_plt_ComplTriad.clear();
 
-    for (int i=0; i< btns_plt_CompSat.size(); i++)
-    {
+    for (int i = 0; i < btns_plt_CompSat.size(); i++) {
         std::string n = ("compSat" + ofToString(i));
         auto a = scene->getChildWithName(n, 1000);
         auto b = a->getName();
@@ -2339,8 +2250,7 @@ void ofxColorManager::palettes_resize()
     }
     btns_plt_CompSat.clear();
 
-    for (int i=0; i< btns_plt_ComplBrgt.size(); i++)
-    {
+    for (int i = 0; i < btns_plt_ComplBrgt.size(); i++) {
         std::string n = ("compBrgt" + ofToString(i));
         auto a = scene->getChildWithName(n, 1000);
         auto b = a->getName();
@@ -2349,8 +2259,7 @@ void ofxColorManager::palettes_resize()
     }
     btns_plt_ComplBrgt.clear();
 
-    for (int i=0; i< btns_plt_MonoSat.size(); i++)
-    {
+    for (int i = 0; i < btns_plt_MonoSat.size(); i++) {
         std::string n = ("monoSat" + ofToString(i));
         auto a = scene->getChildWithName(n, 1000);
         auto b = a->getName();
@@ -2359,8 +2268,7 @@ void ofxColorManager::palettes_resize()
     }
     btns_plt_MonoSat.clear();
 
-    for (int i=0; i< btns_plt_MonoBrgt.size(); i++)
-    {
+    for (int i = 0; i < btns_plt_MonoBrgt.size(); i++) {
         std::string n = ("monoBrgt" + ofToString(i));
         auto a = scene->getChildWithName(n, 1000);
         auto b = a->getName();
@@ -2369,8 +2277,7 @@ void ofxColorManager::palettes_resize()
     }
     btns_plt_MonoBrgt.clear();
 
-    for (int i=0; i< btns_plt_Analog.size(); i++)
-    {
+    for (int i = 0; i < btns_plt_Analog.size(); i++) {
         std::string n = ("analogue" + ofToString(i));
         auto a = scene->getChildWithName(n, 1000);
         auto b = a->getName();
@@ -2379,8 +2286,7 @@ void ofxColorManager::palettes_resize()
     }
     btns_plt_Analog.clear();
 
-    for (int i=0; i< btns_plt_Random.size(); i++)
-    {
+    for (int i = 0; i < btns_plt_Random.size(); i++) {
         std::string n = ("random" + ofToString(i));
         auto a = scene->getChildWithName(n, 1000);
         auto b = a->getName();
@@ -2397,58 +2303,48 @@ void ofxColorManager::palettes_resize()
 
     //-
 
-    if (bAuto_palette_recall)
-    {
+    if (bAuto_palette_recall) {
         palette_clear();
         palette_recallFromPalettes(SELECTED_palette_LAST);//trig last choice
     }
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::palettes_setVisible(bool b)
-{
+void ofxColorManager::palettes_setVisible(bool b) {
     // hide and disable touchs for buttons
     //-
 
     // 1. ALGORITMIC PALETTES
 
-    for (auto& btn : btns_plt_Triad)
-    {
+    for (auto &btn : btns_plt_Triad) {
         btn->setVisible(b);
         btn->setEnabled(b);
     }
-    for (auto& btn : btns_plt_ComplTriad)
-    {
+    for (auto &btn : btns_plt_ComplTriad) {
         btn->setVisible(b);
         btn->setEnabled(b);
     }
-    for (auto& btn : btns_plt_CompSat)
-    {
+    for (auto &btn : btns_plt_CompSat) {
         btn->setVisible(b);
         btn->setEnabled(b);
     }
-    for (auto& btn : btns_plt_ComplBrgt)
-    {
+    for (auto &btn : btns_plt_ComplBrgt) {
         btn->setVisible(b);
         btn->setEnabled(b);
     }
-    for (auto& btn : btns_plt_MonoSat)
-    {
+    for (auto &btn : btns_plt_MonoSat) {
         btn->setVisible(b);
         btn->setEnabled(b);
     }
-    for (auto& btn : btns_plt_MonoBrgt)
-    {
+    for (auto &btn : btns_plt_MonoBrgt) {
         btn->setVisible(b);
         btn->setEnabled(b);
     }
-    for (auto& btn : btns_plt_Analog)
-    {
+    for (auto &btn : btns_plt_Analog) {
         btn->setVisible(b);
         btn->setEnabled(b);
     }
-    for (auto& btn : btns_plt_Random)
-    {
+    for (auto &btn : btns_plt_Random) {
         btn->setVisible(b);
         btn->setEnabled(b);
     }
@@ -2457,16 +2353,14 @@ void ofxColorManager::palettes_setVisible(bool b)
 
     // 2. LABEL BUTTONS
 
-    for (auto& btn : btns_plt_Selector)
-    {
+    for (auto &btn : btns_plt_Selector) {
         btn->setVisible(b);
         btn->setLocked(!b);
     }
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::draw()
-{
+void ofxColorManager::draw() {
     // BACKGROUND
     if (backgroundENABLE)
         ofClear(ofColor(color_backGround.get()));
@@ -2475,8 +2369,7 @@ void ofxColorManager::draw()
 
     // COLORWHEELSCHEMES
 
-    if (SHOW_AlgoPalettes)
-    {
+    if (SHOW_AlgoPalettes) {
         ColorWheel_draw();
     }
 
@@ -2484,8 +2377,7 @@ void ofxColorManager::draw()
 
     // PRESET MANAGER
 
-    if (SHOW_PresetManager)
-    {
+    if (SHOW_PresetManager) {
         //    myPresetPalette.draw();
         myPresetManager.draw();
     }
@@ -2552,7 +2444,7 @@ void ofxColorManager::draw()
             float out = ofMap(curvesTool.getAtPercent(1.0 - curve_pos), 0, curveTool_amount - 1, 1., 0.);
             ofColor c = gradient.getColorAtPercent(out);
 
-            ofRectangle recBar(0,ofGetHeight()-5,framePrc*ofGetWidth(), 5);
+            ofRectangle recBar(0, ofGetHeight() - 5, framePrc * ofGetWidth(), 5);
 
             ofPushStyle();
             ofFill();
@@ -2572,14 +2464,12 @@ void ofxColorManager::draw()
         }
 
         // COLORS BROWSER
-        if (SHOW_BrowserColors)
-        {
+        if (SHOW_BrowserColors) {
             ColorBrowser.draw();
         }
 
         // COLOUR LOVERS
-        if (SHOW_ColourLovers && false)
-        {
+        if (SHOW_ColourLovers && false) {
             draw_ColourLovers();
         }
 
@@ -2589,8 +2479,7 @@ void ofxColorManager::draw()
 
     //--
 
-    if (SHOW_ImGui)
-    {
+    if (SHOW_ImGui) {
         //-
 
         //-
@@ -2606,17 +2495,13 @@ void ofxColorManager::draw()
         // GUI
 
         this->mouseOverGui = false;
-        if (this->guiVisible)
-        {
+        if (this->guiVisible) {
             this->mouseOverGui = this->gui_imGui();
         }
         //disable things to avoid move by mouse when editing gui
-        if (this->mouseOverGui)
-        {
+        if (this->mouseOverGui) {
             ENABLE_keys = false;
-        }
-        else
-        {
+        } else {
             ENABLE_keys = true;
         }
 
@@ -2625,8 +2510,7 @@ void ofxColorManager::draw()
 
     //--
 
-    if (SHOW_GUI_MINI)
-    {
+    if (SHOW_GUI_MINI) {
         draw_Palette_MINI();
     }
 
@@ -2634,8 +2518,7 @@ void ofxColorManager::draw()
 
     // ofxGuiPanelsLayout
 
-    if (SHOW_Layout_Gui)
-    {
+    if (SHOW_Layout_Gui) {
         //        gui_TOGGLES.draw();
         panels.draw();
     }
@@ -2645,27 +2528,25 @@ void ofxColorManager::draw()
 
 
 //--------------------------------------------------------------
-void ofxColorManager::draw_Palette_MINI()
-{
+void ofxColorManager::draw_Palette_MINI() {
     glm::vec2 palettePos;
     int boxW = 40;
     int boxPad = 1;
-    int boxSize = boxW+boxPad;
+    int boxSize = boxW + boxPad;
     ofRectangle r;
 
 //    // right top corner
 //    palettePos = glm::vec2(ofGetWidth() - palette.size()*boxSize, 2*boxPad);
     // left top corner
-    palettePos = glm::vec2(2, 2*boxPad);
+    palettePos = glm::vec2(2, 2 * boxPad);
 
     ofPushMatrix();
     ofPushStyle();
     ofTranslate(palettePos);
 
-    ofDrawBitmapStringHighlight(PRESET_name, glm::vec2(4, boxW+15), ofColor::black, ofColor::white);
+    ofDrawBitmapStringHighlight(PRESET_name, glm::vec2(4, boxW + 15), ofColor::black, ofColor::white);
 
-    for (int col=0; col<palette.size(); col++)
-    {
+    for (int col = 0; col < palette.size(); col++) {
         r = ofRectangle(0, 0, boxW, boxW);
         ofFill();
         ofSetColor(palette[col]);
@@ -2673,7 +2554,7 @@ void ofxColorManager::draw_Palette_MINI()
         ofNoFill();
         ofSetColor(ofColor(ofColor::white, 64));
         ofDrawRectangle(r);
-        ofTranslate ( boxSize, 0);
+        ofTranslate(boxSize, 0);
     }
 
     ofPopStyle();
@@ -2682,31 +2563,27 @@ void ofxColorManager::draw_Palette_MINI()
 
 
 //--------------------------------------------------------------
-void ofxColorManager::palette_addColor(ofColor c)
-{
+void ofxColorManager::palette_addColor(ofColor c) {
     ofLogNotice("ofxColorManager:palette_addColor") << ofToString(c);
-    palette.push_back( c );
-    gradient.addColor( c );
-    palette_addColor_toInterface( c );
+    palette.push_back(c);
+    gradient.addColor(c);
+    palette_addColor_toInterface(c);
 
     // TODO: BUG
-    if (palette_colorSelected>-1 && bPaletteEdit)
-    {
-        palette_colorSelected = palette.size()-1;//select last one, just created now
+    if (palette_colorSelected > -1 && bPaletteEdit) {
+        palette_colorSelected = palette.size() - 1;//select last one, just created now
     }
 }
 
 
 //--------------------------------------------------------------
-void ofxColorManager::palette_removeColorLast()
-{
+void ofxColorManager::palette_removeColorLast() {
     if (palette.size() > 0) {
         palette.pop_back();
         gradient.removeColorLast();
 
-        if (btns_palette.size() > 0)
-        {
-            std::string n = ("btn" + ofToString(btns_palette.size()-1));
+        if (btns_palette.size() > 0) {
+            std::string n = ("btn" + ofToString(btns_palette.size() - 1));
             auto a = scene->getChildWithName(n, 100);
             auto b = a->getName();
             scene->removeChild(a, false);
@@ -2720,17 +2597,12 @@ void ofxColorManager::palette_removeColorLast()
 
 
 //--------------------------------------------------------------
-void ofxColorManager::palette_touched(string name)
-{
+void ofxColorManager::palette_touched(string name) {
     // handle de-select all buttons and select last clicked
-    for (int i=0; i<btns_palette.size(); i++)
-    {
-        if (btns_palette[i]->getName() != name)
-        {
+    for (int i = 0; i < btns_palette.size(); i++) {
+        if (btns_palette[i]->getName() != name) {
             btns_palette[i]->setSelected(false);
-        }
-        else
-        {
+        } else {
             btns_palette[i]->setSelected(true);
             palette_colorSelected = i;
             ofLogNotice("ofxColorManager") << "selected color: " << i;
@@ -2738,16 +2610,14 @@ void ofxColorManager::palette_touched(string name)
     }
 
     // workflow: auto set edit mode
-    if (!bPaletteEdit)
-    {
+    if (!bPaletteEdit) {
         bPaletteEdit = true;
     }
 }
 
 
 //--------------------------------------------------------------
-void ofxColorManager::palette_clear()
-{
+void ofxColorManager::palette_clear() {
     // remove all colors of user palette
 
     ofLogNotice("ofxColorManager") << "palette_clear";
@@ -2757,8 +2627,7 @@ void ofxColorManager::palette_clear()
 
     //    ofLogNotice("ofxColorManager") << "palette_clear::getNumChildren: " << scene->getNumChildren();
 
-    for (int i=0; i< btns_palette.size(); i++)
-    {
+    for (int i = 0; i < btns_palette.size(); i++) {
         std::string n = ("btn" + ofToString(i));
         auto a = scene->getChildWithName(n, 1000);
         auto b = a->getName();
@@ -2772,7 +2641,7 @@ void ofxColorManager::palette_clear()
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::color_picked_Update_To_HSV(){
+void ofxColorManager::color_picked_Update_To_HSV() {
     color_HUE = 255 * color_picked.get().getHue();
     color_SAT = 255 * color_picked.get().getSaturation();
     color_BRG = 255 * color_picked.get().getBrightness();
@@ -2787,8 +2656,7 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
     //    if (name != "INPUT" && name != "OUTPUT" &&
     //            name!="H" && name!="S" && name!="B")
 
-    if (name!="INPUT" && name!="OUTPUT")
-    {
+    if (name != "INPUT" && name != "OUTPUT") {
         ofLogNotice("ofxColorManager") << "Changed_CONTROL: " << name << ": " << e;
     }
 
@@ -2800,20 +2668,15 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
 
     if (name == "SHOW COLOUR LOVERS") {
         ColourLoversHelper.setVisible(SHOW_ColourLovers);
-    }
-    else if (name == "SHOW COLOUR LOVERS SEARCHER") {
+    } else if (name == "SHOW COLOUR LOVERS SEARCHER") {
         ColourLoversHelper.setVisibleSearcher(SHOW_ColourLovers_searcher);
-    }
-    else if (name == "SHOW PALETTES") {
+    } else if (name == "SHOW PALETTES") {
         palettes_setVisible(SHOW_AlgoPalettes);
-    }
-    else if (name == "SHOW BROWSER COLORS") {
+    } else if (name == "SHOW BROWSER COLORS") {
         ColorBrowser.setVisible(SHOW_BrowserColors);
-    }
-    else if (name == "SHOW CURVE TOOL") {
+    } else if (name == "SHOW CURVE TOOL") {
         curveMod_Slider.setVisible(SHOW_Curve);
-    }
-    else if (name == "SHOW TEST CURVE") {
+    } else if (name == "SHOW TEST CURVE") {
         curve_pos_slider.setVisible(SHOW_TEST_Curve);
     }
 
@@ -2823,10 +2686,8 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
 
     // TODO: should reduce callbacks
     // TEST
-    if (LISTEN_isEnabled == true)
-    {
-        if (name=="H" && name=="S" && name=="B")
-        {
+    if (LISTEN_isEnabled == true) {
+        if (name == "H" && name == "S" && name == "B") {
             ofLogNotice("ofxColorManager") << "Changed_CONTROL:LISTEN_isEnabled: " << name << ":" << e;
         }
 
@@ -2835,14 +2696,12 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
             c.set(color_picked.get());
             c.setHue(color_HUE);
             color_picked.set(c);
-        }
-        else if (name == "S") {
+        } else if (name == "S") {
             ofColor c;
             c.set(color_picked.get());
             c.setSaturation(color_SAT);
             color_picked.set(c);
-        }
-        else if (name == "B") {
+        } else if (name == "B") {
             ofColor c;
             c.set(color_picked.get());
             c.setBrightness(color_BRG);
@@ -2928,10 +2787,8 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
         //    else if (name == "INPUT") {
         //    }
 
-    else if (name == "RESET CURVE")
-    {
-        if (bResetCurve)
-        {
+    else if (name == "RESET CURVE") {
+        if (bResetCurve) {
             bResetCurve = false;
             curvesTool.clear();
             curvesTool.add(ofVec2f(0, 0));
@@ -2940,8 +2797,7 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
             curveMod = 0.5;
             curveMod_Slider.setPercent(curveMod);
         }
-    }
-    else if (name == "GRADIENT HARD") {
+    } else if (name == "GRADIENT HARD") {
         gradient.setHardMode(gradient_hard);
     }
 
@@ -2949,19 +2805,14 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
 
         // BACKGROUND
 
-    else if (name == "SET FROM COLOR")
-    {
+    else if (name == "SET FROM COLOR") {
         if (color_backGround_SET) {
             color_backGround_SET = false;
             color_backGround.set(ofColor(color_picked.get()));
         }
-    }
-    else if (name == "AUTO SET")
-    {
+    } else if (name == "AUTO SET") {
 
-    }
-    else if (name == "BACKGROUND")
-    {
+    } else if (name == "BACKGROUND") {
         //        if (color_backGround.get().getBrightness()!=backgroundDarkness_PRE)
         //            backgroundDarkness = color_backGround.get().getBrightness();
         //
@@ -2981,48 +2832,37 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
 
 
 //--------------------------------------------------------------
-void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
-{
+void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs) {
     const int &key = eventArgs.key;
 
     // un-blockeable keys goes here
 
     //--
 
-    if (ENABLE_keys)
-    {
+    if (ENABLE_keys) {
         //    ofLogNotice("ofxColorManager") << "key: " << key;
 
         //-
 
         // PRESET MANAGER
 
-        if (SHOW_PresetManager)
-        {
-            if (key == OF_KEY_LEFT)
-            {
-                if (currentFile>0)
-                {
+        if (SHOW_PresetManager) {
+            if (key == OF_KEY_LEFT) {
+                if (currentFile > 0) {
                     currentFile--;
                 }
-                if (currentFile<files.size())
-                {
+                if (currentFile < files.size()) {
                     PRESET_name = fileNames[currentFile];
-                    ofLogNotice() << "OF_KEY_LEFT: PRESET_name: ["+ofToString(currentFile)+"] " << PRESET_name;
+                    ofLogNotice() << "OF_KEY_LEFT: PRESET_name: [" + ofToString(currentFile) + "] " << PRESET_name;
                     preset_load(PRESET_name);
                 }
-            }
-
-            else if (key == OF_KEY_RIGHT)
-            {
-                if (currentFile<files.size()-1)
-                {
+            } else if (key == OF_KEY_RIGHT) {
+                if (currentFile < files.size() - 1) {
                     currentFile++;
                 }
-                if (currentFile<files.size())
-                {
+                if (currentFile < files.size()) {
                     PRESET_name = fileNames[currentFile];
-                    ofLogNotice() << "OF_KEY_RIGHT: PRESET_name: ["+ofToString(currentFile)+"] " << PRESET_name;
+                    ofLogNotice() << "OF_KEY_RIGHT: PRESET_name: [" + ofToString(currentFile) + "] " << PRESET_name;
                     preset_load(PRESET_name);
                 }
             }
@@ -3175,8 +3015,7 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 
         // COLOUR LOVERS
 
-        if (SHOW_ColourLovers)
-        {
+        if (SHOW_ColourLovers) {
             // 3. randomly get a palete from colour lovers
             if (key == 'v') {
                 ColourLoversHelper.randomPalette();
@@ -3198,8 +3037,7 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
                 // clear DEMO1 objects
                 myDEMO_palette.clear();
 
-            }
-            else if (key == OF_KEY_UP) {
+            } else if (key == OF_KEY_UP) {
                 ColourLoversHelper.prevPalette();
 
 //                textInput_temp = PRESET_name;
@@ -3216,8 +3054,7 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
         if (key == 'z') {
             color_Undo.undo();
             color_picked = color_Undo;
-        }
-        else if (key == 'y') {
+        } else if (key == 'y') {
             color_Undo.redo();
             color_picked = color_Undo;
         }
@@ -3266,33 +3103,29 @@ void ofxColorManager::keyPressed( ofKeyEventArgs& eventArgs )
 
 
 //--------------------------------------------------------------
-void ofxColorManager::keyReleased( ofKeyEventArgs& eventArgs )
-{
-    if( eventArgs.key == ' ')
-    {
+void ofxColorManager::keyReleased(ofKeyEventArgs &eventArgs) {
+    if (eventArgs.key == ' ') {
     }
 }
 
 
 //--------------------------------------------------------------
-void ofxColorManager::addKeysListeners()
-{
-    ofAddListener( ofEvents().keyPressed, this, &ofxColorManager::keyPressed );
+void ofxColorManager::addKeysListeners() {
+    ofAddListener(ofEvents().keyPressed, this, &ofxColorManager::keyPressed);
 }
 
 
 //--------------------------------------------------------------
-void ofxColorManager::removeKeysListeners()
-{
-    ofRemoveListener( ofEvents().keyPressed, this, &ofxColorManager::keyPressed );
+void ofxColorManager::removeKeysListeners() {
+    ofRemoveListener(ofEvents().keyPressed, this, &ofxColorManager::keyPressed);
 }
 
 
 //--------------------------------------------------------------
-void ofxColorManager::mouseDragged(ofMouseEventArgs& eventArgs){
-    const int & x = eventArgs.x;
-    const int & y = eventArgs.y;
-    const int & button = eventArgs.button;
+void ofxColorManager::mouseDragged(ofMouseEventArgs &eventArgs) {
+    const int &x = eventArgs.x;
+    const int &y = eventArgs.y;
+    const int &button = eventArgs.button;
     //    ofLogNotice("ofxColorManager") << "mouseDragged " <<  x << ", " << y << ", " << button;
 
     TouchManager::one().touchMove(button, ofVec2f(x, y));
@@ -3302,10 +3135,10 @@ void ofxColorManager::mouseDragged(ofMouseEventArgs& eventArgs){
 
 
 //--------------------------------------------------------------
-void ofxColorManager::mousePressed(ofMouseEventArgs& eventArgs){
-    const int & x = eventArgs.x;
-    const int & y = eventArgs.y;
-    const int & button = eventArgs.button;
+void ofxColorManager::mousePressed(ofMouseEventArgs &eventArgs) {
+    const int &x = eventArgs.x;
+    const int &y = eventArgs.y;
+    const int &button = eventArgs.button;
     //    ofLogNotice("ofxColorManager") << "mousePressed " <<  x << ", " << y << ", " << button;
 
     TouchManager::one().touchDown(button, ofVec2f(x, y));
@@ -3315,7 +3148,7 @@ void ofxColorManager::mousePressed(ofMouseEventArgs& eventArgs){
     //    if (bPaletteEdit)
     //    {
     // filter touch if its an user palette button only
-    auto a = TouchManager::one().getComponentUnder( ofVec2f(x, y) );
+    auto a = TouchManager::one().getComponentUnder(ofVec2f(x, y));
     auto b = a->getName();
     ofLogVerbose("ofxColorManager") << "touched: " << b;
     auto str = ofSplitString(b, "btn");
@@ -3323,9 +3156,7 @@ void ofxColorManager::mousePressed(ofMouseEventArgs& eventArgs){
     {
         ofLogVerbose("ofxColorManager") << "detected palette touch: " << b;
         palette_touched(b);
-    }
-    else
-    {
+    } else {
         //ofLogVerbose("ofxColorManager") << "ignored touch: " << b;
     }
     //    }
@@ -3338,10 +3169,10 @@ void ofxColorManager::mousePressed(ofMouseEventArgs& eventArgs){
 
 
 //--------------------------------------------------------------
-void ofxColorManager::mouseReleased(ofMouseEventArgs& eventArgs){
-    const int & x = eventArgs.x;
-    const int & y = eventArgs.y;
-    const int & button = eventArgs.button;
+void ofxColorManager::mouseReleased(ofMouseEventArgs &eventArgs) {
+    const int &x = eventArgs.x;
+    const int &y = eventArgs.y;
+    const int &button = eventArgs.button;
     //    ofLogNotice("ofxColorManager") << "mouseReleased " <<  x << ", " << y << ", " << button;
 
     TouchManager::one().touchUp(button, ofVec2f(x, y));
@@ -3352,42 +3183,37 @@ void ofxColorManager::mouseReleased(ofMouseEventArgs& eventArgs){
 
 
 //--------------------------------------------------------------
-void ofxColorManager::addMouseListeners()
-{
-    ofAddListener( ofEvents().mouseDragged, this, &ofxColorManager::mouseDragged );
-    ofAddListener( ofEvents().mousePressed, this, &ofxColorManager::mousePressed );
-    ofAddListener( ofEvents().mouseReleased, this, &ofxColorManager::mouseReleased );
+void ofxColorManager::addMouseListeners() {
+    ofAddListener(ofEvents().mouseDragged, this, &ofxColorManager::mouseDragged);
+    ofAddListener(ofEvents().mousePressed, this, &ofxColorManager::mousePressed);
+    ofAddListener(ofEvents().mouseReleased, this, &ofxColorManager::mouseReleased);
 }
 
 
 //--------------------------------------------------------------
-void ofxColorManager::removeMouseListeners()
-{
-    ofRemoveListener( ofEvents().mouseDragged, this, &ofxColorManager::mouseDragged );
-    ofRemoveListener( ofEvents().mousePressed, this, &ofxColorManager::mousePressed );
-    ofRemoveListener( ofEvents().mouseReleased, this, &ofxColorManager::mouseReleased );
+void ofxColorManager::removeMouseListeners() {
+    ofRemoveListener(ofEvents().mouseDragged, this, &ofxColorManager::mouseDragged);
+    ofRemoveListener(ofEvents().mousePressed, this, &ofxColorManager::mousePressed);
+    ofRemoveListener(ofEvents().mouseReleased, this, &ofxColorManager::mouseReleased);
 }
 
 
 //--------------------------------------------------------------
-void ofxColorManager::disableListeners()
-{
+void ofxColorManager::disableListeners() {
     addMouseListeners();
     addKeysListeners();
 }
 
 
 //--------------------------------------------------------------
-void ofxColorManager::enableListeners()
-{
+void ofxColorManager::enableListeners() {
     removeMouseListeners();
     removeKeysListeners();
 }
 
 
 //--------------------------------------------------------------
-void ofxColorManager::load_group_XML(ofParameterGroup &g, string path)
-{
+void ofxColorManager::load_group_XML(ofParameterGroup &g, string path) {
     ofLogNotice("ofxColorManager") << "load_group_XML " << path;
     ofXml settings;
     settings.load(path);
@@ -3396,20 +3222,19 @@ void ofxColorManager::load_group_XML(ofParameterGroup &g, string path)
 
 
 //--------------------------------------------------------------
-void ofxColorManager::save_group_XML(ofParameterGroup &g, string path)
-{
+void ofxColorManager::save_group_XML(ofParameterGroup &g, string path) {
     ofLogNotice("ofxColorManager") << "save_group_XML " << path;
     ofXml settings;
     ofSerialize(settings, g);
     settings.save(path);
 }
 
+
 //--------------------------------------------------------------
-void ofxColorManager::Update_color_picked_CHANGES()
-{
+void ofxColorManager::update_color_picked_CHANGES() {
     // executes workflow app
 
-    ofLogNotice("ofxColorManager") << "Update_color_picked_CHANGES: " << ofToString(color_picked);
+    ofLogNotice("ofxColorManager") << "update_color_picked_CHANGES: " << ofToString(color_picked);
 
     //    // TEST
     //    color_picked_Update_To_HSV();//redundant...
@@ -3444,13 +3269,12 @@ void ofxColorManager::Update_color_picked_CHANGES()
     }
 }
 
+
 //--------------------------------------------------------------
-void ofxColorManager::Changed_color_picked(ofFloatColor &_c)
-{
+void ofxColorManager::Changed_color_picked(ofFloatColor &_c) {
     // TEST
-    if (LISTEN_isEnabled == true)
-    {
-        Update_color_picked_CHANGES();
+    if (LISTEN_isEnabled == true) {
+        update_color_picked_CHANGES();
 
         // TEST
         color_picked_Update_To_HSV();//redundant...
@@ -3459,8 +3283,7 @@ void ofxColorManager::Changed_color_picked(ofFloatColor &_c)
 
 
 //--------------------------------------------------------------
-void ofxColorManager::Changed_color_clicked(ofFloatColor &color)
-{
+void ofxColorManager::Changed_color_clicked(ofFloatColor &color) {
     //DISABLED
     ofLogNotice("ofxColorManager") << "Changed_color_clicked " << ofToString(color);
     //    color_picked.set(color);
@@ -3473,34 +3296,29 @@ void ofxColorManager::Changed_color_clicked(ofFloatColor &color)
 
 
 //--------------------------------------------------------------
-void ofxColorManager::setColor_TARGET(ofColor &c)
-{
+void ofxColorManager::setColor_TARGET(ofColor &c) {
     color_TARGET = &c;
 }
 
 
 //--------------------------------------------------------------
-void ofxColorManager::setControl(float control)
-{
+void ofxColorManager::setControl(float control) {
     curve_pos = control;
     curve_pos_slider.setPercent(control);
 }
 
 
 //--------------------------------------------------------------
-vector<ofColor> ofxColorManager::getPalette()
-{
+vector<ofColor> ofxColorManager::getPalette() {
     return palette;
 }
 
 
 //--------------------------------------------------------------
-void ofxColorManager::setVisible(bool b)
-{
+void ofxColorManager::setVisible(bool b) {
     // TODO should split all hide or remember states...
 
-    if (!SHOW_ALL_GUI)
-    {
+    if (!SHOW_ALL_GUI) {
         SHOW_BrowserColors = SHOW_ALL_GUI;
         SHOW_Gradient = SHOW_ALL_GUI;
         SHOW_Curve = SHOW_ALL_GUI;
@@ -3517,24 +3335,21 @@ void ofxColorManager::setVisible(bool b)
 
 
 //--------------------------------------------------------------
-ofColor ofxColorManager::getColorAtPercent(float control)
-{
-    float out = ofMap( curvesTool.getAtPercent(1.0-control), 0, curveTool_amount-1, 1., 0.) ;
-    ofColor c = gradient.getColorAtPercent( out );
+ofColor ofxColorManager::getColorAtPercent(float control) {
+    float out = ofMap(curvesTool.getAtPercent(1.0 - control), 0, curveTool_amount - 1, 1., 0.);
+    ofColor c = gradient.getColorAtPercent(out);
     return c;
 }
 
 
 //--------------------------------------------------------------
-void ofxColorManager::setVisible_GUI_MINI(bool b)
-{
+void ofxColorManager::setVisible_GUI_MINI(bool b) {
     SHOW_GUI_MINI = b;
 }
 
 
 //--------------------------------------------------------------
-void ofxColorManager::setBackground_ENABLE(bool b)
-{
+void ofxColorManager::setBackground_ENABLE(bool b) {
     backgroundENABLE = b;
 }
 
@@ -3542,8 +3357,7 @@ void ofxColorManager::setBackground_ENABLE(bool b)
 //--------------------------------------------------------------
 void ofxColorManager::draw_previewGradient(glm::vec2 pos, bool horizontal = true) {
 
-    if (horizontal)
-    {
+    if (horizontal) {
         curve_img_gradient.draw(pos);
     }
     //TODO: how to draw rotated... can image.rotate the image in some trig...
@@ -3559,8 +3373,7 @@ void ofxColorManager::draw_previewGradient(glm::vec2 pos, bool horizontal = true
 
 
 //--------------------------------------------------------------
-void ofxColorManager::setVisible_debugText(bool b)
-{
+void ofxColorManager::setVisible_debugText(bool b) {
     SHOW_debugText = b;
 }
 
@@ -3568,12 +3381,11 @@ void ofxColorManager::setVisible_debugText(bool b)
 
 
 //--------------------------------------------------------------
-void ofxColorManager::draw_ColourLovers(){
+void ofxColorManager::draw_ColourLovers() {
 
     // preview receivers
 
-    if (SHOW_ColourLovers)
-    {
+    if (SHOW_ColourLovers) {
         int x, y, w, h, pad, lineH;
         x = 320;
         y = ofGetHeight() - 200;
@@ -3585,24 +3397,24 @@ void ofxColorManager::draw_ColourLovers(){
         ofFill();
 
         ofDrawBitmapStringHighlight("RECEIVERS IN ofApp", x, y, ofColor::black, ofColor::white);
-        y += 3*pad+lineH;
+        y += 3 * pad + lineH;
 
         ofDrawBitmapStringHighlight("myColor:", x, y, ofColor::black, ofColor::white);
-        y += 3*pad;
+        y += 3 * pad;
 
         ofSetColor(myColor);
         ofDrawRectangle(ofRectangle(x, y, w, h));
-        y += (h+pad);
+        y += (h + pad);
 
         y += (lineH);
         ofDrawBitmapStringHighlight("myPalette:", x, y, ofColor::black, ofColor::white);
-        y += 3*pad;
+        y += 3 * pad;
 
         for (int i = 0; i < myPalette.size(); i++) {
             ofSetColor(myPalette[i]);
             ofDrawRectangle(ofRectangle(x + i * (w + pad), y, w, h));
         }
-        y += (h+pad);
+        y += (h + pad);
 
         y += (lineH);
         ofDrawBitmapStringHighlight("myPalette_Name:", x, y, ofColor::black, ofColor::white);
@@ -3615,13 +3427,12 @@ void ofxColorManager::draw_ColourLovers(){
 
 
 //--------------------------------------------------------------
-void ofxColorManager::windowResized(int w, int h)
-{
+void ofxColorManager::windowResized(int w, int h) {
     // COLOUR LOVERS
     glm::vec2 sizeGui(150, 375);
     glm::vec2 sizeGrid(150, h);
-    glm::vec2 posGui(w- (sizeGui.x+sizeGrid.x+4), 0);
-    glm::vec2 posGrid(posGui.x+sizeGui.x+2, 0);
+    glm::vec2 posGui(w - (sizeGui.x + sizeGrid.x + 4), 0);
+    glm::vec2 posGrid(posGui.x + sizeGui.x + 2, 0);
     ColourLoversHelper.setGrid(posGrid, sizeGrid);
     ColourLoversHelper.setPosition(posGui, sizeGui);
     ColourLoversHelper.windowResized(w, h);
@@ -3629,10 +3440,10 @@ void ofxColorManager::windowResized(int w, int h)
 
 
 //--------------------------------------------------------------
-void ofxColorManager::exit()
-{
+void ofxColorManager::exit() {
 
     //    palette_save("myPalette");
+
     save_group_XML(XML_params, XML_path);
 
     ColorBrowser.exit();
@@ -3654,88 +3465,36 @@ void ofxColorManager::exit()
     //--
 }
 
-//
-////--------------------------------------------------------------
-//void ofxColorManager::palette_load(string p)
-//{
-//    ofLogNotice("ofxColorManager") << "palette_load: " << p;
-//
-//    string path = path_palettes + p + ".json";
-//    ofFile file(path);
-//    if (file.exists())
-//    {
-//        jsonin ji(file);
-//        ji >> data;
-//
-//        ofLogNotice("ofxColorManager") << "palette name: " << data.name;
-//        palette_clear();
-//        ofColor c;
-//        for (int i = 0; i< data.palette.size(); i++)
-//        {
-//            c = data.palette[i];
-//            ofLogNotice("ofxColorManager") << "color_picked" << i << ": " << ofToString(c);
-//            palette_addColor(c);
-//        }
-//    }
-//    else
-//    {
-//        ofLogNotice("ofxColorManager") << "FILE '" << path << "' NOT FOUND";
-//    }
-//}
-//
-//
-////--------------------------------------------------------------
-//void ofxColorManager::palette_save(string p)
-//{
-//    ofLogNotice("ofxColorManager") << "palette_save: " << p;
-//
-//    string path = path_palettes + p + ".json";
-//
-//    data.name = "myPalette";
-//    ofLogNotice("ofxColorManager") << "palette name: " << data.name;
-//
-//    data.palette.resize(palette.size());
-//    for (int i = 0; i< palette.size(); i++)
-//    {
-//        data.palette[i] = palette[i];
-//        ofLogNotice("ofxColorManager") << "color_picked" << i << " " << ofToString(data.palette[i]);
-//    }
-//
-//    ofFile file(path, ofFile::WriteOnly);
-//    jsonout jo(file);
-//    jo << data;
-//}
-
 
 //--------------------------------------------------------------
-void ofxColorManager::preset_load(string p)
-{
-    //TODO
-    textInput_temp = PRESET_name;
+void ofxColorManager::preset_load(string p) {
 
     ofLogNotice("ofxColorManager:preset_load") << p;
-    //    string path = preset_path+p+".json";
 
+    // setup linking pointers to get back on load
     myPresetPalette.setName(p);
-    //    myPresetPalette.setName(PRESET_name);
     myPresetPalette.setCurveName(PRESET_curveName);
-    //        myPresetPalette.setBackgroundColor(color_backGround);//error ofParameter
     myPresetPalette.setPalette(palette);
+    //TODO
+    // curve & gradient
 
-    //TODO should use p..
-    myPresetPalette.preset_load(PRESET_name);
+    // load preset
+    myPresetPalette.preset_load(p);
+
+    //-
+
+    // apply loaded preset to local system
     vector<ofColor> palette_TEMP = myPresetPalette.getPalette();
-
     palette_clear();
-    for (int i=0; i<palette_TEMP.size(); i++)
-    {
-        ofColor c;
-        c = palette_TEMP[i];
-        palette_addColor(c);
+    for (int i = 0; i < palette_TEMP.size(); i++) {
+        palette_addColor(palette_TEMP[i]);
     }
 
-    color_backGround = ofColor( myPresetPalette.getBackground() );
+    //myPresetPalette.setBackgroundColor(color_backGround);//error ofParameter
+    color_backGround = ofColor(myPresetPalette.getBackground());//get directly without pointing
 
+    //TODO
+    // curve & gradient
     //        PRESET_curveName = curveName_BACK;
     ////        string *name_BACK;
     ////        vector<ofColor> *palette_BACK;
@@ -3743,23 +3502,19 @@ void ofxColorManager::preset_load(string p)
 
     //-
 
-    myDEMO_palette.clear();
+    if (TEST_DEMO)
+        myDEMO_palette.clear();
 }
 
 
 //--------------------------------------------------------------
-void ofxColorManager::preset_save(string p)
-{
+void ofxColorManager::preset_save(string p) {
     ofLogNotice("ofxColorManager:preset_save") << "preset_save: " << p;
-    //    string path = preset_path+p+".json";
 
-
-    //    myPresetPalette.setName(PRESET_name);
     myPresetPalette.setName(p);
     myPresetPalette.setCurveName(PRESET_curveName);
-    ofColor c = color_backGround.get();
-    //error if ofParameter
-    myPresetPalette.setBackgroundColor(c);
+    myPresetPalette.setBackgroundColor(color_backGround.get());
     myPresetPalette.setPalette(palette);
+
     myPresetPalette.preset_save(PRESET_name);
 }

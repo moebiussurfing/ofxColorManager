@@ -1,4 +1,5 @@
 #pragma once
+
 #include "ofMain.h"
 
 #include "ofxInterface.h"
@@ -9,11 +10,12 @@
 #include "ofxColorsBrowser.h"
 #include "ofxCurvesTool.h"
 #include "ofxSimpleSlider.h"
-#include "ofxCereal.h"
+//#include "ofxCereal.h"
 #include "ofxMouseRuler.h"
 #include "ofxColourLoversHelper.h"
 #include "ColorWheelScheme.h"
 #include "ColorWheelSchemes.h"
+
 using namespace ofxColorTheory;
 using namespace std;
 
@@ -22,39 +24,19 @@ using namespace std;
 #include "ofxGui.h"
 #include "ofxImGui.h"
 
-#include "DEMO_palette.h"
-#include "PresetPalette.h"
 #include "PresetManager.h"
+#include "PresetPalette.h"
+#include "DEMO_palette.h"
 
-//--
-
-// JSON SERIALIZER
-
-using namespace ofxCereal;
-
-struct CustomData
-{
-    string name;
-    vector<ofColor> palette;
-
-OFX_CEREAL_DEFINE(CEREAL_NVP(name), CEREAL_NVP(palette))
-};
-
-struct PresetData
-{
-    string name;
-    vector<ofColor> palette;
-    string curveName;
-    ofColor background;
-
-OFX_CEREAL_DEFINE(CEREAL_NVP(name), CEREAL_NVP(curveName), CEREAL_NVP(palette), CEREAL_NVP(background))
-};
 
 //--
 
 class ofxColorManager {
 
 public:
+
+//    string path_palettes = "assets/palettes/";
+//    string preset_path = "assets/presets/";
 
     bool ENABLE_keys = true;
 
@@ -63,7 +45,9 @@ public:
     // ColorWheelSchemes
 
     void ColorWheel_setup();
+
     void ColorWheel_update();
+
     void ColorWheel_draw();
 
     shared_ptr<ColorWheelScheme> scheme;
@@ -115,6 +99,7 @@ public:
     // COLOUR LOVERS
 
     void draw_ColourLovers();
+
     ofxColourLoversHelper ColourLoversHelper;
     string myPalette_Name = "";
     ofColor myColor;
@@ -125,18 +110,22 @@ public:
     //--
 
     // TODO: TESTING
-    ofParameter<bool> preview{ "Preview", false };
+    ofParameter<bool> preview{"Preview", false};
     bool show_another_window;
 
     //--
 
     ofxColorManager();
+
     ~ofxColorManager();
 
 
     void setup();
+
     void update();
+
     void draw();
+
     void exit();
 
     void windowResized(int w, int h);
@@ -170,17 +159,23 @@ public:
     // API
 
     vector<ofColor> getPalette();
+
     ofColor getColorAtPercent(float control);
+
     void setControl(float control);
 
     void setVisible(bool b);
+
     void setVisible_GUI_MINI(bool b);
+
     void setVisible_debugText(bool b);
 
     void draw_Palette_MINI();
+
     void draw_previewGradient(glm::vec2 pos, bool horizontal);
 
     void disableListeners();
+
     void enableListeners();
 
     //-----------------------------------------------------------
@@ -218,6 +213,7 @@ public:
     ofParameterGroup params_palette;
     ofParameterGroup params_curve;
     ofParameterGroup params_control;
+
     void Changed_CONTROL(ofAbstractParameter &e);
 
     //--
@@ -242,11 +238,17 @@ public:
     ofParameter<bool> bLock_palette;
 
     void palettes_setup();
+
     void palettes_setup_labels();
+
     void palettes_update();
+
     void palettes_resize();
+
     void palettes_setVisible(bool b);
+
     void draw_palettes();
+
     ofParameter<bool> MODE_Palette;
 
     //--
@@ -254,15 +256,24 @@ public:
     // GUI
 
     ofxImGui::Gui gui;
+
     bool gui_imGui();
+
     void gui_imGui_window1();
+
     void gui_imGui_window2();
+
     void gui_imGui_window3();
+
     void gui_imGui_window4();
+
     bool guiVisible;
     bool mouseOverGui;
+
     void gui_setup_layout();
+
     void gui_imGui_theme();
+
     float widgetFactor = 0.9;
     ofxImGui::Settings mainSettings = ofxImGui::Settings();
 
@@ -277,10 +288,12 @@ public:
 //    float backgroundDarkness_PRE;
 
     bool backgroundENABLE = false;
+
     void setBackground_ENABLE(bool b);
 
     // TEST
     bool LISTEN_isEnabled = true;
+
     void color_picked_Update_To_HSV();
 
     // MAIN COLOR
@@ -304,23 +317,33 @@ public:
     // TODO: TEST LINKING
 
     ofParameter<ofFloatColor> color_clicked_param;
+
     void Changed_color_picked(ofFloatColor &color);
+
     void Changed_color_clicked(ofFloatColor &color);
+
     // TEST
-    void Update_color_picked_CHANGES();
+    void update_color_picked_CHANGES();
 
     //--
 
     // USER PALETTE OF COLORS
 
     vector<ofColor> palette;
+
     void palette_addColor(ofColor c);
+
     void palette_removeColorLast();
+
     void palette_clear();
+
     void palette_addColor_toInterface(ofColor c);
+
     void palette_rearrenge();//resize boxes when adding removing colors to user palette
     void palette_touched(string name);
+
     void palette_recallFromPalettes(int p);
+
     void palette_load_ColourLovers();
 
     //-
@@ -333,26 +356,30 @@ public:
 
     // INTERFACE
 
-    ofxInterface::Node* scene;
-    vector<ButtonExample*> btns_palette;
+    ofxInterface::Node *scene;
+    vector<ButtonExample *> btns_palette;
+
     void interface_setup();
+
     void interface_update();
+
     void interface_draw();
+
     bool bShowDebug = false;
 
     // ALGORITHMIC PALETTES
-    vector<ButtonExample*> btns_plt_Triad;       // 1
-    vector<ButtonExample*> btns_plt_ComplTriad;  // 2
-    vector<ButtonExample*> btns_plt_CompSat;     // 3
-    vector<ButtonExample*> btns_plt_ComplBrgt;   // 4
-    vector<ButtonExample*> btns_plt_MonoSat;     // 5
-    vector<ButtonExample*> btns_plt_MonoBrgt;    // 6
-    vector<ButtonExample*> btns_plt_Analog;      // 7
-    vector<ButtonExample*> btns_plt_Random;      // 8
+    vector<ButtonExample *> btns_plt_Triad;       // 1
+    vector<ButtonExample *> btns_plt_ComplTriad;  // 2
+    vector<ButtonExample *> btns_plt_CompSat;     // 3
+    vector<ButtonExample *> btns_plt_ComplBrgt;   // 4
+    vector<ButtonExample *> btns_plt_MonoSat;     // 5
+    vector<ButtonExample *> btns_plt_MonoBrgt;    // 6
+    vector<ButtonExample *> btns_plt_Analog;      // 7
+    vector<ButtonExample *> btns_plt_Random;      // 8
     int NUM_PALETTES = 8;
 
     // pointer back link the outside (ofApp) variable
-    vector<ButtonPaletteSelector*> btns_plt_Selector; // 1-8
+    vector<ButtonPaletteSelector *> btns_plt_Selector; // 1-8
     int SELECTED_palette = -1;
     int SELECTED_palette_PRE = -1;//to check if changed on update() loop
     int SELECTED_palette_LAST = 3;//default last palette type triggered. compBrg by default
@@ -370,9 +397,11 @@ public:
     // CURVES
 
     ofxCurvesTool curvesTool;
+
     void curveTool_setup();
     void curveTool_update();
     void curveTool_draw();
+
     int curveTool_amount = 256;
     string curveTool_name = "curves.yml";
     ofImage curve_img_gradient;
@@ -395,37 +424,31 @@ public:
     bool TEST_toBackground = true;
     float framePrc;
 
-    ofParameter<bool> TEST_DEMO {"ENABLE DEMO", false};
+    ofParameter<bool> TEST_DEMO{"ENABLE DEMO", false};
 
     //--
 
-    // JSON PALETTES SERIALIZER
-
-    CustomData data;//palette
-    PresetData presetData;//bundle preset: palette+curve+gradient+background
-
-//    void palette_save(string p);
-//    void palette_load(string p);
-    string path_palettes = "assets/palettes/";
+    // PRESET MANAGER
 
     void preset_save(string p);
     void preset_load(string p);
-    string preset_path = "assets/presets/";
 
-//    static void ShowExampleMenuFile();
+    void palette_save(string p);
+    void palette_load(string p);
 
-        // FILES
+    //-
+
+    // FILES
 
     void files_refresh();
     std::vector<std::string> fileNames;
     std::vector<ofFile> files;
     int currentFile = 0;
-
     string textInput_temp = "type name";
 
     //--
 
-    // App settings XML
+    // APP SETTINGS XML
 
     void save_group_XML(ofParameterGroup &g, string path);
     void load_group_XML(ofParameterGroup &g, string path);
@@ -439,6 +462,7 @@ private:
     //--
 
     // LAYOUT
+
     int guiWidth;
     int gui_x, gui_y, gui_w, gui_h;
     int gui2_x, gui2_y, gui2_w, gui2_h;
@@ -481,13 +505,13 @@ private:
 
     // LISTENERS
 
-    void keyPressed( ofKeyEventArgs& eventArgs);
-    void keyReleased( ofKeyEventArgs& eventArgs );
+    void keyPressed(ofKeyEventArgs &eventArgs);
+    void keyReleased(ofKeyEventArgs &eventArgs);
+    void mouseDragged(ofMouseEventArgs &eventArgs);
+    void mousePressed(ofMouseEventArgs &eventArgs);
+    void mouseReleased(ofMouseEventArgs &eventArgs);
     void addKeysListeners();
     void removeKeysListeners();
-    void mouseDragged( ofMouseEventArgs& eventArgs );
-    void mousePressed( ofMouseEventArgs& eventArgs );
-    void mouseReleased( ofMouseEventArgs& eventArgs );
     void addMouseListeners();
     void removeMouseListeners();
 

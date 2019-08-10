@@ -19,23 +19,10 @@ void PresetPalette::setCurveName(string &_curve)
 }
 
 //--------------------------------------------------------------
-void PresetPalette::setBackgroundColor(ofColor _background)
+void PresetPalette::setBackgroundColor(ofColor _background)//without pointer...
 {
     backCol = _background;
 }
-
-////--------------------------------------------------------------
-//void PresetPalette::setBackgroundColor(ofColor &_background)
-//{
-//    background_BACK = &_background;
-//}
-
-////--------------------------------------------------------------
-//void PresetPalette::setBackgroundColor(ofParameter<ofFloatColor> &_background)
-////void PresetPalette::setBackgroundColor(ofColor &_background)
-//{
-//    background_BACK = &_background;
-//}
 
 
 //--------------------------------------------------------------
@@ -44,17 +31,20 @@ void PresetPalette::setPalette(vector<ofColor> &_palette)
     palette_BACK = &_palette;
 }
 
+
 //--------------------------------------------------------------
 vector<ofColor> PresetPalette::getPalette()
 {
     return (*palette_BACK);
 }
 
+
 //--------------------------------------------------------------
 ofColor PresetPalette::getBackground()
 {
     return presetData.background;
 }
+
 
 //--------------------------------------------------------------
 void PresetPalette::preset_load(string p)
@@ -133,8 +123,6 @@ void PresetPalette::preset_save(string p)
     ofLogNotice("PresetPalette::preset_save") << "DONE! preset_save: " << p;
     cout << endl;
 }
-
-
 
 
 //--------------------------------------------------------------

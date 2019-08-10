@@ -17,8 +17,15 @@
 
 using namespace ofxCereal;
 
-struct PresetData_
+struct PaletteData
 {
+    string name;
+    vector<ofColor> palette;
+
+OFX_CEREAL_DEFINE(CEREAL_NVP(name), CEREAL_NVP(palette))
+};
+
+struct PresetData_ {
     string name;
     vector<ofColor> palette;
     string curveName;
@@ -33,8 +40,14 @@ class PresetPalette {
 
 public:
 
+    // constants
+
+    string preset_path = "user_kits/presets/";
+    string path_palettes = "user_kits/palettes/";
+
     //-
 
+    // local data
     string name;
     vector<ofColor> palette;
     string curveName;
@@ -42,28 +55,28 @@ public:
 
     //--
 
+    // outside data by pointers
     string *name_BACK;
     vector<ofColor> *palette_BACK;
     string *curveName_BACK;
     ofColor *background_BACK;
-//    ofFloatColor *background_BACK;
 
     ofColor backCol;
 
 //--
 
+// API
+
     void setName(string &name);
+
     void setCurveName(string &curve);
+
     void setPalette(vector<ofColor> &palette);
 
     void setBackgroundColor(ofColor _background);
 
-//    void setBackgroundColor(ofColor &background);
-//    void setBackgroundColor(ofParameter<ofFloatColor> &background);
-
-    string preset_path = "user_kits/presets/";
-
     vector<ofColor> getPalette();
+
     ofColor getBackground();
 
     //--
@@ -72,7 +85,7 @@ public:
 
     // palette (only colors)
 
-//    CustomData data;//palette
+//    PaletteData data;//palette
 //    void palette_save(string p);
 //    void palette_load(string p);
 //    string path_palettes = "assets/palettes/";
@@ -82,12 +95,15 @@ public:
 
     PresetData_ presetData;//bundle preset: palette+curve+gradient+background
     void preset_save(string p);
+
     void preset_load(string p);
 
     //--
     void palette_save(string p);
+
     void palette_load(string p);
-    string path_palettes = "assets/palettes/";
+
+
 
 };
 

@@ -36,6 +36,11 @@ public:
     void addMouseListeners();
     void removeMouseListeners();
 
+//    void addKeysListeners();
+//    void removeKeysListeners();
+//    void addMouseListeners();
+//    void removeMouseListeners();
+
 private:
 //    ofxImGui::Gui gui;
 //    float v;
