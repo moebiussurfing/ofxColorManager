@@ -8,7 +8,7 @@
 //--------------------------------------------------------------
 void PresetManager::setup()
 {
-    gui.setup();
+gui.setup();
 
 }
 
@@ -23,7 +23,7 @@ void PresetManager::update() {
 void PresetManager::draw()
 {
 //        gui.begin();
-//        ImGui::SliderFloat("slider", &v, 0.f, 10.f);
+    //        ImGui::SliderFloat("slider", &v, 0.f, 10.f);
 //        gui.end();
 }
 
