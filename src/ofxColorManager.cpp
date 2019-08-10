@@ -1366,12 +1366,17 @@ void ofxColorManager::gui_imGui_window3()
 {
     // 3. PRESET MANAGER
 
-    auto MANAGER_Set = ofxImGui::Settings();
-    MANAGER_Set.windowSize = ofVec2f(gui3_w, gui3_h);
-    MANAGER_Set.windowPos = ofVec2f(ofGetWindowWidth()*0.5-gui3_w*0.5, gui3_y);
+    mainSettings = ofxImGui::Settings();
+    mainSettings.windowSize = ofVec2f(gui3_w, gui3_h);
+    mainSettings.windowPos = ofVec2f(ofGetWindowWidth()*0.5-gui3_w*0.5, gui3_y);
 //    MANAGER_Set.windowPos = ofVec2f(gui3_x, gui3_y);
 
-    if (ofxImGui::BeginWindow("PRESET MANAGER", MANAGER_Set, false))
+//    auto MANAGER_Set = ofxImGui::Settings();
+//    MANAGER_Set.windowSize = ofVec2f(gui3_w, gui3_h);
+//    MANAGER_Set.windowPos = ofVec2f(ofGetWindowWidth()*0.5-gui3_w*0.5, gui3_y);
+////    MANAGER_Set.windowPos = ofVec2f(gui3_x, gui3_y);
+
+    if (ofxImGui::BeginWindow("PRESET MANAGER", mainSettings, false))
     {
         ImGui::Text("PALETTE");
 
@@ -1504,17 +1509,17 @@ void ofxColorManager::gui_imGui_window3()
             }
         }
 
-        //-
-
-        //TODO: must disable key sortcuts when typing...
-        if (MANAGER_Set.mouseOverGui)
-            ENABLE_keys = false;
-        else
-            ENABLE_keys = true;
-
-        //-
+//        //-
+//
+//        //TODO: must disable key sortcuts when typing...
+//        if (MANAGER_Set.mouseOverGui)
+//            ENABLE_keys = false;
+//        else
+//            ENABLE_keys = true;
+//
+//        //-
     }
-    ofxImGui::EndWindow(MANAGER_Set);
+    ofxImGui::EndWindow(mainSettings);
 }
 
 
@@ -2579,6 +2584,16 @@ void ofxColorManager::draw()
     {
         //-
 
+        //-
+
+//        //TODO: must disable key sortcuts when typing...
+//        if (MANAGER_Set.mouseOverGui)
+//            ENABLE_keys = false;
+//        else
+//            ENABLE_keys = true;
+//
+//        //-
+
         // GUI
 
         this->mouseOverGui = false;
@@ -2588,9 +2603,11 @@ void ofxColorManager::draw()
         }
         if (this->mouseOverGui)
         {
+            ENABLE_keys = false;
         }
         else
         {
+            ENABLE_keys = true;
         }
 
         //--
