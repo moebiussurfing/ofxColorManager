@@ -30,7 +30,7 @@ public:
     ofColor color_picked;
     ofColor color_over;
     ofColor color_down;
-
+	ofColor color_border;
     ofVec2f touchAnchor;
 	bool bTouched;
 

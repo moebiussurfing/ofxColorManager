@@ -3,6 +3,7 @@
 void ButtonExample::setColor(ofColor c)
 {
     color_picked = c;
+    color_border = ofColor( ofColor::white, 64 );//white with alpha
 }
 
 ofColor ButtonExample::getColor()
@@ -35,6 +36,13 @@ void ButtonExample::draw()
     ofFill();
     ofDrawRectangle(0, 0, getWidth(), getHeight());
 
+    //draw border
+    ofNoFill();
+    ofSetColor(color_border);
+    ofSetLineWidth(1.);
+    ofDrawRectangle(1., 1., getWidth()-1., getHeight()-1);
+
+
 //	// draw the touch anchor
 //	if (bTouched) {
 //		ofSetColor(color_over);
@@ -48,7 +56,9 @@ void ButtonExample::draw()
         ofNoFill();
         ofSetColor(ofColor(ofColor::black, 128));//with alpha
         ofSetLineWidth(1.);
-        ofDrawRectangle(1., 1., getWidth()-2., getHeight()-2.);
+        ofDrawRectangle(1., 1., getWidth()-2., getHeight()-2);
+
+
     }
 }
 
