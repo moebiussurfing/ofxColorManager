@@ -490,27 +490,28 @@ void ofxColorManager::gui_setup_layout() {
     // global mini pad between panels/objects
     pad = 2;
     guiWidth = 200;
-    box_size = 40;
+//    box_size = 40;
+    box_size = 30;
 
-    // gui 1 ImGui COLOR PANEL
+    // gui 1 COLOR PANEL
     gui_x = 0;
     gui_y = 0;
     gui_w = guiWidth;
     gui_h = 200;
 
-    // gui 2 ImGui COLOR MANAGER
+    // gui 2 COLOR MANAGER
     gui2_x = 230;
     gui2_y = 0;
     gui2_w = guiWidth;
     gui2_h = 100;
 
-    // gui 3 ImGui PRESET MANAGER
+    // gui 3 PRESET MANAGER
     gui3_x = 700;
     gui3_y = 0;
     gui3_w = guiWidth;
     gui3_h = 200;
 
-    // gui 4 ImGui PANELS MANAGER
+    // gui 4 PANELS MANAGER
     gui4_x = gui2_x;
     gui4_y = 575;
     gui4_w = guiWidth;
@@ -965,6 +966,8 @@ void ofxColorManager::gui_imGui_window1() {
 
         // 3. PALETTE LIBRARY
 
+        //TODO BUG CRASH
+
         if (ImGui::CollapsingHeader("PALETTE LIBRARY")) {
             //--
 
@@ -994,6 +997,9 @@ void ofxColorManager::gui_imGui_window1() {
             static ImVec4 saved_palette[2310];//same than Pantone palette
 
             if (!saved_palette_inited)
+                //TODO BUG
+//                for (int n = 0; n < ColorBrowser_palette.size(); n++) {
+
                 for (int n = 0; n < IM_ARRAYSIZE(saved_palette); n++) {
                     ofFloatColor c = ofColor(ColorBrowser_palette[n]);
                     saved_palette[n].x = c.r;
@@ -1101,11 +1107,11 @@ void ofxColorManager::gui_imGui_window2() {
             ImGui::PushItemWidth(120);
 
             static ImVec4 color;
-            color = color_backGround.get();
-//            color.x = color_backGround.get().r;
-//            color.y = color_backGround.get().g;
-//            color.z = color_backGround.get().b;
-//            color.w = color_backGround.get().a;
+//            color = color_backGround.get();
+            color.x = color_backGround.get().r;
+            color.y = color_backGround.get().g;
+            color.z = color_backGround.get().b;
+            color.w = color_backGround.get().a;
 
             // squared box
             ImGuiColorEditFlags colorEdiFlags =
@@ -1349,7 +1355,7 @@ void ofxColorManager::gui_imGui_window3() {
         ImGui::Text("KIT");
 
         // arrow buttons
-         int counter = currentFile;
+        static int counter = currentFile;
         float spacing = ImGui::GetStyle().ItemInnerSpacing.x;
 
         ImGui::PushButtonRepeat(true);

@@ -3,7 +3,7 @@
 void ButtonExample::setColor(ofColor c)
 {
     color_picked = c;
-    color_border = ofColor( ofColor::white, 64 );//white with alpha
+    color_border = ofColor( ofColor::white, 32 );//white with alpha
 }
 
 ofColor ButtonExample::getColor()
