@@ -2,24 +2,23 @@
 
 #include "ofMain.h"
 
-#include "ofxInterface.h"
-#include "ButtonPaletteSelector.h"
-#include "ButtonExample.h"
 #include "ofxColorGradient.h"
 #include "ofxColorPalette.h"
 #include "ofxColorsBrowser.h"
-#include "ofxCurvesTool.h"
-#include "ofxSimpleSlider.h"
-//#include "ofxCereal.h"
-#include "ofxMouseRuler.h"
 #include "ofxColourLoversHelper.h"
 #include "ColorWheelScheme.h"
 #include "ColorWheelSchemes.h"
-
 using namespace ofxColorTheory;
 using namespace std;
+#include "ofxCurvesTool.h"
+#include "ofxSimpleSlider.h"
 
+#include "ofxInterface.h"
+#include "ButtonPaletteSelector.h"
+#include "ButtonExample.h"
 #include "ofxUndoSimple.h"
+#include "ofxMouseRuler.h"
+
 #include "ofxGuiPanelsLayout.h"
 #include "ofxGui.h"
 #include "ofxImGui.h"
@@ -28,15 +27,11 @@ using namespace std;
 #include "PresetPalette.h"
 #include "DEMO_palette.h"
 
-
 //--
 
 class ofxColorManager {
 
 public:
-
-//    string path_palettes = "assets/palettes/";
-//    string preset_path = "assets/presets/";
 
     bool ENABLE_keys = true;
 
@@ -45,9 +40,7 @@ public:
     // ColorWheelSchemes
 
     void ColorWheel_setup();
-
     void ColorWheel_update();
-
     void ColorWheel_draw();
 
     shared_ptr<ColorWheelScheme> scheme;
@@ -70,9 +63,7 @@ public:
 
     ofxGuiPanelsLayout panels;
     ofParameterGroup p_TOGGLES;
-//    ofxPanel gui_TOGGLES;//preview
     ofParameter<bool> SHOW_Layout_Gui{"SHOW_Layout_Gui", true};
-
     ofParameter<bool> SHOW_ImGui{"SHOW_ImGui", true};
 
     //--
@@ -114,18 +105,12 @@ public:
     //--
 
     ofxColorManager();
-
     ~ofxColorManager();
 
-
     void setup();
-
     void update();
-
     void draw();
-
     void exit();
-
     void windowResized(int w, int h);
 
     //--
@@ -142,7 +127,6 @@ public:
     ofParameter<bool> SHOW_GUI_MINI;
     ofParameter<bool> SHOW_debugText;
     ofParameter<bool> SHOW_TEST_Curve;
-
     ofParameter<bool> SHOW_PanelsManager;
     ofParameter<bool> SHOW_PresetManager;
     ofParameter<bool> SHOW_ColorManager;
@@ -157,27 +141,17 @@ public:
     // API
 
     vector<ofColor> getPalette();
-
     ofColor getColorAtPercent(float control);
-
     void setControl(float control);
-
     void setVisible(bool b);
-
     void setVisible_GUI_MINI(bool b);
-
     void setVisible_debugText(bool b);
-
     void draw_Palette_MINI();
-
     void draw_previewGradient(glm::vec2 pos, bool horizontal);
-
     void disableListeners();
-
     void enableListeners();
 
     //-----------------------------------------------------------
-
 
     ofxMouseRuler mouseRuler;
 
@@ -196,7 +170,6 @@ public:
 
     ofParameter<bool> bPaletteEdit;
     ofParameter<bool> bRandomColor;
-//    ofParameter<bool> SHOW_PaletteCustom;
     ofParameter<bool> bAddColor;
     ofParameter<bool> bRemoveColor;
     ofParameter<bool> bClearPalette;
@@ -236,13 +209,9 @@ public:
     ofParameter<bool> bLock_palette;
 
     void palettes_setup();
-
     void palettes_setup_labels();
-
     void palettes_update();
-
     void palettes_resize();
-
     void palettes_setVisible(bool b);
 
     void draw_palettes();
@@ -254,26 +223,18 @@ public:
     // GUI
 
     ofxImGui::Gui gui;
-
-    bool gui_imGui();
-
-    void gui_imGui_window1();
-
-    void gui_imGui_window2();
-
-    void gui_imGui_window3();
-
-    void gui_imGui_window4();
-
     bool guiVisible;
     bool mouseOverGui;
-
-    void gui_setup_layout();
-
-    void gui_imGui_theme();
-
     float widgetFactor = 0.9;
     ofxImGui::Settings mainSettings = ofxImGui::Settings();
+
+    bool gui_imGui();
+    void gui_imGui_window1();
+    void gui_imGui_window2();
+    void gui_imGui_window3();
+    void gui_imGui_window4();
+    void gui_setup_layout();
+    void gui_imGui_theme();
 
     //--
 
@@ -317,7 +278,6 @@ public:
     ofParameter<ofFloatColor> color_clicked_param;
 
     void Changed_color_picked(ofFloatColor &color);
-
     void Changed_color_clicked(ofFloatColor &color);
 
     // TEST
@@ -328,20 +288,13 @@ public:
     // USER PALETTE OF COLORS
 
     vector<ofColor> palette;
-
     void palette_addColor(ofColor c);
-
     void palette_removeColorLast();
-
     void palette_clear();
-
     void palette_addColor_toInterface(ofColor c);
-
     void palette_rearrenge();//resize boxes when adding removing colors to user palette
     void palette_touched(string name);
-
     void palette_recallFromPalettes(int p);
-
     void palette_load_ColourLovers();
 
     //-
@@ -358,9 +311,7 @@ public:
     vector<ButtonExample *> btns_palette;
 
     void interface_setup();
-
     void interface_update();
-
     void interface_draw();
 
     bool bShowDebug = false;

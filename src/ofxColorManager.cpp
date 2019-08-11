@@ -1314,7 +1314,7 @@ void ofxColorManager::gui_imGui_window3() {
 //    mainSettings.windowPos = ofVec2f(gui3_x, gui3_y);
 
     if (ofxImGui::BeginWindow("PRESET MANAGER", mainSettings, false)) {
-        ImGui::Text("PALETTE");
+        ImGui::Text("NAME");
 
         //TODO
         //bug doubled keys...
@@ -1355,20 +1355,56 @@ void ofxColorManager::gui_imGui_window3() {
 
         //-
 
-        // 1. palettes
-        if (ImGui::Button("SAVE PALETTE")) {
-            cout << "SAVE PALETTE" << endl;
+//        // 1. palettes
+//
+//        ImGui::Text("PALETTE");
+//
+//        if (ImGui::Button("SAVE PALETTE")) {
+//            cout << "SAVE PALETTE" << endl;
+//            PRESET_name = textInput_temp;
+//
+//            myPresetPalette.setName(PRESET_name);
+//            myPresetPalette.setBackgroundColor(color_backGround.get());
+//            myPresetPalette.setPalette(palette);
+//
+//            myPresetPalette.palette_save(PRESET_name);
+//        }
+//
+//        ImGui::SameLine();
+//        if (ImGui::Button("LOAD PALETTE"))
+//        {
+//            cout << "LOAD PALETTE" << endl;
+//            PRESET_name = textInput_temp;
+//            cout << "PRESET_name: " << PRESET_name << endl;
+//
+//            myPresetPalette.palette_load(PRESET_name);
+//
+//            //-
+//
+//            color_backGround = myPresetPalette.getBackground();//TODO: temp solution because required pointer..
+//
+////            //TODO
+////            // apply loaded preset to local system
+////            vector<ofColor> palette_TEMP = myPresetPalette.getPalette();
+////            palette_clear();
+////            for (int i = 0; i < palette_TEMP.size(); i++) {
+////                palette_addColor(palette_TEMP[i]);
+////            }
+////
+////            color_backGround = ofColor(myPresetPalette.getBackground());//get directly without pointing
+//
+//            //-
+//
+//            if (TEST_DEMO)
+//                myDEMO_palette.clear();
+//        }
 
-            PRESET_name = textInput_temp;
-
-            myPresetPalette.setName(PRESET_name);
-            myPresetPalette.setBackgroundColor(color_backGround.get());
-            myPresetPalette.setPalette(palette);
-
-            myPresetPalette.palette_save(PRESET_name);
-        }
+        //-
 
         // 2. presets
+
+        ImGui::Text("PRESETS");
+
         if (ImGui::Button("SAVE")) {
             cout << "SAVE" << endl;
 
@@ -3486,14 +3522,16 @@ void ofxColorManager::preset_load(string p) {
     myPresetPalette.setName(p);
     myPresetPalette.setCurveName(PRESET_curveName);
     myPresetPalette.setPalette(palette);
+
     //TODO
-    // curve & gradient
+    //+curve & gradient
 
     // load preset
     myPresetPalette.preset_load(p);
 
     //-
 
+    //TODO
     // apply loaded preset to local system
     vector<ofColor> palette_TEMP = myPresetPalette.getPalette();
     palette_clear();
@@ -3501,6 +3539,7 @@ void ofxColorManager::preset_load(string p) {
         palette_addColor(palette_TEMP[i]);
     }
 
+    //TODO
     //myPresetPalette.setBackgroundColor(color_backGround);//error ofParameter
     color_backGround = ofColor(myPresetPalette.getBackground());//get directly without pointing
 
