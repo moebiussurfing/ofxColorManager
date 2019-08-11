@@ -1334,14 +1334,13 @@ void ofxColorManager::gui_imGui_window3() {
 //        }
 
         // B
-//        string textInput_temp = PRESET_name;
-//        static char tab2[32];
-        char tab2[32];
+        string textInput_temp = PRESET_name;
 
         // load tab2 with textInput_temp
-        // load string into char array
+        char tab2[32];
         strncpy(tab2, textInput_temp.c_str(), sizeof(tab2));
         tab2[sizeof(tab2) - 1] = 0;
+        // loaded string into char array
 
         //TODO
         //maybe should use 2 different names to presets from kit
@@ -1354,12 +1353,28 @@ void ofxColorManager::gui_imGui_window3() {
             cout << "textInput_temp:" << textInput_temp << endl;
         }
 
+        //-
+
+        // 1. palettes
+        if (ImGui::Button("SAVE PALETTE")) {
+            cout << "SAVE PALETTE" << endl;
+
+            PRESET_name = textInput_temp;
+
+            myPresetPalette.setName(PRESET_name);
+            myPresetPalette.setBackgroundColor(color_backGround.get());
+            myPresetPalette.setPalette(palette);
+
+            myPresetPalette.palette_save(PRESET_name);
+        }
+
+        // 2. presets
         if (ImGui::Button("SAVE")) {
             cout << "SAVE" << endl;
 
             //TODO
             //should re load by same name and get what position on vector
-            //is to reloaad current preset number
+            //is to reload current preset number
 //            textInput_temp = ofToString(tab2);
 //            cout << "textInput_temp:" << textInput_temp << endl;
 
@@ -1411,9 +1426,6 @@ void ofxColorManager::gui_imGui_window3() {
         ImGui::Separator();
         ImGui::Text("KIT");
 
-//        int numPalettes = fileNames.size();
-//        ImGui::Text("Total palettes: %d", numPalettes);
-
         // arrow buttons
         static int counter = currentFile;
         float spacing = ImGui::GetStyle().ItemInnerSpacing.x;
@@ -1449,9 +1461,8 @@ void ofxColorManager::gui_imGui_window3() {
 
         ImGui::PopButtonRepeat();
 
-        ImGui::SameLine();
-//        ImGui::Text("%d", currentFile);
         int numPalettes = fileNames.size() - 1;
+        ImGui::SameLine();
         ImGui::Text("%d/%d", currentFile, numPalettes);
 
         //-

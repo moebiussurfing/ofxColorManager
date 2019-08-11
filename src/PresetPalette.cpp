@@ -103,7 +103,7 @@ void PresetPalette::preset_save(string p)
     string path = preset_path+p+".json";
 
     presetData.background = backCol;
-    //    presetData.background = (*background_BACK);
+    //presetData.background = (*background_BACK);
 
     presetData.name = (*name_BACK);
     presetData.curveName = (*curveName_BACK);
@@ -114,7 +114,7 @@ void PresetPalette::preset_save(string p)
     ofLogNotice("PresetPalette::preset_save") << "presetData.curveName : " << presetData.curveName;
     ofLogNotice("PresetPalette::preset_save") << "presetData.palette   : " << ofToString(presetData.palette);
 
-    //    curvesTool.save(preset_path+presetData.curveName+".yml");
+    //curvesTool.save(preset_path+presetData.curveName+".yml");
 
     ofFile file(path, ofFile::WriteOnly);
     jsonout jo(file);
@@ -157,22 +157,29 @@ void PresetPalette::palette_load(string p)
 //--------------------------------------------------------------
 void PresetPalette::palette_save(string p)
 {
-//    ofLogNotice("PresetPalette") << "palette_save: " << p;
+    ofLogNotice("PresetPalette") << "palette_save: " << p;
+    string path = path_palettes + p + ".json";
+
+//    paleteData.name = "myPalette";
+//    ofLogNotice("PresetPalette") << "palette name: " << paleteData.name;
 //
-//    string path = path_palettes + p + ".json";
-//
-//    data.name = "myPalette";
-//    ofLogNotice("PresetPalette") << "palette name: " << data.name;
-//
-//    data.palette.resize(palette.size());
+//    paleteData.palette.resize(palette.size());
 //    for (int i = 0; i< palette.size(); i++)
 //    {
-//        data.palette[i] = palette[i];
-//        ofLogNotice("PresetPalette") << "color_picked" << i << " " << ofToString(data.palette[i]);
+//        paleteData.palette[i] = palette[i];
+//        ofLogNotice("PresetPalette") << "color_picked" << i << " " << ofToString(paleteData.palette[i]);
 //    }
-//
-//    ofFile file(path, ofFile::WriteOnly);
-//    jsonout jo(file);
-//    jo << data;
+
+    paleteData.name = (*name_BACK);
+    paleteData.palette = (*palette_BACK);
+    paleteData.background = backCol;
+
+    ofLogNotice("PresetPalette::preset_save") << "paleteData.name      : " << paleteData.name;
+    ofLogNotice("PresetPalette::preset_save") << "paleteData.palette   : " << ofToString(paleteData.palette);
+    ofLogNotice("PresetPalette::preset_save") << "paleteData.background: " << paleteData.background;
+
+    ofFile file(path, ofFile::WriteOnly);
+    jsonout jo(file);
+    jo << paleteData;
 }
 

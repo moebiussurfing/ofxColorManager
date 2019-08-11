@@ -21,8 +21,9 @@ struct PaletteData
 {
     string name;
     vector<ofColor> palette;
+    ofColor background;
 
-OFX_CEREAL_DEFINE(CEREAL_NVP(name), CEREAL_NVP(palette))
+OFX_CEREAL_DEFINE(CEREAL_NVP(name), CEREAL_NVP(palette), CEREAL_NVP(background))
 };
 
 struct PresetData_ {
@@ -95,15 +96,13 @@ public:
 
     PresetData_ presetData;//bundle preset: palette+curve+gradient+background
     void preset_save(string p);
-
     void preset_load(string p);
 
     //--
+
+    PaletteData paleteData;
     void palette_save(string p);
-
     void palette_load(string p);
-
-
 
 };
 
