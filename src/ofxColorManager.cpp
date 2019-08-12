@@ -23,7 +23,7 @@ void ofxColorManager::ColorWheel_update() {
     //    scheme->setPrimaryColor(primaryColor.get());
 
     primaryColor.set(color_picked.get());
-    scheme->setPrimaryColor(color_picked.get());
+    scheme->setPrimaryColor(primaryColor);
 
     colors = scheme->interpolate(numColors.get());
 }
@@ -1009,6 +1009,7 @@ void ofxColorManager::gui_imGui_window1() {
                 }
             saved_palette_inited = true;
 
+//                cout << "IM_ARRAYSIZE(saved_palette): "<<ofToString(IM_ARRAYSIZE(saved_palette)) << endl;
             //-
 
             // layout by pages groups
@@ -1019,8 +1020,8 @@ void ofxColorManager::gui_imGui_window1() {
             int numColorsPage = numLines * rowSizePal;//70
             int startColorInPal = paletteLibPage * numColorsPage;
             int endColorInPal = startColorInPal + numColorsPage;
-            int lastColor = 2310;//pantone
-            int maxPages = lastColor / numColorsPage - 1;
+            int totalNumColors = 2310;//pantone
+            int maxPages = totalNumColors / numColorsPage - 1;
 
             ImGui::Text("PANTONE COLORS");
             ImGui::PushItemWidth(guiWidth * 0.5);
@@ -1034,7 +1035,7 @@ void ofxColorManager::gui_imGui_window1() {
             for (int n = startColorInPal; n < endColorInPal; n++)
                 //for (int n = 0; n < palSize; n++) {
             {
-                if (n < lastColor) //to avoid empty colors at page end...
+                if (n < totalNumColors) //to avoid empty colors at page end...
                 {
                     // ImGui::PushItemWidth(guiWidth * 0.2);
                     ImGui::PushID(n);
