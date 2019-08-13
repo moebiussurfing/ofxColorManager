@@ -35,6 +35,8 @@ public:
 
     bool ENABLE_keys = true;
 
+    string lastColorPickedNameColor = "";
+
     //-
 
     // ColorWheelSchemes

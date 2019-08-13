@@ -823,10 +823,11 @@ void ofxColorManager::gui_imGui_window1() {
 
         // TEST
         static ImVec4 color;
-        color.x = color_picked.get().r;
-        color.y = color_picked.get().g;
-        color.z = color_picked.get().b;
-        color.w = color_picked.get().a;
+//        color.x = color_picked.get().r;
+//        color.y = color_picked.get().g;
+//        color.z = color_picked.get().b;
+//        color.w = color_picked.get().a;
+        color = color_picked.get();
 
         // TEST
         LISTEN_isEnabled = true;
@@ -978,10 +979,11 @@ void ofxColorManager::gui_imGui_window1() {
 
             // TEST
             static ImVec4 color;
-            color.x = color_picked.get().r;
-            color.y = color_picked.get().g;
-            color.z = color_picked.get().b;
-            color.w = color_picked.get().a;
+//            color.x = color_picked.get().r;
+//            color.y = color_picked.get().g;
+//            color.z = color_picked.get().b;
+//            color.w = color_picked.get().a;
+            color = color_picked.get();
 
             // TEST
             LISTEN_isEnabled = true;
@@ -1025,6 +1027,12 @@ void ofxColorManager::gui_imGui_window1() {
 
             ImGui::Text("PANTONE COLORS");
             ImGui::PushItemWidth(guiWidth * 0.5);
+
+            // load tab2 with lastColorPickedNameColor
+            char tab2[32];
+            strncpy(tab2, lastColorPickedNameColor.c_str(), sizeof(tab2));
+            tab2[sizeof(tab2) - 1] = 0;
+            ImGui::Text("%s",tab2);
             ImGui::SliderInt("PAGE", &paletteLibPage, 0, maxPages);
             ImGui::PopItemWidth();
 
@@ -1040,18 +1048,23 @@ void ofxColorManager::gui_imGui_window1() {
                     // ImGui::PushItemWidth(guiWidth * 0.2);
                     ImGui::PushID(n);
 
-                    // pantone
+                    // pantone or other must define his better row size
                     if ((n % rowSizePal) != 0) {
                         ImGui::SameLine(0.0f, ImGui::GetStyle().ItemSpacing.y);
                     }
 
+                    // get clicked color
                     if (ImGui::ColorButton("##palette", saved_palette[n],
                         ImGuiColorEditFlags_NoAlpha | ImGuiColorEditFlags_NoPicker | ImGuiColorEditFlags_NoTooltip,
-                        ImVec2(20, 20))) {
+                        ImVec2(20, 20)))
+                    {
                         color = ImVec4(saved_palette[n].x, saved_palette[n].y, saved_palette[n].z, color.w); // Preserve alpha!
 
                         ofLogNotice("ofxColorManager") << "ImGui: PALETTE PICKED !" << endl;
                         color_picked = color;
+
+                        //name
+                        lastColorPickedNameColor = ColorBrowser.pantoneNames[n];
                     }
 
                     //ImGui::PopItemWidth();
@@ -2856,7 +2869,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs) {
 
             // LOAD
 
-        else if (key == 'l') {
+        if (key == 'l') {
             preset_load(PRESET_name);
         }
 
