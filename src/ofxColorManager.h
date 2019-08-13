@@ -43,10 +43,17 @@ public:
 
     void ColorWheel_setup();
     void ColorWheel_update();
-    void ColorWheel_draw();
+//    void ColorWheel_draw();
 
-    shared_ptr<ColorWheelScheme> scheme;
-    vector<ofColor> colors;
+//    shared_ptr<ColorWheelScheme> scheme;
+//    vector<ofColor> colors;
+//
+//    ofxPanel panel;
+//    ofParameterGroup group;
+    ofParameter<ofColor> primaryColor;
+//    ofParameter<int> colorScheme;
+//    ofParameter<string> colorSchemeName;
+//    ofParameter<int> numColors;
 
     string scheme_Analogous_name;
     string scheme_Complementary_name;
@@ -54,8 +61,8 @@ public:
     string scheme_Compound_name;
     string scheme_FlippedCompound_name;
     string scheme_Monochrome_name;
-    string scheme_Triad_name;
     string scheme_Tetrad_name;
+    string scheme_Triad_name;
 
     shared_ptr<ColorWheelScheme> scheme_Analogous;
     shared_ptr<ColorWheelScheme> scheme_Complementary;
@@ -63,8 +70,8 @@ public:
     shared_ptr<ColorWheelScheme> scheme_Compound;
     shared_ptr<ColorWheelScheme> scheme_FlippedCompound;
     shared_ptr<ColorWheelScheme> scheme_Monochrome;
-    shared_ptr<ColorWheelScheme> scheme_Triad;
     shared_ptr<ColorWheelScheme> scheme_Tetrad;
+    shared_ptr<ColorWheelScheme> scheme_Triad;
 
     vector<ofColor> colors_Analogous;
     vector<ofColor> colors_Complementary;
@@ -72,15 +79,9 @@ public:
     vector<ofColor> colors_Compound;
     vector<ofColor> colors_FlippedCompound;
     vector<ofColor> colors_Monochrome;
-    vector<ofColor> colors_Triad;
     vector<ofColor> colors_Tetrad;
+    vector<ofColor> colors_Triad;
 
-    ofxPanel panel;
-    ofParameterGroup group;
-    ofParameter<ofColor> primaryColor;
-    ofParameter<int> colorScheme;
-    ofParameter<string> colorSchemeName;
-    ofParameter<int> numColors;
 
     //-
 
@@ -228,7 +229,8 @@ public:
     ofxColorPalette monochromeBrightness;
     ofxColorPalette analogue;
     ofxColorPalette random;
-    ofParameter<int> NUM_ALGO_PALETTES;//number of colors. must be even
+    ofParameter<int> NUM_COLORS_ALGO_PALETTES;
+    //number of colors. must be even sometimes to get same size in all palettes
     //ofxColorPalette::ColorChannel mode;
 
     ofParameter<int> BRIGHTNESS;
@@ -337,7 +339,7 @@ public:
     // INTERFACE
 
     ofxInterface::Node *scene;
-    vector<ButtonExample *> btns_palette;
+    vector<ButtonExample *> btns_palette;//button color box for each color of all algorithmic palettes
 
     void interface_setup();
     void interface_update();
@@ -367,7 +369,7 @@ public:
     vector<ButtonExample *> btns_plt_CT_Tetrad;
     int NUM_CT_PALETTES = 8;
 
-    int NUM_TOTAL_PALETTES = 16;
+    int NUM_TOTAL_PALETTES = 16;//TODO
 
     // pointer back link the outside (ofApp) variable
     vector<ButtonPaletteSelector *> btns_plt_Selector; // 1-8

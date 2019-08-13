@@ -40,7 +40,7 @@ void ButtonExample::draw()
     ofNoFill();
     ofSetColor(color_border);
     ofSetLineWidth(1.);
-    ofDrawRectangle(1., 1., getWidth()-1., getHeight()-1);
+    ofDrawRectangle(1., 1., getWidth()-2., getHeight()-2);
 
 
 //	// draw the touch anchor

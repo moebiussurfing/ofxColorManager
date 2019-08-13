@@ -3,69 +3,61 @@
 
 //--------------------------------------------------------------
 void ofxColorManager::ColorWheel_setup() {
-    group.setName("Color Theory");
-    group.add(primaryColor.set("Primary Color", ofColor::magenta));
-    group.add(colorScheme.set("Color Scheme", 6, 0, ColorWheelSchemes::colorSchemes.size() - 1));
-    group.add(colorSchemeName);
-    group.add(numColors.set("Num Colors", 8, 1, 10));
-
-    panel.setup();
-    panel.add(group);
-    panel.setPosition(1000, 400);
-
-
-
-
-    //TEST
-    colorSchemeName.set(ColorWheelSchemes::colorSchemeNames[colorScheme.get()]);
-    scheme = ColorWheelSchemes::colorSchemes[colorScheme.get()];
-    scheme->setPrimaryColor(primaryColor);
-    colors = scheme->interpolate(numColors.get());
+//    group.setName("Color Theory");
+//    group.add(primaryColor.set("Primary Color", ofColor::magenta));
+//    group.add(colorScheme.set("Color Scheme", 6, 0, ColorWheelSchemes::colorSchemes.size() - 1));
+//    group.add(colorSchemeName);
+//    group.add(numColors.set("Num Colors", 8, 1, 10));
+//
+//    panel.setup();
+//    panel.add(group);
+//    panel.setPosition(1000, 400);
+//
+//
+//    numColors = NUM_COLORS_ALGO_PALETTES;
+//
+//    //TEST
+//    colorSchemeName.set(ColorWheelSchemes::colorSchemeNames[colorScheme.get()]);
+//    scheme = ColorWheelSchemes::colorSchemes[colorScheme.get()];
+//    scheme->setPrimaryColor(primaryColor);
+//    colors = scheme->interpolate(numColors.get());
 
     //-
 
     //TODO
     // should reduce calls.. to setup only..
 
-    scheme_Analogous_name = (ColorWheelSchemes::colorSchemeNames[1]);
-    scheme = ColorWheelSchemes::colorSchemes[1];
-    scheme->setPrimaryColor(primaryColor);
-    colors_Analogous = scheme->interpolate(numColors.get());
+    scheme_Analogous_name = (ColorWheelSchemes::colorSchemeNames[0]);
+    scheme_Analogous = ColorWheelSchemes::colorSchemes[0];
+    colors_Analogous = scheme_Analogous->interpolate(NUM_COLORS_ALGO_PALETTES);
 
-    scheme_Complementary_name = (ColorWheelSchemes::colorSchemeNames[2]);
-    scheme = ColorWheelSchemes::colorSchemes[2];
-    scheme->setPrimaryColor(primaryColor);
-    colors_Complementary = scheme->interpolate(numColors.get());
+    scheme_Complementary_name = (ColorWheelSchemes::colorSchemeNames[1]);
+    scheme_Complementary = ColorWheelSchemes::colorSchemes[1];
+    colors_Complementary = scheme_Complementary->interpolate(NUM_COLORS_ALGO_PALETTES);
 
-    scheme_SplitComplementary_name = (ColorWheelSchemes::colorSchemeNames[3]);
-    scheme = ColorWheelSchemes::colorSchemes[3];
-    scheme->setPrimaryColor(primaryColor);
-    colors_SplitComplementary = scheme->interpolate(numColors.get());
+    scheme_SplitComplementary_name = (ColorWheelSchemes::colorSchemeNames[2]);
+    scheme_SplitComplementary = ColorWheelSchemes::colorSchemes[2];
+    colors_SplitComplementary = scheme_SplitComplementary->interpolate(NUM_COLORS_ALGO_PALETTES);
 
-    scheme_Compound_name = (ColorWheelSchemes::colorSchemeNames[4]);
-    scheme = ColorWheelSchemes::colorSchemes[4];
-    scheme->setPrimaryColor(primaryColor);
-    colors_Compound = scheme->interpolate(numColors.get());
+    scheme_Compound_name = (ColorWheelSchemes::colorSchemeNames[3]);
+    scheme_Compound = ColorWheelSchemes::colorSchemes[3];
+    colors_Compound = scheme_Compound->interpolate(NUM_COLORS_ALGO_PALETTES);
 
-    scheme_FlippedCompound_name = (ColorWheelSchemes::colorSchemeNames[5]);
-    scheme = ColorWheelSchemes::colorSchemes[5];
-    scheme->setPrimaryColor(primaryColor);
-    colors_FlippedCompound = scheme->interpolate(numColors.get());
+    scheme_FlippedCompound_name = (ColorWheelSchemes::colorSchemeNames[4]);
+    scheme_FlippedCompound = ColorWheelSchemes::colorSchemes[4];
+    colors_FlippedCompound = scheme_FlippedCompound->interpolate(NUM_COLORS_ALGO_PALETTES);
 
-    scheme_Monochrome_name = (ColorWheelSchemes::colorSchemeNames[6]);
-    scheme = ColorWheelSchemes::colorSchemes[6];
-    scheme->setPrimaryColor(primaryColor);
-    colors_Monochrome = scheme->interpolate(numColors.get());
+    scheme_Monochrome_name = (ColorWheelSchemes::colorSchemeNames[5]);
+    scheme_Monochrome = ColorWheelSchemes::colorSchemes[5];
+    colors_Monochrome = scheme_Monochrome->interpolate(NUM_COLORS_ALGO_PALETTES);
+
+    scheme_Tetrad_name = (ColorWheelSchemes::colorSchemeNames[6]);
+    scheme_Tetrad = ColorWheelSchemes::colorSchemes[6];
+    colors_Tetrad = scheme_Tetrad->interpolate(NUM_COLORS_ALGO_PALETTES);
 
     scheme_Triad_name = (ColorWheelSchemes::colorSchemeNames[7]);
-    scheme = ColorWheelSchemes::colorSchemes[7];
-    scheme->setPrimaryColor(primaryColor);
-    colors_Triad = scheme->interpolate(numColors.get());
-
-//    scheme_Tetrad_name = (ColorWheelSchemes::colorSchemeNames[8]);
-//    scheme = ColorWheelSchemes::colorSchemes[8];
-//    scheme->setPrimaryColor(primaryColor);
-//    colors_Tetrad = scheme->interpolate(numColors.get());
+    scheme_Triad = ColorWheelSchemes::colorSchemes[7];
+    colors_Triad = scheme_Triad->interpolate(NUM_COLORS_ALGO_PALETTES);
 }
 
 
@@ -73,192 +65,70 @@ void ofxColorManager::ColorWheel_setup() {
 void ofxColorManager::ColorWheel_update() {
     primaryColor.set(color_picked.get());
 
-    //TEST
-    colorSchemeName.set(ColorWheelSchemes::colorSchemeNames[colorScheme.get()]);
-    scheme = ColorWheelSchemes::colorSchemes[colorScheme.get()];
-    scheme->setPrimaryColor(primaryColor);
-    colors = scheme->interpolate(numColors.get());
-
-    //-
-
-    //TODO
-    // should reduce calls.. to setup only..
-
-    scheme_Analogous_name = (ColorWheelSchemes::colorSchemeNames[1]);
-    scheme = ColorWheelSchemes::colorSchemes[1];
-    scheme->setPrimaryColor(primaryColor);
-    colors_Analogous = scheme->interpolate(numColors.get());
-
-    scheme_Complementary_name = (ColorWheelSchemes::colorSchemeNames[2]);
-    scheme = ColorWheelSchemes::colorSchemes[2];
-    scheme->setPrimaryColor(primaryColor);
-    colors_Complementary = scheme->interpolate(numColors.get());
-
-    scheme_SplitComplementary_name = (ColorWheelSchemes::colorSchemeNames[3]);
-    scheme = ColorWheelSchemes::colorSchemes[3];
-    scheme->setPrimaryColor(primaryColor);
-    colors_SplitComplementary = scheme->interpolate(numColors.get());
-
-    scheme_Compound_name = (ColorWheelSchemes::colorSchemeNames[4]);
-    scheme = ColorWheelSchemes::colorSchemes[4];
-    scheme->setPrimaryColor(primaryColor);
-    colors_Compound = scheme->interpolate(numColors.get());
-
-    scheme_FlippedCompound_name = (ColorWheelSchemes::colorSchemeNames[5]);
-    scheme = ColorWheelSchemes::colorSchemes[5];
-    scheme->setPrimaryColor(primaryColor);
-    colors_FlippedCompound = scheme->interpolate(numColors.get());
-
-    scheme_Monochrome_name = (ColorWheelSchemes::colorSchemeNames[6]);
-    scheme = ColorWheelSchemes::colorSchemes[6];
-    scheme->setPrimaryColor(primaryColor);
-    colors_Monochrome = scheme->interpolate(numColors.get());
-
-    scheme_Triad_name = (ColorWheelSchemes::colorSchemeNames[7]);
-    scheme = ColorWheelSchemes::colorSchemes[7];
-    scheme->setPrimaryColor(primaryColor);
-    colors_Triad = scheme->interpolate(numColors.get());
-
-//    scheme_Tetrad_name = (ColorWheelSchemes::colorSchemeNames[8]);
-//    scheme = ColorWheelSchemes::colorSchemes[8];
+//    //TEST
+//    colorSchemeName.set(ColorWheelSchemes::colorSchemeNames[colorScheme.get()]);
+//    scheme = ColorWheelSchemes::colorSchemes[colorScheme.get()];
 //    scheme->setPrimaryColor(primaryColor);
-//    colors_Tetrad = scheme->interpolate(numColors.get());
-
-
-//    RANDOM = 0, ANALOGOUS = 1, COMPLEMENTARY = 2, SPLIT_COMPLEMENTARY = 3, COMPOUND = 4, FLIPPED_COMPOUND = 5, MONOCHROME = 6, TRIAD = 7, TETRAD = 8
-
-//    scheme_Analogous_name = ColorWheelSchemes::colorSchemeNames[1];
-//    scheme_Complementary_name = ColorWheelSchemes::colorSchemeNames[2];
-//    scheme_SplitComplementary_name = ColorWheelSchemes::colorSchemeNames[3];
-//    scheme_Compound_name = ColorWheelSchemes::colorSchemeNames[4];
-//    scheme_FlippedCompound_name = ColorWheelSchemes::colorSchemeNames[5];
-//    scheme_Monochrome_name = ColorWheelSchemes::colorSchemeNames[6];
-//    scheme_Triad_name = ColorWheelSchemes::colorSchemeNames[7];
-//    scheme_Tetrad_name = ColorWheelSchemes::colorSchemeNames[8];
-//
-//    // al palettes creator
-//    scheme_Analogous = ColorWheelSchemes::colorSchemes[1];
-//    scheme_Complementary = ColorWheelSchemes::colorSchemes[2];
-//    scheme_SplitComplementary = ColorWheelSchemes::colorSchemes[3];
-//    scheme_Compound = ColorWheelSchemes::colorSchemes[4];
-//    scheme_FlippedCompound = ColorWheelSchemes::colorSchemes[5];
-//    scheme_Monochrome = ColorWheelSchemes::colorSchemes[6];
-//    scheme_Triad = ColorWheelSchemes::colorSchemes[7];
-//    scheme_Tetrad = ColorWheelSchemes::colorSchemes[8];
-//
-//    scheme_Analogous->setPrimaryColor(primaryColor);
-//    scheme_Complementary->setPrimaryColor(primaryColor);
-//    scheme_SplitComplementary->setPrimaryColor(primaryColor);
-//    scheme_Compound->setPrimaryColor(primaryColor);
-//    scheme_FlippedCompound->setPrimaryColor(primaryColor);
-//    scheme_Monochrome->setPrimaryColor(primaryColor);
-//    scheme_Triad->setPrimaryColor(primaryColor);
-//    scheme_Tetrad->setPrimaryColor(primaryColor);
-
-//TODO
-//we can do 8 color vectors simpler and to use only un scheme..
-
+//    numColors = NUM_COLORS_ALGO_PALETTES;
 //    colors = scheme->interpolate(numColors.get());
 
-//    colors_Analogous = scheme_Analogous->interpolate(numColors.get());
-//    colors_Complementary        = scheme_Complementary->interpolate(numColors.get());
-//    colors_SplitComplementary   = scheme_SplitComplementary->interpolate(numColors.get());
-//    colors_Compound             = scheme_Compound->interpolate(numColors.get());
-//    colors_FlippedCompound      = scheme_FlippedCompound->interpolate(numColors.get());
-//    colors_Monochrome           = scheme_Monochrome->interpolate(numColors.get());
-//    colors_Triad                = scheme_Triad->interpolate(numColors.get());
-//    colors_Tetrad               = scheme_Tetrad->interpolate(numColors.get());
-
-}
-
-
-//--------------------------------------------------------------
-void ofxColorManager::ColorWheel_draw() {
-//    ofPushStyle();
-//    ofPushMatrix();
-//    ofTranslate(711, 577);
-//
-//    int y = 0;
-//    int boxWidth = 200;
-//    int pad = 2;
-//    float w;
-//    w = box_size;
-////    w = boxWidth / (float) colors.size();
-//
-//    for (int i = 0; i < colors_Analogous.size(); i++) {
-//        ofSetColor(colors_Analogous[i]);
-//        ofFill();
-//        ofDrawRectangle(w * i, y, w, w);
-//    }
-//    y+= w+pad;
-//
-//    for (int i = 0; i < colors_Complementary.size(); i++) {
-//        ofSetColor(colors_Complementary[i]);
-//        ofFill();
-//        ofDrawRectangle(w * i, y, w, w);
-//    }
-//    y+= w+pad;
-//
-//    for (int i = 0; i < colors_SplitComplementary.size(); i++) {
-//        ofSetColor(colors_SplitComplementary[i]);
-//        ofFill();
-//        ofDrawRectangle(w * i, y, w, w);
-//    }
-//    y+= w+pad;
-//
-//    for (int i = 0; i < colors_Compound.size(); i++) {
-//        ofSetColor(colors_Compound[i]);
-//        ofFill();
-//        ofDrawRectangle(w * i, y, w, w);
-//    }
-//    y+= w+pad;
-//
-//    for (int i = 0; i < colors_FlippedCompound.size(); i++) {
-//        ofSetColor(colors_FlippedCompound[i]);
-//        ofFill();
-//        ofDrawRectangle(w * i, y, w, w);
-//    }
-//    y+= w+pad;
-//
-//    for (int i = 0; i < colors_Monochrome.size(); i++) {
-//        ofSetColor(colors_Monochrome[i]);
-//        ofFill();
-//        ofDrawRectangle(w * i, y, w, w);
-//    }
-//    y+= w+pad;
-//
-//    for (int i = 0; i < colors_Triad.size(); i++) {
-//        ofSetColor(colors_Triad[i]);
-//        ofFill();
-//        ofDrawRectangle(w * i, y, w, w);
-//    }
-//    y+= w+pad;
-//
-//    for (int i = 0; i < colors_Tetrad.size(); i++) {
-//        ofSetColor(colors_Tetrad[i]);
-//        ofFill();
-//        ofDrawRectangle(w * i, y, w, w);
-//    }
-//    y+= w+pad;
-//
-//
-//    ofPopMatrix();
-//    ofPopStyle();
-
     //-
 
-    int w = 30;
-    int guiX = panel.getPosition().x;
-    int guiY = panel.getPosition().y;
+    scheme_Analogous = ColorWheelSchemes::colorSchemes[0];
+    scheme_Analogous->setPrimaryColor(primaryColor);
+    colors_Analogous = scheme_Analogous->interpolate(NUM_COLORS_ALGO_PALETTES);
 
-    for (int i = 0; i < colors.size(); i++) {
-        ofSetColor(colors[i]);
-        ofFill();
-        ofDrawRectangle(guiX + w * i, guiY-2*w, w, w);
-    }
-//    y+= w+pad;
-    panel.draw();
+    scheme_Complementary = ColorWheelSchemes::colorSchemes[1];
+    scheme_Complementary->setPrimaryColor(primaryColor);
+    colors_Complementary = scheme_Complementary->interpolate(NUM_COLORS_ALGO_PALETTES);
+
+    scheme_SplitComplementary = ColorWheelSchemes::colorSchemes[2];
+    scheme_SplitComplementary->setPrimaryColor(primaryColor);
+    colors_SplitComplementary = scheme_SplitComplementary->interpolate(NUM_COLORS_ALGO_PALETTES);
+
+    scheme_Compound = ColorWheelSchemes::colorSchemes[3];
+    scheme_Compound->setPrimaryColor(primaryColor);
+    colors_Compound = scheme_Compound->interpolate(NUM_COLORS_ALGO_PALETTES);
+
+    scheme_FlippedCompound = ColorWheelSchemes::colorSchemes[4];
+    scheme_FlippedCompound->setPrimaryColor(primaryColor);
+    colors_FlippedCompound = scheme_FlippedCompound->interpolate(NUM_COLORS_ALGO_PALETTES);
+
+    scheme_Monochrome = ColorWheelSchemes::colorSchemes[5];
+    scheme_Monochrome->setPrimaryColor(primaryColor);
+    colors_Monochrome = scheme_Monochrome->interpolate(NUM_COLORS_ALGO_PALETTES);
+
+    scheme_Tetrad = ColorWheelSchemes::colorSchemes[6];
+    scheme_Tetrad->setPrimaryColor(primaryColor);
+    colors_Tetrad = scheme_Tetrad->interpolate(NUM_COLORS_ALGO_PALETTES);
+
+    scheme_Triad = ColorWheelSchemes::colorSchemes[7];
+    scheme_Triad->setPrimaryColor(primaryColor);
+    colors_Triad = scheme_Triad->interpolate(NUM_COLORS_ALGO_PALETTES);
+
+//    NOTE: RANDOM = 0, ANALOGOUS = 1, COMPLEMENTARY = 2,
+//    SPLIT_COMPLEMENTARY = 3, COMPOUND = 4, FLIPPED_COMPOUND = 5,
+//    MONOCHROME = 6, TRIAD = 7, TETRAD = 8
 }
+
+
+////--------------------------------------------------------------
+//void ofxColorManager::ColorWheel_draw() {
+//
+//    //-
+//
+//    int w = 30;
+//    int guiX = panel.getPosition().x;
+//    int guiY = panel.getPosition().y;
+//
+//    for (int i = 0; i < colors.size(); i++) {
+//        ofSetColor(colors[i]);
+//        ofFill();
+//        ofDrawRectangle(guiX + w * i, guiY-2*w, w, w);
+//    }
+//
+//    panel.draw();
+//}
 
 
 //--------------------------------------------------------------
@@ -422,13 +292,13 @@ void ofxColorManager::setup() {
     bAuto_palette_recall.set("AUTO CREATE!", false);
     bLock_palette.set("LOCK PALETTES", false);
 
-    NUM_ALGO_PALETTES.set("SIZE COLORS", 6, 2, 8);
+    NUM_COLORS_ALGO_PALETTES.set("SIZE COLORS", 6, 2, 10);
     params_palette.setName("ALGORITHMIC PALETTES");
     params_palette.add(MODE_Palette);
     params_palette.add(SATURATION);
     params_palette.add(BRIGHTNESS);
     params_palette.add(bRandomPalette);
-    params_palette.add(NUM_ALGO_PALETTES);
+    params_palette.add(NUM_COLORS_ALGO_PALETTES);
     params_palette.add(bAuto_palette_recall);
     params_palette.add(bLock_palette);
 
@@ -447,7 +317,7 @@ void ofxColorManager::setup() {
 
     // ALGORITHMIC PALETTES
 
-    random.generateRandom(NUM_ALGO_PALETTES);
+    random.generateRandom(NUM_COLORS_ALGO_PALETTES);
     palettes_update();
     palettes_setup();
     palettes_setup_labels();
@@ -595,7 +465,7 @@ void ofxColorManager::setup() {
 
     XML_params.add(bPaletteEdit);//user palette
     XML_params.add(MODE_Palette);//algorithmic palette
-    XML_params.add(NUM_ALGO_PALETTES);
+    XML_params.add(NUM_COLORS_ALGO_PALETTES);
     XML_params.add(BRIGHTNESS);
     XML_params.add(SATURATION);
     XML_params.add(gradient_hard);//gradient
@@ -1410,7 +1280,7 @@ void ofxColorManager::gui_imGui_window2() {
                 ofxImGui::AddParameter(this->SATURATION);
                 ofxImGui::AddParameter(this->BRIGHTNESS);
             }
-            ofxImGui::AddParameter(this->NUM_ALGO_PALETTES);
+            ofxImGui::AddParameter(this->NUM_COLORS_ALGO_PALETTES);
             ofxImGui::AddParameter(this->bRandomPalette);
             ofxImGui::AddParameter(this->bLock_palette);
             ofxImGui::AddParameter(this->bAuto_palette_recall);
@@ -1717,9 +1587,16 @@ void ofxColorManager::palette_load_ColourLovers() {
 void ofxColorManager::update() {
     ofSetWindowTitle(ofToString((int) ofGetFrameRate()));
 
+    //-
+
+    // OFX-COLOR-THEORY ALGORITHMIC PALETTE
     ColorWheel_update();
 
-    //    myPresetPalette.update();
+    //-
+
+    // PRESET MANAGER
+
+    //myPresetPalette.update();
     myPresetManager.update();
 
     //--
@@ -1817,23 +1694,37 @@ void ofxColorManager::update() {
 
     //--
 
+    // ALGORIHTMIC PALETTES
+
     // handle last selected algorithmic palette
     if (SELECTED_palette != SELECTED_palette_PRE) {
         ofLogNotice("ofxColorManager") << "update:CHANGED SELECTED_palette: " << SELECTED_palette;
 
-        // when a label palette is clicked, will always trig and load the palette
+        // WORKFLOW: when a label palette is clicked, will always trig
+        // and load the palette into the user palette
         // TODO: BUG should add this to avoid auto load to user palette
         palette_recallFromPalettes(SELECTED_palette);
 
-        SELECTED_palette_LAST = SELECTED_palette;
-        SELECTED_palette_PRE = SELECTED_palette = -1;//bug if not if pressed same button
+        SELECTED_palette_LAST = SELECTED_palette;//memorize what was the last trigged palette
+        SELECTED_palette_PRE = SELECTED_palette = -1;//disable to stop check..
+        //bug if not if pressed same button
 
-        // hide all borders
-        for (int p = 0; p < btns_plt_Selector.size() && p < NUM_PALETTES; p++) {
+        // 1. hide all borders
+
+//        // 1. FROM OFX-COLOR-PALETTE
+//        for (int p = 0; p < btns_plt_Selector.size() && p < NUM_PALETTES; p++) {
+//            btns_plt_Selector[p]->setBorder(false);
+//        }
+
+        // 1. FROM OFX-COLOR-PALETTE
+        // 2. FROM OFX-COLOUR-THEORY
+        for (int p = 0; p < btns_plt_Selector.size() && p < NUM_TOTAL_PALETTES; p++) {
             btns_plt_Selector[p]->setBorder(false);
         }
 
-        // set to draw border to selected palette
+        //-
+
+        // 2. set to draw border to selected palette
         if (btns_plt_Selector.size() > 0) {
             btns_plt_Selector[SELECTED_palette_LAST]->setBorder(true);
         }
@@ -2230,6 +2121,19 @@ void ofxColorManager::palettes_setup() {
     }
     x0 = palettes_x + btn_pad_w;
     y0 += h0;
+    for (int i = 0; i < colors_Tetrad.size(); i++) {
+        ButtonExample *btn = new ButtonExample();
+        btn->setup(x0, y0, box_size, box_size);
+        btn->setup_colorBACK(color_clicked);
+        btn->setLocked(true);
+        btn->setName("CT_Tetrad" + ofToString(i));
+        btn->setColor(colors_Tetrad[i]);
+        scene->addChild(btn);
+        btns_plt_CT_Tetrad.push_back(btn);
+        x0 += h0;
+    }
+    x0 = palettes_x + btn_pad_w;
+    y0 += h0;
     for (int i = 0; i < colors_Triad.size(); i++) {
         ButtonExample *btn = new ButtonExample();
         btn->setup(x0, y0, box_size, box_size);
@@ -2241,24 +2145,14 @@ void ofxColorManager::palettes_setup() {
         btns_plt_CT_Triad.push_back(btn);
         x0 += h0;
     }
-//    x0 = palettes_x + btn_pad_w;
-//    y0 += h0;
-//    for (int i = 0; i < colors_Tetrad.size(); i++) {
-//        ButtonExample *btn = new ButtonExample();
-//        btn->setup(x0, y0, box_size, box_size);
-//        btn->setup_colorBACK(color_clicked);
-//        btn->setLocked(true);
-//        btn->setName("CT_Tetrad" + ofToString(i));
-//        btn->setColor(colors_Tetrad[i]);
-//        scene->addChild(btn);
-//        btns_plt_CT_Tetrad.push_back(btn);
-//        x0 += h0;
-//    }
 }
 
 
 //--------------------------------------------------------------
 void ofxColorManager::palettes_setup_labels() {
+
+    // 1. populate label buttons to trig palettes
+
     int x0 = palettes_x;
     int padH = 11;
     int y0 = palettes_y + padH;
@@ -2280,6 +2174,10 @@ void ofxColorManager::palettes_setup_labels() {
 
     //TODO: BUG
     btns_plt_Selector.clear();
+
+    //-
+
+    // 1. FROM OFX-COLOR-PALETTE
 
     for (int p = 0; p < NUM_PALETTES; p++) {
         ButtonPaletteSelector *btn = new ButtonPaletteSelector();
@@ -2335,8 +2233,9 @@ void ofxColorManager::palettes_setup_labels() {
         btns_plt_Selector.push_back(btn);
     }
 
+    //-
 
-    // COLOUR THEORY PALETTES
+    // 2. FROM OFX-COLOUR-THEORY
 
     int iStart, iEnd;
     iStart = NUM_PALETTES;
@@ -2376,15 +2275,15 @@ void ofxColorManager::palettes_setup_labels() {
             btn->set_SELECTED_palette(SELECTED_palette);
         }
         else if (p == iStart + 6) {
-            btn->setup("CT_TRIAD");
+            btn->setup("CT_TETRAD");
             btn->setThisPaletteType(iStart + 6);
             btn->set_SELECTED_palette(SELECTED_palette);
         }
-//        else if (p == iStart + 7) {
-//            btn->setup("CT_TETRAD");
-//            btn->setThisPaletteType(iStart + 7);
-//            btn->set_SELECTED_palette(SELECTED_palette);
-//        }
+        else if (p == iStart + 7) {
+            btn->setup("CT_TRIAD");
+            btn->setThisPaletteType(iStart + 7);
+            btn->set_SELECTED_palette(SELECTED_palette);
+        }
 
         //-
 
@@ -2399,7 +2298,8 @@ void ofxColorManager::palettes_setup_labels() {
 
     //-
 
-    // set to draw border to selected palette
+    // 2. set to draw border to selected palette
+
     if ((btns_plt_Selector.size() > 0) &&
             (btns_plt_Selector.size() > SELECTED_palette_LAST)) {
 
@@ -2515,12 +2415,12 @@ void ofxColorManager::palette_recallFromPalettes(int p) {
                 palette_addColor(color);
             }
             break;
-//        case 15:
-//            for (int i = 0; i < btns_plt_CT_Tetrad.size(); i++) {
-//                color = btns_plt_CT_Tetrad[i]->getColor();
-//                palette_addColor(color);
-//            }
-//            break;
+        case 15:
+            for (int i = 0; i < btns_plt_CT_Tetrad.size(); i++) {
+                color = btns_plt_CT_Tetrad[i]->getColor();
+                palette_addColor(color);
+            }
+            break;
     }
 
     //-
@@ -2561,13 +2461,13 @@ void ofxColorManager::palettes_update() {
     analogue.setBaseColor(base);
     random.setBaseColor(base);
 
-    complement.generateComplementary(ofxColorPalette::SATURATION, NUM_ALGO_PALETTES);
-    complementBrightness.generateComplementary(ofxColorPalette::BRIGHTNESS, NUM_ALGO_PALETTES);
+    complement.generateComplementary(ofxColorPalette::SATURATION, NUM_COLORS_ALGO_PALETTES);
+    complementBrightness.generateComplementary(ofxColorPalette::BRIGHTNESS, NUM_COLORS_ALGO_PALETTES);
     triad.generateTriad();
     complementTriad.generateComplementaryTriad();
-    monochrome.generateMonoChromatic(ofxColorPalette::SATURATION, NUM_ALGO_PALETTES);
-    monochromeBrightness.generateMonoChromatic(ofxColorPalette::BRIGHTNESS, NUM_ALGO_PALETTES);
-    analogue.generateAnalogous(NUM_ALGO_PALETTES, 0.2);
+    monochrome.generateMonoChromatic(ofxColorPalette::SATURATION, NUM_COLORS_ALGO_PALETTES);
+    monochromeBrightness.generateMonoChromatic(ofxColorPalette::BRIGHTNESS, NUM_COLORS_ALGO_PALETTES);
+    analogue.generateAnalogous(NUM_COLORS_ALGO_PALETTES, 0.2);
 
     //-
 
@@ -2614,38 +2514,38 @@ void ofxColorManager::palettes_update() {
 
     ColorWheel_update();//TODO: reduce calls...
 
-    // 1. btns_plt_CT_Analogous
+    // 0. btns_plt_CT_Analogous
     for (int i = 0; i < btns_plt_CT_Analogous.size(); i++) {
         btns_plt_CT_Analogous[i]->setColor(colors_Analogous[i]);
     }
-    // 2. btns_plt_CT_Complementary
+    // 1. btns_plt_CT_Complementary
     for (int i = 0; i < btns_plt_CT_Complementary.size(); i++) {
         btns_plt_CT_Complementary[i]->setColor(colors_Complementary[i]);
     }
-    // 3. btns_plt_CT_SplitComplementary
+    // 2. btns_plt_CT_SplitComplementary
     for (int i = 0; i < btns_plt_CT_SplitComplementary.size(); i++) {
         btns_plt_CT_SplitComplementary[i]->setColor(colors_SplitComplementary[i]);
     }
-    // 4. btns_plt_CT_Compound
+    // 3. btns_plt_CT_Compound
     for (int i = 0; i < btns_plt_CT_Compound.size(); i++) {
         btns_plt_CT_Compound[i]->setColor(colors_Compound[i]);
     }
-    // 5. btns_plt_CT_FlippedCompound
+    // 4. btns_plt_CT_FlippedCompound
     for (int i = 0; i < btns_plt_CT_FlippedCompound.size(); i++) {
         btns_plt_CT_FlippedCompound[i]->setColor(colors_FlippedCompound[i]);
     }
-    // 6. btns_plt_CT_Monochrome
+    // 5. btns_plt_CT_Monochrome
     for (int i = 0; i < btns_plt_CT_Monochrome.size(); i++) {
         btns_plt_CT_Monochrome[i]->setColor(colors_Monochrome[i]);
+    }
+    // 6. btns_plt_CT_Tetrad
+    for (int i = 0; i < btns_plt_CT_Tetrad.size(); i++) {
+        btns_plt_CT_Tetrad[i]->setColor(colors_Tetrad[i]);
     }
     // 7. btns_plt_CT_Triad
     for (int i = 0; i < btns_plt_CT_Triad.size(); i++) {
         btns_plt_CT_Triad[i]->setColor(colors_Triad[i]);
     }
-    // 8. btns_plt_CT_Tetrad
-//    for (int i = 0; i < btns_plt_CT_Tetrad.size(); i++) {
-//        btns_plt_CT_Tetrad[i]->setColor(colors_Tetrad[i]);
-//    }
 
 }
 
@@ -2653,7 +2553,8 @@ void ofxColorManager::palettes_update() {
 //--------------------------------------------------------------
 void ofxColorManager::palettes_resize() {
 
-    //remove all color boxes
+    // 1. remove all color boxes
+
     //-
 
     // 1. FROM OFX-COLOR-PALETTE
@@ -2731,12 +2632,6 @@ void ofxColorManager::palettes_resize() {
     btns_plt_Random.clear();
 
     //-
-//
-//    random.generateRandom(NUM_ALGO_PALETTES);
-//    palettes_update();
-//    palettes_setup();
-
-    //-
 
     // 2. FROM OFX-COLOUR-THEORY
 
@@ -2794,6 +2689,15 @@ void ofxColorManager::palettes_resize() {
     }
     btns_plt_CT_Monochrome.clear();
 
+    for (int i = 0; i < btns_plt_CT_Tetrad.size(); i++) {
+        std::string n = ("CT_Tetrad" + ofToString(i));
+        auto a = scene->getChildWithName(n, 1000);
+        auto b = a->getName();
+        scene->removeChild(a, false);
+        ofLogVerbose("ofxColorManager") << "removed children: " << b;
+    }
+    btns_plt_CT_Tetrad.clear();
+
     for (int i = 0; i < btns_plt_CT_Triad.size(); i++) {
         std::string n = ("CT_Triad" + ofToString(i));
         auto a = scene->getChildWithName(n, 1000);
@@ -2803,28 +2707,23 @@ void ofxColorManager::palettes_resize() {
     }
     btns_plt_CT_Triad.clear();
 
-//    for (int i = 0; i < btns_plt_CT_Tetrad.size(); i++) {
-//        std::string n = ("CT_Tetrad" + ofToString(i));
-//        auto a = scene->getChildWithName(n, 1000);
-//        auto b = a->getName();
-//        scene->removeChild(a, false);
-//        ofLogVerbose("ofxColorManager") << "removed children: " << b;
-//    }
-//    btns_plt_CT_Tetrad.clear();
+    //-
 
-//-
-//TODO
+    //TODO
 
-    random.generateRandom(NUM_ALGO_PALETTES);
+    random.generateRandom(NUM_COLORS_ALGO_PALETTES);
     palettes_update();
     palettes_setup();
 
     //-
 
+    // WORKFLOW: trig last choiced palette
     if (bAuto_palette_recall) {
         palette_clear();
-        palette_recallFromPalettes(SELECTED_palette_LAST);//trig last choice
+        palette_recallFromPalettes(SELECTED_palette_LAST);
     }
+
+    //-
 }
 
 //--------------------------------------------------------------
@@ -2900,10 +2799,10 @@ void ofxColorManager::palettes_setVisible(bool b) {
         btn->setVisible(b);
         btn->setEnabled(b);
     }
-//    for (auto &btn : btns_plt_CT_Tetrad) {
-//        btn->setVisible(b);
-//        btn->setEnabled(b);
-//    }
+    for (auto &btn : btns_plt_CT_Tetrad) {
+        btn->setVisible(b);
+        btn->setEnabled(b);
+    }
 
     //-
 
@@ -2923,11 +2822,11 @@ void ofxColorManager::draw() {
 
     //-
 
-    // COLORWHEELSCHEMES
-
-    if (SHOW_AlgoPalettes) {
-        ColorWheel_draw();
-    }
+//    // COLORWHEELSCHEMES
+//
+//    if (SHOW_AlgoPalettes) {
+//        ColorWheel_draw();
+//    }
 
     //-
 
@@ -3154,18 +3053,23 @@ void ofxColorManager::palette_removeColorLast() {
 
 //--------------------------------------------------------------
 void ofxColorManager::palette_touched(string name) {
+
     // handle de-select all buttons and select last clicked
-    for (int i = 0; i < btns_palette.size(); i++) {
+
+    for (int i = 0; i < btns_palette.size(); i++)
+    {
         if (btns_palette[i]->getName() != name) {
             btns_palette[i]->setSelected(false);
-        } else {
+        }
+        else
+        {
             btns_palette[i]->setSelected(true);
             palette_colorSelected = i;
             ofLogNotice("ofxColorManager") << "selected color: " << i;
         }
     }
 
-    // workflow: auto set edit mode
+    // WORKFLOW: auto set edit mode
     if (!bPaletteEdit) {
         bPaletteEdit = true;
     }
@@ -3316,7 +3220,7 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
         if (bRandomPalette) {
             bRandomPalette = false;
 
-            random.generateRandom(NUM_ALGO_PALETTES);
+            random.generateRandom(NUM_COLORS_ALGO_PALETTES);
             palettes_update();
             if (bAuto_palette_recall) {
                 //set random palette to user palette
@@ -3395,6 +3299,31 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs) {
 
     //--
 
+    // COLORWHEELSCHEMES
+
+    if (SHOW_AlgoPalettes && !SHOW_ColourLovers)
+    {
+
+        if (key == OF_KEY_UP) {
+            SELECTED_palette = SELECTED_palette_LAST;
+            SELECTED_palette--;
+            if (SELECTED_palette<0)
+            {
+                SELECTED_palette = 0;
+            }
+        }
+        else if (key == OF_KEY_DOWN) {
+            SELECTED_palette = SELECTED_palette_LAST;
+            SELECTED_palette++;
+            if (SELECTED_palette>NUM_TOTAL_PALETTES-1)
+            {
+                SELECTED_palette = NUM_TOTAL_PALETTES-1;
+            }
+        }
+    }
+
+    //--
+
     if (ENABLE_keys) {
         //    ofLogNotice("ofxColorManager") << "key: " << key;
 
@@ -3412,7 +3341,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs) {
                     ofLogNotice() << "OF_KEY_LEFT: PRESET_name: [" + ofToString(currentFile) + "] " << PRESET_name;
                     preset_load(PRESET_name);
                 }
-            } else if (key == OF_KEY_RIGHT) {
+            }
+            else if (key == OF_KEY_RIGHT) {
                 if (currentFile < files.size() - 1) {
                     currentFile++;
                 }
@@ -3560,7 +3490,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs) {
                 //            pauseCreate = false;
             }
 
-            random.generateRandom(NUM_ALGO_PALETTES);
+            random.generateRandom(NUM_COLORS_ALGO_PALETTES);
             palettes_update();
             if (bAuto_palette_recall) {
                 //set random palette to user palette
