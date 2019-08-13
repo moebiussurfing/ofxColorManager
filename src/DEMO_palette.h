@@ -21,14 +21,31 @@ public:
         pauseCreate = false;
     }
 
+    void restart(){
+        bDEMO1_clear = true;
+        pauseCreate = false;
+    }
+
     void start(){
         pauseCreate = false;
     }
 
-    void setClear(bool b);
+    void setClear(bool b){
+        bDEMO1_clear = true;
+    }
+
+    void setPalette(vector<ofColor> &_palette )
+    {
+        palette = &_palette;
+    }
+
+    //-
+
+private:
+
+    vector<ofColor> *palette;
 
     // DEMO 1
-
     bool ENABLE_DEMO1 = true;
     vector<glm::vec2> locations;
     vector<glm::vec2> velocities;
@@ -39,14 +56,8 @@ public:
     int iColor = 0;
     bool pauseCreate = false;
 
+    // DEMO 2
     bool ENABLE_DEMO2 = true;
-
-
-    vector<ofColor> *palette;
-    void setPalette(vector<ofColor> &_palette )
-    {
-        palette = &_palette;
-    }
 };
 
 

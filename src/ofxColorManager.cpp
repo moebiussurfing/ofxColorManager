@@ -499,6 +499,7 @@ void ofxColorManager::setup() {
     // ofxGuiPanelsLayout
 
     SHOW_ALL_GUI.setName("SHOW_ALL_GUI");
+    SHOW_UserPalette.setName("SHOW_UserPalette");
     SHOW_GUI_MINI.setName("SHOW_GUI_MINI");
     SHOW_debugText.setName("SHOW_debugText");
     SHOW_TEST_Curve.setName("SHOW_TEST_Curve");
@@ -524,6 +525,7 @@ void ofxColorManager::setup() {
     p_TOGGLES.add(SHOW_ColorPicker);
     p_TOGGLES.add(SHOW_PanelsManager);
     p_TOGGLES.add(SHOW_ColourLovers_searcher);
+    p_TOGGLES.add(SHOW_UserPalette);
 
     //-
 
@@ -545,6 +547,7 @@ void ofxColorManager::setup() {
     panels.addToggle(&SHOW_ColorPicker);
     panels.addToggle(&SHOW_PanelsManager);
     panels.addToggle(&SHOW_ColourLovers_searcher);
+    panels.addToggle(&SHOW_UserPalette);
 
     //call after add the panels
     panels.setup();
@@ -574,6 +577,7 @@ void ofxColorManager::gui_setup_layout() {
     guiWidth = 200;
 //    box_size = 40;
     box_size = 30;
+    box_user_size = 50;//user palette colors
 
     // gui 1 COLOR PANEL
     gui_x = 0;
@@ -608,7 +612,7 @@ void ofxColorManager::gui_setup_layout() {
     curveTool_h = curveTool_amount;
 
     // gradient-pre curve (bad sorted to the left but anchored to curve..)
-    grad_w = box_size;
+    grad_w = box_user_size;
     grad_x = curveTool_x - (grad_w + pad);
     grad_y = curveTool_y;
     grad_h = curveTool_h;
@@ -616,20 +620,20 @@ void ofxColorManager::gui_setup_layout() {
     // curve mod slider
     sliderMod_x = curveTool_x + curveTool_w + pad;
     sliderMod_y = curveTool_y;
-    sliderMod_w = box_size / 2;
+    sliderMod_w = box_user_size / 2;
     sliderMod_h = curveTool_h;
 
     // gradient-curved image LUT [referenced to curve pos (vertical)]
     image_curvedGradient_x = curveTool_w + pad + sliderMod_w + pad;//curveTool +
     image_curvedGradient_y = 0;//curveTool +
-    image_curvedGradient_w = box_size;
+    image_curvedGradient_w = box_user_size;
     image_curvedGradient_h = curveTool_h;
 
     // testing curve widgets
     // curve out slider
-    slider_x = sliderMod_x + pad + image_curvedGradient_w + box_size / 2;
+    slider_x = sliderMod_x + pad + image_curvedGradient_w + box_user_size / 2;
     slider_y = curveTool_y;
-    slider_w = box_size / 2;
+    slider_w = box_user_size / 2;
     slider_h = curveTool_h;
 
     // current color box/bar (the one affected by slider position. just for testing gradient purpose)
@@ -644,8 +648,8 @@ void ofxColorManager::gui_setup_layout() {
 
     // user color box monitor picked (same that color picker gui)
     // bar mode
-    color_w = (2 * box_size);
-    color_x = palette_x - (color_w + pad + box_size / 2 + pad);
+    color_w = (2 * box_user_size);
+    color_x = palette_x - (color_w + pad + box_user_size / 2 + pad);
     color_y = curveTool_y;
     color_h = curveTool_h;
     r_color_picked = ofRectangle(color_x, color_y, color_w, color_h);
@@ -659,7 +663,7 @@ void ofxColorManager::gui_setup_layout() {
     // color clicked box on palettes(hidden)
     colorPick_x = 390;
     colorPick_y = color_h + 30;
-    colorPick_w = colorPick_h = 2 * box_size;
+    colorPick_w = colorPick_h = 2 * box_user_size;
     r_color_clicked = ofRectangle(colorPick_x, colorPick_y, colorPick_w, colorPick_h);
 
     // browser colors palettes
@@ -747,10 +751,10 @@ void ofxColorManager::palette_rearrenge() {
     std::string name;
     int x, y, w, h, hTotal;
     x = palette_x;
-    w = box_size;
+    w = box_user_size;
     int numBtns = btns_palette.size();
     hTotal = curveTool_h;
-    h = hTotal / numBtns;
+    h = hTotal / (float)numBtns;
     bool flipBtn = true;
 
     for (int i = 0; i < numBtns; i++) {
@@ -786,8 +790,8 @@ void ofxColorManager::palette_addColor_toInterface(ofColor c) {
     btn->setName("btn" + ofToString(i));
 
     //temp positions
-    btn->setPosition(palette_x, palette_y + box_size + i * (box_size + pad));
-    btn->setSize(box_size, box_size);
+    btn->setPosition(palette_x, palette_y + box_user_size+pad + i * (box_user_size+pad));
+    btn->setSize(box_user_size, box_user_size);
 
     scene->addChild(btn);
     btns_palette.push_back(btn);
@@ -2121,19 +2125,6 @@ void ofxColorManager::palettes_setup() {
     }
     x0 = palettes_x + btn_pad_w;
     y0 += h0;
-    for (int i = 0; i < colors_Tetrad.size(); i++) {
-        ButtonExample *btn = new ButtonExample();
-        btn->setup(x0, y0, box_size, box_size);
-        btn->setup_colorBACK(color_clicked);
-        btn->setLocked(true);
-        btn->setName("CT_Tetrad" + ofToString(i));
-        btn->setColor(colors_Tetrad[i]);
-        scene->addChild(btn);
-        btns_plt_CT_Tetrad.push_back(btn);
-        x0 += h0;
-    }
-    x0 = palettes_x + btn_pad_w;
-    y0 += h0;
     for (int i = 0; i < colors_Triad.size(); i++) {
         ButtonExample *btn = new ButtonExample();
         btn->setup(x0, y0, box_size, box_size);
@@ -2143,6 +2134,19 @@ void ofxColorManager::palettes_setup() {
         btn->setColor(colors_Triad[i]);
         scene->addChild(btn);
         btns_plt_CT_Triad.push_back(btn);
+        x0 += h0;
+    }
+    x0 = palettes_x + btn_pad_w;
+    y0 += h0;
+    for (int i = 0; i < colors_Tetrad.size(); i++) {
+        ButtonExample *btn = new ButtonExample();
+        btn->setup(x0, y0, box_size, box_size);
+        btn->setup_colorBACK(color_clicked);
+        btn->setLocked(true);
+        btn->setName("CT_Tetrad" + ofToString(i));
+        btn->setColor(colors_Tetrad[i]);
+        scene->addChild(btn);
+        btns_plt_CT_Tetrad.push_back(btn);
         x0 += h0;
     }
 }
@@ -2816,6 +2820,7 @@ void ofxColorManager::palettes_setVisible(bool b) {
 
 //--------------------------------------------------------------
 void ofxColorManager::draw() {
+
     // BACKGROUND
     if (backgroundENABLE)
         ofClear(ofColor(color_backGround.get()));
@@ -2877,11 +2882,13 @@ void ofxColorManager::draw() {
         //-
 
         // INTERFACE
+
         interface_draw();
 
         //-
 
         // CURVE
+
         if (SHOW_Gradient) {
             gradient_draw();
         }
@@ -2891,10 +2898,12 @@ void ofxColorManager::draw() {
         // TEST CURVE
 
         // COLOR MONITORING SLIDER POSITION ON CURVED GRADIENT
+
         if (SHOW_TEST_Curve) {
 
             //gradiented color
-            ofRectangle r(currColor_x, currColor_y, box_size / 2, slider_h);
+            ofRectangle r(currColor_x, currColor_y, box_user_size / 2.0, slider_h);
+
             // 2. current box color at input curve point (right positioned)
             float out = ofMap(curvesTool.getAtPercent(1.0 - curve_pos), 0, curveTool_amount - 1, 1., 0.);
             ofColor c = gradient.getColorAtPercent(out);
@@ -2924,7 +2933,7 @@ void ofxColorManager::draw() {
         }
 
         // COLOUR LOVERS
-        if (SHOW_ColourLovers && false) {
+        if (SHOW_ColourLovers) {//TODO
             draw_ColourLovers();
         }
 
@@ -2935,17 +2944,8 @@ void ofxColorManager::draw() {
     //--
 
     if (SHOW_ImGui) {
-        //-
 
         //-
-
-//        //TODO: must disable key sortcuts when typing...
-//        if (MANAGER_Set.mouseOverGui)
-//            ENABLE_keys = false;
-//        else
-//            ENABLE_keys = true;
-//
-//        //-
 
         // GUI
 
@@ -2974,7 +2974,6 @@ void ofxColorManager::draw() {
     // ofxGuiPanelsLayout
 
     if (SHOW_Layout_Gui) {
-        //        gui_TOGGLES.draw();
         panels.draw();
     }
 
@@ -3095,9 +3094,6 @@ void ofxColorManager::palette_clear() {
         ofLogNotice("ofxColorManager") << "removed children: " << b;
     }
     btns_palette.clear();
-
-    // clear DEMO1 objects
-    //    bDEMO1_clear = true;
 }
 
 //--------------------------------------------------------------
@@ -3123,8 +3119,6 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
     //--
 
     // CONTROL WINDOWS PANELS
-
-//        if(false){}
 
     if (name == "SHOW COLOUR LOVERS") {
         ColourLoversHelper.setVisible(SHOW_ColourLovers);
@@ -3299,33 +3293,50 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs) {
 
     //--
 
-    // COLORWHEELSCHEMES
-
-    if (SHOW_AlgoPalettes && !SHOW_ColourLovers)
-    {
-
-        if (key == OF_KEY_UP) {
-            SELECTED_palette = SELECTED_palette_LAST;
-            SELECTED_palette--;
-            if (SELECTED_palette<0)
-            {
-                SELECTED_palette = 0;
-            }
-        }
-        else if (key == OF_KEY_DOWN) {
-            SELECTED_palette = SELECTED_palette_LAST;
-            SELECTED_palette++;
-            if (SELECTED_palette>NUM_TOTAL_PALETTES-1)
-            {
-                SELECTED_palette = NUM_TOTAL_PALETTES-1;
-            }
-        }
-    }
-
-    //--
-
     if (ENABLE_keys) {
         //    ofLogNotice("ofxColorManager") << "key: " << key;
+
+        //--
+
+        // COLORWHEELSCHEMES
+
+        if (SHOW_AlgoPalettes && !SHOW_ColourLovers) {
+
+            if (key == OF_KEY_UP) {
+                SELECTED_palette = SELECTED_palette_LAST;
+                SELECTED_palette--;
+                if (SELECTED_palette < 0) {
+                    SELECTED_palette = 0;
+                }
+
+                myDEMO_palette.restart();
+            }
+            else if (key == OF_KEY_DOWN) {
+                SELECTED_palette = SELECTED_palette_LAST;
+                SELECTED_palette++;
+                if (SELECTED_palette > NUM_TOTAL_PALETTES - 1) {
+                    SELECTED_palette = NUM_TOTAL_PALETTES - 1;
+                }
+
+                myDEMO_palette.restart();
+            }
+            else if (key == OF_KEY_LEFT) {
+                NUM_COLORS_ALGO_PALETTES--;
+                NUM_COLORS_ALGO_PALETTES = (int) ofClamp(NUM_COLORS_ALGO_PALETTES,
+                    NUM_COLORS_ALGO_PALETTES.getMin(),
+                    NUM_COLORS_ALGO_PALETTES.getMax());
+
+                myDEMO_palette.restart();
+            }
+            else if (key == OF_KEY_RIGHT) {
+                NUM_COLORS_ALGO_PALETTES++;
+                NUM_COLORS_ALGO_PALETTES = (int) ofClamp(NUM_COLORS_ALGO_PALETTES,
+                    NUM_COLORS_ALGO_PALETTES.getMin(),
+                    NUM_COLORS_ALGO_PALETTES.getMax());
+
+                myDEMO_palette.restart();
+            }
+        }
 
         //-
 

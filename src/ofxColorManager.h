@@ -161,6 +161,7 @@ public:
     ofParameter<bool> SHOW_PresetManager;
     ofParameter<bool> SHOW_ColorManager;
     ofParameter<bool> SHOW_ColorPicker;
+    ofParameter<bool> SHOW_UserPalette;
 
     void setColor_TARGET(ofColor &c);//backwards pointer ofApp color
     ofColor *color_TARGET;//backwards pointer ofApp color
@@ -461,7 +462,8 @@ private:
     int gui2_x, gui2_y, gui2_w, gui2_h;
     int gui3_x, gui3_y, gui3_w, gui3_h;
     int gui4_x, gui4_y, gui4_w, gui4_h;
-    int box_size;
+    int box_user_size;//user palette colors
+    int box_size;//palettes colors
     int pad; //global mini pad
     int c_grad_x, c_grad_y, c_grad_w, c_grad_h;
     int curveTool_x;
