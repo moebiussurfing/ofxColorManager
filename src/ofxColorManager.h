@@ -356,6 +356,19 @@ public:
     vector<ButtonExample *> btns_plt_Random;      // 8
     int NUM_PALETTES = 8;
 
+    // colour theory color palettes
+    vector<ButtonExample *> btns_plt_CT_Analogous;
+    vector<ButtonExample *> btns_plt_CT_Complementary;
+    vector<ButtonExample *> btns_plt_CT_SplitComplementary;
+    vector<ButtonExample *> btns_plt_CT_Compound;
+    vector<ButtonExample *> btns_plt_CT_FlippedCompound;
+    vector<ButtonExample *> btns_plt_CT_Monochrome;
+    vector<ButtonExample *> btns_plt_CT_Triad;
+    vector<ButtonExample *> btns_plt_CT_Tetrad;
+    int NUM_CT_PALETTES = 8;
+
+    int NUM_TOTAL_PALETTES = 16;
+
     // pointer back link the outside (ofApp) variable
     vector<ButtonPaletteSelector *> btns_plt_Selector; // 1-8
     int SELECTED_palette = -1;
