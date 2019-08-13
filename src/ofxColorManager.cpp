@@ -51,20 +51,21 @@ void ofxColorManager::ColorWheel_update() {
     scheme->setPrimaryColor(primaryColor);
     colors_FlippedCompound = scheme->interpolate(numColors.get());
 
-    scheme_Monochrome_name = (ColorWheelSchemes::colorSchemeNames[5]);
-    scheme = ColorWheelSchemes::colorSchemes[5];
+    scheme_Monochrome_name = (ColorWheelSchemes::colorSchemeNames[6]);
+    scheme = ColorWheelSchemes::colorSchemes[6];
     scheme->setPrimaryColor(primaryColor);
     colors_Monochrome = scheme->interpolate(numColors.get());
-
-    scheme_Triad_name = (ColorWheelSchemes::colorSchemeNames[5]);
-    scheme = ColorWheelSchemes::colorSchemes[5];
+//
+    scheme_Triad_name = (ColorWheelSchemes::colorSchemeNames[7]);
+    scheme = ColorWheelSchemes::colorSchemes[7];
     scheme->setPrimaryColor(primaryColor);
     colors_Triad = scheme->interpolate(numColors.get());
+//
+//    scheme_Tetrad_name = (ColorWheelSchemes::colorSchemeNames[8]);
+//    scheme = ColorWheelSchemes::colorSchemes[8];
+//    scheme->setPrimaryColor(primaryColor);
+//    colors_Tetrad = scheme->interpolate(numColors.get());
 
-    scheme_Tetrad_name = (ColorWheelSchemes::colorSchemeNames[5]);
-    scheme = ColorWheelSchemes::colorSchemes[5];
-    scheme->setPrimaryColor(primaryColor);
-    colors_Tetrad = scheme->interpolate(numColors.get());
 
 //    RANDOM = 0, ANALOGOUS = 1, COMPLEMENTARY = 2, SPLIT_COMPLEMENTARY = 3, COMPOUND = 4, FLIPPED_COMPOUND = 5, MONOCHROME = 6, TRIAD = 7, TETRAD = 8
 
@@ -117,14 +118,14 @@ void ofxColorManager::ColorWheel_update() {
 void ofxColorManager::ColorWheel_draw() {
     ofPushStyle();
     ofPushMatrix();
-    ofTranslate(700, 590);
+    ofTranslate(711, 577);
 
     int y = 0;
     int boxWidth = 200;
     int pad = 2;
     float w;
+    w = box_size;
 //    w = boxWidth / (float) colors.size();
-    w = 25;
 
     for (int i = 0; i < colors_Analogous.size(); i++) {
         ofSetColor(colors_Analogous[i]);
