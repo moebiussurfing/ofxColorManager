@@ -317,7 +317,7 @@ void ofxColorManager::setup() {
 
     // ALGORITHMIC PALETTES
 
-    random.generateRandom(NUM_COLORS_ALGO_PALETTES);
+//    random.generateRandom(NUM_COLORS_ALGO_PALETTES);
     palettes_update();
     palettes_setup();
     palettes_setup_labels();
@@ -854,10 +854,10 @@ void ofxColorManager::interface_update() {
     for (int i = 0; i < btns_plt_Analog.size(); i++) {
         btns_plt_Analog[i]->update();
     }
-    // 8. random
-    for (int i = 0; i < btns_plt_Random.size(); i++) {
-        btns_plt_Random[i]->update();
-    }
+//    // 8. random
+//    for (int i = 0; i < btns_plt_Random.size(); i++) {
+//        btns_plt_Random[i]->update();
+//    }
 }
 
 
@@ -2026,20 +2026,20 @@ void ofxColorManager::palettes_setup() {
         x0 += h0;
     }
 
-    // 8. random
-    x0 = palettes_x + btn_pad_w;
-    y0 += h0;
-    for (int i = 0; i < random.size(); i++) {
-        ButtonExample *btn = new ButtonExample();
-        btn->setup(x0, y0, box_size, box_size);
-        btn->setup_colorBACK(color_clicked);
-        btn->setLocked(true);
-        btn->setName("random" + ofToString(i));
-        btn->setColor(random[i]);
-        scene->addChild(btn);
-        btns_plt_Random.push_back(btn);
-        x0 += h0;
-    }
+//    // 8. random
+//    x0 = palettes_x + btn_pad_w;
+//    y0 += h0;
+//    for (int i = 0; i < random.size(); i++) {
+//        ButtonExample *btn = new ButtonExample();
+//        btn->setup(x0, y0, box_size, box_size);
+//        btn->setup_colorBACK(color_clicked);
+//        btn->setLocked(true);
+//        btn->setName("random" + ofToString(i));
+//        btn->setColor(random[i]);
+//        scene->addChild(btn);
+//        btns_plt_Random.push_back(btn);
+//        x0 += h0;
+//    }
 
     //-
 
@@ -2221,11 +2221,11 @@ void ofxColorManager::palettes_setup_labels() {
                 btn->setThisPaletteType(6);
                 btn->set_SELECTED_palette(SELECTED_palette);
                 break;
-            case 7:
-                btn->setup("RANDOM");
-                btn->setThisPaletteType(7);
-                btn->set_SELECTED_palette(SELECTED_palette);
-                break;
+//            case 7:
+//                btn->setup("RANDOM");
+//                btn->setThisPaletteType(7);
+//                btn->set_SELECTED_palette(SELECTED_palette);
+//                break;
         }
 
         btn->setPosition(x0, y0 + p * btn_plt_h);
@@ -2364,12 +2364,12 @@ void ofxColorManager::palette_recallFromPalettes(int p) {
                 palette_addColor(color);
             }
             break;
-        case 7:
-            for (int i = 0; i < btns_plt_Random.size(); i++) {
-                color = btns_plt_Random[i]->getColor();
-                palette_addColor(color);
-            }
-            break;
+//        case 7:
+//            for (int i = 0; i < btns_plt_Random.size(); i++) {
+//                color = btns_plt_Random[i]->getColor();
+//                palette_addColor(color);
+//            }
+//            break;
     }
 
     //-
@@ -2377,49 +2377,57 @@ void ofxColorManager::palette_recallFromPalettes(int p) {
     // 2. FROM OFX-COLOUR-THEORY
 
     switch (p) {
-        case 8:
+//        case 8:
+        case 7:
             for (int i = 0; i < btns_plt_CT_Analogous.size(); i++) {
                 color = btns_plt_CT_Analogous[i]->getColor();
                 palette_addColor(color);
             }
             break;
-        case 9:
+//        case 9:
+        case 8:
             for (int i = 0; i < btns_plt_CT_Complementary.size(); i++) {
                 color = btns_plt_CT_Complementary[i]->getColor();
                 palette_addColor(color);
             }
             break;
-        case 10:
+//        case 10:
+        case 9:
             for (int i = 0; i < btns_plt_CT_SplitComplementary.size(); i++) {
                 color = btns_plt_CT_SplitComplementary[i]->getColor();
                 palette_addColor(color);
             }
             break;
-        case 11:
+//        case 11:
+        case 10:
             for (int i = 0; i < btns_plt_CT_Compound.size(); i++) {
                 color = btns_plt_CT_Compound[i]->getColor();
                 palette_addColor(color);
             }
             break;
-        case 12:
+//        case 12:
+        case 11:
             for (int i = 0; i < btns_plt_CT_FlippedCompound.size(); i++) {
                 color = btns_plt_CT_FlippedCompound[i]->getColor();
                 palette_addColor(color);
             }
             break;
-        case 13:
+//        case 13:
+        case 12:
             for (int i = 0; i < btns_plt_CT_Monochrome.size(); i++) {
                 color = btns_plt_CT_Monochrome[i]->getColor();
                 palette_addColor(color);
             }
             break;
-        case 14:
+//        case 14:
+        case 13:
             for (int i = 0; i < btns_plt_CT_Triad.size(); i++) {
                 color = btns_plt_CT_Triad[i]->getColor();
                 palette_addColor(color);
             }
             break;
-        case 15:
+//        case 15:
+        case 14:
             for (int i = 0; i < btns_plt_CT_Tetrad.size(); i++) {
                 color = btns_plt_CT_Tetrad[i]->getColor();
                 palette_addColor(color);
@@ -2429,7 +2437,7 @@ void ofxColorManager::palette_recallFromPalettes(int p) {
 
     //-
 
-    // workflow: set background color from first/last palette color
+    // WORKFLOW: set background color from first/last palette color
     if (color_backGround_SETAUTO) {
         int size = palette.size();
         ofColor c;
@@ -2463,7 +2471,7 @@ void ofxColorManager::palettes_update() {
     monochrome.setBaseColor(base);
     monochromeBrightness.setBaseColor(base);
     analogue.setBaseColor(base);
-    random.setBaseColor(base);
+//    random.setBaseColor(base);
 
     complement.generateComplementary(ofxColorPalette::SATURATION, NUM_COLORS_ALGO_PALETTES);
     complementBrightness.generateComplementary(ofxColorPalette::BRIGHTNESS, NUM_COLORS_ALGO_PALETTES);
@@ -2507,10 +2515,10 @@ void ofxColorManager::palettes_update() {
     for (int i = 0; i < btns_plt_Analog.size(); i++) {
         btns_plt_Analog[i]->setColor(analogue[i]);
     }
-    // 8. random
-    for (int i = 0; i < btns_plt_Random.size(); i++) {
-        btns_plt_Random[i]->setColor(random[i]);
-    }
+//    // 8. random
+//    for (int i = 0; i < btns_plt_Random.size(); i++) {
+//        btns_plt_Random[i]->setColor(random[i]);
+//    }
 
     //--
 
@@ -2626,14 +2634,14 @@ void ofxColorManager::palettes_resize() {
     }
     btns_plt_Analog.clear();
 
-    for (int i = 0; i < btns_plt_Random.size(); i++) {
-        std::string n = ("random" + ofToString(i));
-        auto a = scene->getChildWithName(n, 1000);
-        auto b = a->getName();
-        scene->removeChild(a, false);
-        ofLogVerbose("ofxColorManager") << "removed children: " << b;
-    }
-    btns_plt_Random.clear();
+//    for (int i = 0; i < btns_plt_Random.size(); i++) {
+//        std::string n = ("random" + ofToString(i));
+//        auto a = scene->getChildWithName(n, 1000);
+//        auto b = a->getName();
+//        scene->removeChild(a, false);
+//        ofLogVerbose("ofxColorManager") << "removed children: " << b;
+//    }
+//    btns_plt_Random.clear();
 
     //-
 
@@ -2715,7 +2723,7 @@ void ofxColorManager::palettes_resize() {
 
     //TODO
 
-    random.generateRandom(NUM_COLORS_ALGO_PALETTES);
+//    random.generateRandom(NUM_COLORS_ALGO_PALETTES);
     palettes_update();
     palettes_setup();
 
@@ -2768,10 +2776,12 @@ void ofxColorManager::palettes_setVisible(bool b) {
         btn->setVisible(b);
         btn->setEnabled(b);
     }
-    for (auto &btn : btns_plt_Random) {
-        btn->setVisible(b);
-        btn->setEnabled(b);
-    }
+//    for (auto &btn : btns_plt_Random) {
+//        btn->setVisible(b);
+//        btn->setEnabled(b);
+//    }
+
+    //-
 
     // 2. FROM OFX-COLOUR-THEORY
 
@@ -3210,18 +3220,19 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
 
         // ALGORITHMIC PALETTES
 
-    else if (name == "RANDOM PALETTE") {
-        if (bRandomPalette) {
-            bRandomPalette = false;
-
-            random.generateRandom(NUM_COLORS_ALGO_PALETTES);
-            palettes_update();
-            if (bAuto_palette_recall) {
-                //set random palette to user palette
-                palette_recallFromPalettes(7);
-            }
-        }
-    } else if (name == "SIZE COLORS") {
+//    else if (name == "RANDOM PALETTE") {
+//        if (bRandomPalette) {
+//            bRandomPalette = false;
+//
+//            random.generateRandom(NUM_COLORS_ALGO_PALETTES);
+//            palettes_update();
+//            if (bAuto_palette_recall) {
+//                //set random palette to user palette
+//                palette_recallFromPalettes(7);
+//            }
+//        }
+//    }
+    else if (name == "SIZE COLORS") {
         palettes_resize();
     } else if (name == "AUTO CREATE!") {
         if (bAuto_palette_recall)
@@ -3492,25 +3503,25 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs) {
 
             // 2. trig get algorithmic random palette
 
-        else if (key == 'p') {
-            //TODO
-            // workflow: when loading a colour lover palette we disable auto create from algo palettes
-            if (!bAuto_palette_recall) {
-                bAuto_palette_recall = true;
-
-                //            pauseCreate = false;
-            }
-
-            random.generateRandom(NUM_COLORS_ALGO_PALETTES);
-            palettes_update();
-            if (bAuto_palette_recall) {
-                //set random palette to user palette
-                palette_recallFromPalettes(7);
-            }
-
-            // clear DEMO1 objects
-            myDEMO_palette.clear();
-        }
+//        else if (key == 'p') {
+//            //TODO
+//            // workflow: when loading a colour lover palette we disable auto create from algo palettes
+//            if (!bAuto_palette_recall) {
+//                bAuto_palette_recall = true;
+//
+//                //            pauseCreate = false;
+//            }
+//
+//            random.generateRandom(NUM_COLORS_ALGO_PALETTES);
+//            palettes_update();
+//            if (bAuto_palette_recall) {
+//                //set random palette to user palette
+//                palette_recallFromPalettes(7);
+//            }
+//
+//            // clear DEMO1 objects
+//            myDEMO_palette.clear();
+//        }
         //-
 
         // COLOUR LOVERS
