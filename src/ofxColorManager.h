@@ -48,6 +48,33 @@ public:
     shared_ptr<ColorWheelScheme> scheme;
     vector<ofColor> colors;
 
+    string scheme_Analogous_name;
+    string scheme_Complementary_name;
+    string scheme_SplitComplementary_name;
+    string scheme_Compound_name;
+    string scheme_FlippedCompound_name;
+    string scheme_Monochrome_name;
+    string scheme_Triad_name;
+    string scheme_Tetrad_name;
+
+    shared_ptr<ColorWheelScheme> scheme_Analogous;
+    shared_ptr<ColorWheelScheme> scheme_Complementary;
+    shared_ptr<ColorWheelScheme> scheme_SplitComplementary;
+    shared_ptr<ColorWheelScheme> scheme_Compound;
+    shared_ptr<ColorWheelScheme> scheme_FlippedCompound;
+    shared_ptr<ColorWheelScheme> scheme_Monochrome;
+    shared_ptr<ColorWheelScheme> scheme_Triad;
+    shared_ptr<ColorWheelScheme> scheme_Tetrad;
+
+    vector<ofColor> colors_Analogous;
+    vector<ofColor> colors_Complementary;
+    vector<ofColor> colors_SplitComplementary;
+    vector<ofColor> colors_Compound;
+    vector<ofColor> colors_FlippedCompound;
+    vector<ofColor> colors_Monochrome;
+    vector<ofColor> colors_Triad;
+    vector<ofColor> colors_Tetrad;
+
     ofxPanel panel;
     ofParameterGroup group;
     ofParameter<ofColor> primaryColor;

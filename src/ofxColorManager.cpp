@@ -17,15 +17,99 @@ void ofxColorManager::ColorWheel_setup() {
 
 //--------------------------------------------------------------
 void ofxColorManager::ColorWheel_update() {
+    primaryColor.set(color_picked.get());
+
     colorSchemeName.set(ColorWheelSchemes::colorSchemeNames[colorScheme.get()]);
     scheme = ColorWheelSchemes::colorSchemes[colorScheme.get()];
-
-    //    scheme->setPrimaryColor(primaryColor.get());
-
-    primaryColor.set(color_picked.get());
     scheme->setPrimaryColor(primaryColor);
-
     colors = scheme->interpolate(numColors.get());
+
+    //-
+
+    scheme_Analogous_name = (ColorWheelSchemes::colorSchemeNames[1]);
+    scheme = ColorWheelSchemes::colorSchemes[1];
+    scheme->setPrimaryColor(primaryColor);
+    colors_Analogous = scheme->interpolate(numColors.get());
+
+    scheme_Complementary_name = (ColorWheelSchemes::colorSchemeNames[2]);
+    scheme = ColorWheelSchemes::colorSchemes[2];
+    scheme->setPrimaryColor(primaryColor);
+    colors_Complementary = scheme->interpolate(numColors.get());
+
+    scheme_SplitComplementary_name = (ColorWheelSchemes::colorSchemeNames[3]);
+    scheme = ColorWheelSchemes::colorSchemes[3];
+    scheme->setPrimaryColor(primaryColor);
+    colors_SplitComplementary = scheme->interpolate(numColors.get());
+
+    scheme_Compound_name = (ColorWheelSchemes::colorSchemeNames[4]);
+    scheme = ColorWheelSchemes::colorSchemes[4];
+    scheme->setPrimaryColor(primaryColor);
+    colors_Compound = scheme->interpolate(numColors.get());
+
+    scheme_FlippedCompound_name = (ColorWheelSchemes::colorSchemeNames[5]);
+    scheme = ColorWheelSchemes::colorSchemes[5];
+    scheme->setPrimaryColor(primaryColor);
+    colors_FlippedCompound = scheme->interpolate(numColors.get());
+
+    scheme_Monochrome_name = (ColorWheelSchemes::colorSchemeNames[5]);
+    scheme = ColorWheelSchemes::colorSchemes[5];
+    scheme->setPrimaryColor(primaryColor);
+    colors_Monochrome = scheme->interpolate(numColors.get());
+
+    scheme_Triad_name = (ColorWheelSchemes::colorSchemeNames[5]);
+    scheme = ColorWheelSchemes::colorSchemes[5];
+    scheme->setPrimaryColor(primaryColor);
+    colors_Triad = scheme->interpolate(numColors.get());
+
+    scheme_Tetrad_name = (ColorWheelSchemes::colorSchemeNames[5]);
+    scheme = ColorWheelSchemes::colorSchemes[5];
+    scheme->setPrimaryColor(primaryColor);
+    colors_Tetrad = scheme->interpolate(numColors.get());
+
+//    RANDOM = 0, ANALOGOUS = 1, COMPLEMENTARY = 2, SPLIT_COMPLEMENTARY = 3, COMPOUND = 4, FLIPPED_COMPOUND = 5, MONOCHROME = 6, TRIAD = 7, TETRAD = 8
+
+//    scheme_Analogous_name = ColorWheelSchemes::colorSchemeNames[1];
+//    scheme_Complementary_name = ColorWheelSchemes::colorSchemeNames[2];
+//    scheme_SplitComplementary_name = ColorWheelSchemes::colorSchemeNames[3];
+//    scheme_Compound_name = ColorWheelSchemes::colorSchemeNames[4];
+//    scheme_FlippedCompound_name = ColorWheelSchemes::colorSchemeNames[5];
+//    scheme_Monochrome_name = ColorWheelSchemes::colorSchemeNames[6];
+//    scheme_Triad_name = ColorWheelSchemes::colorSchemeNames[7];
+//    scheme_Tetrad_name = ColorWheelSchemes::colorSchemeNames[8];
+//
+//    // al palettes creator
+//    scheme_Analogous = ColorWheelSchemes::colorSchemes[1];
+//    scheme_Complementary = ColorWheelSchemes::colorSchemes[2];
+//    scheme_SplitComplementary = ColorWheelSchemes::colorSchemes[3];
+//    scheme_Compound = ColorWheelSchemes::colorSchemes[4];
+//    scheme_FlippedCompound = ColorWheelSchemes::colorSchemes[5];
+//    scheme_Monochrome = ColorWheelSchemes::colorSchemes[6];
+//    scheme_Triad = ColorWheelSchemes::colorSchemes[7];
+//    scheme_Tetrad = ColorWheelSchemes::colorSchemes[8];
+//
+//    scheme_Analogous->setPrimaryColor(primaryColor);
+//    scheme_Complementary->setPrimaryColor(primaryColor);
+//    scheme_SplitComplementary->setPrimaryColor(primaryColor);
+//    scheme_Compound->setPrimaryColor(primaryColor);
+//    scheme_FlippedCompound->setPrimaryColor(primaryColor);
+//    scheme_Monochrome->setPrimaryColor(primaryColor);
+//    scheme_Triad->setPrimaryColor(primaryColor);
+//    scheme_Tetrad->setPrimaryColor(primaryColor);
+
+//TODO
+//we can do 8 color vectors simpler and to use only un scheme..
+
+//    colors = scheme->interpolate(numColors.get());
+
+//    colors_Analogous = scheme_Analogous->interpolate(numColors.get());
+//    colors_Complementary        = scheme_Complementary->interpolate(numColors.get());
+//    colors_SplitComplementary   = scheme_SplitComplementary->interpolate(numColors.get());
+//    colors_Compound             = scheme_Compound->interpolate(numColors.get());
+//    colors_FlippedCompound      = scheme_FlippedCompound->interpolate(numColors.get());
+//    colors_Monochrome           = scheme_Monochrome->interpolate(numColors.get());
+//    colors_Triad                = scheme_Triad->interpolate(numColors.get());
+//    colors_Tetrad               = scheme_Tetrad->interpolate(numColors.get());
+
 }
 
 
@@ -33,19 +117,85 @@ void ofxColorManager::ColorWheel_update() {
 void ofxColorManager::ColorWheel_draw() {
     ofPushStyle();
     ofPushMatrix();
-    ofTranslate(711, 670);
+    ofTranslate(700, 590);
 
-    //    float w = ofGetWidth() / (float) colors.size();
-    float w = 200 / (float) colors.size();
-    for (int i = 0; i < colors.size(); i++) {
-        ofSetColor(colors[i]);
+    int y = 0;
+    int boxWidth = 200;
+    int pad = 2;
+    float w;
+//    w = boxWidth / (float) colors.size();
+    w = 25;
+
+    for (int i = 0; i < colors_Analogous.size(); i++) {
+        ofSetColor(colors_Analogous[i]);
         ofFill();
-        ofDrawRectangle(w * i, 0, w, 50);
+        ofDrawRectangle(w * i, y, w, w);
     }
+    y+= w+pad;
+
+    for (int i = 0; i < colors_Complementary.size(); i++) {
+        ofSetColor(colors_Complementary[i]);
+        ofFill();
+        ofDrawRectangle(w * i, y, w, w);
+    }
+    y+= w+pad;
+
+    for (int i = 0; i < colors_SplitComplementary.size(); i++) {
+        ofSetColor(colors_SplitComplementary[i]);
+        ofFill();
+        ofDrawRectangle(w * i, y, w, w);
+    }
+    y+= w+pad;
+
+    for (int i = 0; i < colors_Compound.size(); i++) {
+        ofSetColor(colors_Compound[i]);
+        ofFill();
+        ofDrawRectangle(w * i, y, w, w);
+    }
+    y+= w+pad;
+
+    for (int i = 0; i < colors_FlippedCompound.size(); i++) {
+        ofSetColor(colors_FlippedCompound[i]);
+        ofFill();
+        ofDrawRectangle(w * i, y, w, w);
+    }
+    y+= w+pad;
+
+    for (int i = 0; i < colors_Monochrome.size(); i++) {
+        ofSetColor(colors_Monochrome[i]);
+        ofFill();
+        ofDrawRectangle(w * i, y, w, w);
+    }
+    y+= w+pad;
+
+    for (int i = 0; i < colors_Triad.size(); i++) {
+        ofSetColor(colors_Triad[i]);
+        ofFill();
+        ofDrawRectangle(w * i, y, w, w);
+    }
+    y+= w+pad;
+
+    for (int i = 0; i < colors_Tetrad.size(); i++) {
+        ofSetColor(colors_Tetrad[i]);
+        ofFill();
+        ofDrawRectangle(w * i, y, w, w);
+    }
+    y+= w+pad;
+
+
     ofPopMatrix();
     ofPopStyle();
 
-    panel.draw();
+    //-
+
+//
+//    for (int i = 0; i < colors.size(); i++) {
+//        ofSetColor(colors[i]);
+//        ofFill();
+//        ofDrawRectangle(830 + w * i, 670-2*w, w, w);
+//    }
+//    y+= w+pad;
+//    panel.draw();
 }
 
 
