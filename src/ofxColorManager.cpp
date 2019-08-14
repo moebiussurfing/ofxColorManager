@@ -1663,7 +1663,8 @@ void ofxColorManager::update() {
 
     // TEST CURVE
 
-    if (TEST_MODE) {
+    if (TEST_MODE)
+    {
         int frameBuffer = (int) ofMap(TEST_Speed, 0., 1., TEST_maxFrames, 30);
         int frameCurrent = ofGetFrameNum() % frameBuffer;//0 to maxFrames
         framePrc = ofMap(frameCurrent, 0, frameBuffer, 0., 1.);
@@ -1685,7 +1686,10 @@ void ofxColorManager::update() {
 
     ColourLoversHelper.update();
 
-    if (bUpdated_Palette_BACK) {
+    // 1. palette has been clicked
+
+    if (bUpdated_Palette_BACK)
+    {
         bUpdated_Palette_BACK = false;
         ofLogWarning("ofxColorManager") << "update:bUpdated_Palette_BACK: " << bUpdated_Palette_BACK;
 
@@ -1694,6 +1698,10 @@ void ofxColorManager::update() {
 
         // 1. get palette colors from colour lovers
         palette_load_ColourLovers();
+
+
+        //TODO
+        ColorWheel_update();
 
         //-
 
@@ -1711,7 +1719,12 @@ void ofxColorManager::update() {
             myDEMO_palette.clear();
     }
 
-    if (bUpdated_Color_BACK) {
+    //-
+
+    // 2. color pick from palette clicked
+
+    if (bUpdated_Color_BACK)
+    {
         bUpdated_Color_BACK = false;
         ofLogWarning("ofxColorManager") << "update:bUpdated_Color_BACK: " << bUpdated_Color_BACK;
 
@@ -1725,6 +1738,9 @@ void ofxColorManager::update() {
 
         // 2. get color from colour lovers
         color_clicked = ofColor(myColor);
+
+        //TODO
+        ColorWheel_update();
 
         // 3. auto create user palette from algo palette from colour lover picked color
         if (!ColourLoversHelper.MODE_PickPalette_BACK && ColourLoversHelper.MODE_PickColor_BACK) {
@@ -1740,11 +1756,13 @@ void ofxColorManager::update() {
 
     //--
 
-    // CHANGED ALGORIHTMIC PALETTES
+    // 3. CHANGED ALGORIHTMIC PALETTES
 
     // handle last selected algorithmic palette
 
-    if (SELECTED_palette != SELECTED_palette_PRE) {
+    if (SELECTED_palette != SELECTED_palette_PRE)
+    {
+
         ofLogNotice("ofxColorManager") << "update:CHANGED SELECTED_palette: " << SELECTED_palette;
 
         // WORKFLOW: when a label palette is clicked, will always trig
@@ -1782,18 +1800,18 @@ void ofxColorManager::update() {
 
         if (!MODE_newPreset)
             MODE_newPreset = true;
-
     }
 
     //-
 
-    interface_update();
-    curveTool_update();
-    ColorBrowser.update();
+//    interface_update();
+//    curveTool_update();
+//    ColorBrowser.update();
 
     //-
 
     // 3.
+
     if (color_clicked != color_clicked_PRE) {
         color_clicked_PRE = color_clicked;
         ofLogNotice("ofxColorManager") << "update:CHANGED color_clicked";
@@ -1803,6 +1821,7 @@ void ofxColorManager::update() {
     //-
 
     // 4. set the local scope color pointer that is into ofxColorBrowser that whill be used as color picked too
+
     if (color_BACK != color_BACK_PRE) {
         color_BACK_PRE = color_BACK;
         ofLogNotice("ofxColorManager") << "update:CHANGED color_BACK pointer";
@@ -1814,9 +1833,14 @@ void ofxColorManager::update() {
                 palette_recallFromPalettes(SELECTED_palette_LAST);//trig last choice
             }
         }
-
-        //-
     }
+
+    //-
+
+    //TODO
+    interface_update();
+    curveTool_update();
+    ColorBrowser.update();
 }
 
 
