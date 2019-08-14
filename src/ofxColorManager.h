@@ -325,7 +325,7 @@ public:
     void palette_clear();
     void palette_addColor_toInterface(ofColor c);
     void palette_rearrenge();//resize boxes when adding removing colors to user palette
-    void palette_touched(string name);
+    void palette_colorTouched(string name);
     void palette_recallFromPalettes(int p);
     void palette_load_ColourLovers();
 
@@ -356,7 +356,7 @@ public:
     vector<ButtonExample *> btns_plt_MonoSat;     // 5
     vector<ButtonExample *> btns_plt_MonoBrgt;    // 6
     vector<ButtonExample *> btns_plt_Analog;      // 7
-//    vector<ButtonExample *> btns_plt_Random;      // 8
+//    vector<ButtonExample *> btns_plt_Random;    // 8
 //    int NUM_PALETTES = 8;
     int NUM_PALETTES = 7;//without random
 
@@ -372,7 +372,7 @@ public:
     int NUM_CT_PALETTES = 8;
 
 //    int NUM_TOTAL_PALETTES = 16;//TODO
-    int NUM_TOTAL_PALETTES = 15;//TODO //without random
+    int NUM_TOTAL_PALETTES = NUM_PALETTES+NUM_CT_PALETTES;//TODO //without random
 
     // pointer back link the outside (ofApp) variable
     vector<ButtonPaletteSelector *> btns_plt_Selector; // 1-8
@@ -432,6 +432,7 @@ public:
     void palette_save(string p);
     void palette_load(string p);
 
+    bool MODE_newPreset = false;
     //-
 
     // FILES

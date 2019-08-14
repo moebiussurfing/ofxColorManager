@@ -63,6 +63,9 @@ void ofxColorManager::ColorWheel_setup() {
 
 //--------------------------------------------------------------
 void ofxColorManager::ColorWheel_update() {
+    //TODO
+    //reduce callback on every loop frame..
+
     primaryColor.set(color_picked.get());
 
 //    //TEST
@@ -1306,7 +1309,28 @@ void ofxColorManager::gui_imGui_window3() {
 //    mainSettings.windowPos = ofVec2f(gui3_x, gui3_y);
 
     if (ofxImGui::BeginWindow("PRESET MANAGER", mainSettings, false)) {
-        ImGui::Text("NAME");
+
+        //-
+
+        //TODO
+        //maybe should use 2 different names to presets from kit
+        //or loaded from colour lovers
+
+        ImGui::Text("NEW NAME");
+        string textInput_New = "new preset";
+
+        // loaded string into char array
+        char tab[32];
+        strncpy(tab, textInput_New.c_str(), sizeof(tab));
+        tab[sizeof(tab)-1] = 0;
+
+        if (ImGui::InputText("", tab, IM_ARRAYSIZE(tab))) {
+            cout << "InputText [tab]:" << ofToString(tab) << endl;
+            textInput_New = ofToString(tab);
+            cout << "textInput_New:" << textInput_New << endl;
+        }
+
+        //-
 
         //TODO
         //bug doubled keys...
@@ -1325,27 +1349,6 @@ void ofxColorManager::gui_imGui_window3() {
 //            cout << "textInput_temp:" << textInput_temp << endl;
 //        }
 
-        // B
-        string textInput_temp = PRESET_name;
-
-        // load tab2 with textInput_temp
-        char tab2[32];
-        strncpy(tab2, textInput_temp.c_str(), sizeof(tab2));
-        tab2[sizeof(tab2) - 1] = 0;
-        // loaded string into char array
-
-        //TODO
-        //maybe should use 2 different names to presets from kit
-        //or loaded from colour lovers
-
-        if (ImGui::InputText("", tab2, IM_ARRAYSIZE(tab2))) {
-            cout << "InputText:" << ofToString(tab2) << endl;
-
-            textInput_temp = ofToString(tab2);
-            cout << "textInput_temp:" << textInput_temp << endl;
-        }
-
-        //-
 
 //        // 1. palettes
 //
@@ -1449,10 +1452,50 @@ void ofxColorManager::gui_imGui_window3() {
             files_refresh();
         }
 
+        // WORKFLOW: when its editing a new preset..
+
+        // Color buttons, demonstrate using PushID() to add unique identifier in the ID stack, and changing style.
+
+        ImGui::SameLine();
+        ImGui::PushID(1);
+
+        if(!MODE_newPreset)
+            ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(1.0f, 0.6f, 0.6f));
+        else
+            ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.5, 0.6f, 0.6f));
+
+        ImGui::Button("NEW");
+        ImGui::PopStyleColor(1);
+        ImGui::PopID();
+
+        if (ImGui::Button("NEW"))//current preset
+        {
+            cout << "NEW" << endl;
+        }
+
         //-
 
         ImGui::Separator();
         ImGui::Text("KIT");
+
+        //-
+
+        ImGui::Text("NAME");
+        string textInput_temp = PRESET_name;
+
+        // loaded string into char array
+        char tab2[32];
+        strncpy(tab2, textInput_temp.c_str(), sizeof(tab2));
+        tab2[sizeof(tab2) - 1] = 0;
+
+        if (ImGui::InputText("", tab2, IM_ARRAYSIZE(tab2))) {
+            cout << "InputText:" << ofToString(tab2) << endl;
+
+            textInput_temp = ofToString(tab2);
+            cout << "textInput_temp:" << textInput_temp << endl;
+        }
+
+        //--
 
         // arrow buttons
         static int counter = currentFile;
@@ -1664,9 +1707,8 @@ void ofxColorManager::update() {
         PRESET_name = myPalette_Name;
         textInput_temp = PRESET_name;
 
-
-        // clear DEMO1 objects
-        myDEMO_palette.clear();
+        if (TEST_MODE)
+            myDEMO_palette.clear();
     }
 
     if (bUpdated_Color_BACK) {
@@ -1692,15 +1734,16 @@ void ofxColorManager::update() {
             }
         }
 
-        // clear DEMO1 objects
-        myDEMO_palette.clear();
+        if (TEST_MODE)
+            myDEMO_palette.clear();
     }
 
     //--
 
-    // ALGORIHTMIC PALETTES
+    // CHANGED ALGORIHTMIC PALETTES
 
     // handle last selected algorithmic palette
+
     if (SELECTED_palette != SELECTED_palette_PRE) {
         ofLogNotice("ofxColorManager") << "update:CHANGED SELECTED_palette: " << SELECTED_palette;
 
@@ -1712,6 +1755,8 @@ void ofxColorManager::update() {
         SELECTED_palette_LAST = SELECTED_palette;//memorize what was the last trigged palette
         SELECTED_palette_PRE = SELECTED_palette = -1;//disable to stop check..
         //bug if not if pressed same button
+
+        //-
 
         // 1. hide all borders
 
@@ -1732,6 +1777,12 @@ void ofxColorManager::update() {
         if (btns_plt_Selector.size() > 0) {
             btns_plt_Selector[SELECTED_palette_LAST]->setBorder(true);
         }
+
+        //-
+
+        if (!MODE_newPreset)
+            MODE_newPreset = true;
+
     }
 
     //-
@@ -1742,6 +1793,7 @@ void ofxColorManager::update() {
 
     //-
 
+    // 3.
     if (color_clicked != color_clicked_PRE) {
         color_clicked_PRE = color_clicked;
         ofLogNotice("ofxColorManager") << "update:CHANGED color_clicked";
@@ -1750,7 +1802,7 @@ void ofxColorManager::update() {
 
     //-
 
-    // set the local scope color pointer that is into ofxColorBrowser that whill be used as color picked too
+    // 4. set the local scope color pointer that is into ofxColorBrowser that whill be used as color picked too
     if (color_BACK != color_BACK_PRE) {
         color_BACK_PRE = color_BACK;
         ofLogNotice("ofxColorManager") << "update:CHANGED color_BACK pointer";
@@ -2439,10 +2491,10 @@ void ofxColorManager::palette_recallFromPalettes(int p) {
 
     // WORKFLOW: set background color from first/last palette color
     if (color_backGround_SETAUTO) {
-        int size = palette.size();
-        ofColor c;
-        c = palette[0];//get first color
-        color_backGround.set(c);
+//        int size = palette.size();
+
+        //get first color
+        color_backGround.set(palette[0]);
     }
 
     //-
@@ -2559,6 +2611,7 @@ void ofxColorManager::palettes_update() {
         btns_plt_CT_Triad[i]->setColor(colors_Triad[i]);
     }
 
+    //--
 }
 
 
@@ -3061,13 +3114,13 @@ void ofxColorManager::palette_removeColorLast() {
 
 
 //--------------------------------------------------------------
-void ofxColorManager::palette_touched(string name) {
+void ofxColorManager::palette_colorTouched(string name) {
 
     // handle de-select all buttons and select last clicked
 
     for (int i = 0; i < btns_palette.size(); i++)
     {
-        if (btns_palette[i]->getName() != name) {
+        if (btns_palette[i]->getName()!=name) {
             btns_palette[i]->setSelected(false);
         }
         else
@@ -3305,11 +3358,11 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs) {
     //--
 
     if (ENABLE_keys) {
-        //    ofLogNotice("ofxColorManager") << "key: " << key;
+        //ofLogNotice("ofxColorManager") << "key: " << key;
 
         //--
 
-        // COLORWHEELSCHEMES
+        // COLOR-WHEEL-SCHEMES
 
         if (SHOW_AlgoPalettes && !SHOW_ColourLovers) {
 
@@ -3320,7 +3373,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs) {
                     SELECTED_palette = 0;
                 }
 
-                myDEMO_palette.restart();
+                if (TEST_MODE)
+                    myDEMO_palette.restart();
             }
             else if (key == OF_KEY_DOWN) {
                 SELECTED_palette = SELECTED_palette_LAST;
@@ -3329,7 +3383,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs) {
                     SELECTED_palette = NUM_TOTAL_PALETTES - 1;
                 }
 
-                myDEMO_palette.restart();
+                if (TEST_MODE)
+                    myDEMO_palette.restart();
             }
             else if (key == OF_KEY_LEFT) {
                 NUM_COLORS_ALGO_PALETTES--;
@@ -3337,7 +3392,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs) {
                     NUM_COLORS_ALGO_PALETTES.getMin(),
                     NUM_COLORS_ALGO_PALETTES.getMax());
 
-                myDEMO_palette.restart();
+                if (TEST_MODE)
+                    myDEMO_palette.restart();
             }
             else if (key == OF_KEY_RIGHT) {
                 NUM_COLORS_ALGO_PALETTES++;
@@ -3345,7 +3401,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs) {
                     NUM_COLORS_ALGO_PALETTES.getMin(),
                     NUM_COLORS_ALGO_PALETTES.getMax());
 
-                myDEMO_palette.restart();
+                if (TEST_MODE)
+                    myDEMO_palette.restart();
             }
         }
 
@@ -3363,7 +3420,11 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs) {
                     ofLogNotice() << "OF_KEY_LEFT: PRESET_name: [" + ofToString(currentFile) + "] " << PRESET_name;
                     preset_load(PRESET_name);
                 }
+
+                if (MODE_newPreset)
+                    MODE_newPreset = false;
             }
+
             else if (key == OF_KEY_RIGHT) {
                 if (currentFile < files.size() - 1) {
                     currentFile++;
@@ -3373,6 +3434,9 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs) {
                     ofLogNotice() << "OF_KEY_RIGHT: PRESET_name: [" + ofToString(currentFile) + "] " << PRESET_name;
                     preset_load(PRESET_name);
                 }
+
+                if (MODE_newPreset)
+                    MODE_newPreset = false;
             }
         }
 
@@ -3408,6 +3472,12 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs) {
             panels.group_Selected = 5;
         } else if (key == '6') {
             panels.group_Selected = 6;
+        } else if (key == '7') {
+            panels.group_Selected = 7;
+        } else if (key == '8') {
+            panels.group_Selected = 8;
+        } else if (key == '9') {
+            panels.group_Selected = 9;
         } else if (key == 'g') {
             SHOW_Layout_Gui = !SHOW_Layout_Gui;
         }
@@ -3473,7 +3543,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs) {
 
             // 1. randomize color and build palette if enabled
 
-        else if (key == 'o') {
+        else if (key == 'o')
+        {
             //TODO
             // workflow: when loading a colour lover palette we disable auto create from algo palettes
             if (!bAuto_palette_recall) {
@@ -3493,10 +3564,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs) {
             color_Undo = color_picked.get();
             color_Undo.store();
 
-            myDEMO_palette.clear();
-            //        // clear DEMO1 objects
-            //        bDEMO1_clear = true;
-            //        pauseCreate = false;
+            if (TEST_MODE)
+                myDEMO_palette.clear();
         }
 
             //--
@@ -3519,10 +3588,11 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs) {
 //                palette_recallFromPalettes(7);
 //            }
 //
-//            // clear DEMO1 objects
-//            myDEMO_palette.clear();
+//            if (TEST_MODE)
+//                    myDEMO_palette.clear();
 //        }
-        //-
+
+        //--
 
         // COLOUR LOVERS
 
@@ -3533,29 +3603,35 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs) {
 
                 textInput_temp = PRESET_name;
 
-                // clear DEMO1 objects
-                myDEMO_palette.clear();
+                if (TEST_MODE)
+                    myDEMO_palette.clear();
             }
 
                 //-
 
                 // browse presets
+
             else if (key == OF_KEY_DOWN) {
                 ColourLoversHelper.nextPalette();
 
-//                textInput_temp = PRESET_name;
+                if (!MODE_newPreset)
+                    MODE_newPreset = true;
 
-                // clear DEMO1 objects
-                myDEMO_palette.clear();
+                if (TEST_MODE)
+                    myDEMO_palette.clear();
 
-            } else if (key == OF_KEY_UP) {
+            }
+            else if (key == OF_KEY_UP) {
                 ColourLoversHelper.prevPalette();
 
-//                textInput_temp = PRESET_name;
+                if (!MODE_newPreset)
+                    MODE_newPreset = true;
 
-                // clear DEMO1 objects
-                myDEMO_palette.clear();
+                if (TEST_MODE)
+                    myDEMO_palette.clear();
             }
+
+            //--
         }
 
         //--
@@ -3565,7 +3641,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs) {
         if (key == 'z') {
             color_Undo.undo();
             color_picked = color_Undo;
-        } else if (key == 'y') {
+        }
+        else if (key == 'y') {
             color_Undo.redo();
             color_picked = color_Undo;
         }
@@ -3663,11 +3740,14 @@ void ofxColorManager::mousePressed(ofMouseEventArgs &eventArgs) {
     auto b = a->getName();
     ofLogVerbose("ofxColorManager") << "touched: " << b;
     auto str = ofSplitString(b, "btn");
+
     if (str.size() > 1)//check if "btn" is present
     {
         ofLogVerbose("ofxColorManager") << "detected palette touch: " << b;
-        palette_touched(b);
-    } else {
+        palette_colorTouched(b);
+    }
+    else
+    {
         //ofLogVerbose("ofxColorManager") << "ignored touch: " << b;
     }
     //    }
@@ -3752,6 +3832,14 @@ void ofxColorManager::update_color_picked_CHANGES() {
 
     color_clicked.set(color_picked);//TODO: mirror clicked/picked colors
 
+
+    //-
+
+    //TODO
+    // palettes
+//    primaryColor.set(color_picked.get());
+    ColorWheel_update();
+
     //--
 
     // 1. autosave edited color
@@ -3778,6 +3866,13 @@ void ofxColorManager::update_color_picked_CHANGES() {
     if (!bLock_palette) {
         palettes_update();
     }
+
+    //-
+
+//    //TODO
+//    // palettes
+////    primaryColor.set(color_picked.get());
+//    ColorWheel_update();
 }
 
 
