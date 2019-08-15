@@ -292,7 +292,7 @@ void ofxColorManager::setup() {
     SATURATION.set("SATURATION", 200, 0, 255);
     BRIGHTNESS.set("BRIGHTNESS", 200, 0, 255);
     bRandomPalette.set("RANDOM PALETTE", false);
-    bAuto_palette_recall.set("AUTO CREATE!", false);
+    bAuto_palette_recall.set("AUTO LIVE MODE", false);
     bLock_palette.set("LOCK PALETTES", false);
 
     NUM_COLORS_ALGO_PALETTES.set("SIZE COLORS", 6, 2, 10);
@@ -1688,15 +1688,9 @@ void ofxColorManager::update() {
         // 1. get palette colors from colour lovers
         palette_load_ColourLovers();
 
-        // OFX-COLOR-THEORY ALGORITHMIC PALETTE
-//        palettes_colorTheory_update();
-        // OFX-COLOR-PALETTE
-//        palettes_update();
-
         //-
 
-        //TODO
-        // workflow: when loading a colour lover palette we disable auto create from algo palettes
+        // WORKFLOW: when loading a colour lover palette we disable auto create from algo palettes
         if (bAuto_palette_recall) {
             bAuto_palette_recall = false;
         }
@@ -1704,8 +1698,6 @@ void ofxColorManager::update() {
         //-
 
         // PRESET MANAGER
-        //TODO
-
         if (!MODE_newPreset)
             MODE_newPreset = true;
         textInput_New = myPalette_Name;
@@ -1736,12 +1728,6 @@ void ofxColorManager::update() {
 
         // 2. get color from colour lovers
         color_clicked = ofColor(myColor);
-
-        //TODO
-        // OFX-COLOR-THEORY ALGORITHMIC PALETTE
-//        palettes_colorTheory_update();
-        // OFX-COLOR-PALETTE
-//        palettes_update();
 
         // 3. auto create user palette from algo palette from colour lover picked color
         if (!ColourLoversHelper.MODE_PickPalette_BACK && ColourLoversHelper.MODE_PickColor_BACK) {
@@ -1782,14 +1768,7 @@ void ofxColorManager::update() {
         //-
 
         // 1. hide all borders
-
-//        // 1. FROM OFX-COLOR-PALETTE
-//        for (int p = 0; p < btns_plt_Selector.size() && p < NUM_PALETTES; p++) {
-//            btns_plt_Selector[p]->setBorder(false);
-//        }
-
-        // 1. FROM OFX-COLOR-PALETTE
-        // 2. FROM OFX-COLOUR-THEORY
+        // from OFX-COLOR-PALETTE & OFX-COLOUR-THEORY
         for (int p = 0; p < btns_plt_Selector.size() && p < NUM_TOTAL_PALETTES; p++) {
             btns_plt_Selector[p]->setBorder(false);
         }
@@ -1819,7 +1798,6 @@ void ofxColorManager::update() {
     //TODO
     //not used and hidden
     // 3. color clicked
-
     if (color_clicked != color_clicked_PRE) {
         color_clicked_PRE = color_clicked;
         ofLogNotice("ofxColorManager") << "update:CHANGED color_clicked";
@@ -1841,16 +1819,10 @@ void ofxColorManager::update() {
                 palette_recallFromPalettes(SELECTED_palette_LAST);//trig last choice
             }
         }
-
-        //TODO
-//        palettes_colorTheory_update();
-        // OFX-COLOR-PALETTE
-//        palettes_update();
     }
 
     //-
 
-    //TODO
     interface_update();
     curveTool_update();
     ColorBrowser.update();
@@ -1863,7 +1835,7 @@ void ofxColorManager::curveTool_setup() {
     curve_img_gradient.allocate(image_curvedGradient_w, image_curvedGradient_h, OF_IMAGE_COLOR);
 
     curvesTool.setup(curveTool_amount);
-    //TEMP
+    //TODO: TEMP
     curvesTool.load("curves.yml"); //needed because it fills polyline
 
     curve_pos.set("INPUT", 0., 0., 1.);
@@ -1912,7 +1884,7 @@ void ofxColorManager::curveTool_update() {
 
     //--
 
-    // vertical palette clors gradient rectangle modified by curveTool
+    // vertical palette colors gradient rectangle modified by curveTool
 
     // every y point has different color
     for (int y = 0; y < image_curvedGradient_h; y++) {
@@ -1931,8 +1903,7 @@ void ofxColorManager::curveTool_update() {
 
     //-
 
-    // UPDATE TRAGET COLOR POINTER IN ofApp
-
+    // UPDATE TARGET COLOR POINTER IN ofApp
     if (color_TARGET != nullptr)//only if pointer is setted
     {
         float out = ofMap(curvesTool.getAtPercent(1.0 - curve_pos), 0, curveTool_amount - 1, 1., 0.);
@@ -1981,23 +1952,8 @@ void ofxColorManager::curveTool_draw() {
         //        ofDrawCircle(curve_pos_LUT, y, 3);
     }
 
-    //-
-
     ofPopMatrix();
     ofPopStyle();
-
-    //-
-
-    //    // debug curve values
-    //    int posx, posy;
-    //    posx = 425;
-    //    posy = 20;
-    //    ofDrawBitmapStringHighlight("in : "+ofToString(curve_pos), glm::vec2(posx, posy));
-    //    ofDrawBitmapStringHighlight("out: "+ofToString(curve_pos_out), glm::vec2(posx, posy + 20));
-    //    ofDrawBitmapStringHighlight("lut: "+ofToString(curve_pos_LUT), glm::vec2(posx, posy + 40));
-    //    }
-
-    //-
 }
 
 
@@ -2546,13 +2502,11 @@ void ofxColorManager::palettes_update() {
 
     ofColor base;
     if (!MODE_Palette) {
-        // using hue only from picked color and sat/(brg from sliders
-        //TODO: should use direct color get, not from hsb...
+        // using hue only from picked color and forcing sat/(brg from algo sliders
         base = ofColor::fromHsb(ofMap(color_picked.get().getHue(), 0., 1., 0, 255), SATURATION, BRIGHTNESS);
     }
     else {
-        // check using hue + sat/brg from color
-//        base = ofColor::fromHsb(ofMap(color_picked.get().getHue(), 0., 1., 0, 255), color_SAT, color_BRG);
+        // check using hue + sat/brg from color ignoring algo panel SV sliders
         base = color_picked.get();
     }
 
@@ -3335,7 +3289,7 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
 //    }
     else if (name == "SIZE COLORS") {
         palettes_resize();
-    } else if (name == "AUTO CREATE!") {
+    } else if (name == "AUTO LIVE MODE") {
         if (bAuto_palette_recall)
             bLock_palette = false;
     } else if (name == "LOCK PALETTES") {
