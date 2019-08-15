@@ -1500,15 +1500,8 @@ void ofxColorManager::gui_imGui_PresetManager() {
 
         if (MODE_newPreset)
         {
-
             ImGui::Separator();
-
-            //TODO
-            //maybe should use 2 different names to presets from kit
-            //or loaded from colour lovers
-
-            ImGui::Text("NEW PRESET");
-            //textInput_New = "new preset";
+            ImGui::Text("NEW PRESET!");
 
             // loaded string into char array
             char tab[32];
@@ -1524,10 +1517,9 @@ void ofxColorManager::gui_imGui_PresetManager() {
             // WORKFLOW: when its editing a new preset..
 
             ImGui::PushID(1);
-
-                int n = 30;
-                float a = ofMap(ofGetFrameNum() % n, 0, n, 0.0f, 1.0f);
-                ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4) ImColor::HSV(0.5, 0.0f, 0.5f, a));
+            int n = 30;
+            float a = ofMap(ofGetFrameNum() % n, 0, n, 0.0f, 1.0f);
+            ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4) ImColor::HSV(0.5, 0.0f, 0.5f, a));
 
             if (ImGui::Button("SAVE NEW")) {
                 MODE_newPreset = false;
