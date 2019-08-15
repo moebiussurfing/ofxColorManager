@@ -1,5 +1,5 @@
 //
-// Created by Manu Molina on 8/6/19.
+// Created by moebiussurfing on 8/6/19.
 //
 
 #ifndef INC_4_COLORMANAGER_DEMO_PALETTE_H
@@ -16,18 +16,11 @@ public:
     void draw();
 
     void clear(){
-
-        // clear DEMO1 objects
         bDEMO1_clear = true;
         pauseCreate = false;
     }
 
     void reStart(){
-//        //TODO
-//        locations.clear();
-//        velocities.clear();
-//        colors.clear();
-
         bDEMO1_clear = true;
         pauseCreate = false;
     }
@@ -51,16 +44,17 @@ public:
         else
             cam.disableMouseInput();
     }
+
     void toggleMouseCamera(){
         if (!cam.getMouseInputEnabled())
             cam.enableMouseInput();
         else
             cam.disableMouseInput();
     }
-    //-
 
 private:
 
+    ofEasyCam cam;
     vector<ofColor> *palette;
 
     // DEMO 1
@@ -70,13 +64,11 @@ private:
     vector<ofColor> colors;
     bool bDEMO1_clear = false;
     bool bDEMO1_stop = false;
-    ofEasyCam cam;
     int iColor = 0;
     bool pauseCreate = false;
 
     // DEMO 2
     bool ENABLE_DEMO2 = true;
 };
-
 
 #endif //INC_4_COLORMANAGER_DEMO_PALETTE_H

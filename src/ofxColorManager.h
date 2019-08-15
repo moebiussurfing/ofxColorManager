@@ -269,9 +269,9 @@ public:
     ofxImGui::Settings mainSettings = ofxImGui::Settings();
 
     bool gui_imGui();
-    void gui_imGui_window1();
+    void gui_imGui_ColorPicker();
     void gui_imGui_window2();
-    void gui_imGui_window3();
+    void gui_imGui_PresetManager();
     void gui_imGui_window4();
     void gui_setup_layout();
     void gui_imGui_theme();
@@ -341,7 +341,17 @@ public:
 
     // PALETTE LIBRARY
 
+#define NUM_COLORS_PANTONE 2310
+//    int palSize = IM_ARRAYSIZE(saved_palette);
+    int palSize = (NUM_COLORS_PANTONE);
+    int rowSizePal = 7;//7 colors per row Pantone lib
+    int numLines = 10;//rows per page
+    int numColorsPage = numLines * rowSizePal;//70
+    int totalNumColors = NUM_COLORS_PANTONE;//pantone
+    int maxPages = totalNumColors / numColorsPage - 1;
+
     int paletteLibPage = 0;
+    ofParameter<int> paletteLibPage_param{"page", 0, 0, maxPages};
 
     //-
 

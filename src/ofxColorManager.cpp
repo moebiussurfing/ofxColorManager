@@ -476,6 +476,7 @@ void ofxColorManager::setup() {
     //    XML_params.add(TEST_MODE);
     XML_params.add(color_backGround_SETAUTO);
     XML_params.add(SHOW_Layout_Gui);
+    XML_params.add(paletteLibPage_param);
 
 
     load_group_XML(XML_params, XML_path);
@@ -877,7 +878,7 @@ void ofxColorManager::interface_draw() {
 
 
 //--------------------------------------------------------------
-void ofxColorManager::gui_imGui_window1() {
+void ofxColorManager::gui_imGui_ColorPicker() {
 
     // 1. COLOR PICKER CUSTOM
 
@@ -914,10 +915,6 @@ void ofxColorManager::gui_imGui_window1() {
 
         // TEST
         static ImVec4 color;
-//        color.x = color_picked.get().r;
-//        color.y = color_picked.get().g;
-//        color.z = color_picked.get().b;
-//        color.w = color_picked.get().a;
         color = color_picked.get();
 
         // TEST
@@ -1006,7 +1003,8 @@ void ofxColorManager::gui_imGui_window1() {
         {
             // 0. custom button color big
 
-            ImGui::PushItemWidth(guiWidth * widgetFactor);
+//            ImGui::PushItemWidth(guiWidth * widgetFactor);
+            ImGui::PushItemWidth(guiWidth * 0.7);
 
             //--
 
@@ -1066,18 +1064,9 @@ void ofxColorManager::gui_imGui_window1() {
 
             // GET COLOR FROM OUTSIDE COLOR PICKED
 
-            // TEST
             LISTEN_isEnabled = false;//maybe required because get() causes callbacks too (?)
-
-            // TEST
             static ImVec4 color;
-//            color.x = color_picked.get().r;
-//            color.y = color_picked.get().g;
-//            color.z = color_picked.get().b;
-//            color.w = color_picked.get().a;
             color = color_picked.get();
-
-            // TEST
             LISTEN_isEnabled = true;
 
             //--
@@ -1088,12 +1077,9 @@ void ofxColorManager::gui_imGui_window1() {
             //const int PaletteSIZE = ColorBrowser_palette.size();//error
 
             //static ImVec4 saved_palette[130];//same than openColor palettes
-            static ImVec4 saved_palette[2310];//same than Pantone palette
+            static ImVec4 saved_palette[NUM_COLORS_PANTONE];//same than Pantone palette
 
             if (!saved_palette_inited)
-                //TODO BUG
-//                for (int n = 0; n < ColorBrowser_palette.size(); n++) {
-
                 for (int n = 0; n < IM_ARRAYSIZE(saved_palette); n++) {
                     ofFloatColor c = ofColor(ColorBrowser_palette[n]);
                     saved_palette[n].x = c.r;
@@ -1102,20 +1088,14 @@ void ofxColorManager::gui_imGui_window1() {
                     saved_palette[n].w = 1.0f;//alpha
                 }
             saved_palette_inited = true;
-
 //                cout << "IM_ARRAYSIZE(saved_palette): "<<ofToString(IM_ARRAYSIZE(saved_palette)) << endl;
+
             //-
 
             // layout by pages groups
-
-            int palSize = IM_ARRAYSIZE(saved_palette);
-            int rowSizePal = 7;//7 colors per row Pantone lib
-            int numLines = 10;//rows per page
-            int numColorsPage = numLines * rowSizePal;//70
             int startColorInPal = paletteLibPage * numColorsPage;
             int endColorInPal = startColorInPal + numColorsPage;
-            int totalNumColors = 2310;//pantone
-            int maxPages = totalNumColors / numColorsPage - 1;
+//            paletteLibPage = paletteLibPage_param.get();
 
             ImGui::Text("PANTONE COLORS");
             ImGui::PushItemWidth(guiWidth * 0.5);
@@ -1123,7 +1103,7 @@ void ofxColorManager::gui_imGui_window1() {
             // load tab2 with lastColorPickedNameColor
             char tab2[32];
             strncpy(tab2, lastColorPickedNameColor.c_str(), sizeof(tab2));
-            tab2[sizeof(tab2) - 1] = 0;
+            tab2[sizeof(tab2)-1] = 0;
             ImGui::Text("%s",tab2);
             ImGui::SliderInt("PAGE", &paletteLibPage, 0, maxPages);
             ImGui::PopItemWidth();
@@ -1214,11 +1194,11 @@ void ofxColorManager::gui_imGui_window2() {
             ImGui::PushItemWidth(120);
 
             static ImVec4 color;
-//            color = color_backGround.get();
-            color.x = color_backGround.get().r;
-            color.y = color_backGround.get().g;
-            color.z = color_backGround.get().b;
-            color.w = color_backGround.get().a;
+            color = color_backGround.get();
+//            color.x = color_backGround.get().r;
+//            color.y = color_backGround.get().g;
+//            color.z = color_backGround.get().b;
+//            color.w = color_backGround.get().a;
 
             // squared box
             ImGuiColorEditFlags colorEdiFlags =
@@ -1303,7 +1283,7 @@ void ofxColorManager::gui_imGui_window2() {
 
 
 //--------------------------------------------------------------
-void ofxColorManager::gui_imGui_window3() {
+void ofxColorManager::gui_imGui_PresetManager() {
 
     // 3. PRESET MANAGER
 
@@ -1564,7 +1544,7 @@ bool ofxColorManager::gui_imGui() {
     // 1. COLOR PICKER
 
     if (SHOW_ColorPicker)
-        gui_imGui_window1();
+        gui_imGui_ColorPicker();
 
     //-
 
@@ -1578,7 +1558,7 @@ bool ofxColorManager::gui_imGui() {
     // 3. PRESET MANAGER
 
     if (SHOW_PresetManager)
-        gui_imGui_window3();
+        gui_imGui_PresetManager();
 
     //-
 
@@ -3039,9 +3019,10 @@ void ofxColorManager::draw() {
         }
 
         // COLOUR LOVERS
-        if (SHOW_ColourLovers) {//TODO
-            draw_ColourLovers();
-        }
+        // debug
+//        if (SHOW_ColourLovers) {
+//            draw_ColourLovers();
+//        }
 
         ofPopMatrix();
         ofPopStyle();
@@ -3844,12 +3825,16 @@ void ofxColorManager::load_group_XML(ofParameterGroup &g, string path) {
     ofXml settings;
     settings.load(path);
     ofDeserialize(settings, g);
+
+    paletteLibPage = paletteLibPage_param.get();
+
 }
 
 
 //--------------------------------------------------------------
 void ofxColorManager::save_group_XML(ofParameterGroup &g, string path) {
     ofLogNotice("ofxColorManager") << "save_group_XML " << path;
+    paletteLibPage_param = paletteLibPage;
     ofXml settings;
     ofSerialize(settings, g);
     settings.save(path);
