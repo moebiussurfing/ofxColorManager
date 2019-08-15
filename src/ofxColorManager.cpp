@@ -577,7 +577,9 @@ void ofxColorManager::gui_setup_layout() {
     // TODO:: add layout json saver like ofxGuiPanels
 
     // global mini pad between panels/objects
-    pad = 2;
+    pad = 0;//between box colors in palettes
+    int padPanels = 2;//between panels mainly in curve tool sections
+
     guiWidth = 200;
 //    box_size = 40;
     box_size = 30;
@@ -617,43 +619,43 @@ void ofxColorManager::gui_setup_layout() {
 
     // gradient-pre curve (bad sorted to the left but anchored to curve..)
     grad_w = box_user_size;
-    grad_x = curveTool_x - (grad_w + pad);
+    grad_x = curveTool_x - (grad_w + padPanels);
     grad_y = curveTool_y;
     grad_h = curveTool_h;
 
     // curve mod slider
-    sliderMod_x = curveTool_x + curveTool_w + pad;
+    sliderMod_x = curveTool_x + curveTool_w + padPanels;
     sliderMod_y = curveTool_y;
     sliderMod_w = box_user_size / 2;
     sliderMod_h = curveTool_h;
 
     // gradient-curved image LUT [referenced to curve pos (vertical)]
-    image_curvedGradient_x = curveTool_w + pad + sliderMod_w + pad;//curveTool +
+    image_curvedGradient_x = curveTool_w + pad + sliderMod_w + padPanels;//curveTool +
     image_curvedGradient_y = 0;//curveTool +
     image_curvedGradient_w = box_user_size;
     image_curvedGradient_h = curveTool_h;
 
     // testing curve widgets
     // curve out slider
-    slider_x = sliderMod_x + pad + image_curvedGradient_w + box_user_size / 2;
+    slider_x = sliderMod_x + padPanels + image_curvedGradient_w + box_user_size / 2;
     slider_y = curveTool_y;
     slider_w = box_user_size / 2;
     slider_h = curveTool_h;
 
     // current color box/bar (the one affected by slider position. just for testing gradient purpose)
-    currColor_x = slider_x + 2 * (slider_w + pad);
+    currColor_x = slider_x + 2 * (slider_w + padPanels);
     currColor_y = curveTool_y;
 
     //-
 
     // user palette (pos related to gradient-pre curve)
-    palette_x = grad_x - (grad_w + pad);
+    palette_x = grad_x - (grad_w + padPanels);
     palette_y = curveTool_y;
 
     // user color box monitor picked (same that color picker gui)
     // bar mode
     color_w = (2 * box_user_size);
-    color_x = palette_x - (color_w + pad + box_user_size / 2 + pad);
+    color_x = palette_x - (color_w + padPanels + box_user_size / 2 + padPanels);
     color_y = curveTool_y;
     color_h = curveTool_h;
     r_color_picked = ofRectangle(color_x, color_y, color_w, color_h);
@@ -661,8 +663,6 @@ void ofxColorManager::gui_setup_layout() {
     //-
 
     // algorithmic palettes
-//    palettes_x = 500;
-//    palettes_y = 320;
     palettes_x = 996;
     palettes_y = 10;
 
@@ -912,12 +912,8 @@ void ofxColorManager::gui_imGui_ColorPicker() {
 
         // TEST
         LISTEN_isEnabled = false;//maybe required because get() causes callbacks too (?)
-
-        // TEST
         static ImVec4 color;
         color = color_picked.get();
-
-        // TEST
         LISTEN_isEnabled = true;
 
         //--
@@ -926,7 +922,7 @@ void ofxColorManager::gui_imGui_ColorPicker() {
 
 //        ImGui::PushItemWidth(guiWidth * widgetFactor);
         int colorW = guiWidth;
-        int colorH = 90;
+        int colorH = 85;
         int misc_flags =    ImGuiColorEditFlags_NoOptions |
                             ImGuiColorEditFlags_NoTooltip;
 
@@ -1004,7 +1000,7 @@ void ofxColorManager::gui_imGui_ColorPicker() {
             // 0. custom button color big
 
 //            ImGui::PushItemWidth(guiWidth * widgetFactor);
-            ImGui::PushItemWidth(guiWidth * 0.75);
+            ImGui::PushItemWidth(guiWidth * 0.80);
 
             //--
 
@@ -1056,8 +1052,6 @@ void ofxColorManager::gui_imGui_ColorPicker() {
 
         // 3. PALETTE LIBRARY
 
-        //TODO BUG CRASH
-
         if (ofxImGui::BeginTree("PALETTE LIBRARY", mainSettings)) {
 //        if (ImGui::CollapsingHeader("PALETTE LIBRARY")) {
             //--
@@ -1098,12 +1092,12 @@ void ofxColorManager::gui_imGui_ColorPicker() {
 //            paletteLibPage = paletteLibPage_param.get();
 
             ImGui::Text("PANTONE COLORS");
-            ImGui::PushItemWidth(guiWidth * 0.5);
 
             // load tab2 with lastColorPickedNameColor
             char tab2[32];
             strncpy(tab2, lastColorPickedNameColor.c_str(), sizeof(tab2));
             tab2[sizeof(tab2)-1] = 0;
+            ImGui::PushItemWidth(guiWidth * 0.5);
             ImGui::Text("%s",tab2);
             ImGui::SliderInt("PAGE", &paletteLibPage, 0, maxPages);
             ImGui::PopItemWidth();
@@ -1113,7 +1107,6 @@ void ofxColorManager::gui_imGui_ColorPicker() {
             // 2.2 draw palette
 
             for (int n = startColorInPal; n < endColorInPal; n++)
-                //for (int n = 0; n < palSize; n++) {
             {
                 if (n < totalNumColors) //to avoid empty colors at page end...
                 {
@@ -1121,22 +1114,25 @@ void ofxColorManager::gui_imGui_ColorPicker() {
                     ImGui::PushID(n);
 
                     // pantone or other must define his better row size
-                    if ((n % rowSizePal) != 0) {
-                        ImGui::SameLine(0.0f, ImGui::GetStyle().ItemSpacing.y);
+                    if ((n%rowSizePal) != 0) {
+                        ImGui::SameLine(0.0f, ImGui::GetStyle().ItemSpacing.y);//vertical inter line
                     }
 
                     // get clicked color
+                    static int colBoxSize = 22;
                     if (ImGui::ColorButton("##palette", saved_palette[n],
-                        ImGuiColorEditFlags_NoAlpha | ImGuiColorEditFlags_NoPicker | ImGuiColorEditFlags_NoTooltip,
-                        ImVec2(20, 20)))
+                        ImGuiColorEditFlags_NoAlpha |
+                        ImGuiColorEditFlags_NoPicker |
+                        ImGuiColorEditFlags_NoTooltip,
+                        ImVec2(colBoxSize, colBoxSize)))
                     {
-                        color = ImVec4(saved_palette[n].x, saved_palette[n].y, saved_palette[n].z, color.w); // Preserve alpha!
-
                         ofLogNotice("ofxColorManager") << "ImGui: PALETTE PICKED !" << endl;
+
+                        color = ImVec4(saved_palette[n].x, saved_palette[n].y, saved_palette[n].z, color.w); // Preserve alpha!
                         color_picked = color;
 
-                        //name
-                        lastColorPickedNameColor = ColorBrowser.pantoneNames[n];
+                        //color name
+                        lastColorPickedNameColor = "'"+ColorBrowser.pantoneNames[n]+"'";
                     }
 
                     //ImGui::PopItemWidth();
@@ -1195,10 +1191,6 @@ void ofxColorManager::gui_imGui_ColorManager() {
 
             static ImVec4 color;
             color = color_backGround.get();
-//            color.x = color_backGround.get().r;
-//            color.y = color_backGround.get().g;
-//            color.z = color_backGround.get().b;
-//            color.w = color_backGround.get().a;
 
             // squared box
             ImGuiColorEditFlags colorEdiFlags =
@@ -3212,6 +3204,8 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
     }
     else if (name == "SHOW COLOUR LOVERS SEARCHER") {
         ColourLoversHelper.setVisibleSearcher(SHOW_ColourLovers_searcher);
+        if (!SHOW_ColourLovers)
+            SHOW_ColourLovers = true;
     }
     else if (name == "SHOW PALETTES") {
         palettes_setVisible(SHOW_AlgoPalettes);
