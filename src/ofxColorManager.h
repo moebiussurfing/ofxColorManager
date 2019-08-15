@@ -331,7 +331,8 @@ public:
 
     // USER PALETTE OF COLORS
 
-    vector<ofColor> palette;
+    vector<ofColor> palette;//main user palette
+
     void palette_addColor(ofColor c);
     void palette_removeColorLast();
     void palette_clear();

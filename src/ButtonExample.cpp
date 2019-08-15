@@ -57,8 +57,6 @@ void ButtonExample::draw()
         ofSetColor(ofColor(ofColor::black, 128));//with alpha
         ofSetLineWidth(1.);
         ofDrawRectangle(1., 1., getWidth()-2., getHeight()-2);
-
-
     }
 }
 
@@ -95,6 +93,7 @@ void ButtonExample::onTouchDown(ofxInterface::TouchEvent &event)
     {
         if (!bIsSelected)
             bIsSelected = true;
+
 //        else
 //            bIsSelected = false;
     }

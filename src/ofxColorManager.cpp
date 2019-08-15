@@ -3287,9 +3287,10 @@ void ofxColorManager::palette_addColor(ofColor c)
     palette_addColor_toInterface(c);
 
     // TODO: BUG
+    // WORKFLOW: select last one, just created now
     if (palette_colorSelected > -1 && bPaletteEdit)
     {
-        palette_colorSelected = palette.size() - 1;//select last one, just created now
+        palette_colorSelected = palette.size() - 1;
     }
 }
 
@@ -3320,9 +3321,13 @@ void ofxColorManager::palette_removeColorLast()
 //--------------------------------------------------------------
 void ofxColorManager::palette_colorTouched(string name)
 {
+    // WORKFLOW: auto set edit mode
+    if (!bPaletteEdit)
+    {
+        bPaletteEdit = true;
+    }
 
     // handle de-select all buttons and select last clicked
-
     for (int i = 0; i < btns_palette.size(); i++)
     {
         if (btns_palette[i]->getName() != name)
@@ -3331,16 +3336,11 @@ void ofxColorManager::palette_colorTouched(string name)
         }
         else
         {
-            btns_palette[i]->setSelected(true);
+            // set this button selected
+            btns_palette[i]->setSelected(true);//sets border only
             palette_colorSelected = i;
             ofLogNotice("ofxColorManager") << "selected color: " << i;
         }
-    }
-
-    // WORKFLOW: auto set edit mode
-    if (!bPaletteEdit)
-    {
-        bPaletteEdit = true;
     }
 }
 
@@ -3482,26 +3482,40 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e)
     }
     else if (name == "EDIT COLOR")
     {
+        if (!bPaletteEdit)
+        {
+            palette_colorSelected = -1;
+        }
+
+        // deselect all color buttons
         for (int i = 0; i < btns_palette.size(); i++)
         {
             if (!bPaletteEdit)
             {
+                // make not selectable all color buttons
                 btns_palette[i]->setSelectable(false);
                 btns_palette[i]->setSelected(false);//deselect each
-                palette_colorSelected = -1;
             }
             else if (bPaletteEdit)
             {
+                // make selectable all color buttons
                 btns_palette[i]->setSelectable(true);
                 btns_palette[i]->setSelected(false);
             }
         }
-        if (bPaletteEdit && btns_palette.size() > 0)
+
+        //TODO
+        if (bPaletteEdit && btns_palette.size() > 0 && palette_colorSelected == -1)
         {
             palette_colorSelected = 0;
-            btns_palette[0]->setSelected(true);
+            btns_palette[palette_colorSelected]->setSelected(true);//sets border only
+
+            //autoload color on picker
+            color_picked = palette[palette_colorSelected];
         }
     }
+
+        //TODO: implement remove selected color.. not lastone only
     else if (name == "REMOVE COLOR")
     {
         if (bRemoveColor)
@@ -4046,21 +4060,22 @@ void ofxColorManager::mousePressed(ofMouseEventArgs &eventArgs)
     const int &x = eventArgs.x;
     const int &y = eventArgs.y;
     const int &button = eventArgs.button;
-    //    ofLogNotice("ofxColorManager") << "mousePressed " <<  x << ", " << y << ", " << button;
+    ofLogNotice("ofxColorManager") << "mousePressed " << x << ", " << y << ", " << button;
 
     TouchManager::one().touchDown(button, ofVec2f(x, y));
 
     //-
 
-    //    if (bPaletteEdit)
-    //    {
-    // filter touch if its an user palette button only
+    // filter touch if its an user palette color box button only
     auto a = TouchManager::one().getComponentUnder(ofVec2f(x, y));
     auto b = a->getName();
-    ofLogVerbose("ofxColorManager") << "touched: " << b;
+    ofLogVerbose("ofxColorManager") << "touched item: " << b;
     auto str = ofSplitString(b, "btn");
 
-    if (str.size() > 1)//check if "btn" is present
+    //check if "btn" label is present to identify item as a color box from user palette
+    //instead of being another item like a palette label or others..
+
+    if (str.size() > 1)
     {
         ofLogVerbose("ofxColorManager") << "detected palette touch: " << b;
         palette_colorTouched(b);
@@ -4069,12 +4084,15 @@ void ofxColorManager::mousePressed(ofMouseEventArgs &eventArgs)
     {
         //ofLogVerbose("ofxColorManager") << "ignored touch: " << b;
     }
-    //    }
 
     //-
 
     // DEMO
-    myDEMO_palette.start();
+
+    if (button == 2)//second button cleans DEMO
+        myDEMO_palette.clear();
+    else
+        myDEMO_palette.start();//trig DEMO start
 }
 
 
@@ -4087,9 +4105,6 @@ void ofxColorManager::mouseReleased(ofMouseEventArgs &eventArgs)
     //    ofLogNotice("ofxColorManager") << "mouseReleased " <<  x << ", " << y << ", " << button;
 
     TouchManager::one().touchUp(button, ofVec2f(x, y));
-
-    //-
-
 }
 
 
