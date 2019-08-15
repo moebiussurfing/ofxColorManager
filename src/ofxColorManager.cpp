@@ -2,7 +2,7 @@
 
 
 //--------------------------------------------------------------
-void ofxColorManager::ColorWheel_setup() {
+void ofxColorManager::palettes_colorTheory_setup() {
 //    group.setName("Color Theory");
 //    group.add(primaryColor.set("Primary Color", ofColor::magenta));
 //    group.add(colorScheme.set("Color Scheme", 6, 0, ColorWheelSchemes::colorSchemes.size() - 1));
@@ -62,7 +62,7 @@ void ofxColorManager::ColorWheel_setup() {
 
 
 //--------------------------------------------------------------
-void ofxColorManager::ColorWheel_update() {
+void ofxColorManager::palettes_colorTheory_update() {
     //TODO
     //reduce callback on every loop frame..
 
@@ -145,7 +145,7 @@ ofxColorManager::~ofxColorManager() {
 
 
 //--------------------------------------------------------------
-void ofxColorManager::files_refresh() {
+void ofxColorManager::preset_filesRefresh() {
     ofDirectory dataDirectory(ofToDataPath("user_kits/presets", true));
 
     files.clear();
@@ -183,7 +183,7 @@ void ofxColorManager::setup() {
 
     // ColorWheel
 
-    ColorWheel_setup();
+    palettes_colorTheory_setup();
 
     //--
 
@@ -479,7 +479,7 @@ void ofxColorManager::setup() {
     XML_params.add(paletteLibPage_param);
 
 
-    load_group_XML(XML_params, XML_path);
+    XML_load_AppSettings(XML_params, XML_path);
 
     //------------------------------------------------
 
@@ -489,7 +489,7 @@ void ofxColorManager::setup() {
 
     // PRESET MANAGER
 
-    files_refresh();
+    preset_filesRefresh();
 
     // TODO
     preset_load(PRESET_name);
@@ -663,7 +663,7 @@ void ofxColorManager::gui_setup_layout() {
     // algorithmic palettes
 //    palettes_x = 500;
 //    palettes_y = 320;
-    palettes_x = 860;
+    palettes_x = 996;
     palettes_y = 10;
 
     // color clicked box on palettes(hidden)
@@ -1151,7 +1151,7 @@ void ofxColorManager::gui_imGui_ColorPicker() {
 
 
 //--------------------------------------------------------------
-void ofxColorManager::gui_imGui_window4() {
+void ofxColorManager::gui_imGui_ControlPanels() {
     // 4. PANELS MANAGER
 
     auto panelsSet = ofxImGui::Settings();
@@ -1176,7 +1176,7 @@ void ofxColorManager::gui_imGui_window4() {
 
 
 //--------------------------------------------------------------
-void ofxColorManager::gui_imGui_window2() {
+void ofxColorManager::gui_imGui_ColorManager() {
 
     // 2. COLOR MANAGER
 
@@ -1447,7 +1447,7 @@ void ofxColorManager::gui_imGui_PresetManager() {
             cout << "PRESET_name: " << PRESET_name << endl;
 
             preset_save(PRESET_name);
-            files_refresh();
+            preset_filesRefresh();
         }
 
         ImGui::SameLine();
@@ -1459,11 +1459,11 @@ void ofxColorManager::gui_imGui_PresetManager() {
 
             //delete old file
             files[currentFile].remove();
-            // files_refresh();
+            // preset_filesRefresh();
 
             //save new one
             preset_save(PRESET_name);
-            files_refresh();
+            preset_filesRefresh();
         }
 
         ImGui::SameLine();
@@ -1480,7 +1480,7 @@ void ofxColorManager::gui_imGui_PresetManager() {
             cout << "DELETE" << endl;
 
             files[currentFile].remove();
-            files_refresh();
+            preset_filesRefresh();
         }
 
         //-
@@ -1520,7 +1520,7 @@ void ofxColorManager::gui_imGui_PresetManager() {
                 MODE_newPreset = false;
                 cout << "textInput_New: " << textInput_New << endl;
                 preset_save(textInput_New);
-                files_refresh();
+                preset_filesRefresh();
             }
 
             ImGui::PopStyleColor(1);
@@ -1551,7 +1551,7 @@ bool ofxColorManager::gui_imGui() {
     // 2. COLORS MANAGER
 
     if (SHOW_ColorManager)
-        gui_imGui_window2();
+        gui_imGui_ColorManager();
 
     //-
 
@@ -1565,7 +1565,7 @@ bool ofxColorManager::gui_imGui() {
     // 4. PANELS MANAGER
 
     if (SHOW_PanelsManager)
-        gui_imGui_window4();
+        gui_imGui_ControlPanels();
 
     //-
 
@@ -1618,7 +1618,7 @@ void ofxColorManager::update() {
     //-
 
     // OFX-COLOR-THEORY ALGORITHMIC PALETTE
-    ColorWheel_update();
+    palettes_colorTheory_update();
 
     //-
 
@@ -1682,7 +1682,7 @@ void ofxColorManager::update() {
 
 
         //TODO
-        ColorWheel_update();
+        palettes_colorTheory_update();
 
         //-
 
@@ -1729,7 +1729,7 @@ void ofxColorManager::update() {
         color_clicked = ofColor(myColor);
 
         //TODO
-        ColorWheel_update();
+        palettes_colorTheory_update();
 
         // 3. auto create user palette from algo palette from colour lover picked color
         if (!ColourLoversHelper.MODE_PickPalette_BACK && ColourLoversHelper.MODE_PickColor_BACK) {
@@ -1831,7 +1831,7 @@ void ofxColorManager::update() {
         }
 
         //TODO
-        ColorWheel_update();
+        palettes_colorTheory_update();
     }
 
     //-
@@ -2599,7 +2599,7 @@ void ofxColorManager::palettes_update() {
 
     // 2. FROM OFX-COLOUR-THEORY
 
-    ColorWheel_update();//TODO: reduce calls...
+    palettes_colorTheory_update();//TODO: reduce calls...
 
     // 0. btns_plt_CT_Analogous
     for (int i = 0; i < btns_plt_CT_Analogous.size(); i++) {
@@ -3021,7 +3021,7 @@ void ofxColorManager::draw() {
         // COLOUR LOVERS
         // debug
 //        if (SHOW_ColourLovers) {
-//            draw_ColourLovers();
+//            colourLovers_drawPreview();
 //        }
 
         ofPopMatrix();
@@ -3053,7 +3053,7 @@ void ofxColorManager::draw() {
     //--
 
     if (SHOW_GUI_MINI) {
-        draw_Palette_MINI();
+        palette_drawMINI();
     }
 
     //--
@@ -3069,7 +3069,7 @@ void ofxColorManager::draw() {
 
 
 //--------------------------------------------------------------
-void ofxColorManager::draw_Palette_MINI() {
+void ofxColorManager::palette_drawMINI() {
     glm::vec2 palettePos;
     int boxW = 40;
     int boxPad = 1;
@@ -3820,21 +3820,21 @@ void ofxColorManager::enableListeners() {
 
 
 //--------------------------------------------------------------
-void ofxColorManager::load_group_XML(ofParameterGroup &g, string path) {
-    ofLogNotice("ofxColorManager") << "load_group_XML " << path;
+void ofxColorManager::XML_load_AppSettings(ofParameterGroup &g, string path) {
+    ofLogNotice("ofxColorManager") << "XML_load_AppSettings " << path;
     ofXml settings;
     settings.load(path);
     ofDeserialize(settings, g);
 
     paletteLibPage = paletteLibPage_param.get();
-
 }
 
 
 //--------------------------------------------------------------
-void ofxColorManager::save_group_XML(ofParameterGroup &g, string path) {
-    ofLogNotice("ofxColorManager") << "save_group_XML " << path;
+void ofxColorManager::XML_save_AppSettings(ofParameterGroup &g, string path) {
+    ofLogNotice("ofxColorManager") << "XML_save_AppSettings " << path;
     paletteLibPage_param = paletteLibPage;
+
     ofXml settings;
     ofSerialize(settings, g);
     settings.save(path);
@@ -3852,13 +3852,12 @@ void ofxColorManager::update_color_picked_CHANGES() {
 
     color_clicked.set(color_picked);//TODO: mirror clicked/picked colors
 
-
     //-
 
     //TODO
     // palettes
 //    primaryColor.set(color_picked.get());
-    ColorWheel_update();
+    palettes_colorTheory_update();
 
     //--
 
@@ -3892,7 +3891,7 @@ void ofxColorManager::update_color_picked_CHANGES() {
 //    //TODO
 //    // palettes
 ////    primaryColor.set(color_picked.get());
-//    ColorWheel_update();
+//    palettes_colorTheory_update();
 }
 
 
@@ -3981,7 +3980,7 @@ void ofxColorManager::setBackground_ENABLE(bool b) {
 
 
 //--------------------------------------------------------------
-void ofxColorManager::draw_previewGradient(glm::vec2 pos, bool horizontal = true) {
+void ofxColorManager::gradient_drawPreview(glm::vec2 pos, bool horizontal = true) {
 
     if (horizontal) {
         curve_img_gradient.draw(pos);
@@ -4007,7 +4006,7 @@ void ofxColorManager::setVisible_debugText(bool b) {
 
 
 //--------------------------------------------------------------
-void ofxColorManager::draw_ColourLovers() {
+void ofxColorManager::colourLovers_drawPreview() {
 
     // preview receivers
 
@@ -4070,7 +4069,7 @@ void ofxColorManager::exit() {
 
     //    palette_save("myPalette");
 
-    save_group_XML(XML_params, XML_path);
+    XML_save_AppSettings(XML_params, XML_path);
 
     ColorBrowser.exit();
     ColourLoversHelper.exit();

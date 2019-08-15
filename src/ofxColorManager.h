@@ -43,8 +43,8 @@ public:
 
     // ColorWheelSchemes
 
-    void ColorWheel_setup();
-    void ColorWheel_update();
+    void palettes_colorTheory_setup();
+    void palettes_colorTheory_update();
 //    void ColorWheel_draw();
 
 //    shared_ptr<ColorWheelScheme> scheme;
@@ -119,7 +119,7 @@ public:
 
     // COLOUR LOVERS
 
-    void draw_ColourLovers();
+    void colourLovers_drawPreview();
 
     ofxColourLoversHelper ColourLoversHelper;
     string myPalette_Name = "";
@@ -179,8 +179,8 @@ public:
     void setVisible(bool b);
     void setVisible_GUI_MINI(bool b);
     void setVisible_debugText(bool b);
-    void draw_Palette_MINI();
-    void draw_previewGradient(glm::vec2 pos, bool horizontal);
+    void palette_drawMINI();
+    void gradient_drawPreview(glm::vec2 pos, bool horizontal);
     void disableListeners();
     void enableListeners();
 
@@ -270,9 +270,9 @@ public:
 
     bool gui_imGui();
     void gui_imGui_ColorPicker();
-    void gui_imGui_window2();
+    void gui_imGui_ColorManager();
     void gui_imGui_PresetManager();
-    void gui_imGui_window4();
+    void gui_imGui_ControlPanels();
     void gui_setup_layout();
     void gui_imGui_theme();
 
@@ -455,7 +455,7 @@ public:
 
     // FILES
 
-    void files_refresh();
+    void preset_filesRefresh();
     std::vector<std::string> fileNames;
     std::vector<ofFile> files;
     int currentFile = 0;
@@ -465,8 +465,8 @@ public:
 
     // APP SETTINGS XML
 
-    void save_group_XML(ofParameterGroup &g, string path);
-    void load_group_XML(ofParameterGroup &g, string path);
+    void XML_save_AppSettings(ofParameterGroup &g, string path);
+    void XML_load_AppSettings(ofParameterGroup &g, string path);
     ofParameterGroup XML_params;
     string XML_path = "ofxColorManager.xml";
 
