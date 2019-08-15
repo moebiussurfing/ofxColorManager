@@ -16,12 +16,18 @@ public:
     void draw();
 
     void clear(){
+
         // clear DEMO1 objects
         bDEMO1_clear = true;
         pauseCreate = false;
     }
 
-    void restart(){
+    void reStart(){
+//        //TODO
+//        locations.clear();
+//        velocities.clear();
+//        colors.clear();
+
         bDEMO1_clear = true;
         pauseCreate = false;
     }
@@ -39,6 +45,18 @@ public:
         palette = &_palette;
     }
 
+    void setEnableMouseCamera(bool b){
+        if (b)
+            cam.enableMouseInput();
+        else
+            cam.disableMouseInput();
+    }
+    void toggleMouseCamera(){
+        if (!cam.getMouseInputEnabled())
+            cam.enableMouseInput();
+        else
+            cam.disableMouseInput();
+    }
     //-
 
 private:

@@ -30,39 +30,32 @@ void DEMO_palette::update() {
 // DEMO 1 - CIRCLES
 
     if (bDEMO1_clear)
-//    if (bDEMO1_clear || locations.size()>10)
     {
         bDEMO1_clear = false;
-        locations.clear();
-        velocities.clear();
-        colors.clear();
+        this->locations.clear();
+        this->velocities.clear();
+        this->colors.clear();
     }
 
-//        int bloquer = locations.size()>10
     ofColor color;
 
 // 1. create circle every x frames
-    int frameCurrent = ofGetFrameNum() % 5;//speed retrig
+    int frameCurrent = ofGetFrameNum()%5;//speed retrig
     if (frameCurrent == 0 && !pauseCreate) {
 
 //            // 2. create circle with randomly frequency
 //        if ((ofRandom(100) < 50) && !pauseCreate) {
-//        if ((ofRandom(100) < 5) && !pauseCreate) {
-//        if (ofRandom(100) < 50) {//prob speed?
-//        if (ofRandom(100) < 80) {//prob speed?
 
         glm::vec2 startPos;
 //        glm::vec2 mousePos = glm::vec2(ofGetMouseX(), ofGetMouseY()) - glm::vec2(ofGetWidth() * 0.5, ofGetHeight() * 0.5);
 //        startPos = mousePos;
-
         startPos = glm::vec2(0, 0);
 
         this->locations.push_back(startPos);
 
-// randomize each circle/color speed
+        // randomize each circle/color speed
         this->velocities.push_back(glm::normalize(glm::vec2(ofRandom(-1, 1), ofRandom(-1, 1))) * 2);
 
-//        if (iColor == palette.size() - 1)
         if (iColor == palette->size() - 1)
             pauseCreate = true;
 
@@ -80,11 +73,7 @@ void DEMO_palette::update() {
             color.set(ofColor(ofRandom(255)));
         }
 
-        //TODO
-//        color.set(ofRandom(255), ofRandom(255), ofRandom(255));
-
         iColor++;
-//        int palSize = palette.size();
         int palSize = palette->size();
         iColor = iColor % palSize;
 
@@ -99,13 +88,13 @@ void DEMO_palette::update() {
 //            this->velocities.push_back(glm::normalize( glm::vec2(palSize/(float)iColor * ofRandom(-1, 1), ofRandom(-1, 1)) ));
     }
 
-    for (int i = this->locations.size() - 1; i > -1; i--) {
+    //update circles speeds
+    for (int i = this->locations.size()-1; i>-1; i--) {
 
         this->locations[i] += this->velocities[i];
 
-// distance to erase circles outside screen
+        // distance to erase circles outside screen
         int maxCirclesDist = 1440;
-
         if (glm::length(this->locations[i]) > maxCirclesDist) {
 
             this->locations.erase(this->locations.begin() + i);

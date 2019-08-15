@@ -37,6 +37,8 @@ public:
 
     string lastColorPickedNameColor = "";
 
+    string textInput_New = "new preset";
+
     //-
 
     // ColorWheelSchemes
@@ -240,6 +242,12 @@ public:
     ofParameter<bool> bAuto_palette_recall;//trig last used algo palette on click or change color
     ofParameter<bool> bLock_palette;
 
+    //TODO
+    void palettes_setPosition(glm::vec2 pos)
+    {
+        palettes_x = pos.x;
+        palettes_y = pos.y;
+    }
     void palettes_setup();
     void palettes_setup_labels();
     void palettes_update();
