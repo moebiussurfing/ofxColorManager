@@ -505,8 +505,8 @@ void ofxColorManager::setup() {
     SHOW_ALL_GUI.setName("SHOW_ALL_GUI");
     SHOW_UserPalette.setName("SHOW_UserPalette");
     SHOW_GUI_MINI.setName("SHOW_GUI_MINI");
-    SHOW_debugText.setName("SHOW_debugText");
-    SHOW_TEST_Curve.setName("SHOW_TEST_Curve");
+    SHOW_debugText.setName("SHOW debug");
+    SHOW_TEST_Curve.setName("SHOW TEST CURVE");
 
     // ofxGuiPanelsLayout
 
@@ -1004,7 +1004,7 @@ void ofxColorManager::gui_imGui_ColorPicker() {
             // 0. custom button color big
 
 //            ImGui::PushItemWidth(guiWidth * widgetFactor);
-            ImGui::PushItemWidth(guiWidth * 0.7);
+            ImGui::PushItemWidth(guiWidth * 0.75);
 
             //--
 
@@ -1873,7 +1873,7 @@ void ofxColorManager::curveTool_setup() {
     curveMod = 0.5;
     curveMod_Slider.setup(sliderMod_x, sliderMod_y, sliderMod_w, sliderMod_h, 0., 1., 0, true, false);
     curveMod_Slider.setPercent(curveMod);
-    curveMod_Slider.setVisible(SHOW_TEST_Curve);
+    curveMod_Slider.setVisible(SHOW_Curve);
     //    curve_pos_slider.setLabelString("input");
 }
 
@@ -2306,7 +2306,7 @@ void ofxColorManager::palettes_setup_labels() {
         btn->setPosition(x0, y0 + p * btn_plt_h);
         btn->setBGColor(btn_plt_c);
         btn->setLabelColor(ofColor::white);
-        btn->setBorderColor(ofColor::white);
+        btn->setBorderColor(ofColor(128));
         btn->setBorder(false);
         scene->addChild(btn);
         btns_plt_Selector.push_back(btn);
@@ -2369,7 +2369,7 @@ void ofxColorManager::palettes_setup_labels() {
         btn->setPosition(x0, y0 + p * btn_plt_h);
         btn->setBGColor(btn_plt_c);
         btn->setLabelColor(ofColor::white);
-        btn->setBorderColor(ofColor::white);
+        btn->setBorderColor(ofColor(128));
         btn->setBorder(false);
         scene->addChild(btn);
         btns_plt_Selector.push_back(btn);
@@ -3209,15 +3209,20 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
 
     if (name == "SHOW COLOUR LOVERS") {
         ColourLoversHelper.setVisible(SHOW_ColourLovers);
-    } else if (name == "SHOW COLOUR LOVERS SEARCHER") {
+    }
+    else if (name == "SHOW COLOUR LOVERS SEARCHER") {
         ColourLoversHelper.setVisibleSearcher(SHOW_ColourLovers_searcher);
-    } else if (name == "SHOW PALETTES") {
+    }
+    else if (name == "SHOW PALETTES") {
         palettes_setVisible(SHOW_AlgoPalettes);
-    } else if (name == "SHOW BROWSER COLORS") {
+    }
+    else if (name == "SHOW BROWSER COLORS") {
         ColorBrowser.setVisible(SHOW_BrowserColors);
-    } else if (name == "SHOW CURVE TOOL") {
+    }
+    else if (name == "SHOW CURVE TOOL") {
         curveMod_Slider.setVisible(SHOW_Curve);
-    } else if (name == "SHOW TEST CURVE") {
+    }
+    else if (name == "SHOW TEST CURVE") {
         curve_pos_slider.setVisible(SHOW_TEST_Curve);
     }
 

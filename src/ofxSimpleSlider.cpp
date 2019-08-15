@@ -67,7 +67,7 @@ void ofxSimpleSlider::setLabelString (string str){
 //----------------------------------------------------
 void ofxSimpleSlider::draw(ofEventArgs& event){
 
-    if (SHOW_ALL_GUI) {
+    if (isEnabled) {
 
         ofPushStyle();
 
@@ -183,42 +183,51 @@ void ofxSimpleSlider::setNumberDisplayPrecision(int prec){
 		
 //----------------------------------------------------
 void ofxSimpleSlider::mouseMoved(ofMouseEventArgs& event){
-	bHasFocus = false;
+	if (isEnabled)
+		bHasFocus = false;
 }
 void ofxSimpleSlider::mouseDragged(ofMouseEventArgs& event){
-	if (bHasFocus){
-		updatePercentFromMouse (event.x, event.y); 
+	if (isEnabled) {
+		if (bHasFocus) {
+			updatePercentFromMouse(event.x, event.y);
+		}
 	}
 }
 void ofxSimpleSlider::mousePressed(ofMouseEventArgs& event){
-	bHasFocus = false;
-	if (box.inside(event.x, event.y)){
-		bHasFocus = true;
-		updatePercentFromMouse (event.x, event.y); 
+	if (isEnabled) {
+		bHasFocus = false;
+		if (box.inside(event.x, event.y)) {
+			bHasFocus = true;
+			updatePercentFromMouse(event.x, event.y);
+		}
 	}
 }
 void ofxSimpleSlider::mouseReleased(ofMouseEventArgs& event){
-	if (bHasFocus){
-		if (box.inside(event.x, event.y)){
-			updatePercentFromMouse (event.x, event.y); 
+	if (isEnabled) {
+		if (bHasFocus) {
+			if (box.inside(event.x, event.y)) {
+				updatePercentFromMouse(event.x, event.y);
+			}
 		}
+		bHasFocus = false;
 	}
-	bHasFocus = false;
 }
 
 //----------------------------------------------------
 void ofxSimpleSlider::updatePercentFromMouse (int mx, int my){
-	// Given the mouse value, compute the percentage.
-	if (bVertical){
-		percent = ofMap(my, y, y+height, 1,0, true);
-	} else {
-		percent = ofMap(mx, x, x+width,  0,1, true);
+	if (isEnabled) {
+		// Given the mouse value, compute the percentage.
+		if (bVertical) {
+			percent = ofMap(my, y, y + height, 1, 0, true);
+		} else {
+			percent = ofMap(mx, x, x + width, 0, 1, true);
+		}
 	}
 }
 
 //--------------------------------------------------------------
 void ofxSimpleSlider::setVisible(bool b)
 {
-    SHOW_ALL_GUI = b;
+    isEnabled = b;
 }
 

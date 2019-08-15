@@ -37,7 +37,7 @@ public:
     void setLabelString (string str);
     void updatePercentFromMouse(int mx, int my);
 
-    bool SHOW_ALL_GUI = true;
+    bool isEnabled = true;
     void setVisible(bool b);
 
 protected:
