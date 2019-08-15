@@ -947,14 +947,13 @@ void ofxColorManager::gui_imGui_ColorPicker() {
 
 //        if (ofxImGui::BeginTree("COLOR", mainSettings))
         if (ImGui::CollapsingHeader("COLOR")) {
-//            ImGui::PushItemWidth(guiWidth * 0.77);
+            ImGui::PushItemWidth(guiWidth * 0.90);
 
             // TODO: SHOULD APPLY HSV HERE, NOT INTO CALLBACK, BECAUSE IT WILL TRIG
             // THE COLOR PICKED UPDATING CALLBACK!!!
 
             // TEST
-            LISTEN_isEnabled = false;
-
+            LISTEN_isEnabled = false; //disable callbacks
             if (ofxImGui::AddParameter(this->color_HUE)) {
                 ofLogNotice("ofxColorManager") << "ImGui: HUE MOVED !" << endl;
                 ofColor c;
@@ -979,15 +978,13 @@ void ofxColorManager::gui_imGui_ColorPicker() {
                 color_picked.set(c);
                 update_color_picked_CHANGES();
             }
-
-            // TEST
             LISTEN_isEnabled = true;
-
-            //-
 
             ofxImGui::AddParameter(this->bRandomColor);
 
-//            ImGui::PopItemWidth();
+            //-
+
+            ImGui::PopItemWidth();
 //            ofxImGui::EndTree(mainSettings);
         }
 
@@ -1096,13 +1093,39 @@ void ofxColorManager::gui_imGui_ColorPicker() {
             strncpy(tab2, lastColorPickedNameColor.c_str(), sizeof(tab2));
             tab2[sizeof(tab2)-1] = 0;
             ImGui::PushItemWidth(guiWidth * 0.5);
-            ImGui::Text("%s",tab2);
-            ImGui::SliderInt("PAGE", &paletteLibPage, 0, maxPages);
+            ImGui::Text("%s",tab2);//color name label
+
+            //-
+
+            // arrow buttons
+            float spacing = ImGui::GetStyle().ItemInnerSpacing.x;
+//            ImGui::SameLine();
+            ImGui::PushButtonRepeat(true);
+            // prev
+            if (ImGui::ArrowButton("##left", ImGuiDir_Left)) {
+                if (paletteLibPage > 0) {
+                    paletteLibPage--;
+                }
+            }
+            // next
+            ImGui::SameLine(0.0f, spacing);
+            if (ImGui::ArrowButton("##right", ImGuiDir_Right)) {
+                if (paletteLibPage < maxPages) {
+                    paletteLibPage++;
+                }
+            }
+            ImGui::PopButtonRepeat();
+            ImGui::SameLine();
+
+            //-
+
+            ImGui::SameLine();
+            ImGui::SliderInt("PAGE", &paletteLibPage, 0, maxPages);//page slider selector
             ImGui::PopItemWidth();
 
             //-
 
-            // 2.2 draw palette
+            // 2.2 draw all palette colors grid
 
             for (int n = startColorInPal; n < endColorInPal; n++)
             {
@@ -1111,7 +1134,7 @@ void ofxColorManager::gui_imGui_ColorPicker() {
                     // ImGui::PushItemWidth(guiWidth * 0.2);
                     ImGui::PushID(n);
 
-                    // pantone or other must define his better row size
+                    // PANTONE or other must define his better row size
                     if ((n%rowSizePal) != 0) {
                         ImGui::SameLine(0.0f, ImGui::GetStyle().ItemSpacing.y);//vertical inter line
                     }
