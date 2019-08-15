@@ -749,35 +749,33 @@ void ofxColorManager::gui_imGui_theme() {
 
 //--------------------------------------------------------------
 void ofxColorManager::palette_rearrenge() {
-    ofLogNotice("ofxColorManager:palette_rearrenge");
     ofLogNotice("ofxColorManager:palette_rearrenge") << "btns_palette.size():" << btns_palette.size();
 
     // re-arrenge all resized boxes
+    // used when changed palette size
 
     std::string name;
-    int x, y, w, h, hTotal;
+    int x, y, w, hTotal;
+    float h;
     x = palette_x;
     w = box_user_size;
     int numBtns = btns_palette.size();
     hTotal = curveTool_h;
-    h = hTotal / (float)numBtns;
-    bool flipBtn = true;
+    h = hTotal/(float)numBtns;
+    bool flipBtn = true;//flip color sorting
 
-    for (int i = 0; i < numBtns; i++) {
-        name = "btn" + ofToString(i);
-        //cout << name << endl;
+    for (int i = 0; i<numBtns; i++) {
+        name = "btn"+ofToString(i);
         auto a = scene->getChildWithName(name, 1000);
 
         if (flipBtn)
-            y = palette_y + (numBtns - i - 1) * h;
+            y = palette_y + (numBtns-i-1) * h;
         else
-            y = palette_y + i * h;
+            y = palette_y + i*h;
 
         a->setPosition(x, y);
         a->setSize(w, h);
     }
-
-    ofLogNotice("ofxColorManager:palette_rearrenge") << "btns_palette.size():" << btns_palette.size();
 }
 
 
@@ -795,7 +793,7 @@ void ofxColorManager::palette_addColor_toInterface(ofColor c) {
     btn->setLocked(true);//avoid dragging
     btn->setName("btn" + ofToString(i));
 
-    //temp positions
+    //temp positions that we re positioned
     btn->setPosition(palette_x, palette_y + box_user_size+pad + i * (box_user_size+pad));
     btn->setSize(box_user_size, box_user_size);
 
@@ -3204,7 +3202,7 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e) {
     }
     else if (name == "SHOW COLOUR LOVERS SEARCHER") {
         ColourLoversHelper.setVisibleSearcher(SHOW_ColourLovers_searcher);
-        if (!SHOW_ColourLovers)
+        if (SHOW_ColourLovers_searcher && !SHOW_ColourLovers)
             SHOW_ColourLovers = true;
     }
     else if (name == "SHOW PALETTES") {
