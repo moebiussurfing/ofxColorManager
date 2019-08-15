@@ -1630,11 +1630,6 @@ void ofxColorManager::update() {
 
     //-
 
-    // OFX-COLOR-THEORY ALGORITHMIC PALETTE
-    palettes_colorTheory_update();
-
-    //-
-
     // PRESET MANAGER
 
     //myPresetPalette.update();
@@ -1693,9 +1688,10 @@ void ofxColorManager::update() {
         // 1. get palette colors from colour lovers
         palette_load_ColourLovers();
 
-
-        //TODO
-        palettes_colorTheory_update();
+        // OFX-COLOR-THEORY ALGORITHMIC PALETTE
+//        palettes_colorTheory_update();
+        // OFX-COLOR-PALETTE
+//        palettes_update();
 
         //-
 
@@ -1730,7 +1726,7 @@ void ofxColorManager::update() {
         bUpdated_Color_BACK = false;
         ofLogWarning("ofxColorManager") << "update:bUpdated_Color_BACK: " << bUpdated_Color_BACK;
 
-        // workflow: TODO: disable to avoid overwrite the selected color into the palette just created
+        // WORKFLOW: TODO: disable to avoid overwrite the selected color into the palette just created
         if (ColourLoversHelper.MODE_PickPalette_BACK &&
             ColourLoversHelper.MODE_PickColor_BACK) {
             if (bPaletteEdit) {
@@ -1742,7 +1738,10 @@ void ofxColorManager::update() {
         color_clicked = ofColor(myColor);
 
         //TODO
-        palettes_colorTheory_update();
+        // OFX-COLOR-THEORY ALGORITHMIC PALETTE
+//        palettes_colorTheory_update();
+        // OFX-COLOR-PALETTE
+//        palettes_update();
 
         // 3. auto create user palette from algo palette from colour lover picked color
         if (!ColourLoversHelper.MODE_PickPalette_BACK && ColourLoversHelper.MODE_PickColor_BACK) {
@@ -1844,7 +1843,9 @@ void ofxColorManager::update() {
         }
 
         //TODO
-        palettes_colorTheory_update();
+//        palettes_colorTheory_update();
+        // OFX-COLOR-PALETTE
+//        palettes_update();
     }
 
     //-
@@ -2546,10 +2547,13 @@ void ofxColorManager::palettes_update() {
     ofColor base;
     if (!MODE_Palette) {
         // using hue only from picked color and sat/(brg from sliders
+        //TODO: should use direct color get, not from hsb...
         base = ofColor::fromHsb(ofMap(color_picked.get().getHue(), 0., 1., 0, 255), SATURATION, BRIGHTNESS);
-    } else {
+    }
+    else {
         // check using hue + sat/brg from color
-        base = ofColor::fromHsb(ofMap(color_picked.get().getHue(), 0., 1., 0, 255), color_SAT, color_BRG);
+//        base = ofColor::fromHsb(ofMap(color_picked.get().getHue(), 0., 1., 0, 255), color_SAT, color_BRG);
+        base = color_picked.get();
     }
 
     complement.setBaseColor(base);
