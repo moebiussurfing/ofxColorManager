@@ -8,8 +8,10 @@
 #include "ofxColourLoversHelper.h"
 #include "ColorWheelScheme.h"
 #include "ColorWheelSchemes.h"
+
 using namespace ofxColorTheory;
 using namespace std;
+
 #include "ofxCurvesTool.h"
 #include "ofxSimpleSlider.h"
 
@@ -29,7 +31,8 @@ using namespace std;
 
 //--
 
-class ofxColorManager {
+class ofxColorManager
+{
 
 public:
 
@@ -45,17 +48,17 @@ public:
 
     void palettes_colorTheory_setup();
     void palettes_colorTheory_update();
-//    void ColorWheel_draw();
+    //    void ColorWheel_draw();
 
-//    shared_ptr<ColorWheelScheme> scheme;
-//    vector<ofColor> colors;
-//
-//    ofxPanel panel;
-//    ofParameterGroup group;
+    //    shared_ptr<ColorWheelScheme> scheme;
+    //    vector<ofColor> colors;
+    //
+    //    ofxPanel panel;
+    //    ofParameterGroup group;
     ofParameter<ofColor> primaryColor;
-//    ofParameter<int> colorScheme;
-//    ofParameter<string> colorSchemeName;
-//    ofParameter<int> numColors;
+    //    ofParameter<int> colorScheme;
+    //    ofParameter<string> colorSchemeName;
+    //    ofParameter<int> numColors;
 
     string scheme_Analogous_name;
     string scheme_Complementary_name;
@@ -248,6 +251,7 @@ public:
         palettes_x = pos.x;
         palettes_y = pos.y;
     }
+
     void palettes_setup();
     void palettes_setup_labels();
     void palettes_update();
@@ -283,8 +287,8 @@ public:
     ofParameter<ofFloatColor> color_backGround;//main color
     ofParameter<bool> color_backGround_SET;
     ofParameter<bool> color_backGround_SETAUTO;
-//    ofParameter<float> backgroundDarkness{"DARKNESS", 0.5, 0., 1.};
-//    float backgroundDarkness_PRE;
+    //    ofParameter<float> backgroundDarkness{"DARKNESS", 0.5, 0., 1.};
+    //    float backgroundDarkness_PRE;
 
     bool backgroundENABLE = false;
 
@@ -342,7 +346,7 @@ public:
     // PALETTE LIBRARY
 
 #define NUM_COLORS_PANTONE 2310
-//    int palSize = IM_ARRAYSIZE(saved_palette);
+    //    int palSize = IM_ARRAYSIZE(saved_palette);
     int palSize = (NUM_COLORS_PANTONE);
     int rowSizePal = 7;//7 colors per row Pantone lib
     int numLines = 10;//rows per page
@@ -374,8 +378,8 @@ public:
     vector<ButtonExample *> btns_plt_MonoSat;     // 5
     vector<ButtonExample *> btns_plt_MonoBrgt;    // 6
     vector<ButtonExample *> btns_plt_Analog;      // 7
-//    vector<ButtonExample *> btns_plt_Random;    // 8
-//    int NUM_PALETTES = 8;
+    //    vector<ButtonExample *> btns_plt_Random;    // 8
+    //    int NUM_PALETTES = 8;
     int NUM_PALETTES = 7;//without random
 
     // colour theory color palettes
@@ -389,8 +393,8 @@ public:
     vector<ButtonExample *> btns_plt_CT_Tetrad;
     int NUM_CT_PALETTES = 8;
 
-//    int NUM_TOTAL_PALETTES = 16;//TODO
-    int NUM_TOTAL_PALETTES = NUM_PALETTES+NUM_CT_PALETTES;//TODO //without random
+    //    int NUM_TOTAL_PALETTES = 16;//TODO
+    int NUM_TOTAL_PALETTES = NUM_PALETTES + NUM_CT_PALETTES;//TODO //without random
 
     // pointer back link the outside (ofApp) variable
     vector<ButtonPaletteSelector *> btns_plt_Selector; // 1-8
