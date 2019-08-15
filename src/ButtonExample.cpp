@@ -31,17 +31,16 @@ void ButtonExample::update()
 
 void ButtonExample::draw()
 {
-    // filled color box
+    // 1. filled color box
     ofSetColor(color_picked);
     ofFill();
     ofDrawRectangle(0, 0, getWidth(), getHeight());
 
-    //draw border
+    // 2. draw border
     ofNoFill();
     ofSetColor(color_border);
     ofSetLineWidth(1.);
     ofDrawRectangle(1., 1., getWidth()-2., getHeight()-2);
-
 
 //	// draw the touch anchor
 //	if (bTouched) {
@@ -50,7 +49,7 @@ void ButtonExample::draw()
 //		ofDrawEllipse(touchAnchor, 10, 10);
 //	}
 
-    // draw border
+    // 3. when selected draw border ?
     if (bIsSelected)
     {
         ofNoFill();

@@ -338,7 +338,7 @@ public:
     void palette_clear();
     void palette_addColor_toInterface(ofColor c);
     void palette_rearrenge();//resize boxes when adding removing colors to user palette
-    void palette_colorTouched(string name);
+    void palette_touchedColor(string name);
     void palette_recallFromPalettes(int p);
     void palette_load_ColourLovers();
 

@@ -400,6 +400,7 @@ void ofxColorManager::setup()
     params_control.add(SHOW_ColorManager);
     params_control.add(SHOW_ColorPicker);
     params_control.add(SHOW_PanelsManager);
+    params_control.add(SHOW_UserPalette);
 
     SHOW_ALL_GUI = true;
     SHOW_debugText = false;
@@ -462,6 +463,7 @@ void ofxColorManager::setup()
     XML_params.add(SHOW_ColorManager);
     XML_params.add(SHOW_ColorPicker);
     XML_params.add(SHOW_PanelsManager);
+    XML_params.add(SHOW_UserPalette);
 
     XML_params.add(SHOW_ColourLovers_searcher);
     XML_params.add(SHOW_ColourLovers);
@@ -470,7 +472,6 @@ void ofxColorManager::setup()
     XML_params.add(SHOW_Curve);
     XML_params.add(SHOW_TEST_Curve);//curve tool
     XML_params.add(SHOW_BrowserColors);
-    //    XML_params.add(SHOW_PaletteCustom);
 
     XML_params.add(color_picked);
     XML_params.add(color_backGround);
@@ -483,11 +484,10 @@ void ofxColorManager::setup()
     XML_params.add(SATURATION);
     XML_params.add(gradient_hard);//gradient
     XML_params.add(bAuto_palette_recall);
-    //    XML_params.add(TEST_MODE);
     XML_params.add(color_backGround_SETAUTO);
     XML_params.add(SHOW_Layout_Gui);
     XML_params.add(paletteLibPage_param);
-
+    //    XML_params.add(TEST_MODE);
 
     XML_load_AppSettings(XML_params, XML_path);
 
@@ -513,7 +513,7 @@ void ofxColorManager::setup()
     // ofxGuiPanelsLayout
 
     SHOW_ALL_GUI.setName("SHOW_ALL_GUI");
-    SHOW_UserPalette.setName("SHOW_UserPalette");
+    SHOW_UserPalette.setName("SHOW USER PALETTE");
     SHOW_GUI_MINI.setName("SHOW_GUI_MINI");
     SHOW_debugText.setName("SHOW debug");
     SHOW_TEST_Curve.setName("SHOW TEST CURVE");
@@ -770,18 +770,25 @@ void ofxColorManager::palette_rearrenge()
 
     std::string name;
     int x, y, w, hTotal;
-    float h;
+    float h;//of each button
     x = palette_x;
     w = box_user_size;
     int numBtns = btns_palette.size();
     hTotal = curveTool_h;
     h = hTotal / (float) numBtns;
-    bool flipBtn = true;//flip color sorting
 
+    //TODO: improve boxes borders and padding...
+    //int pad = 1;
+    //h = (hTotal / (float) numBtns) - pad;
+
+    bool flipBtn = true;//flip color sorting
     for (int i = 0; i < numBtns; i++)
     {
         name = "btn" + ofToString(i);
         auto a = scene->getChildWithName(name, 1000);
+
+        //TODO: could get num childres instead of using 1000
+        //auto a = scene->getChildWithName(name, scene->getNumChildren());
 
         if (flipBtn)
             y = palette_y + (numBtns - i - 1) * h;
@@ -807,7 +814,7 @@ void ofxColorManager::palette_addColor_toInterface(ofColor c)
     btn->setup_colorBACK(color_clicked);
     btn->setSelectable(false);//to enable border draw
     btn->setLocked(true);//avoid dragging
-    btn->setName("btn" + ofToString(i));
+    btn->setName("btn" + ofToString(i));// "btn" is the label for user palette color boxes
 
     //temp positions that we re positioned
     btn->setPosition(palette_x, palette_y + box_user_size + pad + i * (box_user_size + pad));
@@ -954,7 +961,7 @@ void ofxColorManager::gui_imGui_ColorPicker()
         int misc_flags = ImGuiColorEditFlags_NoOptions |
             ImGuiColorEditFlags_NoTooltip;
 
-        ImGui::ColorButton("MyColor##3", *(ImVec4 *) &color, misc_flags,
+        ImGui::ColorButton("MyColor##3", *(ImVec4 * ) & color, misc_flags,
             ImVec2(colorW, colorH));
         //        ImGui::PopItemWidth();
 
@@ -976,7 +983,7 @@ void ofxColorManager::gui_imGui_ColorPicker()
 
         // 2. COLOR HSB
 
-        //        if (ofxImGui::BeginTree("COLOR", mainSettings))
+        //if (ofxImGui::BeginTree("COLOR", mainSettings))
         if (ImGui::CollapsingHeader("COLOR"))
         {
             ImGui::PushItemWidth(guiWidth * 0.90);
@@ -1020,7 +1027,7 @@ void ofxColorManager::gui_imGui_ColorPicker()
             //-
 
             ImGui::PopItemWidth();
-            //            ofxImGui::EndTree(mainSettings);
+            //ofxImGui::EndTree(mainSettings);
         }
 
         //-
@@ -1029,7 +1036,7 @@ void ofxColorManager::gui_imGui_ColorPicker()
         {
             // 0. custom button color big
 
-            //            ImGui::PushItemWidth(guiWidth * widgetFactor);
+            //ImGui::PushItemWidth(guiWidth * widgetFactor);
             ImGui::PushItemWidth(guiWidth * 0.80);
 
             //--
@@ -1074,7 +1081,7 @@ void ofxColorManager::gui_imGui_ColorPicker()
 
             //-
 
-            //            ofxImGui::AddParameter(this->SHOW_PaletteCustom);
+            //ofxImGui::AddParameter(this->SHOW_PaletteCustom);
 
             ImGui::PopItemWidth();
             ofxImGui::EndTree(mainSettings);
@@ -1116,14 +1123,14 @@ void ofxColorManager::gui_imGui_ColorPicker()
                     saved_palette[n].w = 1.0f;//alpha
                 }
             saved_palette_inited = true;
-            //                cout << "IM_ARRAYSIZE(saved_palette): "<<ofToString(IM_ARRAYSIZE(saved_palette)) << endl;
+            //cout << "IM_ARRAYSIZE(saved_palette): "<<ofToString(IM_ARRAYSIZE(saved_palette)) << endl;
 
             //-
 
             // layout by pages groups
             int startColorInPal = paletteLibPage * numColorsPage;
             int endColorInPal = startColorInPal + numColorsPage;
-            //            paletteLibPage = paletteLibPage_param.get();
+            //paletteLibPage = paletteLibPage_param.get();
 
             ImGui::Text("PANTONE COLORS");
 
@@ -1138,7 +1145,7 @@ void ofxColorManager::gui_imGui_ColorPicker()
 
             // arrow buttons
             float spacing = ImGui::GetStyle().ItemInnerSpacing.x;
-            //            ImGui::SameLine();
+            //ImGui::SameLine();
             ImGui::PushButtonRepeat(true);
             // prev
             if (ImGui::ArrowButton("##left", ImGuiDir_Left))
@@ -1224,6 +1231,7 @@ void ofxColorManager::gui_imGui_ControlPanels()
     {
         //        if (ofxImGui::BeginTree("PANELS", panelsSet))
         //        {
+        ofxImGui::AddParameter(this->SHOW_UserPalette);
         ofxImGui::AddParameter(this->SHOW_Gradient);
         ofxImGui::AddParameter(this->SHOW_Curve);
         ofxImGui::AddParameter(this->SHOW_TEST_Curve);
@@ -1701,8 +1709,8 @@ void ofxColorManager::update()
 
     // PRESET MANAGER
 
-    //myPresetPalette.update();
     myPresetManager.update();
+    //myPresetPalette.update();
 
     //--
 
@@ -2620,10 +2628,11 @@ void ofxColorManager::palette_recallFromPalettes(int p)
     // WORKFLOW: set background color from first/last palette color
     if (color_backGround_SETAUTO)
     {
-        //        int size = palette.size();
-
-        //get first color
-        color_backGround.set(palette[0]);
+        if (palette.size() > 0)
+        {
+            //get first color of user palette to the background
+            color_backGround.set(palette[0]);
+        }
     }
 
     //-
@@ -2638,6 +2647,8 @@ void ofxColorManager::palettes_update()
     // 1. FROM OFX-COLOR-PALETTE
 
     ofColor base;
+    //ofFloatColor base;//TODO
+
     if (!MODE_Palette)
     {
         // using hue only from picked color and forcing sat/(brg from algo sliders
@@ -3073,19 +3084,11 @@ void ofxColorManager::draw()
 
     //-
 
-    //    // COLORWHEELSCHEMES
-    //
-    //    if (SHOW_AlgoPalettes) {
-    //        ColorWheel_draw();
-    //    }
-
-    //-
-
     // PRESET MANAGER
 
     if (SHOW_PresetManager)
     {
-        //    myPresetPalette.draw();
+        //myPresetPalette.draw();
         myPresetManager.draw();
     }
 
@@ -3098,101 +3101,99 @@ void ofxColorManager::draw()
 
     //--
 
-    if (SHOW_ALL_GUI)
+    //if (SHOW_ALL_GUI)
+    //{
+    //    ofPushMatrix();
+    //    ofPushStyle();
+
+    //-
+
+    // COLOR BOX PICKER (CURRENT)
+
+    //        ofPushStyle();
+    //        ofFill();
+    //        ofSetColor(ofColor( color_picked.get() ));
+    //        ofDrawRectangle(r_color_picked);
+    //        ofPopStyle();
+
+    //-
+
+    // COLOR BOX CLICKED
+
+    //    ofPushStyle();
+    //    ofFill();
+    //
+    //    ofSetColor( ofColor( color_clicked ) );
+    ////    ofSetColor( ofColor( color_clicked_param.get() ) );
+    //
+    //    ofDrawRectangle(r_color_clicked);
+    //    ofPopStyle();
+
+    //-
+
+    // INTERFACE
+
+    interface_draw();
+
+    //-
+
+    // CURVE
+
+    if (SHOW_Gradient)
     {
+        gradient_draw();
+    }
 
-        ofPushMatrix();
+    //-
+
+    // TEST CURVE
+
+    // COLOR MONITORING SLIDER POSITION ON CURVED GRADIENT
+
+    if (SHOW_TEST_Curve)
+    {
+        //gradiented color
+        ofRectangle r(currColor_x, currColor_y, box_user_size / 2.0, slider_h);
+
+        // 2. current box color at input curve point (right positioned)
+        float out = ofMap(curvesTool.getAtPercent(1.0 - curve_pos), 0, curveTool_amount - 1, 1., 0.);
+        ofColor c = gradient.getColorAtPercent(out);
+
+        ofRectangle recBar(0, ofGetHeight() - 5, framePrc * ofGetWidth(), 5);
+
         ofPushStyle();
-
-        //-
-
-        // COLOR BOX PICKER (CURRENT)
-
-        //        ofPushStyle();
-        //        ofFill();
-        //        ofSetColor(ofColor( color_picked.get() ));
-        //        ofDrawRectangle(r_color_picked);
-        //        ofPopStyle();
-
-        //-
-
-        // COLOR BOX CLICKED
-
-        //    ofPushStyle();
-        //    ofFill();
-        //
-        //    ofSetColor( ofColor( color_clicked ) );
-        ////    ofSetColor( ofColor( color_clicked_param.get() ) );
-        //
-        //    ofDrawRectangle(r_color_clicked);
-        //    ofPopStyle();
-
-        //-
-
-        // INTERFACE
-
-        interface_draw();
-
-        //-
-
-        // CURVE
-
-        if (SHOW_Gradient)
-        {
-            gradient_draw();
-        }
-
-        //-
-
-        // TEST CURVE
-
-        // COLOR MONITORING SLIDER POSITION ON CURVED GRADIENT
-
-        if (SHOW_TEST_Curve)
-        {
-
-            //gradiented color
-            ofRectangle r(currColor_x, currColor_y, box_user_size / 2.0, slider_h);
-
-            // 2. current box color at input curve point (right positioned)
-            float out = ofMap(curvesTool.getAtPercent(1.0 - curve_pos), 0, curveTool_amount - 1, 1., 0.);
-            ofColor c = gradient.getColorAtPercent(out);
-
-            ofRectangle recBar(0, ofGetHeight() - 5, framePrc * ofGetWidth(), 5);
-
-            ofPushStyle();
-            ofFill();
-            ofSetColor(c);
-            ofDrawRectangle(r);
-            ofSetColor(ofColor(ofColor::black, 200));
-            //            ofSetColor(ofColor::black);
-            ofDrawRectangle(recBar);
-            ofPopStyle();
-        }
-
-        //-
-
-        // CURVE
-        if (SHOW_Curve)
-        {
-            curveTool_draw();
-        }
-
-        // COLORS BROWSER
-        if (SHOW_BrowserColors)
-        {
-            ColorBrowser.draw();
-        }
-
-        // COLOUR LOVERS
-        // debug
-        //        if (SHOW_ColourLovers) {
-        //            colourLovers_drawPreview();
-        //        }
-
-        ofPopMatrix();
+        ofFill();
+        ofSetColor(c);
+        ofDrawRectangle(r);
+        ofSetColor(ofColor(ofColor::black, 200));
+        //ofSetColor(ofColor::black);
+        ofDrawRectangle(recBar);
         ofPopStyle();
     }
+
+    //-
+
+    // CURVE
+    if (SHOW_Curve)
+    {
+        curveTool_draw();
+    }
+
+    // COLORS BROWSER
+    if (SHOW_BrowserColors)
+    {
+        ColorBrowser.draw();
+    }
+
+    // COLOUR LOVERS
+    // debug
+    //        if (SHOW_ColourLovers) {
+    //            colourLovers_drawPreview();
+    //        }
+
+    //ofPopMatrix();
+    //ofPopStyle();
+    //}
 
     //--
 
@@ -3231,7 +3232,6 @@ void ofxColorManager::draw()
     //--
 
     // ofxGuiPanelsLayout
-
     if (SHOW_Layout_Gui)
     {
         panels.draw();
@@ -3319,15 +3319,19 @@ void ofxColorManager::palette_removeColorLast()
 
 
 //--------------------------------------------------------------
-void ofxColorManager::palette_colorTouched(string name)
+void ofxColorManager::palette_touchedColor(string name)
 {
+    // WORKFLOW: disable
+    if (bAuto_palette_recall)
+        bAuto_palette_recall = false;
+
     // WORKFLOW: auto set edit mode
     if (!bPaletteEdit)
     {
         bPaletteEdit = true;
     }
 
-    // handle de-select all buttons and select last clicked
+    // de-select all buttons and select current touched/clicked
     for (int i = 0; i < btns_palette.size(); i++)
     {
         if (btns_palette[i]->getName() != name)
@@ -3420,6 +3424,22 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e)
     else if (name == "SHOW TEST CURVE")
     {
         curve_pos_slider.setVisible(SHOW_TEST_Curve);
+    }
+    else if (name == "SHOW USER PALETTE")
+    {
+        for (int i = 0; i < btns_palette.size(); i++)
+        {
+            btns_palette[i]->setVisible(SHOW_UserPalette);
+        }
+
+        //if (SHOW_UserPalette)
+        //{
+        //
+        //}
+        //else
+        //{
+        //
+        //}
     }
 
     //--
@@ -3636,8 +3656,6 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
     const int &key = eventArgs.key;
 
     // un-blockeable keys goes here
-
-    //    myDEMO_palette.reStart();
 
     //--
 
@@ -3897,29 +3915,43 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
                 myDEMO_palette.reStart();
         }
 
-        //--
+            //--
 
-        // 2. trig get algorithmic random palette
+            // 2. randomize user palette
 
-        //        else if (key == 'p') {
-        //            //TODO
-        //            // workflow: when loading a colour lover palette we disable auto create from algo palettes
-        //            if (!bAuto_palette_recall) {
-        //                bAuto_palette_recall = true;
-        //
-        //                //            pauseCreate = false;
-        //            }
-        //
-        //            random.generateRandom(NUM_COLORS_ALGO_PALETTES);
-        //            palettes_update();
-        //            if (bAuto_palette_recall) {
-        //                //set random palette to user palette
-        //                palette_recallFromPalettes(7);
-        //            }
-        //
-        //            if (TEST_DEMO)
-        //                    myDEMO_palette.reStart();
-        //        }
+        else if (key == 'p')
+        {
+            //-
+
+            if (!bAuto_palette_recall)
+            {
+                bAuto_palette_recall = true;
+            }
+
+            //-
+
+            //// A. create random palette
+            //random.generateRandom(NUM_COLORS_ALGO_PALETTES);
+            //palettes_update();
+            //if (bAuto_palette_recall)
+            //{
+            //    //set random palette to user palette
+            //    palette_recallFromPalettes(7);
+            //}
+
+            //-
+
+            // B. get a random palette from PANTONE
+            int r = (int) ofRandom(NUM_COLORS_PANTONE);
+            color_picked = ofColor(ColorBrowser_palette[r]);
+            palettes_update();
+            palette_recallFromPalettes(SELECTED_palette_LAST);
+
+            //-
+
+            if (TEST_DEMO)
+                myDEMO_palette.reStart();
+        }
 
         //--
 
@@ -4060,7 +4092,7 @@ void ofxColorManager::mousePressed(ofMouseEventArgs &eventArgs)
     const int &x = eventArgs.x;
     const int &y = eventArgs.y;
     const int &button = eventArgs.button;
-    ofLogNotice("ofxColorManager") << "mousePressed " << x << ", " << y << ", " << button;
+    //ofLogNotice("ofxColorManager") << "mousePressed " << x << ", " << y << ", " << button;
 
     TouchManager::one().touchDown(button, ofVec2f(x, y));
 
@@ -4078,7 +4110,7 @@ void ofxColorManager::mousePressed(ofMouseEventArgs &eventArgs)
     if (str.size() > 1)
     {
         ofLogVerbose("ofxColorManager") << "detected palette touch: " << b;
-        palette_colorTouched(b);
+        palette_touchedColor(b);
     }
     else
     {
@@ -4089,10 +4121,13 @@ void ofxColorManager::mousePressed(ofMouseEventArgs &eventArgs)
 
     // DEMO
 
-    if (button == 2)//second button cleans DEMO
-        myDEMO_palette.clear();
-    else
-        myDEMO_palette.start();//trig DEMO start
+    if (TEST_DEMO)
+    {
+        if (button == 2)//second button cleans DEMO
+            myDEMO_palette.clear();
+        else
+            myDEMO_palette.start();//trig DEMO start
+    }
 }
 
 
@@ -4269,7 +4304,7 @@ void ofxColorManager::setControl(float control)
 
 
 //--------------------------------------------------------------
-vector<ofColor> ofxColorManager::getPalette()
+vector <ofColor> ofxColorManager::getPalette()
 {
     return palette;
 }
@@ -4279,21 +4314,21 @@ vector<ofColor> ofxColorManager::getPalette()
 void ofxColorManager::setVisible(bool b)
 {
     // TODO should split all hide or remember states...
-
-    if (!SHOW_ALL_GUI)
-    {
-        SHOW_BrowserColors = SHOW_ALL_GUI;
-        SHOW_Gradient = SHOW_ALL_GUI;
-        SHOW_Curve = SHOW_ALL_GUI;
-        SHOW_AlgoPalettes = SHOW_ALL_GUI;
-        SHOW_TEST_Curve = SHOW_ALL_GUI;
-        SHOW_ColourLovers = SHOW_ALL_GUI;
-        SHOW_ColourLovers_searcher = SHOW_ALL_GUI;
-    }
-
-    this->guiVisible = SHOW_ALL_GUI;
-    //    curve_pos_slider.setVisible(b);
-    //    curveMod_Slider.setVisible(b);
+    //
+    //if (!SHOW_ALL_GUI)
+    //{
+    //    SHOW_BrowserColors = SHOW_ALL_GUI;
+    //    SHOW_Gradient = SHOW_ALL_GUI;
+    //    SHOW_Curve = SHOW_ALL_GUI;
+    //    SHOW_AlgoPalettes = SHOW_ALL_GUI;
+    //    SHOW_TEST_Curve = SHOW_ALL_GUI;
+    //    SHOW_ColourLovers = SHOW_ALL_GUI;
+    //    SHOW_ColourLovers_searcher = SHOW_ALL_GUI;
+    //}
+    //
+    //this->guiVisible = SHOW_ALL_GUI;
+    ////    curve_pos_slider.setVisible(b);
+    ////    curveMod_Slider.setVisible(b);
 }
 
 
@@ -4461,7 +4496,7 @@ void ofxColorManager::preset_load(string p)
 
     //TODO
     // apply loaded preset to local system
-    vector<ofColor> palette_TEMP = myPresetPalette.getPalette();
+    vector <ofColor> palette_TEMP = myPresetPalette.getPalette();
     palette_clear();
     for (int i = 0; i < palette_TEMP.size(); i++)
     {

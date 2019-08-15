@@ -16,8 +16,11 @@ public:
     void draw();
 
     void clear(){
-        bDEMO1_clear = true;
-        pauseCreate = false;
+        //bDEMO1_clear = true;
+        //pauseCreate = false;
+        this->locations.clear();
+        this->velocities.clear();
+        this->colors.clear();
     }
 
     void reStart(){
