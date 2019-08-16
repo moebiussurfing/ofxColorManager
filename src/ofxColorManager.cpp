@@ -283,10 +283,13 @@ void ofxColorManager::setup()
     setBackground_ENABLE(true);
     color_backGround.set("BACKGROUND", ofFloatColor::white);
     color_backGround_SET.set("SET FROM COLOR", false);
+    backgroundDarkness.set("DARKNESS", 0.5, 0., 1.);
+    color_backGround_Darker.set("DARKER", false);
     color_backGround_SETAUTO.set("AUTO SET", false);
     params_data.setName("GENERAL");
     params_data.add(color_backGround);
     params_data.add(color_backGround_SET);
+    params_data.add(color_backGround_Darker);
     params_data.add(color_backGround_SETAUTO);
 
     //--
@@ -420,7 +423,8 @@ void ofxColorManager::setup()
 
     params_control.add(color_backGround_SET);
     params_control.add(color_backGround_SETAUTO);
-    //    params_control.add(backgroundDarkness);
+    params_control.add(color_backGround_Darker);
+    params_control.add(backgroundDarkness);
 
     //-
 
@@ -483,6 +487,8 @@ void ofxColorManager::setup()
 
     XML_params.add(color_picked);
     XML_params.add(color_backGround);
+    XML_params.add(backgroundDarkness);
+    XML_params.add(color_backGround_Darker);
     XML_params.add(color_backGround_SETAUTO);
 
     XML_params.add(bPaletteEdit);//user palette
@@ -492,7 +498,6 @@ void ofxColorManager::setup()
     XML_params.add(SATURATION);
     XML_params.add(gradient_hard);//gradient
     XML_params.add(bAuto_palette_recall);
-    XML_params.add(color_backGround_SETAUTO);
     XML_params.add(SHOW_Layout_Gui);
     XML_params.add(paletteLibPage_param);
     //    XML_params.add(TEST_MODE);
@@ -1298,8 +1303,12 @@ void ofxColorManager::gui_imGui_ColorManager()
             //-
 
             ImGui::PushItemWidth(guiWidth * 0.3);
-            //ofxImGui::AddParameter(this->backgroundDarkness);
             ofxImGui::AddParameter(this->color_backGround_SET);
+            ofxImGui::AddParameter(this->color_backGround_Darker);
+            if (color_backGround_Darker)
+            {
+                ofxImGui::AddParameter(this->backgroundDarkness);
+            }
             ofxImGui::AddParameter(this->color_backGround_SETAUTO);
             ofxImGui::EndTree(mainSettings);
             ImGui::PopItemWidth();
@@ -1699,7 +1708,27 @@ void ofxColorManager::palette_load_ColourLovers()
         if (palette.size() > 0)
         {
             ofColor c;
-            c = palette[0];//get first color
+            c = palette[0];//get first color from user palette
+
+            //TODO: must improve
+            // modulate darker
+            if (color_backGround_Darker)
+            {
+                float darkness;
+                //darkness = ofMap(backgroundDarkness, 0.0, 1.0, 0.0, 1.5);
+                float b;
+                if (backgroundDarkness < 0.5)
+                {
+                    b = c.getBrightness() / backgroundDarkness * 10;
+                }
+                else if (backgroundDarkness >= 0.5)
+                {
+                    b = c.getBrightness() * backgroundDarkness * 20;
+                }
+
+                b = ofClamp(b, 0.0, 255.0);
+                c.setBrightness(b);
+            }
             color_backGround.set(c);
         }
     }
@@ -2638,8 +2667,36 @@ void ofxColorManager::palette_recallFromPalettes(int p)
     {
         if (palette.size() > 0)
         {
-            //get first color of user palette to the background
-            color_backGround.set(palette[0]);
+            ofColor c;
+            c = palette[0];//get first color from user palette
+
+            //TODO: must improve
+            // modulate darker
+            if (color_backGround_Darker)
+            {
+                float darkness;
+                //darkness = ofMap(backgroundDarkness, 0.0, 1.0, 0.0, 1.5);
+                float b;
+                if (backgroundDarkness < 0.5)
+                {
+                    b = c.getBrightness() / backgroundDarkness * 10;
+                }
+                else if (backgroundDarkness >= 0.5)
+                {
+                    b = c.getBrightness() * backgroundDarkness * 20;
+                }
+
+                b = ofClamp(b, 0.0, 255.0);
+                c.setBrightness(b);
+            }
+            //if (color_backGround_Darker)
+            //{
+            //    float darkness = ofMap(backgroundDarkness, 0.0, 1.0, 0.0, 1.0);
+            //    float b = c.getBrightness() * darkness;
+            //    //b = ofClamp(b, 0.0, 1.0);
+            //    c.setBrightness(b);
+            //}
+            color_backGround.set(c);
         }
     }
 
@@ -2650,9 +2707,8 @@ void ofxColorManager::palette_recallFromPalettes(int p)
 //--------------------------------------------------------------
 void ofxColorManager::palettes_update()
 {
-    //TODO: could be improved using this base color to both palettes addons..
-    //ofFloatColor base;
 
+    // calculate base primary color
     if (!MODE_Palette)
     {
         // using hue only from picked color and forcing sat/(brg from algo sliders
@@ -3603,6 +3659,10 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e)
         {
             palette_clear();
             palette_recallFromPalettes(SELECTED_palette_LAST);//trig last choice
+
+            // DEMO
+            if (TEST_DEMO)
+                myDEMO_palette.reStart();
         }
     }
 
@@ -3655,15 +3715,18 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e)
         ////        if (backgroundDarkness_PRE!=backgroundDarkness)
         ////            backgroundDarkness = (int)darkness;
     }
-    //    else if (name == "DARKNESS") {
-    ////        cout << "DARKNESS: " << backgroundDarkness << endl;
-    //        ofColor c;
-    //        c.set(color_backGround.get());
-    //        c.setBrightness(255*backgroundDarkness);
-    //        color_backGround = c;
-    //
-    //        backgroundDarkness_PRE = backgroundDarkness;
-    //    }
+    else if (name == "DARKNESS")
+    {
+        //TODO: must improve
+        //palettes_update();
+
+        // auto create user palette from algo palette
+        if (bAuto_palette_recall)
+        {
+            palette_clear();
+            palette_recallFromPalettes(SELECTED_palette_LAST);//trig last choice
+        }
+    }
 }
 
 

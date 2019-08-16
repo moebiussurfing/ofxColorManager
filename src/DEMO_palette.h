@@ -24,7 +24,8 @@ public:
     }
 
     void reStart(){
-        bDEMO1_clear = true;
+        //bDEMO1_clear = true;
+        clear();
         pauseCreate = false;
     }
 

@@ -290,7 +290,8 @@ public:
     ofParameter<ofFloatColor> color_backGround;//main color
     ofParameter<bool> color_backGround_SET;
     ofParameter<bool> color_backGround_SETAUTO;
-    //    ofParameter<float> backgroundDarkness{"DARKNESS", 0.5, 0., 1.};
+    ofParameter<bool> color_backGround_Darker;
+    ofParameter<float> backgroundDarkness;
     //    float backgroundDarkness_PRE;
 
     bool backgroundENABLE = false;
