@@ -1712,28 +1712,33 @@ void ofxColorManager::palette_load_ColourLovers()
 
             //TODO: must improve
             // modulate darker
+            //if (color_backGround_Darker)
+            //{
+            //    float darkness;
+            //    //darkness = ofMap(backgroundDarkness, 0.0, 1.0, 0.0, 1.5);
+            //    float b;
+            //    if (backgroundDarkness < 0.5)
+            //    {
+            //        b = c.getBrightness() / backgroundDarkness * 10;
+            //    }
+            //    else if (backgroundDarkness >= 0.5)
+            //    {
+            //        b = c.getBrightness() * backgroundDarkness * 20;
+            //    }
+            //
+            //    b = ofClamp(b, 0.0, 255.0);
+            //    c.setBrightness(b);
+            //}
             if (color_backGround_Darker)
             {
-                float darkness;
-                //darkness = ofMap(backgroundDarkness, 0.0, 1.0, 0.0, 1.5);
-                float b;
-                if (backgroundDarkness < 0.5)
-                {
-                    b = c.getBrightness() / backgroundDarkness * 10;
-                }
-                else if (backgroundDarkness >= 0.5)
-                {
-                    b = c.getBrightness() * backgroundDarkness * 20;
-                }
-
-                b = ofClamp(b, 0.0, 255.0);
+                float darkness = ofMap(backgroundDarkness, 0.0, 1.0, 0.0, 2.0);
+                float b = c.getBrightness() * darkness;
+                //b = ofClamp(b, 0.0, 1.0);
                 c.setBrightness(b);
             }
             color_backGround.set(c);
         }
     }
-
-    //-
 }
 
 
@@ -2672,30 +2677,30 @@ void ofxColorManager::palette_recallFromPalettes(int p)
 
             //TODO: must improve
             // modulate darker
-            if (color_backGround_Darker)
-            {
-                float darkness;
-                //darkness = ofMap(backgroundDarkness, 0.0, 1.0, 0.0, 1.5);
-                float b;
-                if (backgroundDarkness < 0.5)
-                {
-                    b = c.getBrightness() / backgroundDarkness * 10;
-                }
-                else if (backgroundDarkness >= 0.5)
-                {
-                    b = c.getBrightness() * backgroundDarkness * 20;
-                }
-
-                b = ofClamp(b, 0.0, 255.0);
-                c.setBrightness(b);
-            }
             //if (color_backGround_Darker)
             //{
-            //    float darkness = ofMap(backgroundDarkness, 0.0, 1.0, 0.0, 1.0);
-            //    float b = c.getBrightness() * darkness;
-            //    //b = ofClamp(b, 0.0, 1.0);
+            //    float darkness;
+            //    //darkness = ofMap(backgroundDarkness, 0.0, 1.0, 0.0, 1.5);
+            //    float b;
+            //    if (backgroundDarkness < 0.5)
+            //    {
+            //        b = c.getBrightness() / backgroundDarkness * 10;
+            //    }
+            //    else if (backgroundDarkness >= 0.5)
+            //    {
+            //        b = c.getBrightness() * backgroundDarkness * 20;
+            //    }
+            //
+            //    b = ofClamp(b, 0.0, 255.0);
             //    c.setBrightness(b);
             //}
+            if (color_backGround_Darker)
+            {
+                float darkness = ofMap(backgroundDarkness, 0.0, 1.0, 0.0, 2.0);
+                float b = c.getBrightness() * darkness;
+                //b = ofClamp(b, 0.0, 1.0);
+                c.setBrightness(b);
+            }
             color_backGround.set(c);
         }
     }
