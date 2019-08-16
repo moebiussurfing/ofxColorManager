@@ -65,10 +65,21 @@ void ofxColorManager::palettes_colorTheory_setup()
 //--------------------------------------------------------------
 void ofxColorManager::palettes_colorTheory_update()
 {
-    //TODO
-    //reduce callback on every loop frame..
+    //ofFloatColor base;//TODO
+    //if (!MODE_Palette)
+    //{
+    //    // using hue only from picked color and forcing sat/(brg from algo sliders
+    //    base = ofFloatColor::fromHsb(color_picked.get().getHue(),
+    //        ofMap(SATURATION, 0, 255, 0., 1.),
+    //        ofMap(BRIGHTNESS, 0, 255, 0., 1.));
+    //}
+    //else
+    //{
+    //    // check using hue + sat/brg from color ignoring algo panel SV sliders
+    //    base = color_picked.get();
+    //}
 
-    primaryColor.set(color_picked.get());
+    primaryColor.set(base);
 
     //    //TEST
     //    colorSchemeName.set(ColorWheelSchemes::colorSchemeNames[colorScheme.get()]);
@@ -286,7 +297,6 @@ void ofxColorManager::setup()
     color_HUE.set("H", 0, 0, 255);
     color_SAT.set("S", 0, 0, 255);
     color_BRG.set("B", 0, 0, 255);
-
     params_color.setName("COLOR");
     params_color.add(color_HUE);
     params_color.add(color_SAT);
@@ -298,25 +308,23 @@ void ofxColorManager::setup()
 
     // ALGORITHMIC PALETTE
 
-    MODE_Palette.set("FROM COLOR", false);
+    MODE_Palette.set("LOCK FROM COLOR", false);
     SATURATION.set("SATURATION", 200, 0, 255);
     BRIGHTNESS.set("BRIGHTNESS", 200, 0, 255);
-    bRandomPalette.set("RANDOM PALETTE", false);
+    //bRandomPalette.set("RANDOM PALETTE", false);
     bAuto_palette_recall.set("AUTO LIVE MODE", false);
     bLock_palette.set("LOCK PALETTES", false);
-
     NUM_COLORS_ALGO_PALETTES.set("SIZE COLORS", 6, 2, 10);
     params_palette.setName("ALGORITHMIC PALETTES");
     params_palette.add(MODE_Palette);
     params_palette.add(SATURATION);
     params_palette.add(BRIGHTNESS);
-    params_palette.add(bRandomPalette);
+    //params_palette.add(bRandomPalette);
     params_palette.add(NUM_COLORS_ALGO_PALETTES);
     params_palette.add(bAuto_palette_recall);
     params_palette.add(bLock_palette);
 
     ofAddListener(params_palette.parameterChangedE(), this, &ofxColorManager::Changed_CONTROL);
-
 
     //TODO: add ColorWheelSchemes alternative
 
@@ -378,7 +386,7 @@ void ofxColorManager::setup()
     // CONTROL WINDOWS
 
     SHOW_ColourLovers.set("SHOW COLOUR LOVERS", true);
-    SHOW_ColourLovers_searcher.set("SHOW COLOUR LOVERS SEARCHER", true);
+    SHOW_ColourLovers_searcher.set("LOVERS SEARCHER", true);
     SHOW_AlgoPalettes.set("SHOW PALETTES", true);
     SHOW_BrowserColors.set("SHOW BROWSER COLORS", true);
     SHOW_Gradient.set("SHOW GRADIENT", true);
@@ -961,7 +969,7 @@ void ofxColorManager::gui_imGui_ColorPicker()
         int misc_flags = ImGuiColorEditFlags_NoOptions |
             ImGuiColorEditFlags_NoTooltip;
 
-        ImGui::ColorButton("MyColor##3", *(ImVec4 * ) & color, misc_flags,
+        ImGui::ColorButton("MyColor##3", *(ImVec4 *) &color, misc_flags,
             ImVec2(colorW, colorH));
         //        ImGui::PopItemWidth();
 
@@ -1290,13 +1298,13 @@ void ofxColorManager::gui_imGui_ColorManager()
             //-
 
             ImGui::PushItemWidth(guiWidth * 0.3);
-            //            ofxImGui::AddParameter(this->backgroundDarkness);
+            //ofxImGui::AddParameter(this->backgroundDarkness);
             ofxImGui::AddParameter(this->color_backGround_SET);
             ofxImGui::AddParameter(this->color_backGround_SETAUTO);
             ofxImGui::EndTree(mainSettings);
             ImGui::PopItemWidth();
 
-            //            ofxImGui::EndTree(mainSettings);
+            //ofxImGui::EndTree(mainSettings);
         }
 
         //--
@@ -1340,14 +1348,14 @@ void ofxColorManager::gui_imGui_ColorManager()
         if (ImGui::CollapsingHeader("ALGORITHMIC PALETTES"))
         {
             ImGui::PushItemWidth(guiWidth * 0.5);
+            ofxImGui::AddParameter(this->NUM_COLORS_ALGO_PALETTES);
             ofxImGui::AddParameter(this->MODE_Palette);
             if (!MODE_Palette)
             {
                 ofxImGui::AddParameter(this->SATURATION);
                 ofxImGui::AddParameter(this->BRIGHTNESS);
             }
-            ofxImGui::AddParameter(this->NUM_COLORS_ALGO_PALETTES);
-            ofxImGui::AddParameter(this->bRandomPalette);
+            //ofxImGui::AddParameter(this->bRandomPalette);
             ofxImGui::AddParameter(this->bLock_palette);
             ofxImGui::AddParameter(this->bAuto_palette_recall);
             ImGui::PopItemWidth();
@@ -2636,23 +2644,21 @@ void ofxColorManager::palette_recallFromPalettes(int p)
     }
 
     //-
-
 }
 
 
 //--------------------------------------------------------------
 void ofxColorManager::palettes_update()
 {
-
-    // 1. FROM OFX-COLOR-PALETTE
-
-    ofColor base;
-    //ofFloatColor base;//TODO
+    //TODO: could be improved using this base color to both palettes addons..
+    //ofFloatColor base;
 
     if (!MODE_Palette)
     {
         // using hue only from picked color and forcing sat/(brg from algo sliders
-        base = ofColor::fromHsb(ofMap(color_picked.get().getHue(), 0., 1., 0, 255), SATURATION, BRIGHTNESS);
+        base = ofFloatColor::fromHsb(color_picked.get().getHue(),
+            ofMap(SATURATION, 0, 255, 0., 1.),
+            ofMap(BRIGHTNESS, 0, 255, 0., 1.));
     }
     else
     {
@@ -2660,6 +2666,11 @@ void ofxColorManager::palettes_update()
         base = color_picked.get();
     }
 
+    //--
+
+    // 1. FROM OFX-COLOR-PALETTE
+
+    // update palettes
     complement.setBaseColor(base);
     complementBrightness.setBaseColor(base);
     triad.setBaseColor(base);
@@ -2667,7 +2678,7 @@ void ofxColorManager::palettes_update()
     monochrome.setBaseColor(base);
     monochromeBrightness.setBaseColor(base);
     analogue.setBaseColor(base);
-    //    random.setBaseColor(base);
+    //random.setBaseColor(base);
 
     complement.generateComplementary(ofxColorPalette::SATURATION, NUM_COLORS_ALGO_PALETTES);
     complementBrightness.generateComplementary(ofxColorPalette::BRIGHTNESS, NUM_COLORS_ALGO_PALETTES);
@@ -3403,7 +3414,7 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e)
     {
         ColourLoversHelper.setVisible(SHOW_ColourLovers);
     }
-    else if (name == "SHOW COLOUR LOVERS SEARCHER")
+    else if (name == "LOVERS SEARCHER")
     {
         ColourLoversHelper.setVisibleSearcher(SHOW_ColourLovers_searcher);
         if (SHOW_ColourLovers_searcher && !SHOW_ColourLovers)
@@ -3586,7 +3597,13 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e)
     else if (name == "BRIGHTNESS" || name == "SATURATION")
     {
         palettes_update();
-        //        cout << name << endl;
+
+        // auto create user palette from algo palette
+        if (bAuto_palette_recall)
+        {
+            palette_clear();
+            palette_recallFromPalettes(SELECTED_palette_LAST);//trig last choice
+        }
     }
 
         //--
@@ -4304,7 +4321,7 @@ void ofxColorManager::setControl(float control)
 
 
 //--------------------------------------------------------------
-vector <ofColor> ofxColorManager::getPalette()
+vector<ofColor> ofxColorManager::getPalette()
 {
     return palette;
 }
@@ -4496,7 +4513,7 @@ void ofxColorManager::preset_load(string p)
 
     //TODO
     // apply loaded preset to local system
-    vector <ofColor> palette_TEMP = myPresetPalette.getPalette();
+    vector<ofColor> palette_TEMP = myPresetPalette.getPalette();
     palette_clear();
     for (int i = 0; i < palette_TEMP.size(); i++)
     {

@@ -261,6 +261,9 @@ public:
     void draw_palettes();
 
     ofParameter<bool> MODE_Palette;
+    // force SAT/BRG from panel SB sliders or all from color
+
+    ofFloatColor base;
 
     //--
 
