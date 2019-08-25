@@ -200,6 +200,22 @@ void ofxColorManager::preset_filesRefresh()
 //--------------------------------------------------------------
 void ofxColorManager::setup()
 {
+    //-
+
+    dt = 1. / 30.0f;//TODO: should be setted externally
+
+    //--
+
+    colorQuantizer.setup();
+    colorQuantizer.setPosition(glm::vec2(400, 600));
+    colorQuantizer.setSize(glm::vec2(750, 400));
+    // receivers pointers
+    colorQuantizer.setPalette_BACK(myPalette);
+    colorQuantizer.setPalette_bUpdated_Palette_BACK(bUpdated_Palette_BACK);
+    colorQuantizer.setPalette_Name_BACK(myPalette_Name);
+    //colorQuantizer.setColor_BACK(myColor);
+    //colorQuantizer.setPalette_bUpdated_Color_BACK(bUpdated_Color_BACK);
+
     //--
 
     // ColorWheel
@@ -208,12 +224,8 @@ void ofxColorManager::setup()
 
     //--
 
-    //    myPresetPalette.setup();
     myPresetManager.setup();
-
-    //-
-
-    dt = 1 / 30.0f;//TODO: should be setted externally
+    //myPresetPalette.setup();
 
     //--
 
@@ -254,7 +266,7 @@ void ofxColorManager::setup()
 
     // some initiation values..
     myColor = ofColor::white;
-    myPalette.resize(2);//pointer setter whill clear/resize. nevermind the vector size here
+    myPalette.resize(2);//pointer setter will clear/resize. nevermind the vector size here
     myPalette[0] = ofColor::white;
     myPalette[0] = ofColor::white;
     myPalette_Name = "NOT LOADED";
@@ -412,6 +424,8 @@ void ofxColorManager::setup()
     params_control.add(SHOW_ColorPicker);
     params_control.add(SHOW_PanelsManager);
     params_control.add(SHOW_UserPalette);
+    params_control.add(SHOW_ColorQuantizer);
+
 
     SHOW_ALL_GUI = true;
     SHOW_debugText = false;
@@ -476,6 +490,7 @@ void ofxColorManager::setup()
     XML_params.add(SHOW_ColorPicker);
     XML_params.add(SHOW_PanelsManager);
     XML_params.add(SHOW_UserPalette);
+    XML_params.add(SHOW_ColorQuantizer);
 
     XML_params.add(SHOW_ColourLovers_searcher);
     XML_params.add(SHOW_ColourLovers);
@@ -530,6 +545,7 @@ void ofxColorManager::setup()
     SHOW_GUI_MINI.setName("SHOW_GUI_MINI");
     SHOW_debugText.setName("SHOW debug");
     SHOW_TEST_Curve.setName("SHOW TEST CURVE");
+    SHOW_ColorQuantizer.setName("SHOW COLOR PICTURE");
 
     // ofxGuiPanelsLayout
 
@@ -553,6 +569,7 @@ void ofxColorManager::setup()
     p_TOGGLES.add(SHOW_PanelsManager);
     p_TOGGLES.add(SHOW_ColourLovers_searcher);
     p_TOGGLES.add(SHOW_UserPalette);
+    p_TOGGLES.add(SHOW_ColorQuantizer);
 
     //-
 
@@ -575,6 +592,7 @@ void ofxColorManager::setup()
     panels.addToggle(&SHOW_PanelsManager);
     panels.addToggle(&SHOW_ColourLovers_searcher);
     panels.addToggle(&SHOW_UserPalette);
+    panels.addToggle(&SHOW_ColorQuantizer);
 
     //call after add the panels
     panels.setup();
@@ -1251,6 +1269,7 @@ void ofxColorManager::gui_imGui_ControlPanels()
         ofxImGui::AddParameter(this->SHOW_ColourLovers);
         ofxImGui::AddParameter(this->SHOW_ColourLovers_searcher);
         ofxImGui::AddParameter(this->SHOW_AlgoPalettes);
+        ofxImGui::AddParameter(this->SHOW_ColorQuantizer);
         ofxImGui::AddParameter(this->SHOW_BrowserColors);
         //            ofxImGui::EndTree(panelsSet);
         //        }
@@ -3310,6 +3329,9 @@ void ofxColorManager::draw()
     }
 
     //--
+
+    if (SHOW_ColorQuantizer)
+        colorQuantizer.draw();
 }
 
 
@@ -3512,6 +3534,10 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e)
         //{
         //
         //}
+    }
+    else if (name == "SHOW COLOR PICTURE")
+    {
+        colorQuantizer.setActive(SHOW_ColorQuantizer);
     }
 
     //--
@@ -3752,9 +3778,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
         // COLOR-WHEEL-SCHEMES
 
-        if (SHOW_AlgoPalettes && !SHOW_ColourLovers)
+        if (SHOW_AlgoPalettes && !SHOW_ColourLovers && !SHOW_ColorQuantizer)
         {
-
             if (key == OF_KEY_UP)
             {
                 SELECTED_palette = SELECTED_palette_LAST;
@@ -4535,13 +4560,13 @@ void ofxColorManager::windowResized(int w, int h)
 //--------------------------------------------------------------
 void ofxColorManager::exit()
 {
-
     //    palette_save("myPalette");
 
     XML_save_AppSettings(XML_params, XML_path);
 
     ColorBrowser.exit();
     ColourLoversHelper.exit();
+    colorQuantizer.exit();
 
     removeKeysListeners();
     removeMouseListeners();

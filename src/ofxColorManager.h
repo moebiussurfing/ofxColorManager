@@ -8,9 +8,9 @@
 #include "ofxColourLoversHelper.h"
 #include "ColorWheelScheme.h"
 #include "ColorWheelSchemes.h"
-
 using namespace ofxColorTheory;
 using namespace std;
+#include "ofxColorQuantizerHelper.h"
 
 #include "ofxCurvesTool.h"
 #include "ofxSimpleSlider.h"
@@ -35,6 +35,8 @@ class ofxColorManager
 {
 
 public:
+
+    ofxColorQuantizerHelper colorQuantizer;
 
     bool ENABLE_keys = true;
 
@@ -167,6 +169,7 @@ public:
     ofParameter<bool> SHOW_ColorManager;
     ofParameter<bool> SHOW_ColorPicker;
     ofParameter<bool> SHOW_UserPalette;
+    ofParameter<bool> SHOW_ColorQuantizer;
 
     void setColor_TARGET(ofColor &c);//backwards pointer ofApp color
     ofColor *color_TARGET;//backwards pointer ofApp color
