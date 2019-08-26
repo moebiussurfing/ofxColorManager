@@ -207,12 +207,14 @@ void ofxColorManager::setup()
     //--
 
     colorQuantizer.setup();
-    colorQuantizer.setPosition(glm::vec2(400, 600));
+    colorQuantizer.setPosition(glm::vec2(400, 400));
     colorQuantizer.setSize(glm::vec2(750, 400));
     // receivers pointers
     colorQuantizer.setPalette_BACK(myPalette);
     colorQuantizer.setPalette_bUpdated_Palette_BACK(bUpdated_Palette_BACK);
     colorQuantizer.setPalette_Name_BACK(myPalette_Name);
+    //colorQuantizer.setPalette_Name_BACK(textInput_New);
+
     //colorQuantizer.setColor_BACK(myColor);
     //colorQuantizer.setPalette_bUpdated_Color_BACK(bUpdated_Color_BACK);
 
@@ -3295,19 +3297,34 @@ void ofxColorManager::draw()
 
         // GUI
 
+        bool ENABLE_keys_PRE = ENABLE_keys;
+
         this->mouseOverGui = false;
         if (this->guiVisible)
         {
             this->mouseOverGui = this->gui_imGui();
         }
         //disable things to avoid move by mouse when editing gui
-        if (this->mouseOverGui)
+        if (this->mouseOverGui == true)
         {
             ENABLE_keys = false;
         }
         else
         {
             ENABLE_keys = true;
+        }
+
+        //TODO
+        if (ENABLE_keys != ENABLE_keys_PRE)
+        {
+            if (SHOW_ColorQuantizer && !ENABLE_keys)
+            {
+                colorQuantizer.setActive(false);
+            }
+            else if (SHOW_ColorQuantizer && ENABLE_keys)
+            {
+                colorQuantizer.setActive(true);
+            }
         }
 
         //--
