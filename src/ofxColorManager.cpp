@@ -4166,11 +4166,11 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
         {
             palette_removeColorLast();
         }
-        else if (key == 'a')
-        {
-            color_picked = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
-            palette_addColor(ofColor(color_picked.get()));
-        }
+        //else if (key == 'a')
+        //{
+        //    color_picked = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
+        //    palette_addColor(ofColor(color_picked.get()));
+        //}
 
         //-
 
@@ -4183,9 +4183,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
         //
         //    else if (key == OF_KEY_RETURN)
         //        ColorBrowser.switch_sorted_Type();
-
     }
-
 }
 
 
