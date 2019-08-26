@@ -200,19 +200,20 @@ void ofxColorManager::preset_filesRefresh()
 //--------------------------------------------------------------
 void ofxColorManager::setup()
 {
-    //-
+    //--
 
     dt = 1. / 30.0f;//TODO: should be setted externally
 
     //--
 
     colorQuantizer.setup();
-    colorQuantizer.setPosition(glm::vec2(400, 400));
+    colorQuantizer.setPosition(glm::vec2(400, 500));
     colorQuantizer.setSize(glm::vec2(750, 400));
     // receivers pointers
     colorQuantizer.setPalette_BACK(myPalette);
     colorQuantizer.setPalette_bUpdated_Palette_BACK(bUpdated_Palette_BACK);
-    colorQuantizer.setPalette_Name_BACK(myPalette_Name);
+    colorQuantizer.setPalette_Name_BACK(textInput_temp);
+    //colorQuantizer.setPalette_Name_BACK(myPalette_Name);
     //colorQuantizer.setPalette_Name_BACK(textInput_New);
 
     //colorQuantizer.setColor_BACK(myColor);
