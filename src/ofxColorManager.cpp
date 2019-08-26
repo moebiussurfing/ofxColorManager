@@ -1220,28 +1220,43 @@ void ofxColorManager::gui_imGui_ColorPicker()
                     // ImGui::PushItemWidth(guiWidth * 0.2);
                     ImGui::PushID(n);
 
+                    // get clicked color
+                    static int colBoxSize;
+                    colBoxSize = 22;
+                    //TODO: draw border to selected color
+                    //if (n == lastColorPicked)
+                    //    colBoxSize = 24;
+                    //else
+                    //    colBoxSize = 22;
+
+                    //ImGui::PushStyleVar(ImGui::ImGuiStyleVar_FrameBorderSize), 1.0f;
+
                     // PANTONE or other must define his better row size
                     if ((n % rowSizePal) != 0)
                     {
                         ImGui::SameLine(0.0f, ImGui::GetStyle().ItemSpacing.y);//vertical inter line
                     }
 
-                    // get clicked color
-                    static int colBoxSize = 22;
+                    //Style.FrameBorderSize
                     if (ImGui::ColorButton("##palette", saved_palette[n],
                         ImGuiColorEditFlags_NoAlpha |
                             ImGuiColorEditFlags_NoPicker |
                             ImGuiColorEditFlags_NoTooltip,
                         ImVec2(colBoxSize, colBoxSize)))
                     {
-                        ofLogNotice("ofxColorManager") << "ImGui: PALETTE PICKED !" << endl;
+                        lastColorPicked = n;
 
                         color = ImVec4(saved_palette[n].x, saved_palette[n].y, saved_palette[n].z, color.w); // Preserve alpha!
                         color_picked = color;
 
                         //color name
                         lastColorPickedNameColor = "'" + ColorBrowser.pantoneNames[n] + "'";
+                        string str = "ImGui: PALETTE PICKED: [" + ofToString(lastColorPicked) + "] " + lastColorPickedNameColor;
+
+                        ofLogNotice("ofxColorManager") << str << endl;
                     }
+
+                    //ImGui::PopStyleVar();
 
                     //ImGui::PopItemWidth();
                     ImGui::PopID();
@@ -4082,7 +4097,11 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
             //-
 
             // B. get a random palette from PANTONE
-            int r = (int) ofRandom(NUM_COLORS_PANTONE);
+            //int r = (int) ofRandom(NUM_COLORS_PANTONE);
+            int r = (int) ofRandom(paletteLibPage * numColorsPage, paletteLibPage * numColorsPage + numColorsPage);
+            r = ofClamp(r, 0, NUM_COLORS_PANTONE);
+            //color name
+            lastColorPickedNameColor = "'" + ColorBrowser.pantoneNames[r] + "'";
             color_picked = ofColor(ColorBrowser_palette[r]);
             palettes_update();
             palette_recallFromPalettes(SELECTED_palette_LAST);

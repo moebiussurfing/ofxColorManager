@@ -8,8 +8,10 @@
 #include "ofxColourLoversHelper.h"
 #include "ColorWheelScheme.h"
 #include "ColorWheelSchemes.h"
+
 using namespace ofxColorTheory;
 using namespace std;
+
 #include "ofxColorQuantizerHelper.h"
 
 #include "ofxCurvesTool.h"
@@ -39,8 +41,6 @@ public:
     ofxColorQuantizerHelper colorQuantizer;
 
     bool ENABLE_keys = true;
-
-    string lastColorPickedNameColor = "";
 
     string textInput_New = "new preset";
 
@@ -360,9 +360,11 @@ public:
     int numColorsPage = numLines * rowSizePal;//70
     int totalNumColors = NUM_COLORS_PANTONE;//pantone
     int maxPages = totalNumColors / numColorsPage - 1;
-
+    string lastColorPickedNameColor = "";
+    int lastColorPicked;
     int paletteLibPage = 0;
     ofParameter<int> paletteLibPage_param{"page", 0, 0, maxPages};
+
 
     //-
 
