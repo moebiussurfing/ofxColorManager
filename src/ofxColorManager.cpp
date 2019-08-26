@@ -207,13 +207,15 @@ void ofxColorManager::setup()
     //--
 
     colorQuantizer.setup();
-    colorQuantizer.setPosition(glm::vec2(400, 500));
+    colorQuantizer.setBottomMode(true);//ignore y position and put at the window bottom
+    colorQuantizer.setPosition(glm::vec2(400, ofGetHeight() - 225));
+    //colorQuantizer.setPosition(glm::vec2(400, 0));
     colorQuantizer.setSize(glm::vec2(750, 400));
     // receivers pointers
     colorQuantizer.setPalette_BACK(myPalette);
     colorQuantizer.setPalette_bUpdated_Palette_BACK(bUpdated_Palette_BACK);
-    colorQuantizer.setPalette_Name_BACK(textInput_temp);
-    //colorQuantizer.setPalette_Name_BACK(myPalette_Name);
+    //colorQuantizer.setPalette_Name_BACK(textInput_temp);
+    colorQuantizer.setPalette_Name_BACK(myPalette_Name);
     //colorQuantizer.setPalette_Name_BACK(textInput_New);
 
     //colorQuantizer.setColor_BACK(myColor);
@@ -1274,6 +1276,7 @@ void ofxColorManager::gui_imGui_ControlPanels()
         ofxImGui::AddParameter(this->SHOW_AlgoPalettes);
         ofxImGui::AddParameter(this->SHOW_ColorQuantizer);
         ofxImGui::AddParameter(this->SHOW_BrowserColors);
+        ofxImGui::AddParameter(this->SHOW_PresetManager);
         //            ofxImGui::EndTree(panelsSet);
         //        }
     }
@@ -1767,7 +1770,10 @@ void ofxColorManager::palette_load_ColourLovers()
 //--------------------------------------------------------------
 void ofxColorManager::update()
 {
-    ofSetWindowTitle(ofToString((int) ofGetFrameRate()));
+    string str;
+    str += ("[PAGE " + ofToString(panels.group_Selected) + "] ");
+    str += ofToString((int) ofGetFrameRate()) + "FPS";
+    ofSetWindowTitle(str);
 
     //-
 
@@ -3293,7 +3299,6 @@ void ofxColorManager::draw()
 
     if (SHOW_ImGui)
     {
-
         //-
 
         // GUI
@@ -3552,6 +3557,13 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e)
         //{
         //
         //}
+    }
+    else if (name == "SHOW PRESET MANAGER")
+    {
+        if (SHOW_PresetManager && SHOW_ColorQuantizer)
+            colorQuantizer.setActive(false);
+        else if (!SHOW_PresetManager && SHOW_ColorQuantizer)
+            colorQuantizer.setActive(true);
     }
     else if (name == "SHOW COLOR PICTURE")
     {

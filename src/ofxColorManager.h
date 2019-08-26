@@ -174,7 +174,6 @@ public:
     void setColor_TARGET(ofColor &c);//backwards pointer ofApp color
     ofColor *color_TARGET;//backwards pointer ofApp color
 
-
     //-----------------------------------------------------------
 
     // API
