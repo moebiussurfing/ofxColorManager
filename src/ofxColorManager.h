@@ -453,7 +453,7 @@ public:
     ofParameter<bool> TEST_DEMO{"ENABLE DEMO", false};
 
     ////TODO: make pauses between any test trig..
-    //bool bTEST_pause = false;
+    bool bTEST_pause = false;
     //int TEST_pauseLong = 2000;
     //int TEST_pauseChrono = 0;
 

@@ -1816,32 +1816,41 @@ void ofxColorManager::update()
 
     if (TEST_MODE)
     {
-        //if (bTEST_pause && ofGetFrameNum() % frameBuffer)
-        //{
-        //    bTEST_pause = false;
-        //}
-
         int frameBuffer = (int) ofMap(TEST_Speed, 0., 1., TEST_maxFrames, 30);
         int frameCurrent = ofGetFrameNum() % frameBuffer;//0 to maxFrames
 
-        //if (frameCurrent == 0)
-        //{
-        //    bTEST_pause = true;
-        //    //TEST_pauseChrono = ofGetEllapsedMillis();
-        //}
-
-        framePrc = ofMap(frameCurrent, 0, frameBuffer, 0., 1.);
-        float control;
-        if (!TEST_CycleMODE)
-            control = ofClamp(framePrc, 0., 1.);
-        else
+        if (!bTEST_pause)
         {
-            float mySin = std::sin(PI * framePrc);
-            control = ofClamp(mySin, 0., 1.);
+            framePrc = ofMap(frameCurrent, 0, frameBuffer, 0., 1.);
+            float control;
+            if (!TEST_CycleMODE)
+                control = ofClamp(framePrc, 0., 1.);
+            else
+            {
+                float mySin = std::sin(PI * framePrc);
+                control = ofClamp(mySin, 0., 1.);
+            }
+            if (TEST_toBackground)
+                color_backGround.set(getColorAtPercent(control));
+            setControl(control);
         }
-        if (TEST_toBackground)
-            color_backGround.set(getColorAtPercent(control));
-        setControl(control);
+
+        if (frameCurrent == frameBuffer-1)
+        {
+            bTEST_pause = !bTEST_pause;
+
+            //round end position to clamp
+            float control;
+            if (!TEST_CycleMODE)
+                control = 1.;
+            else
+            {
+                control = 0.;
+            }
+            if (TEST_toBackground)
+                color_backGround.set(getColorAtPercent(control));
+            setControl(control);
+        }
     }
 
     //--
