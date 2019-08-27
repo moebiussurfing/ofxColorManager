@@ -1816,8 +1816,20 @@ void ofxColorManager::update()
 
     if (TEST_MODE)
     {
+        //if (bTEST_pause && ofGetFrameNum() % frameBuffer)
+        //{
+        //    bTEST_pause = false;
+        //}
+
         int frameBuffer = (int) ofMap(TEST_Speed, 0., 1., TEST_maxFrames, 30);
         int frameCurrent = ofGetFrameNum() % frameBuffer;//0 to maxFrames
+
+        //if (frameCurrent == 0)
+        //{
+        //    bTEST_pause = true;
+        //    //TEST_pauseChrono = ofGetEllapsedMillis();
+        //}
+
         framePrc = ofMap(frameCurrent, 0, frameBuffer, 0., 1.);
         float control;
         if (!TEST_CycleMODE)

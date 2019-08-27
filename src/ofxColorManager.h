@@ -450,8 +450,12 @@ public:
     int TEST_maxFrames = 300;//slowest period
     bool TEST_toBackground = true;
     float framePrc;
-
     ofParameter<bool> TEST_DEMO{"ENABLE DEMO", false};
+
+    ////TODO: make pauses between any test trig..
+    //bool bTEST_pause = false;
+    //int TEST_pauseLong = 2000;
+    //int TEST_pauseChrono = 0;
 
     //--
 
