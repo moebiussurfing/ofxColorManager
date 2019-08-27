@@ -1835,17 +1835,21 @@ void ofxColorManager::update()
             setControl(control);
         }
 
-        if (frameCurrent == frameBuffer-1)
+        if (frameCurrent == frameBuffer - 1)
         {
             bTEST_pause = !bTEST_pause;
 
             //round end position to clamp
             float control;
             if (!TEST_CycleMODE)
+            {
                 control = 1.;
+                framePrc = 1.;
+            }
             else
             {
                 control = 0.;
+                framePrc = 1.;
             }
             if (TEST_toBackground)
                 color_backGround.set(getColorAtPercent(control));
@@ -4052,10 +4056,11 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
             //            myDEMO_palette.toggleMouseCamera();
         }
-        else if (key == 'd')
-        {
-            bShowDebug = !bShowDebug;
-        }
+            //else if (key == 'd')
+            //{
+            //    // DEBUG INTERFACE
+            //    bShowDebug = !bShowDebug;
+            //}
 
             //-
 
@@ -4128,6 +4133,26 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
             //-
 
+            if (TEST_DEMO)
+                myDEMO_palette.reStart();
+        }
+
+        //-
+
+        // TEST MODE
+
+        if (key == 't')
+        {
+            TEST_MODE = !TEST_MODE;
+        }
+
+        //-
+
+        // DEMO
+
+        else if (key == 'd')
+        {
+            TEST_DEMO = !TEST_DEMO;
             if (TEST_DEMO)
                 myDEMO_palette.reStart();
         }
