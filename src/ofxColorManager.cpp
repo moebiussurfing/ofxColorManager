@@ -2476,7 +2476,7 @@ void ofxColorManager::palettes_setup_labels()
         btn->setPosition(x0, y0 + p * btn_plt_h);
         btn->setBGColor(btn_plt_c);
         btn->setLabelColor(ofColor::white);
-        btn->setBorderColor(ofColor(128));
+        //btn->setBorderColor(ofColor(128));
         btn->setBorder(false);
         scene->addChild(btn);
         btns_plt_Selector.push_back(btn);
@@ -2548,7 +2548,7 @@ void ofxColorManager::palettes_setup_labels()
         btn->setPosition(x0, y0 + p * btn_plt_h);
         btn->setBGColor(btn_plt_c);
         btn->setLabelColor(ofColor::white);
-        btn->setBorderColor(ofColor(128));
+        //btn->setBorderColor(ofColor(128));
         btn->setBorder(false);
         scene->addChild(btn);
         btns_plt_Selector.push_back(btn);
@@ -2561,7 +2561,6 @@ void ofxColorManager::palettes_setup_labels()
     if ((btns_plt_Selector.size() > 0) &&
         (btns_plt_Selector.size() > SELECTED_palette_LAST))
     {
-
         btns_plt_Selector[SELECTED_palette_LAST]->setBorder(true);
     }
 }

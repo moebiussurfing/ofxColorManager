@@ -7,9 +7,11 @@
 #include "ofxInterface.h"
 #include "ofxFontStash.h"
 
-namespace ofxInterface {
+namespace ofxInterface
+{
 
-    class ButtonPaletteSelector : public Node {
+    class ButtonPaletteSelector : public Node
+    {
     public:
 
         void setup(const string &label);
@@ -22,23 +24,28 @@ namespace ofxInterface {
 
         void onTouchUp(TouchEvent &event);
 
-        void setBackground(bool set) {
+        void setBackground(bool set)
+        {
             bDrawBackground = set;
         }
 
-        void setBorder(bool set) {
+        void setBorder(bool set)
+        {
             bDrawBorder = set;
         }
 
-        void setLabelColor(const ofColor &c) {
+        void setLabelColor(const ofColor &c)
+        {
             labelColor = c;
         }
 
-        void setBGColor(const ofColor &c) {
+        void setBGColor(const ofColor &c)
+        {
             bgColor = c;
         }
 
-        void setBorderColor(const ofColor &c) {
+        void setBorderColor(const ofColor &c)
+        {
             borderColor = c;
         }
 
@@ -70,7 +77,8 @@ namespace ofxInterface {
         //TODO: Add pointer support to save font loads
         ofxFontStash font;
 
-        void setLocked(bool b) {
+        void setLocked(bool b)
+        {
             isLocked = b;
         }
 

@@ -11,7 +11,7 @@ namespace ofxInterface
         bDrawBorder = true;
         bDrawBackground = true;
 
-        borderColor = ofColor(128);
+        borderColor = ofColor(ofColor::white, 255);
         bgColor = ofColor(255);
         labelColor = ofColor(0);
 
