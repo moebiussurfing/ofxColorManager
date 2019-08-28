@@ -320,7 +320,7 @@ void ofxColorManager::setup()
     color_picked.set("COLOR", ofFloatColor::red);
     color_HUE.set("H", 0, 0, 255);
     color_SAT.set("S", 0, 0, 255);
-    color_BRG.set("B", 0, 0, 255);
+    color_BRG.set("V", 0, 0, 255);
     params_color.setName("COLOR");
     params_color.add(color_HUE);
     params_color.add(color_SAT);
@@ -3593,7 +3593,7 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e)
 
     // TODO: should reduce callbacks in output..
     //    if (name != "INPUT" && name != "OUTPUT" &&
-    //            name!="H" && name!="S" && name!="B")
+    //            name!="H" && name!="S" && name!="V")
 
     if (name != "INPUT" && name != "OUTPUT")
     {
@@ -3658,7 +3658,7 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e)
     // TEST
     if (LISTEN_isEnabled)
     {
-        if (name == "H" && name == "S" && name == "B")
+        if (name == "H" && name == "S" && name == "V")
         {
             ofLogNotice("ofxColorManager") << "Changed_CONTROL:LISTEN_isEnabled: " << name << ":" << e;
         }
@@ -3677,7 +3677,7 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e)
             c.setSaturation(color_SAT);
             color_picked.set(c);
         }
-        else if (name == "B")
+        else if (name == "V")
         {
             ofColor c;
             c.set(color_picked.get());
