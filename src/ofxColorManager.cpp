@@ -856,6 +856,15 @@ void ofxColorManager::palette_addColor_toInterface(ofColor c)
     btn->setPosition(palette_x, palette_y + box_user_size + pad + i * (box_user_size + pad));
     btn->setSize(box_user_size, box_user_size);
 
+    if (SHOW_UserPalette)
+    {
+        btn->setVisible(true);
+    }
+    else
+    {
+        btn->setVisible(false);
+    }
+
     scene->addChild(btn);
     btns_palette.push_back(btn);
 
@@ -3234,8 +3243,8 @@ void ofxColorManager::palettes_setVisible(bool b)
 //--------------------------------------------------------------
 void ofxColorManager::draw()
 {
-
     // BACKGROUND
+
     if (backgroundENABLE)
         ofClear(ofColor(color_backGround.get()));
 
@@ -3602,19 +3611,11 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e)
     }
     else if (name == "SHOW USER PALETTE")
     {
+        cout << "SHOW_UserPalette: " << SHOW_UserPalette << endl;
         for (int i = 0; i < btns_palette.size(); i++)
         {
             btns_palette[i]->setVisible(SHOW_UserPalette);
         }
-
-        //if (SHOW_UserPalette)
-        //{
-        //
-        //}
-        //else
-        //{
-        //
-        //}
     }
     else if (name == "SHOW PRESET MANAGER")
     {
