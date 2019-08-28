@@ -208,7 +208,7 @@ void ofxColorManager::setup()
 
     colorQuantizer.setup();
     colorQuantizer.setBottomMode(true);//ignore y position and put at the window bottom
-    colorQuantizer.setPosition(glm::vec2(400, ofGetHeight() - 225));
+    colorQuantizer.setPosition(glm::vec2(2, ofGetHeight() - 225));
     //colorQuantizer.setPosition(glm::vec2(400, 0));
     colorQuantizer.setSize(glm::vec2(750, 400));
     // receivers pointers
@@ -1223,11 +1223,6 @@ void ofxColorManager::gui_imGui_ColorPicker()
                     // get clicked color
                     static int colBoxSize;
                     colBoxSize = 22;
-                    //TODO: draw border to selected color
-                    //if (n == lastColorPicked)
-                    //    colBoxSize = 24;
-                    //else
-                    //    colBoxSize = 22;
 
                     //ImGui::PushStyleVar(ImGui::ImGuiStyleVar_FrameBorderSize), 1.0f;
 
@@ -1235,6 +1230,18 @@ void ofxColorManager::gui_imGui_ColorPicker()
                     if ((n % rowSizePal) != 0)
                     {
                         ImGui::SameLine(0.0f, ImGui::GetStyle().ItemSpacing.y);//vertical inter line
+                    }
+
+                    // draw border to selected color
+                    bool bDrawBorder = false;
+                    if (n == lastColorPicked)
+                    {
+                        bDrawBorder = true;
+                    }
+                    if (bDrawBorder)
+                    {
+                        ImGui::PushStyleColor(ImGuiCol_Border, ImVec4 (1,1,1,.40));
+                        ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1.0f);
                     }
 
                     //Style.FrameBorderSize
@@ -1254,6 +1261,13 @@ void ofxColorManager::gui_imGui_ColorPicker()
                         string str = "ImGui: PALETTE PICKED: [" + ofToString(lastColorPicked) + "] " + lastColorPickedNameColor;
 
                         ofLogNotice("ofxColorManager") << str << endl;
+                    }
+
+                    //TODO: draw border to selected color
+                    if (bDrawBorder)
+                    {
+                        ImGui::PopStyleColor();
+                        ImGui::PopStyleVar(1);
                     }
 
                     //ImGui::PopStyleVar();
@@ -1417,7 +1431,6 @@ void ofxColorManager::gui_imGui_ColorManager()
 //--------------------------------------------------------------
 void ofxColorManager::gui_imGui_PresetManager()
 {
-
     // 3. PRESET MANAGER
 
     mainSettings = ofxImGui::Settings();
@@ -1711,6 +1724,11 @@ bool ofxColorManager::gui_imGui()
     //-
 
     this->gui.end();
+
+    //bug fix for disabled mouse on startup
+    if (ofGetFrameNum() == 30)
+        return false;
+
     return mainSettings.mouseOverGui;
 }
 
@@ -3298,7 +3316,8 @@ void ofxColorManager::draw()
         float out = ofMap(curvesTool.getAtPercent(1.0 - curve_pos), 0, curveTool_amount - 1, 1., 0.);
         ofColor c = gradient.getColorAtPercent(out);
 
-        ofRectangle recBar(0, ofGetHeight() - 5, framePrc * ofGetWidth(), 5);
+        // 3. rectangle progress bar
+        ofRectangle recBar(0, ofGetHeight() - 15, framePrc * ofGetWidth(), 5);
 
         ofPushStyle();
         ofFill();
@@ -4125,7 +4144,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
             //int r = (int) ofRandom(NUM_COLORS_PANTONE);
             int r = (int) ofRandom(paletteLibPage * numColorsPage, paletteLibPage * numColorsPage + numColorsPage);
             r = ofClamp(r, 0, NUM_COLORS_PANTONE);
-            //color name
+            //color pos & name
+            lastColorPicked = r;
             lastColorPickedNameColor = "'" + ColorBrowser.pantoneNames[r] + "'";
             color_picked = ofColor(ColorBrowser_palette[r]);
             palettes_update();
@@ -4325,7 +4345,7 @@ void ofxColorManager::mousePressed(ofMouseEventArgs &eventArgs)
 
     if (TEST_DEMO)
     {
-        if (button == 2)//second button cleans DEMO
+        if (button == 2)//second mouse button cleans DEMO
             myDEMO_palette.clear();
         else
             myDEMO_palette.start();//trig DEMO start

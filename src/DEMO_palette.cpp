@@ -14,7 +14,7 @@ void DEMO_palette::setup() {
 
     // DEMO 1
 
-    ofSetCircleResolution(50);
+    ofSetCircleResolution(75);
 
     ofxLoadCamera(cam, "DEMOcam");
     cam.disableMouseInput();
@@ -117,7 +117,7 @@ void DEMO_palette::draw() {
 
         for (int i = 0; i < this->locations.size(); i++) {
             ofSetColor(this->colors[i]);
-            float radius = (2 * PI * glm::length(this->locations[i])) / 360 * 20;
+            float radius = 2.5 * (2 * PI * glm::length(this->locations[i])) / 360 * 20;
             ofDrawCircle(this->locations[i], radius);
         }
         ofPopStyle();

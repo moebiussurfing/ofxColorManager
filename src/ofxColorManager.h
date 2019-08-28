@@ -40,7 +40,8 @@ public:
 
     ofxColorQuantizerHelper colorQuantizer;
 
-    bool ENABLE_keys = true;
+    bool ENABLE_keys = false;
+    //bool ENABLE_keys_PRE = false;
 
     string textInput_New = "new preset";
 
