@@ -208,9 +208,9 @@ void ofxColorManager::setup()
 
     colorQuantizer.setup();
     colorQuantizer.setBottomMode(true);//ignore y position and put at the window bottom
-    colorQuantizer.setPosition(glm::vec2(2, ofGetHeight() - 225));
-    //colorQuantizer.setPosition(glm::vec2(400, 0));
-    colorQuantizer.setSize(glm::vec2(750, 400));
+    colorQuantizer.setPosition(glm::vec2(0, ofGetHeight() - 225));
+    //colorQuantizer.setPosition(glm::vec2(400, 0));//is ignored
+    //colorQuantizer.setSize(glm::vec2(750, 400));
     // receivers pointers
     colorQuantizer.setPalette_BACK(myPalette);
     colorQuantizer.setPalette_bUpdated_Palette_BACK(bUpdated_Palette_BACK);
