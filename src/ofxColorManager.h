@@ -31,6 +31,9 @@ using namespace std;
 #include "PresetPalette.h"
 #include "DEMO_palette.h"
 
+//#include "ofxMacMouseControl.h"
+//#include "ofxMacMouseEventStealer.h"
+
 //--
 
 class ofxColorManager
@@ -38,6 +41,11 @@ class ofxColorManager
 
 public:
 
+    //void mouseEvent(ofxMacMouseEventArg &arg) {
+    //    ofLogNotice() << "global mouse position: " << arg.x << ", " << arg.y;
+    //}
+
+    // colorQuantizer
     ofxColorQuantizerHelper colorQuantizer;
 
     bool ENABLE_keys = false;

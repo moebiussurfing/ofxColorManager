@@ -12159,6 +12159,109 @@
 				<key>sourceTree</key>
 				<string>SOURCE_ROOT</string>
 			</dict>
+			<key>35A915AE5EB45C956A5F233C</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxMacMouseEventStealer.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxMacMouse/src/ofxMacMouseEventStealer.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>3BE2C91284DB0FD92D44423B</key>
+			<dict>
+				<key>fileRef</key>
+				<string>5D2C1289A508E5A0EC535CE0</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>5D2C1289A508E5A0EC535CE0</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxMacMouseEventStealer.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxMacMouse/src/ofxMacMouseEventStealer.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>4DD9D0B36C02DA86E5B7044E</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxMacMouseControl.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxMacMouse/src/ofxMacMouseControl.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>9E9ACBF0FD3CC40340D97AB7</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>BD81D43D0B624DB2BA20560B</string>
+					<string>4DD9D0B36C02DA86E5B7044E</string>
+					<string>5D2C1289A508E5A0EC535CE0</string>
+					<string>35A915AE5EB45C956A5F233C</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>src</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>A1BE04D75A320B4770AFBD85</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>9E9ACBF0FD3CC40340D97AB7</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>ofxMacMouse</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>74804170D0B56D987CE43D43</key>
+			<dict>
+				<key>fileRef</key>
+				<string>BD81D43D0B624DB2BA20560B</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>BD81D43D0B624DB2BA20560B</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxMacMouseControl.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxMacMouse/src/ofxMacMouseControl.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
 			<key>26A541233BC6F736E758F718</key>
 			<dict>
 				<key>explicitFileType</key>
@@ -17052,6 +17155,7 @@ fi
 						<string>../../../addons/ofxJSON/libs/jsoncpp/include/json</string>
 						<string>../../../addons/ofxJSON/libs/jsoncpp/src</string>
 						<string>../../../addons/ofxJSON/src</string>
+						<string>../../../addons/ofxMacMouse/src</string>
 						<string>../../../addons/ofxMouseRuler/src</string>
 						<string>../../../addons/ofxOpenColor/src</string>
 						<string>../../../addons/ofxOpenCv/libs</string>
@@ -17209,6 +17313,7 @@ fi
 						<string>../../../addons/ofxJSON/libs/jsoncpp/include/json</string>
 						<string>../../../addons/ofxJSON/libs/jsoncpp/src</string>
 						<string>../../../addons/ofxJSON/src</string>
+						<string>../../../addons/ofxMacMouse/src</string>
 						<string>../../../addons/ofxMouseRuler/src</string>
 						<string>../../../addons/ofxOpenColor/src</string>
 						<string>../../../addons/ofxOpenCv/libs</string>
@@ -17355,6 +17460,7 @@ fi
 					<string>768C3255AF2F3E1A78DC4DF4</string>
 					<string>2CCFAD75F0D6A81E947E5D26</string>
 					<string>2865DAEF86B1907A704CA70B</string>
+					<string>A1BE04D75A320B4770AFBD85</string>
 					<string>52F81B91F554ACD32FA1F358</string>
 					<string>8B3A069D4C26DD08C7152F5C</string>
 					<string>A0B90D3B0ADB9C1716816714</string>
@@ -20164,6 +20270,7 @@ fi
 						<string>../../../addons/ofxJSON/libs/jsoncpp/include/json</string>
 						<string>../../../addons/ofxJSON/libs/jsoncpp/src</string>
 						<string>../../../addons/ofxJSON/src</string>
+						<string>../../../addons/ofxMacMouse/src</string>
 						<string>../../../addons/ofxMouseRuler/src</string>
 						<string>../../../addons/ofxOpenColor/src</string>
 						<string>../../../addons/ofxOpenCv/libs</string>
@@ -20341,6 +20448,7 @@ fi
 						<string>../../../addons/ofxJSON/libs/jsoncpp/include/json</string>
 						<string>../../../addons/ofxJSON/libs/jsoncpp/src</string>
 						<string>../../../addons/ofxJSON/src</string>
+						<string>../../../addons/ofxMacMouse/src</string>
 						<string>../../../addons/ofxMouseRuler/src</string>
 						<string>../../../addons/ofxOpenColor/src</string>
 						<string>../../../addons/ofxOpenCv/libs</string>
@@ -20518,6 +20626,8 @@ fi
 					<string>C9AA4E39732FC73FED43B1C7</string>
 					<string>FB84AAF8D1B7A95266DB5C09</string>
 					<string>BEDFEE7400C58EA4E412B757</string>
+					<string>74804170D0B56D987CE43D43</string>
+					<string>3BE2C91284DB0FD92D44423B</string>
 					<string>A05B3B5EB678BCB79C972FFC</string>
 					<string>250A95BA26587BE85DB0A353</string>
 					<string>1D5F3298C2FA073628012944</string>
@@ -20711,6 +20821,7 @@ fi
 						<string>../../../addons/ofxJSON/libs/jsoncpp/include/json</string>
 						<string>../../../addons/ofxJSON/libs/jsoncpp/src</string>
 						<string>../../../addons/ofxJSON/src</string>
+						<string>../../../addons/ofxMacMouse/src</string>
 						<string>../../../addons/ofxMouseRuler/src</string>
 						<string>../../../addons/ofxOpenColor/src</string>
 						<string>../../../addons/ofxOpenCv/libs</string>
@@ -20889,6 +21000,7 @@ fi
 						<string>../../../addons/ofxJSON/libs/jsoncpp/include/json</string>
 						<string>../../../addons/ofxJSON/libs/jsoncpp/src</string>
 						<string>../../../addons/ofxJSON/src</string>
+						<string>../../../addons/ofxMacMouse/src</string>
 						<string>../../../addons/ofxMouseRuler/src</string>
 						<string>../../../addons/ofxOpenColor/src</string>
 						<string>../../../addons/ofxOpenCv/libs</string>

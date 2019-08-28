@@ -200,22 +200,27 @@ void ofxColorManager::preset_filesRefresh()
 //--------------------------------------------------------------
 void ofxColorManager::setup()
 {
+    //ofAddListener(ofxMacMouseEvent, this, &ofxColorManager::mouseEvent);
+
     //--
 
     dt = 1. / 30.0f;//TODO: should be setted externally
 
     //--
 
+    // colorQuantizer
+
     colorQuantizer.setup();
-    colorQuantizer.setBottomMode(true);//ignore y position and put at the window bottom
-    colorQuantizer.setPosition(glm::vec2(0, ofGetHeight() - 225));
-    //colorQuantizer.setPosition(glm::vec2(400, 0));//is ignored
-    //colorQuantizer.setSize(glm::vec2(750, 400));
+    colorQuantizer.setBottomMode(true);
+    // ignore y position and put at the window bottom
+    colorQuantizer.setPosition(glm::vec2(0, 0));
+
     // receivers pointers
     colorQuantizer.setPalette_BACK(myPalette);
     colorQuantizer.setPalette_bUpdated_Palette_BACK(bUpdated_Palette_BACK);
-    //colorQuantizer.setPalette_Name_BACK(textInput_temp);
+
     colorQuantizer.setPalette_Name_BACK(myPalette_Name);
+    //colorQuantizer.setPalette_Name_BACK(textInput_temp);
     //colorQuantizer.setPalette_Name_BACK(textInput_New);
 
     //colorQuantizer.setColor_BACK(myColor);
@@ -230,7 +235,6 @@ void ofxColorManager::setup()
     //--
 
     myPresetManager.setup();
-    //myPresetPalette.setup();
 
     //--
 
@@ -1249,7 +1253,7 @@ void ofxColorManager::gui_imGui_ColorPicker()
                     }
                     if (bDrawBorder)
                     {
-                        ImGui::PushStyleColor(ImGuiCol_Border, ImVec4 (1,1,1,.40));
+                        ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(1, 1, 1, .40));
                         ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1.0f);
                     }
 
@@ -1734,9 +1738,27 @@ bool ofxColorManager::gui_imGui()
 
     this->gui.end();
 
-    //bug fix for disabled mouse on startup
-    if (ofGetFrameNum() == 30)
-        return false;
+    // TODO: bug fix for disabled mouse on startup
+    //if (ofGetFrameNum() == 30)
+    //{
+    //    //ofxMacMousePress(OFX_MAC_MOUSE_BUTTON_LEFT, 700, 450);
+    //    ofxMacMouseClick(OFX_MAC_MOUSE_BUTTON_LEFT, 700, 450, 1);
+    //
+    //    //CGWarpMouseCursorPosition(CGPoint {700,450});//not trigs event
+    //    //mouse_event (MOUSEEVENTF_LEFTDOWN, 0,0,0,0);
+    //    //mouse_event (MOUSEEVENTF_LEFTUP, 0,0,0,0);
+    //
+    //    //#include <X11/Xlib.h>
+    //    //int newX = 10;
+    //    //int newY = 5;
+    //    //if ((display = XOpenDisplay(NULL)) == NULL)
+    //    //    ofExit(0);
+    //    //root = DefaultRootWindow(display);
+    //    //XWarpPointer(display, None, None, 0, 0, 0, 0,newX, newY);
+    //    //XCloseDisplay(display);
+    //
+    //    return false;
+    //}
 
     return mainSettings.mouseOverGui;
 }
@@ -1822,7 +1844,6 @@ void ofxColorManager::update()
     // PRESET MANAGER
 
     myPresetManager.update();
-    //myPresetPalette.update();
 
     //--
 
@@ -4167,9 +4188,9 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
             TEST_MODE = !TEST_MODE;
         }
 
-        //-
+            //-
 
-        // DEMO
+            // DEMO
 
         else if (key == 'd')
         {

@@ -18,6 +18,7 @@ ofxHttpUtils
 ofxImGui
 ofxInterface
 ofxJSON
+ofxMacMouse
 ofxMouseRuler
 ofxOpenColor
 ofxOpenCv
