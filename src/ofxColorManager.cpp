@@ -964,7 +964,7 @@ void ofxColorManager::gui_imGui_ColorPicker()
 
     // 1. COLOR PICKER CUSTOM
 
-    mainSettings = ofxImGui::Settings();
+    //mainSettings = ofxImGui::Settings();
     mainSettings.windowPos = ofVec2f(gui_x, gui_y);
     mainSettings.windowSize = ofVec2f(guiWidth, ofGetWindowHeight() - gui_y);
 
@@ -1299,11 +1299,11 @@ void ofxColorManager::gui_imGui_ControlPanels()
 {
     // 4. PANELS MANAGER
 
-    auto panelsSet = ofxImGui::Settings();
-    panelsSet.windowPos = ofVec2f(gui4_x, gui4_y);
-    panelsSet.windowSize = ofVec2f(gui4_w, gui4_h);
+    //auto mainSettings = ofxImGui::Settings();
+    mainSettings.windowPos = ofVec2f(gui4_x, gui4_y);
+    mainSettings.windowSize = ofVec2f(gui4_w, gui4_h);
 
-    if (ofxImGui::BeginWindow("PANELS MANAGER", panelsSet, false))
+    if (ofxImGui::BeginWindow("PANELS MANAGER", mainSettings, false))
     {
         //        if (ofxImGui::BeginTree("PANELS", panelsSet))
         //        {
@@ -1320,7 +1320,7 @@ void ofxColorManager::gui_imGui_ControlPanels()
         //            ofxImGui::EndTree(panelsSet);
         //        }
     }
-    ofxImGui::EndWindow(panelsSet);
+    ofxImGui::EndWindow(mainSettings);
 }
 
 
@@ -1332,11 +1332,11 @@ void ofxColorManager::gui_imGui_ColorManager()
 
     //    mainSettings = ofxImGui::Settings();
 
-    auto COLOR_MANAGER_Settings = ofxImGui::Settings();
-    COLOR_MANAGER_Settings.windowPos = ofVec2f(gui2_x, gui2_y);
-    COLOR_MANAGER_Settings.windowSize = ofVec2f(gui2_w, gui2_h);
+    //auto mainSettings = ofxImGui::Settings();
+    mainSettings.windowPos = ofVec2f(gui2_x, gui2_y);
+    mainSettings.windowSize = ofVec2f(gui2_w, gui2_h);
 
-    if (ofxImGui::BeginWindow("COLOR MANAGER", COLOR_MANAGER_Settings, false))
+    if (ofxImGui::BeginWindow("COLOR MANAGER", mainSettings, false))
     {
         // GENERAL DATA
 
@@ -1435,7 +1435,7 @@ void ofxColorManager::gui_imGui_ColorManager()
             ImGui::PopItemWidth();
         }
     }
-    ofxImGui::EndWindow(COLOR_MANAGER_Settings);
+    ofxImGui::EndWindow(mainSettings);
 }
 
 
@@ -1444,7 +1444,7 @@ void ofxColorManager::gui_imGui_PresetManager()
 {
     // 3. PRESET MANAGER
 
-    mainSettings = ofxImGui::Settings();
+    //mainSettings = ofxImGui::Settings();
     mainSettings.windowSize = ofVec2f(gui3_w, gui3_h);
     mainSettings.windowPos = ofVec2f(ofGetWindowWidth() * 0.5 - gui3_w * 0.5, gui3_y);
     //    mainSettings.windowPos = ofVec2f(gui3_x, gui3_y);
@@ -1736,6 +1736,7 @@ bool ofxColorManager::gui_imGui()
 
     this->gui.end();
 
+    // TODO: must make another key disabler but when mouse is in text-input panels..
     // TODO: bug fix for disabled mouse on startup
     //if (ofGetFrameNum() == 30)
     //{
@@ -1758,7 +1759,15 @@ bool ofxColorManager::gui_imGui()
     //    return false;
     //}
 
+    //// TODO: BUG: startup disabled keys..
+    //if (ofGetFrameNum() < 60)
+    //{
+    //    return false;
+    //}
+    //else
+    //{
     return mainSettings.mouseOverGui;
+    //}
 }
 
 
@@ -1832,9 +1841,11 @@ void ofxColorManager::palette_load_ColourLovers()
 //--------------------------------------------------------------
 void ofxColorManager::update()
 {
+
+
     //-
 
-    // WIINDOW TITLE
+    // WINDOW TITLE
 
     string str;
     str += ("[PAGE " + ofToString(panels.group_Selected) + "] ");
@@ -3162,7 +3173,7 @@ void ofxColorManager::palettes_setVisible(bool b)
 {
     // hide and disable touchs for buttons
 
-    // ALGORITMIC PALETTES
+    // ALGORITMIC COLOR PALETTES
 
     //-
 
@@ -3272,7 +3283,20 @@ void ofxColorManager::draw()
     if (backgroundENABLE)
         ofClear(ofColor(color_backGround.get()));
 
-    //-
+    //--
+
+    //TODO: BUG: startup..
+    //if (ENABLE_keys)
+    if (this->mouseOverGui)
+    {
+        ofClear(ofColor::red);
+    }
+    else
+    {
+        ofClear(ofColor::blue);
+    }
+
+    //--
 
     // PRESET MANAGER
 
@@ -3388,21 +3412,13 @@ void ofxColorManager::draw()
 
     //--
 
+    // GUI
+
     if (SHOW_ImGui)
     {
-        //-
-
-        // GUI
-
         bool ENABLE_keys_PRE = ENABLE_keys;
 
-        this->mouseOverGui = false;
-        if (this->guiVisible)
-        {
-            this->mouseOverGui = this->gui_imGui();
-        }
-        //disable things to avoid move by mouse when editing gui
-        if (this->mouseOverGui == true)
+        if (this->mouseOverGui)
         {
             ENABLE_keys = false;
         }
@@ -3411,7 +3427,41 @@ void ofxColorManager::draw()
             ENABLE_keys = true;
         }
 
-        //TODO
+        this->mouseOverGui = false;
+        if (this->guiVisible)
+        {
+            this->mouseOverGui = this->gui_imGui();
+
+            ////TODO
+            //gui_imGui();
+            //mouseOverGui = ofxImGui::IsMouseOverGui();
+        }
+        //disable things to avoid move by mouse when editing gui
+
+        //// TODO: BUG: startup disabled keys..
+        //if (ofGetFrameNum() == 60)
+        //{
+        //    ENABLE_keys = true;
+        //}
+        //else
+        //{
+        //    if (this->mouseOverGui)
+        //    {
+        //        ENABLE_keys = false;
+        //    }
+        //    else
+        //    {
+        //        ENABLE_keys = true;
+        //    }
+        //}
+
+        ////TODO: disables keys when using colour lovers
+        //if (SHOW_ColourLovers || SHOW_ColourLovers_searcher)
+        //{
+        //    ENABLE_keys = false;
+        //}
+
+        //TODO: BUG: solve startup bug taht disables keys
         if (ENABLE_keys != ENABLE_keys_PRE)
         {
             if (SHOW_ColorQuantizer && !ENABLE_keys)
@@ -3422,6 +3472,11 @@ void ofxColorManager::draw()
             {
                 colorQuantizer.setActive(true);
             }
+
+            //TODO
+            //if (SHOW_ColourLovers || SHOW_ColourLovers_searcher)
+            //    ColourLoversHelper.setKeysEnabled(false);
+
         }
 
         //--
@@ -3639,7 +3694,6 @@ void ofxColorManager::color_picked_Update_To_HSV()
 //--------------------------------------------------------------
 void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e)
 {
-
     string name = e.getName();
 
     // TODO: should reduce callbacks in output..
@@ -3658,12 +3712,24 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e)
     if (name == "SHOW COLOUR LOVERS")
     {
         ColourLoversHelper.setVisible(SHOW_ColourLovers);
+
+        ////TODO
+        //if (ENABLE_keys)
+        //{
+        //    ColourLoversHelper.setKeysEnabled(true);
+        //}
     }
     else if (name == "LOVERS SEARCHER")
     {
         ColourLoversHelper.setVisibleSearcher(SHOW_ColourLovers_searcher);
         if (SHOW_ColourLovers_searcher && !SHOW_ColourLovers)
             SHOW_ColourLovers = true;
+
+        ////TODO
+        //if (ENABLE_keys)
+        //{
+        //    ColourLoversHelper.setKeysEnabled(true);
+        //}
     }
     else if (name == "SHOW PALETTES")
     {
@@ -3691,6 +3757,10 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e)
     }
     else if (name == "SHOW COLOR PICTURE")
     {
+        // WORKFLOW:
+        if (bPaletteEdit && SHOW_ColorQuantizer)
+            bPaletteEdit = false;
+
         if (!SHOW_PresetManager)
         {
             colorQuantizer.setActive(SHOW_ColorQuantizer);
@@ -3698,7 +3768,6 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e)
             {
                 colorQuantizer.map_setup();
             }
-
         }
         else
         {
@@ -3773,8 +3842,7 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e)
     }
     else if (name == "EDIT COLOR")
     {
-
-        // deselect all color buttons
+        // 1. deselect all color buttons
         for (int i = 0; i < btns_palette.size(); i++)
         {
             if (!bPaletteEdit)
@@ -3791,16 +3859,16 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e)
             }
         }
 
+        // WORKFLOW:
         if (!bPaletteEdit)
         {
             palette_colorSelected = -1;
         }
 
-        //TODO
-        // if is not selected any color button, set current color to the first one / 0
-        // and load color to the color picker panel
+        // 2. and load color to the color picker panel
         if (bPaletteEdit && btns_palette.size() > 0)
         {
+            // if is not selected any color button, set current color to the first one / 0
             if (palette_colorSelected == -1)
                 palette_colorSelected = 0;
 
@@ -4602,7 +4670,11 @@ void ofxColorManager::Changed_color_picked(ofFloatColor &_c)
         update_color_picked_CHANGES();
 
         // TEST
-        color_picked_Update_To_HSV();//redundant...
+        color_picked_Update_To_HSV();//redundant.. ?
+
+        // DEMO
+        if (TEST_DEMO)
+            myDEMO_palette.reStart();
     }
 }
 
