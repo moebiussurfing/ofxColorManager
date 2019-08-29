@@ -3637,16 +3637,21 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e)
             btns_palette[i]->setVisible(SHOW_UserPalette);
         }
     }
+    else if (name == "SHOW COLOR PICTURE")
+    {
+        if (!SHOW_PresetManager)
+            colorQuantizer.setActive(SHOW_ColorQuantizer);
+        else
+        {
+            colorQuantizer.setActive(false);
+        }
+    }
     else if (name == "SHOW PRESET MANAGER")
     {
         if (SHOW_PresetManager && SHOW_ColorQuantizer)
             colorQuantizer.setActive(false);
         else if (!SHOW_PresetManager && SHOW_ColorQuantizer)
             colorQuantizer.setActive(true);
-    }
-    else if (name == "SHOW COLOR PICTURE")
-    {
-        colorQuantizer.setActive(SHOW_ColorQuantizer);
     }
 
     //--
