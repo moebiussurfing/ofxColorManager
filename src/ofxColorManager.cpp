@@ -657,7 +657,7 @@ void ofxColorManager::gui_setup_layout()
 
     // gui 4 PANELS MANAGER
     gui4_x = gui2_x;
-    gui4_y = 575;
+    gui4_y = 460;
     gui4_w = guiWidth;
     gui4_h = 200;
 
@@ -1140,9 +1140,10 @@ void ofxColorManager::gui_imGui_ColorPicker()
 
         // 3. PALETTE LIBRARY
 
-        if (ofxImGui::BeginTree("PALETTE LIBRARY", mainSettings))
+        //if (ofxImGui::BeginTree("PALETTE LIBRARY", mainSettings))
+        //{
+        if (ImGui::CollapsingHeader("PALETTE LIBRARY"))
         {
-            //        if (ImGui::CollapsingHeader("PALETTE LIBRARY")) {
             //--
 
             // GET COLOR FROM OUTSIDE COLOR PICKED
@@ -1282,8 +1283,6 @@ void ofxColorManager::gui_imGui_ColorPicker()
                         ImGui::PopStyleColor();
                         ImGui::PopStyleVar(1);
                     }
-
-                    //ImGui::PopStyleVar();
 
                     //ImGui::PopItemWidth();
                     ImGui::PopID();
