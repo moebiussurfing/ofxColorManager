@@ -164,12 +164,11 @@ void ofxColorManager::preset_filesRefresh()
 {
     ofDirectory dataDirectory(ofToDataPath("user_kits/presets", true));
 
+    // clear files and filenames vectors
     files.clear();
     fileNames.clear();
 
-    //TODO
-    //there is not any sorting of files..
-
+    // load all folder files in one call
     files = dataDirectory.getFiles();
     for (size_t i = 0; i < files.size(); i++)
     {
@@ -1650,6 +1649,22 @@ void ofxColorManager::gui_imGui_PresetManager()
             cout << "DELETE" << endl;
 
             files[currentFile].remove();
+
+            //string str = fileNames[currentFile];
+            //cout << "DELETE:"<<str<<endl;
+            //dir.listDir("user_kits/presets");
+            //dir.allowExt("jpg");
+            //dir.allowExt("png");
+            //dir.sort();
+
+
+            preset_filesRefresh();
+        }
+
+        ImGui::SameLine();
+        if (ImGui::Button("REFRESH"))//current preset
+        {
+            cout << "REFRESH" << endl;
             preset_filesRefresh();
         }
 
@@ -4118,6 +4133,9 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
                 if (MODE_newPreset)
                     MODE_newPreset = false;
+
+                if (TEST_DEMO)
+                    myDEMO_palette.reStart();
             }
             else if (key == OF_KEY_RIGHT)
             {
@@ -4134,6 +4152,9 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
                 if (MODE_newPreset)
                     MODE_newPreset = false;
+
+                if (TEST_DEMO)
+                    myDEMO_palette.reStart();
             }
         }
 
