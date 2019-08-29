@@ -49,7 +49,7 @@ void ButtonExample::draw()
 //		ofDrawEllipse(touchAnchor, 10, 10);
 //	}
 
-    // 3. when selected draw border ?
+    // 3. when selected draw border
     if (bIsSelected)
     {
         ofNoFill();

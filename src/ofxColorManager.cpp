@@ -1287,7 +1287,7 @@ void ofxColorManager::gui_imGui_ColorPicker()
                     ImGui::PopID();
                 }
             }
-            ofxImGui::EndTree(mainSettings);
+            //ofxImGui::EndTree(mainSettings);
         }
     }
     ofxImGui::EndWindow(mainSettings);
@@ -1961,6 +1961,7 @@ void ofxColorManager::update()
         if (ColourLoversHelper.MODE_PickPalette_BACK &&
             ColourLoversHelper.MODE_PickColor_BACK)
         {
+            // WORKFLOW: auto disable edit mode
             if (bPaletteEdit)
             {
                 bPaletteEdit = false;
@@ -3505,12 +3506,12 @@ void ofxColorManager::palette_addColor(ofColor c)
 //--------------------------------------------------------------
 void ofxColorManager::palette_removeColor(int c)
 {
-    // remove current color of user palette
+    // remove current color from user palette
 
     ofLogNotice("ofxColorManager") << "palette_removeColor: " << c;
     ofLogNotice("ofxColorManager") << "palette size pre: " << palette.size();
 
-    if (c < palette.size() - 1)
+    if (c < palette.size())
     {
         // 0. erase last touched color th element
         palette.erase(palette.begin() + c - 1);
@@ -3576,17 +3577,11 @@ void ofxColorManager::palette_removeColorLast()
 //--------------------------------------------------------------
 void ofxColorManager::palette_touchedColor(string name)
 {
-    // WORKFLOW: disable
+    // WORKFLOW: disable auto get algorithmic palette
     if (bAuto_palette_recall)
         bAuto_palette_recall = false;
 
-    //// WORKFLOW: auto set edit mode
-    //if (!bPaletteEdit)
-    //{
-    //    bPaletteEdit = true;
-    //}
-
-    // de-select all buttons and select current touched/clicked
+    // 1. de-select all buttons and select current touched/clicked
     for (int i = 0; i < btns_palette.size(); i++)
     {
         if (btns_palette[i]->getName() != name)
@@ -3600,6 +3595,12 @@ void ofxColorManager::palette_touchedColor(string name)
             palette_colorSelected = i;
             ofLogNotice("ofxColorManager") << "user palette selected color: " << i;
         }
+    }
+
+    // 2. WORKFLOW: auto set edit mode when click a color user palette
+    if (!bPaletteEdit)
+    {
+        bPaletteEdit = true;
     }
 }
 
@@ -3772,10 +3773,6 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e)
     }
     else if (name == "EDIT COLOR")
     {
-        if (!bPaletteEdit)
-        {
-            palette_colorSelected = -1;
-        }
 
         // deselect all color buttons
         for (int i = 0; i < btns_palette.size(); i++)
@@ -3794,18 +3791,27 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e)
             }
         }
 
-        //TODO
-        if (bPaletteEdit && btns_palette.size() > 0 && palette_colorSelected == -1)
+        if (!bPaletteEdit)
         {
-            palette_colorSelected = 0;
+            palette_colorSelected = -1;
+        }
+
+        //TODO
+        // if is not selected any color button, set current color to the first one / 0
+        // and load color to the color picker panel
+        if (bPaletteEdit && btns_palette.size() > 0)
+        {
+            if (palette_colorSelected == -1)
+                palette_colorSelected = 0;
+
+            // select box
             btns_palette[palette_colorSelected]->setSelected(true);//sets border only
 
-            //autoload color on picker
+            // autoload color on picker
             color_picked = palette[palette_colorSelected];
         }
     }
 
-        //TODO: implement remove selected color.. not lastone only
     else if (name == "REMOVE COLOR")
     {
         if (bRemoveColor)
@@ -4340,10 +4346,16 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
         {
             palette_clear();
         }
+
         else if (key == 'x')
         {
-            palette_removeColorLast();
+            // 1. remove last
+            //palette_removeColorLast();
+
+            // 2. remove selected
+            palette_removeColor(palette_colorSelected);
         }
+
         //else if (key == 'a')
         //{
         //    color_picked = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
@@ -4543,16 +4555,21 @@ void ofxColorManager::update_color_picked_CHANGES()
     if (bPaletteEdit && palette_colorSelected != -1 && btns_palette.size() > palette_colorSelected)
     {
         // update user palette color with recently picked color
+
+        // 1. interface buttons
         btns_palette[palette_colorSelected]->setColor(color_clicked);
 
-        // update gradient for selected index color
-        if (gradient.getNumColors() > palette_colorSelected)
-        {
-            gradient.replaceColorAtIndex(palette_colorSelected, btns_palette[palette_colorSelected]->getColor());
-        }
+        // 2. palette vector
+        palette[palette_colorSelected].set(color_clicked);
+
+        // 3. update gradient
+        if (palette_colorSelected < gradient.getNumColors())
+            gradient.replaceColorAtIndex(palette_colorSelected, color_clicked);
     }
 
-    // 2. when color picked changes, auto trig and put generated palette to user palette
+    //-
+
+    // 2. WORKFLOW: if enabled, when color picked changes, auto trig and put generated palette to user palette
 
     if (bAuto_palette_recall)
     {
@@ -4593,7 +4610,7 @@ void ofxColorManager::Changed_color_picked(ofFloatColor &_c)
 //--------------------------------------------------------------
 void ofxColorManager::Changed_color_clicked(ofFloatColor &color)
 {
-    //DISABLED
+    // NOT USED. DISABLED
     ofLogNotice("ofxColorManager") << "Changed_color_clicked " << ofToString(color);
     //    color_picked.set(color);
 }
