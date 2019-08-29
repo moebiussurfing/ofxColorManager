@@ -2488,7 +2488,7 @@ void ofxColorManager::palettes_setup_labels()
     // 1. populate label buttons to trig palettes
 
     int x0 = palettes_x;
-    int padH = 11;
+    int padH = 5;
     int y0 = palettes_y + padH;
     int h0 = box_size + pad;
 
@@ -3158,7 +3158,7 @@ void ofxColorManager::palettes_resize()
 
     //-
 
-    // WORKFLOW: trig last choiced palette
+    // WORKFLOW: trig last picked palette
     if (bAuto_palette_recall)
     {
         palette_clear();
@@ -3173,7 +3173,7 @@ void ofxColorManager::palettes_setVisible(bool b)
 {
     // hide and disable touchs for buttons
 
-    // ALGORITMIC COLOR PALETTES
+    // ALGORITHMIC COLOR PALETTES
 
     //-
 
@@ -3285,16 +3285,16 @@ void ofxColorManager::draw()
 
     //--
 
-    //TODO: BUG: startup..
-    //if (ENABLE_keys)
-    if (this->mouseOverGui)
-    {
-        ofClear(ofColor::red);
-    }
-    else
-    {
-        ofClear(ofColor::blue);
-    }
+    ////TODO: BUG: startup..
+    ////if (ENABLE_keys)
+    //if (this->mouseOverGui)
+    //{
+    //    ofClear(ofColor::red);
+    //}
+    //else
+    //{
+    //    ofClear(ofColor::blue);
+    //}
 
     //--
 
@@ -3549,12 +3549,12 @@ void ofxColorManager::palette_addColor(ofColor c)
     gradient.addColor(c);
     palette_addColor_toInterface(c);
 
-    // TODO: BUG
-    // WORKFLOW: select last one, just the one created now
-    if (palette_colorSelected > -1 && bPaletteEdit)
-    {
-        palette_colorSelected = palette.size() - 1;
-    }
+    //// TODO: BUG
+    //// WORKFLOW: select last one, just the one created now
+    //if (palette_colorSelected > -1 && bPaletteEdit)
+    //{
+    //    palette_colorSelected = palette.size() - 1;
+    //}
 }
 
 
@@ -3569,9 +3569,10 @@ void ofxColorManager::palette_removeColor(int c)
     if (c < palette.size())
     {
         // 0. erase last touched color th element
-        palette.erase(palette.begin() + c - 1);
+        //palette.erase(palette.begin() + c - 1);
+        palette.erase(palette.begin() + c);
 
-        // 1. remove color from palette vector
+        // 1. debug after remove color from palette vector
         std::cout << "vector palette contains: ";
         for (unsigned i = 0; i < palette.size(); ++i)
             std::cout << ' ' << palette[i];
@@ -3832,14 +3833,32 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e)
             color_picked = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
         }
     }
+
     else if (name == "ADD COLOR")
     {
         if (bAddColor)
         {
             bAddColor = false;
             palette_addColor(ofColor(color_picked.get()));
+
+            // WORKFLOW: select last one, just the one created now
+            //if (bPaletteEdit)
+            {
+                palette_colorSelected = palette.size() - 1;
+
+                // 1. de-select all buttons
+                for (int i = 0; i < btns_palette.size(); i++)
+                {
+                    btns_palette[i]->setSelected(false);
+                }
+
+                // 2. set last button from current added color
+                btns_palette[palette_colorSelected]->setSelected(true);//sets border only
+                ofLogNotice("ofxColorManager") << "user palette selected last color: " << palette_colorSelected;
+            }
         }
     }
+
     else if (name == "EDIT COLOR")
     {
         // 1. deselect all color buttons
