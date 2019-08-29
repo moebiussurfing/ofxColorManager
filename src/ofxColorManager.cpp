@@ -657,7 +657,7 @@ void ofxColorManager::gui_setup_layout()
 
     // gui 4 PANELS MANAGER
     gui4_x = gui2_x;
-    gui4_y = 460;
+    gui4_y = 510;
     gui4_w = guiWidth;
     gui4_h = 200;
 
@@ -805,7 +805,7 @@ void ofxColorManager::palette_rearrenge()
 {
     ofLogNotice("ofxColorManager:palette_rearrenge") << "btns_palette.size():" << btns_palette.size();
 
-    // re-arrenge all resized boxes
+    // re-arrenge all resized boxes from interface to fill all bar
     // used when changed palette size
 
     std::string name;
@@ -872,9 +872,8 @@ void ofxColorManager::palette_addColor_toInterface(ofColor c)
     scene->addChild(btn);
     btns_palette.push_back(btn);
 
-    ofLogNotice("ofxColorManager:palette_addColor_toInterface:") << "added btn";
-    ofLogNotice("ofxColorManager:palette_addColor_toInterface:") << "btns_palette.size():[" << btns_palette.size()
-                                                                 << "]";
+    //ofLogNotice("ofxColorManager") << "palette_addColor_toInterface:" << "added btn";
+    ofLogNotice("ofxColorManager") << "palette_addColor_toInterface:" << "size: [" << btns_palette.size() << "]";
 
     //-
 
@@ -1833,6 +1832,10 @@ void ofxColorManager::palette_load_ColourLovers()
 //--------------------------------------------------------------
 void ofxColorManager::update()
 {
+    //-
+
+    // WIINDOW TITLE
+
     string str;
     str += ("[PAGE " + ofToString(panels.group_Selected) + "] ");
     str += ofToString((int) ofGetFrameRate()) + "FPS";
@@ -3491,10 +3494,58 @@ void ofxColorManager::palette_addColor(ofColor c)
     palette_addColor_toInterface(c);
 
     // TODO: BUG
-    // WORKFLOW: select last one, just created now
+    // WORKFLOW: select last one, just the one created now
     if (palette_colorSelected > -1 && bPaletteEdit)
     {
         palette_colorSelected = palette.size() - 1;
+    }
+}
+
+
+//--------------------------------------------------------------
+void ofxColorManager::palette_removeColor(int c)
+{
+    // remove current color of user palette
+
+    ofLogNotice("ofxColorManager") << "palette_removeColor: " << c;
+    ofLogNotice("ofxColorManager") << "palette size pre: " << palette.size();
+
+    if (c < palette.size() - 1)
+    {
+        // 0. erase last touched color th element
+        palette.erase(palette.begin() + c - 1);
+
+        // 1. remove color from palette vector
+        std::cout << "vector palette contains: ";
+        for (unsigned i = 0; i < palette.size(); ++i)
+            std::cout << ' ' << palette[i];
+        std::cout << '\n';
+        ofLogNotice("ofxColorManager") << "palette size post: " << palette.size();
+
+        // 2. reset gradient
+        gradient.reset();
+
+        // 3. remove all interface buttons
+        for (int i = 0; i < btns_palette.size(); i++)
+        {
+            std::string n = ("btn" + ofToString(i));
+            auto a = scene->getChildWithName(n, 1000);
+            auto b = a->getName();
+            scene->removeChild(a, false);
+            ofLogNotice("ofxColorManager") << "removed children: " << b;
+        }
+        btns_palette.clear();
+
+        // 4. add edited palette colors vector to interface buttons and to gradient
+        for (int i = 0; i < palette.size(); i++)
+        {
+            ofLogNotice("ofxColorManager") << "add color [" << i << "]";
+            gradient.addColor(palette[i]);
+            palette_addColor_toInterface(palette[i]);
+        }
+
+        // 5. make positions & resizes to fill bar
+        palette_rearrenge();
     }
 }
 
@@ -3529,11 +3580,11 @@ void ofxColorManager::palette_touchedColor(string name)
     if (bAuto_palette_recall)
         bAuto_palette_recall = false;
 
-    // WORKFLOW: auto set edit mode
-    if (!bPaletteEdit)
-    {
-        bPaletteEdit = true;
-    }
+    //// WORKFLOW: auto set edit mode
+    //if (!bPaletteEdit)
+    //{
+    //    bPaletteEdit = true;
+    //}
 
     // de-select all buttons and select current touched/clicked
     for (int i = 0; i < btns_palette.size(); i++)
@@ -3547,7 +3598,7 @@ void ofxColorManager::palette_touchedColor(string name)
             // set this button selected
             btns_palette[i]->setSelected(true);//sets border only
             palette_colorSelected = i;
-            ofLogNotice("ofxColorManager") << "selected color: " << i;
+            ofLogNotice("ofxColorManager") << "user palette selected color: " << i;
         }
     }
 }
@@ -3640,7 +3691,14 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e)
     else if (name == "SHOW COLOR PICTURE")
     {
         if (!SHOW_PresetManager)
+        {
             colorQuantizer.setActive(SHOW_ColorQuantizer);
+            if (SHOW_ColorQuantizer)
+            {
+                colorQuantizer.map_setup();
+            }
+
+        }
         else
         {
             colorQuantizer.setActive(false);
@@ -3753,7 +3811,13 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e)
         if (bRemoveColor)
         {
             bRemoveColor = false;
-            palette_removeColorLast();
+
+            // 1. remove last
+            //palette_removeColorLast();
+
+            // 2. remove selected
+            palette_removeColor(palette_colorSelected);
+
         }
     }
     else if (name == "CLEAR PALETTE")
@@ -4116,7 +4180,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
         else if (key == 'o')
         {
             //TODO
-            // workflow: when loading a colour lover palette we disable auto create from algo palettes
+            // WORKFLOW: when loading a colour lover palette we disable auto create from algo palettes
             if (!bAuto_palette_recall)
             {
                 bAuto_palette_recall = true;
@@ -4176,6 +4240,10 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
             color_picked = ofColor(ColorBrowser_palette[r]);
             palettes_update();
             palette_recallFromPalettes(SELECTED_palette_LAST);
+
+            // undo
+            color_Undo = color_picked.get();
+            color_Undo.store();
 
             //-
 

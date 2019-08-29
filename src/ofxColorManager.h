@@ -350,6 +350,7 @@ public:
 
     void palette_addColor(ofColor c);
     void palette_removeColorLast();
+    void palette_removeColor(int c);
     void palette_clear();
     void palette_addColor_toInterface(ofColor c);
     void palette_rearrenge();//resize boxes when adding removing colors to user palette
