@@ -179,20 +179,37 @@ void ofxColorManager::preset_filesRefresh()
 
     //TODO
     //void to go to 1st...
-    //always goes to 1st preset 0
-    //thats because saving re sort the files
-    //and we don't know the position of las saves preset
 
+    // 1. load same position preset
+    // if preset is deleted goes to nextone..
+    // should check names because sorting changes..
     if (fileNames.size() > 0)
     {
-        currentFile = 0;
+        if (currentFile > fileNames.size() - 1)
+            currentFile = fileNames.size() - 1;
+        //else if (currentFile > fileNames.size() - 1)
+
         PRESET_name = fileNames[currentFile];
         preset_load(PRESET_name);
     }
     else
     {
-        ofLogError("ofxColorManager") << "NOT FOUND ANY FILE PRESET!";
+        ofLogError("ofxColorManager") << "FILE PRESET NOT FOUND!";
     }
+
+    //// 2. always goes to 1st preset 0
+    ////that's because saving re sort the files
+    ////and we don't know the position of last saves preset..
+    //if (fileNames.size() > 0)
+    //{
+    //    currentFile = 0;
+    //    PRESET_name = fileNames[currentFile];
+    //    preset_load(PRESET_name);
+    //}
+    //else
+    //{
+    //    ofLogError("ofxColorManager") << "NOT FOUND ANY FILE PRESET!";
+    //}
 }
 
 
@@ -637,20 +654,20 @@ void ofxColorManager::gui_setup_layout()
     box_user_size = 50;//user palette colors
 
     // gui 1 COLOR PANEL
-    gui_x = 0;
-    gui_y = 0;
+    gui_x = 5;
+    gui_y = 5;
     gui_w = guiWidth;
     gui_h = 200;
 
     // gui 2 COLOR MANAGER
     gui2_x = 230;
-    gui2_y = 0;
+    gui2_y = 5;
     gui2_w = guiWidth;
     gui2_h = 100;
 
     // gui 3 PRESET MANAGER
     gui3_x = 700;
-    gui3_y = 0;
+    gui3_y = 5;
     gui3_w = guiWidth;
     gui3_h = 200;
 
@@ -1445,8 +1462,8 @@ void ofxColorManager::gui_imGui_PresetManager()
 
     //mainSettings = ofxImGui::Settings();
     mainSettings.windowSize = ofVec2f(gui3_w, gui3_h);
-    mainSettings.windowPos = ofVec2f(ofGetWindowWidth() * 0.5 - gui3_w * 0.5, gui3_y);
-    //    mainSettings.windowPos = ofVec2f(gui3_x, gui3_y);
+    //mainSettings.windowPos = ofVec2f(ofGetWindowWidth() * 0.5 - gui3_w * 0.5, gui3_y);
+        mainSettings.windowPos = ofVec2f(gui3_x, gui3_y);
 
     if (ofxImGui::BeginWindow("PRESET MANAGER", mainSettings, false))
     {
@@ -1649,6 +1666,7 @@ void ofxColorManager::gui_imGui_PresetManager()
             cout << "DELETE" << endl;
 
             files[currentFile].remove();
+            preset_filesRefresh();
 
             //string str = fileNames[currentFile];
             //cout << "DELETE:"<<str<<endl;
@@ -1656,17 +1674,14 @@ void ofxColorManager::gui_imGui_PresetManager()
             //dir.allowExt("jpg");
             //dir.allowExt("png");
             //dir.sort();
-
-
-            preset_filesRefresh();
         }
 
-        ImGui::SameLine();
-        if (ImGui::Button("REFRESH"))//current preset
-        {
-            cout << "REFRESH" << endl;
-            preset_filesRefresh();
-        }
+        //ImGui::SameLine();
+        //if (ImGui::Button("REFRESH"))//current preset
+        //{
+        //    cout << "REFRESH" << endl;
+        //    preset_filesRefresh();
+        //}
 
         //-
 
@@ -3765,7 +3780,7 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e)
     }
     else if (name == "SHOW USER PALETTE")
     {
-        cout << "SHOW_UserPalette: " << SHOW_UserPalette << endl;
+        ofLogVerbose("ofxColorManager") << "SHOW_UserPalette: " << SHOW_UserPalette << endl;
         for (int i = 0; i < btns_palette.size(); i++)
         {
             btns_palette[i]->setVisible(SHOW_UserPalette);
@@ -3777,7 +3792,8 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e)
         if (bPaletteEdit && SHOW_ColorQuantizer)
             bPaletteEdit = false;
 
-        if (!SHOW_PresetManager)
+        // WORKFLOW: BUG
+        //if (!SHOW_PresetManager)
         {
             colorQuantizer.setActive(SHOW_ColorQuantizer);
             if (SHOW_ColorQuantizer)
@@ -3785,10 +3801,10 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e)
                 colorQuantizer.map_setup();
             }
         }
-        else
-        {
-            colorQuantizer.setActive(false);
-        }
+        //else
+        //{
+        //    colorQuantizer.setActive(false);
+        //}
     }
     else if (name == "SHOW PRESET MANAGER")
     {

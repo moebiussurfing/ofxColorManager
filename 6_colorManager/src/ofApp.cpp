@@ -5,7 +5,8 @@
 void ofApp::setup(){
     ofEnableAlphaBlending();
     ofSetFrameRate(30);
-    ofSetLogLevel(OF_LOG_NOTICE);
+    ofSetLogLevel(OF_LOG_SILENT);
+    //ofSetLogLevel(OF_LOG_NOTICE);
 
     ColorManager.setup();
 }
