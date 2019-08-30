@@ -158,7 +158,8 @@ void DEMO_palette::draw() {
             if (palette != nullptr) {
                 c.set((*palette)[iCol]);
                 iCol++;
-                iCol = iCol % palette->size();
+                if (palette->size() > 0)
+                    iCol = iCol % palette->size();
             }
 
             else
