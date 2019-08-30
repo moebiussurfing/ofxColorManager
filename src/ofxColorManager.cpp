@@ -1323,16 +1323,19 @@ void ofxColorManager::gui_imGui_ControlPanels()
     {
         //        if (ofxImGui::BeginTree("PANELS", panelsSet))
         //        {
+        ofxImGui::AddParameter(this->SHOW_PresetManager);
+        ofxImGui::AddParameter(this->SHOW_ColorPicker);
+        ofxImGui::AddParameter(this->SHOW_ColorManager);
         ofxImGui::AddParameter(this->SHOW_UserPalette);
         ofxImGui::AddParameter(this->SHOW_Gradient);
         ofxImGui::AddParameter(this->SHOW_Curve);
         ofxImGui::AddParameter(this->SHOW_TEST_Curve);
+        ImGui::Separator();
+        ofxImGui::AddParameter(this->SHOW_AlgoPalettes);
         ofxImGui::AddParameter(this->SHOW_ColourLovers);
         ofxImGui::AddParameter(this->SHOW_ColourLovers_searcher);
-        ofxImGui::AddParameter(this->SHOW_AlgoPalettes);
         ofxImGui::AddParameter(this->SHOW_ColorQuantizer);
         ofxImGui::AddParameter(this->SHOW_BrowserColors);
-        ofxImGui::AddParameter(this->SHOW_PresetManager);
         //            ofxImGui::EndTree(panelsSet);
         //        }
     }
@@ -1463,7 +1466,7 @@ void ofxColorManager::gui_imGui_PresetManager()
     //mainSettings = ofxImGui::Settings();
     mainSettings.windowSize = ofVec2f(gui3_w, gui3_h);
     //mainSettings.windowPos = ofVec2f(ofGetWindowWidth() * 0.5 - gui3_w * 0.5, gui3_y);
-        mainSettings.windowPos = ofVec2f(gui3_x, gui3_y);
+    mainSettings.windowPos = ofVec2f(gui3_x, gui3_y);
 
     if (ofxImGui::BeginWindow("PRESET MANAGER", mainSettings, false))
     {
@@ -1530,7 +1533,6 @@ void ofxColorManager::gui_imGui_PresetManager()
 
             textInput_temp = ofToString(tab2);
             cout << "textInput_temp:" << textInput_temp << endl;
-
 
             if (MODE_newPreset)
                 MODE_newPreset = false;
