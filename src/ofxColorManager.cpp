@@ -2072,7 +2072,6 @@ void ofxColorManager::update()
         //-
 
         // PRESET MANAGER
-
         if (!MODE_newPreset)
             MODE_newPreset = true;
         textInput_New = btns_plt_Selector[SELECTED_palette_LAST]->getName();
@@ -3010,7 +3009,6 @@ void ofxColorManager::palettes_update()
 //--------------------------------------------------------------
 void ofxColorManager::palettes_resize()
 {
-
     // 1. remove all color boxes
 
     //-
@@ -3811,10 +3809,10 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e)
     }
     else if (name == "SHOW PRESET MANAGER")
     {
-        if (SHOW_PresetManager && SHOW_ColorQuantizer)
-            colorQuantizer.setActive(false);
-        else if (!SHOW_PresetManager && SHOW_ColorQuantizer)
-            colorQuantizer.setActive(true);
+        //if (SHOW_PresetManager && SHOW_ColorQuantizer)
+        //    colorQuantizer.setActive(false);
+        //else if (!SHOW_PresetManager && SHOW_ColorQuantizer)
+        //    colorQuantizer.setActive(true);
     }
 
     //--
@@ -4083,7 +4081,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
         // COLOR-WHEEL-SCHEMES
 
-        if (SHOW_AlgoPalettes && !SHOW_ColourLovers && !SHOW_ColorQuantizer && !SHOW_PresetManager)
+        if (SHOW_AlgoPalettes && !SHOW_ColourLovers && !SHOW_ColorQuantizer)
         {
             if (key == OF_KEY_UP)
             {
@@ -4333,6 +4331,11 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
             color_Undo = color_picked.get();
             color_Undo.store();
 
+            // PRESET MANAGER
+            if (!MODE_newPreset)
+                MODE_newPreset = true;
+            textInput_New = btns_plt_Selector[SELECTED_palette_LAST]->getName();
+
             if (TEST_DEMO)
                 myDEMO_palette.reStart();
         }
@@ -4377,6 +4380,11 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
             // undo
             color_Undo = color_picked.get();
             color_Undo.store();
+
+            // PRESET MANAGER
+            if (!MODE_newPreset)
+                MODE_newPreset = true;
+            textInput_New = btns_plt_Selector[SELECTED_palette_LAST]->getName();
 
             //-
 
