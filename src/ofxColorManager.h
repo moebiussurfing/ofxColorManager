@@ -41,17 +41,17 @@ class ofxColorManager
 
 public:
 
+    //TODO
+    //BUG: trying to avoid bug moving mouse..
     //void mouseEvent(ofxMacMouseEventArg &arg) {
     //    ofLogNotice() << "global mouse position: " << arg.x << ", " << arg.y;
     //}
 
-    // colorQuantizer
-    ofxColorQuantizerHelper colorQuantizer;
-
     bool ENABLE_keys = false;
     //bool ENABLE_keys_PRE = false;
 
-    string textInput_New = "new preset";
+    // colorQuantizer
+    ofxColorQuantizerHelper colorQuantizer;
 
     //-
 
@@ -375,7 +375,6 @@ public:
     int paletteLibPage = 0;
     ofParameter<int> paletteLibPage_param{"page", 0, 0, maxPages};
 
-
     //-
 
     // INTERFACE
@@ -478,6 +477,8 @@ public:
     void palette_load(string p);
 
     bool MODE_newPreset = false;
+    string textInput_New = "new preset";
+
     //-
 
     // FILES

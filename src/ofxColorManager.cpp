@@ -2,152 +2,6 @@
 
 
 //--------------------------------------------------------------
-void ofxColorManager::palettes_colorTheory_setup()
-{
-    //    group.setName("Color Theory");
-    //    group.add(primaryColor.set("Primary Color", ofColor::magenta));
-    //    group.add(colorScheme.set("Color Scheme", 6, 0, ColorWheelSchemes::colorSchemes.size() - 1));
-    //    group.add(colorSchemeName);
-    //    group.add(numColors.set("Num Colors", 8, 1, 10));
-    //
-    //    panel.setup();
-    //    panel.add(group);
-    //    panel.setPosition(1000, 400);
-    //
-    //
-    //    numColors = NUM_COLORS_ALGO_PALETTES;
-    //
-    //    //TEST
-    //    colorSchemeName.set(ColorWheelSchemes::colorSchemeNames[colorScheme.get()]);
-    //    scheme = ColorWheelSchemes::colorSchemes[colorScheme.get()];
-    //    scheme->setPrimaryColor(primaryColor);
-    //    colors = scheme->interpolate(numColors.get());
-
-    //-
-
-    //TODO
-    // should reduce calls.. to setup only..
-
-    scheme_Analogous_name = (ColorWheelSchemes::colorSchemeNames[0]);
-    scheme_Analogous = ColorWheelSchemes::colorSchemes[0];
-    colors_Analogous = scheme_Analogous->interpolate(NUM_COLORS_ALGO_PALETTES);
-
-    scheme_Complementary_name = (ColorWheelSchemes::colorSchemeNames[1]);
-    scheme_Complementary = ColorWheelSchemes::colorSchemes[1];
-    colors_Complementary = scheme_Complementary->interpolate(NUM_COLORS_ALGO_PALETTES);
-
-    scheme_SplitComplementary_name = (ColorWheelSchemes::colorSchemeNames[2]);
-    scheme_SplitComplementary = ColorWheelSchemes::colorSchemes[2];
-    colors_SplitComplementary = scheme_SplitComplementary->interpolate(NUM_COLORS_ALGO_PALETTES);
-
-    scheme_Compound_name = (ColorWheelSchemes::colorSchemeNames[3]);
-    scheme_Compound = ColorWheelSchemes::colorSchemes[3];
-    colors_Compound = scheme_Compound->interpolate(NUM_COLORS_ALGO_PALETTES);
-
-    scheme_FlippedCompound_name = (ColorWheelSchemes::colorSchemeNames[4]);
-    scheme_FlippedCompound = ColorWheelSchemes::colorSchemes[4];
-    colors_FlippedCompound = scheme_FlippedCompound->interpolate(NUM_COLORS_ALGO_PALETTES);
-
-    scheme_Monochrome_name = (ColorWheelSchemes::colorSchemeNames[5]);
-    scheme_Monochrome = ColorWheelSchemes::colorSchemes[5];
-    colors_Monochrome = scheme_Monochrome->interpolate(NUM_COLORS_ALGO_PALETTES);
-
-    scheme_Tetrad_name = (ColorWheelSchemes::colorSchemeNames[6]);
-    scheme_Tetrad = ColorWheelSchemes::colorSchemes[6];
-    colors_Tetrad = scheme_Tetrad->interpolate(NUM_COLORS_ALGO_PALETTES);
-
-    scheme_Triad_name = (ColorWheelSchemes::colorSchemeNames[7]);
-    scheme_Triad = ColorWheelSchemes::colorSchemes[7];
-    colors_Triad = scheme_Triad->interpolate(NUM_COLORS_ALGO_PALETTES);
-}
-
-
-//--------------------------------------------------------------
-void ofxColorManager::palettes_colorTheory_update()
-{
-    //ofFloatColor base;//TODO
-    //if (!MODE_Palette)
-    //{
-    //    // using hue only from picked color and forcing sat/(brg from algo sliders
-    //    base = ofFloatColor::fromHsb(color_picked.get().getHue(),
-    //        ofMap(SATURATION, 0, 255, 0., 1.),
-    //        ofMap(BRIGHTNESS, 0, 255, 0., 1.));
-    //}
-    //else
-    //{
-    //    // check using hue + sat/brg from color ignoring algo panel SV sliders
-    //    base = color_picked.get();
-    //}
-
-    primaryColor.set(base);
-
-    //    //TEST
-    //    colorSchemeName.set(ColorWheelSchemes::colorSchemeNames[colorScheme.get()]);
-    //    scheme = ColorWheelSchemes::colorSchemes[colorScheme.get()];
-    //    scheme->setPrimaryColor(primaryColor);
-    //    numColors = NUM_COLORS_ALGO_PALETTES;
-    //    colors = scheme->interpolate(numColors.get());
-
-    //-
-
-    scheme_Analogous = ColorWheelSchemes::colorSchemes[0];
-    scheme_Analogous->setPrimaryColor(primaryColor);
-    colors_Analogous = scheme_Analogous->interpolate(NUM_COLORS_ALGO_PALETTES);
-
-    scheme_Complementary = ColorWheelSchemes::colorSchemes[1];
-    scheme_Complementary->setPrimaryColor(primaryColor);
-    colors_Complementary = scheme_Complementary->interpolate(NUM_COLORS_ALGO_PALETTES);
-
-    scheme_SplitComplementary = ColorWheelSchemes::colorSchemes[2];
-    scheme_SplitComplementary->setPrimaryColor(primaryColor);
-    colors_SplitComplementary = scheme_SplitComplementary->interpolate(NUM_COLORS_ALGO_PALETTES);
-
-    scheme_Compound = ColorWheelSchemes::colorSchemes[3];
-    scheme_Compound->setPrimaryColor(primaryColor);
-    colors_Compound = scheme_Compound->interpolate(NUM_COLORS_ALGO_PALETTES);
-
-    scheme_FlippedCompound = ColorWheelSchemes::colorSchemes[4];
-    scheme_FlippedCompound->setPrimaryColor(primaryColor);
-    colors_FlippedCompound = scheme_FlippedCompound->interpolate(NUM_COLORS_ALGO_PALETTES);
-
-    scheme_Monochrome = ColorWheelSchemes::colorSchemes[5];
-    scheme_Monochrome->setPrimaryColor(primaryColor);
-    colors_Monochrome = scheme_Monochrome->interpolate(NUM_COLORS_ALGO_PALETTES);
-
-    scheme_Tetrad = ColorWheelSchemes::colorSchemes[6];
-    scheme_Tetrad->setPrimaryColor(primaryColor);
-    colors_Tetrad = scheme_Tetrad->interpolate(NUM_COLORS_ALGO_PALETTES);
-
-    scheme_Triad = ColorWheelSchemes::colorSchemes[7];
-    scheme_Triad->setPrimaryColor(primaryColor);
-    colors_Triad = scheme_Triad->interpolate(NUM_COLORS_ALGO_PALETTES);
-
-    //    NOTE: RANDOM = 0, ANALOGOUS = 1, COMPLEMENTARY = 2,
-    //    SPLIT_COMPLEMENTARY = 3, COMPOUND = 4, FLIPPED_COMPOUND = 5,
-    //    MONOCHROME = 6, TRIAD = 7, TETRAD = 8
-}
-
-
-////--------------------------------------------------------------
-//void ofxColorManager::ColorWheel_draw() {
-//
-//    //-
-//
-//    int w = 30;
-//    int guiX = panel.getPosition().x;
-//    int guiY = panel.getPosition().y;
-//
-//    for (int i = 0; i < colors.size(); i++) {
-//        ofSetColor(colors[i]);
-//        ofFill();
-//        ofDrawRectangle(guiX + w * i, guiY-2*w, w, w);
-//    }
-//
-//    panel.draw();
-//}
-
-
-//--------------------------------------------------------------
 ofxColorManager::ofxColorManager()
 {
 }
@@ -3303,6 +3157,152 @@ void ofxColorManager::palettes_setVisible(bool b)
         btn->setLocked(!b);
     }
 }
+
+
+//--------------------------------------------------------------
+void ofxColorManager::palettes_colorTheory_setup()
+{
+    //    group.setName("Color Theory");
+    //    group.add(primaryColor.set("Primary Color", ofColor::magenta));
+    //    group.add(colorScheme.set("Color Scheme", 6, 0, ColorWheelSchemes::colorSchemes.size() - 1));
+    //    group.add(colorSchemeName);
+    //    group.add(numColors.set("Num Colors", 8, 1, 10));
+    //
+    //    panel.setup();
+    //    panel.add(group);
+    //    panel.setPosition(1000, 400);
+    //
+    //
+    //    numColors = NUM_COLORS_ALGO_PALETTES;
+    //
+    //    //TEST
+    //    colorSchemeName.set(ColorWheelSchemes::colorSchemeNames[colorScheme.get()]);
+    //    scheme = ColorWheelSchemes::colorSchemes[colorScheme.get()];
+    //    scheme->setPrimaryColor(primaryColor);
+    //    colors = scheme->interpolate(numColors.get());
+
+    //-
+
+    //TODO
+    // should reduce calls.. to setup only..
+
+    scheme_Analogous_name = (ColorWheelSchemes::colorSchemeNames[0]);
+    scheme_Analogous = ColorWheelSchemes::colorSchemes[0];
+    colors_Analogous = scheme_Analogous->interpolate(NUM_COLORS_ALGO_PALETTES);
+
+    scheme_Complementary_name = (ColorWheelSchemes::colorSchemeNames[1]);
+    scheme_Complementary = ColorWheelSchemes::colorSchemes[1];
+    colors_Complementary = scheme_Complementary->interpolate(NUM_COLORS_ALGO_PALETTES);
+
+    scheme_SplitComplementary_name = (ColorWheelSchemes::colorSchemeNames[2]);
+    scheme_SplitComplementary = ColorWheelSchemes::colorSchemes[2];
+    colors_SplitComplementary = scheme_SplitComplementary->interpolate(NUM_COLORS_ALGO_PALETTES);
+
+    scheme_Compound_name = (ColorWheelSchemes::colorSchemeNames[3]);
+    scheme_Compound = ColorWheelSchemes::colorSchemes[3];
+    colors_Compound = scheme_Compound->interpolate(NUM_COLORS_ALGO_PALETTES);
+
+    scheme_FlippedCompound_name = (ColorWheelSchemes::colorSchemeNames[4]);
+    scheme_FlippedCompound = ColorWheelSchemes::colorSchemes[4];
+    colors_FlippedCompound = scheme_FlippedCompound->interpolate(NUM_COLORS_ALGO_PALETTES);
+
+    scheme_Monochrome_name = (ColorWheelSchemes::colorSchemeNames[5]);
+    scheme_Monochrome = ColorWheelSchemes::colorSchemes[5];
+    colors_Monochrome = scheme_Monochrome->interpolate(NUM_COLORS_ALGO_PALETTES);
+
+    scheme_Tetrad_name = (ColorWheelSchemes::colorSchemeNames[6]);
+    scheme_Tetrad = ColorWheelSchemes::colorSchemes[6];
+    colors_Tetrad = scheme_Tetrad->interpolate(NUM_COLORS_ALGO_PALETTES);
+
+    scheme_Triad_name = (ColorWheelSchemes::colorSchemeNames[7]);
+    scheme_Triad = ColorWheelSchemes::colorSchemes[7];
+    colors_Triad = scheme_Triad->interpolate(NUM_COLORS_ALGO_PALETTES);
+}
+
+
+//--------------------------------------------------------------
+void ofxColorManager::palettes_colorTheory_update()
+{
+    //ofFloatColor base;//TODO
+    //if (!MODE_Palette)
+    //{
+    //    // using hue only from picked color and forcing sat/(brg from algo sliders
+    //    base = ofFloatColor::fromHsb(color_picked.get().getHue(),
+    //        ofMap(SATURATION, 0, 255, 0., 1.),
+    //        ofMap(BRIGHTNESS, 0, 255, 0., 1.));
+    //}
+    //else
+    //{
+    //    // check using hue + sat/brg from color ignoring algo panel SV sliders
+    //    base = color_picked.get();
+    //}
+
+    primaryColor.set(base);
+
+    //    //TEST
+    //    colorSchemeName.set(ColorWheelSchemes::colorSchemeNames[colorScheme.get()]);
+    //    scheme = ColorWheelSchemes::colorSchemes[colorScheme.get()];
+    //    scheme->setPrimaryColor(primaryColor);
+    //    numColors = NUM_COLORS_ALGO_PALETTES;
+    //    colors = scheme->interpolate(numColors.get());
+
+    //-
+
+    scheme_Analogous = ColorWheelSchemes::colorSchemes[0];
+    scheme_Analogous->setPrimaryColor(primaryColor);
+    colors_Analogous = scheme_Analogous->interpolate(NUM_COLORS_ALGO_PALETTES);
+
+    scheme_Complementary = ColorWheelSchemes::colorSchemes[1];
+    scheme_Complementary->setPrimaryColor(primaryColor);
+    colors_Complementary = scheme_Complementary->interpolate(NUM_COLORS_ALGO_PALETTES);
+
+    scheme_SplitComplementary = ColorWheelSchemes::colorSchemes[2];
+    scheme_SplitComplementary->setPrimaryColor(primaryColor);
+    colors_SplitComplementary = scheme_SplitComplementary->interpolate(NUM_COLORS_ALGO_PALETTES);
+
+    scheme_Compound = ColorWheelSchemes::colorSchemes[3];
+    scheme_Compound->setPrimaryColor(primaryColor);
+    colors_Compound = scheme_Compound->interpolate(NUM_COLORS_ALGO_PALETTES);
+
+    scheme_FlippedCompound = ColorWheelSchemes::colorSchemes[4];
+    scheme_FlippedCompound->setPrimaryColor(primaryColor);
+    colors_FlippedCompound = scheme_FlippedCompound->interpolate(NUM_COLORS_ALGO_PALETTES);
+
+    scheme_Monochrome = ColorWheelSchemes::colorSchemes[5];
+    scheme_Monochrome->setPrimaryColor(primaryColor);
+    colors_Monochrome = scheme_Monochrome->interpolate(NUM_COLORS_ALGO_PALETTES);
+
+    scheme_Tetrad = ColorWheelSchemes::colorSchemes[6];
+    scheme_Tetrad->setPrimaryColor(primaryColor);
+    colors_Tetrad = scheme_Tetrad->interpolate(NUM_COLORS_ALGO_PALETTES);
+
+    scheme_Triad = ColorWheelSchemes::colorSchemes[7];
+    scheme_Triad->setPrimaryColor(primaryColor);
+    colors_Triad = scheme_Triad->interpolate(NUM_COLORS_ALGO_PALETTES);
+
+    //    NOTE: RANDOM = 0, ANALOGOUS = 1, COMPLEMENTARY = 2,
+    //    SPLIT_COMPLEMENTARY = 3, COMPOUND = 4, FLIPPED_COMPOUND = 5,
+    //    MONOCHROME = 6, TRIAD = 7, TETRAD = 8
+}
+
+
+////--------------------------------------------------------------
+//void ofxColorManager::ColorWheel_draw() {
+//
+//    //-
+//
+//    int w = 30;
+//    int guiX = panel.getPosition().x;
+//    int guiY = panel.getPosition().y;
+//
+//    for (int i = 0; i < colors.size(); i++) {
+//        ofSetColor(colors[i]);
+//        ofFill();
+//        ofDrawRectangle(guiX + w * i, guiY-2*w, w, w);
+//    }
+//
+//    panel.draw();
+//}
 
 //--------------------------------------------------------------
 void ofxColorManager::draw()
