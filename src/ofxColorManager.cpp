@@ -819,7 +819,7 @@ void ofxColorManager::gui_imGui_theme()
 //--------------------------------------------------------------
 void ofxColorManager::palette_rearrenge()
 {
-    ofLogNotice("ofxColorManager:palette_rearrenge") << "btns_palette.size():" << btns_palette.size();
+    ofLogNotice("ofxColorManager") << "palette_rearrenge" << "size:" << btns_palette.size();
 
     // re-arrenge all resized boxes from interface to fill all bar
     // used when changed palette size
@@ -889,7 +889,7 @@ void ofxColorManager::palette_addColor_toInterface(ofColor c)
     btns_palette.push_back(btn);
 
     //ofLogNotice("ofxColorManager") << "palette_addColor_toInterface:" << "added btn";
-    ofLogNotice("ofxColorManager") << "palette_addColor_toInterface:" << "size: [" << btns_palette.size() << "]";
+    ofLogVerbose("ofxColorManager") << "palette_addColor_toInterface:" << "size: [" << btns_palette.size() << "]";
 
     //-
 
@@ -3505,7 +3505,6 @@ void ofxColorManager::draw()
             //TODO
             //if (SHOW_ColourLovers || SHOW_ColourLovers_searcher)
             //    ColourLoversHelper.setKeysEnabled(false);
-
         }
 
         //--
@@ -3573,7 +3572,7 @@ void ofxColorManager::palette_drawMINI()
 //--------------------------------------------------------------
 void ofxColorManager::palette_addColor(ofColor c)
 {
-    ofLogNotice("ofxColorManager:palette_addColor") << ofToString(c);
+    ofLogVerbose("ofxColorManager:palette_addColor") << ofToString(c);
     palette.push_back(c);
     gradient.addColor(c);
     palette_addColor_toInterface(c);
@@ -3618,7 +3617,7 @@ void ofxColorManager::palette_removeColor(int c)
             auto a = scene->getChildWithName(n, 1000);
             auto b = a->getName();
             scene->removeChild(a, false);
-            ofLogNotice("ofxColorManager") << "removed children: " << b;
+            ofLogVerbose("ofxColorManager") << "removed children: " << b;
         }
         btns_palette.clear();
 
@@ -3708,7 +3707,7 @@ void ofxColorManager::palette_clear()
         auto a = scene->getChildWithName(n, 1000);
         auto b = a->getName();
         scene->removeChild(a, false);
-        ofLogNotice("ofxColorManager") << "removed children: " << b;
+        ofLogVerbose("ofxColorManager") << "removed children: " << b;
     }
     btns_palette.clear();
 }
@@ -4311,10 +4310,10 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
         {
             //TODO
             // WORKFLOW: when loading a colour lover palette we disable auto create from algo palettes
-            if (!bAuto_palette_recall)
-            {
-                bAuto_palette_recall = true;
-            }
+//            if (!bAuto_palette_recall)
+//            {
+//                bAuto_palette_recall = true;
+//            }
 
             //TODO: bug because some trigs are flags. we need direct functions
             //        bRandomColor = true;
@@ -4482,7 +4481,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
             palette_clear();
         }
 
-        else if (key == 'x')
+        else if (key == OF_KEY_BACKSPACE)
         {
             // 1. remove last
             //palette_removeColorLast();
@@ -4951,7 +4950,7 @@ void ofxColorManager::exit()
 void ofxColorManager::preset_load(string p)
 {
 
-    ofLogNotice("ofxColorManager:preset_load") << p;
+    ofLogNotice("ofxColorManager") << "preset_load " << p;
 
     // setup linking pointers to get back on load
     myPresetPalette.setName(p);
@@ -4996,7 +4995,7 @@ void ofxColorManager::preset_load(string p)
 //--------------------------------------------------------------
 void ofxColorManager::preset_save(string p)
 {
-    ofLogNotice("ofxColorManager:preset_save") << "preset_save: " << p;
+    ofLogNotice("ofxColorManager") << "preset_save: " << p;
 
     myPresetPalette.setName(p);
     myPresetPalette.setCurveName(PRESET_curveName);
