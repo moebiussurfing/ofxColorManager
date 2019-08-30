@@ -3798,7 +3798,8 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e)
             colorQuantizer.setActive(SHOW_ColorQuantizer);
             if (SHOW_ColorQuantizer)
             {
-                colorQuantizer.map_setup();
+                //open colors from one image
+                //colorQuantizer.map_setup();
             }
         }
         //else
@@ -4080,7 +4081,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
         // COLOR-WHEEL-SCHEMES
 
-        if (SHOW_AlgoPalettes && !SHOW_ColourLovers && !SHOW_ColorQuantizer)
+        if (SHOW_AlgoPalettes && !SHOW_ColourLovers && !SHOW_ColorQuantizer && !SHOW_PresetManager)
         {
             if (key == OF_KEY_UP)
             {
@@ -4407,8 +4408,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
         if (SHOW_ColourLovers)
         {
-            // 3. randomly get a palete from colour lovers
-            if (key == 'v')
+            // 3. randomly get a palette from colour lovers only
+            if (key == 'i')
             {
                 ColourLoversHelper.randomPalette();
 
