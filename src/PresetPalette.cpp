@@ -50,7 +50,7 @@ ofColor PresetPalette::getBackground()
 void PresetPalette::preset_load(string p)
 {
     ofLogNotice("PresetPalette::preset_load") << p;
-    string path = preset_path+p+".json";
+    string path = preset_path + p + ".json";
 
     ofFile file(path);
     if (file.exists())
@@ -100,7 +100,7 @@ void PresetPalette::preset_load(string p)
 void PresetPalette::preset_save(string p)
 {
     ofLogNotice("PresetPalette::preset_save") << "preset_save: " << p;
-    string path = preset_path+p+".json";
+    string path = preset_path + p + ".json";
 
     presetData.background = backCol;
     //presetData.background = (*background_BACK);

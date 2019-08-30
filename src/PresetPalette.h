@@ -26,7 +26,8 @@ struct PaletteData
 OFX_CEREAL_DEFINE(CEREAL_NVP(name), CEREAL_NVP(palette), CEREAL_NVP(background))
 };
 
-struct PresetData {
+struct PresetData
+{
     string name;
     vector<ofColor> palette;
     string curveName;
@@ -37,7 +38,8 @@ OFX_CEREAL_DEFINE(CEREAL_NVP(name), CEREAL_NVP(curveName), CEREAL_NVP(palette), 
 
 //--
 
-class PresetPalette {
+class PresetPalette
+{
 
 public:
 

@@ -2128,7 +2128,7 @@ void ofxColorManager::curveTool_setup()
 
     curvesTool.setup(curveTool_amount);
     //TODO: TEMP
-    curvesTool.load("curves.yml"); //needed because it fills polyline
+    curvesTool.load("settings/curves.yml"); //needed because it fills polyline
 
     curve_pos.set("INPUT", 0., 0., 1.);
     curve_pos_out.set("OUTPUT", 0., 0., 1.);

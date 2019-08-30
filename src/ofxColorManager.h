@@ -495,7 +495,7 @@ public:
     void XML_save_AppSettings(ofParameterGroup &g, string path);
     void XML_load_AppSettings(ofParameterGroup &g, string path);
     ofParameterGroup XML_params;
-    string XML_path = "ofxColorManager.xml";
+    string XML_path = "settings/ofxColorManager.xml";
 
     //--
 
