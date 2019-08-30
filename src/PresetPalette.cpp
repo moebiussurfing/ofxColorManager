@@ -49,7 +49,7 @@ ofColor PresetPalette::getBackground()
 //--------------------------------------------------------------
 void PresetPalette::preset_load(string p)
 {
-    ofLogNotice("PresetPalette::preset_load") << p;
+    ofLogNotice("PresetPalette") << "preset_load" << p;
     string path = preset_path + p + ".json";
 
     ofFile file(path);
@@ -58,9 +58,9 @@ void PresetPalette::preset_load(string p)
         jsonin ji(file);
         ji >> presetData;
 
-        ofLogNotice("PresetPalette::preset_load") << "presetData.name      : " << presetData.name;
-        ofLogNotice("PresetPalette::preset_load") << "presetData.curveName : " << presetData.curveName;
-        ofLogNotice("PresetPalette::preset_load") << "presetData.background: " << presetData.background;
+        ofLogNotice("PresetPalette") << "presetData.name: " << presetData.name;
+        ofLogNotice("PresetPalette") << "presetData.curveName: " << presetData.curveName;
+        ofLogNotice("PresetPalette") << "presetData.background: " << presetData.background;
 
         //        curvesTool.load(preset_path + presetData.curveName + ".yml");
         //
@@ -69,7 +69,7 @@ void PresetPalette::preset_load(string p)
         //            color_backGround = presetData.background;
         //        }
 
-        ofLogNotice("PresetPalette::preset_load") << "presetData.palette.size(): " << presetData.palette.size();
+        ofLogNotice("PresetPalette") << "presetData.palette.size(): " << presetData.palette.size();
 
         //        palette_clear();
         //        for (int i=0; i<presetData.palette.size(); i++)
@@ -91,7 +91,7 @@ void PresetPalette::preset_load(string p)
     }
     else
     {
-        ofLogNotice("PresetPalette::preset_load") << "FILE '" << path << "' NOT FOUND";
+        ofLogNotice("PresetPalette") << "FILE '" << path << "' NOT FOUND";
     }
 }
 
@@ -99,7 +99,7 @@ void PresetPalette::preset_load(string p)
 //--------------------------------------------------------------
 void PresetPalette::preset_save(string p)
 {
-    ofLogNotice("PresetPalette::preset_save") << "preset_save: " << p;
+    ofLogNotice("PresetPalette") << "preset_save: " << p;
     string path = preset_path + p + ".json";
 
     presetData.background = backCol;
@@ -109,10 +109,10 @@ void PresetPalette::preset_save(string p)
     presetData.curveName = (*curveName_BACK);
     presetData.palette = (*palette_BACK);
 
-    ofLogNotice("PresetPalette::preset_save") << "presetData.name      : " << presetData.name;
-    ofLogNotice("PresetPalette::preset_save") << "presetData.curveName : " << presetData.curveName;
-    ofLogNotice("PresetPalette::preset_save") << "presetData.palette   : " << ofToString(presetData.palette);
-    ofLogNotice("PresetPalette::preset_save") << "presetData.background: " << presetData.background;
+    ofLogNotice("PresetPalette") << "presetData.name: " << presetData.name;
+    ofLogNotice("PresetPalette") << "presetData.curveName: " << presetData.curveName;
+    ofLogNotice("PresetPalette") << "presetData.palette: " << ofToString(presetData.palette);
+    ofLogNotice("PresetPalette") << "presetData.background: " << presetData.background;
 
     //curvesTool.save(preset_path+presetData.curveName+".yml");
 
@@ -120,7 +120,7 @@ void PresetPalette::preset_save(string p)
     jsonout jo(file);
     jo << presetData;
 
-    ofLogNotice("PresetPalette::preset_save") << "DONE! preset_save: " << p;
+    ofLogNotice("PresetPalette") << "DONE! preset_save: " << p;
     cout << endl;
 }
 
@@ -137,9 +137,9 @@ void PresetPalette::palette_load(string p)
         jsonin ji(file);
         ji >> paletteData;
 
-        ofLogNotice("PresetPalette::palette_load") << "paletteData.name      : " << paletteData.name;
-        ofLogNotice("PresetPalette::palette_load") << "paletteData.palette   : " << ofToString(paletteData.palette);
-        ofLogNotice("PresetPalette::palette_load") << "paletteData.background: " << paletteData.background;
+        ofLogNotice("PresetPalette") << "paletteData.name: " << paletteData.name;
+        ofLogNotice("PresetPalette") << "paletteData.palette: " << ofToString(paletteData.palette);
+        ofLogNotice("PresetPalette") << "paletteData.background: " << paletteData.background;
 
         (*name_BACK) = paletteData.name;
         (*palette_BACK) = paletteData.palette;
@@ -163,9 +163,9 @@ void PresetPalette::palette_save(string p)
     paletteData.palette = (*palette_BACK);
     paletteData.background = backCol;
 
-    ofLogNotice("PresetPalette::preset_save") << "paletteData.name      : " << paletteData.name;
-    ofLogNotice("PresetPalette::preset_save") << "paletteData.palette   : " << ofToString(paletteData.palette);
-    ofLogNotice("PresetPalette::preset_save") << "paletteData.background: " << paletteData.background;
+    ofLogNotice("PresetPalette") << "paletteData.name: " << paletteData.name;
+    ofLogNotice("PresetPalette") << "paletteData.palette: " << ofToString(paletteData.palette);
+    ofLogNotice("PresetPalette") << "paletteData.background: " << paletteData.background;
 
     ofFile file(path, ofFile::WriteOnly);
     jsonout jo(file);
