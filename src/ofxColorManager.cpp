@@ -660,7 +660,7 @@ void ofxColorManager::gui_setup_layout()
     gui_h = 200;
 
     // gui 2 COLOR MANAGER
-    gui2_x = 230;
+    gui2_x = 225;
     gui2_y = 5;
     gui2_w = guiWidth;
     gui2_h = 100;
@@ -1273,7 +1273,6 @@ void ofxColorManager::gui_imGui_ColorPicker()
                         ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1.0f);
                     }
 
-                    //Style.FrameBorderSize
                     if (ImGui::ColorButton("##palette", saved_palette[n],
                         ImGuiColorEditFlags_NoAlpha |
                             ImGuiColorEditFlags_NoPicker |
@@ -4107,7 +4106,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
                 if (TEST_DEMO)
                     myDEMO_palette.reStart();
             }
-            else if (key == OF_KEY_LEFT)
+            else if (key == OF_KEY_LEFT && !SHOW_PresetManager)
             {
                 NUM_COLORS_ALGO_PALETTES--;
                 NUM_COLORS_ALGO_PALETTES = (int) ofClamp(NUM_COLORS_ALGO_PALETTES,
@@ -4117,7 +4116,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
                 if (TEST_DEMO)
                     myDEMO_palette.reStart();
             }
-            else if (key == OF_KEY_RIGHT)
+            else if (key == OF_KEY_RIGHT && !SHOW_PresetManager)
             {
                 NUM_COLORS_ALGO_PALETTES++;
                 NUM_COLORS_ALGO_PALETTES = (int) ofClamp(NUM_COLORS_ALGO_PALETTES,
@@ -4306,7 +4305,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
             // RANDOM USER PALETTE
 
-            // 1. randomize color and build palette if enabled
+            // 1. randomize one color and build palette if enabled
 
         else if (key == 'o')
         {
@@ -4334,7 +4333,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
             // PRESET MANAGER
             if (!MODE_newPreset)
                 MODE_newPreset = true;
-            textInput_New = btns_plt_Selector[SELECTED_palette_LAST]->getName();
+            textInput_New = "random_"+btns_plt_Selector[SELECTED_palette_LAST]->getName();
 
             if (TEST_DEMO)
                 myDEMO_palette.reStart();
@@ -4342,7 +4341,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
             //--
 
-            // 2. randomize user palette
+            // 2. randomize one color and created user palette
 
         else if (key == 'p')
         {
@@ -4384,7 +4383,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
             // PRESET MANAGER
             if (!MODE_newPreset)
                 MODE_newPreset = true;
-            textInput_New = btns_plt_Selector[SELECTED_palette_LAST]->getName();
+            textInput_New = ColorBrowser.pantoneNames[lastColorPicked]+"_";
+            textInput_New += btns_plt_Selector[SELECTED_palette_LAST]->getName();
 
             //-
 

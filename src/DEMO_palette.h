@@ -58,6 +58,7 @@ public:
 
 private:
 
+    string path = "settings/";
     ofEasyCam cam;
     vector<ofColor> *palette;
 

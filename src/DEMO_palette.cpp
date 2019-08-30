@@ -16,7 +16,7 @@ void DEMO_palette::setup() {
 
     ofSetCircleResolution(75);
 
-    ofxLoadCamera(cam, "DEMOcam");
+    ofxLoadCamera(cam, path+"DEMOcam");
     cam.disableMouseInput();
 //    cam.enableOrtho();
 
