@@ -3534,9 +3534,9 @@ void ofxColorManager::draw()
 
     //TODO:
     string strKeys = "COLOUR LOVERS KEYS: ";
-    strKeys += (ColourLoversHelper.ENABLER_Keys ? "OUT":"ON FOCUS");
+    strKeys += (ColourLoversHelper.ENABLER_Keys ? "ENTER/UNFOCUS":"FOCUS/LOAD");
     string strKeys2 = "MOUSE OVER GUI: ";
-    strKeys2 += (ENABLE_keys ? "ENTER/UNFOCUS":"FOCUS/LOAD");
+    strKeys2 += (ENABLE_keys ? "FALSE":"TRUE");
     ofDrawBitmapStringHighlight( strKeys, glm::vec2(500,ofGetHeight()-40) );
     ofDrawBitmapStringHighlight( strKeys2, glm::vec2(500,ofGetHeight()-20) );
 
