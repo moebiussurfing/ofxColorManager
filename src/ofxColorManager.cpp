@@ -673,7 +673,7 @@ void ofxColorManager::gui_imGui_theme()
 //--------------------------------------------------------------
 void ofxColorManager::palette_rearrenge()
 {
-    ofLogNotice("ofxColorManager") << "palette_rearrenge size: " << btns_palette.size();
+    ofLogVerbose("ofxColorManager") << "palette_rearrenge size: " << btns_palette.size();
 
     // re-arrenge all resized boxes from interface to fill all bar
     // used when changed palette size
@@ -743,7 +743,7 @@ void ofxColorManager::palette_addColor_toInterface(ofColor c)
     btns_palette.push_back(btn);
 
     //ofLogNotice("ofxColorManager") << "palette_addColor_toInterface:" << "added btn";
-    ofLogNotice("ofxColorManager") << "palette_addColor_toInterface: size: [" << btns_palette.size() << "]";
+    ofLogVerbose("ofxColorManager") << "palette_addColor_toInterface: size: [" << btns_palette.size() << "]";
 
     //-
 
@@ -3529,6 +3529,17 @@ void ofxColorManager::draw()
 
     if (SHOW_ColorQuantizer)
         colorQuantizer.draw();
+
+    //--
+
+    //TODO:
+    string strKeys = "COLOUR LOVERS KEYS: ";
+    strKeys += (ColourLoversHelper.ENABLER_Keys ? "OUT":"ON FOCUS");
+    string strKeys2 = "MOUSE OVER GUI: ";
+    strKeys2 += (ENABLE_keys ? "ENTER/UNFOCUS":"FOCUS/LOAD");
+    ofDrawBitmapStringHighlight( strKeys, glm::vec2(500,ofGetHeight()-40) );
+    ofDrawBitmapStringHighlight( strKeys2, glm::vec2(500,ofGetHeight()-20) );
+
 }
 
 
@@ -3572,7 +3583,7 @@ void ofxColorManager::palette_drawMINI()
 //--------------------------------------------------------------
 void ofxColorManager::palette_addColor(ofColor c)
 {
-    ofLogNotice("ofxColorManager") << "palette_addColor: " << ofToString(c);
+    ofLogVerbose("ofxColorManager") << "palette_addColor: " << ofToString(c);
     palette.push_back(c);
     gradient.addColor(c);
     palette_addColor_toInterface(c);
@@ -4071,9 +4082,9 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
     //--
 
-    //TODO: BUG:
-    if (SHOW_ColourLovers_searcher)
-        ENABLE_keys = false;
+//    //TODO: BUG:
+//    if (SHOW_ColourLovers_searcher)
+//        ENABLE_keys = false;
 
     //-
 
@@ -4487,7 +4498,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
             palette_clear();
         }
 
-        else if (key == OF_KEY_BACKSPACE)
+        else if (key == 'x')
         {
             // 1. remove last
             //palette_removeColorLast();
