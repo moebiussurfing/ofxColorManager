@@ -160,8 +160,8 @@ void ofxColorManager::setup()
 
     // COLOR BROWSER
 
-    ColorBrowser.setBoxSize(7);
-    ColorBrowser.setRowsSize(7 * 17);//for Pantone palette
+    //ColorBrowser.setBoxSize(7);
+    //ColorBrowser.setRowsSize(7 * 17);//for Pantone palette
     ColorBrowser.setup_colorBACK(color_BACK);
     ColorBrowser.setPosition(colorBrowserPos);
     ColorBrowser.setup();
@@ -242,6 +242,7 @@ void ofxColorManager::setup()
     // GRADIENT
 
     gradient.reset();
+    //gradient.setupAsTurbo(10); //with 10 samples
     gradient_hard.set("GRADIENT HARD", false);
     gradient.setHardMode(gradient_hard);
     gradient.setDrawVertical(true);
@@ -496,7 +497,7 @@ void ofxColorManager::interface_setup()
 void ofxColorManager::gui_setup_layout()
 {
     // LAYOUT DEFAULT
-    // TODO:: add layout json saver like ofxGuiPanels
+    // TODO:: add layout json saver like ofxGuiPanels to live editing!
 
     // global mini pad between panels/objects
     pad = 0;//between box colors in palettes
@@ -595,7 +596,7 @@ void ofxColorManager::gui_setup_layout()
     r_color_clicked = ofRectangle(colorPick_x, colorPick_y, colorPick_w, colorPick_h);
 
     // browser colors palettes
-    colorBrowserPos = glm::vec2(270, 675);
+    colorBrowserPos = glm::vec2(300, 335);
 }
 
 
@@ -3532,13 +3533,13 @@ void ofxColorManager::draw()
 
     //--
 
-    //TODO:
-    string strKeys = "COLOUR LOVERS KEYS: ";
-    strKeys += (ColourLoversHelper.ENABLER_Keys ? "ENTER/UNFOCUS":"FOCUS/LOAD");
-    string strKeys2 = "MOUSE OVER GUI: ";
-    strKeys2 += (ENABLE_keys ? "FALSE":"TRUE");
-    ofDrawBitmapStringHighlight( strKeys, glm::vec2(500,ofGetHeight()-40) );
-    ofDrawBitmapStringHighlight( strKeys2, glm::vec2(500,ofGetHeight()-20) );
+    ////TODO:
+    //string strKeys = "COLOUR LOVERS KEYS: ";
+    //strKeys += (ColourLoversHelper.ENABLER_Keys ? "ENTER/UNFOCUS":"FOCUS/LOAD");
+    //string strKeys2 = "MOUSE OVER GUI: ";
+    //strKeys2 += (ENABLE_keys ? "FALSE":"TRUE");
+    //ofDrawBitmapStringHighlight( strKeys, glm::vec2(500,ofGetHeight()-40) );
+    //ofDrawBitmapStringHighlight( strKeys2, glm::vec2(500,ofGetHeight()-20) );
 
 }
 
