@@ -31,6 +31,8 @@ using namespace std;
 #include "PresetPalette.h"
 #include "DEMO_palette.h"
 
+//#include "ofxCosineGradient.h"
+
 //#include "ofxMacMouseControl.h"
 //#include "ofxMacMouseEventStealer.h"
 
@@ -179,6 +181,7 @@ public:
     ofParameter<bool> SHOW_ColorPicker;
     ofParameter<bool> SHOW_UserPalette;
     ofParameter<bool> SHOW_ColorQuantizer;
+    //ofParameter<bool> SHOW_CosineGradient;
 
     void setColor_TARGET(ofColor &c);//backwards pointer ofApp color
     ofColor *color_TARGET;//backwards pointer ofApp color
@@ -560,4 +563,40 @@ private:
     void removeMouseListeners();
 
     //--
+
+    ////COSINE GRADIENT
+    //ofxCosineGradient mCosineGradient;
+    //ofxImGui::Gui mGui;
+    //ofParameterGroup cosineGradient_params;
+    //ofParameter<glm::vec3> mBias;
+    //ofParameter<glm::vec3> mAmplitude;
+    //ofParameter<glm::vec3> mFrequency;
+    //ofParameter<glm::vec3> mPhase;
+    //
+    //glm::vec3 mB;
+    //glm::vec3 mA;
+    //glm::vec3 mF;
+    //glm::vec3 mP;
+    //
+    //void cosineGradient_update()
+    //{
+    //    mB = mBias.get();
+    //    mA = mAmplitude.get();
+    //    mF = mFrequency.get();
+    //    mP = mPhase.get();
+    //
+    //    mCosineGradient.setBias(mB);
+    //    mCosineGradient.setAmplitude(mA);
+    //    mCosineGradient.setFrequency(mF);
+    //    mCosineGradient.setPhase(mP);
+    //    mCosineGradient.update();
+    //
+    //    ////cout << "cosineGradient_update" << endl;
+    //    //mCosineGradient.setBias(mBias.get());
+    //    //mCosineGradient.setAmplitude(mAmplitude.get());
+    //    //mCosineGradient.setFrequency(mFrequency.get());
+    //    //mCosineGradient.setPhase(mPhase.get());
+    //    //mCosineGradient.update();
+    //}
+    //void gui_imGui_CosineGradient();
 };

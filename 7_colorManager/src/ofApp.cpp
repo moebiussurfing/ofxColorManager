@@ -4,7 +4,7 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
     ofEnableAlphaBlending();
-    ofSetFrameRate(30);
+    ofSetFrameRate(60);
     
 //    ofSetLogLevel(OF_LOG_SILENT);
     ofSetLogLevel(OF_LOG_NOTICE);
