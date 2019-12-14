@@ -10,7 +10,6 @@ ofxColorsBrowser
 ofxColourLovers
 ofxColourLoversHelper
 ofxControlPointManager
-ofxCosineGradient
 ofxCurvesTool
 ofxFontStash
 ofxGui

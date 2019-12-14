@@ -14235,70 +14235,6 @@
 				<key>sourceTree</key>
 				<string>SOURCE_ROOT</string>
 			</dict>
-			<key>0421DB9A405DF4CE12A4FEFD</key>
-			<dict>
-				<key>explicitFileType</key>
-				<string>sourcecode.c.h</string>
-				<key>fileEncoding</key>
-				<string>4</string>
-				<key>isa</key>
-				<string>PBXFileReference</string>
-				<key>name</key>
-				<string>ofxCosineGradient.h</string>
-				<key>path</key>
-				<string>../../../addons/ofxCosineGradient/src/ofxCosineGradient.h</string>
-				<key>sourceTree</key>
-				<string>SOURCE_ROOT</string>
-			</dict>
-			<key>A52D4F57E3C6408990AF5C92</key>
-			<dict>
-				<key>children</key>
-				<array>
-					<string>CA799300D1F0337374199450</string>
-					<string>0421DB9A405DF4CE12A4FEFD</string>
-				</array>
-				<key>isa</key>
-				<string>PBXGroup</string>
-				<key>name</key>
-				<string>src</string>
-				<key>sourceTree</key>
-				<string>&lt;group&gt;</string>
-			</dict>
-			<key>4BDC7DB77F1DE3BEBDCE72F3</key>
-			<dict>
-				<key>children</key>
-				<array>
-					<string>A52D4F57E3C6408990AF5C92</string>
-				</array>
-				<key>isa</key>
-				<string>PBXGroup</string>
-				<key>name</key>
-				<string>ofxCosineGradient</string>
-				<key>sourceTree</key>
-				<string>&lt;group&gt;</string>
-			</dict>
-			<key>89D3E220D1575A9BDCD1BFB8</key>
-			<dict>
-				<key>fileRef</key>
-				<string>CA799300D1F0337374199450</string>
-				<key>isa</key>
-				<string>PBXBuildFile</string>
-			</dict>
-			<key>CA799300D1F0337374199450</key>
-			<dict>
-				<key>explicitFileType</key>
-				<string>sourcecode.cpp.cpp</string>
-				<key>fileEncoding</key>
-				<string>4</string>
-				<key>isa</key>
-				<string>PBXFileReference</string>
-				<key>name</key>
-				<string>ofxCosineGradient.cpp</string>
-				<key>path</key>
-				<string>../../../addons/ofxCosineGradient/src/ofxCosineGradient.cpp</string>
-				<key>sourceTree</key>
-				<string>SOURCE_ROOT</string>
-			</dict>
 			<key>3EB8AC38590DB5436EC3059B</key>
 			<dict>
 				<key>explicitFileType</key>
@@ -17100,7 +17036,6 @@ fi
 						<string>../../../addons/ofxColourLovers/src</string>
 						<string>../../../addons/ofxColourLoversHelper/src</string>
 						<string>../../../addons/ofxControlPointManager/src</string>
-						<string>../../../addons/ofxCosineGradient/src</string>
 						<string>../../../addons/ofxCurvesTool/src</string>
 						<string>../../../addons/ofxFontStash/libs</string>
 						<string>../../../addons/ofxFontStash/libs/fontstash</string>
@@ -17260,7 +17195,6 @@ fi
 						<string>../../../addons/ofxColourLovers/src</string>
 						<string>../../../addons/ofxColourLoversHelper/src</string>
 						<string>../../../addons/ofxControlPointManager/src</string>
-						<string>../../../addons/ofxCosineGradient/src</string>
 						<string>../../../addons/ofxCurvesTool/src</string>
 						<string>../../../addons/ofxFontStash/libs</string>
 						<string>../../../addons/ofxFontStash/libs/fontstash</string>
@@ -17420,7 +17354,6 @@ fi
 					<string>3AC6D1D46D486EA6BC219BEA</string>
 					<string>01975D8112AE9E1AD468EE25</string>
 					<string>EEDCF7CAD3C7E431019DFCF6</string>
-					<string>4BDC7DB77F1DE3BEBDCE72F3</string>
 					<string>20FC95435D1FC200D4265565</string>
 					<string>B7006DB7785B098B4504962B</string>
 					<string>480A780D8D0308AE4A368801</string>
@@ -20217,7 +20150,6 @@ fi
 						<string>../../../addons/ofxColourLovers/src</string>
 						<string>../../../addons/ofxColourLoversHelper/src</string>
 						<string>../../../addons/ofxControlPointManager/src</string>
-						<string>../../../addons/ofxCosineGradient/src</string>
 						<string>../../../addons/ofxCurvesTool/src</string>
 						<string>../../../addons/ofxFontStash/libs</string>
 						<string>../../../addons/ofxFontStash/libs/fontstash</string>
@@ -20397,7 +20329,6 @@ fi
 						<string>../../../addons/ofxColourLovers/src</string>
 						<string>../../../addons/ofxColourLoversHelper/src</string>
 						<string>../../../addons/ofxControlPointManager/src</string>
-						<string>../../../addons/ofxCosineGradient/src</string>
 						<string>../../../addons/ofxCurvesTool/src</string>
 						<string>../../../addons/ofxFontStash/libs</string>
 						<string>../../../addons/ofxFontStash/libs/fontstash</string>
@@ -20558,7 +20489,6 @@ fi
 					<string>C141B0D98FA91AB1BD529D31</string>
 					<string>E88DD26682FCBE8CD9E7D994</string>
 					<string>880222013245072FECB30C33</string>
-					<string>89D3E220D1575A9BDCD1BFB8</string>
 					<string>CABA2A99CFDFE993141568F9</string>
 					<string>368CCF86BF3EF63BAFDFA84A</string>
 					<string>801397981E78A4CBDE809376</string>
@@ -20771,7 +20701,6 @@ fi
 						<string>../../../addons/ofxColourLovers/src</string>
 						<string>../../../addons/ofxColourLoversHelper/src</string>
 						<string>../../../addons/ofxControlPointManager/src</string>
-						<string>../../../addons/ofxCosineGradient/src</string>
 						<string>../../../addons/ofxCurvesTool/src</string>
 						<string>../../../addons/ofxFontStash/libs</string>
 						<string>../../../addons/ofxFontStash/libs/fontstash</string>
@@ -20950,7 +20879,6 @@ fi
 						<string>../../../addons/ofxColourLovers/src</string>
 						<string>../../../addons/ofxColourLoversHelper/src</string>
 						<string>../../../addons/ofxControlPointManager/src</string>
-						<string>../../../addons/ofxCosineGradient/src</string>
 						<string>../../../addons/ofxCurvesTool/src</string>
 						<string>../../../addons/ofxFontStash/libs</string>
 						<string>../../../addons/ofxFontStash/libs/fontstash</string>
