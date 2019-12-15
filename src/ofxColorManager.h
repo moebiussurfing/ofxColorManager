@@ -31,6 +31,8 @@ using namespace std;
 #include "PresetPalette.h"
 #include "DEMO_palette.h"
 
+#include "ofxWindowApp.h"
+
 //#include "ofxCosineGradient.h"
 
 //#include "ofxMacMouseControl.h"
@@ -42,6 +44,10 @@ class ofxColorManager
 {
 
 public:
+
+    ofxWindowApp WindowApp;
+    string XML_WindowApp_folder = "settings/";
+    string XML_WindowApp_filename = "WindowApp.xml";
 
     //TODO
     //BUG: trying to avoid bug moving mouse..
@@ -164,6 +170,13 @@ public:
     //--
 
     float dt;
+    float fps;
+
+    void setFps(float _fps)
+    {
+        fps = _fps;
+        dt = 1. / fps;
+    }
 
     ofParameter<bool> SHOW_ColourLovers;
     ofParameter<bool> SHOW_ColourLovers_searcher;

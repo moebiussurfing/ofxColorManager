@@ -171,6 +171,70 @@
 				<key>sourceTree</key>
 				<string>SOURCE_ROOT</string>
 			</dict>
+			<key>429DB333984F55A910EF5CA3</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxWindowApp.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxWindowApp/src/ofxWindowApp.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>68887EED53C57C44FE347A11</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>D706BCE3E48CE3B4CFCCE8F8</string>
+					<string>429DB333984F55A910EF5CA3</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>src</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>D8023E50186E3B3FBAEFB645</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>68887EED53C57C44FE347A11</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>ofxWindowApp</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>3D190822873128F7BED5E19E</key>
+			<dict>
+				<key>fileRef</key>
+				<string>D706BCE3E48CE3B4CFCCE8F8</string>
+				<key>isa</key>
+				<string>PBXBuildFile</string>
+			</dict>
+			<key>D706BCE3E48CE3B4CFCCE8F8</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.cpp.cpp</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxWindowApp.cpp</string>
+				<key>path</key>
+				<string>../../../addons/ofxWindowApp/src/ofxWindowApp.cpp</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
 			<key>CCFB52D42B9C52B056A65438</key>
 			<dict>
 				<key>explicitFileType</key>
@@ -2190,6 +2254,47 @@
 				<string>ofxUI.h</string>
 				<key>path</key>
 				<string>../../../addons/ofxUI/src/ofxUI.h</string>
+				<key>sourceTree</key>
+				<string>SOURCE_ROOT</string>
+			</dict>
+			<key>C7F692CA68CF5C057DA0D704</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>CCC3CC1A2068DA77BC39C62F</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>src</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>C6F71BDEA19D47F20C22AF39</key>
+			<dict>
+				<key>children</key>
+				<array>
+					<string>C7F692CA68CF5C057DA0D704</string>
+				</array>
+				<key>isa</key>
+				<string>PBXGroup</string>
+				<key>name</key>
+				<string>ofxSerializer</string>
+				<key>sourceTree</key>
+				<string>&lt;group&gt;</string>
+			</dict>
+			<key>CCC3CC1A2068DA77BC39C62F</key>
+			<dict>
+				<key>explicitFileType</key>
+				<string>sourcecode.c.h</string>
+				<key>fileEncoding</key>
+				<string>4</string>
+				<key>isa</key>
+				<string>PBXFileReference</string>
+				<key>name</key>
+				<string>ofxSerializer.h</string>
+				<key>path</key>
+				<string>../../../addons/ofxSerializer/src/ofxSerializer.h</string>
 				<key>sourceTree</key>
 				<string>SOURCE_ROOT</string>
 			</dict>
@@ -17134,8 +17239,10 @@ fi
 						<string>../../../addons/ofxPoco/src</string>
 						<string>../../../addons/ofxPoco/libs/openssl/include</string>
 						<string>../../../addons/ofxRectangleUtils/src</string>
+						<string>../../../addons/ofxSerializer/src</string>
 						<string>../../../addons/ofxUI/src</string>
 						<string>../../../addons/ofxUndo/src</string>
+						<string>../../../addons/ofxWindowApp/src</string>
 						<string>../../../addons/ofxXmlSettings/libs</string>
 						<string>../../../addons/ofxXmlSettings/src</string>
 					</array>
@@ -17293,8 +17400,10 @@ fi
 						<string>../../../addons/ofxPoco/src</string>
 						<string>../../../addons/ofxPoco/libs/openssl/include</string>
 						<string>../../../addons/ofxRectangleUtils/src</string>
+						<string>../../../addons/ofxSerializer/src</string>
 						<string>../../../addons/ofxUI/src</string>
 						<string>../../../addons/ofxUndo/src</string>
+						<string>../../../addons/ofxWindowApp/src</string>
 						<string>../../../addons/ofxXmlSettings/libs</string>
 						<string>../../../addons/ofxXmlSettings/src</string>
 					</array>
@@ -17367,8 +17476,10 @@ fi
 					<string>A0B90D3B0ADB9C1716816714</string>
 					<string>0117D94CE0C695E5E5482BEC</string>
 					<string>F2299E1641EB6CBFBF1F65DE</string>
+					<string>C6F71BDEA19D47F20C22AF39</string>
 					<string>A492CE86424AB8905550BFD8</string>
 					<string>44EBA3B5C027631D6029B264</string>
+					<string>D8023E50186E3B3FBAEFB645</string>
 					<string>1F4FB5C423662B96ADFDCC0B</string>
 				</array>
 				<key>isa</key>
@@ -20248,8 +20359,10 @@ fi
 						<string>../../../addons/ofxPoco/src</string>
 						<string>../../../addons/ofxPoco/libs/openssl/include</string>
 						<string>../../../addons/ofxRectangleUtils/src</string>
+						<string>../../../addons/ofxSerializer/src</string>
 						<string>../../../addons/ofxUI/src</string>
 						<string>../../../addons/ofxUndo/src</string>
+						<string>../../../addons/ofxWindowApp/src</string>
 						<string>../../../addons/ofxXmlSettings/libs</string>
 						<string>../../../addons/ofxXmlSettings/src</string>
 					</array>
@@ -20427,8 +20540,10 @@ fi
 						<string>../../../addons/ofxPoco/src</string>
 						<string>../../../addons/ofxPoco/libs/openssl/include</string>
 						<string>../../../addons/ofxRectangleUtils/src</string>
+						<string>../../../addons/ofxSerializer/src</string>
 						<string>../../../addons/ofxUI/src</string>
 						<string>../../../addons/ofxUndo/src</string>
+						<string>../../../addons/ofxWindowApp/src</string>
 						<string>../../../addons/ofxXmlSettings/libs</string>
 						<string>../../../addons/ofxXmlSettings/src</string>
 					</array>
@@ -20583,6 +20698,7 @@ fi
 					<string>AE281BEBF3A00F1FC37F3DA0</string>
 					<string>82845E1F8C90E1F5A99D9868</string>
 					<string>CE5D89B9893EAA12F511DCAC</string>
+					<string>3D190822873128F7BED5E19E</string>
 					<string>933A2227713C720CEFF80FD9</string>
 					<string>9D44DC88EF9E7991B4A09951</string>
 					<string>5A4349E9754D6FA14C0F2A3A</string>
@@ -20799,8 +20915,10 @@ fi
 						<string>../../../addons/ofxPoco/src</string>
 						<string>../../../addons/ofxPoco/libs/openssl/include</string>
 						<string>../../../addons/ofxRectangleUtils/src</string>
+						<string>../../../addons/ofxSerializer/src</string>
 						<string>../../../addons/ofxUI/src</string>
 						<string>../../../addons/ofxUndo/src</string>
+						<string>../../../addons/ofxWindowApp/src</string>
 						<string>../../../addons/ofxXmlSettings/libs</string>
 						<string>../../../addons/ofxXmlSettings/src</string>
 					</array>
@@ -20977,8 +21095,10 @@ fi
 						<string>../../../addons/ofxPoco/src</string>
 						<string>../../../addons/ofxPoco/libs/openssl/include</string>
 						<string>../../../addons/ofxRectangleUtils/src</string>
+						<string>../../../addons/ofxSerializer/src</string>
 						<string>../../../addons/ofxUI/src</string>
 						<string>../../../addons/ofxUndo/src</string>
+						<string>../../../addons/ofxWindowApp/src</string>
 						<string>../../../addons/ofxXmlSettings/libs</string>
 						<string>../../../addons/ofxXmlSettings/src</string>
 					</array>

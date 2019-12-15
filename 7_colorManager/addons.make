@@ -23,6 +23,8 @@ ofxOpenColor
 ofxOpenCv
 ofxPoco
 ofxRectangleUtils
+ofxSerializer
 ofxUI
 ofxUndo
+ofxWindowApp
 ofxXmlSettings

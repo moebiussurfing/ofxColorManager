@@ -1,11 +1,12 @@
 #include "ofxColorManager.h"
 
-
 //--------------------------------------------------------------
 ofxColorManager::ofxColorManager()
 {
+    //default
+    fps = 30.0f;
+    dt = 1. / fps;
 }
-
 
 //--------------------------------------------------------------
 void ofxColorManager::setup()
@@ -30,10 +31,6 @@ void ofxColorManager::setup()
     //-
 
     //ofAddListener(ofxMacMouseEvent, this, &ofxColorManager::mouseEvent);
-
-    //--
-
-    dt = 1. / 30.0f;//TODO: should be setted externally
 
     //--
 
@@ -191,7 +188,7 @@ void ofxColorManager::setup()
 
     // ALGORITHMIC PALETTES
 
-    //    random.generateRandom(NUM_COLORS_ALGO_PALETTES);
+    //random.generateRandom(NUM_COLORS_ALGO_PALETTES);
     palettes_update();
     palettes_setup();
     palettes_setup_labels();
@@ -219,21 +216,21 @@ void ofxColorManager::setup()
 
     // CONTROL
 
-    //    SHOW_PaletteCustom.set("SHOW PALETTE LIB", false);
+    //SHOW_PaletteCustom.set("SHOW PALETTE LIB", false);
     bRandomColor.set("RANDOM COLOR", false);
     bAddColor.set("ADD COLOR", false);
     bPaletteEdit.set("EDIT COLOR", false);
     bRemoveColor.set("REMOVE COLOR", false);
     bClearPalette.set("CLEAR PALETTE", false);
     params_control.setName("COLOR EDITOR");
-    //    params_control.add(color_picked);
+    //params_control.add(color_picked);
     params_control.add(bRandomColor);
     params_control.add(bPaletteEdit);
     params_control.add(bAddColor);
     params_control.add(bRemoveColor);
     params_control.add(bClearPalette);
-    //    params_control.add(SHOW_PaletteCustom);
-    //    params_control.add(color_backGround);
+    //params_control.add(SHOW_PaletteCustom);
+    //params_control.add(color_backGround);
 
     //-
 
@@ -267,6 +264,7 @@ void ofxColorManager::setup()
     params_control.add(SHOW_ColorQuantizer);
     //params_control.add(SHOW_CosineGradient);
 
+    //-
 
     SHOW_ALL_GUI = true;
     SHOW_debugText = false;
@@ -298,9 +296,9 @@ void ofxColorManager::setup()
     inputPath = ofFilePath::getAbsolutePath("assets/fonts/PragmataProR_0822.ttf");
     const char *myPath = inputPath.c_str();
     ImFontConfig config;
-    //    config.OversampleH = 3;
-    //    config.OversampleV = 1;
-    //    config.GlyphExtraSpacing.x = 1.0f;
+    //config.OversampleH = 3;
+    //config.OversampleV = 1;
+    //config.GlyphExtraSpacing.x = 1.0f;
     io.Fonts->AddFontFromFileTTF(myPath, 13.0f, &config);
 
     // create
@@ -357,7 +355,7 @@ void ofxColorManager::setup()
     XML_params.add(bAuto_palette_recall);
     XML_params.add(SHOW_Layout_Gui);
     XML_params.add(paletteLibPage_param);
-    //    XML_params.add(TEST_MODE);
+    //XML_params.add(TEST_MODE);
 
     XML_load_AppSettings(XML_params, XML_path);
 
@@ -444,8 +442,13 @@ void ofxColorManager::setup()
     panels.group_Selected = 1;
 
     //--
-}
 
+    //window mode
+    WindowApp.setPathFolder(XML_WindowApp_folder);
+    WindowApp.setPathFilename(XML_WindowApp_filename);
+    WindowApp.setAutoSaveLoad(true);
+    WindowApp.setup();
+}
 
 //--------------------------------------------------------------
 void ofxColorManager::update()
@@ -619,7 +622,6 @@ void ofxColorManager::update()
 
     if (SELECTED_palette != SELECTED_palette_PRE)
     {
-
         ofLogNotice("ofxColorManager") << "update:CHANGED SELECTED_palette: " << SELECTED_palette;
 
         // WORKFLOW: when a label palette is clicked, will always trig
@@ -894,7 +896,7 @@ void ofxColorManager::draw()
         //    ENABLE_keys = false;
         //}
 
-        //TODO: BUG: solve startup bug taht disables keys
+        //TODO: BUG: solve startup bug that disables keys
         if (ENABLE_keys != ENABLE_keys_PRE)
         {
             if (SHOW_ColorQuantizer && !ENABLE_keys)
@@ -955,7 +957,7 @@ ofxColorManager::~ofxColorManager()
 //--------------------------------------------------------------
 void ofxColorManager::exit()
 {
-    //    palette_save("myPalette");
+    //palette_save("myPalette");
 
     XML_save_AppSettings(XML_params, XML_path);
 
@@ -990,7 +992,6 @@ void ofxColorManager::interface_setup()
     scene->setName("Scene");
     TouchManager::one().setup(scene);
 }
-
 
 //--------------------------------------------------------------
 void ofxColorManager::gui_setup_layout()
@@ -1098,7 +1099,6 @@ void ofxColorManager::gui_setup_layout()
     colorBrowserPos = glm::vec2(300, 335);
 }
 
-
 //--------------------------------------------------------------
 void ofxColorManager::palette_rearrenge()
 {
@@ -1184,7 +1184,6 @@ void ofxColorManager::palette_addColor_toInterface(ofColor c)
 //--------------------------------------------------------------
 void ofxColorManager::interface_update()
 {
-
     TouchManager::one().update();
 
     // 1. EACH COLOR OF CURRENT USER PALETTE
@@ -1280,10 +1279,10 @@ void ofxColorManager::interface_draw()
 //    ofxImGui::EndWindow(mainSettings);
 //}
 
+
 //--------------------------------------------------------------
 void ofxColorManager::gui_imGui_ColorPicker()
 {
-
     // 1. COLOR PICKER CUSTOM
 
     //mainSettings = ofxImGui::Settings();
@@ -1653,7 +1652,6 @@ void ofxColorManager::gui_imGui_ControlPanels()
 //--------------------------------------------------------------
 void ofxColorManager::gui_imGui_ColorManager()
 {
-
     // 2. COLOR MANAGER
 
     //    mainSettings = ofxImGui::Settings();
@@ -3527,6 +3525,8 @@ void ofxColorManager::palettes_colorTheory_update()
 //    panel.draw();
 //}
 
+#pragma mark - PALETTE
+
 //--------------------------------------------------------------
 void ofxColorManager::palette_load_ColourLovers()
 {
@@ -3630,8 +3630,6 @@ void ofxColorManager::palette_drawMINI()
     ofPopMatrix();
 }
 
-
-#pragma mark - PALETTE
 
 //--------------------------------------------------------------
 void ofxColorManager::palette_addColor(ofColor c)
