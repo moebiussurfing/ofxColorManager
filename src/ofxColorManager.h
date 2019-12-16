@@ -32,9 +32,9 @@ using namespace std;
 #include "DEMO_palette.h"
 
 #include "ofxWindowApp.h"
+#include "ofxSerializer.h"
 
 //#include "ofxCosineGradient.h"
-
 //#include "ofxMacMouseControl.h"
 //#include "ofxMacMouseEventStealer.h"
 
@@ -45,6 +45,12 @@ class ofxColorManager
 
 public:
 
+    //live reload colors file
+    string path_Colors;
+    void saveColors();
+    bool bAutoExportPreset = true;
+
+    //windowApp
     ofxWindowApp WindowApp;
     string XML_WindowApp_folder = "settings/";
     string XML_WindowApp_filename = "WindowApp.xml";
@@ -105,7 +111,6 @@ public:
     vector<ofColor> colors_Monochrome;
     vector<ofColor> colors_Tetrad;
     vector<ofColor> colors_Triad;
-
 
     //-
 

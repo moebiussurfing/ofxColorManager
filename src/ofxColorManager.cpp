@@ -1990,6 +1990,14 @@ void ofxColorManager::gui_imGui_PresetManager()
             //dir.sort();
         }
 
+        //export user palette colors to live reload from another parallel app!
+        ImGui::SameLine();
+        if (ImGui::Button("EXPORT"))
+        {
+            cout << "EXPORT" << endl;
+            saveColors();
+        }
+
         //ImGui::SameLine();
         //if (ImGui::Button("REFRESH"))//current preset
         //{
@@ -4860,6 +4868,14 @@ void ofxColorManager::preset_load(string p)
 
     if (TEST_DEMO)
         myDEMO_palette.clear();
+
+
+    //WORKFLOW
+    if(bAutoExportPreset)
+    {
+        cout << "EXPORT" << endl;
+        saveColors();
+    }
 }
 
 
@@ -5082,7 +5098,6 @@ void ofxColorManager::setVisible_debugText(bool b)
 //--------------------------------------------------------------
 void ofxColorManager::colourLovers_drawPreview()
 {
-
     // preview receivers
 
     if (SHOW_ColourLovers)
@@ -5127,3 +5142,17 @@ void ofxColorManager::colourLovers_drawPreview()
     }
 }
 
+
+//--------------------------------------------------------------
+void ofxColorManager::saveColors()
+{
+    ofLogNotice("ofxColorManager") << "saveColors";
+
+    //path_Colors = "colors/liveColors.json";
+    path_Colors = "/Users/manu/Documents/openFrameworks/addons/ofxFontAnimator/4_ofxFontAnimatorNoise/bin/data/colors/liveColors.json";
+    ofLogNotice("ofxColorManager") << "path_Colors: " << path_Colors;
+
+    ofJson j = palette;
+    ofSavePrettyJson(path_Colors, j);
+    ofLogNotice("ofxColorManager") << "saveColors: " << ofToString(palette);
+}
