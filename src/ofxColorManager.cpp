@@ -1,5 +1,6 @@
 #include "ofxColorManager.h"
 
+#pragma mark - OF APP
 //--------------------------------------------------------------
 ofxColorManager::ofxColorManager()
 {
@@ -538,7 +539,7 @@ void ofxColorManager::update()
 
     ColourLoversHelper.update();
 
-    // 1. colour lover palette has been clicked
+    // 1. colour lover palette has been clicked/changed selected
 
     if (bUpdated_Palette_BACK)
     {
@@ -571,6 +572,15 @@ void ofxColorManager::update()
         // DEMO
         if (TEST_DEMO)
             myDEMO_palette.reStart();
+
+        //-
+
+        //WORKFLOW
+        if(bAutoExportPreset)
+        {
+            cout << "EXPORT" << endl;
+            saveColors();
+        }
     }
 
     //-
@@ -4552,10 +4562,22 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
             else if (key == OF_KEY_DOWN)
             {
                 ColourLoversHelper.nextPalette();
+                ////WORKFLOW
+                //if(bAutoExportPreset)
+                //{
+                //    cout << "EXPORT" << endl;
+                //    saveColors();
+                //}
             }
             else if (key == OF_KEY_UP)
             {
                 ColourLoversHelper.prevPalette();
+                ////WORKFLOW
+                //if(bAutoExportPreset)
+                //{
+                //    cout << "EXPORT" << endl;
+                //    saveColors();
+                //}
             }
 
             //--
@@ -5148,6 +5170,8 @@ void ofxColorManager::saveColors()
 {
     ofLogNotice("ofxColorManager") << "saveColors";
 
+    //TODO
+    //make export dialog to set path for export outside /data
     //path_Colors = "colors/liveColors.json";
     path_Colors = "/Users/manu/Documents/openFrameworks/addons/ofxFontAnimator/4_ofxFontAnimatorNoise/bin/data/colors/liveColors.json";
     ofLogNotice("ofxColorManager") << "path_Colors: " << path_Colors;
