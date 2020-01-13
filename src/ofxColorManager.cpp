@@ -12,6 +12,8 @@ ofxColorManager::ofxColorManager()
 //--------------------------------------------------------------
 void ofxColorManager::setup()
 {
+	ofSetLogLevel("ofxColorManager", OF_LOG_NOTICE);
+
     //-
 
     ////COSINE GRADIENT
@@ -587,7 +589,8 @@ void ofxColorManager::update()
         //WORKFLOW
         if(bAutoExportPreset)
         {
-            cout << "EXPORT" << endl;
+			ofLogNotice("ofxColorManager") << "update:bAutoExportPreset: " << bAutoExportPreset;
+			//cout << "EXPORT" << endl;
             saveColors();
         }
     }
@@ -719,7 +722,7 @@ void ofxColorManager::update()
 
 	//TODO:
 	//Windows
-    //curveTool_update();
+    curveTool_update();
     ColorBrowser.update();
 }
 
