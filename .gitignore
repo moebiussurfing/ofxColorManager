@@ -31,7 +31,20 @@ docs/tagfile.xml
 # IDE
 #########################
 
+# VS2017
+*.vcxproj
+*.vcxproj.*
+icon.rc
+*.vs
+*.vs/
+*.vs/*
+*.vs/
+*.sln
+*.filters
+*.user
+
 # XCode
+*.xcodeproj
 *.pbxuser
 *.perspective
 *.perspectivev3
@@ -120,22 +133,3 @@ Desktop.ini
 *.sql
 *.sqlite
 
-5_colorManager/bin/data/assets/presetsCLASS/ofxImGuiLoggerChannel.h
-5_colorManager/bin/data/assets/presetsCLASS/ofxImGuiLoggerChannel.cpp
-5_colorManager/bin/data/assets/presetsCLASS/ofxImGui.h
-5_colorManager/bin/data/assets/presetsCLASS/imconfig.h
-5_colorManager/bin/data/assets/presetsCLASS/Helpers.h
-5_colorManager/bin/data/assets/presetsCLASS/Helpers.cpp
-5_colorManager/bin/data/assets/presetsCLASS/Gui.h
-5_colorManager/bin/data/assets/presetsCLASS/Gui.cpp
-5_colorManager/bin/data/assets/presetsCLASS/EngineVk.h
-5_colorManager/bin/data/assets/presetsCLASS/EngineVk.cpp
-5_colorManager/bin/data/assets/presetsCLASS/EngineOpenGLES.h
-5_colorManager/bin/data/assets/presetsCLASS/EngineOpenGLES.cpp
-5_colorManager/bin/data/assets/presetsCLASS/EngineGLFW.h
-5_colorManager/bin/data/assets/presetsCLASS/EngineGLFW.cpp
-5_colorManager/bin/data/assets/presetsCLASS/DefaultTheme.h
-5_colorManager/bin/data/assets/presetsCLASS/DefaultTheme.cpp
-5_colorManager/bin/data/assets/presetsCLASS/BaseTheme.h
-5_colorManager/bin/data/assets/presetsCLASS/BaseEngine.h
-5_colorManager/bin/data/assets/presetsCLASS/BaseEngine.cpp
