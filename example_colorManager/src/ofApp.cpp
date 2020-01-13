@@ -3,7 +3,7 @@
 //--------------------------------------------------------------
 void ofApp::setup()
 {
-	//macOS: encapsulata /data folder into .app file
+	//macOS: encapsulates /data folder into .app file
     //ofSetDataPathRoot("../Resources/data/");
 
     //ofSetLogLevel(OF_LOG_SILENT);

@@ -296,8 +296,10 @@ void ofxColorManager::setup()
     string inputPath;
 	
 	//macOS
-    inputPath = ofFilePath::getAbsolutePath("assets/fonts/PragmataProR_0822.ttf");
-    
+    //inputPath = ofFilePath::getAbsolutePath("assets/fonts/PragmataProR_0822.ttf");
+	//Windows
+	//inputPath = "assets/fonts/PragmataProR_0822.ttf";
+	
 	const char *myPath = inputPath.c_str();
     ImFontConfig config;
     //config.OversampleH = 3;
@@ -306,7 +308,9 @@ void ofxColorManager::setup()
 
 	//macOS
     //io.Fonts->AddFontFromFileTTF(myPath, 13.0f, &config);
-
+	//Windows
+	//io.Fonts->AddFontFromFileTTF(myPath, 13.0f, &config);
+	
     // create
     this->gui.setup();
     this->guiVisible = true;
