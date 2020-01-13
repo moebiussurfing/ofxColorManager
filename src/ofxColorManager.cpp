@@ -294,13 +294,18 @@ void ofxColorManager::setup()
 
     ImGuiIO &io = ImGui::GetIO();
     string inputPath;
+	
+	//macOS
     inputPath = ofFilePath::getAbsolutePath("assets/fonts/PragmataProR_0822.ttf");
-    const char *myPath = inputPath.c_str();
+    
+	const char *myPath = inputPath.c_str();
     ImFontConfig config;
     //config.OversampleH = 3;
     //config.OversampleV = 1;
     //config.GlyphExtraSpacing.x = 1.0f;
-    io.Fonts->AddFontFromFileTTF(myPath, 13.0f, &config);
+
+	//macOS
+    //io.Fonts->AddFontFromFileTTF(myPath, 13.0f, &config);
 
     // create
     this->gui.setup();
@@ -707,7 +712,10 @@ void ofxColorManager::update()
     //-
 
     interface_update();
-    curveTool_update();
+
+	//TODO:
+	//Windows
+    //curveTool_update();
     ColorBrowser.update();
 }
 
@@ -2263,8 +2271,11 @@ void ofxColorManager::curveTool_update()
         pointToModify = pointsSize / 2;
     else if (pointsSize % 2 == 0 && pointsSize >= 3)
         pointToModify = pointsSize / 2 - 1;
+	
+	//TODO:Windows
     pointY = (curvesTool.getPoint(pointToModify)).x;
-    curvesTool.set(pointToModify, ofVec2f(pointY, ofMap(curveMod, 0., 1., 0, curveTool_amount)));
+    
+	curvesTool.set(pointToModify, ofVec2f(pointY, ofMap(curveMod, 0., 1., 0, curveTool_amount)));
 
     //--
 

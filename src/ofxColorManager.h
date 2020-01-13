@@ -14,7 +14,9 @@ using namespace std;
 
 #include "ofxColorQuantizerHelper.h"
 
+//phaseIV / ofxCurvesTool
 #include "ofxCurvesTool.h"
+
 #include "ofxSimpleSlider.h"
 
 #include "ofxInterface.h"

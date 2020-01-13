@@ -1,0 +1,919 @@
+<?xml version="1.0"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<ItemGroup Label="ProjectConfigurations">
+		<ProjectConfiguration Include="Debug|Win32">
+			<Configuration>Debug</Configuration>
+			<Platform>Win32</Platform>
+		</ProjectConfiguration>
+		<ProjectConfiguration Include="Debug|x64">
+			<Configuration>Debug</Configuration>
+			<Platform>x64</Platform>
+		</ProjectConfiguration>
+		<ProjectConfiguration Include="Release|Win32">
+			<Configuration>Release</Configuration>
+			<Platform>Win32</Platform>
+		</ProjectConfiguration>
+		<ProjectConfiguration Include="Release|x64">
+			<Configuration>Release</Configuration>
+			<Platform>x64</Platform>
+		</ProjectConfiguration>
+	</ItemGroup>
+	<PropertyGroup Condition="'$(WindowsTargetPlatformVersion)'==''">
+		<LatestTargetPlatformVersion>$([Microsoft.Build.Utilities.ToolLocationHelper]::GetLatestSDKTargetPlatformVersion('Windows', '10.0'))</LatestTargetPlatformVersion>
+		<WindowsTargetPlatformVersion Condition="'$(WindowsTargetPlatformVersion)' == ''">$(LatestTargetPlatformVersion)</WindowsTargetPlatformVersion>
+		<TargetPlatformVersion>$(WindowsTargetPlatformVersion)</TargetPlatformVersion>
+	</PropertyGroup>
+	<PropertyGroup Label="Globals">
+		<ProjectGuid>{7FD42DF7-442E-479A-BA76-D0022F99702A}</ProjectGuid>
+		<Keyword>Win32Proj</Keyword>
+		<RootNamespace>7_colorManager</RootNamespace>
+	</PropertyGroup>
+	<Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+		<ConfigurationType>Application</ConfigurationType>
+		<CharacterSet>Unicode</CharacterSet>
+		<PlatformToolset>v141</PlatformToolset>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+		<ConfigurationType>Application</ConfigurationType>
+		<CharacterSet>Unicode</CharacterSet>
+		<PlatformToolset>v141</PlatformToolset>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+		<ConfigurationType>Application</ConfigurationType>
+		<CharacterSet>Unicode</CharacterSet>
+		<WholeProgramOptimization>true</WholeProgramOptimization>
+		<PlatformToolset>v141</PlatformToolset>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+		<ConfigurationType>Application</ConfigurationType>
+		<CharacterSet>Unicode</CharacterSet>
+		<WholeProgramOptimization>true</WholeProgramOptimization>
+		<PlatformToolset>v141</PlatformToolset>
+	</PropertyGroup>
+	<Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+	<ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+		<Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+		<Import Project="..\..\..\libs\openFrameworksCompiled\project\vs\openFrameworksRelease.props" />
+	</ImportGroup>
+	<ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+		<Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+		<Import Project="..\..\..\libs\openFrameworksCompiled\project\vs\openFrameworksRelease.props" />
+	</ImportGroup>
+	<ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+		<Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+		<Import Project="..\..\..\libs\openFrameworksCompiled\project\vs\openFrameworksDebug.props" />
+	</ImportGroup>
+	<ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+		<Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+		<Import Project="..\..\..\libs\openFrameworksCompiled\project\vs\openFrameworksDebug.props" />
+	</ImportGroup>
+	<PropertyGroup Label="UserMacros" />
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+		<OutDir>bin\</OutDir>
+		<IntDir>obj\$(Platform)\$(Configuration)\</IntDir>
+		<TargetName>$(ProjectName)_debug</TargetName>
+		<LinkIncremental>true</LinkIncremental>
+		<GenerateManifest>true</GenerateManifest>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+		<OutDir>bin\</OutDir>
+		<IntDir>obj\$(Platform)\$(Configuration)\</IntDir>
+		<TargetName>$(ProjectName)_debug</TargetName>
+		<LinkIncremental>true</LinkIncremental>
+		<GenerateManifest>true</GenerateManifest>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+		<OutDir>bin\</OutDir>
+		<IntDir>obj\$(Platform)\$(Configuration)\</IntDir>
+		<LinkIncremental>false</LinkIncremental>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+		<OutDir>bin\</OutDir>
+		<IntDir>obj\$(Platform)\$(Configuration)\</IntDir>
+		<LinkIncremental>false</LinkIncremental>
+	</PropertyGroup>
+	<ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+		<ClCompile>
+			<Optimization>Disabled</Optimization>
+			<BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+			<PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+			<RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+			<WarningLevel>Level3</WarningLevel>
+			<AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);src;..\..\..\addons\ofxCameraSaveLoad\src;..\..\..\addons\ofxCereal\src\;..\..\..\addons\ofxCereal\libs\cereal\include;..\..\..\addons\ofxColorGradient\src;..\..\..\addons\ofxColorManager\src;..\..\..\addons\ofxColorPalette\src;..\..\..\addons\ofxColorQuantizer\src;..\..\..\addons\ofxColorQuantizerHelper\src;..\..\..\addons\ofxColorsBrowser\src;..\..\..\addons\ofxColorTheory\src;..\..\..\addons\ofxColorTheory\src\Rules;..\..\..\addons\ofxColourLovers\src;..\..\..\addons\ofxColourLoversHelper\src;..\..\..\addons\ofxControlPointManager\src;..\..\..\addons\ofxCurvesTool\src;..\..\..\addons\ofxFontStash\libs;..\..\..\addons\ofxFontStash\libs\fontstash;..\..\..\addons\ofxFontStash\libs\fontstash\src;..\..\..\addons\ofxFontStash\src;..\..\..\addons\ofxGui\src;..\..\..\addons\ofxGuiPanelsLayout\src;..\..\..\addons\ofxHttpUtils\src;..\..\..\addons\ofxImGui\libs;..\..\..\addons\ofxImGui\libs\imgui;..\..\..\addons\ofxImGui\libs\imgui\src;..\..\..\addons\ofxImGui\src;..\..\..\addons\ofxInterface\src;..\..\..\addons\ofxInterface\src\components;..\..\..\addons\ofxJSON\libs;..\..\..\addons\ofxJSON\libs\jsoncpp;..\..\..\addons\ofxJSON\libs\jsoncpp\include;..\..\..\addons\ofxJSON\libs\jsoncpp\include\json;..\..\..\addons\ofxJSON\libs\jsoncpp\src;..\..\..\addons\ofxJSON\src;..\..\..\addons\ofxMouseRuler\src;..\..\..\addons\ofxOpenColor\src;..\..\..\addons\ofxOpenCv\libs;..\..\..\addons\ofxOpenCv\libs\ippicv;..\..\..\addons\ofxOpenCv\libs\ippicv\include;..\..\..\addons\ofxOpenCv\libs\ippicv\lib;..\..\..\addons\ofxOpenCv\libs\ippicv\lib\vs;..\..\..\addons\ofxOpenCv\libs\ippicv\lib\vs\Win32;..\..\..\addons\ofxOpenCv\libs\ippicv\lib\vs\x64;..\..\..\addons\ofxOpenCv\libs\opencv;..\..\..\addons\ofxOpenCv\libs\opencv\include;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\calib3d;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cuda;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cuda\detail;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\hal;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\opencl;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\opencl\runtime;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\opencl\runtime\autogenerated;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\openvx;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\private;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\utils;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\dnn;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\features2d;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\features2d\hal;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\cpu;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\fluid;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\gpu;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\ocl;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\own;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\util;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\highgui;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgcodecs;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgcodecs\legacy;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgproc;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgproc\detail;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgproc\hal;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\ml;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\objdetect;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\photo;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\photo\legacy;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\stitching;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\stitching\detail;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\ts;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\video;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\video\legacy;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\videoio;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\videoio\legacy;..\..\..\addons\ofxOpenCv\libs\opencv\lib;..\..\..\addons\ofxOpenCv\libs\opencv\lib\vs;..\..\..\addons\ofxOpenCv\libs\opencv\lib\vs\Win32;..\..\..\addons\ofxOpenCv\libs\opencv\lib\vs\Win32\Debug;..\..\..\addons\ofxOpenCv\libs\opencv\lib\vs\Win32\Release;..\..\..\addons\ofxOpenCv\libs\opencv\lib\vs\x64;..\..\..\addons\ofxOpenCv\libs\opencv\lib\vs\x64\Debug;..\..\..\addons\ofxOpenCv\libs\opencv\lib\vs\x64\Release;..\..\..\addons\ofxOpenCv\libs\opencv\license;..\..\..\addons\ofxOpenCv\src;..\..\..\addons\ofxPoco\libs\poco\include;..\..\..\addons\ofxPoco\src;..\..\..\addons\ofxRectangleUtils\src;..\..\..\addons\ofxSerializer\src;..\..\..\addons\ofxUI\src;..\..\..\addons\ofxUndo\src;..\..\..\addons\ofxWindowApp\src;..\..\..\addons\ofxXmlSettings\libs;..\..\..\addons\ofxXmlSettings\src</AdditionalIncludeDirectories>
+			<CompileAs>CompileAsCpp</CompileAs>
+			<ObjectFileName>$(IntDir)</ObjectFileName>
+			<AdditionalOptions>-DPOCO_STATIC</AdditionalOptions>
+		</ClCompile>
+		<Link>
+			<GenerateDebugInformation>true</GenerateDebugInformation>
+			<SubSystem>Console</SubSystem>
+			<RandomizedBaseAddress>false</RandomizedBaseAddress>
+			<AdditionalDependencies>%(AdditionalDependencies);ippicvmt.lib;ade.lib;ippiwd.lib;ittnotifyd.lib;libprotobufd.lib;libwebpd.lib;opencv_calib3d401d.lib;opencv_core401d.lib;opencv_dnn401d.lib;opencv_features2d401d.lib;opencv_flann401d.lib;opencv_gapi401d.lib;opencv_highgui401d.lib;opencv_imgcodecs401d.lib;opencv_imgproc401d.lib;opencv_ml401d.lib;opencv_objdetect401d.lib;opencv_photo401d.lib;opencv_stitching401d.lib;opencv_video401d.lib;opencv_videoio401d.lib;quircd.lib;zlibd.lib;PocoCryptomdd.lib;PocoDatamdd.lib;PocoDataSQLitemdd.lib;PocoFoundationmdd.lib;PocoJSONmdd.lib;PocoNetmdd.lib;PocoNetSSLmdd.lib;PocoPDFmdd.lib;PocoUtilmdd.lib;PocoXMLmdd.lib;PocoZipmdd.lib;iphlpapi.lib</AdditionalDependencies>
+			<AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);..\..\..\addons\ofxOpenCv\libs\ippicv\lib\vs\Win32;..\..\..\addons\ofxOpenCv\libs\opencv\lib\vs\Win32\Debug;..\..\..\addons\ofxPoco\libs\poco\lib\vs\Win32\Debug;..\..\..\addons\ofxPoco</AdditionalLibraryDirectories>
+		</Link>
+		<PostBuildEvent />
+	</ItemDefinitionGroup>
+	<ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+		<ClCompile>
+			<Optimization>Disabled</Optimization>
+			<BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+			<PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+			<RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+			<WarningLevel>Level3</WarningLevel>
+			<AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);src;..\..\..\addons\ofxCameraSaveLoad\src;..\..\..\addons\ofxCereal\src\;..\..\..\addons\ofxCereal\libs\cereal\include;..\..\..\addons\ofxColorGradient\src;..\..\..\addons\ofxColorManager\src;..\..\..\addons\ofxColorPalette\src;..\..\..\addons\ofxColorQuantizer\src;..\..\..\addons\ofxColorQuantizerHelper\src;..\..\..\addons\ofxColorsBrowser\src;..\..\..\addons\ofxColorTheory\src;..\..\..\addons\ofxColorTheory\src\Rules;..\..\..\addons\ofxColourLovers\src;..\..\..\addons\ofxColourLoversHelper\src;..\..\..\addons\ofxControlPointManager\src;..\..\..\addons\ofxCurvesTool\src;..\..\..\addons\ofxFontStash\libs;..\..\..\addons\ofxFontStash\libs\fontstash;..\..\..\addons\ofxFontStash\libs\fontstash\src;..\..\..\addons\ofxFontStash\src;..\..\..\addons\ofxGui\src;..\..\..\addons\ofxGuiPanelsLayout\src;..\..\..\addons\ofxHttpUtils\src;..\..\..\addons\ofxImGui\libs;..\..\..\addons\ofxImGui\libs\imgui;..\..\..\addons\ofxImGui\libs\imgui\src;..\..\..\addons\ofxImGui\src;..\..\..\addons\ofxInterface\src;..\..\..\addons\ofxInterface\src\components;..\..\..\addons\ofxJSON\libs;..\..\..\addons\ofxJSON\libs\jsoncpp;..\..\..\addons\ofxJSON\libs\jsoncpp\include;..\..\..\addons\ofxJSON\libs\jsoncpp\include\json;..\..\..\addons\ofxJSON\libs\jsoncpp\src;..\..\..\addons\ofxJSON\src;..\..\..\addons\ofxMouseRuler\src;..\..\..\addons\ofxOpenColor\src;..\..\..\addons\ofxOpenCv\libs;..\..\..\addons\ofxOpenCv\libs\ippicv;..\..\..\addons\ofxOpenCv\libs\ippicv\include;..\..\..\addons\ofxOpenCv\libs\ippicv\lib;..\..\..\addons\ofxOpenCv\libs\ippicv\lib\vs;..\..\..\addons\ofxOpenCv\libs\ippicv\lib\vs\Win32;..\..\..\addons\ofxOpenCv\libs\ippicv\lib\vs\x64;..\..\..\addons\ofxOpenCv\libs\opencv;..\..\..\addons\ofxOpenCv\libs\opencv\include;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\calib3d;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cuda;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cuda\detail;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\hal;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\opencl;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\opencl\runtime;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\opencl\runtime\autogenerated;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\openvx;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\private;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\utils;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\dnn;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\features2d;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\features2d\hal;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\cpu;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\fluid;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\gpu;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\ocl;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\own;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\util;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\highgui;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgcodecs;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgcodecs\legacy;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgproc;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgproc\detail;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgproc\hal;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\ml;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\objdetect;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\photo;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\photo\legacy;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\stitching;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\stitching\detail;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\ts;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\video;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\video\legacy;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\videoio;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\videoio\legacy;..\..\..\addons\ofxOpenCv\libs\opencv\lib;..\..\..\addons\ofxOpenCv\libs\opencv\lib\vs;..\..\..\addons\ofxOpenCv\libs\opencv\lib\vs\Win32;..\..\..\addons\ofxOpenCv\libs\opencv\lib\vs\Win32\Debug;..\..\..\addons\ofxOpenCv\libs\opencv\lib\vs\Win32\Release;..\..\..\addons\ofxOpenCv\libs\opencv\lib\vs\x64;..\..\..\addons\ofxOpenCv\libs\opencv\lib\vs\x64\Debug;..\..\..\addons\ofxOpenCv\libs\opencv\lib\vs\x64\Release;..\..\..\addons\ofxOpenCv\libs\opencv\license;..\..\..\addons\ofxOpenCv\src;..\..\..\addons\ofxPoco\libs\poco\include;..\..\..\addons\ofxPoco\src;..\..\..\addons\ofxRectangleUtils\src;..\..\..\addons\ofxSerializer\src;..\..\..\addons\ofxUI\src;..\..\..\addons\ofxUndo\src;..\..\..\addons\ofxWindowApp\src;..\..\..\addons\ofxXmlSettings\libs;..\..\..\addons\ofxXmlSettings\src</AdditionalIncludeDirectories>
+			<CompileAs>CompileAsCpp</CompileAs>
+			<MultiProcessorCompilation>true</MultiProcessorCompilation>
+			<ObjectFileName>$(IntDir)</ObjectFileName>
+			<AdditionalOptions>-DPOCO_STATIC</AdditionalOptions>
+		</ClCompile>
+		<Link>
+			<GenerateDebugInformation>true</GenerateDebugInformation>
+			<SubSystem>Console</SubSystem>
+			<RandomizedBaseAddress>false</RandomizedBaseAddress>
+			<AdditionalDependencies>%(AdditionalDependencies);ippicvmt.lib;ade.lib;ippiwd.lib;ittnotifyd.lib;libprotobufd.lib;libwebpd.lib;opencv_calib3d401d.lib;opencv_core401d.lib;opencv_dnn401d.lib;opencv_features2d401d.lib;opencv_flann401d.lib;opencv_gapi401d.lib;opencv_highgui401d.lib;opencv_imgcodecs401d.lib;opencv_imgproc401d.lib;opencv_ml401d.lib;opencv_objdetect401d.lib;opencv_photo401d.lib;opencv_stitching401d.lib;opencv_video401d.lib;opencv_videoio401d.lib;quircd.lib;zlibd.lib;PocoCryptomdd.lib;PocoDatamdd.lib;PocoDataSQLitemdd.lib;PocoFoundationmdd.lib;PocoJSONmdd.lib;PocoNetmdd.lib;PocoNetSSLmdd.lib;PocoPDFmdd.lib;PocoUtilmdd.lib;PocoXMLmdd.lib;PocoZipmdd.lib;iphlpapi.lib</AdditionalDependencies>
+			<AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);..\..\..\addons\ofxOpenCv\libs\ippicv\lib\vs\x64;..\..\..\addons\ofxOpenCv\libs\opencv\lib\vs\x64\Debug;..\..\..\addons\ofxPoco\libs\poco\lib\vs\x64\Debug;..\..\..\addons\ofxPoco</AdditionalLibraryDirectories>
+		</Link>
+		<PostBuildEvent />
+	</ItemDefinitionGroup>
+	<ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+		<ClCompile>
+			<WholeProgramOptimization>false</WholeProgramOptimization>
+			<PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+			<RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+			<WarningLevel>Level3</WarningLevel>
+			<AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);src;..\..\..\addons\ofxCameraSaveLoad\src;..\..\..\addons\ofxCereal\src\;..\..\..\addons\ofxCereal\libs\cereal\include;..\..\..\addons\ofxColorGradient\src;..\..\..\addons\ofxColorManager\src;..\..\..\addons\ofxColorPalette\src;..\..\..\addons\ofxColorQuantizer\src;..\..\..\addons\ofxColorQuantizerHelper\src;..\..\..\addons\ofxColorsBrowser\src;..\..\..\addons\ofxColorTheory\src;..\..\..\addons\ofxColorTheory\src\Rules;..\..\..\addons\ofxColourLovers\src;..\..\..\addons\ofxColourLoversHelper\src;..\..\..\addons\ofxControlPointManager\src;..\..\..\addons\ofxCurvesTool\src;..\..\..\addons\ofxFontStash\libs;..\..\..\addons\ofxFontStash\libs\fontstash;..\..\..\addons\ofxFontStash\libs\fontstash\src;..\..\..\addons\ofxFontStash\src;..\..\..\addons\ofxGui\src;..\..\..\addons\ofxGuiPanelsLayout\src;..\..\..\addons\ofxHttpUtils\src;..\..\..\addons\ofxImGui\libs;..\..\..\addons\ofxImGui\libs\imgui;..\..\..\addons\ofxImGui\libs\imgui\src;..\..\..\addons\ofxImGui\src;..\..\..\addons\ofxInterface\src;..\..\..\addons\ofxInterface\src\components;..\..\..\addons\ofxJSON\libs;..\..\..\addons\ofxJSON\libs\jsoncpp;..\..\..\addons\ofxJSON\libs\jsoncpp\include;..\..\..\addons\ofxJSON\libs\jsoncpp\include\json;..\..\..\addons\ofxJSON\libs\jsoncpp\src;..\..\..\addons\ofxJSON\src;..\..\..\addons\ofxMouseRuler\src;..\..\..\addons\ofxOpenColor\src;..\..\..\addons\ofxOpenCv\libs;..\..\..\addons\ofxOpenCv\libs\ippicv;..\..\..\addons\ofxOpenCv\libs\ippicv\include;..\..\..\addons\ofxOpenCv\libs\ippicv\lib;..\..\..\addons\ofxOpenCv\libs\ippicv\lib\vs;..\..\..\addons\ofxOpenCv\libs\ippicv\lib\vs\Win32;..\..\..\addons\ofxOpenCv\libs\ippicv\lib\vs\x64;..\..\..\addons\ofxOpenCv\libs\opencv;..\..\..\addons\ofxOpenCv\libs\opencv\include;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\calib3d;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cuda;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cuda\detail;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\hal;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\opencl;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\opencl\runtime;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\opencl\runtime\autogenerated;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\openvx;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\private;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\utils;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\dnn;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\features2d;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\features2d\hal;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\cpu;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\fluid;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\gpu;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\ocl;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\own;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\util;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\highgui;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgcodecs;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgcodecs\legacy;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgproc;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgproc\detail;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgproc\hal;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\ml;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\objdetect;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\photo;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\photo\legacy;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\stitching;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\stitching\detail;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\ts;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\video;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\video\legacy;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\videoio;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\videoio\legacy;..\..\..\addons\ofxOpenCv\libs\opencv\lib;..\..\..\addons\ofxOpenCv\libs\opencv\lib\vs;..\..\..\addons\ofxOpenCv\libs\opencv\lib\vs\Win32;..\..\..\addons\ofxOpenCv\libs\opencv\lib\vs\Win32\Debug;..\..\..\addons\ofxOpenCv\libs\opencv\lib\vs\Win32\Release;..\..\..\addons\ofxOpenCv\libs\opencv\lib\vs\x64;..\..\..\addons\ofxOpenCv\libs\opencv\lib\vs\x64\Debug;..\..\..\addons\ofxOpenCv\libs\opencv\lib\vs\x64\Release;..\..\..\addons\ofxOpenCv\libs\opencv\license;..\..\..\addons\ofxOpenCv\src;..\..\..\addons\ofxPoco\libs\poco\include;..\..\..\addons\ofxPoco\src;..\..\..\addons\ofxRectangleUtils\src;..\..\..\addons\ofxSerializer\src;..\..\..\addons\ofxUI\src;..\..\..\addons\ofxUndo\src;..\..\..\addons\ofxWindowApp\src;..\..\..\addons\ofxXmlSettings\libs;..\..\..\addons\ofxXmlSettings\src</AdditionalIncludeDirectories>
+			<CompileAs>CompileAsCpp</CompileAs>
+			<MultiProcessorCompilation>true</MultiProcessorCompilation>
+			<ObjectFileName>$(IntDir)</ObjectFileName>
+			<AdditionalOptions>-DPOCO_STATIC</AdditionalOptions>
+		</ClCompile>
+		<Link>
+			<IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+			<GenerateDebugInformation>false</GenerateDebugInformation>
+			<SubSystem>Console</SubSystem>
+			<OptimizeReferences>true</OptimizeReferences>
+			<EnableCOMDATFolding>true</EnableCOMDATFolding>
+			<RandomizedBaseAddress>false</RandomizedBaseAddress>
+			<AdditionalDependencies>%(AdditionalDependencies);ippicvmt.lib;ade.lib;ippiw.lib;ittnotify.lib;libprotobuf.lib;libwebp.lib;opencv_calib3d401.lib;opencv_core401.lib;opencv_dnn401.lib;opencv_features2d401.lib;opencv_flann401.lib;opencv_gapi401.lib;opencv_highgui401.lib;opencv_imgcodecs401.lib;opencv_imgproc401.lib;opencv_ml401.lib;opencv_objdetect401.lib;opencv_photo401.lib;opencv_stitching401.lib;opencv_video401.lib;opencv_videoio401.lib;quirc.lib;zlib.lib;PocoCryptomd.lib;PocoDatamd.lib;PocoDataSQLitemd.lib;PocoFoundationmd.lib;PocoJSONmd.lib;PocoNetmd.lib;PocoNetSSLmd.lib;PocoPDFmd.lib;PocoUtilmd.lib;PocoXMLmd.lib;PocoZipmd.lib;iphlpapi.lib</AdditionalDependencies>
+			<AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);..\..\..\addons\ofxOpenCv\libs\ippicv\lib\vs\Win32;..\..\..\addons\ofxOpenCv\libs\opencv\lib\vs\Win32\Release;..\..\..\addons\ofxPoco\libs\poco\lib\vs\Win32\Release;..\..\..\addons\ofxPoco</AdditionalLibraryDirectories>
+		</Link>
+		<PostBuildEvent />
+	</ItemDefinitionGroup>
+	<ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+		<ClCompile>
+			<WholeProgramOptimization>false</WholeProgramOptimization>
+			<PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+			<RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+			<WarningLevel>Level3</WarningLevel>
+			<AdditionalIncludeDirectories>%(AdditionalIncludeDirectories);src;..\..\..\addons\ofxCameraSaveLoad\src;..\..\..\addons\ofxCereal\src\;..\..\..\addons\ofxCereal\libs\cereal\include;..\..\..\addons\ofxColorGradient\src;..\..\..\addons\ofxColorManager\src;..\..\..\addons\ofxColorPalette\src;..\..\..\addons\ofxColorQuantizer\src;..\..\..\addons\ofxColorQuantizerHelper\src;..\..\..\addons\ofxColorsBrowser\src;..\..\..\addons\ofxColorTheory\src;..\..\..\addons\ofxColorTheory\src\Rules;..\..\..\addons\ofxColourLovers\src;..\..\..\addons\ofxColourLoversHelper\src;..\..\..\addons\ofxControlPointManager\src;..\..\..\addons\ofxCurvesTool\src;..\..\..\addons\ofxFontStash\libs;..\..\..\addons\ofxFontStash\libs\fontstash;..\..\..\addons\ofxFontStash\libs\fontstash\src;..\..\..\addons\ofxFontStash\src;..\..\..\addons\ofxGui\src;..\..\..\addons\ofxGuiPanelsLayout\src;..\..\..\addons\ofxHttpUtils\src;..\..\..\addons\ofxImGui\libs;..\..\..\addons\ofxImGui\libs\imgui;..\..\..\addons\ofxImGui\libs\imgui\src;..\..\..\addons\ofxImGui\src;..\..\..\addons\ofxInterface\src;..\..\..\addons\ofxInterface\src\components;..\..\..\addons\ofxJSON\libs;..\..\..\addons\ofxJSON\libs\jsoncpp;..\..\..\addons\ofxJSON\libs\jsoncpp\include;..\..\..\addons\ofxJSON\libs\jsoncpp\include\json;..\..\..\addons\ofxJSON\libs\jsoncpp\src;..\..\..\addons\ofxJSON\src;..\..\..\addons\ofxMouseRuler\src;..\..\..\addons\ofxOpenColor\src;..\..\..\addons\ofxOpenCv\libs;..\..\..\addons\ofxOpenCv\libs\ippicv;..\..\..\addons\ofxOpenCv\libs\ippicv\include;..\..\..\addons\ofxOpenCv\libs\ippicv\lib;..\..\..\addons\ofxOpenCv\libs\ippicv\lib\vs;..\..\..\addons\ofxOpenCv\libs\ippicv\lib\vs\Win32;..\..\..\addons\ofxOpenCv\libs\ippicv\lib\vs\x64;..\..\..\addons\ofxOpenCv\libs\opencv;..\..\..\addons\ofxOpenCv\libs\opencv\include;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\calib3d;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cuda;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cuda\detail;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\hal;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\opencl;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\opencl\runtime;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\opencl\runtime\autogenerated;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\openvx;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\private;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\utils;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\dnn;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\features2d;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\features2d\hal;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\cpu;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\fluid;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\gpu;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\ocl;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\own;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\util;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\highgui;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgcodecs;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgcodecs\legacy;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgproc;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgproc\detail;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgproc\hal;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\ml;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\objdetect;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\photo;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\photo\legacy;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\stitching;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\stitching\detail;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\ts;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\video;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\video\legacy;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\videoio;..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\videoio\legacy;..\..\..\addons\ofxOpenCv\libs\opencv\lib;..\..\..\addons\ofxOpenCv\libs\opencv\lib\vs;..\..\..\addons\ofxOpenCv\libs\opencv\lib\vs\Win32;..\..\..\addons\ofxOpenCv\libs\opencv\lib\vs\Win32\Debug;..\..\..\addons\ofxOpenCv\libs\opencv\lib\vs\Win32\Release;..\..\..\addons\ofxOpenCv\libs\opencv\lib\vs\x64;..\..\..\addons\ofxOpenCv\libs\opencv\lib\vs\x64\Debug;..\..\..\addons\ofxOpenCv\libs\opencv\lib\vs\x64\Release;..\..\..\addons\ofxOpenCv\libs\opencv\license;..\..\..\addons\ofxOpenCv\src;..\..\..\addons\ofxPoco\libs\poco\include;..\..\..\addons\ofxPoco\src;..\..\..\addons\ofxRectangleUtils\src;..\..\..\addons\ofxSerializer\src;..\..\..\addons\ofxUI\src;..\..\..\addons\ofxUndo\src;..\..\..\addons\ofxWindowApp\src;..\..\..\addons\ofxXmlSettings\libs;..\..\..\addons\ofxXmlSettings\src</AdditionalIncludeDirectories>
+			<CompileAs>CompileAsCpp</CompileAs>
+			<ObjectFileName>$(IntDir)</ObjectFileName>
+			<AdditionalOptions>-DPOCO_STATIC</AdditionalOptions>
+		</ClCompile>
+		<Link>
+			<IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+			<GenerateDebugInformation>false</GenerateDebugInformation>
+			<SubSystem>Console</SubSystem>
+			<OptimizeReferences>true</OptimizeReferences>
+			<EnableCOMDATFolding>true</EnableCOMDATFolding>
+			<RandomizedBaseAddress>false</RandomizedBaseAddress>
+			<AdditionalDependencies>%(AdditionalDependencies);ippicvmt.lib;ade.lib;ippiw.lib;ittnotify.lib;libprotobuf.lib;libwebp.lib;opencv_calib3d401.lib;opencv_core401.lib;opencv_dnn401.lib;opencv_features2d401.lib;opencv_flann401.lib;opencv_gapi401.lib;opencv_highgui401.lib;opencv_imgcodecs401.lib;opencv_imgproc401.lib;opencv_ml401.lib;opencv_objdetect401.lib;opencv_photo401.lib;opencv_stitching401.lib;opencv_video401.lib;opencv_videoio401.lib;quirc.lib;zlib.lib;PocoCryptomd.lib;PocoDatamd.lib;PocoDataSQLitemd.lib;PocoFoundationmd.lib;PocoJSONmd.lib;PocoNetmd.lib;PocoNetSSLmd.lib;PocoPDFmd.lib;PocoUtilmd.lib;PocoXMLmd.lib;PocoZipmd.lib;iphlpapi.lib</AdditionalDependencies>
+			<AdditionalLibraryDirectories>%(AdditionalLibraryDirectories);..\..\..\addons\ofxOpenCv\libs\ippicv\lib\vs\x64;..\..\..\addons\ofxOpenCv\libs\opencv\lib\vs\x64\Release;..\..\..\addons\ofxPoco\libs\poco\lib\vs\x64\Release;..\..\..\addons\ofxPoco</AdditionalLibraryDirectories>
+		</Link>
+		<PostBuildEvent />
+	</ItemDefinitionGroup>
+	<ItemGroup>
+		<ClCompile Include="src\main.cpp" />
+		<ClCompile Include="src\ofApp.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxCameraSaveLoad\src\ofxCameraSaveLoad.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxColorGradient\src\ofxColorGradient.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxColorManager\src\ButtonExample.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxColorManager\src\ButtonPaletteSelector.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxColorManager\src\DEMO_palette.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxColorManager\src\ofxColorManager.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxColorManager\src\ofxSimpleSlider.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxColorManager\src\PresetManager.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxColorManager\src\PresetPalette.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxColorPalette\src\ofxColorPalette.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxColorQuantizer\src\ofxColorQuantizer.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxColorQuantizerHelper\src\ofxColorQuantizerHelper.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxColorsBrowser\src\ColorRectangle.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxColorsBrowser\src\Color_BitmapTextButton.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxColorsBrowser\src\ofxColorsBrowser.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxColorTheory\src\ColorScheme.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxColorTheory\src\ColorUtil.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxColorTheory\src\ColorWheelScheme.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxColorTheory\src\ColorWheelSchemes.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxColorTheory\src\Rules\Analogous.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxColorTheory\src\Rules\Complementary.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxColorTheory\src\Rules\Compound.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxColorTheory\src\Rules\FlippedCompound.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxColorTheory\src\Rules\Monochrome.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxColorTheory\src\Rules\SplitComplementary.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxColorTheory\src\Rules\Tetrad.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxColorTheory\src\Rules\Triad.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxColourLovers\src\ColourLoveEvent.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxColourLovers\src\ColourLovePalette.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxColourLovers\src\ofxColourLovers.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxColourLoversHelper\src\ofxColourLoversHelper.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxControlPointManager\src\ofxControlPointManager.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxCurvesTool\src\CurveLut.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxCurvesTool\src\ofxCurvesTool.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxFontStash\src\ofxFontStash.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxFontStash\libs\fontstash\src\fontstash.c" />
+		<ClCompile Include="..\..\..\addons\ofxFontStash\libs\fontstash\src\stb_truetype.c" />
+		<ClCompile Include="..\..\..\addons\ofxGui\src\ofxBaseGui.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxGui\src\ofxButton.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxGui\src\ofxColorPicker.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxGui\src\ofxGuiGroup.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxGui\src\ofxInputField.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxGui\src\ofxLabel.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxGui\src\ofxPanel.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxGui\src\ofxSlider.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxGui\src\ofxSliderGroup.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxGui\src\ofxToggle.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxGuiPanelsLayout\src\ofxGuiPanelsLayout.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxGuiPanelsLayout\src\TextBox.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxHttpUtils\src\ofxHttpUtils.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxImGui\src\BaseEngine.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxImGui\src\DefaultTheme.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxImGui\src\EngineGLFW.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxImGui\src\EngineOpenGLES.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxImGui\src\EngineVk.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxImGui\src\Gui.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxImGui\src\Helpers.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxImGui\src\ofxImGuiLoggerChannel.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxImGui\libs\imgui\src\imgui.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxImGui\libs\imgui\src\imgui_demo.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxImGui\libs\imgui\src\imgui_draw.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxImGui\libs\imgui\src\imgui_widgets.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxInterface\src\components\BitmapTextButton.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxInterface\src\components\LambdaView.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxInterface\src\components\SolidColorPanel.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxInterface\src\components\TextureButton.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxInterface\src\Node.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxInterface\src\TouchEvent.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxInterface\src\TouchManager.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxInterface\src\VirtualTouch.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxJSON\src\ofxJSONElement.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxJSON\libs\jsoncpp\src\jsoncpp.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxMouseRuler\src\ofxMouseRuler.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxOpenCv\src\ofxCvColorImage.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxOpenCv\src\ofxCvContourFinder.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxOpenCv\src\ofxCvFloatImage.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxOpenCv\src\ofxCvGrayscaleImage.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxOpenCv\src\ofxCvHaarFinder.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxOpenCv\src\ofxCvImage.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxOpenCv\src\ofxCvShortImage.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxPoco\src\ofxXmlPoco.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxRectangleUtils\src\ofxRectangleUtils.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUI2DGraph.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUI2DPad.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUIBaseDraws.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUIBiLabelSlider.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUIButton.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUICanvas.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUICircleSlider.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUIDragableLabelButton.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUIDropDownList.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUIEventArgs.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUIFPS.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUIFPSSlider.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUIImage.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUIImageButton.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUIImageSampler.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUIImageSlider.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUIImageToggle.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUILabel.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUILabelButton.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUILabelToggle.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUIMinimalSlider.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUIMovingGraph.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUIMultiImageButton.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUIMultiImageToggle.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUINumberDialer.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUIRadio.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUIRangeSlider.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUIRectangle.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUIRotarySlider.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUIScrollableCanvas.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUISlider.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUISortableList.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUISpacer.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUISpectrum.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUISuperCanvas.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUITabBar.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUITextArea.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUITextInput.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUIToggle.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUIToggleMatrix.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUIValuePlotter.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUIWaveform.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUIWidget.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxUI\src\ofxUIWidgetWithLabel.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxWindowApp\src\ofxWindowApp.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxXmlSettings\src\ofxXmlSettings.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxml.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxmlerror.cpp" />
+		<ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxmlparser.cpp" />
+	</ItemGroup>
+	<ItemGroup>
+		<ClInclude Include="src\ofApp.h" />
+		<ClInclude Include="..\..\..\addons\ofxCameraSaveLoad\src\ofxCameraSaveLoad.h" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\src\ofxCereal.h" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\access.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\archives\adapters.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\archives\binary.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\archives\json2.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\archives\portable_binary.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\archives\xml.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\cereal.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\details\helpers.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\details\polymorphic_impl.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\details\static_object.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\details\traits.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\details\util.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\external\base64.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\external\rapidjson\document.h" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\external\rapidjson\filestream.h" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\external\rapidjson\genericstream.h" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\external\rapidjson\internal\pow10.h" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\external\rapidjson\internal\stack.h" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\external\rapidjson\internal\strfunc.h" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\external\rapidjson\prettywriter.h" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\external\rapidjson\rapidjson.h" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\external\rapidjson\reader.h" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\external\rapidjson\stringbuffer.h" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\external\rapidjson\writer.h" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\external\rapidxml\rapidxml.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\external\rapidxml\rapidxml_iterators.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\external\rapidxml\rapidxml_print.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\external\rapidxml\rapidxml_utils.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\macros.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\types\array.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\types\base_class.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\types\bitset.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\types\boost_variant.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\types\chrono.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\types\common.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\types\complex.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\types\deque.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\types\forward_list.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\types\list.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\types\map.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\types\memory.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\types\polymorphic.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\types\queue.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\types\set.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\types\stack.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\types\string.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\types\tuple.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\types\unordered_map.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\types\unordered_set.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\types\utility.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\types\valarray.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxCereal\libs\cereal\include\cereal\types\vector.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxColorGradient\src\ofxColorGradient.h" />
+		<ClInclude Include="..\..\..\addons\ofxColorManager\src\ButtonExample.h" />
+		<ClInclude Include="..\..\..\addons\ofxColorManager\src\ButtonPaletteSelector.h" />
+		<ClInclude Include="..\..\..\addons\ofxColorManager\src\DEMO_palette.h" />
+		<ClInclude Include="..\..\..\addons\ofxColorManager\src\ofxColorManager.h" />
+		<ClInclude Include="..\..\..\addons\ofxColorManager\src\ofxSimpleSlider.h" />
+		<ClInclude Include="..\..\..\addons\ofxColorManager\src\OFX_SETTINGS.h" />
+		<ClInclude Include="..\..\..\addons\ofxColorManager\src\PresetManager.h" />
+		<ClInclude Include="..\..\..\addons\ofxColorManager\src\PresetPalette.h" />
+		<ClInclude Include="..\..\..\addons\ofxColorPalette\src\ofxColorPalette.h" />
+		<ClInclude Include="..\..\..\addons\ofxColorQuantizer\src\ofxColorQuantizer.h" />
+		<ClInclude Include="..\..\..\addons\ofxColorQuantizerHelper\src\ColorConverter.h" />
+		<ClInclude Include="..\..\..\addons\ofxColorQuantizerHelper\src\ofxColorQuantizerHelper.h" />
+		<ClInclude Include="..\..\..\addons\ofxColorsBrowser\src\ColorRectangle.h" />
+		<ClInclude Include="..\..\..\addons\ofxColorsBrowser\src\Color_BitmapTextButton.h" />
+		<ClInclude Include="..\..\..\addons\ofxColorsBrowser\src\ofxColorsBrowser.h" />
+		<ClInclude Include="..\..\..\addons\ofxColorsBrowser\src\ofxRectangle.h" />
+		<ClInclude Include="..\..\..\addons\ofxColorTheory\src\ColorScheme.h" />
+		<ClInclude Include="..\..\..\addons\ofxColorTheory\src\ColorUtil.h" />
+		<ClInclude Include="..\..\..\addons\ofxColorTheory\src\ColorWheelScheme.h" />
+		<ClInclude Include="..\..\..\addons\ofxColorTheory\src\ColorWheelSchemes.h" />
+		<ClInclude Include="..\..\..\addons\ofxColorTheory\src\Rules\Analogous.h" />
+		<ClInclude Include="..\..\..\addons\ofxColorTheory\src\Rules\Complementary.h" />
+		<ClInclude Include="..\..\..\addons\ofxColorTheory\src\Rules\Compound.h" />
+		<ClInclude Include="..\..\..\addons\ofxColorTheory\src\Rules\FlippedCompound.h" />
+		<ClInclude Include="..\..\..\addons\ofxColorTheory\src\Rules\Monochrome.h" />
+		<ClInclude Include="..\..\..\addons\ofxColorTheory\src\Rules\SplitComplementary.h" />
+		<ClInclude Include="..\..\..\addons\ofxColorTheory\src\Rules\Tetrad.h" />
+		<ClInclude Include="..\..\..\addons\ofxColorTheory\src\Rules\Triad.h" />
+		<ClInclude Include="..\..\..\addons\ofxColourLovers\src\ColourCallTypes.h" />
+		<ClInclude Include="..\..\..\addons\ofxColourLovers\src\ColourLoveEvent.h" />
+		<ClInclude Include="..\..\..\addons\ofxColourLovers\src\ColourLovePalette.h" />
+		<ClInclude Include="..\..\..\addons\ofxColourLovers\src\ofxColourLovers.h" />
+		<ClInclude Include="..\..\..\addons\ofxColourLoversHelper\src\ofxColourLoversHelper.h" />
+		<ClInclude Include="..\..\..\addons\ofxControlPointManager\src\ofxControlPointManager.h" />
+		<ClInclude Include="..\..\..\addons\ofxCurvesTool\src\CurveLut.h" />
+		<ClInclude Include="..\..\..\addons\ofxCurvesTool\src\ofxCurvesTool.h" />
+		<ClInclude Include="..\..\..\addons\ofxFontStash\src\ofxFontStash.h" />
+		<ClInclude Include="..\..\..\addons\ofxFontStash\libs\fontstash\src\fontstash.h" />
+		<ClInclude Include="..\..\..\addons\ofxFontStash\libs\fontstash\src\stb_truetype.h" />
+		<ClInclude Include="..\..\..\addons\ofxGui\src\ofxBaseGui.h" />
+		<ClInclude Include="..\..\..\addons\ofxGui\src\ofxButton.h" />
+		<ClInclude Include="..\..\..\addons\ofxGui\src\ofxColorPicker.h" />
+		<ClInclude Include="..\..\..\addons\ofxGui\src\ofxGui.h" />
+		<ClInclude Include="..\..\..\addons\ofxGui\src\ofxGuiGroup.h" />
+		<ClInclude Include="..\..\..\addons\ofxGui\src\ofxGuiUtils.h" />
+		<ClInclude Include="..\..\..\addons\ofxGui\src\ofxInputField.h" />
+		<ClInclude Include="..\..\..\addons\ofxGui\src\ofxLabel.h" />
+		<ClInclude Include="..\..\..\addons\ofxGui\src\ofxPanel.h" />
+		<ClInclude Include="..\..\..\addons\ofxGui\src\ofxSlider.h" />
+		<ClInclude Include="..\..\..\addons\ofxGui\src\ofxSliderGroup.h" />
+		<ClInclude Include="..\..\..\addons\ofxGui\src\ofxToggle.h" />
+		<ClInclude Include="..\..\..\addons\ofxGuiPanelsLayout\src\ofxGuiPanelsLayout.h" />
+		<ClInclude Include="..\..\..\addons\ofxGuiPanelsLayout\src\TextBox.h" />
+		<ClInclude Include="..\..\..\addons\ofxHttpUtils\src\ofxHttpTypes.h" />
+		<ClInclude Include="..\..\..\addons\ofxHttpUtils\src\ofxHttpUtils.h" />
+		<ClInclude Include="..\..\..\addons\ofxImGui\src\BaseEngine.h" />
+		<ClInclude Include="..\..\..\addons\ofxImGui\src\BaseTheme.h" />
+		<ClInclude Include="..\..\..\addons\ofxImGui\src\DefaultTheme.h" />
+		<ClInclude Include="..\..\..\addons\ofxImGui\src\EngineGLFW.h" />
+		<ClInclude Include="..\..\..\addons\ofxImGui\src\EngineOpenGLES.h" />
+		<ClInclude Include="..\..\..\addons\ofxImGui\src\EngineVk.h" />
+		<ClInclude Include="..\..\..\addons\ofxImGui\src\Gui.h" />
+		<ClInclude Include="..\..\..\addons\ofxImGui\src\Helpers.h" />
+		<ClInclude Include="..\..\..\addons\ofxImGui\src\imconfig.h" />
+		<ClInclude Include="..\..\..\addons\ofxImGui\src\ofxImGui.h" />
+		<ClInclude Include="..\..\..\addons\ofxImGui\src\ofxImGuiLoggerChannel.h" />
+		<ClInclude Include="..\..\..\addons\ofxImGui\libs\imgui\src\imgui.h" />
+		<ClInclude Include="..\..\..\addons\ofxImGui\libs\imgui\src\imgui_internal.h" />
+		<ClInclude Include="..\..\..\addons\ofxImGui\libs\imgui\src\imstb_rectpack.h" />
+		<ClInclude Include="..\..\..\addons\ofxImGui\libs\imgui\src\imstb_textedit.h" />
+		<ClInclude Include="..\..\..\addons\ofxImGui\libs\imgui\src\imstb_truetype.h" />
+		<ClInclude Include="..\..\..\addons\ofxInterface\src\components\BitmapTextButton.h" />
+		<ClInclude Include="..\..\..\addons\ofxInterface\src\components\LambdaView.h" />
+		<ClInclude Include="..\..\..\addons\ofxInterface\src\components\SolidColorPanel.h" />
+		<ClInclude Include="..\..\..\addons\ofxInterface\src\components\TextureButton.h" />
+		<ClInclude Include="..\..\..\addons\ofxInterface\src\Node.h" />
+		<ClInclude Include="..\..\..\addons\ofxInterface\src\ofxInterface.h" />
+		<ClInclude Include="..\..\..\addons\ofxInterface\src\TouchEvent.h" />
+		<ClInclude Include="..\..\..\addons\ofxInterface\src\TouchManager.h" />
+		<ClInclude Include="..\..\..\addons\ofxInterface\src\VirtualTouch.h" />
+		<ClInclude Include="..\..\..\addons\ofxJSON\src\ofxJSON.h" />
+		<ClInclude Include="..\..\..\addons\ofxJSON\src\ofxJSONElement.h" />
+		<ClInclude Include="..\..\..\addons\ofxJSON\libs\jsoncpp\include\json\json-forwards.h" />
+		<ClInclude Include="..\..\..\addons\ofxJSON\libs\jsoncpp\include\json\json.h" />
+		<ClInclude Include="..\..\..\addons\ofxMouseRuler\src\ofxMouseRuler.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenColor\src\ofxOpenColor.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\src\ofxCvBlob.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\src\ofxCvColorImage.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\src\ofxCvConstants.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\src\ofxCvContourFinder.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\src\ofxCvFloatImage.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\src\ofxCvGrayscaleImage.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\src\ofxCvHaarFinder.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\src\ofxCvImage.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\src\ofxCvShortImage.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\src\ofxOpenCv.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\ippicv\include\ippicv.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\ippicv\include\ippicv_base.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\ippicv\include\ippicv_defs.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\ippicv\include\ippicv_defs_l.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\ippicv\include\ippicv_l.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\ippicv\include\ippicv_redefs.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\ippicv\include\ippicv_types.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\ippicv\include\ippicv_types_l.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\ippicv\include\ippversion.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\calib3d\calib3d.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\calib3d\calib3d_c.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\calib3d.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\affine.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\base.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\bindings_utils.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\bufferpool.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\check.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\core.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\core_c.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cuda\block.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cuda\border_interpolate.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cuda\color.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cuda\common.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cuda\datamov_utils.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cuda\detail\color_detail.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cuda\detail\reduce.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cuda\detail\reduce_key_val.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cuda\detail\transform_detail.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cuda\detail\type_traits_detail.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cuda\detail\vec_distance_detail.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cuda\dynamic_smem.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cuda\emulation.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cuda\filters.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cuda\funcattrib.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cuda\functional.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cuda\limits.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cuda\reduce.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cuda\saturate_cast.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cuda\scan.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cuda\simd_functions.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cuda\transform.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cuda\type_traits.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cuda\utility.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cuda\vec_distance.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cuda\vec_math.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cuda\vec_traits.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cuda\warp.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cuda\warp_reduce.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cuda\warp_shuffle.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cuda.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cuda.inl.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cuda_stream_accessor.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cuda_types.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cvdef.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cvstd.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cvstd.inl.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cvstd_wrapper.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cv_cpu_dispatch.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\cv_cpu_helper.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\directx.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\eigen.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\fast_math.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\hal\hal.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\hal\interface.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\hal\intrin.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\hal\intrin_avx.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\hal\intrin_cpp.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\hal\intrin_forward.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\hal\intrin_neon.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\hal\intrin_sse.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\hal\intrin_sse_em.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\hal\intrin_vsx.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\mat.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\mat.inl.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\matx.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\neon_utils.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\ocl.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\ocl_genbase.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\opencl\ocl_defs.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\opencl\opencl_info.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\opencl\opencl_svm.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\opencl\runtime\autogenerated\opencl_clamdblas.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\opencl\runtime\autogenerated\opencl_clamdfft.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\opencl\runtime\autogenerated\opencl_core.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\opencl\runtime\autogenerated\opencl_core_wrappers.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\opencl\runtime\autogenerated\opencl_gl.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\opencl\runtime\autogenerated\opencl_gl_wrappers.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\opencl\runtime\opencl_clamdblas.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\opencl\runtime\opencl_clamdfft.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\opencl\runtime\opencl_core.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\opencl\runtime\opencl_core_wrappers.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\opencl\runtime\opencl_gl.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\opencl\runtime\opencl_gl_wrappers.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\opencl\runtime\opencl_svm_20.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\opencl\runtime\opencl_svm_definitions.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\opencl\runtime\opencl_svm_hsa_extension.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\opengl.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\openvx\ovx_defs.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\operations.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\optim.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\ovx.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\persistence.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\private\cv_cpu_include_simd_declarations.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\private.cuda.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\private.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\saturate.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\softfloat.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\sse_utils.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\traits.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\types.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\types_c.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\utility.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\utils\configuration.private.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\utils\filesystem.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\utils\filesystem.private.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\utils\lock.private.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\utils\logger.defines.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\utils\logger.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\utils\trace.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\utils\trace.private.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\va_intel.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\version.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core\vsx_utils.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\core.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\cvconfig.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\dnn\all_layers.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\dnn\dict.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\dnn\dnn.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\dnn\dnn.inl.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\dnn\layer.details.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\dnn\layer.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\dnn\shape_utils.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\dnn\version.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\dnn.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\features2d\features2d.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\features2d\hal\interface.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\features2d.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\allocator.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\all_indices.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\any.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\autotuned_index.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\composite_index.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\config.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\defines.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\dist.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\dummy.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\dynamic_bitset.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\flann.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\flann_base.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\general.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\ground_truth.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\heap.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\hierarchical_clustering_index.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\index_testing.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\kdtree_index.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\kdtree_single_index.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\kmeans_index.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\linear_index.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\logger.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\lsh_index.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\lsh_table.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\matrix.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\miniflann.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\nn_index.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\object_factory.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\params.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\random.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\result_set.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\sampling.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\saving.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\simplex_downhill.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann\timer.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\flann.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\core.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\cpu\core.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\cpu\gcpukernel.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\cpu\imgproc.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\fluid\core.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\fluid\gfluidbuffer.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\fluid\gfluidkernel.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\fluid\imgproc.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\garg.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\garray.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\gcall.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\gcommon.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\gcompiled.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\gcompoundkernel.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\gcomputation.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\gkernel.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\gmat.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\gmetaarg.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\gproto.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\gpu\core.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\gpu\ggpukernel.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\gpu\imgproc.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\gscalar.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\gtyped.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\gtype_traits.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\imgproc.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\ocl\core.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\ocl\goclkernel.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\ocl\imgproc.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\opencv_includes.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\operators.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\own\assert.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\own\convert.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\own\cvdefs.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\own\exports.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\own\mat.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\own\saturate.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\own\scalar.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\own\types.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\util\any.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\util\compiler_hints.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\util\optional.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\util\throw.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\util\util.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi\util\variant.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\gapi.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\highgui\highgui.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\highgui\highgui_c.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\highgui\highgui_winrt.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\highgui.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgcodecs\imgcodecs.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgcodecs\imgcodecs_c.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgcodecs\ios.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgcodecs\legacy\constants_c.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgcodecs.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgproc\detail\gcgraph.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgproc\hal\hal.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgproc\hal\interface.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgproc\imgproc.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgproc\imgproc_c.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgproc\types_c.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\imgproc.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\ml\ml.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\ml\ml.inl.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\ml.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\objdetect\detection_based_tracker.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\objdetect\objdetect.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\objdetect.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\opencv.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\opencv_modules.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\photo\cuda.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\photo\legacy\constants_c.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\photo\photo.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\photo.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\stitching\detail\autocalib.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\stitching\detail\blenders.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\stitching\detail\camera.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\stitching\detail\exposure_compensate.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\stitching\detail\matchers.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\stitching\detail\motion_estimators.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\stitching\detail\seam_finders.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\stitching\detail\timelapsers.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\stitching\detail\util.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\stitching\detail\util_inl.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\stitching\detail\warpers.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\stitching\detail\warpers_inl.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\stitching\warpers.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\stitching.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\ts\cuda_perf.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\ts\cuda_test.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\ts\ocl_perf.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\ts\ocl_test.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\ts\ts_ext.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\ts\ts_gtest.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\ts\ts_perf.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\ts.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\video\background_segm.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\video\legacy\constants_c.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\video\tracking.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\video\video.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\video.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\videoio\cap_ios.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\videoio\cap_winrt.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\videoio\container_avi.private.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\videoio\legacy\constants_c.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\videoio\registry.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\videoio\videoio.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\videoio\videoio_c.h" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\videoio.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\world.hpp" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\src\ofxXmlPoco.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\aes.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\asn1.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\asn1t.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\asn1_mac.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\async.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\bio.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\blowfish.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\bn.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\buffer.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\camellia.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\cast.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\cmac.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\cms.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\comp.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\conf.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\conf_api.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\crypto.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\ct.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\des.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\dh.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\dsa.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\dtls1.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\ebcdic.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\ec.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\ecdh.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\ecdsa.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\engine.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\err.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\evp.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\e_os2.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\hmac.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\idea.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\kdf.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\lhash.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\md2.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\md4.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\md5.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\mdc2.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\modes.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\objects.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\obj_mac.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\ocsp.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\opensslconf.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\opensslconf_osx.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\opensslv.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\ossl_typ.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\pem.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\pem2.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\pkcs12.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\pkcs7.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\rand.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\rc2.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\rc4.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\rc5.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\ripemd.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\rsa.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\safestack.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\seed.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\sha.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\srp.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\srtp.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\ssl.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\ssl2.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\ssl3.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\stack.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\symhacks.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\tls1.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\ts.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\txt_db.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\ui.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\whrlpool.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\x509.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\x509v3.h" />
+		<ClInclude Include="..\..\..\addons\ofxPoco\libs\openssl\include\openssl\x509_vfy.h" />
+		<ClInclude Include="..\..\..\addons\ofxRectangleUtils\src\ofAbstractRectanglePacker.h" />
+		<ClInclude Include="..\..\..\addons\ofxRectangleUtils\src\ofBaseOnlineRectanglePacker.h" />
+		<ClInclude Include="..\..\..\addons\ofxRectangleUtils\src\ofRectanglePacker.h" />
+		<ClInclude Include="..\..\..\addons\ofxRectangleUtils\src\ofxRectangleUtils.h" />
+		<ClInclude Include="..\..\..\addons\ofxSerializer\src\ofxSerializer.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUI.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUI2DGraph.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUI2DPad.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIBaseDraws.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIBiLabelSlider.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIButton.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUICanvas.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUICircleSlider.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIDefines.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIDragableLabelButton.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIDropDownList.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIEventArgs.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIFPS.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIFPSSlider.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIImage.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIImageButton.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIImageSampler.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIImageSlider.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIImageToggle.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUILabel.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUILabelButton.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUILabelToggle.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIMinimalSlider.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIMovingGraph.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIMultiImageButton.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIMultiImageToggle.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUINumberDialer.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIOFWrapper.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIRadio.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIRangeSlider.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIRectangle.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIRotarySlider.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIScrollableCanvas.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUISlider.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUISortableList.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUISpacer.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUISpectrum.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUISuperCanvas.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUITabBar.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUITextArea.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUITextInput.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIToggle.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIToggleMatrix.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIUtils.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIValuePlotter.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIWaveform.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIWidget.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIWidgets.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIWidgetWithLabel.h" />
+		<ClInclude Include="..\..\..\addons\ofxUI\src\ofxUIWrapper.h" />
+		<ClInclude Include="..\..\..\addons\ofxUndo\src\ofxUndo.h" />
+		<ClInclude Include="..\..\..\addons\ofxUndo\src\ofxUndoCommand.h" />
+		<ClInclude Include="..\..\..\addons\ofxUndo\src\ofxUndoGroup.h" />
+		<ClInclude Include="..\..\..\addons\ofxUndo\src\ofxUndoHistoryToFile.h" />
+		<ClInclude Include="..\..\..\addons\ofxUndo\src\ofxUndoJson.h" />
+		<ClInclude Include="..\..\..\addons\ofxUndo\src\ofxUndoManager.h" />
+		<ClInclude Include="..\..\..\addons\ofxUndo\src\ofxUndoModifyChecker.h" />
+		<ClInclude Include="..\..\..\addons\ofxUndo\src\ofxUndoRef.h" />
+		<ClInclude Include="..\..\..\addons\ofxUndo\src\ofxUndoSimple.h" />
+		<ClInclude Include="..\..\..\addons\ofxUndo\src\ofxUndoState.h" />
+		<ClInclude Include="..\..\..\addons\ofxWindowApp\src\ofxWindowApp.h" />
+		<ClInclude Include="..\..\..\addons\ofxXmlSettings\src\ofxXmlSettings.h" />
+		<ClInclude Include="..\..\..\addons\ofxXmlSettings\libs\tinyxml.h" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="$(OF_ROOT)\libs\openFrameworksCompiled\project\vs\openframeworksLib.vcxproj">
+			<Project>{5837595d-aca9-485c-8e76-729040ce4b0b}</Project>
+		</ProjectReference>
+	</ItemGroup>
+	<ItemGroup>
+		<ResourceCompile Include="icon.rc">
+			<AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">/D_DEBUG %(AdditionalOptions)</AdditionalOptions>
+			<AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">/D_DEBUG %(AdditionalOptions)</AdditionalOptions>
+			<AdditionalIncludeDirectories>$(OF_ROOT)\libs\openFrameworksCompiled\project\vs</AdditionalIncludeDirectories>
+		</ResourceCompile>
+	</ItemGroup>
+	<Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+	<ProjectExtensions>
+		<VisualStudio>
+			<UserProperties RESOURCE_FILE="icon.rc" />
+		</VisualStudio>
+	</ProjectExtensions>
+</Project>
