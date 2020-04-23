@@ -455,11 +455,11 @@ void ofxColorManager::setup()
 
     //--
 
-    //window mode
-    WindowApp.setPathFolder(XML_WindowApp_folder);
-    WindowApp.setPathFilename(XML_WindowApp_filename);
-    WindowApp.setAutoSaveLoad(true);
-    WindowApp.setup();
+    ////window mode
+    //WindowApp.setPathFolder(XML_WindowApp_folder);
+    //WindowApp.setPathFilename(XML_WindowApp_filename);
+    //WindowApp.setAutoSaveLoad(true);
+    //WindowApp.setup();
 }
 
 //--------------------------------------------------------------
@@ -2019,7 +2019,7 @@ void ofxColorManager::gui_imGui_PresetManager()
         ImGui::SameLine();
         if (ImGui::Button("EXPORT"))
         {
-            cout << "EXPORT" << endl;
+            //cout << "EXPORT" << endl;
             saveColors();
         }
 
@@ -2279,7 +2279,8 @@ void ofxColorManager::curveTool_update()
     else if (pointsSize % 2 == 0 && pointsSize >= 3)
         pointToModify = pointsSize / 2 - 1;
 	
-	//TODO:Windows
+	//TODO:
+	//Windows
     pointY = (curvesTool.getPoint(pointToModify)).x;
     
 	curvesTool.set(pointToModify, ofVec2f(pointY, ofMap(curveMod, 0., 1., 0, curveTool_amount)));
@@ -4913,7 +4914,7 @@ void ofxColorManager::preset_load(string p)
     //WORKFLOW
     if(bAutoExportPreset)
     {
-        cout << "EXPORT" << endl;
+        //cout << "EXPORT" << endl;
         saveColors();
     }
 }
