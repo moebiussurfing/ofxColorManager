@@ -33,9 +33,6 @@ using namespace std;
 #include "PresetPalette.h"
 #include "DEMO_palette.h"
 
-#include "ofxWindowApp.h"
-#include "ofxSerializer.h"
-
 //#include "ofxCosineGradient.h"
 //#include "ofxMacMouseControl.h"
 //#include "ofxMacMouseEventStealer.h"
@@ -52,10 +49,10 @@ public:
     void saveColors();
     bool bAutoExportPreset = true;
 
-    //windowApp
-    ofxWindowApp WindowApp;
-    string XML_WindowApp_folder = "settings/";
-    string XML_WindowApp_filename = "WindowApp.xml";
+    ////windowApp
+    //ofxWindowApp WindowApp;
+    //string XML_WindowApp_folder = "settings/";
+    //string XML_WindowApp_filename = "WindowApp.xml";
 
     //TODO
     //BUG: trying to avoid bug moving mouse..

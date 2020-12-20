@@ -5189,13 +5189,14 @@ void ofxColorManager::saveColors()
 {
     ofLogNotice("ofxColorManager") << "saveColors";
 
-    //TODO
-    //make export dialog to set path for export outside /data
-    //path_Colors = "colors/liveColors.json";
-    path_Colors = "/Users/manu/Documents/openFrameworks/addons/ofxFontAnimator/4_ofxFontAnimatorNoise/bin/data/colors/liveColors.json";
-    ofLogNotice("ofxColorManager") << "path_Colors: " << path_Colors;
+    ////TODO
+    ////make export dialog to set path for export outside /data
+    ////path_Colors = "colors/liveColors.json";
+    //path_Colors = "liveColors.json";
+    ////path_Colors = "/Users/manu/Documents/openFrameworks/addons/ofxFontAnimator/4_ofxFontAnimatorNoise/bin/data/colors/liveColors.json";
+    //ofLogNotice("ofxColorManager") << "path_Colors: " << path_Colors;
 
-    ofJson j = palette;
-    ofSavePrettyJson(path_Colors, j);
-    ofLogNotice("ofxColorManager") << "saveColors: " << ofToString(palette);
+    //ofJson j = palette;
+    //ofSavePrettyJson(path_Colors, j);
+    //ofLogNotice("ofxColorManager") << "saveColors: " << ofToString(palette);
 }

@@ -2,6 +2,7 @@ ofxGui
 ofxOpenCv
 ofxXmlSettings
 ofxCameraSaveLoad
+ofxCereal
 ofxColorManager
 ofxColourLovers
 ofxColourLoversHelper
@@ -10,8 +11,9 @@ ofxFontStash
 ofxGuiPanelsLayout
 ofxHttpUtils
 ofxImGui
+ofxJSON
 ofxMouseRuler
 ofxPoco
+ofxSerializer
 ofxUI
 ofxUndo
-ofxWindowApp
