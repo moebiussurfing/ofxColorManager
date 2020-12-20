@@ -1,0 +1,92 @@
+[
+    {
+        "panel": "SHOW COLOUR LOVERS",
+        "x": 0,
+        "y": 0
+    },
+    {
+        "panel": "SHOW PALETTES",
+        "x": 0,
+        "y": 0
+    },
+    {
+        "panel": "SHOW BROWSER COLORS",
+        "x": 0,
+        "y": 0
+    },
+    {
+        "panel": "SHOW GRADIENT",
+        "x": 0,
+        "y": 0
+    },
+    {
+        "panel": "SHOW CURVE TOOL",
+        "x": 0,
+        "y": 0
+    },
+    {
+        "panel": "SHOW_ALL_GUI",
+        "x": 0,
+        "y": 0
+    },
+    {
+        "panel": "SHOW_GUI_MINI",
+        "x": 0,
+        "y": 0
+    },
+    {
+        "panel": "SHOW debug",
+        "x": 0,
+        "y": 0
+    },
+    {
+        "panel": "SHOW TEST CURVE",
+        "x": 0,
+        "y": 0
+    },
+    {
+        "panel": "SHOW_ImGui",
+        "x": 0,
+        "y": 0
+    },
+    {
+        "panel": "ENABLE DEMO",
+        "x": 0,
+        "y": 0
+    },
+    {
+        "panel": "SHOW PRESET MANAGER",
+        "x": 0,
+        "y": 0
+    },
+    {
+        "panel": "SHOW COLOR MANAGER",
+        "x": 0,
+        "y": 0
+    },
+    {
+        "panel": "SHOW COLOR PICKER",
+        "x": 0,
+        "y": 0
+    },
+    {
+        "panel": "SHOW PANELS MANAGER",
+        "x": 0,
+        "y": 0
+    },
+    {
+        "panel": "LOVERS SEARCHER",
+        "x": 0,
+        "y": 0
+    },
+    {
+        "panel": "SHOW USER PALETTE",
+        "x": 0,
+        "y": 0
+    },
+    {
+        "panel": "SHOW COLOR PICTURE",
+        "x": 0,
+        "y": 0
+    }
+]

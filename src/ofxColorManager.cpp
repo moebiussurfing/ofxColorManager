@@ -4,6 +4,9 @@
 //--------------------------------------------------------------
 ofxColorManager::ofxColorManager()
 {
+	ofAddListener(ofEvents().update, this, &ofxColorManager::update);
+	ofAddListener(ofEvents().draw, this, &ofxColorManager::draw);
+
     //default
     fps = 30.0f;
     dt = 1. / fps;
@@ -240,7 +243,7 @@ void ofxColorManager::setup()
     // CONTROL WINDOWS
 
     SHOW_ColourLovers.set("SHOW COLOUR LOVERS", true);
-    SHOW_ColourLovers_searcher.set("LOVERS SEARCHER", true);
+    SHOW_ColourLovers_searcher.set("SHOW COLOUR LOVERS SEARCH", true);
     SHOW_AlgoPalettes.set("SHOW PALETTES", true);
     SHOW_BrowserColors.set("SHOW BROWSER COLORS", true);
     SHOW_Gradient.set("SHOW GRADIENT", true);
@@ -312,13 +315,28 @@ void ofxColorManager::setup()
     //io.Fonts->AddFontFromFileTTF(myPath, 13.0f, &config);
 	//Windows
 	//io.Fonts->AddFontFromFileTTF(myPath, 13.0f, &config);
-	
-    // create
-    this->gui.setup();
-    this->guiVisible = true;
 
-    // theme colors
-    gui_imGui_theme();
+#ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
+	ofxSurfingHelpers::ImGui_FontCustom();
+#endif
+
+    // create
+    gui.setup();
+	
+	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
+	// theme customize
+#ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
+	ofxSurfingHelpers::ImGui_ThemeMoebiusSurfing();
+	//ofxSurfingHelpers::ImGui_ThemeModernDark();
+#endif
+	
+	//-
+
+	guiVisible = true;
+
+    //// theme colors
+    //gui_imGui_theme();
 
     //--
 
@@ -454,16 +472,10 @@ void ofxColorManager::setup()
     panels.group_Selected = 1;
 
     //--
-
-    ////window mode
-    //WindowApp.setPathFolder(XML_WindowApp_folder);
-    //WindowApp.setPathFilename(XML_WindowApp_filename);
-    //WindowApp.setAutoSaveLoad(true);
-    //WindowApp.setup();
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::update()
+void ofxColorManager::update(ofEventArgs & args)
 {
 
     ////COSINE GRADIENT
@@ -727,7 +739,7 @@ void ofxColorManager::update()
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::draw()
+void ofxColorManager::draw(ofEventArgs & args)
 {
     // BACKGROUND
 
@@ -977,6 +989,7 @@ void ofxColorManager::draw()
 //--------------------------------------------------------------
 ofxColorManager::~ofxColorManager()
 {
+	exit();
 }
 
 //--------------------------------------------------------------
@@ -1004,6 +1017,8 @@ void ofxColorManager::exit()
     panels.exit();
 
     //--
+	ofRemoveListener(ofEvents().update, this, &ofxColorManager::update);
+	ofRemoveListener(ofEvents().draw, this, &ofxColorManager::draw);
 }
 
 
@@ -3868,7 +3883,7 @@ void ofxColorManager::Changed_CONTROL(ofAbstractParameter &e)
         //    ColourLoversHelper.setKeysEnabled(true);
         //}
     }
-    else if (name == "LOVERS SEARCHER")
+    else if (name == "SHOW COLOUR LOVERS SEARCH")
     {
         ColourLoversHelper.setVisibleSearcher(SHOW_ColourLovers_searcher);
         if (SHOW_ColourLovers_searcher && !SHOW_ColourLovers)

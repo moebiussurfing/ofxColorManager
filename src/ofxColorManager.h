@@ -1,5 +1,4 @@
 #pragma once
-
 #include "ofMain.h"
 
 #include "ofxColorGradient.h"
@@ -27,7 +26,9 @@ using namespace std;
 
 #include "ofxGuiPanelsLayout.h"
 #include "ofxGui.h"
+
 #include "ofxImGui.h"
+#define INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
 
 #include "PresetManager.h"
 #include "PresetPalette.h"
@@ -37,9 +38,12 @@ using namespace std;
 //#include "ofxMacMouseControl.h"
 //#include "ofxMacMouseEventStealer.h"
 
+#include "ofxSurfingHelpers.h"
+#include "ofxSurfing_ImGui.h"
+
 //--
 
-class ofxColorManager
+class ofxColorManager : public ofBaseApp
 {
 
 public:
@@ -48,11 +52,6 @@ public:
     string path_Colors;
     void saveColors();
     bool bAutoExportPreset = true;
-
-    ////windowApp
-    //ofxWindowApp WindowApp;
-    //string XML_WindowApp_folder = "settings/";
-    //string XML_WindowApp_filename = "WindowApp.xml";
 
     //TODO
     //BUG: trying to avoid bug moving mouse..
@@ -166,8 +165,13 @@ public:
     ~ofxColorManager();
 
     void setup();
-    void update();
-    void draw();
+    
+	//void update();
+    //void draw();
+	
+	void update(ofEventArgs & args);
+	void draw(ofEventArgs & args);
+
     void exit();
     void windowResized(int w, int h);
 
