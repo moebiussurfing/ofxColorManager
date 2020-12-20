@@ -1,0 +1,16 @@
+ofxColorManager
+ofxColourLovers
+ofxColourLoversHelper
+ofxControlPointManager
+ofxFontStash
+ofxGui
+ofxGuiPanelsLayout
+ofxHttpUtils
+ofxImGui
+ofxMouseRuler
+ofxOpenCv
+ofxPoco
+ofxUI
+ofxUndo
+ofxWindowApp
+ofxXmlSettings
