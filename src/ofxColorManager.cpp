@@ -8,8 +8,8 @@ ofxColorManager::ofxColorManager()
 	ofAddListener(ofEvents().draw, this, &ofxColorManager::draw);
 
 	//default
-	fps = 30.0f;
-	dt = 1. / fps;
+	fps = 60.0f;
+	dt = 1.f / fps;
 }
 
 //--------------------------------------------------------------
@@ -41,7 +41,7 @@ void ofxColorManager::setup()
 	//--
 
 	// colorQuantizer
-
+		#ifdef QUANT_IMA
 	colorQuantizer.setup();
 	colorQuantizer.setBottomMode(true);
 	// ignore y position and put at the window bottom
@@ -57,6 +57,7 @@ void ofxColorManager::setup()
 
 	//colorQuantizer.setColor_BACK(myColor);
 	//colorQuantizer.setPalette_bUpdated_Color_BACK(bUpdated_Color_BACK);
+#endif
 
 	//--
 
@@ -67,22 +68,30 @@ void ofxColorManager::setup()
 	//--
 
 	//color range
-	generate(ofColor::black, ofColor::white);
-	types = { "RGB ", "HSL ", "HSV ", "HSB ", "LUV ", "LAB ", "HLAB", "LCH ", "CMY ", "CMYK", "YXY ", "XYZ " };
-	bRefreshMorph = true;
+	col1 = ofColor(0);
+	col2 = ofColor(255);
+	guiCol1 = ofFloatColor(0);
+	guiCol2 = ofFloatColor(1);
+	generateRange(guiCol1, guiCol2);
+
+	types = { "RGB ", "HSL ", "HSV ", "HSB ", "LUV ", "LAB ", "HLAB", "LCH ", "CMY ", "CMYK", "YXY ", "XYZ " };//12 types
+	bRefreshMorph = false;
 
 	morphAutoUpdate.set("AUTO UPDATE", true);
 	color1FromPicker.set("AUTO PICK C1", false);
 	color2FromPicker.set("AUTO PICK C2", false);
 	bGetPaletteFromrange.set("GET PALETTE", false);
-	numCcolorsRange.set("Num Colors", 11, 4, 20);
+	numCcolorsRange.set("Amount Colors", 11, 4, 20);
 
 	params_rangTypes.setName("rangTypes");
-	for (int i = 0; i < types.size(); i++) //11
+	for (int i = 0; i < types.size(); i++) //12
 	{
-		rangTypes[i].set(ofToString(types[i]), false);
+		rangTypes[i].set(ofToString(types.at(i)), false);
 		params_rangTypes.add(rangTypes[i]);
 	}
+	params_rangTypes.add(numCcolorsRange);
+
+	ofAddListener(params_rangTypes.parameterChangedE(), this, &ofxColorManager::Changed_Range);
 
 	//--
 
@@ -154,11 +163,11 @@ void ofxColorManager::setup()
 	// GENERAL DATA
 
 	setBackground_ENABLE(true);
-	color_backGround.set("BACKGROUND", ofFloatColor::white);
+	color_backGround.set("BACKGROUND", ofColor(8));
 	color_backGround_SET.set("SET FROM COLOR", false);
 	backgroundDarkness.set("DARKNESS", 0.5, 0., 1.);
 	color_backGround_Darker.set("DARKER", false);
-	color_backGround_SETAUTO.set("AUTO SET", false);
+	color_backGround_SETAUTO.set("AUTO SET", true);
 	params_data.setName("GENERAL");
 	params_data.add(color_backGround);
 	params_data.add(color_backGround_SET);
@@ -469,7 +478,7 @@ void ofxColorManager::setup()
 	//-
 
 	// add panels to manager
-
+	#ifdef INCL_LAYOUT
 	panels.addToggle(&SHOW_ColourLovers);
 	panels.addToggle(&SHOW_AlgoPalettes);
 	panels.addToggle(&SHOW_BrowserColors);
@@ -495,6 +504,7 @@ void ofxColorManager::setup()
 	panels.setup();
 
 	panels.group_Selected = 1;
+#endif
 
 	//--
 }
@@ -509,11 +519,12 @@ void ofxColorManager::update(ofEventArgs & args)
 	//-
 
 	// WINDOW TITLE
-
+		#ifdef INCL_LAYOUT
 	string str;
 	str += ("[PAGE " + ofToString(panels.group_Selected) + "] ");
 	//str += ofToString((int)ofGetFrameRate()) + "FPS";
 	ofSetWindowTitle(str);
+#endif
 
 	//-
 
@@ -524,8 +535,10 @@ void ofxColorManager::update(ofEventArgs & args)
 	//--
 
 	// ofxGuiPanelsLayout
-
+	//#define QUANT_IMA
+#ifdef INCL_LAYOUT
 	panels.update();
+#endif
 
 	//--
 
@@ -961,6 +974,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 		//TODO: BUG: solve startup bug that disables keys
 		if (ENABLE_keys != ENABLE_keys_PRE)
 		{
+				#ifdef QUANT_IMA
 			if (SHOW_ColorQuantizer && !ENABLE_keys)
 			{
 				colorQuantizer.setActive(false);
@@ -969,6 +983,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 			{
 				colorQuantizer.setActive(true);
 			}
+#endif
 
 			//TODO
 			//if (SHOW_ColourLovers || SHOW_ColourLovers_searcher)
@@ -990,13 +1005,16 @@ void ofxColorManager::draw(ofEventArgs & args)
 	// ofxGuiPanelsLayout
 	if (SHOW_Layout_Gui)
 	{
+		#ifdef INCL_LAYOUT
 		panels.draw();
+#endif
 	}
 
 	//--
-
+		#ifdef QUANT_IMA
 	if (SHOW_ColorQuantizer)
 		colorQuantizer.draw();
+#endif
 
 	//--
 
@@ -1026,7 +1044,9 @@ void ofxColorManager::exit()
 
 	ColorBrowser.exit();
 	ColourLoversHelper.exit();
+		#ifdef QUANT_IMA
 	colorQuantizer.exit();
+#endif
 
 	removeKeysListeners();
 	removeMouseListeners();
@@ -1036,11 +1056,14 @@ void ofxColorManager::exit()
 	ofRemoveListener(params_palette.parameterChangedE(), this, &ofxColorManager::Changed_Controls);
 	ofRemoveListener(params_curve.parameterChangedE(), this, &ofxColorManager::Changed_Controls);
 
+	ofRemoveListener(params_rangTypes.parameterChangedE(), this, &ofxColorManager::Changed_Range);
+
 	//--
 
 	// ofxGuiPanelsLayout
-
+	#ifdef INCL_LAYOUT
 	panels.exit();
+#endif
 
 	//--
 
@@ -1346,6 +1369,70 @@ void ofxColorManager::interface_draw()
 //    ofxImGui::EndWindow(mainSettings);
 //}
 
+
+//--------------------------------------------------------------
+void ofxColorManager::gui_imGui_ColorPalette()
+{
+	mainSettings.windowPos = ofVec2f(700, 50);
+	mainSettings.windowSize = ofVec2f(200, 400);
+
+	if (ofxImGui::BeginWindow("USER PALETE", mainSettings, false))
+	{
+		// get clicked color
+		static int colBoxSize = 40;
+
+		//-
+
+		//ImGui::Dummy(ImVec2(0.0f, 5));
+
+		const size_t tot = palette.size();
+
+		for (int n = 0; n < tot; n++)
+		{
+			ImGui::PushID(n);
+
+			// draw border to selected color
+			bool bDrawBorder = false;
+			if (n == lastColorPicked_Palette)
+			{
+				bDrawBorder = true;
+			}
+			if (bDrawBorder)
+			{
+				ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(1, 1, 1, .40));
+				ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1.0f);
+			}
+
+			//-			
+
+			ImGui::SameLine();
+			//ImGui::SameLine(0.0f, ImGui::GetStyle().ItemSpacing.y);//vertical inter line
+
+			if (ImGui::ColorButton("##palette", palette[n],
+				ImGuiColorEditFlags_NoAlpha |
+				ImGuiColorEditFlags_NoPicker |
+				ImGuiColorEditFlags_NoTooltip,
+				ImVec2(colBoxSize, colBoxSize)))
+			{
+				lastColorPicked_Palette = n;
+
+				//color = ImVec4(palette[n].x, palette[n].y, palette[n].z, palette.w); // Preserve alpha!
+				//color_picked = color;
+			}
+
+			//draw border to selected color
+			if (bDrawBorder)
+			{
+				ImGui::PopStyleColor();
+				ImGui::PopStyleVar(1);
+			}
+
+			//ImGui::PopItemWidth();
+			ImGui::PopID();
+		}
+	}
+	ofxImGui::EndWindow(mainSettings);
+}
 
 //--------------------------------------------------------------
 void ofxColorManager::gui_imGui_ColorPicker()
@@ -1739,25 +1826,24 @@ void ofxColorManager::gui_imGui_ColorRange()
 		ImGui::Dummy(ImVec2(0.0f, 5));
 
 		//-
-		
+
 		col1 = guiCol1;
 		col2 = guiCol2;
-		
+
 		//autogenerate
-		if (morphAutoUpdate) 
+		if (morphAutoUpdate)
 		{
 			if (cpre1 != guiCol1[0] || (cpre2 != guiCol2[0]))
-				generate(col1, col2);
+				generateRange(col1, col2);
 		}
-		
+
 		//if (ofxSurfingHelpers::AddBigButton("GENERATE"))
-		if (ImGui::Button("GENERATE")) 
+		if (ImGui::Button("GENERATE"))
 		{
-			generate(col1, col2);
+			generateRange(col1, col2);
 		}
 
 		ofxImGui::AddParameter(morphAutoUpdate);
-
 		ofxImGui::AddParameter(numCcolorsRange);
 		ofxSurfingHelpers::AddBigButton(bGetPaletteFromrange);
 
@@ -1766,8 +1852,12 @@ void ofxColorManager::gui_imGui_ColorRange()
 		//-
 
 		// 2.2 draw all palette colors grid
-		const int ncols = 11;
+		const int ncols = 11;//?
 		const int tot = ncols * ncols;
+		
+		//const int ncols = numCcolorsRange.get();
+		//const int ty = (int)NUM_TYPES_RANGES;
+		//const int tot = ncols * ty;
 
 		static ImVec4 color;
 		color = color_picked.get();
@@ -1776,7 +1866,7 @@ void ofxColorManager::gui_imGui_ColorRange()
 		if (bRefreshMorph)
 			for (int n = 0; n < IM_ARRAYSIZE(_palette); n++)
 			{
-				ofFloatColor c = colorPalette[n];
+				ofFloatColor c = paletteRange[n];
 				_palette[n].x = c.r;
 				_palette[n].y = c.g;
 				_palette[n].z = c.b;
@@ -1789,23 +1879,26 @@ void ofxColorManager::gui_imGui_ColorRange()
 		for (int n = 0; n < tot; n++)
 		{
 			//label for each row
-			const int _row = n / 11;
+			const int _row = n / numCcolorsRange.get();
+			//const int _row = n / 11;
 
-			if (n%ncols == 0) 
+			if (n % ncols == 0)
 			{
 				////label
 				//std::string str;
 				//str = types.at(n / ncols);
 				//ImGui::Text(str.c_str());
-			
-				//labeled button
-				std::string str = rangTypes[_row].getName();
-				if (ImGui::Button(str.c_str()))
-				{
-				}
 
-				ImGui::SameLine(0.0f, ImGui::GetStyle().ItemSpacing.y);//vertical inter line
-				////ImGui::SameLine();
+				//labeled button
+				//std::string str = rangTypes[_row].getName();
+				//if (ImGui::Button(str.c_str()))
+				//{
+				//}
+				//ofxImGui::AddParameter(rangTypes[_row]);
+				ofxSurfingHelpers::AddSmallButton(rangTypes[_row]);
+
+				//ImGui::SameLine(0.0f, ImGui::GetStyle().ItemSpacing.y);//vertical inter line
+				ImGui::SameLine();
 			}
 
 			{
@@ -1959,7 +2052,7 @@ void ofxColorManager::gui_imGui_ColorManager()
 			ImGui::Checkbox("CYCLE", &TEST_CycleMODE);
 			ImGui::Checkbox("TO BACKGROUND", &TEST_toBackground);
 			ImGui::SliderFloat("SPEED", &TEST_Speed, 0.0f, 1.0f);
-			//            ImGui::Checkbox("ENABLE DEMO", &TEST_DEMO);
+			//ImGui::Checkbox("ENABLE DEMO", &TEST_DEMO);
 			ofxImGui::AddParameter(this->TEST_DEMO);
 			ImGui::PopItemWidth();
 		}
@@ -2290,6 +2383,10 @@ bool ofxColorManager::gui_imGui_Draw()
 
 	if (SHOW_ColorRange) {
 		gui_imGui_ColorRange();
+	}
+
+	if (SHOW_UserPalette) {
+		gui_imGui_ColorPalette();
 	}
 
 	// 2. COLORS MANAGER
@@ -2995,7 +3092,7 @@ void ofxColorManager::palettes_setup_labels()
 //--------------------------------------------------------------
 void ofxColorManager::palette_recallFromPalettes(int p)
 {
-	ofLogNotice(__FUNCTION__) << "palette_recallFromPalettes: " << p;
+	ofLogNotice(__FUNCTION__) << p;
 
 	palette_clear();
 	ofColor color;
@@ -4111,12 +4208,14 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		// WORKFLOW: BUG
 		//if (!SHOW_PresetManager)
 		{
+				#ifdef QUANT_IMA
 			colorQuantizer.setActive(SHOW_ColorQuantizer);
 			if (SHOW_ColorQuantizer)
 			{
 				//open colors from one image
 				//colorQuantizer.map_setup();
 			}
+#endif
 		}
 		//else
 		//{
@@ -4141,7 +4240,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	{
 		if (name == "H" && name == "S" && name == "V")
 		{
-			ofLogNotice(__FUNCTION__) << "Changed_Controls:LISTEN_isEnabled: " << name << ":" << e;
+			ofLogNotice(__FUNCTION__) << "LISTEN_isEnabled: " << name << ":" << e;
 		}
 
 		if (name == "H")
@@ -4379,8 +4478,43 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	}
 }
 
-#pragma mark - KEYS MOUSE CALLBACKS
+//load user palette from range
+//--------------------------------------------------------------
+void ofxColorManager::Changed_Range(ofAbstractParameter &e)
+{
+	std::string name = e.getName();
 
+	ofLogNotice(__FUNCTION__) << name << " : " << e;
+
+	if (name == numCcolorsRange.getName())
+	{
+
+	}
+	else
+	{
+		for (int i = 0; i < 12; i++) //12
+		{
+			if (name == rangTypes[i].getName() && rangTypes[i].get())
+			{
+				rangTypes[i] = false;//off button
+
+				palette_clear();
+				ofColor c;
+				int st = i * numCcolorsRange.get();
+				int ed = st + numCcolorsRange.get();
+				for (int j = st; j < ed; j++)
+				{
+					c = paletteRange[j];
+					ofLogNotice(__FUNCTION__) << "color [" << j << "] " << ofToString(c);
+					palette_addColor(c);
+				}
+			}
+		}
+	}
+}
+
+
+#pragma mark - KEYS MOUSE CALLBACKS
 
 //--------------------------------------------------------------
 void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
@@ -4521,6 +4655,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 		// OFX GUI-PANELS-LAYOUT
 
+#ifdef INCL_LAYOUT
 		if (key == 'a')
 		{
 			panels.SHOW_advanced = !panels.SHOW_advanced;
@@ -4576,6 +4711,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		{
 			panels.group_Selected = 9;
 		}
+#endif
+
 		else if (key == 'g')
 		{
 			SHOW_Layout_Gui = !SHOW_Layout_Gui;
@@ -5381,7 +5518,6 @@ void ofxColorManager::colourLovers_drawPreview()
 	}
 }
 
-
 //--------------------------------------------------------------
 void ofxColorManager::saveColors()
 {
@@ -5401,17 +5537,23 @@ void ofxColorManager::saveColors()
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::generate(ofColor col1, ofColor col2) {
-	colorPalette.clear();//?
+void ofxColorManager::generateRange(ofColor col1, ofColor col2) {
+	paletteRange.clear();
 
-	for (auto i = 0; i < 12; ++i) {
-		glm::vec3 left = { 270, 120 + i * 40, 0.0 };
-		glm::vec3 right = { 670, 120 + i * 40, 0.0 };
-		for (auto j = 0; j <= 400; j += 40) {
-			glm::vec3 pos = { j + 270, 120 + i * 40, 0.0 };
+	int max = 400;
+	int step = max / (numCcolorsRange.get() - 1);
+
+	for (auto i = 0; i < 12; ++i)
+	{
+		glm::vec3 left = { 270, 120 + i * step, 0.0 };
+		glm::vec3 right = { 670, 120 + i * step, 0.0 };
+
+		for (auto j = 0; j <= max; j += step)
+		{
+			glm::vec3 pos = { j + 270, 120 + i * step, 0.0 };
 			ofColor color = ofxColorMorph::colorMorph(pos, left, col1, right, col2, static_cast<type>(i));
-			//colorPalette.push_back(std::make_pair(pos, color));
-			colorPalette.push_back(color);
+
+			paletteRange.push_back(color);
 		}
 	}
 

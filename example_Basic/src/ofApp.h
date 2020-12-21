@@ -7,9 +7,6 @@ class ofApp: public ofBaseApp{
 
 public:
     void setup();
-    void update();
-    void draw();
-    void exit();
     void keyPressed(int key);
     void windowResized(int w, int h);
 
@@ -17,13 +14,12 @@ public:
 
     //-
 
-    // received targeted palette from addon
+    // received from the addon
     vector<ofColor> palette;
     ofColor color_TARGET;
 
-    // live control
-    float control;
-    bool direction = true;
-
-    bool hide = false;
+    //// live control
+    //float control;
+    //bool direction = true;
+    //bool hide = false;
 };
