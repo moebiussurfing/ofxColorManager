@@ -15,7 +15,7 @@ ofxColorManager::ofxColorManager()
 //--------------------------------------------------------------
 void ofxColorManager::setup()
 {
-	ofSetLogLevel("ofxColorManager", OF_LOG_NOTICE);
+	//ofSetLogLevel("ofxColorManager", OF_LOG_NOTICE);
 
 	//-
 
@@ -41,7 +41,7 @@ void ofxColorManager::setup()
 	//--
 
 	// colorQuantizer
-		#ifdef QUANT_IMA
+#ifdef QUANT_IMA
 	colorQuantizer.setup();
 	colorQuantizer.setBottomMode(true);
 	// ignore y position and put at the window bottom
@@ -68,6 +68,7 @@ void ofxColorManager::setup()
 	//--
 
 	//color range
+
 	col1 = ofColor(0);
 	col2 = ofColor(255);
 	guiCol1 = ofFloatColor(0);
@@ -478,7 +479,7 @@ void ofxColorManager::setup()
 	//-
 
 	// add panels to manager
-	#ifdef INCL_LAYOUT
+#ifdef INCL_LAYOUT
 	panels.addToggle(&SHOW_ColourLovers);
 	panels.addToggle(&SHOW_AlgoPalettes);
 	panels.addToggle(&SHOW_BrowserColors);
@@ -519,7 +520,7 @@ void ofxColorManager::update(ofEventArgs & args)
 	//-
 
 	// WINDOW TITLE
-		#ifdef INCL_LAYOUT
+#ifdef INCL_LAYOUT
 	string str;
 	str += ("[PAGE " + ofToString(panels.group_Selected) + "] ");
 	//str += ofToString((int)ofGetFrameRate()) + "FPS";
@@ -974,7 +975,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 		//TODO: BUG: solve startup bug that disables keys
 		if (ENABLE_keys != ENABLE_keys_PRE)
 		{
-				#ifdef QUANT_IMA
+#ifdef QUANT_IMA
 			if (SHOW_ColorQuantizer && !ENABLE_keys)
 			{
 				colorQuantizer.setActive(false);
@@ -1005,13 +1006,13 @@ void ofxColorManager::draw(ofEventArgs & args)
 	// ofxGuiPanelsLayout
 	if (SHOW_Layout_Gui)
 	{
-		#ifdef INCL_LAYOUT
+#ifdef INCL_LAYOUT
 		panels.draw();
 #endif
 	}
 
 	//--
-		#ifdef QUANT_IMA
+#ifdef QUANT_IMA
 	if (SHOW_ColorQuantizer)
 		colorQuantizer.draw();
 #endif
@@ -1044,7 +1045,7 @@ void ofxColorManager::exit()
 
 	ColorBrowser.exit();
 	ColourLoversHelper.exit();
-		#ifdef QUANT_IMA
+#ifdef QUANT_IMA
 	colorQuantizer.exit();
 #endif
 
@@ -1061,7 +1062,7 @@ void ofxColorManager::exit()
 	//--
 
 	// ofxGuiPanelsLayout
-	#ifdef INCL_LAYOUT
+#ifdef INCL_LAYOUT
 	panels.exit();
 #endif
 
@@ -1854,7 +1855,7 @@ void ofxColorManager::gui_imGui_ColorRange()
 		// 2.2 draw all palette colors grid
 		const int ncols = 11;//?
 		const int tot = ncols * ncols;
-		
+
 		//const int ncols = numCcolorsRange.get();
 		//const int ty = (int)NUM_TYPES_RANGES;
 		//const int tot = ncols * ty;
@@ -4208,7 +4209,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		// WORKFLOW: BUG
 		//if (!SHOW_PresetManager)
 		{
-				#ifdef QUANT_IMA
+#ifdef QUANT_IMA
 			colorQuantizer.setActive(SHOW_ColorQuantizer);
 			if (SHOW_ColorQuantizer)
 			{
@@ -4486,11 +4487,11 @@ void ofxColorManager::Changed_Range(ofAbstractParameter &e)
 
 	ofLogNotice(__FUNCTION__) << name << " : " << e;
 
-	if (name == numCcolorsRange.getName())
-	{
+	//if (name == numCcolorsRange.getName())
+	//{
 
-	}
-	else
+	//}
+	//else
 	{
 		for (int i = 0; i < 12; i++) //12
 		{
@@ -5205,53 +5206,53 @@ void ofxColorManager::preset_filesRefresh()
 void ofxColorManager::preset_load(string p)
 {
 
-	ofLogNotice(__FUNCTION__) << "preset_load " << p;
+	//ofLogNotice(__FUNCTION__) << "preset_load " << p;
 
-	// setup linking pointers to get back on load
-	myPresetPalette.setName(p);
-	myPresetPalette.setCurveName(PRESET_curveName);
-	myPresetPalette.setPalette(palette);
+	//// setup linking pointers to get back on load
+	//myPresetPalette.setName(p);
+	//myPresetPalette.setCurveName(PRESET_curveName);
+	//myPresetPalette.setPalette(palette);
 
-	//TODO
-	//+curve & gradient
+	////TODO
+	////+curve & gradient
 
-	// load preset
-	myPresetPalette.preset_load(p);
+	//// load preset
+	//myPresetPalette.preset_load(p);
 
-	//-
+	////-
 
-	//TODO
-	// apply loaded preset to local system
-	vector<ofColor> palette_TEMP = myPresetPalette.getPalette();
-	palette_clear();
-	for (int i = 0; i < palette_TEMP.size(); i++)
-	{
-		palette_addColor(palette_TEMP[i]);
-	}
+	////TODO
+	//// apply loaded preset to local system
+	//vector<ofColor> palette_TEMP = myPresetPalette.getPalette();
+	//palette_clear();
+	//for (int i = 0; i < palette_TEMP.size(); i++)
+	//{
+	//	palette_addColor(palette_TEMP[i]);
+	//}
 
-	//TODO
-	//myPresetPalette.setBackgroundColor(color_backGround);//error ofParameter
-	color_backGround = ofColor(myPresetPalette.getBackground());//get directly without pointing
+	////TODO
+	////myPresetPalette.setBackgroundColor(color_backGround);//error ofParameter
+	//color_backGround = ofColor(myPresetPalette.getBackground());//get directly without pointing
 
-	//TODO
-	// curve & gradient
-	//        PRESET_curveName = curveName_BACK;
-	////        string *name_BACK;
-	////        vector<ofColor> *palette_BACK;
-	////        string *curveName_BACK;
+	////TODO
+	//// curve & gradient
+	////        PRESET_curveName = curveName_BACK;
+	//////        string *name_BACK;
+	//////        vector<ofColor> *palette_BACK;
+	//////        string *curveName_BACK;
 
-	//-
+	////-
 
-	if (TEST_DEMO)
-		myDEMO_palette.clear();
+	//if (TEST_DEMO)
+	//	myDEMO_palette.clear();
 
 
-	//WORKFLOW
-	if (bAutoExportPreset)
-	{
-		//cout << "EXPORT" << endl;
-		saveColors();
-	}
+	////WORKFLOW
+	//if (bAutoExportPreset)
+	//{
+	//	//cout << "EXPORT" << endl;
+	//	saveColors();
+	//}
 }
 
 
@@ -5521,27 +5522,30 @@ void ofxColorManager::colourLovers_drawPreview()
 //--------------------------------------------------------------
 void ofxColorManager::saveColors()
 {
-	//TODO:
-	//make export dialog to set path for export outside /data
+	////TODO:
+	////make export dialog to set path for export outside /data
 
-	//path_Colors = "colors/liveColors.json";
-	path_Colors = "liveColors.json";
-	//path_Colors = "/Users/manu/Documents/openFrameworks/addons/ofxFontAnimator/4_ofxFontAnimatorNoise/bin/data/colors/liveColors.json";
+	////path_Colors = "colors/liveColors.json";
+	//path_Colors = "liveColors.json";
+	////path_Colors = "/Users/manu/Documents/openFrameworks/addons/ofxFontAnimator/4_ofxFontAnimatorNoise/bin/data/colors/liveColors.json";
 
-	ofLogNotice(__FUNCTION__) << "path_Colors: " << path_Colors;
+	//ofLogNotice(__FUNCTION__) << "path_Colors: " << path_Colors;
 
-	//ofxSerializer
-	ofJson j = palette;
-	ofSavePrettyJson(path_Colors, j);
-	ofLogNotice(__FUNCTION__) << "\n" << ofToString(palette);
+	////ofxSerializer
+	//ofJson j = palette;
+	//ofSavePrettyJson(path_Colors, j);
+	//ofLogNotice(__FUNCTION__) << "\n" << ofToString(palette);
 }
 
 //--------------------------------------------------------------
 void ofxColorManager::generateRange(ofColor col1, ofColor col2) {
+	ofLogNotice(__FUNCTION__);
+
 	paletteRange.clear();
 
 	int max = 400;
-	int step = max / (numCcolorsRange.get() - 1);
+	int step = max / 10;
+	//int step = max / (numCcolorsRange.get() - 1);
 
 	for (auto i = 0; i < 12; ++i)
 	{

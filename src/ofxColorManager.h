@@ -14,12 +14,12 @@ using namespace ofxColorMorph;
 using namespace ofxColorTheory;
 using namespace std;
 
-//#define QUANT_IMA
+#define QUANT_IMA
 #ifdef QUANT_IMA
 #include "ofxColorQuantizerHelper.h"
 #endif
 
-//phaseIV / ofxCurvesTool
+//ofxCurvesTool
 #include "ofxCurvesTool.h"
 
 #include "ofxSimpleSlider.h"
