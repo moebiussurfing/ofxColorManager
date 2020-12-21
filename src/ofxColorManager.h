@@ -8,6 +8,9 @@
 #include "ColorWheelScheme.h"
 #include "ColorWheelSchemes.h"
 
+#include "ofxColorMorph.h"
+using namespace ofxColorMorph;
+
 using namespace ofxColorTheory;
 using namespace std;
 
@@ -41,10 +44,32 @@ using namespace std;
 #include "ofxSurfingHelpers.h"
 #include "ofxSurfing_ImGui.h"
 
+#include "ofxSerializer.h"
+
 //--
 
 class ofxColorManager : public ofBaseApp
 {
+	//ofxColorMorph
+public:
+	void generate(ofColor col1, ofColor col2);
+private:
+	ofColor col1 = { 255,  0,   0 };
+	ofColor col2 = { 0,  0, 255 };
+	ofColor color;
+	ofFloatColor guiCol1;
+	ofFloatColor guiCol2;
+	std::vector<ofColor> colorPalette;
+	//std::vector<std::pair<glm::vec3, ofColor>> colorPalette;
+	std::vector<string> types;
+	bool bRefreshMorph;
+	ofParameter<bool> morphAutoUpdate;
+	ofParameter<bool> color1FromPicker;
+	ofParameter<bool> color2FromPicker;
+	ofParameter<bool> bGetPaletteFromrange;
+	ofParameter<int> numCcolorsRange;
+	ofParameter<bool> rangTypes[12];
+	ofParameterGroup params_rangTypes;
 
 public:
 
@@ -200,6 +225,7 @@ public:
     ofParameter<bool> SHOW_PresetManager;
     ofParameter<bool> SHOW_ColorManager;
     ofParameter<bool> SHOW_ColorPicker;
+    ofParameter<bool> SHOW_ColorRange;
     ofParameter<bool> SHOW_UserPalette;
     ofParameter<bool> SHOW_ColorQuantizer;
     //ofParameter<bool> SHOW_CosineGradient;
@@ -256,7 +282,7 @@ public:
     ofParameterGroup params_curve;
     ofParameterGroup params_control;
 
-    void Changed_CONTROL(ofAbstractParameter &e);
+    void Changed_Controls(ofAbstractParameter &e);
 
     //--
 
@@ -310,13 +336,14 @@ public:
     float widgetFactor = 0.9;
     ofxImGui::Settings mainSettings = ofxImGui::Settings();
 
-    bool gui_imGui();
+    bool gui_imGui_Draw();
     void gui_imGui_ColorPicker();
     void gui_imGui_ColorManager();
+    void gui_imGui_ColorRange();
     void gui_imGui_PresetManager();
     void gui_imGui_ControlPanels();
     void gui_setup_layout();
-    void gui_imGui_theme();
+    void gui_imGui_Theme();
 
     //--
 
@@ -340,6 +367,7 @@ public:
 
     // MAIN COLOR
     ofParameter<ofFloatColor> color_picked;
+    //ofParameter<ofFloatColor> color_picked2;
     ofxUndoSimple<ofFloatColor> color_Undo;
 
     ofRectangle r_color_picked;
@@ -360,8 +388,8 @@ public:
 
     ofParameter<ofFloatColor> color_clicked_param;
 
-    void Changed_color_picked(ofFloatColor &color);
-    void Changed_color_clicked(ofFloatColor &color);
+    void Changed_ColorPicked(ofFloatColor &color);
+    void Changed_ColorClicked(ofFloatColor &color);
 
     // TEST
     void update_color_picked_CHANGES();
@@ -517,8 +545,8 @@ public:
 
     // APP SETTINGS XML
 
-    void XML_save_AppSettings(ofParameterGroup &g, string path);
-    void XML_load_AppSettings(ofParameterGroup &g, string path);
+    void saveAppSettings(ofParameterGroup &g, string path);
+    void loadAppSettings(ofParameterGroup &g, string path);
     ofParameterGroup XML_params;
     string XML_path = "settings/ofxColorManager.xml";
 

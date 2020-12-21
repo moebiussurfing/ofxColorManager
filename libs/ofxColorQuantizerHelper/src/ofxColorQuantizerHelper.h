@@ -203,8 +203,8 @@ private:
     bool isActive = true;
 
     // APP SETTINGS XML
-    void XML_save_AppSettings(ofParameterGroup &g, string path);
-    void XML_load_AppSettings(ofParameterGroup &g, string path);
+    void saveAppSettings(ofParameterGroup &g, string path);
+    void loadAppSettings(ofParameterGroup &g, string path);
     ofParameterGroup XML_params;
     string XML_path = "settings/ofxColorQuantizerHelper.xml";
 

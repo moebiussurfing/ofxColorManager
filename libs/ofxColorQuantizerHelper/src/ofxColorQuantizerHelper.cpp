@@ -81,7 +81,7 @@ void ofxColorQuantizerHelper::setup()
     XML_params.add(ENABLE_minimal);
     XML_params.add(numColors);
     XML_params.add(sortedType);
-    XML_load_AppSettings(XML_params, XML_path);
+    loadAppSettings(XML_params, XML_path);
 
     //-
 
@@ -818,7 +818,7 @@ void ofxColorQuantizerHelper::removeMouseListeners()
 //--------------------------------------------------------------
 void ofxColorQuantizerHelper::exit()
 {
-    XML_save_AppSettings(XML_params, XML_path);
+    saveAppSettings(XML_params, XML_path);
 }
 
 //--------------------------------------------------------------
@@ -893,9 +893,9 @@ void ofxColorQuantizerHelper::draw_imageDragged()
 
 
 //--------------------------------------------------------------
-void ofxColorQuantizerHelper::XML_load_AppSettings(ofParameterGroup &g, string path)
+void ofxColorQuantizerHelper::loadAppSettings(ofParameterGroup &g, string path)
 {
-    ofLogNotice("ofxColorQuantizerHelper") << "XML_load_AppSettings " << path;
+    ofLogNotice("ofxColorQuantizerHelper") << "loadAppSettings " << path;
     ofXml settings;
     settings.load(path);
     ofDeserialize(settings, g);
@@ -903,9 +903,9 @@ void ofxColorQuantizerHelper::XML_load_AppSettings(ofParameterGroup &g, string p
 
 
 //--------------------------------------------------------------
-void ofxColorQuantizerHelper::XML_save_AppSettings(ofParameterGroup &g, string path)
+void ofxColorQuantizerHelper::saveAppSettings(ofParameterGroup &g, string path)
 {
-    ofLogNotice("ofxColorQuantizerHelper") << "XML_save_AppSettings " << path;
+    ofLogNotice("ofxColorQuantizerHelper") << "saveAppSettings " << path;
 
     ofXml settings;
     ofSerialize(settings, g);

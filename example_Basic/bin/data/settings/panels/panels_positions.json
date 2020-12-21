@@ -50,11 +50,6 @@
         "y": 0
     },
     {
-        "panel": "ENABLE DEMO",
-        "x": 0,
-        "y": 0
-    },
-    {
         "panel": "SHOW PRESET MANAGER",
         "x": 0,
         "y": 0
@@ -70,12 +65,17 @@
         "y": 0
     },
     {
+        "panel": "SHOW COLOR RANGE",
+        "x": 0,
+        "y": 0
+    },
+    {
         "panel": "SHOW PANELS MANAGER",
         "x": 0,
         "y": 0
     },
     {
-        "panel": "LOVERS SEARCHER",
+        "panel": "SHOW COLOUR LOVERS SEARCH",
         "x": 0,
         "y": 0
     },
@@ -86,6 +86,11 @@
     },
     {
         "panel": "SHOW COLOR PICTURE",
+        "x": 0,
+        "y": 0
+    },
+    {
+        "panel": "ENABLE DEMO",
         "x": 0,
         "y": 0
     }
