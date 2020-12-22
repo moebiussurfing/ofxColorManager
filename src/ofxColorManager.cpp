@@ -69,10 +69,17 @@ void ofxColorManager::setup()
 
 	//color range
 
-	col1 = ofColor(0);
-	col2 = ofColor(255);
-	guiCol1 = ofFloatColor(0);
-	guiCol2 = ofFloatColor(1);
+	//col1 = ofColor(0);
+	//col2 = ofColor(255);
+	col1.set("Color 1", ofColor(0), ofColor(0), ofColor(255));
+	col2.set("Color 2", ofColor(0), ofColor(0), ofColor(255));
+
+	//guiCol1 = ofFloatColor(0);
+	//guiCol2 = ofFloatColor(1);
+
+	guiCol1 = col1.get();
+	guiCol2 = col2.get();
+
 	generateRange(guiCol1, guiCol2);
 
 	types = { "RGB ", "HSL ", "HSV ", "HSB ", "LUV ", "LAB ", "HLAB", "LCH ", "CMY ", "CMYK", "YXY ", "XYZ " };//12 types
@@ -2567,7 +2574,7 @@ void ofxColorManager::curveTool_update()
 	// curve modifier
 	curveMod = curveMod_Slider.getValue();
 	int pointsSize = curvesTool.getPointSize();
-	int pointToModify;//default 1 if size is 3 points
+	int pointToModify = 1;//default 1 if size is 3 points
 	int pointY;
 	if (pointsSize % 2 != 0 && pointsSize >= 3)//impar
 		pointToModify = pointsSize / 2;
@@ -5205,54 +5212,56 @@ void ofxColorManager::preset_filesRefresh()
 //--------------------------------------------------------------
 void ofxColorManager::preset_load(string p)
 {
+	if (!bErrorNoFiles) {
 
-	//ofLogNotice(__FUNCTION__) << "preset_load " << p;
+		ofLogNotice(__FUNCTION__) << "preset_load " << p;
 
-	//// setup linking pointers to get back on load
-	//myPresetPalette.setName(p);
-	//myPresetPalette.setCurveName(PRESET_curveName);
-	//myPresetPalette.setPalette(palette);
+		// setup linking pointers to get back on load
+		myPresetPalette.setName(p);
+		myPresetPalette.setCurveName(PRESET_curveName);
+		myPresetPalette.setPalette(palette);
 
-	////TODO
-	////+curve & gradient
+		//TODO
+		//+curve & gradient
 
-	//// load preset
-	//myPresetPalette.preset_load(p);
+		// load preset
+		myPresetPalette.preset_load(p);
 
-	////-
+		//-
 
-	////TODO
-	//// apply loaded preset to local system
-	//vector<ofColor> palette_TEMP = myPresetPalette.getPalette();
-	//palette_clear();
-	//for (int i = 0; i < palette_TEMP.size(); i++)
-	//{
-	//	palette_addColor(palette_TEMP[i]);
-	//}
+		//TODO
+		// apply loaded preset to local system
+		vector<ofColor> palette_TEMP = myPresetPalette.getPalette();
+		palette_clear();
+		for (int i = 0; i < palette_TEMP.size(); i++)
+		{
+			palette_addColor(palette_TEMP[i]);
+		}
 
-	////TODO
-	////myPresetPalette.setBackgroundColor(color_backGround);//error ofParameter
-	//color_backGround = ofColor(myPresetPalette.getBackground());//get directly without pointing
+		//TODO
+		//myPresetPalette.setBackgroundColor(color_backGround);//error ofParameter
+		color_backGround = ofColor(myPresetPalette.getBackground());//get directly without pointing
 
-	////TODO
-	//// curve & gradient
-	////        PRESET_curveName = curveName_BACK;
-	//////        string *name_BACK;
-	//////        vector<ofColor> *palette_BACK;
-	//////        string *curveName_BACK;
+		//TODO
+		// curve & gradient
+		//        PRESET_curveName = curveName_BACK;
+		////        string *name_BACK;
+		////        vector<ofColor> *palette_BACK;
+		////        string *curveName_BACK;
 
-	////-
+		//-
 
-	//if (TEST_DEMO)
-	//	myDEMO_palette.clear();
+		if (TEST_DEMO)
+			myDEMO_palette.clear();
 
 
-	////WORKFLOW
-	//if (bAutoExportPreset)
-	//{
-	//	//cout << "EXPORT" << endl;
-	//	saveColors();
-	//}
+		//WORKFLOW
+		if (bAutoExportPreset)
+		{
+			//cout << "EXPORT" << endl;
+			saveColors();
+		}
+	}
 }
 
 
@@ -5266,7 +5275,7 @@ void ofxColorManager::preset_save(string p)
 	myPresetPalette.setBackgroundColor(color_backGround.get());
 	myPresetPalette.setPalette(palette);
 
-	//    myPresetPalette.preset_save(PRESET_name);
+	//myPresetPalette.preset_save(PRESET_name);
 	myPresetPalette.preset_save(p);
 }
 

@@ -30,7 +30,7 @@ using namespace std;
 #include "ofxUndoSimple.h"
 #include "ofxMouseRuler.h"
 
-//#define INCL_LAYOUT
+#define INCL_LAYOUT
 #ifdef INCL_LAYOUT
 #include "ofxGuiPanelsLayout.h"
 #endif
@@ -61,8 +61,10 @@ class ofxColorManager : public ofBaseApp
 public:
 	void generateRange(ofColor col1, ofColor col2);
 private:
-	ofColor col1 = { 0, 0, 0 };
-	ofColor col2 = { 0, 0, 0 };
+	//ofColor col1 = { 0, 0, 0 };
+	//ofColor col2 = { 0, 0, 0 };
+	ofParameter<ofColor> col1;
+	ofParameter<ofColor> col2;
 	ofColor color;
 	ofFloatColor guiCol1;
 	ofFloatColor guiCol2;
@@ -81,6 +83,8 @@ private:
 	void Changed_Range(ofAbstractParameter &e);
 
 	//-
+
+	bool bErrorNoFiles = true;
 
 public:
 
