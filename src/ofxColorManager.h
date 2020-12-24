@@ -61,22 +61,19 @@ class ofxColorManager : public ofBaseApp
 public:
 	void generateRange(ofColor col1, ofColor col2);
 private:
-	//ofColor col1 = { 0, 0, 0 };
-	//ofColor col2 = { 0, 0, 0 };
-	ofParameter<ofColor> col1;
-	ofParameter<ofColor> col2;
+	ofParameter<ofColor> col1range;
+	ofParameter<ofColor> col2range;
 	ofColor color;
 	ofFloatColor guiCol1;
 	ofFloatColor guiCol2;
 	std::vector<ofColor> paletteRange;
-	//std::vector<std::pair<glm::vec3, ofColor>> paletteRange;
 	std::vector<std::string> types;
 	bool bRefreshMorph;
 	ofParameter<bool> morphAutoUpdate;
 	ofParameter<bool> color1FromPicker;
 	ofParameter<bool> color2FromPicker;
-	ofParameter<bool> bGetPaletteFromrange;
-	ofParameter<int> numCcolorsRange;
+	ofParameter<bool> bGetPaletteFromRange;
+	ofParameter<int> numColorsRange;
 	ofParameterGroup params_rangTypes;
 #define NUM_TYPES_RANGES 12
 	ofParameter<bool> rangTypes[NUM_TYPES_RANGES];
@@ -114,12 +111,12 @@ public:
 	ofParameter<bool> theoryTypes[NUM_COLOR_THEORY_TYPES];
 	shared_ptr<ColorWheelScheme> scheme;
 	vector<ofColor> colorsTheory[NUM_COLOR_THEORY_TYPES];
-	//vector<ofColor> colorsTheory;
 	ofParameterGroup params_ColorTheory;
 	ofParameter<ofColor> primaryColorTheory;
 	ofParameter<int> colorScheme;
 	ofParameter<std::string> colorSchemeName;
 	ofParameter<int> numColors;
+	ofParameter<bool> bGetFromPicker;
 	ofParameter<int> lastColorTheoryPicked_Palette;
 	void Changed_ColorTheory(ofAbstractParameter &e);
 	void refreshColorTheory();
@@ -132,8 +129,9 @@ public:
 	//user palette
 	ofParameter<bool> bEditUserPalette;
 	ofParameter<int> boxSizeUser;
+	ofParameter<int> boxRowsUser;
 	ofParameter<bool> bFlipUserPalette;
-	ofParameter<bool> bUserPaletteVertical;
+	//ofParameter<bool> bUserPaletteVertical;
 
 	//-
 
@@ -233,6 +231,7 @@ public:
 	~ofxColorManager();
 
 	void setup();
+	void startup();
 
 	//void update();
 	//void draw();
@@ -404,7 +403,7 @@ public:
 	ofParameter<float> backgroundDarkness;
 	//    float backgroundDarkness_PRE;
 
-	bool backgroundENABLE = false;
+	ofParameter<bool> backgroundENABLE{ "DRAW BG",false };
 
 	void setBackground_ENABLE(bool b);
 

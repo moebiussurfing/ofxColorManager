@@ -27,13 +27,14 @@ void ofApp::update()
 void ofApp::draw()
 {
 	ofPushStyle();
+	int sz = 50;
 	ofFill();
 	ofSetColor(color);
-	ofDrawRectangle(5, 5, 10, 10);
+	ofDrawRectangle(5, 5, sz, sz);
 	ofNoFill();
 	ofSetLineWidth(2);
 	ofSetColor(0);
-	ofDrawRectangle(5, 5, 10, 10);
+	ofDrawRectangle(5, 5, sz, sz);
 	ofPopStyle();
 }
 

@@ -1,6 +1,46 @@
 [
     {
+        "panel": "SHOW PANELS MANAGER",
+        "x": 0,
+        "y": 0
+    },
+    {
+        "panel": "SHOW_ImGui",
+        "x": 0,
+        "y": 0
+    },
+    {
+        "panel": "SHOW USER PALETTE",
+        "x": 0,
+        "y": 0
+    },
+    {
+        "panel": "SHOW COLOR MANAGER",
+        "x": 0,
+        "y": 0
+    },
+    {
+        "panel": "SHOW COLOR PICKER",
+        "x": 0,
+        "y": 0
+    },
+    {
+        "panel": "SHOW COLOR RANGE",
+        "x": 0,
+        "y": 0
+    },
+    {
+        "panel": "SHOW COLOR THEORY",
+        "x": 0,
+        "y": 0
+    },
+    {
         "panel": "SHOW COLOUR LOVERS",
+        "x": 0,
+        "y": 0
+    },
+    {
+        "panel": "SHOW COLOUR LOVERS SEARCH",
         "x": 0,
         "y": 0
     },
@@ -45,52 +85,12 @@
         "y": 0
     },
     {
-        "panel": "SHOW_ImGui",
+        "panel": "SHOW COLOR PICTURE",
         "x": 0,
         "y": 0
     },
     {
         "panel": "SHOW PRESET MANAGER",
-        "x": 0,
-        "y": 0
-    },
-    {
-        "panel": "SHOW COLOR MANAGER",
-        "x": 0,
-        "y": 0
-    },
-    {
-        "panel": "SHOW COLOR PICKER",
-        "x": 0,
-        "y": 0
-    },
-    {
-        "panel": "SHOW COLOR RANGE",
-        "x": 0,
-        "y": 0
-    },
-    {
-        "panel": "SHOW COLOR THEORY",
-        "x": 0,
-        "y": 0
-    },
-    {
-        "panel": "SHOW PANELS MANAGER",
-        "x": 0,
-        "y": 0
-    },
-    {
-        "panel": "SHOW COLOUR LOVERS SEARCH",
-        "x": 0,
-        "y": 0
-    },
-    {
-        "panel": "SHOW USER PALETTE",
-        "x": 0,
-        "y": 0
-    },
-    {
-        "panel": "SHOW COLOR PICTURE",
         "x": 0,
         "y": 0
     },
