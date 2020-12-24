@@ -394,7 +394,7 @@ void ofxColorManager::setup()
 	generateRange(guiCol1, guiCol2);
 
 	morphAutoUpdate.set("Auto Generate", true);
-	color1FromPicker.set("Auto Pick From", false);
+	color1FromPicker.set("Auto Pick From", true);
 	color2FromPicker.set("Auto Pick To", false);
 	bGetPaletteFromRange.set("To User Palette", false);
 	numColorsRange.set("Amount Colors", 11, 4, 20);
@@ -411,6 +411,43 @@ void ofxColorManager::setup()
 	params_rangTypes.add(bGetPaletteFromRange);
 
 	ofAddListener(params_rangTypes.parameterChangedE(), this, &ofxColorManager::Changed_ColorRange);
+
+	//-
+
+	//extra algo
+	std::string name;
+	params_algoTypes.setName("AlgoTypes");
+	for (int i = 0; i < 7; i++)
+	{
+		switch (i)
+		{
+		case 0:
+			name = "Triad";
+			break;
+		case 1:
+			name = "Complement Triad";
+			break;
+		case 2:
+			name = "Complement Saturation";
+			break;
+		case 3:
+			name = "Complement Brightness";
+			break;
+		case 4:
+			name = "Monochrome Saturation";
+			break;
+		case 5:
+			name = "Monochrome Brightness";
+			break;
+		case 6:
+			name = "Analogue";
+			break;
+		}
+		algoTypes[i].set(name, false);
+		params_algoTypes.add(algoTypes[i]);
+	}
+
+	ofAddListener(params_algoTypes.parameterChangedE(), this, &ofxColorManager::Changed_ColorRange);
 
 	//-
 
@@ -1063,6 +1100,8 @@ void ofxColorManager::exit()
 	ofRemoveListener(params_curve.parameterChangedE(), this, &ofxColorManager::Changed_Controls);
 
 	ofRemoveListener(params_rangTypes.parameterChangedE(), this, &ofxColorManager::Changed_ColorRange);
+	ofRemoveListener(params_algoTypes.parameterChangedE(), this, &ofxColorManager::Changed_ColorRange);
+	
 	ofRemoveListener(params_ColorTheory.parameterChangedE(), this, &ofxColorManager::Changed_ColorTheory);
 	ofRemoveListener(params_UserPalette.parameterChangedE(), this, &ofxColorManager::Changed_ColorUserPalette);
 
@@ -1460,47 +1499,36 @@ void ofxColorManager::gui_imGui_ColorTheory()
 		//-
 
 		//extra
-		for (int i = 0; i <= 7; i++)
+		for (int i = 0; i < 7; i++)
 		{
-			std::string name;
 			size_t _total;
 
 			switch (i)
 			{
 			case 0:
 				_total = btns_plt_Triad.size();
-				name = "Triad";
 				break;
 			case 1:
 				_total = btns_plt_ComplTriad.size();
-				name = "Complement Triad";
 				break;
 			case 2:
 				_total = btns_plt_CompSat.size();
-				name = "Complement Saturation";
 				break;
 			case 3:
 				_total = btns_plt_ComplBrgt.size();
-				name = "Complement Brightness";
 				break;
 			case 4:
 				_total = btns_plt_MonoSat.size();
-				name = "Monochrome Saturation";
 				break;
 			case 5:
 				_total = btns_plt_MonoBrgt.size();
-				name = "Monochrome Brightness";
 				break;
 			case 6:
 				_total = btns_plt_Analog.size();
-				name = "Analogue";
 				break;
-			//case 7:
-			//	_total = colors_Triad.size();
-			//	break;
 			}
 
-			ofxSurfingHelpers::AddSmallButton(theoryTypes[i], 150, colBoxSize);
+			ofxSurfingHelpers::AddSmallButton(algoTypes[i], 150, colBoxSize);
 			ImGui::SameLine();
 
 			for (int n = 0; n < _total; n++)
@@ -1532,9 +1560,6 @@ void ofxColorManager::gui_imGui_ColorTheory()
 				case 6:
 					c = analogue[n];
 					break;
-				//case 7:
-				//	c = colors_Triad[n];
-				//	break;
 				}
 
 				ImGui::SameLine();
@@ -4136,7 +4161,7 @@ void ofxColorManager::palettes_colorTheory_setup()
 {
 	params_ColorTheory.setName("Color Theory");
 	params_ColorTheory.add(primaryColorTheory.set("Base Color", ofColor::magenta, ofColor(0), ofColor(255)));
-	params_ColorTheory.add(bGetFromPicker.set("Auto Picker", false));
+	params_ColorTheory.add(bGetFromPicker.set("Auto Picker", true));
 	params_ColorTheory.add(colorScheme.set("Color Scheme", 6, 0, ColorWheelSchemes::colorSchemes.size() - 1));
 	params_ColorTheory.add(colorSchemeName);
 	params_ColorTheory.add(numColors.set("Amount Colors", 8, 2, 20));

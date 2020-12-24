@@ -79,6 +79,10 @@ private:
 	ofParameter<bool> rangTypes[NUM_TYPES_RANGES];
 	void Changed_ColorRange(ofAbstractParameter &e);
 
+	//extra
+	ofParameter<bool> algoTypes[7];
+	ofParameterGroup params_algoTypes;
+
 	//-
 
 	bool bErrorNoFiles = true;
