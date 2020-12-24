@@ -393,10 +393,10 @@ void ofxColorManager::setup()
 
 	generateRange(guiCol1, guiCol2);
 
-	morphAutoUpdate.set("AUTO UPDATE", true);
-	color1FromPicker.set("AUTO PICK C1", false);
-	color2FromPicker.set("AUTO PICK C2", false);
-	bGetPaletteFromRange.set("GET PALETTE", false);
+	morphAutoUpdate.set("Auto Generate", true);
+	color1FromPicker.set("Auto Pick From", false);
+	color2FromPicker.set("Auto Pick To", false);
+	bGetPaletteFromRange.set("To User Palette", false);
 	numColorsRange.set("Amount Colors", 11, 4, 20);
 
 	params_rangTypes.setName("rangTypes");
@@ -1456,43 +1456,52 @@ void ofxColorManager::gui_imGui_ColorTheory()
 			}
 		}
 
+
 		//-
 
 		//extra
 		for (int i = 0; i <= 7; i++)
 		{
-			ofxSurfingHelpers::AddSmallButton(theoryTypes[i], 150, colBoxSize);
-			ImGui::SameLine();
-
+			std::string name;
 			size_t _total;
 
 			switch (i)
 			{
 			case 0:
-				_total = colors_Analogous.size();
+				_total = btns_plt_Triad.size();
+				name = "Triad";
 				break;
 			case 1:
-				_total = colors_Complementary.size();
+				_total = btns_plt_ComplTriad.size();
+				name = "Complement Triad";
 				break;
 			case 2:
-				_total = colors_SplitComplementary.size();
+				_total = btns_plt_CompSat.size();
+				name = "Complement Saturation";
 				break;
 			case 3:
-				_total = colors_Compound.size();
+				_total = btns_plt_ComplBrgt.size();
+				name = "Complement Brightness";
 				break;
 			case 4:
-				_total = colors_FlippedCompound.size();
+				_total = btns_plt_MonoSat.size();
+				name = "Monochrome Saturation";
 				break;
 			case 5:
-				_total = colors_Monochrome.size();
+				_total = btns_plt_MonoBrgt.size();
+				name = "Monochrome Brightness";
 				break;
 			case 6:
-				_total = colors_Tetrad.size();
+				_total = btns_plt_Analog.size();
+				name = "Analogue";
 				break;
-			case 7:
-				_total = colors_Triad.size();
-				break;
+			//case 7:
+			//	_total = colors_Triad.size();
+			//	break;
 			}
+
+			ofxSurfingHelpers::AddSmallButton(theoryTypes[i], 150, colBoxSize);
+			ImGui::SameLine();
 
 			for (int n = 0; n < _total; n++)
 			{
@@ -1503,29 +1512,29 @@ void ofxColorManager::gui_imGui_ColorTheory()
 				switch (i)
 				{
 				case 0:
-					c = colors_Analogous[n];
+					c = triad[n];
 					break;
 				case 1:
-					c = colors_Complementary[n];
+					c = complementTriad[n];
 					break;
 				case 2:
-					c = colors_SplitComplementary[n];
+					c = complement[n];
 					break;
 				case 3:
-					c = colors_Compound[n];
+					c = complementBrightness[n];
 					break;
 				case 4:
-					c = colors_FlippedCompound[n];
+					c = monochrome[n];
 					break;
 				case 5:
-					c = colors_Monochrome[n];
+					c = monochromeBrightness[n];
 					break;
 				case 6:
-					c = colors_Tetrad[n];
+					c = analogue[n];
 					break;
-				case 7:
-					c = colors_Triad[n];
-					break;
+				//case 7:
+				//	c = colors_Triad[n];
+				//	break;
 				}
 
 				ImGui::SameLine();
@@ -1544,6 +1553,97 @@ void ofxColorManager::gui_imGui_ColorTheory()
 				ImGui::PopID();
 			}
 		}
+
+		////-
+
+		////extra
+		////same but with bright/saturation
+		//for (int i = 0; i <= 7; i++)
+		//{
+		//	ofxSurfingHelpers::AddSmallButton(theoryTypes[i], 150, colBoxSize);
+		//	ImGui::SameLine();
+
+		//	size_t _total;
+
+		//	switch (i)
+		//	{
+		//	case 0:
+		//		_total = colors_Analogous.size();
+		//		break;
+		//	case 1:
+		//		_total = colors_Complementary.size();
+		//		break;
+		//	case 2:
+		//		_total = colors_SplitComplementary.size();
+		//		break;
+		//	case 3:
+		//		_total = colors_Compound.size();
+		//		break;
+		//	case 4:
+		//		_total = colors_FlippedCompound.size();
+		//		break;
+		//	case 5:
+		//		_total = colors_Monochrome.size();
+		//		break;
+		//	case 6:
+		//		_total = colors_Tetrad.size();
+		//		break;
+		//	case 7:
+		//		_total = colors_Triad.size();
+		//		break;
+		//	}
+
+		//	for (int n = 0; n < _total; n++)
+		//	{
+		//		ImGui::PushID(n);
+
+		//		ofColor c;
+
+		//		switch (i)
+		//		{
+		//		case 0:
+		//			c = colors_Analogous[n];
+		//			break;
+		//		case 1:
+		//			c = colors_Complementary[n];
+		//			break;
+		//		case 2:
+		//			c = colors_SplitComplementary[n];
+		//			break;
+		//		case 3:
+		//			c = colors_Compound[n];
+		//			break;
+		//		case 4:
+		//			c = colors_FlippedCompound[n];
+		//			break;
+		//		case 5:
+		//			c = colors_Monochrome[n];
+		//			break;
+		//		case 6:
+		//			c = colors_Tetrad[n];
+		//			break;
+		//		case 7:
+		//			c = colors_Triad[n];
+		//			break;
+		//		}
+
+		//		ImGui::SameLine();
+
+		//		if (ImGui::ColorButton("##paletteAlgorith",
+
+		//			c,
+		//			ImGuiColorEditFlags_NoAlpha |
+		//			ImGuiColorEditFlags_NoPicker |
+		//			ImGuiColorEditFlags_NoTooltip,
+		//			ImVec2(colBoxSize, colBoxSize)))
+		//		{
+		//			lastColorTheoryPicked_Palette = n + colorsTheory[i].size();
+		//		}
+
+		//		ImGui::PopID();
+		//	}
+		//}
+
 
 	}
 	ofxImGui::EndWindow(mainSettings);
@@ -2119,7 +2219,7 @@ void ofxColorManager::gui_imGui_ColorRange()
 		ImGui::Columns(2);
 
 		ImGui::PushItemWidth(120);
-		ImGui::ColorPicker3("Color From", &guiCol1[0]);
+		ImGui::ColorPicker3(" From", &guiCol1[0]);
 		ImGui::PopItemWidth();
 
 		ofxImGui::AddParameter(color1FromPicker);
@@ -2129,7 +2229,7 @@ void ofxColorManager::gui_imGui_ColorRange()
 		ImGui::NextColumn();
 
 		ImGui::PushItemWidth(120);
-		ImGui::ColorPicker3("Color To", &guiCol2[0]);
+		ImGui::ColorPicker3(" To", &guiCol2[0]);
 		ImGui::PopItemWidth();
 		ofxImGui::AddParameter(color2FromPicker);
 
@@ -2152,14 +2252,14 @@ void ofxColorManager::gui_imGui_ColorRange()
 		}
 
 		//if (ofxSurfingHelpers::AddBigButton("GENERATE"))
-		if (ImGui::Button("GENERATE", ImVec2(150, 20)))
+		if (ImGui::Button("GENERATE", ImVec2(150, 30)))
 		{
 			generateRange(col1range, col2range);
 		}
 
 		ofxImGui::AddParameter(morphAutoUpdate);
 		ofxImGui::AddParameter(numColorsRange);
-		ofxSurfingHelpers::AddSmallButton(bGetPaletteFromRange, 150, 20);
+		//ofxSurfingHelpers::AddSmallButton(bGetPaletteFromRange, 150, 30);
 
 		ImGui::Dummy(ImVec2(0.0f, 5));
 
@@ -4035,8 +4135,8 @@ void ofxColorManager::refreshColorTheory()
 void ofxColorManager::palettes_colorTheory_setup()
 {
 	params_ColorTheory.setName("Color Theory");
-	params_ColorTheory.add(primaryColorTheory.set("Primary Color Theory", ofColor::magenta, ofColor(0), ofColor(255)));
-	params_ColorTheory.add(bGetFromPicker.set("Get Picker", false));
+	params_ColorTheory.add(primaryColorTheory.set("Base Color", ofColor::magenta, ofColor(0), ofColor(255)));
+	params_ColorTheory.add(bGetFromPicker.set("Auto Picker", false));
 	params_ColorTheory.add(colorScheme.set("Color Scheme", 6, 0, ColorWheelSchemes::colorSchemes.size() - 1));
 	params_ColorTheory.add(colorSchemeName);
 	params_ColorTheory.add(numColors.set("Amount Colors", 8, 2, 20));
