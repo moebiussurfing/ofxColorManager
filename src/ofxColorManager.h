@@ -70,7 +70,7 @@ private:
 	ofFloatColor guiCol2;
 	std::vector<ofColor> paletteRange;
 	//std::vector<std::pair<glm::vec3, ofColor>> paletteRange;
-	std::vector<string> types;
+	std::vector<std::string> types;
 	bool bRefreshMorph;
 	ofParameter<bool> morphAutoUpdate;
 	ofParameter<bool> color1FromPicker;
@@ -89,7 +89,7 @@ private:
 public:
 
 	//live reload colors file
-	string path_Colors;
+	std::string path_Colors;
 	void saveColors();
 	bool bAutoExportPreset = true;
 
@@ -109,30 +109,43 @@ public:
 
 	//-
 
+	// color theory
+	shared_ptr<ColorWheelScheme> scheme;
+	vector<ofColor> colors;
+	ofParameterGroup params_ColorTheory;
+	ofParameter<ofColor> primaryColorTheory;
+	ofParameter<int> colorScheme;
+	ofParameter<std::string> colorSchemeName;
+	ofParameter<int> numColors;
+
+	//-
+
+	//user palette
+	ofParameter<bool> bEditUserPalette;
+	ofParameter<bool> bUserPaletteVertical;
+
+	//-
+
 	// ColorWheelSchemes
 
 	void palettes_colorTheory_setup();
 	void palettes_colorTheory_update();
-	//    void ColorWheel_draw();
+	//void ColorWheel_draw();
 
-	//    shared_ptr<ColorWheelScheme> scheme;
-	//    vector<ofColor> colors;
-	//
-	//    ofxPanel panel;
-	//    ofParameterGroup group;
 	ofParameter<ofColor> primaryColor;
-	//    ofParameter<int> colorScheme;
-	//    ofParameter<string> colorSchemeName;
-	//    ofParameter<int> numColors;
 
-	string scheme_Analogous_name;
-	string scheme_Complementary_name;
-	string scheme_SplitComplementary_name;
-	string scheme_Compound_name;
-	string scheme_FlippedCompound_name;
-	string scheme_Monochrome_name;
-	string scheme_Tetrad_name;
-	string scheme_Triad_name;
+	//shared_ptr<ColorWheelScheme> scheme;
+	//vector<ofColor> colors;
+	//ofxPanel panel;
+	
+	std::string scheme_Analogous_name;
+	std::string scheme_Complementary_name;
+	std::string scheme_SplitComplementary_name;
+	std::string scheme_Compound_name;
+	std::string scheme_FlippedCompound_name;
+	std::string scheme_Monochrome_name;
+	std::string scheme_Tetrad_name;
+	std::string scheme_Triad_name;
 
 	shared_ptr<ColorWheelScheme> scheme_Analogous;
 	shared_ptr<ColorWheelScheme> scheme_Complementary;
@@ -182,7 +195,7 @@ public:
 	//TODO
 	//BUG: should create a default preset because if myPreset is not detected it crashes
 	std::string PRESET_name = "_emptyPreset";//default preset
-	string PRESET_curveName = "curve01";
+	std::string PRESET_curveName = "curve01";
 
 	//-
 
@@ -191,7 +204,7 @@ public:
 	void colourLovers_drawPreview();
 
 	ofxColourLoversHelper ColourLoversHelper;
-	string myPalette_Name = "";
+	std::string myPalette_Name = "";
 	ofColor myColor;
 	vector<ofColor> myPalette;
 	bool bUpdated_Palette_BACK = false;
@@ -224,6 +237,7 @@ public:
 	float dt;
 	float fps;
 
+	//--------------------------------------------------------------
 	void setFps(float _fps)
 	{
 		fps = _fps;
@@ -246,6 +260,7 @@ public:
 	ofParameter<bool> SHOW_ColorPicker;
 	ofParameter<bool> SHOW_ColorRange;
 	ofParameter<bool> SHOW_UserPalette;
+	ofParameter<bool> SHOW_ColorTheory;
 	ofParameter<bool> SHOW_ColorQuantizer;
 	//ofParameter<bool> SHOW_CosineGradient;
 
@@ -302,6 +317,7 @@ public:
 	ofParameterGroup params_control;
 
 	void Changed_Controls(ofAbstractParameter &e);
+	void Changed_ColorTheory(ofAbstractParameter &e);
 
 	//--
 
@@ -356,7 +372,8 @@ public:
 	ofxImGui::Settings mainSettings = ofxImGui::Settings();
 
 	bool gui_imGui_Draw();
-	void gui_imGui_ColorPalette();
+	void gui_imGui_ColorUserPalette();
+	void gui_imGui_ColorTheory();
 	void gui_imGui_ColorPicker();
 	void gui_imGui_ColorManager();
 	void gui_imGui_ColorRange();
@@ -426,7 +443,7 @@ public:
 	void palette_clear();
 	void palette_addColor_toInterface(ofColor c);
 	void palette_rearrenge();//resize boxes when adding removing colors to user palette
-	void palette_touchedColor(string name);
+	void palette_touchedColor(std::string name);
 	void palette_recallFromPalettes(int p);
 	void palette_load_ColourLovers();
 
@@ -442,7 +459,7 @@ public:
 	int numColorsPage = numLines * rowSizePal;//70
 	int totalNumColors = NUM_COLORS_PANTONE;//pantone
 	int maxPages = totalNumColors / numColorsPage - 1;
-	string lastColorPickedNameColor = "";
+	std::string lastColorPickedNameColor = "";
 	int lastColorPicked;
 	int lastColorPicked_Palette;
 	int paletteLibPage = 0;
@@ -512,7 +529,7 @@ public:
 	void curveTool_draw();
 
 	int curveTool_amount = 256;
-	string curveTool_name = "curves.yml";
+	std::string curveTool_name = "curves.yml";
 	ofImage curve_img_gradient;
 	ofxSimpleSlider curve_pos_slider;
 	ofParameter<float> curve_pos;
@@ -543,14 +560,14 @@ public:
 
 	// PRESET MANAGER
 
-	void preset_save(string p);
-	void preset_load(string p);
+	void preset_save(std::string p);
+	void preset_load(std::string p);
 
-	void palette_save(string p);
-	void palette_load(string p);
+	void palette_save(std::string p);
+	void palette_load(std::string p);
 
 	bool MODE_newPreset = false;
-	string textInput_New = "new preset";
+	std::string textInput_New = "new preset";
 
 	//-
 
@@ -560,16 +577,16 @@ public:
 	std::vector<std::string> fileNames;
 	std::vector<ofFile> files;
 	int currentFile = 0;
-	string textInput_temp = "type name";
+	std::string textInput_temp = "type name";
 
 	//--
 
 	// APP SETTINGS XML
 
-	void saveAppSettings(ofParameterGroup &g, string path);
-	void loadAppSettings(ofParameterGroup &g, string path);
+	void saveAppSettings(ofParameterGroup &g, std::string path);
+	void loadAppSettings(ofParameterGroup &g, std::string path);
 	ofParameterGroup XML_params;
-	string XML_path = "settings/ofxColorManager.xml";
+	std::string XML_path = "settings/ofxColorManager.xml";
 
 	//--
 
