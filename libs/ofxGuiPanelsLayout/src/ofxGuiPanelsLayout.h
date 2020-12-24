@@ -15,6 +15,8 @@
 
 #include "OFX_SETTINGS.h"
 
+#include "ofxSurfingHelpers.h"
+
 //--
 
 #ifdef USE_GUI_TYPE_OFX_GUI
@@ -122,7 +124,7 @@ public:
     struct panelData
     {
         ofParameter<int> type;
-        ofParameter<string> name;
+        ofParameter<std::string> name;
         ofParameter<bool> state; //visible;
         ofParameter<int> id;//not used
         ofParameter<glm::vec2> position;
@@ -184,7 +186,7 @@ public:
     void TextFlow_setVisible(bool visible);
     void TextFlow_setMaxLines(int numMaxLines);
     void TextFlow_setPosition(glm::vec2 p);
-    void TextFlow_setTitle(string title);
+    void TextFlow_setTitle(std::string title);
 #endif
 
     //-
