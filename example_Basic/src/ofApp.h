@@ -3,6 +3,11 @@
 
 #include "ofxColorManager.h"
 
+#define USE_OFX_WINDOW_APP
+#ifdef USE_OFX_WINDOW_APP
+#include "ofxWindowApp.h"
+#endif
+
 class ofApp: public ofBaseApp{
 
 public:
@@ -18,4 +23,8 @@ public:
     // received colors
     vector<ofColor> palette;
     ofColor color;
+
+#ifdef USE_OFX_WINDOW_APP
+	ofxWindowApp WindowApp;
+#endif
 };

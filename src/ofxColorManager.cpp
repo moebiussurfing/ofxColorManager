@@ -305,6 +305,7 @@ void ofxColorManager::setup()
 	//-
 
 	//user palette
+	boxSizeUser.set("Size", 40, 10, 200);
 	bEditUserPalette.set("EDIT", false);
 	bUserPaletteVertical.set("VERTICAL", false);
 	bFlipUserPalette.set("FLIP", false);
@@ -313,6 +314,7 @@ void ofxColorManager::setup()
 	params_UserPalette.add(bEditUserPalette);
 	params_UserPalette.add(bUserPaletteVertical);
 	params_UserPalette.add(bFlipUserPalette);
+	params_UserPalette.add(boxSizeUser);
 	ofAddListener(params_UserPalette.parameterChangedE(), this, &ofxColorManager::Changed_ColorUserPalette);
 
 	//-
@@ -348,9 +350,11 @@ void ofxColorManager::setup()
 	// theme customize
 	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	ImGui::GetIO().MouseDrawCursor = false;
+	ImGui::GetIO().ConfigWindowsResizeFromEdges = true;
+
 #ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
-	//ofxSurfingHelpers::ImGui_ThemeMoebiusSurfing();
-	ofxSurfingHelpers::ImGui_ThemeModernDark();
+	ofxSurfingHelpers::ImGui_ThemeMoebiusSurfing();
+	//ofxSurfingHelpers::ImGui_ThemeModernDark();
 #endif
 
 	//-
@@ -1449,70 +1453,11 @@ void ofxColorManager::gui_imGui_ColorUserPalette()
 	mainSettings.windowSize = ofVec2f(200, 400);
 
 	// box size
-	static int colBoxSize = 40;
+	int colBoxSize = boxSizeUser.get();
+	//static int colBoxSize = boxSizeUser.get();
 
 	if (ofxImGui::BeginWindow("USER PALETE", mainSettings, false))
 	{
-		const size_t _total = palette.size();
-
-		for (int n = 0; n < _total; n++)
-		{
-			ImGui::PushID(n);
-
-			// draw border to selected color
-			bool bDrawBorder = false;
-			if (n == lastColorPicked_Palette)
-			{
-				bDrawBorder = true;
-			}
-			if (bDrawBorder)
-			{
-				ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(1, 1, 1, .40));
-				ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1.0f);
-			}
-
-			//-			
-
-			if (!bUserPaletteVertical && n != 0)
-			{
-				ImGui::SameLine();
-			}
-
-			if (ImGui::ColorButton("##palette", palette[n],
-				ImGuiColorEditFlags_NoAlpha |
-				ImGuiColorEditFlags_NoPicker |
-				ImGuiColorEditFlags_NoTooltip,
-				ImVec2(colBoxSize, colBoxSize)))
-			{
-				lastColorPicked_Palette = n;
-
-				//color = ImVec4(palette[n].x, palette[n].y, palette[n].z, palette.w); // Preserve alpha!
-				//color_picked = color;
-			}
-
-			//draw border to selected color
-			if (bDrawBorder)
-			{
-				ImGui::PopStyleColor();
-				ImGui::PopStyleVar(1);
-			}
-
-			//ImGui::PopItemWidth();
-			ImGui::PopID();
-		}
-
-		//-
-
-		ofxImGui::AddParameter(bEditUserPalette);
-		ofxImGui::AddParameter(bUserPaletteVertical);
-		ofxSurfingHelpers::AddSmallButton(bFlipUserPalette);
-
-		ImGui::Dummy(ImVec2(0.0f, 10));
-
-		//-
-
-		//TODO:
-		if (ImGui::TreeNode("Drag and drop to copy/swap items"))
 		{
 			enum Mode
 			{
@@ -1521,54 +1466,130 @@ void ofxColorManager::gui_imGui_ColorUserPalette()
 				Mode_Swap
 			};
 			static int mode = 2;
-			if (ImGui::RadioButton("Copy", mode == Mode_Copy)) { mode = Mode_Copy; } ImGui::SameLine();
-			if (ImGui::RadioButton("Move", mode == Mode_Move)) { mode = Mode_Move; } ImGui::SameLine();
-			if (ImGui::RadioButton("Swap", mode == Mode_Swap)) { mode = Mode_Swap; }
-			static const char* names[9] = { "Bobby", "Beatrice", "Betty", "Brianna", "Barry", "Bernard", "Bibi", "Blaine", "Bryn" };
-			for (int n = 0; n < IM_ARRAYSIZE(names); n++)
+
+			for (int n = 0; n < palette.size(); n++)
 			{
 				ImGui::PushID(n);
-				if ((n % 3) != 0)
+
+				//if ((n % 3) != 0)//split in rows
+				//	ImGui::SameLine();
+
+				if (!bUserPaletteVertical && n != 0)
+				{
 					ImGui::SameLine();
-				ImGui::Button(names[n], ImVec2(60, 60));
+				}
+
+				if (ImGui::ColorButton("##paletteDrag", palette[n],
+					ImGuiColorEditFlags_NoAlpha |
+					ImGuiColorEditFlags_NoPicker |
+					ImGuiColorEditFlags_NoTooltip,
+
+					ImVec2(colBoxSize, colBoxSize)))
+				{
+					lastColorPicked_Palette = n;
+				}
 
 				// Our buttons are both drag sources and drag targets here!
 				if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
 				{
-					ImGui::SetDragDropPayload("DND_DEMO_CELL", &n, sizeof(int));    // Set payload to carry the index of our item (could be anything)
-					if (mode == Mode_Copy) { ImGui::Text("Copy %s", names[n]); }    // Display preview (could be anything, e.g. when dragging an image we could decide to display the filename and a small preview of the image, etc.)
-					if (mode == Mode_Move) { ImGui::Text("Move %s", names[n]); }
-					if (mode == Mode_Swap) { ImGui::Text("Swap %s", names[n]); }
+					ImGui::SetDragDropPayload("DND_DEMO_CELL", &n, sizeof(int));
+					if (mode == Mode_Copy) { ImGui::Text("Copy %s", ofToString(n).c_str()); }
+					if (mode == Mode_Move) { ImGui::Text("Move %s", ofToString(n).c_str()); }
+					if (mode == Mode_Swap) { ImGui::Text("Swap %s", ofToString(n).c_str()); }
 					ImGui::EndDragDropSource();
 				}
+
 				if (ImGui::BeginDragDropTarget())
 				{
 					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_DEMO_CELL"))
 					{
 						IM_ASSERT(payload->DataSize == sizeof(int));
 						int payload_n = *(const int*)payload->Data;
+
 						if (mode == Mode_Copy)
 						{
-							names[n] = names[payload_n];
+							palette[n] = palette[payload_n];
 						}
 						if (mode == Mode_Move)
 						{
-							names[n] = names[payload_n];
-							names[payload_n] = "";
+							palette[n] = palette[payload_n];
+							palette[payload_n] = ofColor(0);
 						}
 						if (mode == Mode_Swap)
 						{
-							const char* tmp = names[n];
-							names[n] = names[payload_n];
-							names[payload_n] = tmp;
+							const ofColor tmp = palette[n];
+							palette[n] = palette[payload_n];
+							palette[payload_n] = tmp;
 						}
 					}
 					ImGui::EndDragDropTarget();
 				}
 				ImGui::PopID();
 			}
-			ImGui::TreePop();
+
+			if (ImGui::RadioButton("Copy", mode == Mode_Copy)) { mode = Mode_Copy; } ImGui::SameLine();
+			if (ImGui::RadioButton("Move", mode == Mode_Move)) { mode = Mode_Move; } ImGui::SameLine();
+			if (ImGui::RadioButton("Swap", mode == Mode_Swap)) { mode = Mode_Swap; }
 		}
+
+		//-
+
+		//for (int n = 0; n < palette.size(); n++)
+		//{
+		//	ImGui::PushID(n);
+
+		//	// draw border to selected color
+		//	bool bDrawBorder = false;
+		//	if (n == lastColorPicked_Palette)
+		//	{
+		//		bDrawBorder = true;
+		//	}
+		//	if (bDrawBorder)
+		//	{
+		//		ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(1, 1, 1, .40));
+		//		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1.0f);
+		//	}
+
+		//	//-			
+
+		//	if (!bUserPaletteVertical && n != 0)
+		//	{
+		//		ImGui::SameLine();
+		//	}
+
+		//	if (ImGui::ColorButton("##palette", palette[n],
+		//		ImGuiColorEditFlags_NoAlpha |
+		//		ImGuiColorEditFlags_NoPicker |
+		//		ImGuiColorEditFlags_NoTooltip,
+		//		ImVec2(colBoxSize, colBoxSize)))
+		//	{
+		//		lastColorPicked_Palette = n;
+
+		//		//color = ImVec4(palette[n].x, palette[n].y, palette[n].z, palette.w); // Preserve alpha!
+		//		//color_picked = color;
+		//	}
+
+		//	//draw border to selected color
+		//	if (bDrawBorder)
+		//	{
+		//		ImGui::PopStyleColor();
+		//		ImGui::PopStyleVar(1);
+		//	}
+
+		//	//ImGui::PopItemWidth();
+		//	ImGui::PopID();
+		//}
+
+		//-
+
+		ofxImGui::AddParameter(bEditUserPalette);
+		ofxImGui::AddParameter(bUserPaletteVertical);
+		ofxSurfingHelpers::AddSmallButton(bFlipUserPalette);
+		ofxImGui::AddParameter(boxSizeUser);
+
+		ImGui::Dummy(ImVec2(0.0f, 10));
+
+		//-
 	}
 	ofxImGui::EndWindow(mainSettings);
 }

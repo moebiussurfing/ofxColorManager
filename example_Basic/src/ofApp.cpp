@@ -3,11 +3,18 @@
 //--------------------------------------------------------------
 void ofApp::setup()
 {
-    ofSetFrameRate(60);
-    ofEnableAlphaBlending();
-
+	ofEnableAlphaBlending();
+	
+	//window
+	float fps = 60.0f;
+#ifdef USE_OFX_WINDOW_APP
+	WindowApp.setFrameRate(fps);
+	WindowApp.setVerticalSync(true);
+#else
+	ofSetFrameRate(fps);
+#endif
+    
     ColorManager.setup();
-
     ColorManager.setColor_TARGET(color);
 }
 

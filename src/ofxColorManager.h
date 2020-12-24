@@ -131,6 +131,7 @@ public:
 
 	//user palette
 	ofParameter<bool> bEditUserPalette;
+	ofParameter<int> boxSizeUser;
 	ofParameter<bool> bFlipUserPalette;
 	ofParameter<bool> bUserPaletteVertical;
 
