@@ -3,34 +3,46 @@
 //--------------------------------------------------------------
 void ofApp::setup()
 {
+    ofSetFrameRate(60);
     ofEnableAlphaBlending();
 
-    float fps = 60;
-    ofSetFrameRate(fps);
-
     ColorManager.setup();
-    ColorManager.setFps(fps);
+
+    ColorManager.setColor_TARGET(color);
+}
+
+//--------------------------------------------------------------
+void ofApp::update()
+{
+}
+
+//--------------------------------------------------------------
+void ofApp::draw()
+{
+	ofPushStyle();
+	ofFill();
+	ofSetColor(color);
+	ofDrawRectangle(5, 5, 10, 10);
+	ofNoFill();
+	ofSetLineWidth(2);
+	ofSetColor(0);
+	ofDrawRectangle(5, 5, 10, 10);
+	ofPopStyle();
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key)
 {
-    //if (key == 'h')
-    //{
-    //    hide = !hide;
-    //    ColorManager.setVisible(!hide);
-    //}
+    if (key == 'h')
+    {
+        ColorManager.setToggleVisible();
+    }
 
-    //if (key == OF_KEY_TAB)
-    //{
-    //    palette = ColorManager.getPalette();
-    //    ofLogNotice("ofApp") << "getPalette";
-
-    //    for (int i = 0; i < palette.size(); i++)
-    //    {
-    //        ofLogNotice("ofApp") << ofToString(palette[i]);
-    //    }
-    //}
+    if (key == OF_KEY_TAB)
+    {
+		//get palette
+        palette = ColorManager.getPalette();
+    }
 }
 
 //--------------------------------------------------------------
@@ -38,12 +50,7 @@ void ofApp::windowResized(int w, int h)
 {
     ColorManager.windowResized(w, h);
 }
-//--------------------------------------------------------------
-void ofApp::update()
-{}
-//--------------------------------------------------------------
-void ofApp::draw()
-{}
+
 //--------------------------------------------------------------
 void ofApp::exit()
 {

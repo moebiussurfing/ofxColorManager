@@ -7,24 +7,15 @@ class ofApp: public ofBaseApp{
 
 public:
     void setup();
-
 	void update();
 	void draw();
 	void exit();
-
     void keyPressed(int key);
     void windowResized(int w, int h);
 
     ofxColorManager ColorManager;
 
-    //-
-
-    // received from the addon
+    // received colors
     vector<ofColor> palette;
-    ofColor color_TARGET;
-
-    //// live control
-    //float control;
-    //bool direction = true;
-    //bool hide = false;
+    ofColor color;
 };

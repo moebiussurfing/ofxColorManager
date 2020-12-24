@@ -14,8 +14,8 @@ using namespace ofxColorMorph;
 using namespace ofxColorTheory;
 using namespace std;
 
-#define QUANT_IMA
-#ifdef QUANT_IMA
+#define USE_IMAGE_QUANTIZER
+#ifdef USE_IMAGE_QUANTIZER
 #include "ofxColorQuantizerHelper.h"
 #endif
 
@@ -78,9 +78,9 @@ private:
 	ofParameter<bool> bGetPaletteFromrange;
 	ofParameter<int> numCcolorsRange;
 	ofParameterGroup params_rangTypes;
-//#define NUM_TYPES_RANGES 12
-	ofParameter<bool> rangTypes[12];
-	void Changed_Range(ofAbstractParameter &e);
+#define NUM_TYPES_RANGES 12
+	ofParameter<bool> rangTypes[NUM_TYPES_RANGES];
+	void Changed_ColorRange(ofAbstractParameter &e);
 
 	//-
 
@@ -103,25 +103,35 @@ public:
 	//bool ENABLE_keys_PRE = false;
 
 	// colorQuantizer
-	#ifdef QUANT_IMA
+	#ifdef USE_IMAGE_QUANTIZER
 	ofxColorQuantizerHelper colorQuantizer;
 #endif
 
 	//-
 
 	// color theory
+#define NUM_COLOR_THEORY_TYPES 8
+	ofParameter<bool> theoryTypes[NUM_COLOR_THEORY_TYPES];
 	shared_ptr<ColorWheelScheme> scheme;
-	vector<ofColor> colors;
+	vector<ofColor> colorsTheory[NUM_COLOR_THEORY_TYPES];
+	//vector<ofColor> colorsTheory;
 	ofParameterGroup params_ColorTheory;
 	ofParameter<ofColor> primaryColorTheory;
 	ofParameter<int> colorScheme;
 	ofParameter<std::string> colorSchemeName;
 	ofParameter<int> numColors;
+	ofParameter<int> lastColorTheoryPicked_Palette;
+	void Changed_ColorTheory(ofAbstractParameter &e);
+	void refreshColorTheory();
+
+	void Changed_ColorUserPalette(ofAbstractParameter &e);
+	ofParameterGroup params_UserPalette;
 
 	//-
 
 	//user palette
 	ofParameter<bool> bEditUserPalette;
+	ofParameter<bool> bFlipUserPalette;
 	ofParameter<bool> bUserPaletteVertical;
 
 	//-
@@ -275,6 +285,7 @@ public:
 	ofColor getColorAtPercent(float control);
 	void setControl(float control);
 	void setVisible(bool b);
+	void setToggleVisible();
 	void setVisible_GUI_MINI(bool b);
 	void setVisible_debugText(bool b);
 	void palette_drawMINI();
@@ -317,7 +328,6 @@ public:
 	ofParameterGroup params_control;
 
 	void Changed_Controls(ofAbstractParameter &e);
-	void Changed_ColorTheory(ofAbstractParameter &e);
 
 	//--
 
@@ -380,7 +390,7 @@ public:
 	void gui_imGui_PresetManager();
 	void gui_imGui_ControlPanels();
 	void gui_setup_layout();
-	void gui_imGui_Theme();
+	//void gui_imGui_Theme();
 
 	//--
 
