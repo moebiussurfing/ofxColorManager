@@ -1,11 +1,11 @@
-ofxGui
-ofxOpenCv
-ofxXmlSettings
 ofxCereal
 ofxColorManager
 ofxColourLoversHelper
+ofxGui
 ofxImGui
 ofxMouseRuler
+ofxOpenCv
 ofxPoco
 ofxSurfingHelpers
 ofxWindowApp
+ofxXmlSettings

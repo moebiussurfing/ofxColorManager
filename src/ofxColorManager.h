@@ -1,36 +1,48 @@
+
 #pragma once
 #include "ofMain.h"
+
+
+//--
+
+#define INCL_LAYOUT
+#define USE_COLOR_LOVERS
+#define USE_IMAGE_QUANTIZER
+#define INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
+
+//--
+
 
 #include "ofxColorGradient.h"
 #include "ofxColorPalette.h"
 #include "ofxColorsBrowser.h"
+
+#ifdef USE_COLOR_LOVERS
 #include "ofxColourLoversHelper.h"
+#endif
+
 #include "ColorWheelScheme.h"
 #include "ColorWheelSchemes.h"
 
 #include "ofxColorMorph.h"
 using namespace ofxColorMorph;
-
 using namespace ofxColorTheory;
-using namespace std;
 
-#define USE_IMAGE_QUANTIZER
 #ifdef USE_IMAGE_QUANTIZER
 #include "ofxColorQuantizerHelper.h"
 #endif
 
 //ofxCurvesTool
 #include "ofxCurvesTool.h"
-
 #include "ofxSimpleSlider.h"
 
 #include "ofxInterface.h"
 #include "ButtonPaletteSelector.h"
 #include "ButtonExample.h"
+
 #include "ofxUndoSimple.h"
 #include "ofxMouseRuler.h"
 
-#define INCL_LAYOUT
 #ifdef INCL_LAYOUT
 #include "ofxGuiPanelsLayout.h"
 #endif
@@ -38,7 +50,6 @@ using namespace std;
 #include "ofxGui.h"
 
 #include "ofxImGui.h"
-#define INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
 
 #include "PresetManager.h"
 #include "PresetPalette.h"
@@ -104,7 +115,7 @@ public:
 	//bool ENABLE_keys_PRE = false;
 
 	// colorQuantizer
-	#ifdef USE_IMAGE_QUANTIZER
+#ifdef USE_IMAGE_QUANTIZER
 	ofxColorQuantizerHelper colorQuantizer;
 #endif
 
@@ -150,7 +161,7 @@ public:
 	//shared_ptr<ColorWheelScheme> scheme;
 	//vector<ofColor> colors;
 	//ofxPanel panel;
-	
+
 	std::string scheme_Analogous_name;
 	std::string scheme_Complementary_name;
 	std::string scheme_SplitComplementary_name;
@@ -186,7 +197,7 @@ public:
 
 	// ofxGuiPanelsLayout
 
-	#ifdef INCL_LAYOUT
+#ifdef INCL_LAYOUT
 	ofxGuiPanelsLayout panels;
 #endif
 	ofParameterGroup p_TOGGLES;
@@ -215,8 +226,9 @@ public:
 	// COLOUR LOVERS
 
 	void colourLovers_drawPreview();
-
+	#ifdef USE_COLOR_LOVERS
 	ofxColourLoversHelper ColourLoversHelper;
+#endif
 	std::string myPalette_Name = "";
 	ofColor myColor;
 	vector<ofColor> myPalette;
@@ -345,12 +357,14 @@ public:
 	ofxColorPalette monochromeBrightness;
 	ofxColorPalette analogue;
 	ofxColorPalette random;
+	//ofxColorPalette::ColorChannel mode;
+
 	ofParameter<int> NUM_COLORS_ALGO_PALETTES;
 	//number of colors. must be even sometimes to get same size in all palettes
-	//ofxColorPalette::ColorChannel mode;
 
 	ofParameter<int> BRIGHTNESS;
 	ofParameter<int> SATURATION;
+
 	ofParameter<bool> bRandomPalette;
 	ofParameter<bool> bAuto_palette_recall;//trig last used algo palette on click or change color
 	ofParameter<bool> bLock_palette;
@@ -380,6 +394,7 @@ public:
 	// GUI
 
 	ofxImGui::Gui gui;
+
 	bool guiVisible;
 	bool mouseOverGui;
 	float widgetFactor = 0.9;
@@ -405,7 +420,7 @@ public:
 	ofParameter<bool> color_backGround_SETAUTO;
 	ofParameter<bool> color_backGround_Darker;
 	ofParameter<float> backgroundDarkness;
-	//    float backgroundDarkness_PRE;
+	//float backgroundDarkness_PRE;
 
 	ofParameter<bool> backgroundENABLE{ "DRAW BG",false };
 
@@ -426,7 +441,7 @@ public:
 	ofParameter<int> color_SAT;
 	ofParameter<int> color_BRG;
 
-	// ?color clicked comes from algo palette colors
+	// color clicked comes from algo palette colors
 	//TODO: pointer color to get click from button class
 	ofFloatColor color_clicked;
 	ofFloatColor color_clicked_PRE;
@@ -466,7 +481,7 @@ public:
 	// PALETTE LIBRARY
 
 #define NUM_COLORS_PANTONE 2310
-	//    int palSize = IM_ARRAYSIZE(saved_palette);
+	//int palSize = IM_ARRAYSIZE(saved_palette);
 	int palSize = (NUM_COLORS_PANTONE);
 	int rowSizePal = 7;//7 colors per row Pantone lib
 	int numLines = 10;//rows per page
@@ -500,8 +515,8 @@ public:
 	vector<ButtonExample *> btns_plt_MonoSat;     // 5
 	vector<ButtonExample *> btns_plt_MonoBrgt;    // 6
 	vector<ButtonExample *> btns_plt_Analog;      // 7
-	//    vector<ButtonExample *> btns_plt_Random;    // 8
-	//    int NUM_PALETTES = 8;
+	//vector<ButtonExample *> btns_plt_Random;    // 8
+	//int NUM_PALETTES = 8;
 	int NUM_PALETTES = 7;//without random
 
 	// colour theory color palettes
@@ -515,7 +530,7 @@ public:
 	vector<ButtonExample *> btns_plt_CT_Tetrad;
 	int NUM_CT_PALETTES = 8;
 
-	//    int NUM_TOTAL_PALETTES = 16;//TODO
+	//int NUM_TOTAL_PALETTES = 16;//TODO
 	int NUM_TOTAL_PALETTES = NUM_PALETTES + NUM_CT_PALETTES;//TODO //without random
 
 	// pointer back link the outside (ofApp) variable
@@ -701,8 +716,10 @@ private:
 	//}
 	//void gui_imGui_CosineGradient();
 
-// Helper to display a little (?) mark which shows a tooltip when hovered.
-// In your own code you may want to display an actual icon if you are using a merged icon fonts (see docs/FONTS.txt)
+	//--
+
+	// Helper to display a little (?) mark which shows a tooltip when hovered.
+	// In your own code you may want to display an actual icon if you are using a merged icon fonts (see docs/FONTS.txt)
 	static void HelpMarker(const char* desc)
 	{
 		ImGui::TextDisabled("(?)");

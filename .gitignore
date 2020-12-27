@@ -555,3 +555,5 @@ example_Basic/bin/data/settings/panels/group_states.json
 example_Basic/bin/data/settings/panels/control_positions.json
 example_Basic/bin/data/settings/ofxColorManager.xml
 example_Basic/bin/data/liveColors.json
+*.xml
+*.json

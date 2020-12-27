@@ -173,7 +173,7 @@ void ofxColorManager::setup()
 	//-
 
 	// colour lovers
-
+	#ifdef USE_COLOR_LOVERS
 	// set positions and panel sizes
 	glm::vec2 sizeGui(150, 375);
 	glm::vec2 sizeGrid(150, ofGetHeight());
@@ -192,6 +192,7 @@ void ofxColorManager::setup()
 	ColourLoversHelper.setPalette_Name_BACK(myPalette_Name);
 	ColourLoversHelper.setPalette_bUpdated_Palette_BACK(bUpdated_Palette_BACK);
 	ColourLoversHelper.setPalette_bUpdated_Color_BACK(bUpdated_Color_BACK);
+#endif
 
 	// some initiation values..
 	myColor = ofColor::white;
@@ -364,7 +365,7 @@ void ofxColorManager::setup()
 	//-
 
 	//user palette
-	boxSizeUser.set("Size", 40, 10, 200);
+	boxSizeUser.set("Box Size", 40, 10, 200);
 	boxRowsUser.set("Rows", 10, 0, 20);
 	bEditUserPalette.set("EDIT", false);
 	//bUserPaletteVertical.set("VERTICAL", false);
@@ -482,7 +483,7 @@ void ofxColorManager::setup()
 	// theme customize
 	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	ImGui::GetIO().MouseDrawCursor = false;
-	ImGui::GetIO().ConfigWindowsResizeFromEdges = true;
+	//ImGui::GetIO().ConfigWindowsResizeFromEdges = true;
 
 #ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
 	ofxSurfingHelpers::ImGui_ThemeMoebiusSurfing();
@@ -639,8 +640,9 @@ void ofxColorManager::update(ofEventArgs & args)
 	//--
 
 	// COLOUR LOVERS
-
+	#ifdef USE_COLOR_LOVERS
 	ColourLoversHelper.update();
+#endif
 
 	// 1. colour lover palette has been clicked/changed selected
 
@@ -696,6 +698,7 @@ void ofxColorManager::update(ofEventArgs & args)
 		bUpdated_Color_BACK = false;
 		ofLogWarning(__FUNCTION__) << "bUpdated_Color_BACK: " << bUpdated_Color_BACK;
 
+		#ifdef USE_COLOR_LOVERS
 		// WORKFLOW: TODO: disable to avoid overwrite the selected color into the palette just created
 		if (ColourLoversHelper.MODE_PickPalette_BACK &&
 			ColourLoversHelper.MODE_PickColor_BACK)
@@ -706,10 +709,12 @@ void ofxColorManager::update(ofEventArgs & args)
 				bPaletteEdit = false;
 			}
 		}
+#endif
 
 		// 2. get color from colour lovers
 		color_clicked = ofColor(myColor);
 
+		#ifdef USE_COLOR_LOVERS
 		// 3. auto create user palette from algo palette from colour lover picked color
 		if (!ColourLoversHelper.MODE_PickPalette_BACK && ColourLoversHelper.MODE_PickColor_BACK)
 		{
@@ -719,6 +724,7 @@ void ofxColorManager::update(ofEventArgs & args)
 				palette_recallFromPalettes(SELECTED_palette_LAST);//trig last choice
 			}
 		}
+#endif
 
 		if (!MODE_newPreset)
 			MODE_newPreset = true;
@@ -875,24 +881,24 @@ void ofxColorManager::draw(ofEventArgs & args)
 
 	// COLOR BOX PICKER (CURRENT)
 
-	//        ofPushStyle();
-	//        ofFill();
-	//        ofSetColor(ofColor( color_picked.get() ));
-	//        ofDrawRectangle(r_color_picked);
-	//        ofPopStyle();
+	//ofPushStyle();
+	//ofFill();
+	//ofSetColor(ofColor( color_picked.get() ));
+	//ofDrawRectangle(r_color_picked);
+	//ofPopStyle();
 
 	//-
 
 	// COLOR BOX CLICKED
 
-	//    ofPushStyle();
-	//    ofFill();
+	//ofPushStyle();
+	//ofFill();
 	//
-	//    ofSetColor( ofColor( color_clicked ) );
-	////    ofSetColor( ofColor( color_clicked_param.get() ) );
+	//ofSetColor( ofColor( color_clicked ) );
+	////ofSetColor( ofColor( color_clicked_param.get() ) );
 	//
-	//    ofDrawRectangle(r_color_clicked);
-	//    ofPopStyle();
+	//ofDrawRectangle(r_color_clicked);
+	//ofPopStyle();
 
 	//-
 
@@ -951,6 +957,14 @@ void ofxColorManager::draw(ofEventArgs & args)
 	{
 		ColorBrowser.draw();
 	}
+
+#ifdef USE_COLOR_LOVERS
+	//// COLOR lovers
+	//if (SHOW_ColourLovers || SHOW_ColourLovers_searcher)
+	//{
+	//	ColourLoversHelper.draw();
+	//}
+#endif
 
 	// COLOUR LOVERS
 	// debug
@@ -1053,6 +1067,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 	}
 
 	//--
+
 #ifdef USE_IMAGE_QUANTIZER
 	if (SHOW_ColorQuantizer)
 		colorQuantizer.draw();
@@ -1067,9 +1082,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 	//strKeys2 += (ENABLE_keys ? "FALSE":"TRUE");
 	//ofDrawBitmapStringHighlight( strKeys, glm::vec2(500,ofGetHeight()-40) );
 	//ofDrawBitmapStringHighlight( strKeys2, glm::vec2(500,ofGetHeight()-20) );
-
 }
-
 
 //--------------------------------------------------------------
 ofxColorManager::~ofxColorManager()
@@ -1087,7 +1100,9 @@ void ofxColorManager::exit()
 	//-
 
 	ColorBrowser.exit();
+	#ifdef USE_COLOR_LOVERS
 	ColourLoversHelper.exit();
+#endif
 #ifdef USE_IMAGE_QUANTIZER
 	colorQuantizer.exit();
 #endif
@@ -1279,7 +1294,6 @@ void ofxColorManager::palette_rearrenge()
 	}
 }
 
-
 //--------------------------------------------------------------
 void ofxColorManager::palette_addColor_toInterface(ofColor c)
 {
@@ -1422,8 +1436,8 @@ void ofxColorManager::interface_draw()
 //--------------------------------------------------------------
 void ofxColorManager::gui_imGui_ColorTheory()
 {
-	mainSettings.windowPos = ofVec2f(900, 50);
-	mainSettings.windowSize = ofVec2f(200, 400);
+	//mainSettings.windowPos = ofVec2f(900, 50);
+	//mainSettings.windowSize = ofVec2f(200, 400);
 
 	// box size
 	static int colBoxSize = 40;
@@ -1677,23 +1691,49 @@ void ofxColorManager::gui_imGui_ColorTheory()
 //--------------------------------------------------------------
 void ofxColorManager::gui_imGui_ColorUserPalette()
 {
-	mainSettings.windowPos = ofVec2f(700, 50);
-	mainSettings.windowSize = ofVec2f(200, 400);
-
+	//mainSettings.windowPos = ofVec2f(700, 50);
+	//mainSettings.windowSize = ofVec2f(200, 400);
+	
 	// box size
 	int colBoxSize = boxSizeUser.get();
 
 	if (ofxImGui::BeginWindow("USER PALETE", mainSettings, false))
 	{
+		enum Mode
 		{
-			enum Mode
-			{
-				Mode_Copy,
-				Mode_Move,
-				Mode_Swap
-			};
-			static int mode = 2;
+			Mode_Copy,
+			Mode_Move,
+			Mode_Swap
+		};
+		static int mode = 2;
 
+		//-
+
+		//edit
+
+		if (bEditUserPalette) 
+		{
+			//ofxImGui::AddParameter(bUserPaletteVertical);
+			ofxSurfingHelpers::AddSmallButton(bFlipUserPalette);
+			ofxImGui::AddParameter(boxSizeUser);
+
+			//ofxImGui::AddParameter(boxRowsUser);
+
+			boxRowsUser.disableEvents();
+			ImGui::InputInt(boxRowsUser.getName().c_str(), (int *)&boxRowsUser.get());
+			boxRowsUser = ofClamp(boxRowsUser.get(), boxRowsUser.getMin(), boxRowsUser.getMax());
+			boxRowsUser.enableEvents();
+
+			//-
+
+			if (ImGui::RadioButton("Copy", mode == Mode_Copy)) { mode = Mode_Copy; } ImGui::SameLine();
+			if (ImGui::RadioButton("Move", mode == Mode_Move)) { mode = Mode_Move; } ImGui::SameLine();
+			if (ImGui::RadioButton("Swap", mode == Mode_Swap)) { mode = Mode_Swap; }
+		}
+
+		//-
+
+		{
 			for (int n = 0; n < palette.size(); n++)
 			{
 				ImGui::PushID(n);
@@ -1784,71 +1824,9 @@ void ofxColorManager::gui_imGui_ColorUserPalette()
 				}
 				ImGui::PopID();
 			}
-			if (bEditUserPalette) {
-				if (ImGui::RadioButton("Copy", mode == Mode_Copy)) { mode = Mode_Copy; } ImGui::SameLine();
-				if (ImGui::RadioButton("Move", mode == Mode_Move)) { mode = Mode_Move; } ImGui::SameLine();
-				if (ImGui::RadioButton("Swap", mode == Mode_Swap)) { mode = Mode_Swap; }
-			}
 		}
-
-		//-
-
-		//for (int n = 0; n < palette.size(); n++)
-		//{
-		//	ImGui::PushID(n);
-
-		//	// draw border to selected color
-		//	bool bDrawBorder = false;
-		//	if (n == lastColorPicked_Palette)
-		//	{
-		//		bDrawBorder = true;
-		//	}
-		//	if (bDrawBorder)
-		//	{
-		//		ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(1, 1, 1, .40));
-		//		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 1.0f);
-		//	}
-
-		//	//-			
-
-		//	if (!bUserPaletteVertical && n != 0)
-		//	{
-		//		ImGui::SameLine();
-		//	}
-
-		//	if (ImGui::ColorButton("##palette", palette[n],
-		//		ImGuiColorEditFlags_NoAlpha |
-		//		ImGuiColorEditFlags_NoPicker |
-		//		ImGuiColorEditFlags_NoTooltip,
-		//		ImVec2(colBoxSize, colBoxSize)))
-		//	{
-		//		lastColorPicked_Palette = n;
-
-		//		//color = ImVec4(palette[n].x, palette[n].y, palette[n].z, palette.w); // Preserve alpha!
-		//		//color_picked = color;
-		//	}
-
-		//	//draw border to selected color
-		//	if (bDrawBorder)
-		//	{
-		//		ImGui::PopStyleColor();
-		//		ImGui::PopStyleVar(1);
-		//	}
-
-		//	//ImGui::PopItemWidth();
-		//	ImGui::PopID();
-		//}
-
-		//-
 
 		ofxImGui::AddParameter(bEditUserPalette);
-
-		if (bEditUserPalette) {
-			//ofxImGui::AddParameter(bUserPaletteVertical);
-			ofxSurfingHelpers::AddSmallButton(bFlipUserPalette);
-			ofxImGui::AddParameter(boxSizeUser);
-			ofxImGui::AddParameter(boxRowsUser);
-		}
 
 		ImGui::Dummy(ImVec2(0.0f, 10));
 
@@ -1863,8 +1841,9 @@ void ofxColorManager::gui_imGui_ColorPicker()
 	// 1. COLOR PICKER CUSTOM
 
 	//mainSettings = ofxImGui::Settings();
-	mainSettings.windowPos = ofVec2f(gui_x, gui_y);
-	mainSettings.windowSize = ofVec2f(guiWidth, ofGetWindowHeight() - gui_y);
+
+	//mainSettings.windowPos = ofVec2f(gui_x, gui_y);
+	//mainSettings.windowSize = ofVec2f(guiWidth, ofGetWindowHeight() - gui_y);
 
 	//    static bool no_titlebar = false;
 	//    static bool no_scrollbar = false;
@@ -2196,28 +2175,29 @@ void ofxColorManager::gui_imGui_ControlPanels()
 	// 4. PANELS MANAGER
 
 	//auto mainSettings = ofxImGui::Settings();
-	mainSettings.windowPos = ofVec2f(gui4_x, gui4_y);
-	mainSettings.windowSize = ofVec2f(gui4_w, gui4_h);
+
+	//mainSettings.windowPos = ofVec2f(gui4_x, gui4_y);
+	//mainSettings.windowSize = ofVec2f(gui4_w, gui4_h);
 
 	if (ofxImGui::BeginWindow("PANELS MANAGER", mainSettings, false))
 	{
 		//        if (ofxImGui::BeginTree("PANELS", panelsSet))
 		//        {
-		ofxImGui::AddParameter(this->SHOW_PresetManager);
-		ofxImGui::AddParameter(this->SHOW_ColorPicker);
-		ofxImGui::AddParameter(this->SHOW_ColorRange);
-		ofxImGui::AddParameter(this->SHOW_ColorTheory);
-		ofxImGui::AddParameter(this->SHOW_ColorManager);
-		ofxImGui::AddParameter(this->SHOW_UserPalette);
-		ofxImGui::AddParameter(this->SHOW_Gradient);
-		ofxImGui::AddParameter(this->SHOW_Curve);
-		ofxImGui::AddParameter(this->SHOW_TEST_Curve);
+		ofxImGui::AddParameter(SHOW_PresetManager);
+		ofxImGui::AddParameter(SHOW_ColorPicker);
+		ofxImGui::AddParameter(SHOW_ColorRange);
+		ofxImGui::AddParameter(SHOW_ColorTheory);
+		ofxImGui::AddParameter(SHOW_ColorManager);
+		ofxImGui::AddParameter(SHOW_UserPalette);
+		ofxImGui::AddParameter(SHOW_Gradient);
+		ofxImGui::AddParameter(SHOW_Curve);
+		ofxImGui::AddParameter(SHOW_TEST_Curve);
 		ImGui::Separator();
-		ofxImGui::AddParameter(this->SHOW_AlgoPalettes);
-		ofxImGui::AddParameter(this->SHOW_ColourLovers);
-		ofxImGui::AddParameter(this->SHOW_ColourLovers_searcher);
-		ofxImGui::AddParameter(this->SHOW_ColorQuantizer);
-		ofxImGui::AddParameter(this->SHOW_BrowserColors);
+		ofxImGui::AddParameter(SHOW_AlgoPalettes);
+		ofxImGui::AddParameter(SHOW_ColourLovers);
+		ofxImGui::AddParameter(SHOW_ColourLovers_searcher);
+		ofxImGui::AddParameter(SHOW_ColorQuantizer);
+		ofxImGui::AddParameter(SHOW_BrowserColors);
 		//ofxImGui::AddParameter(this->SHOW_CosineGradient);
 		//            ofxImGui::EndTree(panelsSet);
 		//        }
@@ -2229,8 +2209,8 @@ void ofxColorManager::gui_imGui_ControlPanels()
 //--------------------------------------------------------------
 void ofxColorManager::gui_imGui_ColorRange()
 {
-	mainSettings.windowPos = ofVec2f(500, 50);
-	mainSettings.windowSize = ofVec2f(200, 400);
+	//mainSettings.windowPos = ofVec2f(500, 50);
+	//mainSettings.windowSize = ofVec2f(200, 400);
 
 	// get clicked color
 	static int _boxSize = 22;
@@ -2389,11 +2369,11 @@ void ofxColorManager::gui_imGui_ColorManager()
 {
 	// 2. COLOR MANAGER
 
-	//    mainSettings = ofxImGui::Settings();
+	//mainSettings = ofxImGui::Settings();
 
-	//auto mainSettings = ofxImGui::Settings();
-	mainSettings.windowPos = ofVec2f(gui2_x, gui2_y);
-	mainSettings.windowSize = ofVec2f(gui2_w, gui2_h);
+	////auto mainSettings = ofxImGui::Settings();
+	//mainSettings.windowPos = ofVec2f(gui2_x, gui2_y);
+	//mainSettings.windowSize = ofVec2f(gui2_w, gui2_h);
 
 	if (ofxImGui::BeginWindow("COLOR MANAGER", mainSettings, false))
 	{
@@ -2510,10 +2490,10 @@ void ofxColorManager::gui_imGui_PresetManager()
 {
 	// 3. PRESET MANAGER
 
-	//mainSettings = ofxImGui::Settings();
-	mainSettings.windowSize = ofVec2f(gui3_w, gui3_h);
-	mainSettings.windowPos = ofVec2f(gui3_x, gui3_y);
-	//mainSettings.windowPos = ofVec2f(ofGetWindowWidth() * 0.5 - gui3_w * 0.5, gui3_y);
+	////mainSettings = ofxImGui::Settings();
+	//mainSettings.windowSize = ofVec2f(gui3_w, gui3_h);
+	//mainSettings.windowPos = ofVec2f(gui3_x, gui3_y);
+	////mainSettings.windowPos = ofVec2f(ofGetWindowWidth() * 0.5 - gui3_w * 0.5, gui3_y);
 
 	if (ofxImGui::BeginWindow("PRESET MANAGER", mainSettings, false))
 	{
@@ -2789,7 +2769,7 @@ bool ofxColorManager::gui_imGui_Draw()
 {
 	mainSettings = ofxImGui::Settings();
 
-	this->gui.begin();
+	gui.begin();
 
 	//// 0. COSINE GRADIENT
 	//
@@ -2835,10 +2815,19 @@ bool ofxColorManager::gui_imGui_Draw()
 
 	if (SHOW_PanelsManager)
 		gui_imGui_ControlPanels();
+	//-
+
+	// COLOR lovers
+	#ifdef USE_COLOR_LOVERS
+	if (SHOW_ColourLovers || SHOW_ColourLovers_searcher)
+	{
+		ColourLoversHelper.draw();
+	}
+#endif
 
 	//-
 
-	this->gui.end();
+	gui.end();
 
 	// TODO: must make another key disabler but when mouse is in text-input panels..
 	// TODO: bug fix for disabled mouse on startup
@@ -4682,7 +4671,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	//--
 
 	// CONTROL WINDOWS PANELS
-
+	#ifdef USE_COLOR_LOVERS
 	if (name == "SHOW COLOUR LOVERS")
 	{
 		ColourLoversHelper.setVisible(SHOW_ColourLovers);
@@ -4705,6 +4694,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		//    ColourLoversHelper.setKeysEnabled(true);
 		//}
 	}
+#endif
 	else if (name == "SHOW PALETTES")
 	{
 		palettes_setVisible(SHOW_AlgoPalettes);
@@ -5445,7 +5435,9 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			// 3. randomly get a palette from colour lovers only
 			if (key == 'i')
 			{
+				#ifdef USE_COLOR_LOVERS
 				ColourLoversHelper.randomPalette();
+#endif
 
 				textInput_temp = PRESET_name;
 
@@ -5456,7 +5448,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			//-
 
 			// browse presets
-
+			#ifdef USE_COLOR_LOVERS
 			else if (key == OF_KEY_DOWN)
 			{
 				ColourLoversHelper.nextPalette();
@@ -5477,6 +5469,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				//    saveColors();
 				//}
 			}
+#endif
 
 			//--
 		}
@@ -5560,6 +5553,7 @@ void ofxColorManager::keyReleased(ofKeyEventArgs &eventArgs)
 void ofxColorManager::windowResized(int w, int h)
 {
 	// COLOUR LOVERS
+	#ifdef USE_COLOR_LOVERS
 	glm::vec2 sizeGui(150, 375);
 	glm::vec2 sizeGrid(150, h);
 	glm::vec2 posGui(w - (sizeGui.x + sizeGrid.x + 4), 0);
@@ -5567,6 +5561,7 @@ void ofxColorManager::windowResized(int w, int h)
 	ColourLoversHelper.setGrid(posGrid, sizeGrid);
 	ColourLoversHelper.setPosition(posGui, sizeGui);
 	ColourLoversHelper.windowResized(w, h);
+#endif
 }
 
 
