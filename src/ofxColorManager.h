@@ -73,8 +73,8 @@ class ofxColorManager : public ofBaseApp
 public:
 	void generateRange(ofColor col1, ofColor col2);
 private:
-	ofParameter<ofColor> col1range;
-	ofParameter<ofColor> col2range;
+	ofParameter<ofColor> c1_Rng;
+	ofParameter<ofColor> c2_Rng;
 	ofColor color;
 	ofFloatColor guiCol1;
 	ofFloatColor guiCol2;
@@ -82,8 +82,8 @@ private:
 	std::vector<std::string> types;
 	bool bRefreshMorph;
 	ofParameter<bool> bRangeAutoGenerate;
-	ofParameter<bool> color1FromPicker;
-	ofParameter<bool> color2FromPicker;
+	ofParameter<bool> autoPickColor1;
+	ofParameter<bool> autoPickColor2;
 	ofParameter<bool> bGetPaletteFromRange;
 	ofParameter<int> numColorsRange;
 	ofParameterGroup params_rangTypes;
@@ -290,7 +290,7 @@ public:
 	ofParameter<bool> SHOW_Range;
 	ofParameter<bool> SHOW_UserPalette;
 	ofParameter<bool> SHOW_Theory;
-	ofParameter<bool> SHOW_ColorQuantizer;
+	ofParameter<bool> SHOW_Quantizer;
 	//ofParameter<bool> SHOW_CosineGradient;
 
 	void setColor_TARGET(ofColor &c);//backwards pointer ofApp color
@@ -413,6 +413,8 @@ public:
 	void gui_Range();
 	void gui_Presets();
 	void gui_Panels();
+	void gui_Quantizer();
+
 	void gui_setup_layout();
 	//void gui_imGui_Theme();
 
@@ -446,13 +448,13 @@ public:
 	ofParameter<int> color_SAT;
 	ofParameter<int> color_BRG;
 
-	ofParameter<int> color_HUE_RndMin;
-	ofParameter<int> color_SAT_RndMin;
-	ofParameter<int> color_BRG_RndMin;
+	ofParameter<int> color_HUE_0;
+	ofParameter<int> color_SAT_0;
+	ofParameter<int> color_BRG_0;
 
-	ofParameter<int> color_HUE_RndMax;
-	ofParameter<int> color_SAT_RndMax;
-	ofParameter<int> color_BRG_RndMax;
+	ofParameter<float> color_HUE_Power;
+	ofParameter<float> color_SAT_Power;
+	ofParameter<float> color_BRG_Power;
 
 	ofParameter<bool> bColor_HUE;
 	ofParameter<bool> bColor_SAT;

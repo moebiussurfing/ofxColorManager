@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <ofxColorQuantizerHelper>
 	<MINIMAL>1</MINIMAL>
-	<number_of_colors>10</number_of_colors>
-	<sort_type>3</sort_type>
+	<Number_of_Colors>10</Number_of_Colors>
+	<Sort_Type>1</Sort_Type>
 </ofxColorQuantizerHelper>

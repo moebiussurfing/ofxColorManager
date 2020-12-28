@@ -60,34 +60,36 @@ void ofxColorQuantizerHelper::setup()
 {
     //-
 
-    // gui
-    gui.setup();
     parameters.setName("COLOR QUANTIZER");
-    parameters.add(numColors.set("number of colors", 10, 1, 50));
-    parameters.add(sortedType.set("sort type", 1, 1, 4));
+    parameters.add(numColors.set("Number of Colors", 10, 1, 50));
+    parameters.add(sortedType.set("Sort Type", 1, 1, 4));
     parameters.add(labelStr.set(" ", labelStr));
     //parameters.add(labelUrlStr.set("type url", labelUrlStr));
-    parameters.add(currentImage.set("dragged files ", 0, 0, dir.size() - 1));
-    parameters.add(bReBuild.set("re build", false));
+    parameters.add(currentImage.set("Amnt Files ", 0, 0, dir.size() - 1));
+    parameters.add(bReBuild.set("Build", false));
 
+	//-
+
+    // gui
+    gui.setup();
     gui.add(parameters);
     gui.setPosition(ofGetWidth() - 205, 5);
     ofAddListener(parameters.parameterChangedE(), this, &ofxColorQuantizerHelper::Changed_parameters);
 
     //-
 
-    // STARTUP SETTINGS
+    // startup settings
+
     XML_params.setName("ofxColorQuantizerHelper");
     XML_params.add(ENABLE_minimal);
     XML_params.add(numColors);
     XML_params.add(sortedType);
+
     loadAppSettings(XML_params, XML_path);
 
     //-
 
     filesRefresh();
-
-
 }
 
 
@@ -100,7 +102,7 @@ void ofxColorQuantizerHelper::update()
 //--------------------------------------------------------------
 void ofxColorQuantizerHelper::draw()
 {
-    if (isLoadedImage)
+    if (isLoadedImage && bVisible)
     {
         // 1. debug big window
         if (!ENABLE_minimal)
@@ -297,7 +299,7 @@ void ofxColorQuantizerHelper::draw()
 
     //-
 
-    if (isVisible_gui && !ENABLE_minimal)
+    if (!ENABLE_minimal && bVisible)
         gui.draw();
 }
 
@@ -325,7 +327,7 @@ void ofxColorQuantizerHelper::build()
 
         //--
 
-        map_setup();
+        rebuildMap();
     }
 }
 
@@ -364,7 +366,7 @@ void ofxColorQuantizerHelper::Changed_parameters(ofAbstractParameter &e)
 
     ofLogNotice("ofxColorQuantizerHelper") << "Changed_parameters: " << WIDGET_name << ": " << e;
 
-    if (WIDGET_name == "sort type")
+    if (WIDGET_name == "Sort Type")
     {
         switch (sortedType)
         {
@@ -429,7 +431,7 @@ void ofxColorQuantizerHelper::Changed_parameters(ofAbstractParameter &e)
         buildFromImageFile(imageName_path, numColors);
         ofLogNotice() << "type url: " << imageName_path;
     }
-    else if (WIDGET_name == "re build")
+    else if (WIDGET_name == "Build")
     {
         if (bReBuild)
         {
@@ -441,7 +443,7 @@ void ofxColorQuantizerHelper::Changed_parameters(ofAbstractParameter &e)
 
 
 //--------------------------------------------------------------
-void ofxColorQuantizerHelper::map_setup()
+void ofxColorQuantizerHelper::rebuildMap()
 {
     palette.clear();
     int palSize = colorQuantizer.getNumColors();
@@ -929,21 +931,21 @@ void ofxColorQuantizerHelper::setPalette_BACK(vector<ofColor> &p)
 
 
 //--------------------------------------------------------------
-void ofxColorQuantizerHelper::setPalette_bUpdated_Palette_BACK(bool &b)
+void ofxColorQuantizerHelper::setPalette_BACK_Refresh(bool &b)
 {
     bUpdated_Palette_BACK = &b;
 }
 
 
 //--------------------------------------------------------------
-void ofxColorQuantizerHelper::setPalette_bUpdated_Color_BACK(bool &b)
+void ofxColorQuantizerHelper::setColor_BACK_Refresh(bool &b)
 {
     bUpdated_Color_BACK = &b;
 }
 
 
 //--------------------------------------------------------------
-void ofxColorQuantizerHelper::setPalette_Name_BACK(string &n)
+void ofxColorQuantizerHelper::setPalette_BACK_Name(string &n)
 {
     myPalette_Name_BACK = &n;
 }

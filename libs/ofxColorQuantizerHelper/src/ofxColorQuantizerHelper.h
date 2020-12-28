@@ -38,7 +38,7 @@ public:
     void setActive(bool b)
     {
         isActive = b;
-        isVisible_gui = b;
+        //isVisible_gui = b;
         if (b)
         {
             addKeysListeners();
@@ -62,6 +62,16 @@ public:
     void setMinimal(bool b)
     {
         ENABLE_minimal = b;
+    }
+
+    void setVisible(bool b)
+    {
+		bVisible = b;
+    }
+
+    void setToggleVisible()
+    {
+		bVisible = !bVisible;
     }
 
     glm::vec2 getPosition()
@@ -90,13 +100,17 @@ public:
 
     // pointers back to 'communicate externally'
     void setPalette_BACK(vector<ofColor> &p);
-    void setPalette_bUpdated_Palette_BACK(bool &b);
+    void setPalette_BACK_Refresh(bool &b);
     void setColor_BACK(ofColor &c);
-    void setPalette_Name_BACK(string &n);
-    void setPalette_bUpdated_Color_BACK(bool &b);
+    void setPalette_BACK_Name(string &n);
+    void setColor_BACK_Refresh(bool &b);
 
     //build palette from already quantized and sorted colors
-    void map_setup();
+    void rebuildMap();
+
+	ofParameterGroup getParameters() {
+		return parameters;
+	}
 
 private:
 
@@ -112,13 +126,15 @@ private:
     void draw_Palette_Preview();
 
     bool bUseBorder = true;
+    bool bVisible = true;
 
     glm::vec2 position = glm::vec2(10,10);
     glm::vec2 size = glm::vec2(1440,900);
 
     string pathFolder = "images/";
+
     bool isLoadedImage = false;
-    bool isVisible_gui = true;
+    //bool isVisible_gui = true;
 
     ofxColorQuantizer colorQuantizer;
     void quantizeImage(string imageName, int numColors);
