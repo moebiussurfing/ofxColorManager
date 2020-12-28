@@ -47,12 +47,7 @@ void ofApp::keyPressed(int key)
 	{
 		colorManager.setToggleVisible();
 	}
-
-    //else if (key == 'h')
-    //{
-    //    colorManager.setToggleVisible();
-    //}
-
+	
 	// get palette
     else if (key == OF_KEY_TAB)
     {

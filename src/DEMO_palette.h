@@ -19,7 +19,7 @@ public:
 	}
 	DEMO_palette()
 	{
-		ofxLoadCamera(cam, path + _name);
+		
 	}
 
 	//-

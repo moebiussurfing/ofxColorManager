@@ -10,18 +10,19 @@
 
 //--------------------------------------------------------------
 void DEMO_palette::setup() {
-	//--
 
 	// DEMO 1
 
 	ofSetCircleResolution(75);
 
-	cam.reset();
-	ofxLoadCamera(cam, path + "DEMOcam");
-	//cam.disableMouseInput();
-	//cam.enableOrtho();
+	//-
 
-	//--
+	// DEMO 2
+
+	ofxLoadCamera(cam, path + _name);
+	//cam.reset();
+	cam.disableMouseInput();
+	//cam.enableOrtho();
 }
 
 //--------------------------------------------------------------
@@ -43,12 +44,12 @@ void DEMO_palette::update() {
 	int frameCurrent = ofGetFrameNum() % 5;//speed retrig
 	if (frameCurrent == 0 && !pauseCreate) {
 
-		//            // 2. create circle with randomly frequency
-		//        if ((ofRandom(100) < 50) && !pauseCreate) {
+		// // 2. create circle with randomly frequency
+		// if ((ofRandom(100) < 50) && !pauseCreate) {
 
 		glm::vec2 startPos;
-		//        glm::vec2 mousePos = glm::vec2(ofGetMouseX(), ofGetMouseY()) - glm::vec2(ofGetWidth() * 0.5, ofGetHeight() * 0.5);
-		//        startPos = mousePos;
+		// glm::vec2 mousePos = glm::vec2(ofGetMouseX(), ofGetMouseY()) - glm::vec2(ofGetWidth() * 0.5, ofGetHeight() * 0.5);
+		// startPos = mousePos;
 		startPos = glm::vec2(0, 0);
 
 		locations.push_back(startPos);
@@ -59,12 +60,12 @@ void DEMO_palette::update() {
 		if (iColor == palette->size() - 1)
 			pauseCreate = true;
 
-		//        // 1. gradient: get random color for all gradient
-		//        float RandomNorm = ofRandom(0., 1.);
-		//        color.set(getColorAtPercent(RandomNorm));
+		// // 1. gradient: get random color for all gradient
+		// float RandomNorm = ofRandom(0., 1.);
+		// color.set(getColorAtPercent(RandomNorm));
 
 		// 2. palette color: get one of the palette colors
-		//        color.set(palette[iColor]);//TODO
+		// color.set(palette[iColor]);//TODO
 
 		//avoid crash when palette pointer not linked
 		if (palette != nullptr && (*palette).size() > 0) {
@@ -88,7 +89,7 @@ void DEMO_palette::update() {
 		}
 
 		// sort each circle/color speed
-		//            this->velocities.push_back(glm::normalize( glm::vec2(palSize/(float)iColor * ofRandom(-1, 1), ofRandom(-1, 1)) ));
+		// this->velocities.push_back(glm::normalize( glm::vec2(palSize/(float)iColor * ofRandom(-1, 1), ofRandom(-1, 1)) ));
 	}
 
 	//update circles speeds
@@ -106,7 +107,6 @@ void DEMO_palette::update() {
 		}
 	}
 }
-
 
 //--------------------------------------------------------------
 void DEMO_palette::draw() {
@@ -142,7 +142,7 @@ void DEMO_palette::draw() {
 		float radius = 300;
 		int iDeg = 36;
 
-		//          int iDeg = 360/ (2*palette.size());
+		//int iDeg = 360/ (2*palette.size());
 		int iCol = 0;
 
 		for (int deg = 0; deg < 360; deg += iDeg) {
@@ -161,6 +161,7 @@ void DEMO_palette::draw() {
 
 			if (palette != nullptr && palette->size() > 0) {
 				c.set((*palette)[iCol]);
+
 				iCol++;
 				if (palette->size() > 0)
 					iCol = iCol % palette->size();
@@ -174,7 +175,8 @@ void DEMO_palette::draw() {
 
 			//-
 
-			ofSetColor(c);
+			ofSetColor(c, 225);
+			//ofSetColor(c);
 
 			//ofRotateZ(ofGetFrameNum() * 0.25);
 			ofRotateZ(ofGetFrameNum() * 0.01);
