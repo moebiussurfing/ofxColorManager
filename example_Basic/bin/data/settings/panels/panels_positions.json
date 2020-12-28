@@ -1,11 +1,11 @@
 [
     {
-        "panel": "PANELS",
+        "panel": "ImGui",
         "x": 0,
         "y": 0
     },
     {
-        "panel": "SHOW_ImGui",
+        "panel": "PANELS",
         "x": 0,
         "y": 0
     },
@@ -35,37 +35,37 @@
         "y": 0
     },
     {
-        "panel": "SHOW COLOR THEORY",
+        "panel": "THEORY",
         "x": 0,
         "y": 0
     },
     {
-        "panel": "SHOW COLOUR LOVERS",
+        "panel": "COLOUR-LOVERS",
         "x": 0,
         "y": 0
     },
     {
-        "panel": "SHOW COLOUR LOVERS SEARCH",
+        "panel": "",
         "x": 0,
         "y": 0
     },
     {
-        "panel": "SHOW PALETTES",
+        "panel": "",
         "x": 0,
         "y": 0
     },
     {
-        "panel": "SHOW BROWSER COLORS",
+        "panel": "",
         "x": 0,
         "y": 0
     },
     {
-        "panel": "SHOW GRADIENT",
+        "panel": "GRADIENT",
         "x": 0,
         "y": 0
     },
     {
-        "panel": "SHOW CURVE TOOL",
+        "panel": "CURVE",
         "x": 0,
         "y": 0
     },
@@ -85,7 +85,7 @@
         "y": 0
     },
     {
-        "panel": "SHOW TEST CURVE",
+        "panel": "TEST CURVE",
         "x": 0,
         "y": 0
     },

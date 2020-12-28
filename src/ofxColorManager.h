@@ -83,7 +83,7 @@ private:
 	std::vector<ofColor> paletteRange;
 	std::vector<std::string> types;
 	bool bRefreshMorph;
-	ofParameter<bool> morphAutoUpdate;
+	ofParameter<bool> bRangeAutoGenerate;
 	ofParameter<bool> color1FromPicker;
 	ofParameter<bool> color2FromPicker;
 	ofParameter<bool> bGetPaletteFromRange;
@@ -405,7 +405,7 @@ public:
 	ofxImGui::Settings mainSettings = ofxImGui::Settings();
 
 	bool gui_Draw();
-	void gui_UserPalette();
+	void gui_Palette();
 	void gui_Theory();
 	void gui_Picker();
 	void gui_Library();
