@@ -6,6 +6,7 @@
 //--
 
 #define INCL_LAYOUT
+#define USE_RECTANGLE_INTERFACES
 #define USE_COLOR_LOVERS
 #define USE_IMAGE_QUANTIZER
 #define INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
@@ -36,9 +37,11 @@ using namespace ofxColorTheory;
 #include "ofxCurvesTool.h"
 #include "ofxSimpleSlider.h"
 
+#ifdef USE_RECTANGLE_INTERFACES
 #include "ofxInterface.h"
 #include "ButtonPaletteSelector.h"
 #include "ButtonExample.h"
+#endif
 
 #include "ofxUndoSimple.h"
 #include "ofxMouseRuler.h"
@@ -282,8 +285,9 @@ public:
 	ofParameter<bool> SHOW_TEST_Curve;
 	ofParameter<bool> SHOW_PanelsManager;
 	ofParameter<bool> SHOW_PresetManager;
-	ofParameter<bool> SHOW_ColorManager;
+	ofParameter<bool> SHOW_BackGround;
 	ofParameter<bool> SHOW_ColorPicker;
+	ofParameter<bool> SHOW_Library;
 	ofParameter<bool> SHOW_ColorRange;
 	ofParameter<bool> SHOW_UserPalette;
 	ofParameter<bool> SHOW_ColorTheory;
@@ -359,7 +363,7 @@ public:
 	ofxColorPalette random;
 	//ofxColorPalette::ColorChannel mode;
 
-	ofParameter<int> NUM_COLORS_ALGO_PALETTES;
+	ofParameter<int> amountColors_Alg;
 	//number of colors. must be even sometimes to get same size in all palettes
 
 	ofParameter<int> BRIGHTNESS;
@@ -384,7 +388,7 @@ public:
 
 	void draw_palettes();
 
-	ofParameter<bool> MODE_Palette;
+	ofParameter<bool> MODE_TweakSatBrg;
 	// force SAT/BRG from panel SB sliders or all from color
 
 	ofFloatColor base;
@@ -404,7 +408,9 @@ public:
 	void gui_imGui_ColorUserPalette();
 	void gui_imGui_ColorTheory();
 	void gui_imGui_ColorPicker();
-	void gui_imGui_ColorManager();
+	void gui_imGui_Library();
+	void gui_imGui_Background();
+	void gui_imGui_CurverManager();
 	void gui_imGui_ColorRange();
 	void gui_imGui_PresetManager();
 	void gui_imGui_ControlPanels();
@@ -494,10 +500,11 @@ public:
 	int paletteLibPage = 0;
 	ofParameter<int> paletteLibPage_param{ "page", 0, 0, maxPages };
 
-	//-
+	//----
 
 	// INTERFACE
-
+	
+#ifdef USE_RECTANGLE_INTERFACES
 	ofxInterface::Node *scene;
 	vector<ButtonExample *> btns_palette;//button color box for each color of all algorithmic palettes
 
@@ -517,7 +524,6 @@ public:
 	vector<ButtonExample *> btns_plt_Analog;      // 7
 	//vector<ButtonExample *> btns_plt_Random;    // 8
 	//int NUM_PALETTES = 8;
-	int NUM_PALETTES = 7;//without random
 
 	// colour theory color palettes
 	vector<ButtonExample *> btns_plt_CT_Analogous;
@@ -528,18 +534,22 @@ public:
 	vector<ButtonExample *> btns_plt_CT_Monochrome;
 	vector<ButtonExample *> btns_plt_CT_Triad;
 	vector<ButtonExample *> btns_plt_CT_Tetrad;
+
+	// pointer back link the outside (ofApp) variable
+	vector<ButtonPaletteSelector *> btns_plt_Selector; // 1-8
+#endif
+
+	int NUM_PALETTES = 7;//without random
 	int NUM_CT_PALETTES = 8;
 
 	//int NUM_TOTAL_PALETTES = 16;//TODO
 	int NUM_TOTAL_PALETTES = NUM_PALETTES + NUM_CT_PALETTES;//TODO //without random
 
-	// pointer back link the outside (ofApp) variable
-	vector<ButtonPaletteSelector *> btns_plt_Selector; // 1-8
 	int SELECTED_palette = -1;
 	int SELECTED_palette_PRE = -1;//to check if changed on update() loop
 	int SELECTED_palette_LAST = 3;//default last palette type triggered. compBrg by default
 
-	//-
+	//----
 
 	// GRADIENT
 

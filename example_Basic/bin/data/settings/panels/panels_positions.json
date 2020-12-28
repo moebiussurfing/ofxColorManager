@@ -15,12 +15,17 @@
         "y": 0
     },
     {
-        "panel": "SHOW COLOR MANAGER",
+        "panel": "SHOW BACKGROUND",
         "x": 0,
         "y": 0
     },
     {
         "panel": "SHOW COLOR PICKER",
+        "x": 0,
+        "y": 0
+    },
+    {
+        "panel": "SHOW LIBRARY",
         "x": 0,
         "y": 0
     },
