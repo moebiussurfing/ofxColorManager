@@ -2196,8 +2196,11 @@ void ofxColorManager::gui_Picker()
 		// 0. color big
 
 		int _w = ImGui::GetWindowContentRegionWidth();
-		int _h = 50;
+
+		int _h = 20;
+		//int _h = 50;
 		//int _h = 85;
+		
 		int _flags = ImGuiColorEditFlags_NoOptions | ImGuiColorEditFlags_NoTooltip;
 
 		ImGui::ColorButton("MyColor##Picker", *(ImVec4 *)&color, _flags, ImVec2(_w, _h));
@@ -2838,13 +2841,13 @@ void ofxColorManager::gui_Background()
 
 			ImGui::PushItemWidth(guiWidth * 0.3);
 
-			ofxImGui::AddParameter(this->color_backGround_SET);
-			ofxImGui::AddParameter(this->color_backGround_Darker);
+			ofxImGui::AddParameter(color_backGround_SET);
+			ofxImGui::AddParameter(color_backGround_Darker);
 			if (color_backGround_Darker)
 			{
-				ofxImGui::AddParameter(this->backgroundDarkness);
+				ofxImGui::AddParameter(backgroundDarkness);
 			}
-			ofxImGui::AddParameter(this->color_backGround_SETAUTO);
+			ofxImGui::AddParameter(color_backGround_SETAUTO);
 
 			ImGui::PopItemWidth();
 		}
@@ -3993,13 +3996,23 @@ void ofxColorManager::palette_recallFromPalettes(int p)
 
 	//-
 
-	// WORKFLOW: set background color from first/last palette color
+	// workflow: 
+	//set background color from first/last palette color
 	if (color_backGround_SETAUTO)
 	{
 		if (palette.size() > 0)
 		{
 			ofColor c;
 			c = palette[0];//get first color from user palette
+
+			if (color_backGround_Darker)
+			{
+				float darkness = ofMap(backgroundDarkness, 0.0, 1.0, 0.0, 2.0);
+				float b = c.getBrightness() * darkness;
+				b = ofClamp(b, 0.0, 1.0);
+				c.setBrightness(b);
+			}
+			color_backGround.set(c);
 
 			//TODO: must improve
 			// modulate darker
@@ -4020,14 +4033,6 @@ void ofxColorManager::palette_recallFromPalettes(int p)
 			//    b = ofClamp(b, 0.0, 255.0);
 			//    c.setBrightness(b);
 			//}
-			if (color_backGround_Darker)
-			{
-				float darkness = ofMap(backgroundDarkness, 0.0, 1.0, 0.0, 2.0);
-				float b = c.getBrightness() * darkness;
-				//b = ofClamp(b, 0.0, 1.0);
-				c.setBrightness(b);
-			}
-			color_backGround.set(c);
 		}
 	}
 
@@ -4725,7 +4730,6 @@ void ofxColorManager::palette_load_ColourLovers()
 	}
 }
 
-
 //--------------------------------------------------------------
 void ofxColorManager::palette_drawMINI()
 {
@@ -4735,10 +4739,11 @@ void ofxColorManager::palette_drawMINI()
 	int boxSize = boxW + boxPad;
 	ofRectangle r;
 
-	//    // right top corner
-	//    palettePos = glm::vec2(ofGetWidth() - palette.size()*boxSize, 2*boxPad);
 	// left top corner
-	palettePos = glm::vec2(2, 2 * boxPad);
+	palettePos = glm::vec2(5, 5 * boxPad);
+	
+	//// right top corner
+	//palettePos = glm::vec2(ofGetWidth() - palette.size()*boxSize, 2*boxPad);
 
 	ofPushMatrix();
 	ofPushStyle();
@@ -4761,7 +4766,6 @@ void ofxColorManager::palette_drawMINI()
 	ofPopStyle();
 	ofPopMatrix();
 }
-
 
 //--------------------------------------------------------------
 void ofxColorManager::palette_addColor(ofColor c)

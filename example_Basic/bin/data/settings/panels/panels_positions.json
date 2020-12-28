@@ -65,12 +65,12 @@
         "y": 0
     },
     {
-        "panel": "SHOW_ALL_GUI",
+        "panel": "MAIN GUI",
         "x": 0,
         "y": 0
     },
     {
-        "panel": "SHOW_GUI_MINI",
+        "panel": "MINI GUI",
         "x": 0,
         "y": 0
     },
