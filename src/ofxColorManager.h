@@ -128,7 +128,7 @@ public:
 	shared_ptr<ColorWheelScheme> scheme;
 	vector<ofColor> colorsTheory[NUM_COLOR_THEORY_TYPES];
 	ofParameterGroup params_ColorTheory;
-	ofParameter<ofColor> primaryColorTheory;
+	ofParameter<ofColor> colorTheoryBase;
 	ofParameter<int> colorScheme;
 	ofParameter<std::string> colorSchemeName;
 	ofParameter<int> amountColors;

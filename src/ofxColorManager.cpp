@@ -216,7 +216,7 @@ void ofxColorManager::setup()
 	// general data
 
 	setBackground_ENABLE(true);
-	color_backGround.set("BACKGROUND", ofColor(8));
+	color_backGround.set("BG COLOR", ofColor(8));
 	color_backGround_SET.set("SET FROM COLOR", false);
 	backgroundDarkness.set("DARKNESS", 0.5, 0., 1.);
 	color_backGround_Darker.set("DARKER", false);
@@ -611,17 +611,17 @@ void ofxColorManager::update(ofEventArgs & args)
 
 	//-
 
-	// WINDOW TITLE
-#ifdef INCL_LAYOUT
-	std::string str;
-	str += ("[PAGE " + ofToString(panels.group_Selected) + "] ");
-	//str += ofToString((int)ofGetFrameRate()) + "FPS";
-	ofSetWindowTitle(str);
-#endif
+//	// WINDOW TITLE
+//#ifdef INCL_LAYOUT
+//	std::string str;
+//	str += ("[PAGE " + ofToString(panels.group_Selected) + "] ");
+//	//str += ofToString((int)ofGetFrameRate()) + "FPS";
+//	ofSetWindowTitle(str);
+//#endif
 
 	//-
 
-	// PRESET MANAGER
+	// preset manager
 
 	myPresetManager.update();
 
@@ -688,7 +688,8 @@ void ofxColorManager::update(ofEventArgs & args)
 
 	//--
 
-	// COLOUR LOVERS
+	// colour lovers
+
 #ifdef USE_COLOR_LOVERS
 	ColourLoversHelper.update();
 #endif
@@ -734,6 +735,7 @@ void ofxColorManager::update(ofEventArgs & args)
 		{
 			ofLogNotice(__FUNCTION__) << "bAutoExportPreset: " << bAutoExportPreset;
 			//ofLogNotice(__FUNCTION__) << "EXPORT";
+
 			saveColors();
 		}
 	}
@@ -778,12 +780,10 @@ void ofxColorManager::update(ofEventArgs & args)
 		}
 #endif
 
-		if (!MODE_newPreset)
-			MODE_newPreset = true;
+		if (!MODE_newPreset) MODE_newPreset = true;
 
 		// DEMO
-		if (TEST_DEMO)
-			myDEMO_palette.reStart();
+		if (TEST_DEMO) myDEMO_palette.reStart();
 	}
 
 	//--
@@ -1492,8 +1492,10 @@ void ofxColorManager::gui_Theory()
 
 	if (ofxImGui::BeginWindow("THEORY", mainSettings, false))
 	{
-		if (ofxImGui::AddParameter(primaryColorTheory))
+		if (ofxImGui::AddParameter(colorTheoryBase))
 		{
+			ofLogNotice(__FUNCTION__) << "PICKER THEORY MOVED !";
+			color_Picked = colorTheoryBase.get();
 		}
 
 		//ImGui::SameLine();
@@ -1850,7 +1852,7 @@ void ofxColorManager::gui_Palette()
 
 				//}
 
-				//ImGuiColorEditFlags colorEdiFlags =
+				//ImGuiColorEditFlags _flags =
 				//	ImGuiColorEditFlags_NoSmallPreview |
 				//	ImGuiColorEditFlags_NoTooltip |
 				//	ImGuiColorEditFlags_NoLabel |
@@ -1865,7 +1867,7 @@ void ofxColorManager::gui_Palette()
 
 				//static ImVec4 color;
 				//color = color_Picked.get();
-				//if (ImGui::ColorButton("##paletteDrag", (float*)&color, colorEdiFlags,
+				//if (ImGui::ColorButton("##paletteDrag", (float*)&color, _flags,
 
 				int wb;
 				//wb = colBoxSize;
@@ -2158,9 +2160,9 @@ void ofxColorManager::gui_Picker()
 
 		int _w = ImGui::GetWindowContentRegionWidth();
 		int _h = 85;
-		int misc_flags = ImGuiColorEditFlags_NoOptions | ImGuiColorEditFlags_NoTooltip;
+		int _flags = ImGuiColorEditFlags_NoOptions | ImGuiColorEditFlags_NoTooltip;
 
-		ImGui::ColorButton("MyColor##Picker", *(ImVec4 *)&color, misc_flags, ImVec2(_w, _h));
+		ImGui::ColorButton("MyColor##Picker", *(ImVec4 *)&color, _flags, ImVec2(_w, _h));
 
 		//-
 
@@ -2406,9 +2408,9 @@ void ofxColorManager::gui_Range()
 		ofFloatColor cpre1 = guiCol1[0];
 		ofFloatColor cpre2 = guiCol2[0];
 
-		//ImGui::Begin("Column row selection");
 		ImGui::Columns(2);
 
+		int _h = 25;
 		int _w = ImGui::GetWindowContentRegionWidth();
 		int pad = _w * 0.4;
 		//int pad = _w * 0.2;
@@ -2417,32 +2419,18 @@ void ofxColorManager::gui_Range()
 		ImGui::PushItemWidth(w50);
 		//ImGui::PushItemWidth(120);
 
-		int misc_flags =
-			ImGuiColorEditFlags_NoOptions |
-			ImGuiColorEditFlags_NoSmallPreview |
-			ImGuiColorEditFlags_NoSidePreview |
-			ImGuiColorEditFlags_InputHSV |
-			//ImGuiColorEditFlags_NoInputs |
-			//ImGuiColorEditFlags_No| 
-			//ImGuiColorEditFlags_cNoLabel |
-			ImGuiColorEditFlags_NoTooltip;
-
-		//--
-
-		//picker
-		ImGui::ColorPicker3("1", &guiCol1[0], misc_flags);
-
-		//--
-
-		// color big
-		//_w = ImGui::GetWindowContentRegionWidth();
-		int _h = 25;
-
-		//misc_flags = ImGuiColorEditFlags_NoOptions | ImGuiColorEditFlags_NoTooltip;
-		//ImGui::ColorButton("MyColor##From", *(ImVec4 *)&guiCol1[0], misc_flags, ImVec2(w50, _h));
+		//int _flags =
+		//	ImGuiColorEditFlags_NoOptions |
+		//	ImGuiColorEditFlags_NoSmallPreview |
+		//	ImGuiColorEditFlags_NoSidePreview |
+		//	ImGuiColorEditFlags_InputHSV |
+		//	//ImGuiColorEditFlags_NoInputs |
+		//	//ImGuiColorEditFlags_No| 
+		//	//ImGuiColorEditFlags_cNoLabel |
+		//	ImGuiColorEditFlags_NoTooltip;
 
 		// circled & triangle
-		ImGuiColorEditFlags colorEdiFlags =
+		ImGuiColorEditFlags _flags =
 			ImGuiColorEditFlags_NoSmallPreview |
 			ImGuiColorEditFlags_NoTooltip |
 			ImGuiColorEditFlags_NoLabel |
@@ -2452,7 +2440,25 @@ void ofxColorManager::gui_Range()
 			ImGuiColorEditFlags_NoInputs |
 			ImGuiColorEditFlags_NoAlpha |
 			ImGuiColorEditFlags_PickerHueWheel;
-		ImGui::ColorButton("MyColor##PickCircle", *(ImVec4 *)&guiCol1[0], colorEdiFlags, ImVec2(w50, _h));
+
+		//--
+
+		//picker
+		ImGui::ColorPicker3("1", &guiCol1[0], _flags);
+		//ImGui::ColorPicker3("1", &guiCol1[0], _flags);
+
+		if (ImGui::ColorButton("MyColor##PickCircle", *(ImVec4 *)&guiCol1[0], _flags, ImVec2(w50, _h)))
+		{
+
+		}
+		
+		//--
+
+		// color big
+		//_w = ImGui::GetWindowContentRegionWidth();
+
+		//_flags = ImGuiColorEditFlags_NoOptions | ImGuiColorEditFlags_NoTooltip;
+		//ImGui::ColorButton("MyColor##From", *(ImVec4 *)&guiCol1[0], _flags, ImVec2(w50, _h));
 
 		//--
 
@@ -2470,18 +2476,23 @@ void ofxColorManager::gui_Range()
 		//--
 
 		//picker
-
-		ImGui::ColorPicker3("2", &guiCol2[0], misc_flags);
+		ImGui::ColorPicker3("2", &guiCol2[0], _flags);
+		//ImGui::ColorPicker3("2", &guiCol2[0], _flags);
 
 		//--
 
 		// color big
 
-		ImGui::ColorButton("MyColor##To", *(ImVec4 *)&guiCol2[1], misc_flags, ImVec2(w50, _h));
+		//ImGui::ColorButton("MyColor##To", *(ImVec4 *)&guiCol2[1], _flags, ImVec2(w50, _h));
+		if (ImGui::ColorButton("MyColor##To", *(ImVec4 *)&guiCol2[0], _flags, ImVec2(w50, _h)))
+		{
+			
+		}
 
 		//--
 
 		ImGui::PopItemWidth();
+
 		ofxImGui::AddParameter(color2FromPicker);
 
 		ImGui::Columns(1);
@@ -2499,6 +2510,7 @@ void ofxColorManager::gui_Range()
 		{
 			if (cpre1 != guiCol1[0] ||
 				cpre2 != guiCol2[0])
+
 				generateRange(col1range, col2range);
 		}
 
@@ -2771,6 +2783,8 @@ void ofxColorManager::gui_Presets()
 		char tab2[32];
 		strncpy(tab2, textInput_temp.c_str(), sizeof(tab2));
 		tab2[sizeof(tab2) - 1] = 0;
+
+		//int wt = ImGui::GetWindowContentRegionWidth() * 0.8;
 
 		if (ImGui::InputText("", tab2, IM_ARRAYSIZE(tab2)))
 		{
@@ -3940,7 +3954,7 @@ void ofxColorManager::palettes_update()
 		base = color_Picked.get();
 	}
 
-	primaryColorTheory = base;
+	colorTheoryBase = base;
 
 	//--
 
@@ -4384,14 +4398,14 @@ void ofxColorManager::refreshColorTheory()
 	////selected
 	//colorSchemeName.set(ColorWheelSchemes::colorSchemeNames[colorScheme.get()]);
 	//scheme = ColorWheelSchemes::colorSchemes[colorScheme.get()];
-	//scheme->setPrimaryColor(primaryColorTheory.get());
+	//scheme->setPrimaryColor(colorTheoryBase.get());
 
 	//colorsTheory = scheme->interpolate(amountColors.get());
 	for (int i = 0; i < NUM_COLOR_THEORY_TYPES; i++)
 	{
 		shared_ptr<ColorWheelScheme> _scheme;
 		_scheme = ColorWheelSchemes::colorSchemes[i];
-		_scheme->setPrimaryColor(primaryColorTheory.get());
+		_scheme->setPrimaryColor(colorTheoryBase.get());
 		colorsTheory[i] = _scheme->interpolate(amountColors.get());
 	}
 }
@@ -4403,7 +4417,7 @@ void ofxColorManager::palettes_colorTheory_setup()
 	//amountColors.makeReferenceTo(amountColors_Alg);
 
 	params_ColorTheory.setName("Color Theory");
-	params_ColorTheory.add(primaryColorTheory.set("Base", ofColor::magenta, ofColor(0), ofColor(255)));
+	params_ColorTheory.add(colorTheoryBase.set("Base", ofColor::magenta, ofColor(0), ofColor(255)));
 	params_ColorTheory.add(bGetFromPicker.set("Auto Picker", true));
 	params_ColorTheory.add(colorScheme.set("Color Scheme", 6, 0, ColorWheelSchemes::colorSchemes.size() - 1));
 	params_ColorTheory.add(colorSchemeName);
@@ -4877,7 +4891,7 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 	{
 	}
 
-	else if (name == colorScheme.getName() || name == primaryColorTheory.getName())
+	else if (name == colorScheme.getName() || name == colorTheoryBase.getName())
 	{
 		refreshColorTheory();
 	}
@@ -5257,7 +5271,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	{
 
 	}
-	else if (name == "BACKGROUND")
+	else if (name == "BG COLOR")
 	{
 		//        if (color_backGround.get().getBrightness()!=backgroundDarkness_PRE)
 		//            backgroundDarkness = color_backGround.get().getBrightness();
@@ -6139,7 +6153,7 @@ void ofxColorManager::update_color_picked_CHANGES()
 	ofLogNotice(__FUNCTION__) << ofToString(color_Picked);
 
 	if (bGetFromPicker) {
-		primaryColorTheory = color_Picked.get();
+		colorTheoryBase = color_Picked.get();
 	}
 
 	if (color1FromPicker) {
