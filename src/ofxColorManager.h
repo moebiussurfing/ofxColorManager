@@ -148,6 +148,7 @@ public:
 	ofParameter<bool> bEditUserPalette;
 	ofParameter<int> boxSizeUser;
 	ofParameter<int> boxRowsUser;
+	ofParameter<float> boxScale;
 	ofParameter<bool> bFlipUserPalette;
 	//ofParameter<bool> bUserPaletteVertical;
 

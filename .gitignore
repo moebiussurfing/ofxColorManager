@@ -557,3 +557,4 @@ example_Basic/bin/data/settings/ofxColorManager.xml
 example_Basic/bin/data/liveColors.json
 *.xml
 *.json
+*.json

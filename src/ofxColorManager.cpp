@@ -293,8 +293,9 @@ void ofxColorManager::setup()
 	//-
 
 	// INTERFACE
-
+#ifdef USE_RECTANGLE_INTERFACES
 	interface_setup();
+#endif
 
 	//-
 
@@ -386,7 +387,8 @@ void ofxColorManager::setup()
 
 	//user palette
 	boxSizeUser.set("Box Size", 40, 10, 200);
-	boxRowsUser.set("Rows", 10, 1, 20);
+	boxRowsUser.set("Max Rows", 10, 1, 20);
+	boxScale.set("Scale", 1.f, 0.25f, 1.25f);
 	bEditUserPalette.set("EDIT", false);
 	//bUserPaletteVertical.set("VERTICAL", false);
 	bFlipUserPalette.set("FLIP", false);
@@ -397,6 +399,7 @@ void ofxColorManager::setup()
 	params_UserPalette.add(bFlipUserPalette);
 	//params_UserPalette.add(boxSizeUser);
 	params_UserPalette.add(boxRowsUser);
+	params_UserPalette.add(boxScale);
 
 	ofAddListener(params_UserPalette.parameterChangedE(), this, &ofxColorManager::Changed_ColorUserPalette);
 
@@ -581,6 +584,7 @@ void ofxColorManager::setup()
 
 	XML_params.add(bAuto_palette_recall);
 	XML_params.add(boxRowsUser);
+	XML_params.add(boxScale);
 
 	//XML_params.add(TEST_MODE);
 
@@ -863,7 +867,7 @@ void ofxColorManager::update(ofEventArgs & args)
 
 	//-
 
-	interface_update();
+	//interface_update();
 
 	//TODO:
 	//Windows
@@ -948,8 +952,9 @@ void ofxColorManager::draw(ofEventArgs & args)
 	//-
 
 	// interface
-
-	//interface_draw();
+	#ifdef USE_RECTANGLE_INTERFACES
+	interface_draw();
+#endif
 
 	//-
 
@@ -1779,29 +1784,6 @@ void ofxColorManager::gui_Palette()
 
 		//-
 
-		//edit
-
-		if (bEditUserPalette)
-		{
-			//ofxImGui::AddParameter(bUserPaletteVertical);
-			ofxSurfingHelpers::AddSmallButton(bFlipUserPalette);
-			//ofxImGui::AddParameter(boxSizeUser);
-			//ofxImGui::AddParameter(boxRowsUser);
-
-			boxRowsUser.disableEvents();
-			ImGui::InputInt(boxRowsUser.getName().c_str(), (int *)&boxRowsUser.get());
-			boxRowsUser = ofClamp(boxRowsUser.get(), boxRowsUser.getMin(), boxRowsUser.getMax());
-			boxRowsUser.enableEvents();
-
-			//-
-
-			if (ImGui::RadioButton("Copy", mode == Mode_Copy)) { mode = Mode_Copy; } ImGui::SameLine();
-			if (ImGui::RadioButton("Move", mode == Mode_Move)) { mode = Mode_Move; } ImGui::SameLine();
-			if (ImGui::RadioButton("Swap", mode == Mode_Swap)) { mode = Mode_Swap; }
-		}
-
-		//-
-
 		{
 			for (int n = 0; n < palette.size(); n++)
 			{
@@ -1859,6 +1841,9 @@ void ofxColorManager::gui_Palette()
 				wb = wb - _spc;
 				wb -= 5;
 
+				wb = wb * boxScale.get();
+
+				//box
 				if (ImGui::ColorButton("##paletteDrag",
 					palette[n],
 					colorEdiFlags,
@@ -1906,7 +1891,34 @@ void ofxColorManager::gui_Palette()
 			}
 		}
 
+		//--
+
+		//edit
+		
 		ofxImGui::AddParameter(bEditUserPalette);
+
+		if (bEditUserPalette)
+		{
+			//ofxImGui::AddParameter(bUserPaletteVertical);
+			ofxSurfingHelpers::AddSmallButton(bFlipUserPalette);
+			//ofxImGui::AddParameter(boxSizeUser);
+			//ofxImGui::AddParameter(boxRowsUser);
+
+			boxRowsUser.disableEvents();
+			ImGui::InputInt(boxRowsUser.getName().c_str(), (int *)&boxRowsUser.get());
+			boxRowsUser = ofClamp(boxRowsUser.get(), boxRowsUser.getMin(), boxRowsUser.getMax());
+			boxRowsUser.enableEvents();
+
+			ImGui::InputFloat(boxScale.getName().c_str(), (float *)&boxScale.get(), 0.025f, 0.10);
+
+			//-
+
+			if (ImGui::RadioButton("Copy", mode == Mode_Copy)) { mode = Mode_Copy; } ImGui::SameLine();
+			if (ImGui::RadioButton("Move", mode == Mode_Move)) { mode = Mode_Move; } ImGui::SameLine();
+			if (ImGui::RadioButton("Swap", mode == Mode_Swap)) { mode = Mode_Swap; }
+		}
+
+		//-
 
 		ImGui::Dummy(ImVec2(0.0f, 10));
 
@@ -1924,7 +1936,17 @@ void ofxColorManager::gui_Library()
 		{
 			// get clicked color
 			static int colBoxSize;
-			colBoxSize = 22;
+
+			// layout by pages groups
+			doublePage = true;
+
+			//numLines = doublePage ? 20 : 10;
+			
+			numLines = 30;
+			colBoxSize = 25;
+			
+			//numLines = 30;
+			//colBoxSize = 22;
 
 			//-
 
@@ -1958,11 +1980,12 @@ void ofxColorManager::gui_Library()
 
 			//-
 
-			// layout by pages groups
-			doublePage = true;
+			//// layout by pages groups
+			//doublePage = true;
 
-			//numLines = doublePage ? 20 : 10;
-			numLines = 30;
+			////numLines = doublePage ? 20 : 10;
+			//numLines = 20;
+			////numLines = 30;
 
 			numColorsPage = numLines * rowSizePal;
 			maxPages = totalNumColors / (numColorsPage - 1);
@@ -2322,6 +2345,7 @@ void ofxColorManager::gui_Panels()
 		ofxImGui::AddParameter(SHOW_ColorRange);
 		ofxImGui::AddParameter(SHOW_ColourLovers);
 		ofxImGui::AddParameter(SHOW_BackGround);
+		ofxImGui::AddParameter(SHOW_PresetManager);
 
 		ImGui::Dummy(ImVec2(0.0f, 10));
 
@@ -2332,7 +2356,6 @@ void ofxColorManager::gui_Panels()
 		ofxImGui::AddParameter(SHOW_Gradient);
 		ofxImGui::AddParameter(SHOW_Curve);
 		ofxImGui::AddParameter(SHOW_ColorQuantizer);
-		ofxImGui::AddParameter(SHOW_PresetManager);
 		//ofxImGui::AddParameter(SHOW_TEST_Curve);
 		//ofxImGui::AddParameter(SHOW_AlgoPalettes);
 		//ofxImGui::AddParameter(SHOW_ColourLovers_searcher);
@@ -2365,9 +2388,12 @@ void ofxColorManager::gui_Range()
 		ImGui::PushItemWidth(w50);
 		//ImGui::PushItemWidth(120);
 
-		int misc_flags = ImGuiColorEditFlags_NoOptions | 
-			ImGuiColorEditFlags_InputRGB | 
-			//ImGuiColorEditFlags_InputHSV | 
+		int misc_flags = 
+			ImGuiColorEditFlags_NoOptions | 
+			ImGuiColorEditFlags_NoInputs | 
+			ImGuiColorEditFlags_NoSmallPreview | 
+			ImGuiColorEditFlags_NoLabel | 
+			ImGuiColorEditFlags_InputHSV | 
 			ImGuiColorEditFlags_NoTooltip;
 
 		//--
@@ -2678,7 +2704,7 @@ void ofxColorManager::gui_Presets()
 
 		//-
 
-		ImGui::Text("PRESET NAME:");
+		ImGui::Text("Name:");
 		std::string textInput_temp = PRESET_name;
 
 		// loaded string into char array
@@ -2693,11 +2719,12 @@ void ofxColorManager::gui_Presets()
 			textInput_temp = ofToString(tab2);
 			ofLogNotice(__FUNCTION__) << "textInput_temp:" << textInput_temp;
 
-			if (MODE_newPreset)
-				MODE_newPreset = false;
+			if (MODE_newPreset) MODE_newPreset = false;
 		}
 
 		//--
+		
+		ImGui::Dummy(ImVec2(0.0f, 10));
 
 		// arrow buttons
 		static int counter = currentFile;
@@ -2751,6 +2778,8 @@ void ofxColorManager::gui_Presets()
 		ImGui::SameLine();
 		ImGui::Text("%d/%d", currentFile, numPalettes);
 
+		ImGui::Dummy(ImVec2(0.0f, 10));
+
 		//-
 
 		// scrollable list
@@ -2777,7 +2806,7 @@ void ofxColorManager::gui_Presets()
 
 		// 2. presets
 
-		ImGui::Text("PRESETS");
+		//ImGui::Text("PRESETS");
 
 		if (ImGui::Button("SAVE"))
 		{
@@ -2821,7 +2850,7 @@ void ofxColorManager::gui_Presets()
 			preset_load(PRESET_name);
 		}
 
-		ImGui::SameLine();
+		//ImGui::SameLine();
 		if (ImGui::Button("DELETE"))//current preset
 		{
 			ofLogNotice(__FUNCTION__) << "DELETE";
@@ -2852,6 +2881,8 @@ void ofxColorManager::gui_Presets()
 		//    preset_filesRefresh();
 		//}
 
+		ImGui::Dummy(ImVec2(0.0f, 10));
+		
 		//-
 
 		if (MODE_newPreset)
