@@ -96,6 +96,9 @@ public:
         return palette;
     }
 
+	int getPaletteSize() {
+		return palette.size();
+	}
     //--
 
     // pointers back to 'communicate externally'
@@ -110,6 +113,25 @@ public:
 
 	ofParameterGroup getParameters() {
 		return parameters;
+	}
+
+	std::string getImagePath() {
+		return imageName_path;
+	}
+
+	void loadNext();
+	void loadPrev();
+
+	//easy callback
+	bool bUpdate = false;
+	bool isUpdated() {
+		if (bUpdate) {
+			bUpdate = false;
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 private:

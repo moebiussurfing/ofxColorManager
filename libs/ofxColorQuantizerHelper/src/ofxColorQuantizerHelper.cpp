@@ -24,7 +24,7 @@ bool compareSaturation(const colorMapping &s1, const colorMapping &s2)
 void ofxColorQuantizerHelper::filesRefresh()
 {
     // load dragged images folder
-    ofLogNotice("ofxColorQuantizerHelper") << "list files " << pathFolerDrag;
+    ofLogNotice(__FUNCTION__) << "list files " << pathFolerDrag;
     dir.listDir(pathFolerDrag);
     dir.allowExt("jpg");
     dir.allowExt("png");
@@ -51,7 +51,7 @@ void ofxColorQuantizerHelper::filesRefresh()
     // log files on folder
     for (int i = 0; i < dir.size(); i++)
     {
-        ofLogNotice("ofxColorQuantizerHelper") << "file " << "[" << ofToString(i) << "] " << dir.getName(i);
+        ofLogNotice(__FUNCTION__) << "file " << "[" << ofToString(i) << "] " << dir.getName(i);
     }
 }
 
@@ -80,7 +80,7 @@ void ofxColorQuantizerHelper::setup()
 
     // startup settings
 
-    XML_params.setName("ofxColorQuantizerHelper");
+    XML_params.setName(__FUNCTION__);
     XML_params.add(ENABLE_minimal);
     XML_params.add(numColors);
     XML_params.add(sortedType);
@@ -364,7 +364,7 @@ void ofxColorQuantizerHelper::Changed_parameters(ofAbstractParameter &e)
 {
     string WIDGET_name = e.getName();
 
-    ofLogNotice("ofxColorQuantizerHelper") << "Changed_parameters: " << WIDGET_name << ": " << e;
+    ofLogNotice(__FUNCTION__) << "Changed_parameters: " << WIDGET_name << ": " << e;
 
     if (WIDGET_name == "Sort Type")
     {
@@ -537,11 +537,14 @@ void ofxColorQuantizerHelper::rebuildMap()
 //--------------------------------------------------------------
 void ofxColorQuantizerHelper::buildFromImageFile(string path, int num)
 {
+
     //TODO: improve with threading load..
 
     //quantizeImage(pathFolder + path, num);
     quantizeImage(path, num);
     build();
+
+	bUpdate = true;
 }
 
 
@@ -599,19 +602,19 @@ void ofxColorQuantizerHelper::kMeansTest()
     cv::Mat centers;
     double compactness = cv::kmeans(samples, 3, labels, cv::TermCriteria(), 2, cv::KMEANS_PP_CENTERS, centers);
 
-    ofLogNotice("ofxColorQuantizerHelper") << "labels:";
+    ofLogNotice(__FUNCTION__) << "labels:";
     for (int i = 0; i < labels.rows; ++i)
     {
-        ofLogNotice("ofxColorQuantizerHelper") << labels.at<int>(0, i);
+        ofLogNotice(__FUNCTION__) << labels.at<int>(0, i);
     }
 
-    ofLogNotice("ofxColorQuantizerHelper") << "\ncenters:" << endl;
+    ofLogNotice(__FUNCTION__) << "\ncenters:" << endl;
     for (int i = 0; i < centers.rows; ++i)
     {
-        ofLogNotice("ofxColorQuantizerHelper") << centers.at<float>(0, i);
+        ofLogNotice(__FUNCTION__) << centers.at<float>(0, i);
     }
 
-    ofLogNotice("ofxColorQuantizerHelper") << "\ncompactness: " << compactness;
+    ofLogNotice(__FUNCTION__) << "\ncompactness: " << compactness;
 }
 
 
@@ -622,10 +625,59 @@ ofxColorQuantizerHelper::ofxColorQuantizerHelper()
 }
 
 //--------------------------------------------------------------
+void ofxColorQuantizerHelper::loadPrev()
+{
+	// refresh dir
+	dir.listDir(pathFolerDrag);
+	dir.allowExt("jpg");
+	dir.allowExt("png");
+	dir.sort();
+	currentImage.setMax(dir.size() - 1);
+
+	currentImage--;
+	if (currentImage < 0) currentImage = dir.size() - 1;
+	//currentImage = 0;
+
+	ofLogNotice(__FUNCTION__) << "currentImage:" << ofToString(currentImage);
+
+	if (dir.size() > 0 && currentImage < dir.size() - 1)
+	{
+		imageName = dir.getName(currentImage);
+		imageName_path = dir.getPath(currentImage);
+		buildFromImageFile(imageName_path, numColors);
+	}
+}
+
+//--------------------------------------------------------------
+void ofxColorQuantizerHelper::loadNext()
+{
+	// refresh dir
+	dir.listDir(pathFolerDrag);
+	dir.allowExt("jpg");
+	dir.allowExt("png");
+	dir.sort();
+	currentImage.setMax(dir.size() - 1);
+
+	currentImage++;
+	if (currentImage > dir.size() - 1)
+		currentImage = 0;
+
+	//currentImage = dir.size() - 1;
+
+	ofLogNotice(__FUNCTION__) << "currentImage:" << ofToString(currentImage);
+
+	if (dir.size() > 0 && currentImage < dir.size())
+	{
+		imageName = dir.getName(currentImage);
+		imageName_path = dir.getPath(currentImage);
+		buildFromImageFile(imageName_path, numColors);
+	}
+}
+//--------------------------------------------------------------
 void ofxColorQuantizerHelper::keyPressed(ofKeyEventArgs &eventArgs)
 {
     const int &key = eventArgs.key;
-    ofLogNotice("ofxColorQuantizerHelper") << "key: " << key;
+    ofLogNotice(__FUNCTION__) << "key: " << key;
 
     // minimal mode
     if (key == 'a')
@@ -640,64 +692,23 @@ void ofxColorQuantizerHelper::keyPressed(ofKeyEventArgs &eventArgs)
     if (key == OF_KEY_LEFT)
     {
         numColors--;
-        if (numColors < numColors.getMin())
-            numColors = numColors.getMin();
+        if (numColors < numColors.getMin()) numColors = numColors.getMin();
         bReBuild = true;
     }
     if (key == OF_KEY_RIGHT)
     {
         numColors++;
-        if (numColors > numColors.getMax())
-            numColors = numColors.getMax();
+        if (numColors > numColors.getMax()) numColors = numColors.getMax();
         bReBuild = true;
     }
 
     if (key == OF_KEY_UP)
     {
-        // refresh dir
-        dir.listDir(pathFolerDrag);
-        dir.allowExt("jpg");
-        dir.allowExt("png");
-        dir.sort();
-        currentImage.setMax(dir.size() - 1);
-
-        currentImage--;
-        if (currentImage < 0)
-            currentImage = dir.size() - 1;
-        //currentImage = 0;
-
-        ofLogNotice("ofxColorQuantizerHelper") << "currentImage:" << ofToString(currentImage);
-
-        if (dir.size() > 0 && currentImage < dir.size() - 1)
-        {
-            imageName = dir.getName(currentImage);
-            imageName_path = dir.getPath(currentImage);
-            buildFromImageFile(imageName_path, numColors);
-        }
+		loadPrev();
     }
     if (key == OF_KEY_DOWN || key == ' ')
     {
-        // refresh dir
-        dir.listDir(pathFolerDrag);
-        dir.allowExt("jpg");
-        dir.allowExt("png");
-        dir.sort();
-        currentImage.setMax(dir.size() - 1);
-
-        currentImage++;
-        if (currentImage > dir.size() - 1)
-            currentImage = 0;
-
-        //currentImage = dir.size() - 1;
-
-        ofLogNotice("ofxColorQuantizerHelper") << "currentImage:" << ofToString(currentImage);
-
-        if (dir.size() > 0 && currentImage < dir.size())
-        {
-            imageName = dir.getName(currentImage);
-            imageName_path = dir.getPath(currentImage);
-            buildFromImageFile(imageName_path, numColors);
-        }
+		loadNext();
     }
 
     //-
@@ -707,8 +718,7 @@ void ofxColorQuantizerHelper::keyPressed(ofKeyEventArgs &eventArgs)
     if (key == 's')
     {
         sortedType++;
-        if (sortedType > 4)
-            sortedType = 1;
+        if (sortedType > 4) sortedType = 1;
     }
 
     //        if (key == '1'){
@@ -782,7 +792,7 @@ void ofxColorQuantizerHelper::mouseDragged(ofMouseEventArgs &eventArgs)
     const int &x = eventArgs.x;
     const int &y = eventArgs.y;
     const int &button = eventArgs.button;
-    //ofLogNotice("ofxColorQuantizerHelper") << "mouseDragged " << x << ", " << y << ", " << button;
+    //ofLogNotice(__FUNCTION__) << "mouseDragged " << x << ", " << y << ", " << button;
 }
 
 //--------------------------------------------------------------
@@ -791,7 +801,7 @@ void ofxColorQuantizerHelper::mousePressed(ofMouseEventArgs &eventArgs)
     const int &x = eventArgs.x;
     const int &y = eventArgs.y;
     const int &button = eventArgs.button;
-    //ofLogNotice("ofxColorQuantizerHelper") << "mousePressed " << x << ", " << y << ", " << button;
+    //ofLogNotice(__FUNCTION__) << "mousePressed " << x << ", " << y << ", " << button;
 }
 
 //--------------------------------------------------------------
@@ -800,7 +810,7 @@ void ofxColorQuantizerHelper::mouseReleased(ofMouseEventArgs &eventArgs)
     const int &x = eventArgs.x;
     const int &y = eventArgs.y;
     const int &button = eventArgs.button;
-    //ofLogNotice("ofxColorQuantizerHelper") << "mouseReleased " << x << ", " << y << ", " << button;
+    //ofLogNotice(__FUNCTION__) << "mouseReleased " << x << ", " << y << ", " << button;
 }
 
 //--------------------------------------------------------------
@@ -835,17 +845,17 @@ ofxColorQuantizerHelper::~ofxColorQuantizerHelper()
 void ofxColorQuantizerHelper::dragEvent(ofDragInfo &eventArgs)
 {
     auto info = eventArgs;
-    ofLogNotice("ofxColorQuantizerHelper") << "dragEvent ";
+    ofLogNotice(__FUNCTION__) << "dragEvent ";
 
     if (info.files.size() > 0)
     {
         dragPt = info.position;
-        ofLogNotice("ofxColorQuantizerHelper") << "info.position: " << dragPt;
+        ofLogNotice(__FUNCTION__) << "info.position: " << dragPt;
 
         draggedImages.assign(info.files.size(), ofImage());
         for (unsigned int k = 0; k < info.files.size(); k++)
         {
-            ofLogNotice("ofxColorQuantizerHelper") << "draggedImages: " << info.files[k];
+            ofLogNotice(__FUNCTION__) << "draggedImages: " << info.files[k];
             draggedImages[k].load(info.files[k]);
 
             // save dragged files to data folder
@@ -897,7 +907,7 @@ void ofxColorQuantizerHelper::draw_imageDragged()
 //--------------------------------------------------------------
 void ofxColorQuantizerHelper::loadAppSettings(ofParameterGroup &g, string path)
 {
-    ofLogNotice("ofxColorQuantizerHelper") << "loadAppSettings " << path;
+    ofLogNotice(__FUNCTION__) << "loadAppSettings " << path;
     ofXml settings;
     settings.load(path);
     ofDeserialize(settings, g);
@@ -907,7 +917,7 @@ void ofxColorQuantizerHelper::loadAppSettings(ofParameterGroup &g, string path)
 //--------------------------------------------------------------
 void ofxColorQuantizerHelper::saveAppSettings(ofParameterGroup &g, string path)
 {
-    ofLogNotice("ofxColorQuantizerHelper") << "saveAppSettings " << path;
+    ofLogNotice(__FUNCTION__) << "saveAppSettings " << path;
 
     ofXml settings;
     ofSerialize(settings, g);

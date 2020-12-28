@@ -558,3 +558,5 @@ example_Basic/bin/data/liveColors.json
 *.xml
 *.json
 *.json
+*.json
+*.xml

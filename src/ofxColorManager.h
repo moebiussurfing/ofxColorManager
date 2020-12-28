@@ -118,6 +118,9 @@ public:
 	// colorQuantizer
 #ifdef USE_IMAGE_QUANTIZER
 	ofxColorQuantizerHelper colorQuantizer;
+
+	ofImage imageButtonSource;
+	GLuint imageButtonID;
 #endif
 
 	//-
@@ -415,7 +418,7 @@ public:
 	void gui_Panels();
 	void gui_Quantizer();
 
-	void gui_setup_layout();
+	void gui_Layout();
 	//void gui_imGui_Theme();
 
 	//--
