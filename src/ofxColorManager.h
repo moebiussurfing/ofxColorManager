@@ -475,13 +475,13 @@ public:
 
 	// TODO: TEST LINKING
 
-	ofParameter<ofFloatColor> color_clicked_param;
+	ofParameter<ofFloatColor> color_Clicked;
 
 	void Changed_ColorPicked(ofFloatColor &color);
 	void Changed_ColorClicked(ofFloatColor &color);
 
 	// TEST
-	void update_color_picked_CHANGES();
+	void refreshPicker_Touched();
 
 	//--
 

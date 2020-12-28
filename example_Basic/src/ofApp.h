@@ -18,7 +18,7 @@ public:
     void keyPressed(int key);
     void windowResized(int w, int h);
 
-    ofxColorManager ColorManager;
+    ofxColorManager colorManager;
 
     // received colors
     vector<ofColor> palette;

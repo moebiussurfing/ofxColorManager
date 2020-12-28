@@ -14,8 +14,8 @@ void ofApp::setup()
 	ofSetFrameRate(fps);
 #endif
     
-    ColorManager.setup();
-    ColorManager.setColor_TARGET(color);
+    colorManager.setup();
+    colorManager.setColor_TARGET(color);
 }
 
 //--------------------------------------------------------------
@@ -41,26 +41,33 @@ void ofApp::draw()
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key)
 {
-    if (key == 'h')
-    {
-        ColorManager.setToggleVisible();
-    }
+	if (false) {}
 
-    if (key == OF_KEY_TAB)
+	else if (key == 'g')
+	{
+		colorManager.setToggleVisible();
+	}
+
+    //else if (key == 'h')
+    //{
+    //    colorManager.setToggleVisible();
+    //}
+
+	// get palette
+    else if (key == OF_KEY_TAB)
     {
-		//get palette
-        palette = ColorManager.getPalette();
+        palette = colorManager.getPalette();
     }
 }
 
 //--------------------------------------------------------------
 void ofApp::windowResized(int w, int h)
 {
-    ColorManager.windowResized(w, h);
+    colorManager.windowResized(w, h);
 }
 
 //--------------------------------------------------------------
 void ofApp::exit()
 {
-	ColorManager.exit();
+	colorManager.exit();
 }
