@@ -349,9 +349,9 @@ void ofxColorManager::setup()
 
 	// CONTROL WINDOWS
 
-	//SHOW_ColourLovers_searcher.set("SHOW COLOUR LOVERS SEARCH", true);
-	//SHOW_AlgoPalettes.set("SHOW PALETTES", true);
-	//SHOW_BrowserColors.set("SHOW BROWSER COLORS", true);
+	SHOW_ColourLovers_searcher.set("SHOW COLOUR LOVERS SEARCH", true);
+	SHOW_AlgoPalettes.set("SHOW PALETTES", true);
+	SHOW_BrowserColors.set("SHOW BROWSER COLORS", true);
 	//SHOW_CosineGradient.set("SHOW COSINE GRADIENT", true);
 	
 	SHOW_ColourLovers.set("COLOUR-LOVERS", true);
@@ -385,7 +385,8 @@ void ofxColorManager::setup()
 
 	//-
 
-	//user palette
+	//palette
+
 	boxSizeUser.set("Box Size", 40, 10, 200);
 	boxRowsUser.set("Max Rows", 10, 1, 20);
 	boxScale.set("Scale", 1.f, 0.25f, 1.25f);
@@ -2259,6 +2260,10 @@ void ofxColorManager::gui_Picker()
 			//ofxSurfingHelpers::AddBigToggle(bColor_HUE);
 			//ofxSurfingHelpers::AddBigToggle(bColor_SAT);
 			//ofxSurfingHelpers::AddBigToggle(bColor_BRG);
+			
+			//bCallback_ENABLED = false; //disable callbacks
+			
+			ImGui::Dummy(ImVec2(0.0f, 5));
 
 			if (ofxImGui::AddParameter(bColor_HUE))
 			{}
@@ -2266,6 +2271,8 @@ void ofxColorManager::gui_Picker()
 			{}
 			if (ofxImGui::AddParameter(bColor_BRG))
 			{}
+
+			ImGui::Dummy(ImVec2(0.0f, 5));
 
 			//ImGui::Text("Min");
 
@@ -2281,6 +2288,8 @@ void ofxColorManager::gui_Picker()
 			{
 				ofLogNotice(__FUNCTION__) << "ImGui: BRG MOVED !";
 			}
+			
+			ImGui::Dummy(ImVec2(0.0f, 5));
 
 			//ImGui::Text("Max");
 
