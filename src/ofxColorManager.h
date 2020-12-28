@@ -133,7 +133,7 @@ public:
 	ofParameter<ofColor> primaryColorTheory;
 	ofParameter<int> colorScheme;
 	ofParameter<std::string> colorSchemeName;
-	ofParameter<int> numColors;
+	ofParameter<int> amountColors;
 	ofParameter<bool> bGetFromPicker;
 	ofParameter<int> lastColorTheoryPicked_Palette;
 	void Changed_ColorTheory(ofAbstractParameter &e);
@@ -433,7 +433,7 @@ public:
 	void setBackground_ENABLE(bool b);
 
 	// TEST
-	bool LISTEN_isEnabled = true;
+	bool bCallback_ENABLED = true;
 
 	void color_picked_Update_To_HSV();
 
