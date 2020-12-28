@@ -2,7 +2,6 @@
 #pragma once
 #include "ofMain.h"
 
-
 //--
 
 #define INCL_LAYOUT
@@ -12,7 +11,6 @@
 #define INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
 
 //--
-
 
 #include "ofxColorGradient.h"
 #include "ofxColorPalette.h"
@@ -284,14 +282,14 @@ public:
 	ofParameter<bool> SHOW_GUI_MINI;
 	ofParameter<bool> SHOW_debugText;
 	ofParameter<bool> SHOW_TEST_Curve;
-	ofParameter<bool> SHOW_PanelsManager;
-	ofParameter<bool> SHOW_PresetManager;
+	ofParameter<bool> SHOW_Panels;
+	ofParameter<bool> SHOW_Presets;
 	ofParameter<bool> SHOW_BackGround;
-	ofParameter<bool> SHOW_ColorPicker;
+	ofParameter<bool> SHOW_Picker;
 	ofParameter<bool> SHOW_Library;
-	ofParameter<bool> SHOW_ColorRange;
+	ofParameter<bool> SHOW_Range;
 	ofParameter<bool> SHOW_UserPalette;
-	ofParameter<bool> SHOW_ColorTheory;
+	ofParameter<bool> SHOW_Theory;
 	ofParameter<bool> SHOW_ColorQuantizer;
 	//ofParameter<bool> SHOW_CosineGradient;
 
