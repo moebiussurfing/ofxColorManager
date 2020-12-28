@@ -447,6 +447,14 @@ public:
 	ofParameter<int> color_SAT;
 	ofParameter<int> color_BRG;
 
+	ofParameter<int> color_HUE_RndMin;
+	ofParameter<int> color_SAT_RndMin;
+	ofParameter<int> color_BRG_RndMin;
+
+	ofParameter<int> color_HUE_RndMax;
+	ofParameter<int> color_SAT_RndMax;
+	ofParameter<int> color_BRG_RndMax;
+
 	// color clicked comes from algo palette colors
 	//TODO: pointer color to get click from button class
 	ofFloatColor color_clicked;
@@ -490,6 +498,7 @@ public:
 	//int palSize = IM_ARRAYSIZE(saved_palette);
 	int palSize = (NUM_COLORS_PANTONE);
 	int rowSizePal = 7;//7 colors per row Pantone lib
+	bool doublePage;
 	int numLines = 10;//rows per page
 	int numColorsPage = numLines * rowSizePal;//70
 	int totalNumColors = NUM_COLORS_PANTONE;//pantone

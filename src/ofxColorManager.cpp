@@ -221,7 +221,7 @@ void ofxColorManager::setup()
 
 	//-
 
-	// GENERAL DATA
+	// general data
 
 	setBackground_ENABLE(true);
 	color_backGround.set("BACKGROUND", ofColor(8));
@@ -237,7 +237,7 @@ void ofxColorManager::setup()
 
 	//--
 
-	// COLOR
+	// color
 
 	color_picked.set("COLOR", ofFloatColor::red);
 	color_HUE.set("H", 0, 0, 255);
@@ -248,11 +248,20 @@ void ofxColorManager::setup()
 	params_color.add(color_SAT);
 	params_color.add(color_BRG);
 
+	//randomizer
+	color_HUE_RndMin.set("H Min", 0, 0, 255);
+	color_SAT_RndMin.set("S Min", 0, 0, 255);
+	color_BRG_RndMin.set("B Min", 0, 0, 255);
+
+	color_HUE_RndMax.set("H Max", 255, 0, 255);
+	color_SAT_RndMax.set("S Max", 255, 0, 255);
+	color_BRG_RndMax.set("B Max", 255, 0, 255);
+
 	ofAddListener(params_color.parameterChangedE(), this, &ofxColorManager::Changed_Controls);
 
 	//-
 
-	// ALGORITHMIC PALETTE
+	// algorithmic palette
 
 	MODE_TweakSatBrg.set("TWEAK SAT/BRT", false);
 	SATURATION.set("SATURATION", 200, 0, 255);
@@ -426,25 +435,25 @@ void ofxColorManager::setup()
 		switch (i)
 		{
 		case 0:
-			name = "Triad";
-			break;
-		case 1:
-			name = "Complement Triad";
-			break;
-		case 2:
 			name = "Complement Saturation";
 			break;
-		case 3:
+		case 1:
 			name = "Complement Brightness";
 			break;
-		case 4:
+		case 2:
 			name = "Monochrome Saturation";
 			break;
-		case 5:
+		case 3:
 			name = "Monochrome Brightness";
 			break;
-		case 6:
+		case 4:
 			name = "Analogue";
+			break;
+		case 5:
+			name = "Triad";
+			break;
+		case 6:
+			name = "Complement Triad";
 			break;
 		}
 		algoTypes[i].set(name, false);
@@ -547,6 +556,9 @@ void ofxColorManager::setup()
 	XML_params.add(bAuto_palette_recall);
 	XML_params.add(SHOW_Layout_Gui);
 	XML_params.add(paletteLibPage_param);
+
+	XML_params.add(boxRowsUser);
+
 	//XML_params.add(TEST_MODE);
 
 	//loadAppSettings(XML_params, XML_path);
@@ -839,7 +851,7 @@ void ofxColorManager::update(ofEventArgs & args)
 //--------------------------------------------------------------
 void ofxColorManager::draw(ofEventArgs & args)
 {
-	// BACKGROUND
+	// background
 
 	if (backgroundENABLE)
 		ofClear(ofColor(color_backGround.get()));
@@ -914,19 +926,9 @@ void ofxColorManager::draw(ofEventArgs & args)
 
 	//-
 
-	// INTERFACE
+	// interface
 
-	interface_draw();
-
-	//-
-
-	// CURVE
-
-	////COSINE GRADIENT
-	//if (SHOW_Gradient)
-	//{
-	//    gradient_draw();
-	//}
+	//interface_draw();
 
 	//-
 
@@ -963,6 +965,16 @@ void ofxColorManager::draw(ofEventArgs & args)
 	{
 		curveTool_draw();
 	}
+
+	//-
+
+	// CURVE
+
+	////COSINE GRADIENT
+	//if (SHOW_Gradient)
+	//{
+	//    gradient_draw();
+	//}
 
 	// COLORS BROWSER
 	if (SHOW_BrowserColors)
@@ -1428,9 +1440,6 @@ void ofxColorManager::interface_draw()
 ////--------------------------------------------------------------
 //void ofxColorManager::gui_imGui_CosineGradient()
 //{
-//    mainSettings.windowPos = ofVec2f(gui4_x + 200, gui4_y);
-//    mainSettings.windowSize = ofVec2f(gui4_w, gui4_h);
-//
 //    if (ofxImGui::BeginWindow("COSINE GRADIENT", mainSettings, false))
 //    {
 //        if (ofxImGui::BeginTree(this->cosineGradient_params, mainSettings))
@@ -1449,9 +1458,6 @@ void ofxColorManager::interface_draw()
 //--------------------------------------------------------------
 void ofxColorManager::gui_imGui_ColorTheory()
 {
-	//mainSettings.windowPos = ofVec2f(900, 50);
-	//mainSettings.windowSize = ofVec2f(200, 400);
-
 	// box size
 	static int colBoxSize = 40;
 
@@ -1460,27 +1466,28 @@ void ofxColorManager::gui_imGui_ColorTheory()
 		ofxImGui::AddParameter(primaryColorTheory); ImGui::SameLine();
 		ofxImGui::AddParameter(bGetFromPicker);
 
-		ImGui::InputInt(amountColors.getName().c_str(), (int *)&amountColors.get());
+		//ImGui::InputInt(amountColors.getName().c_str(), (int *)&amountColors.get());
 		//ofxImGui::AddParameter(amountColors);
-		
+		ofxImGui::AddParameter(amountColors_Alg);
+
 		//ofxImGui::AddParameter(colorScheme);
 		//ofxImGui::AddParameter(colorSchemeName);
 
 
-		// ALGORITHMIC PALETTES
+		// algorithmic palettes
 		if (ImGui::CollapsingHeader("ADVANCED"))
 		{
 			//ImGui::PushItemWidth(guiWidth * 0.5);
 			//ofxImGui::AddParameter(this->amountColors_Alg);
-			ofxImGui::AddParameter(this->MODE_TweakSatBrg);
+			ofxImGui::AddParameter(MODE_TweakSatBrg);
 			if (MODE_TweakSatBrg)
 			{
-				ofxImGui::AddParameter(this->SATURATION);
-				ofxImGui::AddParameter(this->BRIGHTNESS);
+				ofxImGui::AddParameter(SATURATION);
+				ofxImGui::AddParameter(BRIGHTNESS);
 			}
 			//ofxImGui::AddParameter(this->bRandomPalette);
-			ofxImGui::AddParameter(this->bLock_palette);
-			ofxImGui::AddParameter(this->bAuto_palette_recall);
+			ofxImGui::AddParameter(bLock_palette);
+			ofxImGui::AddParameter(bAuto_palette_recall);
 			//ImGui::PopItemWidth();
 		}
 
@@ -1555,25 +1562,25 @@ void ofxColorManager::gui_imGui_ColorTheory()
 			switch (i)
 			{
 			case 0:
-				_total = btns_plt_Triad.size();
-				break;
-			case 1:
-				_total = btns_plt_ComplTriad.size();
-				break;
-			case 2:
 				_total = btns_plt_CompSat.size();
 				break;
-			case 3:
+			case 1:
 				_total = btns_plt_ComplBrgt.size();
 				break;
-			case 4:
+			case 2:
 				_total = btns_plt_MonoSat.size();
 				break;
-			case 5:
+			case 3:
 				_total = btns_plt_MonoBrgt.size();
 				break;
-			case 6:
+			case 4:
 				_total = btns_plt_Analog.size();
+				break;
+			case 5:
+				_total = btns_plt_Triad.size();
+				break;
+			case 6:
+				_total = btns_plt_ComplTriad.size();
 				break;
 			}
 
@@ -1589,25 +1596,25 @@ void ofxColorManager::gui_imGui_ColorTheory()
 				switch (i)
 				{
 				case 0:
-					c = triad[n];
-					break;
-				case 1:
-					c = complementTriad[n];
-					break;
-				case 2:
 					c = complement[n];
 					break;
-				case 3:
+				case 1:
 					c = complementBrightness[n];
 					break;
-				case 4:
+				case 2:
 					c = monochrome[n];
 					break;
-				case 5:
+				case 3:
 					c = monochromeBrightness[n];
 					break;
-				case 6:
+				case 4:
 					c = analogue[n];
+					break;
+				case 5:
+					c = triad[n];
+					break;
+				case 6:
+					c = complementTriad[n];
 					break;
 				}
 
@@ -1821,8 +1828,8 @@ void ofxColorManager::gui_imGui_ColorUserPalette()
 				wb = ImGui::GetWindowContentRegionWidth() / _r;
 
 				float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
-				wb = wb - ((_r-1) * _spc);
-				wb -= 40;
+				wb = wb - _spc;
+				wb -= 3;
 
 				if (ImGui::ColorButton("##paletteDrag",
 					palette[n],
@@ -1900,8 +1907,8 @@ void ofxColorManager::gui_imGui_Library()
 
 			static bool saved_palette_inited = false;
 			//const int PaletteSIZE = ColorBrowser_palette.size();//error
-
 			//static ImVec4 _palette[130];//same than openColor palettes
+
 			static ImVec4 saved_palette[NUM_COLORS_PANTONE];//same than Pantone palette
 
 			if (!saved_palette_inited)
@@ -1914,17 +1921,29 @@ void ofxColorManager::gui_imGui_Library()
 					saved_palette[n].w = 1.0f;//alpha
 				}
 			saved_palette_inited = true;
-			//ofLogNotice(__FUNCTION__) << "IM_ARRAYSIZE(_palette): "<<ofToString(IM_ARRAYSIZE(_palette));
 
 			//-
 
 			// layout by pages groups
+			doublePage = true;
+
+			numLines = doublePage ? 20 : 10;
+			numColorsPage = numLines * rowSizePal;
+			maxPages = totalNumColors / numColorsPage - 1;
+
 			int startColorInPal = paletteLibPage * numColorsPage;
 			int endColorInPal = startColorInPal + numColorsPage;
 			//paletteLibPage = paletteLibPage_param.get();
 
+			//-
+
+			ImGui::Dummy(ImVec2(0.0f, 5));
+
 			ImGui::Text("PANTONE COLORS");
 
+			ImGui::Dummy(ImVec2(0.0f, 5));
+
+			// name color
 			// load tab2 with lastColorPickedNameColor
 			char tab2[32];
 			strncpy(tab2, lastColorPickedNameColor.c_str(), sizeof(tab2));
@@ -1932,11 +1951,15 @@ void ofxColorManager::gui_imGui_Library()
 			ImGui::PushItemWidth(guiWidth * 0.5);
 			ImGui::Text("%s", tab2);//color name label
 
+			//ImGui::SameLine();
+
+			ImGui::Dummy(ImVec2(0.0f, 5));
+
 			//-
 
 			// arrow buttons
 			float spacing = ImGui::GetStyle().ItemInnerSpacing.x;
-			//ImGui::SameLine();
+
 			ImGui::PushButtonRepeat(true);
 
 			// prev
@@ -1963,9 +1986,12 @@ void ofxColorManager::gui_imGui_Library()
 
 			//-
 
-			ImGui::DragInt("PAGE", (int *)&paletteLibPage, 0, maxPages);
-			//ImGui::SliderInt("PAGE", &paletteLibPage, 0, maxPages);//page slider selector
+			ImGui::SliderInt("PAGE", &paletteLibPage, 0, maxPages);//page slider selector
+			//ImGui::DragInt("PAGE", (int *)&paletteLibPage, 0, maxPages);
+
 			ImGui::PopItemWidth();
+
+			ImGui::Dummy(ImVec2(0.0f, 5));
 
 			//-
 
@@ -2121,12 +2147,13 @@ void ofxColorManager::gui_imGui_ColorPicker()
 		//if (ofxImGui::BeginTree("HSB", mainSettings))
 		if (ImGui::CollapsingHeader("HSB"))
 		{
-			ImGui::PushItemWidth(_w * 0.9);
+			ImGui::PushItemWidth(_w * 0.8);
 
-			// TODO: SHOULD APPLY HSV HERE, NOT INTO CALLBACK, BECAUSE IT WILL TRIG
-			// THE COLOR PICKED UPDATING CALLBACK!!!
+			// TODO: ?
+			//should apply hsb here, not into callback, 
+			//because it will trig
+			//the color picked updating callback!!!
 
-			// TEST
 			bCallback_ENABLED = false; //disable callbacks
 			if (ofxImGui::AddParameter(color_HUE))
 			{
@@ -2164,6 +2191,36 @@ void ofxColorManager::gui_imGui_ColorPicker()
 		if (ImGui::CollapsingHeader("RANDOMIZER"))
 		{
 			ofxImGui::AddParameter(bRandomColor);
+
+			ImGui::Text("Min");
+
+			if (ofxImGui::AddParameter(color_HUE_RndMin))
+			{
+				ofLogNotice(__FUNCTION__) << "ImGui: HUE MOVED !";
+			}
+			if (ofxImGui::AddParameter(color_SAT_RndMin))
+			{
+				ofLogNotice(__FUNCTION__) << "ImGui: SAT MOVED !";
+			}
+			if (ofxImGui::AddParameter(color_BRG_RndMin))
+			{
+				ofLogNotice(__FUNCTION__) << "ImGui: BRG MOVED !";
+			}
+
+			ImGui::Text("Max");
+
+			if (ofxImGui::AddParameter(color_HUE_RndMax))
+			{
+				ofLogNotice(__FUNCTION__) << "ImGui: HUE MOVED !";
+			}
+			if (ofxImGui::AddParameter(color_SAT_RndMax))
+			{
+				ofLogNotice(__FUNCTION__) << "ImGui: SAT MOVED !";
+			}
+			if (ofxImGui::AddParameter(color_BRG_RndMax))
+			{
+				ofLogNotice(__FUNCTION__) << "ImGui: BRG MOVED !";
+			}
 		}
 
 		//--
@@ -2229,7 +2286,7 @@ void ofxColorManager::gui_imGui_ColorRange()
 
 		//ImGui::Begin("Column row selection");
 		ImGui::Columns(2);
-
+		//color_HUE
 		ImGui::PushItemWidth(120);
 		ImGui::ColorPicker3(" From", &guiCol1[0]);
 		ImGui::PopItemWidth();
@@ -4147,7 +4204,8 @@ void ofxColorManager::refreshColorTheory()
 //--------------------------------------------------------------
 void ofxColorManager::palettes_colorTheory_setup()
 {
-	amountColors.makeReferenceTo(amountColors_Alg);
+	amountColors_Alg.makeReferenceTo(amountColors);
+	//amountColors.makeReferenceTo(amountColors_Alg);
 
 	params_ColorTheory.setName("Color Theory");
 	params_ColorTheory.add(primaryColorTheory.set("Base Color", ofColor::magenta, ofColor(0), ofColor(255)));
@@ -4632,6 +4690,8 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 	else if (name == amountColors.getName())
 	{
 		refreshColorTheory();
+
+		amountColors_Alg = amountColors;
 	}
 
 	//toggles
@@ -4794,7 +4854,18 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		if (bRandomColor)
 		{
 			bRandomColor = false;
-			color_picked = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
+
+			float _hue = ofRandom(color_HUE_RndMin, color_HUE_RndMax);
+			float _sat = ofRandom(color_SAT_RndMin, color_SAT_RndMax);
+			float _brg = ofRandom(color_BRG_RndMin, color_BRG_RndMax);
+			ofColor c;
+			c.setHue(_hue);
+			c.setSaturation(_sat);
+			c.setBrightness(_brg);
+
+			color_picked = c;
+
+			//color_picked = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
 		}
 	}
 
