@@ -1,6 +1,6 @@
 [
     {
-        "panel": "SHOW PANELS MANAGER",
+        "panel": "PANELS",
         "x": 0,
         "y": 0
     },
@@ -10,27 +10,27 @@
         "y": 0
     },
     {
-        "panel": "SHOW USER PALETTE",
+        "panel": "PALETTE",
         "x": 0,
         "y": 0
     },
     {
-        "panel": "SHOW BACKGROUND",
+        "panel": "BACKGROUND",
         "x": 0,
         "y": 0
     },
     {
-        "panel": "SHOW COLOR PICKER",
+        "panel": "PICKER",
         "x": 0,
         "y": 0
     },
     {
-        "panel": "SHOW LIBRARY",
+        "panel": "LIBRARY",
         "x": 0,
         "y": 0
     },
     {
-        "panel": "SHOW COLOR RANGE",
+        "panel": "RANGE",
         "x": 0,
         "y": 0
     },
@@ -90,12 +90,12 @@
         "y": 0
     },
     {
-        "panel": "SHOW COLOR PICTURE",
+        "panel": "PICTURE CAPTURE",
         "x": 0,
         "y": 0
     },
     {
-        "panel": "SHOW PRESET MANAGER",
+        "panel": "PRESETS",
         "x": 0,
         "y": 0
     },

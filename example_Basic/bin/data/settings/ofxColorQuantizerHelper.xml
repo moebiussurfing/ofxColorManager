@@ -2,5 +2,5 @@
 <ofxColorQuantizerHelper>
 	<MINIMAL>0</MINIMAL>
 	<number_of_colors>10</number_of_colors>
-	<sort_type>1</sort_type>
+	<sort_type>3</sort_type>
 </ofxColorQuantizerHelper>

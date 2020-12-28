@@ -204,8 +204,8 @@ public:
 	ofxGuiPanelsLayout panels;
 #endif
 	ofParameterGroup p_TOGGLES;
-	ofParameter<bool> SHOW_Layout_Gui{ "SHOW_Layout_Gui", true };
-	ofParameter<bool> SHOW_ImGui{ "SHOW_ImGui", true };
+	ofParameter<bool> SHOW_Layout_Gui{ "Layout", true };
+	ofParameter<bool> SHOW_ImGui{ "ImGui", true };
 
 	//--
 
@@ -404,16 +404,16 @@ public:
 	float widgetFactor = 0.9;
 	ofxImGui::Settings mainSettings = ofxImGui::Settings();
 
-	bool gui_imGui_Draw();
-	void gui_imGui_ColorUserPalette();
-	void gui_imGui_ColorTheory();
-	void gui_imGui_ColorPicker();
-	void gui_imGui_Library();
-	void gui_imGui_Background();
-	void gui_imGui_CurverManager();
-	void gui_imGui_ColorRange();
-	void gui_imGui_PresetManager();
-	void gui_imGui_ControlPanels();
+	bool gui_Draw();
+	void gui_UserPalette();
+	void gui_Theory();
+	void gui_Picker();
+	void gui_Library();
+	void gui_Background();
+	void gui_Curve();
+	void gui_Range();
+	void gui_Presets();
+	void gui_Panels();
 	void gui_setup_layout();
 	//void gui_imGui_Theme();
 
@@ -438,7 +438,7 @@ public:
 	void color_picked_Update_To_HSV();
 
 	// MAIN COLOR
-	ofParameter<ofFloatColor> color_picked;
+	ofParameter<ofFloatColor> color_Picked;
 	//ofParameter<ofFloatColor> color_picked2;
 	ofxUndoSimple<ofFloatColor> color_Undo;
 
@@ -454,6 +454,11 @@ public:
 	ofParameter<int> color_HUE_RndMax;
 	ofParameter<int> color_SAT_RndMax;
 	ofParameter<int> color_BRG_RndMax;
+
+	ofParameter<bool> bColor_HUE;
+	ofParameter<bool> bColor_SAT;
+	ofParameter<bool> bColor_BRG;
+
 
 	// color clicked comes from algo palette colors
 	//TODO: pointer color to get click from button class
@@ -506,7 +511,7 @@ public:
 	std::string lastColorPickedNameColor = "";
 	int lastColorPicked;
 	int lastColorPicked_Palette;
-	int paletteLibPage = 0;
+	ofParameter<int> paletteLibPage{ "PAGE" , 0, 0, maxPages };
 	ofParameter<int> paletteLibPage_param{ "page", 0, 0, maxPages };
 
 	//----
