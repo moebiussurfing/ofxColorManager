@@ -25,11 +25,11 @@ void ofxColorManager::startup()
 	rPreview.enableEdit();
 	//rPreview.disableEdit();
 	
-	rPreview.setRect(0, 0, 100, 100);
+	rPreview.setRect(500, 500, 250, 250);
 
 	//B. load settings
 	//rPreview.loadSettings(name_r1, name_r2, false);
-	rPreview.loadSettings();
+	//rPreview.loadSettings();
 	//setPosition_GuiExtra(rPreview.x + padx, rPreview.y + pady);// ?
 
 	//initialize
@@ -589,7 +589,7 @@ void ofxColorManager::setup()
 	XML_params.add(SHOW_Curve);
 	XML_params.add(SHOW_Curve);//curve tool
 	XML_params.add(SHOW_BrowserColors);
-	XML_params.add(SHOW_Layout_Gui);
+	XML_params.add(SHOW_GuiInternal);
 	XML_params.add(SHOW_GUI_MINI);
 	//XML_params.add(SHOW_CosineGradient);
 
@@ -1031,7 +1031,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 //interface_draw();
 #endif
 
-	//-
+	//---
 
 	// CURVE
 
@@ -1079,7 +1079,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 		curveTool_draw();
 	}
 
-	//-
+	//--
 
 	// curve
 
@@ -1089,7 +1089,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 	//    gradient_draw();
 	//}
 
-	//-
+	//---
 
 	// colors browser
 
@@ -1195,7 +1195,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 	// ofxGuiPanelsLayout
 
 #ifdef INCL_LAYOUT
-	if (SHOW_Layout_Gui) panels.draw();
+	if (SHOW_GuiInternal) panels.draw();
 #endif
 
 	//--
@@ -2601,7 +2601,7 @@ void ofxColorManager::gui_Panels()
 		ofxImGui::AddParameter(SHOW_Quantizer);
 		ofxImGui::AddParameter(SHOW_Curve);
 		ofxImGui::AddParameter(MODE_Editor);
-		ofxImGui::AddParameter(SHOW_Layout_Gui);
+		ofxImGui::AddParameter(SHOW_GuiInternal);
 		ofxImGui::AddParameter(SHOW_Presets);
 
 		//ofxSurfingHelpers::AddBigToggle(SHOW_Picker, -1);
@@ -5851,7 +5851,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 		else if (key == 'G')
 		{
-			SHOW_Layout_Gui = !SHOW_Layout_Gui;
+			SHOW_GuiInternal = !SHOW_GuiInternal;
 		}
 
 		//    else if (key == 's')

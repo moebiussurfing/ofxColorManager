@@ -213,7 +213,7 @@ public:
 	ofxGuiPanelsLayout panels;
 #endif
 	ofParameterGroup p_TOGGLES;
-	ofParameter<bool> SHOW_Layout_Gui{ "Layout", true };
+	ofParameter<bool> SHOW_GuiInternal{ "Gui Internal", false };
 	ofParameter<bool> SHOW_ImGui{ "ImGui", true };
 
 	//--
