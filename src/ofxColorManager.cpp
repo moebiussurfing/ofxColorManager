@@ -549,8 +549,8 @@ void ofxColorManager::setup()
 	//ImGui::GetIO().ConfigWindowsResizeFromEdges = true;
 
 #ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
-	//ofxSurfingHelpers::ImGui_ThemeMoebiusSurfing();
-	ofxSurfingHelpers::ImGui_ThemeModernDark();
+	ofxSurfingHelpers::ImGui_ThemeMoebiusSurfing();
+	//ofxSurfingHelpers::ImGui_ThemeModernDark();
 #endif
 
 	mainSettings = ofxImGui::Settings();
