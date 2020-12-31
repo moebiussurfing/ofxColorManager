@@ -135,7 +135,7 @@ void ofxColorManager::setup()
 
 	// receivers pointers
 	colorQuantizer.setPalette_BACK(myPalette);
-	colorQuantizer.setPalette_BACK_Refresh(bUpdated_Palette_BACK);
+	colorQuantizer.setPalette_BACK_RefreshPalette(bUpdated_Palette_BACK);
 	colorQuantizer.setPalette_BACK_Name(myPalette_Name);
 
 	//--
@@ -516,6 +516,9 @@ void ofxColorManager::setup()
 	ofxSurfingHelpers::ImGui_ThemeMoebiusSurfing();
 	//ofxSurfingHelpers::ImGui_ThemeModernDark();
 #endif
+
+	mainSettings = ofxImGui::Settings();
+
 
 	//-
 
@@ -3137,7 +3140,7 @@ void ofxColorManager::gui_Presets()
 //--------------------------------------------------------------
 bool ofxColorManager::gui_Draw()
 {
-	mainSettings = ofxImGui::Settings();
+	//mainSettings = ofxImGui::Settings();
 
 	gui.begin();
 

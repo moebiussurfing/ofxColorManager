@@ -1,5 +1,7 @@
 ofxCereal
 ofxColorManager
+ofxColorQuantizer
+ofxColorQuantizerHelper
 ofxColourLoversHelper
 ofxGui
 ofxImGui
