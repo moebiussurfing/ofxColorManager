@@ -725,25 +725,25 @@ void ofxColorManager::update(ofEventArgs & args)
 			setControl(control);
 		}
 
-	if (frameCurrent == frameBuffer - 1)
-	{
-		bTEST_pause = !bTEST_pause;
+		if (frameCurrent == frameBuffer - 1)
+		{
+			bTEST_pause = !bTEST_pause;
 
-		//round end position to clamp
-		float control;
-		if (!Test_LFO_MODE)
-		{
-			control = 1.;
-			framePrc = 1.;
+			//round end position to clamp
+			float control;
+			if (!Test_LFO_MODE)
+			{
+				control = 1.;
+				framePrc = 1.;
+			}
+			else
+			{
+				control = 0.;
+				framePrc = 1.;
+			}
+			if (TEST_toBackground) color_backGround.set(getColorAtPercent(control));
+			setControl(control);
 		}
-		else
-		{
-			control = 0.;
-			framePrc = 1.;
-		}
-		if (TEST_toBackground) color_backGround.set(getColorAtPercent(control));
-		setControl(control);
-	}
 
 	}
 
@@ -963,25 +963,27 @@ void ofxColorManager::draw(ofEventArgs & args)
 	//--
 
 	// rectangle editor
-	if (SHOW_Editor)
-	{
-		ofPushStyle();
-		ofFill();
-		ofSetColor(ofColor(0, 220));
-		rPreview.draw();
-		ofDrawRectRounded(rPreview, 5);
-		ofPopStyle();
-	}
+	if (SHOW_Curve) {
+		if (SHOW_Editor)
+		{
+			ofPushStyle();
+			ofFill();
+			ofSetColor(ofColor(0, 220));
+			rPreview.draw();
+			ofDrawRectRounded(rPreview, 5);
+			ofPopStyle();
+		}
 
-	// get clicker position from being edited rectangle
-	if (MODE_Editor.get())
-	{
-		//-
+		// get clicker position from being edited rectangle
+		if (MODE_Editor.get())
+		{
+			//-
 
-		gui_SetLayout();
+			gui_SetLayout();
 
-		//setPosition_GuiExtra(rPreview.x + padx, rPreview.y + pady);
-		//sets all below variables...
+			//setPosition_GuiExtra(rPreview.x + padx, rPreview.y + pady);
+			//sets all below variables...
+		}
 	}
 
 	//-
@@ -1232,9 +1234,9 @@ void ofxColorManager::draw(ofEventArgs & args)
 	//--
 
 
-	if (MODE_Editor)
-	{
-	}
+	//if (MODE_Editor)
+	//{
+	//}
 
 	//--
 
@@ -2491,6 +2493,16 @@ void ofxColorManager::gui_Picker()
 
 			ImGui::Dummy(ImVec2(0.0f, 5));
 
+			if (bColor_HUE) {
+				color_HUE_0 = color_HUE;
+			}
+			if (bColor_SAT) {
+				color_SAT_0 = color_SAT;
+			}
+			if (bColor_BRG) {
+				color_BRG_0 = color_BRG;
+			}
+
 			if (ofxImGui::AddParameter(bColor_HUE))
 			{
 			}
@@ -2510,14 +2522,26 @@ void ofxColorManager::gui_Picker()
 			if (ofxImGui::AddParameter(color_HUE_0))
 			{
 				ofLogNotice(__FUNCTION__) << "ImGui: HUE MOVED !";
+
+				if (bColor_HUE) {
+					color_HUE = color_HUE_0;
+				}
 			}
 			if (ofxImGui::AddParameter(color_SAT_0))
 			{
 				ofLogNotice(__FUNCTION__) << "ImGui: SAT MOVED !";
+
+				if (bColor_SAT) {
+					color_SAT = color_SAT_0;
+				}
 			}
 			if (ofxImGui::AddParameter(color_BRG_0))
 			{
 				ofLogNotice(__FUNCTION__) << "ImGui: BRG MOVED !";
+				
+				if (bColor_BRG) {
+					color_BRG = color_BRG_0;
+				}
 			}
 
 			ImGui::Dummy(ImVec2(0.0f, 5));
@@ -6230,8 +6254,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//
 		//    else if (key == OF_KEY_RETURN)
 		//        ColorBrowser.switch_sorted_Type();
-	}
-}
+				}
+			}
 
 
 //--------------------------------------------------------------

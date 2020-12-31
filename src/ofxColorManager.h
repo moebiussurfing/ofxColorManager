@@ -611,7 +611,7 @@ public:
 
 	ofParameter<bool> TEST_MODE{ "Enable", false };
 	float TEST_Speed = .75;
-	bool Test_LFO_MODE = false;
+	bool Test_LFO_MODE = true;
 	int TEST_maxFrames = 300;//slowest period
 	bool TEST_toBackground = true;
 	float framePrc;
