@@ -17,28 +17,36 @@ void ofxColorManager::startup()
 {
 	bResetCurve = true;
 
-
 	//-
 
 	// edit layout
 
 	guiWidth = 200;
 
-	////A. hardcoded init. comment to use settings file
-	rPreview.enableEdit();
-	//rPreview.disableEdit();
+	ENABLE_keys = true;
 
+	////hardcoded init. comment to use settings file
+	//rPreview.enableEdit();
+	//rPreview.disableEdit();
+	if (MODE_Editor.get())
+	{
+		rPreview.enableEdit();
+		gui_SetLayout();
+	}
+	else
+	{
+		rPreview.disableEdit();
+	}
+	//A. initialize
 	rPreview.setRect(500, 500, 250, 250);
 
 	//B. load settings
 	//rPreview.loadSettings(name_r1, name_r2, false);
-	rPreview.loadSettings();
-	//setPosition_GuiExtra(rPreview.x + padx, rPreview.y + pady);// ?
+	//rPreview.loadSettings();
 
-	//initialize
-	//rPreview.setRect(225, 325, 35, 70);
+	gui_SetLayout();
 
-	//-
+	//----
 
 	// preset manager
 
@@ -252,11 +260,11 @@ void ofxColorManager::setup()
 	// general data
 
 	setBackground_ENABLE(true);
-	color_backGround.set("BG COLOR", ofColor(8));
-	color_backGround_SET.set("SET FROM COLOR", false);
-	backgroundDarkness.set("DARKNESS", 0.5, 0., 1.);
-	color_backGround_Darker.set("DARKER", false);
-	color_background_AutoSet.set("AUTO SET", true);
+	color_backGround.set("BG", ofColor(8));
+	color_backGround_SET.set("Refresh", false);
+	backgroundDarkness.set("Darkerkness", 0.5, 0., 1.);
+	color_backGround_Darker.set("Darker", false);
+	color_background_AutoSet.set("AutoSet", true);
 	params_data.setName("GENERAL");
 	params_data.add(color_backGround);
 	params_data.add(color_backGround_SET);
@@ -340,7 +348,7 @@ void ofxColorManager::setup()
 
 	gradient.reset();
 	//gradient.setupAsTurbo(10); //with 10 samples
-	gradient_hard.set("GRADIENT HARD", false);
+	gradient_hard.set("Hard", false);
 	gradient.setHardMode(gradient_hard);
 	gradient.setDrawVertical(true);
 	gradient.setDrawDirFlip(true);
@@ -386,7 +394,7 @@ void ofxColorManager::setup()
 	SHOW_ColourLovers.set("COLOUR-LOVERS", true);
 	SHOW_Gradient.set("GRADIENT", true);
 	SHOW_Curve.set("CURVE", true);
-	MODE_Editor.set("PREVIEW EDIT", true);
+	MODE_Editor.set("Edit", true);
 
 	SHOW_Presets.set("PRESETS", true);
 	SHOW_BackGround.set("BACKGROUND", true);
@@ -564,13 +572,13 @@ void ofxColorManager::setup()
 
 	//-
 
-	SHOW_ALL_GUI.setName("MAIN GUI");
-	SHOW_GUI_MINI.setName("MINI GUI");
+	SHOW_ALL_GUI.setName("GUI MAIN");
+	SHOW_GUI_MINI.setName("GUI MINI");
 	SHOW_UserPalette.setName("PALETTE");
 	SHOW_Theory.setName("THEORY");
 	SHOW_debugText.setName("SHOW debug");
 	//SHOW_Curve.setName("TEST CURVE");
-	SHOW_Quantizer.setName("PICTURE SCAN");
+	SHOW_Quantizer.setName("PICTURE");
 
 	//------------------------------------------------------
 
@@ -632,7 +640,7 @@ void ofxColorManager::setup()
 	XML_params.add(boxScale);
 	XML_params.add(SHOW_UserPalette);
 
-	//XML_params.add(TEST_MODE);
+	XML_params.add(TEST_MODE);
 
 	//--
 
@@ -699,16 +707,16 @@ void ofxColorManager::update(ofEventArgs & args)
 
 	// TEST CURVE
 
+	int frameBuffer = (int)ofMap(TEST_Speed, 0., 1., TEST_maxFrames, 30);
+	int frameCurrent = ofGetFrameNum() % frameBuffer;//0 to maxFrames
+
 	if (TEST_MODE)
 	{
-		int frameBuffer = (int)ofMap(TEST_Speed, 0., 1., TEST_maxFrames, 30);
-		int frameCurrent = ofGetFrameNum() % frameBuffer;//0 to maxFrames
-
 		if (!bTEST_pause)
 		{
 			framePrc = ofMap(frameCurrent, 0, frameBuffer, 0., 1.);
 			float control;
-			if (!TEST_CycleMODE) control = ofClamp(framePrc, 0., 1.);
+			if (!Test_LFO_MODE) control = ofClamp(framePrc, 0., 1.);
 			else
 			{
 				float mySin = std::sin(PI * framePrc);
@@ -718,25 +726,26 @@ void ofxColorManager::update(ofEventArgs & args)
 			setControl(control);
 		}
 
-		if (frameCurrent == frameBuffer - 1)
-		{
-			bTEST_pause = !bTEST_pause;
+	if (frameCurrent == frameBuffer - 1)
+	{
+		bTEST_pause = !bTEST_pause;
 
-			//round end position to clamp
-			float control;
-			if (!TEST_CycleMODE)
-			{
-				control = 1.;
-				framePrc = 1.;
-			}
-			else
-			{
-				control = 0.;
-				framePrc = 1.;
-			}
-			if (TEST_toBackground) color_backGround.set(getColorAtPercent(control));
-			setControl(control);
+		//round end position to clamp
+		float control;
+		if (!Test_LFO_MODE)
+		{
+			control = 1.;
+			framePrc = 1.;
 		}
+		else
+		{
+			control = 0.;
+			framePrc = 1.;
+		}
+		if (TEST_toBackground) color_backGround.set(getColorAtPercent(control));
+		setControl(control);
+	}
+
 	}
 
 	//--
@@ -970,11 +979,6 @@ void ofxColorManager::draw(ofEventArgs & args)
 	{
 		//-
 
-		int pad = 20;
-		curveTool_y = rPreview.getX() + pad;
-		curveTool_x = rPreview.getY() + pad;
-		guiWidth = rPreview.getWidth() + 2 * pad;
-
 		gui_SetLayout();
 
 		//setPosition_GuiExtra(rPreview.x + padx, rPreview.y + pady);
@@ -1200,7 +1204,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 
 			//TODO
 			//if (SHOW_ColourLovers || SHOW_ColourLovers_searcher)
-			//    ColourLoversHelper.setKeysEnabled(false);
+			//    ColourLoversHelper.setEnableKeys(false);
 		}
 
 		//--
@@ -1254,7 +1258,7 @@ ofxColorManager::~ofxColorManager()
 void ofxColorManager::exit()
 {
 	//palette_save("myPalette");
-	
+
 	//app state
 	ofxSurfingHelpers::saveGroup(XML_params, XML_path);
 
@@ -1308,6 +1312,16 @@ void ofxColorManager::exit()
 //--------------------------------------------------------------
 void ofxColorManager::gui_SetLayout()
 {
+	if (SHOW_Editor)
+	{
+		int pad = 20;
+		curveTool_y = rPreview.getX() + pad;
+		curveTool_x = rPreview.getY() + pad;
+		guiWidth = rPreview.getWidth() + 2 * pad;
+	}
+
+	//--
+
 	// LAYOUT DEFAULT
 	// TODO:: add layout json saver like ofxGuiPanels to live editing!
 
@@ -1638,7 +1652,7 @@ void ofxColorManager::gui_Theory()
 
 		//	//ImGui::ColorEdit4("color 2", col2);
 		//}
-		
+
 		//ImGui::ColorPicker4("MyColor##PickerThy", &c[0], _flags);
 
 		if (ofxImGui::AddParameter(colorTheoryBase))
@@ -2333,7 +2347,13 @@ void ofxColorManager::gui_Picker()
 
 		int _flags = ImGuiColorEditFlags_NoOptions | ImGuiColorEditFlags_NoTooltip;
 
-		ImGui::ColorButton("MyColor##Picker", *(ImVec4 *)&color, _flags, ImVec2(_w, _h));
+		if (true)
+		{
+			ImGui::ColorButton("MyColor##Picker", *(ImVec4 *)&colCurveTest, _flags, ImVec2(_w, _h));
+		}
+		else {
+			ImGui::ColorButton("MyColor##Picker", *(ImVec4 *)&color, _flags, ImVec2(_w, _h));
+		}
 
 		//-
 
@@ -2358,10 +2378,18 @@ void ofxColorManager::gui_Picker()
 				ImGuiColorEditFlags_NoAlpha |
 				ImGuiColorEditFlags_PickerHueWheel;
 
-			if (ImGui::ColorPicker4("MyColor##Wheel", (float *)&color, colorEdiFlags))
+			if (0)
 			{
-				ofLogNotice(__FUNCTION__) << "PICKER 1 MOVED !";
+				ImGui::ColorPicker4("MyColor##Wheel", (float *)&colCurveTest, colorEdiFlags);
+				color_Picked = colCurveTest;
+			}
+			else {
+				ImGui::ColorPicker4("MyColor##Wheel", (float *)&color, colorEdiFlags);
 				color_Picked = color;
+			}
+
+			{
+				//ofLogNotice(__FUNCTION__) << "PICKER 1 MOVED !";
 			}
 
 			//-
@@ -2381,7 +2409,14 @@ void ofxColorManager::gui_Picker()
 			if (ImGui::ColorPicker4("MyColor##5", (float *)&color, colorEdiFlags))
 			{
 				ofLogNotice(__FUNCTION__) << "PICKER 2 MOVED !";
-				color_Picked = color;
+
+				if (0)
+				{
+					color_Picked = colCurveTest;
+				}
+				else {
+					color_Picked = color;
+				}
 			}
 
 			//-
@@ -2616,8 +2651,6 @@ void ofxColorManager::gui_Panels()
 	{
 		ImGui::Dummy(ImVec2(0.0f, 10));
 
-		ofxImGui::AddParameter(SHOW_ALL_GUI);
-		ofxImGui::AddParameter(SHOW_GUI_MINI);
 		ofxImGui::AddParameter(SHOW_UserPalette);
 		ofxImGui::AddParameter(SHOW_Picker);
 		ofxImGui::AddParameter(SHOW_BackGround);
@@ -2628,8 +2661,10 @@ void ofxColorManager::gui_Panels()
 		ofxImGui::AddParameter(SHOW_Quantizer);
 		ofxImGui::AddParameter(SHOW_Curve);
 		ofxImGui::AddParameter(MODE_Editor);
-		ofxImGui::AddParameter(SHOW_GuiInternal);
 		ofxImGui::AddParameter(SHOW_Presets);
+		ofxImGui::AddParameter(SHOW_ALL_GUI);
+		ofxImGui::AddParameter(SHOW_GUI_MINI);
+		ofxImGui::AddParameter(SHOW_GuiInternal);
 
 		//ofxSurfingHelpers::AddBigToggle(SHOW_Picker, -1);
 		//ofxSurfingHelpers::AddBigToggle(SHOW_UserPalette, -1);
@@ -2895,6 +2930,12 @@ void ofxColorManager::gui_Curve()
 			//ImGui::PushItemWidth(guiWidth * 0.5);
 
 			ofxImGui::AddParameter(MODE_Editor);
+			if (ImGui::Button("Reset Layout")) {
+				MODE_Editor = true;
+				rPreview.setRect(500, 500, 250, 250);
+				gui_SetLayout();
+			}
+
 			ofxImGui::AddParameter(gradient_hard);
 			if (ofxImGui::AddParameter(curve_pos))
 			{
@@ -2903,6 +2944,7 @@ void ofxColorManager::gui_Curve()
 			ofxImGui::AddParameter(curve_pos_out);
 			ofxImGui::AddParameter(bResetCurve);
 			//ofxImGui::AddParameter(curveMod);
+
 
 			//ImGui::PopItemWidth();
 
@@ -2918,12 +2960,16 @@ void ofxColorManager::gui_Curve()
 		{
 			//ImGui::PushItemWidth(guiWidth * 0.5);
 
-			ImGui::Checkbox("ENABLE", &TEST_MODE); ImGui::SameLine();
-			ImGui::Checkbox("LFO", &TEST_CycleMODE);
-			ImGui::SliderFloat("speed", &TEST_Speed, 0.0f, 1.0f);
+			ofxImGui::AddParameter(TEST_MODE);
+			//ImGui::Checkbox("Enable", &TEST_MODE); 
+			if (TEST_MODE) {
+				ImGui::SameLine();
+				ImGui::Checkbox("LFO", &Test_LFO_MODE);
+			}
+			ImGui::SliderFloat("Speed", &TEST_Speed, 0.0f, 1.0f);
 			//ImGui::Checkbox("ENABLE DEMO", &TEST_DEMO);
 			ImGui::Checkbox("> Background", &TEST_toBackground);
-			//ofxImGui::AddParameter(this->TEST_DEMO);
+			//ofxImGui::AddParameter(TEST_DEMO);
 
 			//ImGui::PopItemWidth();
 
@@ -3426,8 +3472,8 @@ void ofxColorManager::curveTool_setup()
 	//TODO: TEMP
 	curvesTool.load("settings/curves.yml"); //needed because it fills polyline
 
-	curve_pos.set("INPUT", 0., 0., 1.);
-	curve_pos_out.set("OUTPUT", 0., 0., 1.);
+	curve_pos.set("in", 0., 0., 1.);
+	curve_pos_out.set("out", 0., 0., 1.);
 	bResetCurve.set("RESET", false);
 	SHOW_Curve.set("CURVE", false);
 	params_curve.add(curve_pos);
@@ -5101,8 +5147,8 @@ void ofxColorManager::Changed_ColorUserPalette(ofAbstractParameter &e)
 {
 	std::string name = e.getName();
 
-	//if (name != "INPUT" &&
-	//	name != "OUTPUT")
+	//if (name != "in" &&
+	//	name != "out")
 	{
 		ofLogNotice(__FUNCTION__) << name << " : " << e;
 	}
@@ -5121,8 +5167,8 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 {
 	std::string name = e.getName();
 
-	//if (name != "INPUT" &&
-	//	name != "OUTPUT")
+	//if (name != "in" &&
+	//	name != "out")
 	{
 		ofLogNotice(__FUNCTION__) << name << " : " << e;
 	}
@@ -5181,11 +5227,11 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	std::string name = e.getName();
 
 	// TODO: should reduce callbacks in output..
-	//    if (name != "INPUT" && name != "OUTPUT" &&
+	//    if (name != "in" && name != "out" &&
 	//            name!="H" && name!="S" && name!="B")
 
-	if (name != "INPUT" &&
-		name != "OUTPUT")
+	if (name != "in" &&
+		name != "out")
 	{
 		ofLogNotice(__FUNCTION__) << name << " : " << e;
 	}
@@ -5195,9 +5241,11 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	if (name == MODE_Editor.getName())
 	{
 		ofLogNotice(__FUNCTION__) << name << (MODE_Editor ? " TRUE" : " FALSE");
+
 		if (MODE_Editor.get())
 		{
 			rPreview.enableEdit();
+			gui_SetLayout();
 		}
 		else
 		{
@@ -5217,11 +5265,11 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		////TODO
 		//if (ENABLE_keys)
 		//{
-		//    ColourLoversHelper.setKeysEnabled(true);
+		ColourLoversHelper.setEnableKeys(SHOW_ColourLovers);
 		//}
-	//}
-	//else if (name == "SHOW COLOUR LOVERS SEARCH")
-	//{
+
+		//-
+
 		ColourLoversHelper.setVisibleSearcher(SHOW_ColourLovers_searcher);
 		if (SHOW_ColourLovers_searcher && !SHOW_ColourLovers)
 			SHOW_ColourLovers = true;
@@ -5231,7 +5279,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		////TODO
 		//if (ENABLE_keys)
 		//{
-		//    ColourLoversHelper.setKeysEnabled(true);
+		//    ColourLoversHelper.setEnableKeys(true);
 		//}
 	}
 #endif
@@ -5259,7 +5307,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			btns_palette[i]->setVisible(SHOW_UserPalette);
 		}
 	}
-	else if (name == "PICTURE SCAN")
+	else if (name == "PICTURE")
 	{
 		// WORKFLOW:
 		if (bPaletteEdit && SHOW_Quantizer) bPaletteEdit = false;
@@ -5502,7 +5550,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 	// CURVE
 
-	//    else if (name == "INPUT") {
+	//    else if (name == "in") {
 	//    }
 
 	else if (name == "RESET")
@@ -5519,7 +5567,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			curveMod_Slider.setPercent(curveMod);
 		}
 	}
-	else if (name == "GRADIENT HARD")
+	else if (name == "Hard")
 	{
 		gradient.setHardMode(gradient_hard);
 	}
@@ -5528,7 +5576,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 	// BACKGROUND
 
-	else if (name == "SET FROM COLOR")
+	else if (name == "Refresh")
 	{
 		if (color_backGround_SET)
 		{
@@ -5536,11 +5584,11 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			color_backGround.set(ofColor(color_Picked.get()));
 		}
 	}
-	else if (name == "AUTO SET")
+	else if (name == "AutoSet")
 	{
 
 	}
-	else if (name == "BG COLOR")
+	else if (name == "BG")
 	{
 		//        if (color_backGround.get().getBrightness()!=backgroundDarkness_PRE)
 		//            backgroundDarkness = color_backGround.get().getBrightness();
@@ -5548,7 +5596,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		////        if (backgroundDarkness_PRE!=backgroundDarkness)
 		////            backgroundDarkness = (int)darkness;
 	}
-	else if (name == "DARKNESS")
+	else if (name == "Darkerkness")
 	{
 		//TODO: must improve
 		//palettes_update();
@@ -6093,7 +6141,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 			// browse presets
 #ifdef USE_COLOR_LOVERS
-			else if (key == OF_KEY_DOWN)
+			else if (key == OF_KEY_DOWN || key == '+')
 			{
 				ColourLoversHelper.nextPalette();
 
@@ -6104,7 +6152,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				//    saveColors();
 				//}
 			}
-			else if (key == OF_KEY_UP)
+			else if (key == OF_KEY_UP || key == '-')
 			{
 				ColourLoversHelper.prevPalette();
 
@@ -6183,8 +6231,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//
 		//    else if (key == OF_KEY_RETURN)
 		//        ColorBrowser.switch_sorted_Type();
-			}
-		}
+	}
+}
 
 
 //--------------------------------------------------------------

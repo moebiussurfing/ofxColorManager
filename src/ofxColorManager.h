@@ -215,7 +215,7 @@ public:
 	ofxGuiPanelsLayout panels;
 #endif
 	ofParameterGroup p_TOGGLES;
-	ofParameter<bool> SHOW_GuiInternal{ "Gui Internal", false };
+	ofParameter<bool> SHOW_GuiInternal{ "GUI INTERNAL", false };
 	ofParameter<bool> SHOW_ImGui{ "ImGui", true };
 
 	//--
@@ -609,9 +609,9 @@ public:
 
 	// TEST CURVE
 
-	bool TEST_MODE = false;
+	ofParameter<bool> TEST_MODE{ "Enable", false };
 	float TEST_Speed = .75;
-	bool TEST_CycleMODE = false;
+	bool Test_LFO_MODE = false;
 	int TEST_maxFrames = 300;//slowest period
 	bool TEST_toBackground = true;
 	float framePrc;

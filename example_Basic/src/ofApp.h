@@ -20,7 +20,7 @@ public:
 
     ofxColorManager colorManager;
 
-    // received colors
+    // local palette and color (target pointers)
     vector<ofColor> palette;
     ofColor color;
 
