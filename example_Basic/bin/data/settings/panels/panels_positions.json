@@ -60,7 +60,7 @@
         "y": 0
     },
     {
-        "panel": "CURVE",
+        "panel": "SHOW CURVE",
         "x": 0,
         "y": 0
     },
@@ -80,12 +80,12 @@
         "y": 0
     },
     {
-        "panel": "TEST CURVE",
+        "panel": "SHOW CURVE",
         "x": 0,
         "y": 0
     },
     {
-        "panel": "PICTURE CAPTURE",
+        "panel": "PICTURE SCAN",
         "x": 0,
         "y": 0
     },

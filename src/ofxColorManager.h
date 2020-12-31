@@ -16,6 +16,9 @@
 #include "ofxColorPalette.h"
 #include "ofxColorsBrowser.h"
 
+//#include "ofxScaleDragRect.h"
+#include "ofxInteractiveRect.h" // engine to move the gui. TODO: add resize by mouse too.
+
 #ifdef USE_COLOR_LOVERS
 #include "ofxColourLoversHelper.h"
 #endif
@@ -68,6 +71,10 @@ using namespace ofxColorTheory;
 class ofxColorManager : public ofBaseApp
 {
 	//-
+private:
+	ofxInteractiveRect rPreview = { "_Curve_Gui" };
+	ofParameter<bool> MODE_Editor;
+	ofParameter<bool> SHOW_Editor;
 
 	//ofxColorMorph
 public:
@@ -284,7 +291,7 @@ public:
 	ofParameter<bool> SHOW_ALL_GUI;
 	ofParameter<bool> SHOW_GUI_MINI;
 	ofParameter<bool> SHOW_debugText;
-	ofParameter<bool> SHOW_TEST_Curve;
+	//ofParameter<bool> SHOW_Curve;
 	ofParameter<bool> SHOW_Panels;
 	ofParameter<bool> SHOW_Presets;
 	ofParameter<bool> SHOW_BackGround;
