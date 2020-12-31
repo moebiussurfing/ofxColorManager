@@ -64,7 +64,7 @@ void PresetPalette::preset_load(string p)
 
         //        curvesTool.load(preset_path + presetData.curveName + ".yml");
         //
-        //        if (color_backGround_SETAUTO)
+        //        if (color_background_AutoSet)
         //        {
         //            color_backGround = presetData.background;
         //        }

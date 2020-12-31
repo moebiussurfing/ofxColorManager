@@ -4,7 +4,7 @@
 
 //--
 
-#define INCL_LAYOUT
+//#define INCL_LAYOUT
 #define USE_RECTANGLE_INTERFACES
 #define USE_COLOR_LOVERS
 #define USE_IMAGE_QUANTIZER
@@ -75,6 +75,8 @@ private:
 	ofxInteractiveRect rPreview = { "_Curve_Gui" };
 	ofParameter<bool> MODE_Editor;
 	ofParameter<bool> SHOW_Editor;
+
+	ofColor colCurveTest;
 
 	//ofxColorMorph
 public:
@@ -425,7 +427,7 @@ public:
 	void gui_Panels();
 	void gui_Quantizer();
 
-	void gui_Layout();
+	void gui_SetLayout();
 	//void gui_imGui_Theme();
 
 	//--
@@ -434,12 +436,12 @@ public:
 
 	ofParameter<ofFloatColor> color_backGround;//main color
 	ofParameter<bool> color_backGround_SET;
-	ofParameter<bool> color_backGround_SETAUTO;
+	ofParameter<bool> color_background_AutoSet;
 	ofParameter<bool> color_backGround_Darker;
 	ofParameter<float> backgroundDarkness;
 	//float backgroundDarkness_PRE;
 
-	ofParameter<bool> backgroundENABLE{ "DRAW BG",false };
+	ofParameter<bool> background_Draw_ENABLE{ "DRAW BG",false };
 
 	void setBackground_ENABLE(bool b);
 
