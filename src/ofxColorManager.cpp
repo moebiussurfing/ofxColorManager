@@ -577,7 +577,6 @@ void ofxColorManager::setup()
 	SHOW_UserPalette.setName("PALETTE");
 	SHOW_Theory.setName("THEORY");
 	SHOW_debugText.setName("SHOW debug");
-	//SHOW_Curve.setName("TEST CURVE");
 	SHOW_Quantizer.setName("PICTURE");
 
 	//------------------------------------------------------
@@ -997,7 +996,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 
 	////TODO: BUG: startup..
 	////if (ENABLE_keys)
-	//if (this->mouseOverGui)
+	//if (mouseOverGui)
 	//{
 	//    ofClear(ofColor::red);
 	//}
@@ -1145,14 +1144,14 @@ void ofxColorManager::draw(ofEventArgs & args)
 	{
 		bool ENABLE_keys_PRE = ENABLE_keys;
 
-		if (mouseOverGui)
-		{
-			ENABLE_keys = false;
-		}
-		else
-		{
-			ENABLE_keys = true;
-		}
+		//if (mouseOverGui)
+		//{
+		//	ENABLE_keys = false;
+		//}
+		//else
+		//{
+		//	ENABLE_keys = true;
+		//}
 
 		mouseOverGui = false;
 		if (guiVisible)
@@ -2660,7 +2659,7 @@ void ofxColorManager::gui_Panels()
 		ofxImGui::AddParameter(SHOW_ColourLovers);
 		ofxImGui::AddParameter(SHOW_Quantizer);
 		ofxImGui::AddParameter(SHOW_Curve);
-		ofxImGui::AddParameter(MODE_Editor);
+		//ofxImGui::AddParameter(MODE_Editor);
 		ofxImGui::AddParameter(SHOW_Presets);
 		ofxImGui::AddParameter(SHOW_ALL_GUI);
 		ofxImGui::AddParameter(SHOW_GUI_MINI);
