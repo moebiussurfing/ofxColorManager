@@ -185,6 +185,8 @@ public:
 	ofParameter<bool> bFlipUserPalette;
 	//ofParameter<bool> bUserPaletteVertical;
 
+	ofParameter<float> rangeScale;
+
 	//-
 
 	// ColorWheelSchemes
@@ -535,6 +537,8 @@ public:
 
 	void Changed_ColorPicked(ofFloatColor &color);
 	void Changed_ColorClicked(ofFloatColor &color);
+
+	void reBuildGradientPalette();
 
 	// TEST
 	void refresh_Picker_Touched();
