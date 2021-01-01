@@ -76,7 +76,11 @@ class ofxColorManager : public ofBaseApp
 private:
 	ofEventListener listener_LoverName;
 
-	//-
+	//--
+
+	bool ENABLE_keys_PRE;
+	
+	//--
 
 private:
 	ofxInteractiveRect rPreview = { "_Curve_Gui" };
@@ -451,7 +455,10 @@ public:
 	ofxImGui::Gui gui;
 
 	bool guiVisible;
+
 	bool mouseOverGui;
+	bool mouseOverGui_PRE;
+
 	float widgetFactor = 0.9;
 	ofxImGui::Settings mainSettings = ofxImGui::Settings();
 
@@ -557,11 +564,11 @@ public:
 	int palSize = (NUM_COLORS_PANTONE);
 	int rowSizePal = 7;//7 colors per row Pantone lib
 	bool doublePage;
-	
+
 	//rows per page
 	//int numPantoneLines = 10;
-	ofParameter<int> numPantoneLines{ "Rows Amnt" , 10, 5, 10 * 5};
-	
+	ofParameter<int> numPantoneLines{ "Rows Amnt" , 10, 5, 10 * 5 };
+
 	int numColorsPage = numPantoneLines * rowSizePal;//70
 	int totalNumColors = NUM_COLORS_PANTONE;//pantone
 	int maxPages = totalNumColors / numColorsPage - 1;

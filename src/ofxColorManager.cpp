@@ -148,7 +148,6 @@ void ofxColorManager::setup()
 	//-
 
 	////cosine gradient
-
 	////mCosineGradient.init(100, 25);
 	//mCosineGradient.init(ofGetWidth(), ofGetHeight());
 	////mGui.setup();
@@ -986,6 +985,12 @@ void ofxColorManager::update(ofEventArgs & args)
 //--------------------------------------------------------------
 void ofxColorManager::draw_Curve()
 {
+	float out = ofMap(curvesTool.getAtPercent(1.0 - curve_pos), 0, cAmt - 1, 1, 0);
+	ofColor c;
+	colCurveTest = gradient.getColorAtPercent(out);
+
+	//-
+
 	if (SHOW_Curve)
 	{
 		// 1. draggable bg box
@@ -1010,10 +1015,6 @@ void ofxColorManager::draw_Curve()
 		//-
 
 		// 2. current box color at input curve point (right positioned)
-
-		float out = ofMap(curvesTool.getAtPercent(1.0 - curve_pos), 0, cAmt - 1, 1, 0);
-		ofColor c;
-		colCurveTest = gradient.getColorAtPercent(out);
 		c.set(colCurveTest);
 
 		//-
@@ -1206,66 +1207,38 @@ void ofxColorManager::draw(ofEventArgs & args)
 
 	if (SHOW_ImGui)
 	{
-		//--
-
-		bool ENABLE_keys_PRE = ENABLE_keys;
-
-		//--
-
-		//if (mouseOverGui)
-		//{
-		//	ENABLE_keys = false;
-		//}
-		//else
-		//{
-		//	ENABLE_keys = true;
-		//}
-
-		mouseOverGui = false;
 		if (guiVisible)
 		{
 			mouseOverGui = gui_Draw();
+			mouseOverGui = ofxImGui::IsMouseOverGui();
 
-			////TODO
-			//gui_Draw();
-			//mouseOverGui = ofxImGui::IsMouseOverGui();
+			if (mouseOverGui != mouseOverGui_PRE)
+			{
+				mouseOverGui_PRE = mouseOverGui;
+
+				ofLogNotice(__FUNCTION__) << "mouseOverGui: " << (mouseOverGui ? " TRUE" : " FALSE");
+
+				if (mouseOverGui)
+				{
+					ENABLE_keys = false;
+				}
+				else
+				{
+					ENABLE_keys = true;
+				}
+			}
 		}
-		//disable things to avoid move by mouse when editing gui
 
-		//-
-
-		//// TODO: BUG: startup disabled keys..
-		//if (ofGetFrameNum() == 60)
-		//{
-		//    ENABLE_keys = true;
-		//}
-		//else
-		//{
-		//    if (this->mouseOverGui)
-		//    {
-		//        ENABLE_keys = false;
-		//    }
-		//    else
-		//    {
-		//        ENABLE_keys = true;
-		//    }
-		//}
-
-		//-
-
-		////TODO: 
-		//disables keys when using colour lovers
-		//if (SHOW_ColourLovers || SHOW_ColourLovers_searcher)
-		//{
-		//    ENABLE_keys = false;
-		//}
-
-		//-
+		//--
 
 		//TODO: BUG: 
 		//solve startup bug that disables keys
 		if (ENABLE_keys != ENABLE_keys_PRE)
 		{
+			ENABLE_keys_PRE = ENABLE_keys;
+
+			//-
+
 #ifdef USE_IMAGE_QUANTIZER
 			if (SHOW_Quantizer && !ENABLE_keys)
 			{
@@ -1276,11 +1249,21 @@ void ofxColorManager::draw(ofEventArgs & args)
 				colorQuantizer.setActive(true);
 			}
 #endif
+			//-
 
 			//TODO
 			//if (SHOW_ColourLovers || SHOW_ColourLovers_searcher)
 			//    colourLoversHelper.setEnableKeys(false);
 		}
+
+		//--
+
+		////TODO: 
+		//disables keys when using colour lovers
+		//if (SHOW_ColourLovers || SHOW_ColourLovers_searcher)
+		//{
+		//    ENABLE_keys = false;
+		//}
 
 		//--
 
@@ -2744,7 +2727,7 @@ void ofxColorManager::gui_Picker()
 
 		// user palette
 
-		//if (ofxImGui::BeginTree("USER PALETTE", mainSettings))
+		//if (ofxImGui::BeginTree("PALETTE", mainSettings))
 		if (ImGui::CollapsingHeader("PALETTE"))
 		{
 			int pad = _w * 0.1;
@@ -3635,9 +3618,10 @@ bool ofxColorManager::gui_Draw()
 
 		if (SHOW_BackGround) gui_Background();
 
+		//TODO: move to update
+		draw_Curve();
 		if (SHOW_Curve) {
 			gui_Curve();
-			draw_Curve();
 		}
 
 		if (SHOW_Panels) gui_Panels();

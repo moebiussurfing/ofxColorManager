@@ -84,7 +84,6 @@ void DEMO_palette::update() {
 
 		if (palette != nullptr) {
 			this->colors.push_back(color);
-
 		}
 		else {
 			this->colors.push_back(ofColor(ofRandom(255)));
