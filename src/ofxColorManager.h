@@ -16,7 +16,6 @@
 #include "ofxColorPalette.h"
 #include "ofxColorsBrowser.h"
 
-//#include "ofxScaleDragRect.h"
 #include "ofxInteractiveRect.h" // engine to move the gui. TODO: add resize by mouse too.
 
 #ifdef USE_COLOR_LOVERS
@@ -75,12 +74,23 @@ private:
 	ofxInteractiveRect rPreview = { "_Curve_Gui" };
 	ofParameter<bool> MODE_Editor;
 	ofParameter<bool> SHOW_Editor;
-
 	ofColor colCurveTest;
+	ofParameter<glm::vec2> pos_CurveEditor;
+
+public:
+	//font
+	std::string messageInfo;
+	ofTrueTypeFont fontSmall;
+	ofTrueTypeFont fontMedium;
+	ofTrueTypeFont fontBig;
+
+	//-
 
 	//ofxColorMorph
+
 public:
 	void generateRange(ofColor col1, ofColor col2);
+
 private:
 	ofParameter<ofColor> c1_Rng;
 	ofParameter<ofColor> c2_Rng;
@@ -237,11 +247,14 @@ public:
 
 	//-
 
+	std::string theory_Name = "";
+	std::string range_Name = "";
+
 	// COLOUR LOVERS
 
 	void colourLovers_drawPreview();
 	#ifdef USE_COLOR_LOVERS
-	ofxColourLoversHelper ColourLoversHelper;
+	ofxColourLoversHelper colourLoversHelper;
 #endif
 	std::string myPalette_Name = "";
 	ofColor myColor;
@@ -268,6 +281,7 @@ public:
 
 	void update(ofEventArgs & args);
 	void draw(ofEventArgs & args);
+	void draw_Curve();
 
 	void exit();
 	void windowResized(int w, int h);
@@ -319,7 +333,7 @@ public:
 	void setToggleVisible();
 	void setVisible_GUI_MINI(bool b);
 	void setVisible_debugText(bool b);
-	void palette_drawMINI();
+	void draw_Mini();
 	void gradient_drawPreview(glm::vec2 pos, bool horizontal);
 	void disableListeners();
 	void enableListeners();
@@ -582,7 +596,7 @@ public:
 
 	ofxColorGradient<ofColor> gradient;//unmodified gradient with curveTool
 	ofParameter<bool> gradient_hard;//stepped
-	void gradient_draw();
+	void draw_Gradient();
 
 	//-
 
@@ -590,20 +604,20 @@ public:
 
 	ofxCurvesTool curvesTool;
 
-	void curveTool_setup();
-	void curveTool_update();
-	void curveTool_draw();
+	void setup_CurveTool();
+	void update_CurveTool();
+	void draw_CurveTools();
 
-	int curveTool_amount = 256;
+	int cAmt = 256;
 	std::string curveTool_name = "curves.yml";
 	ofImage curve_img_gradient;
-	ofxSimpleSlider curve_pos_slider;
 	ofParameter<float> curve_pos;
 	ofParameter<float> curve_pos_out;
 	ofParameter<bool> bResetCurve;
 	ofParameter<float> curveMod;
-	ofxSimpleSlider curveMod_Slider;
-	int curve_pos_LUT = 0;
+	ofxSimpleSlider curveSlider_Tweak;
+	ofxSimpleSlider curveSlider_Test;
+	int curve_Index = 0;
 
 	//-
 
@@ -615,7 +629,7 @@ public:
 	int TEST_maxFrames = 300;//slowest period
 	bool TEST_toBackground = true;
 	float framePrc;
-	ofParameter<bool> TEST_DEMO{ "ENABLE DEMO", false };
+	ofParameter<bool> TEST_DEMO{ "DEMO", false };
 
 	////TODO: make pauses between any test trig..
 	bool bTEST_pause = false;
@@ -662,12 +676,12 @@ private:
 
 	// LAYOUT
 
-	int guiWidth;
+	int w_Gui;
 	int gui_x, gui_y, gui_w, gui_h;
 	int gui2_x, gui2_y, gui2_w, gui2_h;
 	int gui3_x, gui3_y, gui3_w, gui3_h;
 	int gui4_x, gui4_y, gui4_w, gui4_h;
-	int box_user_size;//user palette colors
+	int box_size_user;//user palette colors
 	int box_size;//palettes colors
 	int pad; //global mini pad
 	int c_grad_x, c_grad_y, c_grad_w, c_grad_h;

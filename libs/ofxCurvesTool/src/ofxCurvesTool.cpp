@@ -40,11 +40,11 @@ ofVec3f worldToScreen(ofVec3f world) {
 //    
 //}
 
-void ofxCurvesTool::draw(int x, int y, float index) {
-    draw(x,y,int(index));
+void ofxCurvesTool::draw(int x, int y, float index, int _alpha) {
+    draw(x,y,int(index), _alpha);
 }
 
-void ofxCurvesTool::draw(int x, int y, int index) {
+void ofxCurvesTool::draw(int x, int y, int index, int _alpha) {
 	drawn = true; // we've made a call to draw
 	
 	if (keepFocus){
@@ -65,7 +65,7 @@ void ofxCurvesTool::draw(int x, int y, int index) {
 	ofScale(1, -1);
 	
 	
-	ofSetColor(ofColor::black);
+	ofSetColor(ofColor(ofColor::black, _alpha));
 	ofFill();
 	ofDrawRectangle(0, 0, n, n);
     

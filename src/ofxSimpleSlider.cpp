@@ -18,6 +18,9 @@ ofxSimpleSlider::~ofxSimpleSlider() {
 
 //-----------------------------------------------------------------------------------------------------------------------
 void ofxSimpleSlider::setup(float inx, float iny, float inw, float inh, float loVal, float hiVal, float initialValue, bool bVert, bool bDrawNum) {
+	bWasSetup = false; 
+	clear();
+
 	x = inx;
 	y = iny;
 	width = inw;
