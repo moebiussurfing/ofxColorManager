@@ -660,6 +660,12 @@ void ofxColorManager::setup()
 	XML_params.add(color_SAT_Power);
 	XML_params.add(color_BRG_Power);
 
+	XML_params.add(pantoneMaxColumns);
+	XML_params.add(numPantoneLines);
+	XML_params.add(bPantoneCards);
+	XML_params.add(colBoxSize);
+	XML_params.add(pantoneScale);
+
 	//--
 
 	ofxSurfingHelpers::loadGroup(XML_params, XML_path);
@@ -891,6 +897,8 @@ void ofxColorManager::update(ofEventArgs & args)
 
 		//-
 
+#ifdef USE_RECTANGLE_INTERFACES
+
 		// 1. hide all borders
 		// from OFX-COLOR-PALETTE & OFX-COLOUR-THEORY
 		for (int p = 0; p < btns_plt_Selector.size() && p < NUM_TOTAL_PALETTES; p++)
@@ -905,12 +913,16 @@ void ofxColorManager::update(ofEventArgs & args)
 		{
 			btns_plt_Selector[SELECTED_palette_LAST]->setBorder(true);
 		}
+#endif
 
 		//-
 
 		// presets 
 		if (!MODE_newPreset) MODE_newPreset = true;
+
+#ifdef USE_RECTANGLE_INTERFACES
 		textInput_New = btns_plt_Selector[SELECTED_palette_LAST]->getName();
+#endif
 
 		// DEMO
 		if (TEST_DEMO) myDEMO_palette.reStart();
@@ -1531,21 +1543,26 @@ void ofxColorManager::refresh_Gui_Layout()
 
 #pragma mark - INTERFACE
 
-#ifdef USE_RECTANGLE_INTERFACES
 
 //--------------------------------------------------------------
 void ofxColorManager::interface_setup()
 {
+#ifdef USE_RECTANGLE_INTERFACES
 	scene = new Node();
 	scene->setSize(ofGetWidth(), ofGetHeight());
 	scene->setName("Scene");
 
 	TouchManager::one().setup(scene);
+
+	//TODO:
+	scene->deactivate();
+#endif
 }
 
 //--------------------------------------------------------------
 void ofxColorManager::palette_rearrenge()
 {
+#ifdef USE_RECTANGLE_INTERFACES
 	ofLogVerbose(__FUNCTION__) << "size: " << btns_palette.size();
 
 	// re-arrenge all resized boxes from interface to fill all bar
@@ -1579,11 +1596,15 @@ void ofxColorManager::palette_rearrenge()
 		a->setPosition(x, y);
 		a->setSize(w, h);
 	}
+#endif
 }
+
+#ifdef USE_RECTANGLE_INTERFACES
 
 //--------------------------------------------------------------
 void ofxColorManager::palette_addColor_toInterface(ofColor c)
 {
+
 	// vertical palette with resize boxes size to fit gradient bar height
 	// add the new color (current color_clicked) to the user palette
 	int i = btns_palette.size();
@@ -1897,8 +1918,36 @@ void ofxColorManager::gui_Theory()
 
 		for (int i = 0; i < 7; i++)
 		{
+#ifndef USE_RECTANGLE_INTERFACES
 			size_t _total;
+			switch (i)
+			{
+			case 0:
+				_total = complement.size();
+				break;
+			case 1:
+				_total = complementBrightness.size();
+				break;
+			case 2:
+				_total = monochrome.size();
+				break;
+			case 3:
+				_total = monochromeBrightness.size();
+				break;
+			case 4:
+				_total = analogue.size();
+				break;
+			case 5:
+				_total = triad.size();
+				break;
+			case 6:
+				_total = complementTriad.size();
+				break;
+			}
+#endif
 
+#ifdef USE_RECTANGLE_INTERFACES
+			size_t _total;
 			switch (i)
 			{
 			case 0:
@@ -1923,6 +1972,7 @@ void ofxColorManager::gui_Theory()
 				_total = btns_plt_ComplTriad.size();
 				break;
 			}
+#endif
 
 			//-
 
@@ -1967,31 +2017,38 @@ void ofxColorManager::gui_Theory()
 				switch (i)
 				{
 				case 0:
-					c = complement[n];
+					if (n < complement.size())
+						c = complement[n];
 					_name = "Complement";
 					break;
 				case 1:
-					c = complementBrightness[n];
+					if (n < complementBrightness.size())
+						c = complementBrightness[n];
 					_name = "Complement Brigthness";
 					break;
 				case 2:
-					c = monochrome[n];
+					if (n < monochrome.size())
+						c = monochrome[n];
 					_name = "Monochrome";
 					break;
 				case 3:
-					c = monochromeBrightness[n];
+					if (n < monochromeBrightness.size())
+						c = monochromeBrightness[n];
 					_name = "Monochrome Brightness";
 					break;
 				case 4:
-					c = analogue[n];
+					if (n < analogue.size())
+						c = analogue[n];
 					_name = "Analogue";
 					break;
 				case 5:
-					c = triad[n];
+					if (n < triad.size())
+						c = triad[n];
 					_name = "Triad";
 					break;
 				case 6:
-					c = complementTriad[n];
+					if (n < complementTriad.size())
+						c = complementTriad[n];
 					_name = "Complement Triad";
 					break;
 				}
@@ -2095,39 +2152,13 @@ void ofxColorManager::gui_Palette()
 					}
 				}
 
-				////if (!bUserPaletteVertical) 
-				//{
-				//	//split in rows
-				//	if (boxRowsUser != 0)
-				//	{
-				//		if ((n % boxRowsUser) != 0) 
-				//		{
-				//			if (n != 0)
-				//			{
-				//				ImGui::SameLine();
-				//			}
-				//		}
-				//	}
-				//}
-				//else
-				//{
-				//	//split in rows
-				//	if (boxRowsUser != 0) {
-				//		if ((n % boxRowsUser) != 0)
-				//			if (n != 0)
-				//			{
-				//				ImGui::SameLine();
-				//			}
-				//	}
-				//}
-
 				//-
 
 				float _spc = 1.0 * ImGui::GetStyle().ItemInnerSpacing.x;
 				int _w = ImGui::GetWindowContentRegionWidth() - _spc;
-				float _w50 = (_w * 0.5) - (_spc * 0.5);
-				float _w100 = _w - _spc;
-				float _h = BUTTON_HEIGHT;
+				//float _w50 = (_w * 0.5) - (_spc * 0.5);
+				//float _w100 = _w - _spc;
+				//float _h = BUTTON_BIG_HEIGHT;
 
 				//-
 
@@ -2240,25 +2271,56 @@ void ofxColorManager::gui_Library()
 		//if (ImGui::CollapsingHeader("PALETTE LIBRARY"))
 		{
 			// get clicked color
-			static int colBoxSize;
+			//static int colBoxSize;
 
-			int _w = ImGui::GetWindowContentRegionWidth();
+			float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
+
+			float _w = ImGui::GetWindowContentRegionWidth() - 25;
+			//float _w = ImGui::GetWindowContentRegionWidth() - _spc - 50;
+
+			//int _countColumns = _w / (colBoxSize + _spc);
 
 			// layout by pages groups
 			doublePage = true;
-
-			//numLines = doublePage ? 20 : 10;
-
-			//numLines = 30;
+			//numPantoneLines = doublePage ? 20 : 10;
+			//numPantoneLines = 25;
+			//numPantoneLines = 10;
 			//colBoxSize = 25;
 
-			numLines = 25;
-			colBoxSize = 25;
+			//int pantoneMaxColmuns = MAX(1, _w / (colBoxSize + _spc));
 
-			//numLines = 30;
-			//colBoxSize = 22;
+			int rCols;
+			if (bPantoneCards) {
+				rCols = rowSizePal;
+			}
+			else {
+				rCols = pantoneMaxColumns;
+			}
 
-			//-
+			//--
+
+			//// layout by pages groups
+			//doublePage = true;
+			////numPantoneLines = doublePage ? 20 : 10;
+			//numPantoneLines = 20;
+			////numPantoneLines = 30;
+
+			// a. pantone cards: 7 colors / row
+			//numColorsPage = numPantoneLines * rowSizePal;
+
+			// b. responsive
+			numColorsPage = numPantoneLines * pantoneMaxColumns.get();
+
+			maxPages = totalNumColors / (numColorsPage - 1);
+			paletteLibPage.setMax(maxPages);
+			//paletteLibPage.setMax(maxPages - 1);
+
+			int startColorInPal = paletteLibPage * numColorsPage;
+			int endColorInPal = startColorInPal + numColorsPage;
+			//paletteLibPage = paletteLibPage_param.get();
+
+
+			//--
 
 			// get color from outside color picked
 
@@ -2277,7 +2339,7 @@ void ofxColorManager::gui_Library()
 
 			static ImVec4 saved_palette[NUM_COLORS_PANTONE];//same than Pantone palette
 
-			if (!saved_palette_inited)
+			if (!saved_palette_inited) {
 				for (int n = 0; n < IM_ARRAYSIZE(saved_palette); n++)
 				{
 					ofFloatColor c = ofColor(ColorBrowser_palette[n]);
@@ -2286,44 +2348,8 @@ void ofxColorManager::gui_Library()
 					saved_palette[n].z = c.b;
 					saved_palette[n].w = 1.0f;//alpha
 				}
+			}
 			saved_palette_inited = true;
-
-			//-
-
-			//// layout by pages groups
-			//doublePage = true;
-
-			////numLines = doublePage ? 20 : 10;
-			//numLines = 20;
-			////numLines = 30;
-
-			numColorsPage = numLines * rowSizePal;
-			maxPages = totalNumColors / (numColorsPage - 1);
-			paletteLibPage.setMax(maxPages - 1);
-
-			int startColorInPal = paletteLibPage * numColorsPage;
-			int endColorInPal = startColorInPal + numColorsPage;
-			//paletteLibPage = paletteLibPage_param.get();
-
-			//-
-
-			ImGui::Dummy(ImVec2(0.0f, 5));
-
-			ImGui::Text("PANTONE (c)");
-
-			//ImGui::Dummy(ImVec2(0.0f, 5));
-
-			// name color
-			// load tab2 with lastColorPickedNameColor
-			char tab2[32];
-			strncpy(tab2, lastColorPickedNameColor.c_str(), sizeof(tab2));
-			tab2[sizeof(tab2) - 1] = 0;
-			ImGui::PushItemWidth(_w * 0.5);
-			ImGui::Text("%s", tab2);//color name label
-
-			//ImGui::SameLine();
-
-			ImGui::Dummy(ImVec2(0.0f, 5));
 
 			//-
 
@@ -2361,11 +2387,53 @@ void ofxColorManager::gui_Library()
 			//ImGui::SliderInt("PAGE", &paletteLibPage, 0, maxPages);//page slider selector
 			//ImGui::DragInt("PAGE", (int *)&paletteLibPage, 0, maxPages);
 
-			ImGui::PopItemWidth();
+			//ImGui::PopItemWidth();
+
+			//-
+
+			ImGui::Dummy(ImVec2(0.0f, 5));
+
+			ImGui::Text("PANTONE (c)");
+
+			ImGui::Dummy(ImVec2(0.0f, 5));
+
+			// name color
+			// load tab2 with lastColorPickedNameColor
+			char tab2[32];
+			strncpy(tab2, lastColorPickedNameColor.c_str(), sizeof(tab2));
+			tab2[sizeof(tab2) - 1] = 0;
+
+			//ImGui::PushItemWidth(_w * 0.5);
+			ImGui::Text("%s", tab2);//color name label
+
+			ImGui::Dummy(ImVec2(0.0f, 5));
+
+			std::string s = ofToString(lastPantoneIndex) + "/" + ofToString(ColorBrowser.pantoneNames.size() - 1);
+			ImGui::Text(s.c_str());
+
+			//ImGui::SameLine();
 
 			ImGui::Dummy(ImVec2(0.0f, 5));
 
 			//-
+
+			// controls
+			if (ImGui::CollapsingHeader("Advanced"))
+			{
+				ofxImGui::AddParameter(colBoxSize);
+				ofxImGui::AddParameter(bPantoneCards);
+				ofxImGui::AddParameter(pantoneScale);
+
+				if (!bPantoneCards)
+				{
+					ofxImGui::AddParameter(numPantoneLines);
+					ofxImGui::AddParameter(pantoneMaxColumns);
+				}
+			}
+
+			ImGui::Dummy(ImVec2(0.0f, 5));
+
+			//--
 
 			// 2.2 draw all palette colors grid
 
@@ -2379,7 +2447,7 @@ void ofxColorManager::gui_Library()
 					//ImGui::PushStyleVar(ImGui::ImGuiStyleVar_FrameBorderSize), 1.0f;
 
 					// PANTONE or other must define his better row size
-					if ((n % rowSizePal) != 0)
+					if ((n % rCols) != 0)
 					{
 						ImGui::SameLine(0.0f, ImGui::GetStyle().ItemSpacing.y);//vertical inter line
 					}
@@ -2400,12 +2468,16 @@ void ofxColorManager::gui_Library()
 						ImGuiColorEditFlags_NoAlpha |
 						ImGuiColorEditFlags_NoPicker |
 						ImGuiColorEditFlags_NoTooltip,
-						ImVec2(colBoxSize, colBoxSize)))
+
+						//ImVec2(colBoxSize, colBoxSize)))
+						ImVec2(colBoxSize * pantoneScale, colBoxSize * pantoneScale)))
 					{
 						lastColorPicked = n;
 
 						color = ImVec4(saved_palette[n].x, saved_palette[n].y, saved_palette[n].z, color.w); // Preserve alpha!
 						color_Picked = color;
+
+						lastPantoneIndex = n;
 
 						//color name
 						lastColorPickedNameColor = "'" + ColorBrowser.pantoneNames[n] + "'";
@@ -2414,7 +2486,8 @@ void ofxColorManager::gui_Library()
 						ofLogNotice(__FUNCTION__) << str;
 					}
 
-					//TODO: draw border to selected color
+					//TODO: 
+					//draw border to selected color
 					if (bDrawBorder)
 					{
 						ImGui::PopStyleColor();
@@ -2704,7 +2777,7 @@ void ofxColorManager::gui_Quantizer()
 		int _w = ImGui::GetWindowContentRegionWidth() - _spc;
 		float _w50 = (_w * 0.5) - (_spc * 0.5);
 		float _w100 = _w - _spc;
-		float _h = BUTTON_HEIGHT;
+		float _h = BUTTON_BIG_HEIGHT;
 
 		//-
 
@@ -3002,7 +3075,7 @@ void ofxColorManager::gui_Range()
 			if (n % ncols == 0)
 			{
 				// label button
-			
+
 				//-
 
 				// border to selected
@@ -3016,7 +3089,7 @@ void ofxColorManager::gui_Range()
 					ImGui::PushStyleColor(ImGuiCol_Border, color_Pick);
 					ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, linew_Pick);
 				}
-				
+
 				//-
 
 				if (ofxSurfingHelpers::AddSmallButton(rangTypes[_row], 100, _boxSize)) {
@@ -3106,7 +3179,7 @@ void ofxColorManager::gui_Curve()
 		//ImGui::PushItemWidth(_w100);
 
 		float _wb = _w100;
-		float _hb = BUTTON_HEIGHT;
+		float _hb = BUTTON_BIG_HEIGHT;
 
 		//-
 
@@ -3263,7 +3336,7 @@ void ofxColorManager::gui_Presets()
 		//float _wb = 200;
 		float _wb_small = _wb * 0.4;
 
-		float _hb = 0.75 * BUTTON_HEIGHT;
+		float _hb = 0.75 * BUTTON_BIG_HEIGHT;
 
 		//-
 
@@ -3870,12 +3943,16 @@ void ofxColorManager::draw_CurveTools()
 //--------------------------------------------------------------
 void ofxColorManager::palettes_setup()
 {
+#ifdef USE_RECTANGLE_INTERFACES
+
 	int btn_pad_w;
 	btn_pad_w = 210;//padding to place boxes right to the labels
 	int x0;
 	x0 = palettes_x + btn_pad_w;
 	int y0 = palettes_y;
 	int h0 = box_size + pad;
+
+	//--
 
 	// 1. FROM OFX-COLOR-PALETTE
 
@@ -4120,11 +4197,14 @@ void ofxColorManager::palettes_setup()
 		btns_plt_CT_Tetrad.push_back(btn);
 		x0 += h0;
 	}
+
+#endif
 }
 
 //--------------------------------------------------------------
 void ofxColorManager::palettes_setup_labels()
 {
+#ifdef USE_RECTANGLE_INTERFACES
 
 	// 1. populate label buttons to trig palettes
 
@@ -4291,6 +4371,8 @@ void ofxColorManager::palettes_setup_labels()
 	{
 		btns_plt_Selector[SELECTED_palette_LAST]->setBorder(true);
 	}
+
+#endif
 }
 
 
@@ -4544,27 +4626,32 @@ void ofxColorManager::palettes_update()
 	// 3. complement sat
 	for (int i = 0; i < btns_plt_CompSat.size(); i++)
 	{
-		btns_plt_CompSat[i]->setColor(complement[i]);
+		if (i < complement.size())//BUG: avoid crash
+			btns_plt_CompSat[i]->setColor(complement[i]);
 	}
 	// 4. complement brgt
 	for (int i = 0; i < btns_plt_ComplBrgt.size(); i++)
 	{
-		btns_plt_ComplBrgt[i]->setColor(complementBrightness[i]);
+		if (i < complementBrightness.size())//BUG: avoid crash
+			btns_plt_ComplBrgt[i]->setColor(complementBrightness[i]);
 	}
 	// 5. mono sat
 	for (int i = 0; i < btns_plt_MonoSat.size(); i++)
 	{
-		btns_plt_MonoSat[i]->setColor(monochrome[i]);
+		if (i < monochrome.size())//BUG: avoid crash
+			btns_plt_MonoSat[i]->setColor(monochrome[i]);
 	}
 	// 6. mono brgt
 	for (int i = 0; i < btns_plt_MonoBrgt.size(); i++)
 	{
-		btns_plt_MonoBrgt[i]->setColor(monochromeBrightness[i]);
+		if (i < monochromeBrightness.size())//BUG: avoid crash
+			btns_plt_MonoBrgt[i]->setColor(monochromeBrightness[i]);
 	}
 	// 7. analogue
 	for (int i = 0; i < btns_plt_Analog.size(); i++)
 	{
-		btns_plt_Analog[i]->setColor(analogue[i]);
+		if (i < analogue.size())//BUG: avoid crash
+			btns_plt_Analog[i]->setColor(analogue[i]);
 	}
 	//    // 8. random
 	//    for (int i = 0; i < btns_plt_Random.size(); i++) {
@@ -4585,42 +4672,50 @@ void ofxColorManager::palettes_update()
 	// 0. btns_plt_CT_Analogous
 	for (int i = 0; i < btns_plt_CT_Analogous.size(); i++)
 	{
-		btns_plt_CT_Analogous[i]->setColor(colors_Analogous[i]);
+		if (i < colors_Analogous.size())//BUG: avoid crash
+			btns_plt_CT_Analogous[i]->setColor(colors_Analogous[i]);
 	}
 	// 1. btns_plt_CT_Complementary
 	for (int i = 0; i < btns_plt_CT_Complementary.size(); i++)
 	{
-		btns_plt_CT_Complementary[i]->setColor(colors_Complementary[i]);
+		if (i < colors_Complementary.size())//BUG: avoid crash
+			btns_plt_CT_Complementary[i]->setColor(colors_Complementary[i]);
 	}
 	// 2. btns_plt_CT_SplitComplementary
 	for (int i = 0; i < btns_plt_CT_SplitComplementary.size(); i++)
 	{
-		btns_plt_CT_SplitComplementary[i]->setColor(colors_SplitComplementary[i]);
+		if (i < colors_SplitComplementary.size())//BUG: avoid crash
+			btns_plt_CT_SplitComplementary[i]->setColor(colors_SplitComplementary[i]);
 	}
 	// 3. btns_plt_CT_Compound
 	for (int i = 0; i < btns_plt_CT_Compound.size(); i++)
 	{
-		btns_plt_CT_Compound[i]->setColor(colors_Compound[i]);
+		if (i < colors_Compound.size())//BUG: avoid crash
+			btns_plt_CT_Compound[i]->setColor(colors_Compound[i]);
 	}
 	// 4. btns_plt_CT_FlippedCompound
 	for (int i = 0; i < btns_plt_CT_FlippedCompound.size(); i++)
 	{
-		btns_plt_CT_FlippedCompound[i]->setColor(colors_FlippedCompound[i]);
+		if (i < colors_FlippedCompound.size())//BUG: avoid crash
+			btns_plt_CT_FlippedCompound[i]->setColor(colors_FlippedCompound[i]);
 	}
 	// 5. btns_plt_CT_Monochrome
 	for (int i = 0; i < btns_plt_CT_Monochrome.size(); i++)
 	{
-		btns_plt_CT_Monochrome[i]->setColor(colors_Monochrome[i]);
+		if (i < colors_Monochrome.size())//BUG: avoid crash
+			btns_plt_CT_Monochrome[i]->setColor(colors_Monochrome[i]);
 	}
 	// 6. btns_plt_CT_Tetrad
 	for (int i = 0; i < btns_plt_CT_Tetrad.size(); i++)
 	{
-		btns_plt_CT_Tetrad[i]->setColor(colors_Tetrad[i]);
+		if (i < colors_Tetrad.size())//BUG: avoid crash
+			btns_plt_CT_Tetrad[i]->setColor(colors_Tetrad[i]);
 	}
 	// 7. btns_plt_CT_Triad
 	for (int i = 0; i < btns_plt_CT_Triad.size(); i++)
 	{
-		btns_plt_CT_Triad[i]->setColor(colors_Triad[i]);
+		if (i < colors_Triad.size())//BUG: avoid crash
+			btns_plt_CT_Triad[i]->setColor(colors_Triad[i]);
 	}
 #endif
 
@@ -4827,10 +4922,10 @@ void ofxColorManager::palettes_resize()
 	//-
 }
 
-#ifdef USE_RECTANGLE_INTERFACES
 //--------------------------------------------------------------
 void ofxColorManager::palettes_setVisible(bool b)
 {
+#ifdef USE_RECTANGLE_INTERFACES
 	// hide and disable touchs for buttons
 
 	// ALGORITHMIC COLOR PALETTES
@@ -4933,8 +5028,8 @@ void ofxColorManager::palettes_setVisible(bool b)
 		btn->setVisible(b);
 		btn->setLocked(!b);
 	}
-}
 #endif
+}
 
 //--------------------------------------------------------------
 void ofxColorManager::refresh_ColorTheory()
@@ -5289,6 +5384,7 @@ void ofxColorManager::palette_removeColor(int c)
 //--------------------------------------------------------------
 void ofxColorManager::palette_removeColorLast()
 {
+#ifdef USE_RECTANGLE_INTERFACES
 	if (palette.size() > 0)
 	{
 		palette.pop_back();
@@ -5305,7 +5401,6 @@ void ofxColorManager::palette_removeColorLast()
 		btns_palette.pop_back();
 	}
 
-#ifdef USE_RECTANGLE_INTERFACES
 	palette_rearrenge();
 #endif
 }
@@ -5341,11 +5436,14 @@ void ofxColorManager::palette_touchedColor(string name)
 		bPaletteEdit = true;
 	}
 }
+#endif
 
 //--------------------------------------------------------------
 void ofxColorManager::palette_clear()
 {
-	// remove all colors of user palette
+#ifdef USE_RECTANGLE_INTERFACES
+
+	// remove all colors from the user palette
 
 	ofLogNotice(__FUNCTION__);
 
@@ -5365,8 +5463,9 @@ void ofxColorManager::palette_clear()
 		ofLogVerbose(__FUNCTION__) << "removed children: " << b;
 	}
 	btns_palette.clear();
-}
+
 #endif
+}
 
 #pragma mark - CALLBACKS
 
@@ -5582,11 +5681,13 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	}
 	else if (name == "PALETTE")
 	{
+#ifdef USE_RECTANGLE_INTERFACES
 		ofLogVerbose(__FUNCTION__) << "SHOW_UserPalette: " << SHOW_UserPalette;
 		for (int i = 0; i < btns_palette.size(); i++)
 		{
 			btns_palette[i]->setVisible(SHOW_UserPalette);
 		}
+#endif
 	}
 	else if (name == "PICTURE")
 	{
@@ -5691,6 +5792,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 	else if (name == "ADD COLOR")
 	{
+#ifdef USE_RECTANGLE_INTERFACES
 		if (bAddColor)
 		{
 			bAddColor = false;
@@ -5712,10 +5814,12 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 				ofLogNotice(__FUNCTION__) << "user palette selected last color: " << palette_colorSelected;
 			}
 		}
+#endif
 	}
 
 	else if (name == "EDIT COLOR")
 	{
+#ifdef USE_RECTANGLE_INTERFACES
 		// 1. deselect all color buttons
 		for (int i = 0; i < btns_palette.size(); i++)
 		{
@@ -5752,6 +5856,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			// autoload color on picker
 			color_Picked = palette[palette_colorSelected];
 		}
+#endif
 	}
 
 	else if (name == "REMOVE COLOR")
@@ -6503,10 +6608,13 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			color_Undo.store();
 
 			// presets
-			if (!MODE_newPreset)
-				MODE_newPreset = true;
+			if (!MODE_newPreset) MODE_newPreset = true;
+
 			textInput_New = ColorBrowser.pantoneNames[lastColorPicked] + "_";
+
+#ifdef USE_RECTANGLE_INTERFACES
 			textInput_New += btns_plt_Selector[SELECTED_palette_LAST]->getName();
+#endif
 
 			//-
 
@@ -6692,9 +6800,10 @@ void ofxColorManager::mouseDragged(ofMouseEventArgs &eventArgs)
 	const int &x = eventArgs.x;
 	const int &y = eventArgs.y;
 	const int &button = eventArgs.button;
-	//    ofLogNotice(__FUNCTION__) << "mouseDragged " <<  x << ", " << y << ", " << button;
 
+#ifdef USE_RECTANGLE_INTERFACES
 	TouchManager::one().touchMove(button, ofVec2f(x, y));
+#endif
 
 	//-
 }
@@ -6706,8 +6815,8 @@ void ofxColorManager::mousePressed(ofMouseEventArgs &eventArgs)
 	const int &x = eventArgs.x;
 	const int &y = eventArgs.y;
 	const int &button = eventArgs.button;
-	//ofLogNotice(__FUNCTION__) << "mousePressed " << x << ", " << y << ", " << button;
 
+#ifdef USE_RECTANGLE_INTERFACES
 	TouchManager::one().touchDown(button, ofVec2f(x, y));
 
 	//-
@@ -6730,6 +6839,7 @@ void ofxColorManager::mousePressed(ofMouseEventArgs &eventArgs)
 	{
 		//ofLogVerbose(__FUNCTION__) << "ignored touch: " << b;
 	}
+#endif
 
 	//-
 
@@ -6744,18 +6854,17 @@ void ofxColorManager::mousePressed(ofMouseEventArgs &eventArgs)
 	}
 }
 
-
 //--------------------------------------------------------------
 void ofxColorManager::mouseReleased(ofMouseEventArgs &eventArgs)
 {
 	const int &x = eventArgs.x;
 	const int &y = eventArgs.y;
 	const int &button = eventArgs.button;
-	//    ofLogNotice(__FUNCTION__) << "mouseReleased " <<  x << ", " << y << ", " << button;
 
+#ifdef USE_RECTANGLE_INTERFACES
 	TouchManager::one().touchUp(button, ofVec2f(x, y));
+#endif
 }
-
 
 //--------------------------------------------------------------
 void ofxColorManager::addMouseListeners()
@@ -6765,7 +6874,6 @@ void ofxColorManager::addMouseListeners()
 	ofAddListener(ofEvents().mouseReleased, this, &ofxColorManager::mouseReleased);
 }
 
-
 //--------------------------------------------------------------
 void ofxColorManager::removeMouseListeners()
 {
@@ -6774,7 +6882,6 @@ void ofxColorManager::removeMouseListeners()
 	ofRemoveListener(ofEvents().mouseReleased, this, &ofxColorManager::mouseReleased);
 }
 
-
 //--------------------------------------------------------------
 void ofxColorManager::disableListeners()
 {
@@ -6782,14 +6889,12 @@ void ofxColorManager::disableListeners()
 	addKeysListeners();
 }
 
-
 //--------------------------------------------------------------
 void ofxColorManager::enableListeners()
 {
 	removeMouseListeners();
 	removeKeysListeners();
 }
-
 
 #pragma mark - SETTINGS
 
@@ -6993,6 +7098,7 @@ void ofxColorManager::refresh_Picker_Touched()
 
 	// 1. autosave edited color
 
+#ifdef USE_RECTANGLE_INTERFACES
 	if (bPaletteEdit && palette_colorSelected != -1 && btns_palette.size() > palette_colorSelected)
 	{
 		// update user palette color with recently picked color
@@ -7007,6 +7113,7 @@ void ofxColorManager::refresh_Picker_Touched()
 		if (palette_colorSelected < gradient.getNumColors())
 			gradient.replaceColorAtIndex(palette_colorSelected, color_clicked);
 	}
+#endif
 
 	//-
 
@@ -7060,7 +7167,6 @@ void ofxColorManager::setControl(float control)
 //--------------------------------------------------------------
 vector<ofColor> ofxColorManager::getPalette()
 {
-	//log
 	ofLogNotice(__FUNCTION__);
 	for (int i = 0; i < palette.size(); i++)
 	{

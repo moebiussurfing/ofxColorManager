@@ -5,12 +5,12 @@
 //--
 
 //#define INCL_LAYOUT
-#define USE_RECTANGLE_INTERFACES
+#define USE_RECTANGLE_INTERFACES // should be nice to completely disable! to disable ofxInterface
 #define USE_COLOR_LOVERS
 #define USE_IMAGE_QUANTIZER
 #define INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
 
-#define BUTTON_HEIGHT 50
+#define BUTTON_BIG_HEIGHT 50
 
 //--
 
@@ -163,7 +163,7 @@ public:
 	ofParameter<std::string> colorSchemeName;
 	ofParameter<int> amountColors;
 	ofParameter<bool> bGetFromPicker;
-	
+
 	void Changed_ColorTheory(ofAbstractParameter &e);
 	void refresh_ColorTheory();
 
@@ -176,6 +176,7 @@ public:
 	ofParameter<bool> bEditUserPalette;
 	ofParameter<int> boxSizeUser;
 	ofParameter<int> boxRowsUser;
+	ofParameter<int> colBoxSize{ "Size Box", 25, 10, 50 };
 	ofParameter<float> boxScale;
 	ofParameter<bool> bFlipUserPalette;
 	//ofParameter<bool> bUserPaletteVertical;
@@ -258,11 +259,11 @@ public:
 	// gui feedback display
 
 	int lastTheory = -1;
-	int lastRange = -1; 
-	
+	int lastRange = -1;
+
 	std::string theory_Name = "";
 	std::string range_Name = "";
-	
+
 	ofParameter<int> lastColorTheoryPicked_Palette;
 
 	std::string lastColorPickedNameColor = "";
@@ -271,13 +272,13 @@ public:
 
 	ImVec4 color_Pick{ 1,1,1,0.5 };
 	float linew_Pick = 2.0;
-	
+
 	//-
 
 	// COLOUR LOVERS
 
 	void colourLovers_drawPreview();
-	#ifdef USE_COLOR_LOVERS
+#ifdef USE_COLOR_LOVERS
 	ofxColourLoversHelper colourLoversHelper;
 #endif
 	std::string myPalette_Name = "";
@@ -556,23 +557,32 @@ public:
 	int palSize = (NUM_COLORS_PANTONE);
 	int rowSizePal = 7;//7 colors per row Pantone lib
 	bool doublePage;
-	int numLines = 10;//rows per page
-	int numColorsPage = numLines * rowSizePal;//70
+	
+	//rows per page
+	//int numPantoneLines = 10;
+	ofParameter<int> numPantoneLines{ "Rows Amnt" , 10, 5, 10 * 5};
+	
+	int numColorsPage = numPantoneLines * rowSizePal;//70
 	int totalNumColors = NUM_COLORS_PANTONE;//pantone
 	int maxPages = totalNumColors / numColorsPage - 1;
 
 	ofParameter<int> paletteLibPage{ "PAGE" , 0, 0, maxPages };
 	ofParameter<int> paletteLibPage_param{ "page", 0, 0, maxPages };
+	ofParameter<bool>bPantoneCards{ "Cards Mode", "true" };
+	ofParameter<int> pantoneMaxColumns{ "Columns Max", 7, 1, 7 * 6 };
+	ofParameter<float> pantoneScale{ "Scale", 1, 0.5, 1.5 };
+	int lastPantoneIndex = -1;
 
 	//----
 
 	// INTERFACE
-	
+
+	void interface_setup();
+
 #ifdef USE_RECTANGLE_INTERFACES
 	ofxInterface::Node *scene;
 	vector<ButtonExample *> btns_palette;//button color box for each color of all algorithmic palettes
 
-	void interface_setup();
 	void interface_update();
 	void interface_draw();
 
@@ -602,6 +612,8 @@ public:
 	// pointer back link the outside (ofApp) variable
 	vector<ButtonPaletteSelector *> btns_plt_Selector; // 1-8
 #endif
+
+	//-
 
 	int NUM_PALETTES = 7;//without random
 	int NUM_CT_PALETTES = 8;

@@ -68,7 +68,10 @@ void DEMO_palette::update() {
 		// color.set(palette[iColor]);//TODO
 
 		//avoid crash when palette pointer not linked
-		if (palette != nullptr && (*palette).size() > 0) {
+		if ((palette != nullptr) && 
+			((*palette).size() > 0) && 
+			(iColor < (*palette).size())) 
+{
 			color.set((*palette)[iColor]);
 		}
 		else {
@@ -77,8 +80,7 @@ void DEMO_palette::update() {
 
 		iColor++;
 		int palSize = palette->size();
-		if (palSize > 0)
-			iColor = iColor % palSize;
+		if (palSize > 0) iColor = iColor % palSize;
 
 		if (palette != nullptr) {
 			this->colors.push_back(color);
