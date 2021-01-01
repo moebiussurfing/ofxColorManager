@@ -10,6 +10,8 @@
 #define USE_IMAGE_QUANTIZER
 #define INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
 
+#define BUTTON_HEIGHT 50
+
 //--
 
 #include "ofxColorGradient.h"
@@ -31,7 +33,9 @@ using namespace ofxColorTheory;
 
 #ifdef USE_IMAGE_QUANTIZER
 #include "ofxColorQuantizerHelper.h"
+#define NUM_QUANTIZER_COLORS_PER_ROW 4
 #endif
+
 
 //ofxCurvesTool
 #include "ofxCurvesTool.h"
@@ -282,6 +286,7 @@ public:
 	void update(ofEventArgs & args);
 	void draw(ofEventArgs & args);
 	void draw_Curve();
+	void draw_Info();
 
 	void exit();
 	void windowResized(int w, int h);
@@ -455,7 +460,7 @@ public:
 	ofParameter<float> backgroundDarkness;
 	//float backgroundDarkness_PRE;
 
-	ofParameter<bool> background_Draw_ENABLE{ "DRAW BG",false };
+	ofParameter<bool> background_Draw_ENABLE{ "Draw", false };
 
 	void setBackground_ENABLE(bool b);
 
@@ -615,9 +620,12 @@ public:
 	ofParameter<float> curve_pos_out;
 	ofParameter<bool> bResetCurve;
 	ofParameter<float> curveMod;
+	int curve_Index = 0;
+
 	ofxSimpleSlider curveSlider_Tweak;
 	ofxSimpleSlider curveSlider_Test;
-	int curve_Index = 0;
+
+	int lastTheory = -1;
 
 	//-
 
@@ -630,6 +638,7 @@ public:
 	bool TEST_toBackground = true;
 	float framePrc;
 	ofParameter<bool> TEST_DEMO{ "DEMO", false };
+	ofParameter<float> alpha_DEMO{ "DEMO Alpha", 0.8, 0,1 };
 
 	////TODO: make pauses between any test trig..
 	bool bTEST_pause = false;
@@ -676,7 +685,7 @@ private:
 
 	// LAYOUT
 
-	int w_Gui;
+	//int w_Gui;
 	int gui_x, gui_y, gui_w, gui_h;
 	int gui2_x, gui2_y, gui2_w, gui2_h;
 	int gui3_x, gui3_y, gui3_w, gui3_h;

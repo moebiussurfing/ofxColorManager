@@ -109,7 +109,7 @@ void DEMO_palette::update() {
 }
 
 //--------------------------------------------------------------
-void DEMO_palette::draw() {
+void DEMO_palette::draw(float alpha = 1.0f) {
 
 	// DEMO 1 - CIRCLES
 
@@ -119,8 +119,7 @@ void DEMO_palette::draw() {
 		ofTranslate(ofGetWidth() * 0.5, ofGetHeight() * 0.5);
 
 		for (int i = 0; i < locations.size(); i++) {
-			ofSetColor(colors[i], 225);
-			//ofSetColor(colors[i]);
+			ofSetColor(colors[i], 255 * alpha);
 			float radius = 1.5 * (2 * PI * glm::length(this->locations[i])) / 360 * 20;
 			ofDrawCircle(this->locations[i], radius);
 		}

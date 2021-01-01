@@ -9,6 +9,8 @@
  //----------------------------------------------------
 ofxSimpleSlider::ofxSimpleSlider() {
 	bWasSetup = false;
+
+	labelString = "";
 }
 
 //----------------------------------------------------
@@ -18,7 +20,7 @@ ofxSimpleSlider::~ofxSimpleSlider() {
 
 //-----------------------------------------------------------------------------------------------------------------------
 void ofxSimpleSlider::setup(float inx, float iny, float inw, float inh, float loVal, float hiVal, float initialValue, bool bVert, bool bDrawNum) {
-	bWasSetup = false; 
+	bWasSetup = false;
 	clear();
 
 	x = inx;
@@ -37,8 +39,6 @@ void ofxSimpleSlider::setup(float inx, float iny, float inw, float inh, float lo
 	percent = ofMap(initialValue, lowValue, highValue, 0, 1);
 	percent = ofClamp(percent, 0, 1);
 
-	labelString = "";
-
 	if (!bWasSetup) {
 		ofAddListener(ofEvents().draw, this, &ofxSimpleSlider::draw);
 		ofAddListener(ofEvents().mouseMoved, this, &ofxSimpleSlider::mouseMoved);
@@ -47,6 +47,8 @@ void ofxSimpleSlider::setup(float inx, float iny, float inw, float inh, float lo
 		ofAddListener(ofEvents().mouseDragged, this, &ofxSimpleSlider::mouseDragged);
 		bWasSetup = true;
 	}
+
+	//labelString = "";
 }
 
 //----------------------------------------------------
@@ -64,6 +66,8 @@ void ofxSimpleSlider::clear() {
 //----------------------------------------------------
 void ofxSimpleSlider::setLabelString(string str) {
 	labelString = str;
+
+	bLabel = true;
 }
 
 
@@ -139,15 +143,21 @@ void ofxSimpleSlider::draw(ofEventArgs& event) {
 			}
 
 			// draw numeric value
-			if (bDrawNumber) {
-				if (bVertical) {
+			if (bDrawNumber)
+			{
+				int _ph = 15;
+
+				if (bVertical)
+				{
 					ofDrawBitmapString(ofToString(getValue(), numberDisplayPrecision), width + 5, height);
-					ofDrawBitmapString(labelString, width + 5, height - 14);
+
+					if (bLabel) ofDrawBitmapString(labelString, width + 5, height - _ph);
 				}
-				else {
+				else
+				{
 					ofDrawBitmapString(ofToString(getValue(), numberDisplayPrecision), width + 5, height / 2 + 4);
-					float labelStringWidth = labelString.size();
-					ofDrawBitmapString(labelString, 0 - labelStringWidth * 8 - 5, height / 2 + 4);
+
+					if (bLabel) ofDrawBitmapString(labelString, width + 5, height / 2 + 4 - _ph);
 				}
 			}
 

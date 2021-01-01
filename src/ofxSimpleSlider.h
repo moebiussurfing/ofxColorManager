@@ -58,6 +58,7 @@ protected:
     float percent;
 
     string labelString;
+	bool bLabel = false;
 
 private:
 

@@ -27,7 +27,7 @@ public:
 public:
 	void setup();
 	void update();
-	void draw();
+	void draw(float alpha);
 
 	void clear() {
 		//bDEMO1_clear = true;
