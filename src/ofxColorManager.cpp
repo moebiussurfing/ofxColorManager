@@ -242,7 +242,7 @@ void ofxColorManager::setup()
 	colourLoversHelper.setPalette_BACK_Name(myPalette_Name);
 	colourLoversHelper.setPalette_BACK_Refresh(bUpdated_Palette_BACK);
 
-	listener_LoverName = colourLoversHelper.lastPaletteName.newListener([this](string &n) {
+	listener_LoverName = colourLoversHelper.lastPaletteName.newListener([this](std::string &n) {
 		theory_Name = "";
 		range_Name = "";
 		});
@@ -704,15 +704,28 @@ void ofxColorManager::update(ofEventArgs & args)
 
 	//TODO:
 	//quantizer
-	if (0 && colorQuantizer.isUpdated() && ofGetFrameNum() > 120) {
+	if (1 && colorQuantizer.isUpdated() && ofGetFrameNum() > 120) {
 
 		//load ofImage
 		ofLogNotice(__FUNCTION__) << "Image Quantizer Update: " << colorQuantizer.getImagePath();
 
-		//imageButtonSource.clear();
-		imageButtonSource = colorQuantizer.getImage();
-		//imageButtonSource.load(colorQuantizer.getImagePath());
-		imageButtonID = gui.loadImage(imageButtonSource);
+		bool b = ofGetUsingArbTex();
+		ofDisableArbTex();
+		ofLoadImage(tex, colorQuantizer.getImagePath());
+		fbo.allocate(tex.getWidth(), tex.getHeight());
+		fbo.createAndAttachTexture(GL_RGB, 0); //Position
+		fbo.createAndAttachTexture(GL_RGBA32F, 1); //velocity
+		fbo.createAndAttachRenderbuffer(GL_DEPTH_COMPONENT, GL_DEPTH_ATTACHMENT);
+		fbo.checkStatus();
+		fbo.begin();
+		ofClear(0);
+		fbo.end();
+		if (b) ofEnableArbTex();
+
+		fbo.begin();
+		ofClear(0, 0, 0, 0);
+		tex.draw(0, 0);
+		fbo.end();
 	}
 
 	//--
@@ -1743,7 +1756,7 @@ void ofxColorManager::gui_Theory()
 		//ImGui::PushItemWidth(_w* 0.80);
 		//int _h = 30;
 
-		int _flags = ImGuiColorEditFlags_NoOptions | ImGuiColorEditFlags_NoTooltip;
+		ImGuiColorEditFlags colorEdiFlags = ImGuiColorEditFlags_NoOptions | ImGuiColorEditFlags_NoTooltip;
 
 		//TODO:
 		//add wheel!
@@ -2120,7 +2133,8 @@ void ofxColorManager::gui_Palette()
 			if (ImGui::RadioButton("Move", mode == Mode_Move)) { mode = Mode_Move; } ImGui::SameLine();
 			if (ImGui::RadioButton("Swap", mode == Mode_Swap)) { mode = Mode_Swap; }
 
-			if (ofxSurfingHelpers::AddSmallButton(bFlipUserPalette)) {
+			if (ofxSurfingHelpers::AddSmallButton(bFlipUserPalette))
+			{
 				reBuildGradientPalette();
 			}
 
@@ -2796,9 +2810,33 @@ void ofxColorManager::gui_Quantizer()
 
 		//ImGuiColorEditFlags colorEdiFlags = false;
 
-		ofxImGui::AddGroup(colorQuantizer.getParameters(), mainSettings);
+		//-
+
+		// gui parameters
+
+		//ofxImGui::AddGroup(colorQuantizer.getParameters(), mainSettings);
+
+		ofxSurfingHelpers::AddBigButton(colorQuantizer.bReBuild, _w, _h);
+		ImGui::Dummy(ImVec2(0.0f, 5));
+
+		ImGui::InputInt(colorQuantizer.numColors.getName().c_str(), (int *)&colorQuantizer.numColors.get());
+		if (ImGui::InputInt(colorQuantizer.sortedType.getName().c_str(), (int *)&colorQuantizer.sortedType.get())) {
+			colorQuantizer.sortedType = ofClamp(colorQuantizer.sortedType, 1, 4);
+		}
+
+		std::string s2 = colorQuantizer.sortedType_name.get();
+		ImGui::Text(s2.c_str());
+
+		ImGui::Dummy(ImVec2(0.0f, 5));
+
+		std::string s = ofToString(colorQuantizer.currentImage.get()) + "/" + ofToString(colorQuantizer.getAountFiles() - 1);
+		ImGui::Text(s.c_str());
+
+		//ImGui::InputInt(colorQuantizer.currentImage.getName().c_str(), (int *)&colorQuantizer.currentImage.get());
 
 		//-
+
+		ImGui::Dummy(ImVec2(0.0f, 5));
 
 		if (ImGui::Button("Previous", ImVec2(_w50, _h)))
 		{
@@ -2812,9 +2850,12 @@ void ofxColorManager::gui_Quantizer()
 			colorQuantizer.loadNext();
 		}
 
+		ImGui::Dummy(ImVec2(0.0f, 5));
+
 		//-
 
-		const auto p = colorQuantizer.getPalette();
+		//const auto p = colorQuantizer.getPalette();
+		const auto p = colorQuantizer.getPalette(true);
 
 		int wb = (ImGui::GetWindowContentRegionWidth() / NUM_QUANTIZER_COLORS_PER_ROW) - (2 * _spc);
 
@@ -2845,16 +2886,15 @@ void ofxColorManager::gui_Quantizer()
 
 		ImGui::Dummy(ImVec2(0.0f, 10));
 
-		//TODO:
 		// draw image preview
-		float _scale = 0.75f;
-		if (imageButtonSource.isAllocated())
+
+		if (tex.isAllocated())
 		{
-			if (ImGui::ImageButton(GetImTextureID(imageButtonID),
-				ImVec2(
-					_scale * imageButtonSource.getWidth(),
-					_scale * imageButtonSource.getHeight())
-			))
+			float w = tex.getWidth();
+			float h = tex.getHeight();
+			float ratio = h / w;
+
+			if (ImGui::ImageButton((ImTextureID)(uintptr_t)fbo.getTexture(0).getTextureData().textureID, ImVec2(_w, _w * ratio)))
 			{
 				ofLogNotice(__FUNCTION__) << "Image Pressed";
 			}
@@ -3308,9 +3348,10 @@ void ofxColorManager::gui_Background()
 			int _w = ImGui::GetWindowContentRegionWidth();
 			int _h = 20;
 
-			int _flags = ImGuiColorEditFlags_NoOptions | ImGuiColorEditFlags_NoTooltip;
+			ImGuiColorEditFlags colorEdiFlags;
+			colorEdiFlags = ImGuiColorEditFlags_NoOptions | ImGuiColorEditFlags_NoTooltip;
 
-			ImGui::ColorButton("MyColor##Picker", *(ImVec4 *)&color, _flags, ImVec2(_w, _h));
+			ImGui::ColorButton("MyColor##Picker", *(ImVec4 *)&color, colorEdiFlags, ImVec2(_w, _h));
 
 			ImGui::Dummy(ImVec2(0.0f, 10));
 
@@ -3320,8 +3361,10 @@ void ofxColorManager::gui_Background()
 			float w50 = ImGui::GetWindowWidth()*0.5f - pad * 0.5f;
 			float w100 = ImGui::GetWindowWidth() - pad;
 			ImGui::PushItemWidth(w100);
+
 			// squared box
-			ImGuiColorEditFlags colorEdiFlags =
+
+			colorEdiFlags =
 				ImGuiColorEditFlags_NoSmallPreview |
 				ImGuiColorEditFlags_NoTooltip |
 				ImGuiColorEditFlags_NoLabel |

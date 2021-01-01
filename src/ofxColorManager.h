@@ -79,7 +79,7 @@ private:
 	//--
 
 	bool ENABLE_keys_PRE;
-	
+
 	//--
 
 private:
@@ -149,9 +149,8 @@ public:
 	// colorQuantizer
 #ifdef USE_IMAGE_QUANTIZER
 	ofxColorQuantizerHelper colorQuantizer;
-
-	ofImage imageButtonSource;
-	GLuint imageButtonID;
+	ofTexture tex;
+	ofFbo fbo;
 #endif
 
 	//-
