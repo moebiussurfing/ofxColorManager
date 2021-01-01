@@ -172,13 +172,12 @@ void DEMO_palette::draw(float alpha = 1.0f) {
 				iCol++;
 			}
 
-			//-
+			//--
 
-			ofSetColor(c, 225);
-			//ofSetColor(c);
+			ofSetColor(c, 255 * alpha);
 
-			//ofRotateZ(ofGetFrameNum() * 0.25);
 			ofRotateZ(ofGetFrameNum() * 0.01);
+			//ofRotateZ(ofGetFrameNum() * 0.25);
 
 			ofPushMatrix();
 			ofTranslate(ofVec3f(x, y, 0));

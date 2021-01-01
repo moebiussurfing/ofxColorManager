@@ -73,7 +73,11 @@ using namespace ofxColorTheory;
 
 class ofxColorManager : public ofBaseApp
 {
+private:
+	ofEventListener listener_LoverName;
+
 	//-
+
 private:
 	ofxInteractiveRect rPreview = { "_Curve_Gui" };
 	ofParameter<bool> MODE_Editor;
@@ -159,9 +163,9 @@ public:
 	ofParameter<std::string> colorSchemeName;
 	ofParameter<int> amountColors;
 	ofParameter<bool> bGetFromPicker;
-	ofParameter<int> lastColorTheoryPicked_Palette;
+	
 	void Changed_ColorTheory(ofAbstractParameter &e);
-	void refreshColorTheory();
+	void refresh_ColorTheory();
 
 	void Changed_ColorUserPalette(ofAbstractParameter &e);
 	ofParameterGroup params_UserPalette;
@@ -240,7 +244,7 @@ public:
 
 	//--
 
-	// PRESETS
+	// presets
 
 	PresetPalette myPresetPalette;
 
@@ -251,8 +255,24 @@ public:
 
 	//-
 
+	// gui feedback display
+
+	int lastTheory = -1;
+	int lastRange = -1; 
+	
 	std::string theory_Name = "";
 	std::string range_Name = "";
+	
+	ofParameter<int> lastColorTheoryPicked_Palette;
+
+	std::string lastColorPickedNameColor = "";
+	int lastColorPicked;
+	int lastColorPicked_Palette;
+
+	ImVec4 color_Pick{ 1,1,1,0.5 };
+	float linew_Pick = 2.0;
+	
+	//-
 
 	// COLOUR LOVERS
 
@@ -339,7 +359,7 @@ public:
 	void setVisible_GUI_MINI(bool b);
 	void setVisible_debugText(bool b);
 	void draw_Mini();
-	void gradient_drawPreview(glm::vec2 pos, bool horizontal);
+	void draw_GradientPreview(glm::vec2 pos, bool horizontal);
 	void disableListeners();
 	void enableListeners();
 
@@ -446,7 +466,7 @@ public:
 	void gui_Panels();
 	void gui_Quantizer();
 
-	void gui_SetLayout();
+	void refresh_Gui_Layout();
 	//void gui_imGui_Theme();
 
 	//--
@@ -467,7 +487,7 @@ public:
 	// TEST
 	bool bCallback_ENABLED = true;
 
-	void color_picked_Update_To_HSV();
+	void refresh_Picked_Update_To_HSV();
 
 	// MAIN COLOR
 	ofParameter<ofFloatColor> color_Picked;
@@ -509,7 +529,7 @@ public:
 	void Changed_ColorClicked(ofFloatColor &color);
 
 	// TEST
-	void refreshPicker_Touched();
+	void refresh_Picker_Touched();
 
 	//--
 
@@ -540,9 +560,7 @@ public:
 	int numColorsPage = numLines * rowSizePal;//70
 	int totalNumColors = NUM_COLORS_PANTONE;//pantone
 	int maxPages = totalNumColors / numColorsPage - 1;
-	std::string lastColorPickedNameColor = "";
-	int lastColorPicked;
-	int lastColorPicked_Palette;
+
 	ofParameter<int> paletteLibPage{ "PAGE" , 0, 0, maxPages };
 	ofParameter<int> paletteLibPage_param{ "page", 0, 0, maxPages };
 
@@ -625,8 +643,6 @@ public:
 	ofxSimpleSlider curveSlider_Tweak;
 	ofxSimpleSlider curveSlider_Test;
 
-	int lastTheory = -1;
-
 	//-
 
 	// TEST CURVE
@@ -638,7 +654,7 @@ public:
 	bool TEST_toBackground = true;
 	float framePrc;
 	ofParameter<bool> TEST_DEMO{ "DEMO", false };
-	ofParameter<float> alpha_DEMO{ "DEMO Alpha", 0.8, 0,1 };
+	ofParameter<float> alpha_DEMO{ "ALPHA", 0.8, 0,1 };
 
 	////TODO: make pauses between any test trig..
 	bool bTEST_pause = false;
