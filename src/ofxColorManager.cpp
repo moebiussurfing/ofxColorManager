@@ -2827,11 +2827,6 @@ void ofxColorManager::gui_Quantizer()
 		std::string s2 = colorQuantizer.sortedType_name.get();
 		ImGui::Text(s2.c_str());
 
-		ImGui::Dummy(ImVec2(0.0f, 5));
-
-		std::string s = ofToString(colorQuantizer.currentImage.get()) + "/" + ofToString(colorQuantizer.getAountFiles() - 1);
-		ImGui::Text(s.c_str());
-
 		//ImGui::InputInt(colorQuantizer.currentImage.getName().c_str(), (int *)&colorQuantizer.currentImage.get());
 
 		//-
@@ -2849,6 +2844,11 @@ void ofxColorManager::gui_Quantizer()
 		{
 			colorQuantizer.loadNext();
 		}
+
+		ImGui::Dummy(ImVec2(0.0f, 5));
+
+		std::string s = ofToString(colorQuantizer.currentImage.get()) + "/" + ofToString(colorQuantizer.getAountFiles() - 1);
+		ImGui::Text(s.c_str());
 
 		ImGui::Dummy(ImVec2(0.0f, 5));
 
