@@ -1128,56 +1128,66 @@ void ofxColorManager::draw_Info()
 	c0_Ghost.set(0, 32);
 	c1_Ghost.set(255, 32);
 
+	//TODO: create double line shadow draw methoid into ofxSurfingHelpers
+
+	padh = 15;
+	h = padh;
+	y += h;
+
 	if (t0 != "") {//preset name
-		padh = 15;
-		h = fontBig.getSize() + padh;
 		x = ofGetWidth() * 0.5 - _w0 * 0.5;
 		if (txt_lineActive[i]) ofSetColor(c0);
 		else ofSetColor(c0_Ghost);
-		fontBig.drawString(t0, x + sp, (y + sp) + (i * h));
+		fontBig.drawString(t0, x + sp, y + sp);
 		if (txt_lineActive[i]) ofSetColor(c1);
 		else ofSetColor(c1_Ghost);
-		fontBig.drawString(t0, x, y + (i * h));
+		fontBig.drawString(t0, x, y);
 		i++;
+		
+		padh = 15;
+		h = fontBig.getSize() + padh;
+		y += h;
 	}
 
 	if (t1 != "") {//palette name
-		padh = 15;
-		h = fontBig.getSize() + padh;
 		x = ofGetWidth() * 0.5 - _w1 * 0.5;
 		if (txt_lineActive[i]) ofSetColor(c0);
 		else ofSetColor(c0_Ghost);
-		fontBig.drawString(t1, x + sp, (y + sp) + (i * h));
+		fontBig.drawString(t1, x + sp, y + sp);
 		if (txt_lineActive[i]) ofSetColor(c1);
 		else ofSetColor(c1_Ghost);
-		fontBig.drawString(t1, x, y + (i * h));
+		fontBig.drawString(t1, x, y);
 		i++;
+
+		padh = -10;
+		h = fontBig.getSize() + padh;
+		y += h;
 	}
 
 	if (t2 != "") {//theory name
-		padh = 15;
-		h = 2 * fontMedium.getSize() + padh;
 		x = ofGetWidth() * 0.5 - _w2 * 0.5;
 		if (txt_lineActive[i]) ofSetColor(c0);
 		else ofSetColor(c0_Ghost);
-		fontMedium.drawString(t2, x + sp, (y + sp) + (i * h));
+		fontMedium.drawString(t2, x + sp, y + sp);
 		if (txt_lineActive[i]) ofSetColor(c1);
 		else ofSetColor(c1_Ghost);
-		fontMedium.drawString(t2, x, y + (i * h));
+		fontMedium.drawString(t2, x, y);
 		i++;
+
+		padh = 15;
+		h = fontMedium.getSize() + padh;
+		y += h;
 	}
 
 	if (t3 != "") {//range name
-		padh = 40;
-		h = fontMedium.getSize() + padh;
 		x = ofGetWidth() * 0.5 - _w3 * 0.5;
 		if (txt_lineActive[i]) ofSetColor(c0);
 		else ofSetColor(c0_Ghost);
-		fontSmall.drawString(t3, x + sp, (y + sp) + (i * h));
+		fontSmall.drawString(t3, x + sp, y + sp);
 		if (txt_lineActive[i]) ofSetColor(c1);
 		else ofSetColor(c1_Ghost);
-		fontSmall.drawString(t3, x, y + (i * h));
-		i++;
+		fontSmall.drawString(t3, x, y);
+		//i++;
 	}
 
 	//-
@@ -6160,7 +6170,7 @@ void ofxColorManager::Changed_ColorRange(ofAbstractParameter &e)
 
 				//myPalette_Name = "";
 				//theory_Name = "";
-				
+
 				txt_lineActive[0] = true;//preset name
 				txt_lineActive[1] = false;//palette name
 				txt_lineActive[2] = false;//theory name
@@ -6191,7 +6201,7 @@ void ofxColorManager::Changed_ColorRange(ofAbstractParameter &e)
 
 				//myPalette_Name = "";
 				//range_Name = "";
-				
+
 				txt_lineActive[0] = true;//preset name
 				txt_lineActive[1] = false;//palette name
 				txt_lineActive[2] = true;//theory name
@@ -6871,8 +6881,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//
 		//    else if (key == OF_KEY_RETURN)
 		//        ColorBrowser.switch_sorted_Type();
-	}
-}
+			}
+		}
 
 
 //--------------------------------------------------------------
