@@ -145,6 +145,11 @@ void ofxColorManager::setup()
 	fontMedium.load(strFont, 28);
 	fontSmall.load(strFont, 22);
 
+	txt_lineActive[0] = false;
+	txt_lineActive[1] = false;
+	txt_lineActive[2] = false;
+	txt_lineActive[3] = false;
+
 	//-
 
 	////cosine gradient
@@ -243,8 +248,13 @@ void ofxColorManager::setup()
 	colourLoversHelper.setPalette_BACK_Refresh(bUpdated_Palette_BACK);
 
 	listener_LoverName = colourLoversHelper.lastPaletteName.newListener([this](std::string &n) {
-		theory_Name = "";
-		range_Name = "";
+		//theory_Name = "";
+		//range_Name = "";
+
+		txt_lineActive[0] = true;//preset name
+		txt_lineActive[1] = true;//palette name
+		txt_lineActive[2] = false;//theory name
+		txt_lineActive[3] = false;//range name
 		});
 
 #endif
@@ -1086,9 +1096,6 @@ void ofxColorManager::draw_Curve()
 //--------------------------------------------------------------
 void ofxColorManager::draw_Info()
 {
-
-	// name label
-
 	ofPushMatrix();
 	ofPushStyle();
 
@@ -1101,55 +1108,76 @@ void ofxColorManager::draw_Info()
 	int y;
 	int h;
 
-	std::string s0 = myPalette_Name;
-	std::string s1 = theory_Name;
-	std::string s2 = range_Name;
+	std::string t0 = PRESET_name;
+	std::string t1 = myPalette_Name;
+	std::string t2 = theory_Name;
+	std::string t3 = range_Name;
 
-	//TODO:
-	//sort
-	//if (s0 == "" && s1 != "" && s2 == "") s0 == s1;
-	//else if (s0 == "" && s1 == "" && s2 != "") s0 == s2;
-	////else if (s0 != "" && s1 == "" && s2 == "") s0 == s1;
+	float _w0 = ofxSurfingHelpers::getWidthBBtextBoxed(fontBig, t0);
+	float _w1 = ofxSurfingHelpers::getWidthBBtextBoxed(fontBig, t1);
+	float _w2 = ofxSurfingHelpers::getWidthBBtextBoxed(fontMedium, t2);
+	float _w3 = ofxSurfingHelpers::getWidthBBtextBoxed(fontSmall, t3);
 
-	float w0 = ofxSurfingHelpers::getWidthBBtextBoxed(fontBig, s0);
-	float w1 = ofxSurfingHelpers::getWidthBBtextBoxed(fontMedium, s1);
-	float w2 = ofxSurfingHelpers::getWidthBBtextBoxed(fontSmall, s2);
 	int i = 0;
 
 	y = pady + fontBig.getSize();
 
-	ofColor c0, c1;
+	ofColor c0, c1, c0_Ghost, c1_Ghost;
 	c0.set(0, 200);
 	c1.set(255, 200);
+	c0_Ghost.set(0, 32);
+	c1_Ghost.set(255, 32);
 
-	if (s0 != "") {
+	if (t0 != "") {//preset name
 		padh = 15;
-		h = fontBig.getSize() + padh;//font spacer to respect px, py anchor
-		x = ofGetWidth() * 0.5 - w0 * 0.5;
-		ofSetColor(c0);
-		fontBig.drawString(s0, x + sp, (y + sp) + (i * h));
-		ofSetColor(c1);
-		fontBig.drawString(s0, x, y + (i++ * h));
+		h = fontBig.getSize() + padh;
+		x = ofGetWidth() * 0.5 - _w0 * 0.5;
+		if (txt_lineActive[i]) ofSetColor(c0);
+		else ofSetColor(c0_Ghost);
+		fontBig.drawString(t0, x + sp, (y + sp) + (i * h));
+		if (txt_lineActive[i]) ofSetColor(c1);
+		else ofSetColor(c1_Ghost);
+		fontBig.drawString(t0, x, y + (i * h));
+		i++;
 	}
 
-	if (s1 != "") {
+	if (t1 != "") {//palette name
 		padh = 15;
-		h = fontMedium.getSize() + padh;//font spacer to respect px, py anchor
-		x = ofGetWidth() * 0.5 - w1 * 0.5;
-		ofSetColor(c0);
-		fontMedium.drawString(s1, x + sp, (y + sp) + (i * h));
-		ofSetColor(c1);
-		fontMedium.drawString(s1, x, y + (i++ * h));
+		h = fontBig.getSize() + padh;
+		x = ofGetWidth() * 0.5 - _w1 * 0.5;
+		if (txt_lineActive[i]) ofSetColor(c0);
+		else ofSetColor(c0_Ghost);
+		fontBig.drawString(t1, x + sp, (y + sp) + (i * h));
+		if (txt_lineActive[i]) ofSetColor(c1);
+		else ofSetColor(c1_Ghost);
+		fontBig.drawString(t1, x, y + (i * h));
+		i++;
 	}
 
-	if (s2 != "") {
-		padh = 20;
-		h = fontSmall.getSize() + padh;//font spacer to respect px, py anchor
-		x = ofGetWidth() * 0.5 - w2 * 0.5;
-		ofSetColor(c0);
-		fontSmall.drawString(s2, x + sp, (y + sp) + (i * h));
-		ofSetColor(c1);
-		fontSmall.drawString(s2, x, y + (i++ * h));
+	if (t2 != "") {//theory name
+		padh = 15;
+		h = 2 * fontMedium.getSize() + padh;
+		x = ofGetWidth() * 0.5 - _w2 * 0.5;
+		if (txt_lineActive[i]) ofSetColor(c0);
+		else ofSetColor(c0_Ghost);
+		fontMedium.drawString(t2, x + sp, (y + sp) + (i * h));
+		if (txt_lineActive[i]) ofSetColor(c1);
+		else ofSetColor(c1_Ghost);
+		fontMedium.drawString(t2, x, y + (i * h));
+		i++;
+	}
+
+	if (t3 != "") {//range name
+		padh = 40;
+		h = fontMedium.getSize() + padh;
+		x = ofGetWidth() * 0.5 - _w3 * 0.5;
+		if (txt_lineActive[i]) ofSetColor(c0);
+		else ofSetColor(c0_Ghost);
+		fontSmall.drawString(t3, x + sp, (y + sp) + (i * h));
+		if (txt_lineActive[i]) ofSetColor(c1);
+		else ofSetColor(c1_Ghost);
+		fontSmall.drawString(t3, x, y + (i * h));
+		i++;
 	}
 
 	//-
@@ -5649,8 +5677,13 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 				theory_Name = theoryTypes[i].getName();
 				lastTheory = i;
 
-				myPalette_Name = "";
-				range_Name = "";
+				//myPalette_Name = "";
+				//range_Name = "";
+
+				txt_lineActive[0] = true;//preset name
+				txt_lineActive[1] = false;//palette name
+				txt_lineActive[2] = true;//theory name
+				txt_lineActive[3] = false;//range name
 
 				// DEMO
 				if (TEST_DEMO) myDEMO_palette.reStart();
@@ -6125,8 +6158,13 @@ void ofxColorManager::Changed_ColorRange(ofAbstractParameter &e)
 				lastRange = i;
 				range_Name = rangTypes[i].getName();
 
-				myPalette_Name = "";
-				theory_Name = "";
+				//myPalette_Name = "";
+				//theory_Name = "";
+				
+				txt_lineActive[0] = true;//preset name
+				txt_lineActive[1] = false;//palette name
+				txt_lineActive[2] = false;//theory name
+				txt_lineActive[3] = true;//range name
 
 				// DEMO
 				if (TEST_DEMO) myDEMO_palette.reStart();
@@ -6151,8 +6189,13 @@ void ofxColorManager::Changed_ColorRange(ofAbstractParameter &e)
 				theory_Name = algoTypes[i].getName();
 				lastTheory = i + NUM_COLOR_THEORY_TYPES;
 
-				myPalette_Name = "";
-				range_Name = "";
+				//myPalette_Name = "";
+				//range_Name = "";
+				
+				txt_lineActive[0] = true;//preset name
+				txt_lineActive[1] = false;//palette name
+				txt_lineActive[2] = true;//theory name
+				txt_lineActive[3] = false;//range name
 
 				// DEMO
 				if (TEST_DEMO) myDEMO_palette.reStart();

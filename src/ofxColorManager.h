@@ -96,6 +96,8 @@ public:
 	ofTrueTypeFont fontMedium;
 	ofTrueTypeFont fontBig;
 
+	bool txt_lineActive[4];
+
 	//-
 
 	//ofxColorMorph
@@ -831,4 +833,4 @@ private:
 		}
 	}
 
-};
+	};
