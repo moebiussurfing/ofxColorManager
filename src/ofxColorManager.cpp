@@ -1,7 +1,5 @@
 #include "ofxColorManager.h"
 
-#pragma mark - OF APP
-
 //TODO:
 //--------------------------------------------------------------
 void ofxColorManager::dragEvent(ofDragInfo info) {
@@ -111,8 +109,11 @@ void ofxColorManager::setup()
 	//ofSetLogLevel("ofxColorManager", OF_LOG_NOTICE);
 
 	colBoxSize.set("Size", 25, 10, 100);
-	bLibFillMode.set("Mode Fill", false);
+	bLibFillMode.set("Responsive", false);
 	bPagerized.set("Mode Paging", false);
+
+	paletteBoxSize.set("Size", 25, 10, 500);
+	bPaletteFillMode.set("Responsive", false);
 
 	//-
 
@@ -305,11 +306,11 @@ void ofxColorManager::setup()
 
 	// algorithmic palette
 
-	MODE_TweakSatBrg.set("TWEAK SAT/BRT", false);
+	MODE_TweakSatBrg.set("Tweak Sat/Brt", false);
 	SATURATION.set("SATURATION", 200, 0, 255);
 	BRIGHTNESS.set("BRIGHTNESS", 200, 0, 255);
-	bAuto_palette_recall.set("AUTO LIVE MODE", false);
-	bLock_palette.set("LOCK PALETTES", false);
+	bAuto_palette_recall.set("Auto Build", false);
+	bLock_palette.set("Lock Palettes", false);
 	amountColors_Alg.set("Amnt Colors", 6, 2, 10);
 	params_palette.setName("ADVANCED");
 	params_palette.add(MODE_TweakSatBrg);
@@ -444,12 +445,12 @@ void ofxColorManager::setup()
 	boxSizeUser.set("Box Size", 40, 10, 200);
 	boxRowsUser.set("Max Rows", 10, 1, 20);
 	boxScale.set("Scale", 1.f, 0.25f, 1.25f);
-	bEditUserPalette.set("EDIT", false);
+	//bEditUserPalette.set("EDIT", false);
 	//bUserPaletteVertical.set("VERTICAL", false);
 	bFlipUserPalette.set("FLIP", false);
 
 	params_UserPalette.setName("USER PALETTE");
-	params_UserPalette.add(bEditUserPalette);
+	//params_UserPalette.add(bEditUserPalette);
 	//params_UserPalette.add(bUserPaletteVertical);
 	params_UserPalette.add(bFlipUserPalette);
 	//params_UserPalette.add(boxSizeUser);
@@ -620,11 +621,8 @@ void ofxColorManager::setup()
 
 	XML_params.add(MODE_TweakSatBrg);//algorithmic palette
 	XML_params.add(amountColors_Alg);
-	XML_params.add(paletteLibPage);
 	XML_params.add(bPaletteEdit);//user palette
 	XML_params.add(bAuto_palette_recall);
-	XML_params.add(boxRowsUser);
-	XML_params.add(boxScale);
 	XML_params.add(SHOW_UserPalette);
 
 	XML_params.add(TEST_MODE);
@@ -647,6 +645,7 @@ void ofxColorManager::setup()
 	XML_params.add(color_SAT_Power);
 	XML_params.add(color_BRG_Power);
 
+	XML_params.add(paletteLibPage);
 	XML_params.add(pantoneMaxColumns);
 	XML_params.add(numLibLines);
 	XML_params.add(bPantoneCards);
@@ -655,6 +654,12 @@ void ofxColorManager::setup()
 	XML_params.add(bLibFillMode);
 	XML_params.add(bPagerized);
 	XML_params.add(colBoxSize);
+
+	XML_params.add(bPaletteFillMode);
+	XML_params.add(paletteBoxSize);
+	XML_params.add(boxRowsUser);
+	XML_params.add(boxScale);
+
 
 	//--
 
@@ -1296,6 +1301,8 @@ void ofxColorManager::draw(ofEventArgs & args)
 				{
 					ENABLE_keys = true;
 				}
+
+				//myDEMO_palette.setEnableMouseCamera();
 			}
 		}
 	}
@@ -1736,52 +1743,98 @@ void ofxColorManager::gui_Theory()
 
 	if (ofxImGui::BeginWindow("THEORY", mainSettings, false))
 	{
-		//int _w = ImGui::GetWindowContentRegionWidth();
-		//ImGui::PushItemWidth(_w* 0.80);
-		//int _h = 30;
+		ImGui::Dummy(ImVec2(0.0f, 10.f));
 
-		ImGuiColorEditFlags colorEdiFlags = ImGuiColorEditFlags_NoOptions | ImGuiColorEditFlags_NoTooltip;
+		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
+		float _w = ImGui::GetWindowContentRegionWidth() - _spc;
+		int _h = 20;
+		float _w50 = MAX(150, _w * 0.37);
 
-		//TODO:
-		//add wheel!
+		//ImGuiColorEditFlags colorEdiFlags = ImGuiColorEditFlags_NoOptions | ImGuiColorEditFlags_NoTooltip;
 
-		////auto tmpRef = colorTheoryBase.get();
-		//////if (ImGui::ColorEdit3(colorTheoryBase.getName(), &tmpRef._r))
-		////{
-		////	colorTheoryBase.set(tmpRef);
-		////}
+		ImGuiColorEditFlags colorEdiFlags =
+			ImGuiColorEditFlags_NoSmallPreview |
+			ImGuiColorEditFlags_NoTooltip |
+			ImGuiColorEditFlags_NoLabel |
+			ImGuiColorEditFlags_NoSidePreview |
+			ImGuiColorEditFlags_HSV |
+			ImGuiColorEditFlags_RGB |
+			//ImGuiColorEditFlags_NoInputs |
+			ImGuiColorEditFlags_NoAlpha |
+			ImGuiColorEditFlags_PickerHueWheel;
 
-		////ImVec4 c;
-		//ofColor c;
-		//c = colorTheoryBase.get();
+		//-
 
-		//{
-		//	static float col1[3] = { colorTheoryBase.get()[0] };
-		//	//static float col2[4] = { 0.4f,0.7f,0.0f,0.5f };
-		//	ImGui::ColorEdit3("color 1", col1);
-		//	ImGui::SameLine(); HelpMarker("Click on the colored square to open a color picker.\nClick and hold to use drag and drop.\nRight-click on the colored square to show options.\nCTRL+click on individual component to input value.\n");
-
-		//	//ImGui::ColorEdit4("color 2", col2);
-		//}
-
-		//ImGui::ColorPicker4("MyColor##PickerThy", &c[0], colorEdiFlags);
-
-		if (ofxImGui::AddParameter(colorTheoryBase))
+		//ImGui::Columns(2);
+		
+		ofParameter<ofFloatColor> c;
+		c.set(colorTheoryBase.getName(),
+			ofFloatColor(colorTheoryBase.get().r / 255.f, colorTheoryBase.get().g / 255.f, colorTheoryBase.get().b / 255.f, colorTheoryBase.get().a / 255.f),
+			ofFloatColor(0, 0, 0, 0),
+			ofFloatColor(1.f, 1.f, 1.f, 1.f)
+		);
+		auto tmpRef = c.get();
+		ImGui::PushItemWidth(_w50);
+		//wheel
+		if (ImGui::ColorPicker3("ColTheory", &tmpRef.r, colorEdiFlags))
 		{
-			ofLogNotice(__FUNCTION__) << "PICKER THEORY MOVED !";
+			ofLogNotice(__FUNCTION__) << "Wheel Picker Theory moved !";
+			colorTheoryBase.set(tmpRef);
 			color_Picked = colorTheoryBase.get();
 		}
+		//mini box
+		if (ImGui::ColorButton("##CT1", *(ImVec4 *)&tmpRef.r, colorEdiFlags, ImVec2(_w50, _h)))
+		{
+		}
+		//ImGui::PopItemWidth();
+
+		//-
+
+		//TODO:
+		//make columns
+		//ImGui::NextColumn();
+		//ImGui::EndFrame
+
+		//if (ofxImGui::AddParameter(colorTheoryBase))
+		//{
+		//	ofLogNotice(__FUNCTION__) << "Rectangle Picker Theory moved !";
+		//	color_Picked = colorTheoryBase.get();
+		//}
+
+		//square
+		colorEdiFlags =
+			ImGuiColorEditFlags_NoSmallPreview |
+			ImGuiColorEditFlags_NoTooltip |
+			ImGuiColorEditFlags_NoLabel |
+			ImGuiColorEditFlags_NoSidePreview |
+			ImGuiColorEditFlags_HSV |
+			ImGuiColorEditFlags_RGB |
+			ImGuiColorEditFlags_HDR |
+			ImGuiColorEditFlags_NoAlpha |
+			ImGuiColorEditFlags_PickerHueBar;
+
+		if (ImGui::CollapsingHeader("SQUARE"))
+		{
+			if (ImGui::ColorPicker4("##cTheory5", (float *)&tmpRef, colorEdiFlags))
+			{
+				ofLogNotice(__FUNCTION__) << "PICKER 2 MOVED !";
+			}
+		}
+		ImGui::PopItemWidth();
+
+		//-
+
+		ImGui::Dummy(ImVec2(0.0f, 5));
 
 		//ImGui::SameLine();
 
 		ofxImGui::AddParameter(bGetFromPicker);
-
+		ofxImGui::AddParameter(bAuto_palette_recall);
 		if (ofxImGui::AddParameter(amountColors))
+		//if (ImGui::InputInt(amountColors.getName().c_str(), (int*)&amountColors.get(), 1, 5))
 		{
 			palettes_colorTheory_setup();
 		}
-
-		//ImGui::PopItemWidth();
 
 		//-
 
@@ -1819,7 +1872,7 @@ void ofxColorManager::gui_Theory()
 				ofxImGui::AddParameter(BRIGHTNESS);
 			}
 			ofxImGui::AddParameter(bLock_palette);
-			ofxImGui::AddParameter(bAuto_palette_recall);
+			//ofxImGui::AddParameter(bAuto_palette_recall);
 			//ofxImGui::AddParameter(bRandomPalette);
 
 			//ImGui::PopItemWidth();
@@ -2098,26 +2151,35 @@ void ofxColorManager::gui_Palette()
 
 		//-
 
-		if (bEditUserPalette)
+		if (ImGui::CollapsingHeader("Advanced"))
 		{
-			//ofxImGui::AddParameter(bUserPaletteVertical);
-			//ofxImGui::AddParameter(boxSizeUser);
-			//ofxImGui::AddParameter(boxRowsUser);
+			ofxImGui::AddParameter(bPaletteFillMode);
+			if (bPaletteFillMode) {
+				ImGui::InputInt(paletteBoxSize.getName().c_str(), (int*)&paletteBoxSize.get(), 5, 100);
+				//ofxImGui::AddParameter(paletteBoxSize);
+			}
+			if (!bPaletteFillMode) {
+				boxRowsUser.disableEvents();
+				ImGui::InputInt(boxRowsUser.getName().c_str(), (int*)&boxRowsUser.get(), 1, 5);
+				//ImGui::InputInt(boxRowsUser.getName().c_str(), (int *)&boxRowsUser.get());
+				boxRowsUser = ofClamp(boxRowsUser.get(), boxRowsUser.getMin(), boxRowsUser.getMax());
+				boxRowsUser.enableEvents();
 
-			boxRowsUser.disableEvents();
-			ImGui::InputInt(boxRowsUser.getName().c_str(), (int *)&boxRowsUser.get());
-			boxRowsUser = ofClamp(boxRowsUser.get(), boxRowsUser.getMin(), boxRowsUser.getMax());
-			boxRowsUser.enableEvents();
-
-			ImGui::InputFloat(boxScale.getName().c_str(), (float *)&boxScale.get(), 0.005f, 0.010);
+				//ofxImGui::AddParameter(boxScale);
+				ImGui::InputFloat(boxScale.getName().c_str(), (float *)&boxScale.get(), 0.005f, 0.010);
+			}
 
 			//-
+
+			ImGui::Dummy(ImVec2(0.0f, 5));
 
 			if (ImGui::RadioButton("Copy", mode == Mode_Copy)) { mode = Mode_Copy; } ImGui::SameLine();
 			if (ImGui::RadioButton("Move", mode == Mode_Move)) { mode = Mode_Move; } ImGui::SameLine();
 			if (ImGui::RadioButton("Swap", mode == Mode_Swap)) { mode = Mode_Swap; }
 
-			if (ofxSurfingHelpers::AddSmallButton(bFlipUserPalette))
+			ImGui::Dummy(ImVec2(0.0f, 5));
+
+			if (ofxSurfingHelpers::AddSmallButton(bFlipUserPalette, 100, 0.5 * BUTTON_BIG_HEIGHT))
 			{
 				reBuildGradientPalette();
 			}
@@ -2127,11 +2189,39 @@ void ofxColorManager::gui_Palette()
 
 		//-
 
-		{
-			for (int n = 0; n < palette.size(); n++)
-			{
-				ImGui::PushID(n);
+		//responsive
+		ImVec2 button_sz((float)paletteBoxSize.get(), (float)paletteBoxSize.get());
+		ImGuiStyle& style = ImGui::GetStyle();
+		int buttons_count = palette.size();
+		float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
 
+		//-
+
+		for (int n = 0; n < palette.size(); n++)
+		{
+			// responsive buttons size
+			if (bPaletteFillMode) {
+				ImGui::PushID(n);
+				string name = ofToString(n);
+
+				////customize colors
+				//if (n == indexBrowser)//when selected
+				//{
+				//	const ImVec4 color1 = ImVec4(0.1, 0.1, 0.1, 0.8);//changes button color to black
+				//	ImGui::PushStyleColor(ImGuiCol_Button, color1);
+				//}
+				//else //not selected
+				{
+					const ImVec4 color2 = style.Colors[ImGuiCol_Button];//do not changes the color
+					ImGui::PushStyleColor(ImGuiCol_Button, color2);
+				}
+			}
+
+			//--
+
+			ImGui::PushID(n);
+
+			if (!bPaletteFillMode) {
 				//split in rows
 				if (boxRowsUser != 0)
 				{
@@ -2143,103 +2233,103 @@ void ofxColorManager::gui_Palette()
 						}
 					}
 				}
+			}
 
-				//-
+			//-
 
-				float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
-				int _w = ImGui::GetWindowContentRegionWidth() - _spc;
-				//float _w50 = (_w * 0.5) - (_spc * 0.5);
-				//float _w100 = _w - _spc;
-				//float _h = BUTTON_BIG_HEIGHT;
+			float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
+			float _w = ImGui::GetWindowContentRegionWidth() - _spc;
 
-				//-
+			//-
 
-				int _r = (int)MIN(boxRowsUser.get(), palette.size());
+			int _r = (int)MIN(boxRowsUser.get(), palette.size());
 
-				int wb;
-				wb = (_w / _r) - _spc;
-				wb = wb * boxScale.get();
+			int wb;
+			wb = (_w / _r) - _spc;
+			wb = wb * boxScale.get();
 
-				//--
+			//--
 
-				_flags =
-					ImGuiColorEditFlags_NoSmallPreview |
-					ImGuiColorEditFlags_NoTooltip |
-					ImGuiColorEditFlags_NoLabel |
-					ImGuiColorEditFlags_NoSidePreview |
-					ImGuiColorEditFlags_NoInputs |
-					ImGuiColorEditFlags_NoAlpha;
+			_flags =
+				ImGuiColorEditFlags_NoSmallPreview |
+				ImGuiColorEditFlags_NoTooltip |
+				ImGuiColorEditFlags_NoLabel |
+				ImGuiColorEditFlags_NoSidePreview |
+				ImGuiColorEditFlags_NoInputs |
+				ImGuiColorEditFlags_NoAlpha;
 
-				//--
+			//--
 
-				// color box
+			// color box
+			ImVec2 bb;
+			if (bPaletteFillMode) bb = button_sz;
+			else bb = ImVec2(wb, wb);
+			if (ImGui::ColorButton("##paletteDrag",
+				palette[n],
+				_flags,
+				bb))
+			{
+				lastColorPicked_Palette = n;
+			}
 
-				if (ImGui::ColorButton("##paletteDrag",
-					palette[n],
-					_flags,
-					ImVec2(wb, wb)))
+			//--
+
+			// dragggable boxes
+
+			if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
+			{
+				ImGui::SetDragDropPayload("DND_DEMO_CELL", &n, sizeof(int));
+				if (mode == Mode_Copy) { ImGui::Text("Copy %s", ofToString(n).c_str()); }
+				if (mode == Mode_Move) { ImGui::Text("Move %s", ofToString(n).c_str()); }
+				if (mode == Mode_Swap) { ImGui::Text("Swap %s", ofToString(n).c_str()); }
+				ImGui::EndDragDropSource();
+			}
+
+			if (ImGui::BeginDragDropTarget())
+			{
+				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_DEMO_CELL"))
 				{
-					lastColorPicked_Palette = n;
-				}
+					IM_ASSERT(payload->DataSize == sizeof(int));
+					int payload_n = *(const int*)payload->Data;
 
-				//--
-
-				// dragggable boxes
-
-				if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
-				{
-					ImGui::SetDragDropPayload("DND_DEMO_CELL", &n, sizeof(int));
-					if (mode == Mode_Copy) { ImGui::Text("Copy %s", ofToString(n).c_str()); }
-					if (mode == Mode_Move) { ImGui::Text("Move %s", ofToString(n).c_str()); }
-					if (mode == Mode_Swap) { ImGui::Text("Swap %s", ofToString(n).c_str()); }
-					ImGui::EndDragDropSource();
-				}
-
-				if (ImGui::BeginDragDropTarget())
-				{
-					if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_DEMO_CELL"))
+					if (mode == Mode_Copy)
 					{
-						IM_ASSERT(payload->DataSize == sizeof(int));
-						int payload_n = *(const int*)payload->Data;
-
-						if (mode == Mode_Copy)
-						{
-							palette[n] = palette[payload_n];
-						}
-						if (mode == Mode_Move)
-						{
-							palette[n] = palette[payload_n];
-							palette[payload_n] = ofColor(0);
-						}
-						if (mode == Mode_Swap)
-						{
-							const ofColor tmp = palette[n];
-							palette[n] = palette[payload_n];
-							palette[payload_n] = tmp;
-						}
-
-						//--
-
-						// update all pallete (Curve)
-						ofLogNotice(__FUNCTION__) << "DONE Dragged color";
-
-						reBuildGradientPalette();
+						palette[n] = palette[payload_n];
 					}
-					ImGui::EndDragDropTarget();
+					if (mode == Mode_Move)
+					{
+						palette[n] = palette[payload_n];
+						palette[payload_n] = ofColor(0);
+					}
+					if (mode == Mode_Swap)
+					{
+						const ofColor tmp = palette[n];
+						palette[n] = palette[payload_n];
+						palette[payload_n] = tmp;
+					}
+
+					//--
+
+					// update all pallete (Curve)
+					ofLogNotice(__FUNCTION__) << "DONE Dragged color";
+
+					reBuildGradientPalette();
 				}
+				ImGui::EndDragDropTarget();
+			}
+			ImGui::PopID();
+
+			//--
+
+			// responsive buttons size
+			if (bPaletteFillMode) {
+				ImGui::PopStyleColor();
+				float last_button_x2 = ImGui::GetItemRectMax().x;
+				float next_button_x2 = last_button_x2 + style.ItemSpacing.x + button_sz.x; // Expected position if next button was on same line
+				if (n + 1 < buttons_count && next_button_x2 < window_visible_x2) ImGui::SameLine();
 				ImGui::PopID();
 			}
 		}
-
-		ImGui::Dummy(ImVec2(0.0f, 10));
-
-		//--
-
-		//edit
-
-		ofxImGui::AddParameter(bEditUserPalette);
-
-		//-
 
 		ImGui::Dummy(ImVec2(0.0f, 10));
 
@@ -2333,7 +2423,7 @@ void ofxColorManager::gui_Library()
 
 			std::string s = "";
 			s += "PANTONE (c)";
-			s += "  ";
+			s += "    ";
 			s += ofToString(lastPantoneIndex) + "/" + ofToString(ColorBrowser.pantoneNames.size() - 1);
 			ImGui::Text(s.c_str());
 
@@ -2427,6 +2517,7 @@ void ofxColorManager::gui_Library()
 
 			//-
 
+			//responsive
 			ImVec2 button_sz((float)colBoxSize.get(), (float)colBoxSize.get());
 			ImGuiStyle& style = ImGui::GetStyle();
 			int buttons_count;
@@ -2565,7 +2656,7 @@ void ofxColorManager::gui_Picker()
 
 		// 0. color big
 		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
-		int _w = ImGui::GetWindowContentRegionWidth() - _spc;
+		float _w = ImGui::GetWindowContentRegionWidth() - _spc;
 		int _h = 20;
 
 		ImGuiColorEditFlags colorEdiFlags = ImGuiColorEditFlags_NoOptions | ImGuiColorEditFlags_NoTooltip;
@@ -2611,14 +2702,13 @@ void ofxColorManager::gui_Picker()
 				ImGui::ColorPicker4("MyColor##Wheel", (float *)&color, colorEdiFlags);
 				color_Picked = color;
 			}
-
-			{
-				//ofLogNotice(__FUNCTION__) << "PICKER 1 MOVED !";
-			}
+			//{
+			//	//ofLogNotice(__FUNCTION__) << "PICKER 1 MOVED !";
+			//}
 
 			//-
 
-			// 1.2 squared box
+			// 1.2 square
 			colorEdiFlags =
 				ImGuiColorEditFlags_NoSmallPreview |
 				ImGuiColorEditFlags_NoTooltip |
@@ -2884,7 +2974,7 @@ void ofxColorManager::gui_Range()
 		ofFloatColor c2_Pre = guiCol2[0];
 
 		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
-		int _w = ImGui::GetWindowContentRegionWidth() - _spc;
+		float _w = ImGui::GetWindowContentRegionWidth() - _spc;
 		int _h = 20;
 		float w50 = _w * 0.35f;
 		float w100 = _w;
@@ -2908,15 +2998,16 @@ void ofxColorManager::gui_Range()
 
 		//--
 
-		// picker
+		// picker 1
 
-		if (ImGui::ColorPicker3("1", &guiCol1[0], colorEdiFlags)) {
+		//wheel
+		if (ImGui::ColorPicker3("1", &guiCol1[0], colorEdiFlags))
+		{
 			if (autoPickColor1) color_Picked.set(guiCol1[0]);
 		}
-
+		//mini box
 		if (ImGui::ColorButton("##C1", *(ImVec4 *)&guiCol1[0], colorEdiFlags, ImVec2(w50, _h)))
 		{
-
 		}
 
 		ImGui::PopItemWidth();
@@ -2939,19 +3030,16 @@ void ofxColorManager::gui_Range()
 
 		//--
 
-		// picker
-		if (ImGui::ColorPicker3("2", &guiCol2[0], colorEdiFlags)) {
+		// picker 2
+		
+		//wheel
+		if (ImGui::ColorPicker3("2", &guiCol2[0], colorEdiFlags))
+		{
 			if (autoPickColor2) color_Picked.set(guiCol2[0]);
 		}
-
-
-		//--
-
-		// big
-
+		//mini box
 		if (ImGui::ColorButton("##C2", *(ImVec4 *)&guiCol2[0], colorEdiFlags, ImVec2(w50, _h)))
 		{
-
 		}
 
 		ImGui::PopItemWidth();
@@ -2967,7 +3055,7 @@ void ofxColorManager::gui_Range()
 
 		ImGui::Dummy(ImVec2(0.0f, 5));
 
-		//-
+		//--
 
 		ImGui::Columns(1);
 
@@ -3156,7 +3244,7 @@ void ofxColorManager::gui_Curve()
 	{
 		//-
 
-		int _w = ImGui::GetWindowContentRegionWidth();
+		float _w = ImGui::GetWindowContentRegionWidth();
 		int _pad = 5;
 		//int _pad = _w * 0.1;
 		float _w50 = (_w * 0.5f) - (_pad * 0.5f);
@@ -3258,7 +3346,7 @@ void ofxColorManager::gui_Background()
 
 			// 0. color big
 
-			int _w = ImGui::GetWindowContentRegionWidth();
+			float _w = ImGui::GetWindowContentRegionWidth();
 			int _h = 20;
 
 			ImGuiColorEditFlags colorEdiFlags;
@@ -5944,12 +6032,12 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	{
 		palettes_resize();
 	}
-	else if (name == "AUTO LIVE MODE")
+	else if (name == bAuto_palette_recall.getName())
 	{
 		if (bAuto_palette_recall)
 			bLock_palette = false;
 	}
-	else if (name == "LOCK PALETTES")
+	else if (name == bLock_palette.getName())
 	{
 		if (bLock_palette)
 			bAuto_palette_recall = false;
@@ -6679,7 +6767,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		if (SHOW_ColourLovers)
 		{
 			// 3. randomly get a palette from colour lovers only
-			if (key == 'i')
+			if (key == 'r' || key == 'R')
 			{
 #ifdef USE_COLOR_LOVERS
 				colourLoversHelper.randomPalette();
@@ -6880,7 +6968,7 @@ void ofxColorManager::mousePressed(ofMouseEventArgs &eventArgs)
 
 	// DEMO
 
-	if (TEST_DEMO)
+	if (TEST_DEMO && !mouseOverGui)
 	{
 		if (button == 2)//second mouse button cleans DEMO
 			myDEMO_palette.clear();

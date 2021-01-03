@@ -2,7 +2,16 @@
 #pragma once
 #include "ofMain.h"
 
-//--
+/*
+	TODO:
+
++ fix change num colors on algo palettes
++ fix range pickers
++ raname xml params to avoid same names
++ store lovers state favs or history
+
+*/
+
 
 //#define INCL_LAYOUT
 #define USE_RECTANGLE_INTERFACES // should be nice to completely disable! to disable ofxInterface
@@ -76,6 +85,10 @@ public:
 	ofParameter<bool> bLibFillMode;
 	ofParameter<bool> bPagerized;
 	ofParameter<int> colBoxSize;
+
+public:
+	ofParameter<bool> bPaletteFillMode;
+	ofParameter<int> paletteBoxSize;
 
 public:
 	void dragEvent(ofDragInfo dragInfo);
@@ -186,13 +199,11 @@ public:
 	//-
 
 	//user palette
-	ofParameter<bool> bEditUserPalette;
+	//ofParameter<bool> bEditUserPalette;
 	ofParameter<int> boxSizeUser;
 	ofParameter<int> boxRowsUser;
-	//ofParameter<int> colBoxSize{ "Size Box", 25, 10, 100 };
 	ofParameter<float> boxScale;
 	ofParameter<bool> bFlipUserPalette;
-	//ofParameter<bool> bUserPaletteVertical;
 
 	ofParameter<float> rangeScale;
 

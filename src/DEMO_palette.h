@@ -68,6 +68,10 @@ public:
 		else cam.disableMouseInput();
 	}
 
+	void setEnableMouse(bool b) {
+		ofLogNotice(__FUNCTION__);
+	}
+
 	void toggleMouseCamera() {
 		ofLogNotice(__FUNCTION__);
 		if (!cam.getMouseInputEnabled()) cam.enableMouseInput();
