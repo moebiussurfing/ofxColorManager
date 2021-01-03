@@ -66,3 +66,8 @@ void ofApp::exit()
 {
 	colorManager.exit();
 }
+
+//--------------------------------------------------------------
+void ofApp::dragEvent(ofDragInfo info) {
+	colorManager.dragEvent(info);
+}

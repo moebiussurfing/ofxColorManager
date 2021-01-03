@@ -10,6 +10,7 @@
 
 //--------------------------------------------------------------
 void DEMO_palette::setup() {
+	ofLogNotice(__FUNCTION__);
 
 	// DEMO 1
 

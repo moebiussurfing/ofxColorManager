@@ -15,11 +15,12 @@ private:
 public:
 	~DEMO_palette() 
 	{
+		ofLogNotice(__FUNCTION__);
 		ofxSaveCamera(cam, path + _name);
 	}
 	DEMO_palette()
 	{
-		
+		ofLogNotice(__FUNCTION__);
 	}
 
 	//-
@@ -30,6 +31,7 @@ public:
 	void draw(float alpha);
 
 	void clear() {
+		ofLogNotice(__FUNCTION__);
 		//bDEMO1_clear = true;
 		//pauseCreate = false;
 		locations.clear();
@@ -38,38 +40,42 @@ public:
 	}
 
 	void reStart() {
+		ofLogNotice(__FUNCTION__);
 		//bDEMO1_clear = true;
 		clear();
 		pauseCreate = false;
 	}
 
 	void start() {
+		ofLogNotice(__FUNCTION__);
 		pauseCreate = false;
 	}
 
 	void setClear(bool b) {
+		ofLogNotice(__FUNCTION__);
 		bDEMO1_clear = true;
 	}
 
 	void setPalette(vector<ofColor> &_palette)
 	{
+		ofLogNotice(__FUNCTION__);
 		palette = &_palette;
 	}
 
 	void setEnableMouseCamera(bool b) {
+		ofLogNotice(__FUNCTION__);
 		if (b) cam.enableMouseInput();
 		else cam.disableMouseInput();
 	}
 
 	void toggleMouseCamera() {
-		if (!cam.getMouseInputEnabled())
-			cam.enableMouseInput();
-		else
-			cam.disableMouseInput();
+		ofLogNotice(__FUNCTION__);
+		if (!cam.getMouseInputEnabled()) cam.enableMouseInput();
+		else cam.disableMouseInput();
 	}
 
 private:
-
+	
 	string path = "settings/";
 	ofEasyCam cam;
 	vector<ofColor> *palette;

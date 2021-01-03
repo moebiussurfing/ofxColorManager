@@ -36,7 +36,6 @@ using namespace ofxColorTheory;
 #define NUM_QUANTIZER_COLORS_PER_ROW 4
 #endif
 
-
 //ofxCurvesTool
 #include "ofxCurvesTool.h"
 #include "ofxSimpleSlider.h"
@@ -73,6 +72,9 @@ using namespace ofxColorTheory;
 
 class ofxColorManager : public ofBaseApp
 {
+public:
+	void dragEvent(ofDragInfo dragInfo);
+
 private:
 	ofEventListener listener_LoverName;
 
@@ -153,6 +155,7 @@ public:
 	ofxColorQuantizerHelper colorQuantizer;
 	ofTexture tex;
 	ofFbo fbo;
+	void quantizerRefreshImage();
 #endif
 
 	//-
@@ -240,7 +243,6 @@ public:
 #ifdef INCL_LAYOUT
 	ofxGuiPanelsLayout panels;
 #endif
-	ofParameterGroup p_TOGGLES;
 	ofParameter<bool> SHOW_GuiInternal{ "GUI INTERNAL", false };
 	ofParameter<bool> SHOW_ImGui{ "ImGui", true };
 

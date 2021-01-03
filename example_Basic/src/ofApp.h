@@ -18,6 +18,8 @@ public:
     void keyPressed(int key);
     void windowResized(int w, int h);
 
+	void dragEvent(ofDragInfo dragInfo);
+
     ofxColorManager colorManager;
 
     // local palette and color (target pointers)
