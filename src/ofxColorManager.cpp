@@ -164,8 +164,6 @@ void ofxColorManager::setup()
 	colorQuantizer.setPalette_BACK(myPalette);
 	colorQuantizer.setPalette_BACK_RefreshPalette(bUpdated_Palette_BACK);
 	colorQuantizer.setPalette_BACK_Name(myPalette_Name);
-
-	quantizerRefreshImage();
 #endif
 
 	//--
@@ -665,30 +663,30 @@ void ofxColorManager::setup()
 	startup();
 }
 
-//--------------------------------------------------------------
-void ofxColorManager::quantizerRefreshImage()
-{
-	//load ofImage
-	ofLogNotice(__FUNCTION__) << " image path: " << colorQuantizer.getImagePath();
-
-	bool b = ofGetUsingArbTex();
-	ofDisableArbTex();
-	ofLoadImage(tex, colorQuantizer.getImagePath());
-	fbo.allocate(tex.getWidth(), tex.getHeight());
-	fbo.createAndAttachTexture(GL_RGB, 0); //Position
-	fbo.createAndAttachTexture(GL_RGBA32F, 1); //velocity
-	fbo.createAndAttachRenderbuffer(GL_DEPTH_COMPONENT, GL_DEPTH_ATTACHMENT);
-	fbo.checkStatus();
-	fbo.begin();
-	ofClear(0);
-	fbo.end();
-	if (b) ofEnableArbTex();
-
-	fbo.begin();//draw once only
-	ofClear(0, 0, 0, 0);
-	tex.draw(0, 0);
-	fbo.end();
-}
+////--------------------------------------------------------------
+//void ofxColorManager::quantizerRefreshImage()
+//{
+//	//load ofImage
+//	ofLogNotice(__FUNCTION__) << " image path: " << colorQuantizer.getImagePath();
+//
+//	bool b = ofGetUsingArbTex();
+//	ofDisableArbTex();
+//	ofLoadImage(tex, colorQuantizer.getImagePath());
+//	fbo.allocate(tex.getWidth(), tex.getHeight());
+//	fbo.createAndAttachTexture(GL_RGB, 0); //Position
+//	fbo.createAndAttachTexture(GL_RGBA32F, 1); //velocity
+//	fbo.createAndAttachRenderbuffer(GL_DEPTH_COMPONENT, GL_DEPTH_ATTACHMENT);
+//	fbo.checkStatus();
+//	fbo.begin();
+//	ofClear(0);
+//	fbo.end();
+//	if (b) ofEnableArbTex();
+//
+//	fbo.begin();//draw once only
+//	ofClear(0, 0, 0, 0);
+//	tex.draw(0, 0);
+//	fbo.end();
+//}
 
 //--------------------------------------------------------------
 void ofxColorManager::update(ofEventArgs & args)
@@ -707,13 +705,6 @@ void ofxColorManager::update(ofEventArgs & args)
 
 	////cosine gradient
 	//cosineGradient_update();
-
-	//--
-
-	//quantizer
-	if (colorQuantizer.isUpdated() && ofGetFrameNum() > 120) {
-		quantizerRefreshImage();
-	}
 
 	//--
 
@@ -2780,140 +2771,140 @@ void ofxColorManager::gui_Picker()
 	ofxImGui::EndWindow(mainSettings);
 }
 
-//TODO:
-//should move this into the quantizer addon!
-//--------------------------------------------------------------
-void ofxColorManager::gui_Quantizer()
-{
-	if (ofxImGui::BeginWindow("PICTURE", mainSettings, false))
-	{
-		//-
-
-		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
-		int _w = ImGui::GetWindowContentRegionWidth() - _spc;
-		float _w50 = (_w * 0.5) - (_spc * 0.5);
-		float _w100 = _w - _spc;
-		float _h = BUTTON_BIG_HEIGHT;
-
-		//-
-
-		ImGui::Dummy(ImVec2(0.0f, 10));
-
-		//ImGuiColorEditFlags colorEdiFlags =
-		//	ImGuiColorEditFlags_NoSmallPreview |
-		//	ImGuiColorEditFlags_NoTooltip |
-		//	ImGuiColorEditFlags_NoLabel |
-		//	ImGuiColorEditFlags_NoSidePreview |
-		//	ImGuiColorEditFlags_HSV |
-		//	ImGuiColorEditFlags_RGB |
-		//	ImGuiColorEditFlags_NoInputs |
-		//	ImGuiColorEditFlags_NoAlpha |
-		//	ImGuiColorEditFlags_PickerHueWheel;
-
-		ImGuiColorEditFlags colorEdiFlags =
-			ImGuiColorEditFlags_NoAlpha |
-			ImGuiColorEditFlags_NoPicker |
-			ImGuiColorEditFlags_NoTooltip;
-
-		//ImGuiColorEditFlags colorEdiFlags = false;
-
-		//-
-
-		// gui parameters
-
-		//ofxImGui::AddGroup(colorQuantizer.getParameters(), mainSettings);
-
-		ofxSurfingHelpers::AddBigButton(colorQuantizer.bReBuild, _w, _h);
-		ImGui::Dummy(ImVec2(0.0f, 5));
-
-		ImGui::InputInt(colorQuantizer.numColors.getName().c_str(), (int *)&colorQuantizer.numColors.get());
-		if (ImGui::InputInt(colorQuantizer.sortedType.getName().c_str(), (int *)&colorQuantizer.sortedType.get())) {
-			colorQuantizer.sortedType = ofClamp(colorQuantizer.sortedType, 1, 4);
-		}
-		ImGui::Dummy(ImVec2(0.0f, 5));
-		std::string s2 = colorQuantizer.sortedType_name.get();
-		ImGui::Text(s2.c_str());
-
-		//ImGui::InputInt(colorQuantizer.currentImage.getName().c_str(), (int *)&colorQuantizer.currentImage.get());
-
-		//-
-
-		ImGui::Dummy(ImVec2(0.0f, 5));
-
-		if (ImGui::Button("Previous", ImVec2(_w50, _h)))
-		{
-			colorQuantizer.loadPrev();
-		}
-
-		ImGui::SameLine();
-
-		if (ImGui::Button("Next", ImVec2(_w50, _h)))
-		{
-			colorQuantizer.loadNext();
-		}
-
-		ImGui::Dummy(ImVec2(0.0f, 5));
-
-		std::string s = ofToString(colorQuantizer.currentImage.get()) + "/" + ofToString(colorQuantizer.getAountFiles() - 1);
-		ImGui::Text(s.c_str());
-
-		ImGui::Dummy(ImVec2(0.0f, 5));
-
-		//-
-
-		//const auto p = colorQuantizer.getPalette();
-		const auto p = colorQuantizer.getPalette(true);
-
-		int wb = (ImGui::GetWindowContentRegionWidth() / NUM_QUANTIZER_COLORS_PER_ROW) - (2 * _spc);
-
-		for (int n = 0; n < p.size(); n++)
-		{
-			ImGui::PushID(n);
-
-			// box colors
-
-			if (ImGui::ColorButton("##paletteQuantizer",
-				p[n],
-				colorEdiFlags,
-				ImVec2(wb, wb)))
-			{
-				lastColorPicked_Palette = n;
-			}
-
-			// make rows
-			if (n == 0) ImGui::SameLine();
-			else {
-				if ((n % NUM_QUANTIZER_COLORS_PER_ROW) != 0) ImGui::SameLine();
-			}
-
-			ImGui::PopID();
-		}
-
-		//-
-
-		ImGui::Dummy(ImVec2(0.0f, 10));
-
-		// draw image preview
-
-		if (tex.isAllocated())
-		{
-			float w = tex.getWidth();
-			float h = tex.getHeight();
-			float ratio = h / w;
-
-			if (ImGui::ImageButton((ImTextureID)(uintptr_t)fbo.getTexture(0).getTextureData().textureID, ImVec2(_w, _w * ratio)))
-			{
-				ofLogNotice(__FUNCTION__) << "Image Pressed";
-			}
-		}
-
-		//-
-
-		ofxImGui::AddParameter(colorQuantizer.ENABLE_Keys);
-		ofxImGui::AddParameter(colorQuantizer.ENABLE_HelpInfo);
-	}
-	ofxImGui::EndWindow(mainSettings);
-}
+////TODO:
+////should move this into the quantizer addon!
+////--------------------------------------------------------------
+//void ofxColorManager::gui_Quantizer()
+//{
+//	if (ofxImGui::BeginWindow("PICTURE", mainSettings, false))
+//	{
+//		//-
+//
+//		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
+//		int _w = ImGui::GetWindowContentRegionWidth() - _spc;
+//		float _w50 = (_w * 0.5) - (_spc * 0.5);
+//		float _w100 = _w - _spc;
+//		float _h = BUTTON_BIG_HEIGHT;
+//
+//		//-
+//
+//		ImGui::Dummy(ImVec2(0.0f, 10));
+//
+//		//ImGuiColorEditFlags colorEdiFlags =
+//		//	ImGuiColorEditFlags_NoSmallPreview |
+//		//	ImGuiColorEditFlags_NoTooltip |
+//		//	ImGuiColorEditFlags_NoLabel |
+//		//	ImGuiColorEditFlags_NoSidePreview |
+//		//	ImGuiColorEditFlags_HSV |
+//		//	ImGuiColorEditFlags_RGB |
+//		//	ImGuiColorEditFlags_NoInputs |
+//		//	ImGuiColorEditFlags_NoAlpha |
+//		//	ImGuiColorEditFlags_PickerHueWheel;
+//
+//		ImGuiColorEditFlags colorEdiFlags =
+//			ImGuiColorEditFlags_NoAlpha |
+//			ImGuiColorEditFlags_NoPicker |
+//			ImGuiColorEditFlags_NoTooltip;
+//
+//		//ImGuiColorEditFlags colorEdiFlags = false;
+//
+//		//-
+//
+//		// gui parameters
+//
+//		//ofxImGui::AddGroup(colorQuantizer.getParameters(), mainSettings);
+//
+//		ofxSurfingHelpers::AddBigButton(colorQuantizer.bReBuild, _w, _h);
+//		ImGui::Dummy(ImVec2(0.0f, 5));
+//
+//		ImGui::InputInt(colorQuantizer.numColors.getName().c_str(), (int *)&colorQuantizer.numColors.get());
+//		if (ImGui::InputInt(colorQuantizer.sortedType.getName().c_str(), (int *)&colorQuantizer.sortedType.get())) {
+//			colorQuantizer.sortedType = ofClamp(colorQuantizer.sortedType, 1, 4);
+//		}
+//		ImGui::Dummy(ImVec2(0.0f, 5));
+//		std::string s2 = colorQuantizer.sortedType_name.get();
+//		ImGui::Text(s2.c_str());
+//
+//		//ImGui::InputInt(colorQuantizer.currentImage.getName().c_str(), (int *)&colorQuantizer.currentImage.get());
+//
+//		//-
+//
+//		ImGui::Dummy(ImVec2(0.0f, 5));
+//
+//		if (ImGui::Button("Previous", ImVec2(_w50, _h)))
+//		{
+//			colorQuantizer.loadPrev();
+//		}
+//
+//		ImGui::SameLine();
+//
+//		if (ImGui::Button("Next", ImVec2(_w50, _h)))
+//		{
+//			colorQuantizer.loadNext();
+//		}
+//
+//		ImGui::Dummy(ImVec2(0.0f, 5));
+//
+//		std::string s = ofToString(colorQuantizer.currentImage.get()) + "/" + ofToString(colorQuantizer.getAountFiles() - 1);
+//		ImGui::Text(s.c_str());
+//
+//		ImGui::Dummy(ImVec2(0.0f, 5));
+//
+//		//-
+//
+//		//const auto p = colorQuantizer.getPalette();
+//		const auto p = colorQuantizer.getPalette(true);
+//
+//		int wb = (ImGui::GetWindowContentRegionWidth() / NUM_QUANTIZER_COLORS_PER_ROW) - (2 * _spc);
+//
+//		for (int n = 0; n < p.size(); n++)
+//		{
+//			ImGui::PushID(n);
+//
+//			// box colors
+//
+//			if (ImGui::ColorButton("##paletteQuantizer",
+//				p[n],
+//				colorEdiFlags,
+//				ImVec2(wb, wb)))
+//			{
+//				lastColorPicked_Palette = n;
+//			}
+//
+//			// make rows
+//			if (n == 0) ImGui::SameLine();
+//			else {
+//				if ((n % NUM_QUANTIZER_COLORS_PER_ROW) != 0) ImGui::SameLine();
+//			}
+//
+//			ImGui::PopID();
+//		}
+//
+//		//-
+//
+//		ImGui::Dummy(ImVec2(0.0f, 10));
+//
+//		// draw image preview
+//
+//		if (tex.isAllocated())
+//		{
+//			float w = tex.getWidth();
+//			float h = tex.getHeight();
+//			float ratio = h / w;
+//
+//			if (ImGui::ImageButton((ImTextureID)(uintptr_t)fbo.getTexture(0).getTextureData().textureID, ImVec2(_w, _w * ratio)))
+//			{
+//				ofLogNotice(__FUNCTION__) << "Image Pressed";
+//			}
+//		}
+//
+//		//-
+//
+//		ofxImGui::AddParameter(colorQuantizer.ENABLE_Keys);
+//		ofxImGui::AddParameter(colorQuantizer.ENABLE_HelpInfo);
+//	}
+//	ofxImGui::EndWindow(mainSettings);
+//}
 
 //--------------------------------------------------------------
 void ofxColorManager::gui_Panels()
@@ -3730,7 +3721,8 @@ bool ofxColorManager::gui_Draw()
 
 		if (SHOW_Panels) gui_Panels();
 
-		if (SHOW_Quantizer) gui_Quantizer();
+		if (SHOW_Quantizer) colorQuantizer.gui_Quantizer();
+		//if (SHOW_Quantizer) gui_Quantizer();
 
 
 #ifdef USE_COLOR_LOVERS

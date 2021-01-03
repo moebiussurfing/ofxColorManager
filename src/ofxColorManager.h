@@ -33,7 +33,7 @@ using namespace ofxColorTheory;
 
 #ifdef USE_IMAGE_QUANTIZER
 #include "ofxColorQuantizerHelper.h"
-#define NUM_QUANTIZER_COLORS_PER_ROW 4
+//#define NUM_QUANTIZER_COLORS_PER_ROW 4
 #endif
 
 //ofxCurvesTool
@@ -153,9 +153,9 @@ public:
 	// colorQuantizer
 #ifdef USE_IMAGE_QUANTIZER
 	ofxColorQuantizerHelper colorQuantizer;
-	ofTexture tex;
-	ofFbo fbo;
-	void quantizerRefreshImage();
+	//ofTexture tex;
+	//ofFbo fbo;
+	//void quantizerRefreshImage();
 #endif
 
 	//-
@@ -477,7 +477,7 @@ public:
 	void gui_Range();
 	void gui_Presets();
 	void gui_Panels();
-	void gui_Quantizer();
+	//void gui_Quantizer();
 
 	void refresh_Gui_Layout();
 	//void gui_imGui_Theme();
