@@ -73,6 +73,11 @@ using namespace ofxColorTheory;
 class ofxColorManager : public ofBaseApp
 {
 public:
+	ofParameter<bool> bLibFillMode;
+	ofParameter<bool> bPagerized;
+	ofParameter<int> colBoxSize;
+
+public:
 	void dragEvent(ofDragInfo dragInfo);
 
 private:
@@ -184,7 +189,7 @@ public:
 	ofParameter<bool> bEditUserPalette;
 	ofParameter<int> boxSizeUser;
 	ofParameter<int> boxRowsUser;
-	ofParameter<int> colBoxSize{ "Size Box", 25, 10, 50 };
+	//ofParameter<int> colBoxSize{ "Size Box", 25, 10, 100 };
 	ofParameter<float> boxScale;
 	ofParameter<bool> bFlipUserPalette;
 	//ofParameter<bool> bUserPaletteVertical;
@@ -315,7 +320,10 @@ public:
 
 	void update(ofEventArgs & args);
 	void draw(ofEventArgs & args);
+
 	void draw_Curve();
+	void update_Curve();
+
 	void draw_Info();
 
 	void exit();
@@ -570,19 +578,19 @@ public:
 	//int palSize = IM_ARRAYSIZE(saved_palette);
 	int palSize = (NUM_COLORS_PANTONE);
 	int rowSizePal = 7;//7 colors per row Pantone lib
-	bool doublePage;
+	//bool doublePage;
 
 	//rows per page
-	//int numPantoneLines = 10;
-	ofParameter<int> numPantoneLines{ "Rows Amnt" , 10, 5, 10 * 5 };
+	//int numLibLines = 10;
+	ofParameter<int> numLibLines{ "Rows Amnt" , 10, 5, 10 * 5 };
 
-	int numColorsPage = numPantoneLines * rowSizePal;//70
-	int totalNumColors = NUM_COLORS_PANTONE;//pantone
-	int maxPages = totalNumColors / numColorsPage - 1;
+	int numColorsPage = numLibLines * rowSizePal;//70
+	int totalNumColorsLib = NUM_COLORS_PANTONE;//pantone
+	int maxPages = totalNumColorsLib / numColorsPage - 1;
 
 	ofParameter<int> paletteLibPage{ "PAGE" , 0, 0, maxPages };
 	ofParameter<int> paletteLibPage_param{ "page", 0, 0, maxPages };
-	ofParameter<bool>bPantoneCards{ "Cards Mode", "true" };
+	ofParameter<bool>bPantoneCards{ "Mode Cards", false };
 	ofParameter<int> pantoneMaxColumns{ "Columns Max", 7, 1, 7 * 6 };
 	ofParameter<float> pantoneScale{ "Scale", 1, 0.5, 1.5 };
 	int lastPantoneIndex = -1;
