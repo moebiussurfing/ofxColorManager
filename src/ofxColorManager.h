@@ -3,7 +3,8 @@
 #include "ofMain.h"
 
 /*
-	TODO:
+	
+TODO:
 
 + fix change num colors on algo palettes
 + fix range pickers
@@ -84,11 +85,11 @@ class ofxColorManager : public ofBaseApp
 public:
 	ofParameter<bool> bLibFillMode;
 	ofParameter<bool> bPagerized;
-	ofParameter<int> colBoxSize;
+	ofParameter<int> sizeLibColBox;
 
 public:
 	ofParameter<bool> bPaletteFillMode;
-	ofParameter<int> paletteBoxSize;
+	ofParameter<int> sizePaletteBox;
 
 public:
 	void dragEvent(ofDragInfo dragInfo);
