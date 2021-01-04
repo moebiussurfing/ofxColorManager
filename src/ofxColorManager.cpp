@@ -1351,7 +1351,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 			{
 				mouseOverGui_PRE = mouseOverGui;
 
-				ofLogNotice(__FUNCTION__) << "mouseOverGui: " << (mouseOverGui ? " TRUE" : " FALSE");
+				ofLogVerbose(__FUNCTION__) << "mouseOverGui: " << (mouseOverGui ? " TRUE" : " FALSE");
 
 				if (mouseOverGui)
 				{
@@ -1987,7 +1987,7 @@ void ofxColorManager::gui_Theory()
 
 			//-
 
-			// label button
+			// 1.1 label button
 
 			//std::string _label = ColorWheelSchemes::colorSchemeNames[i];
 			if (ofxSurfingHelpers::AddSmallButton(theoryTypes[i], 150, _cSize))
@@ -2006,7 +2006,7 @@ void ofxColorManager::gui_Theory()
 
 			ImGui::SameLine();
 
-			//-
+			//--
 
 			const size_t _total = colorsTheory[i].size();
 
@@ -2029,8 +2029,6 @@ void ofxColorManager::gui_Theory()
 
 					//color = ImVec4(palette[n].x, palette[n].y, palette[n].z, palette.w); // Preserve alpha!
 					//color_Picked = color;
-
-					//-
 				}
 
 				//-
@@ -2117,8 +2115,8 @@ void ofxColorManager::gui_Theory()
 
 			//-
 
-			if (ofxSurfingHelpers::AddSmallButton(algoTypes[i], 150, _cSize)) {
-
+			if (ofxSurfingHelpers::AddSmallButton(algoTypes[i], 150, _cSize)) 
+			{
 				//theory_Name = algoTypes[i].getName();
 				//lastTheory = i;
 			}
@@ -3173,6 +3171,7 @@ void ofxColorManager::gui_Range()
 		//-
 
 		ofxImGui::AddParameter(numColorsRange);
+
 		//ofxSurfingHelpers::AddSmallButton(bGetPaletteFromRange, 150, 30);
 
 		ImGui::Dummy(ImVec2(0.0f, 5));
@@ -3205,7 +3204,7 @@ void ofxColorManager::gui_Range()
 
 		//----
 
-		// colors boxes
+		// 3. colors boxes
 
 		for (int n = 0; n < _total; n++)
 		{
@@ -3570,7 +3569,8 @@ void ofxColorManager::gui_Presets()
 
 		//--
 
-		ImGui::Text("Type Name:");
+		ImGui::Text("Name");
+		//ImGui::Text("Type Name:");
 
 		ImGui::Dummy(ImVec2(0.0f, 5));
 
@@ -5528,7 +5528,7 @@ void ofxColorManager::setup_Theory()
 	params_ColorTheory.add(colorScheme.set("Color Scheme", 6, 0, ColorWheelSchemes::colorSchemes.size() - 1));
 	params_ColorTheory.add(colorSchemeName);
 	params_ColorTheory.add(amountColors.set("Amnt Colors", 8, 2, 20));
-	params_ColorTheory.add(lastColorTheoryPicked_Palette.set("Last Theory Picked", 0, 0, 0));
+	params_ColorTheory.add(lastColorTheoryPicked_Palette.set("Last Theory Picked", 0, 0, NUM_COLOR_THEORY_TYPES-1));
 
 	//toggles
 	for (int i = 0; i < NUM_COLOR_THEORY_TYPES; i++)
@@ -6585,7 +6585,7 @@ void ofxColorManager::Changed_ColorRange(ofAbstractParameter &e)
 
 		//--
 
-		// algo types
+		// algo/theory types
 
 		for (int i = 0; i < 7; i++)
 		{
@@ -6830,7 +6830,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 */
 //-----
 
-// presets
+		// presets
 
 		if (SHOW_Presets && !SHOW_Theory && !SHOW_Range && !SHOW_ColourLovers && !SHOW_Quantizer)
 		{
@@ -6876,9 +6876,9 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 				// new preset
 				if (MODE_newPreset) MODE_newPreset = false;
-				//demo mode
+				// demo mode
 				if (DEMO_Test) myDEMO.reStart();
-				//load first color
+				// load first color
 				if (palette.size() > 0)
 				{
 					color_Picked = ofFloatColor(palette[0]);
@@ -6886,7 +6886,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				}
 			}
 
-			//next without clamp
+			// next without clamp
 			else if (key == ' ')
 			{
 				if (currentFile < files.size() - 1)
@@ -6907,9 +6907,9 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 				// new preset
 				if (MODE_newPreset) MODE_newPreset = false;
-				//demo mode
+				// demo mode
 				if (DEMO_Test) myDEMO.reStart();
-				//load first color
+				// load first color
 				if (palette.size() > 0)
 				{
 					color_Picked = ofFloatColor(palette[0]);
@@ -6917,7 +6917,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				}
 			}
 
-			//random
+			// random
 			else if (key == 'R' || key == 'r')
 			{
 				currentFile = (int)ofRandom(0, files.size());
@@ -6953,6 +6953,70 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			//{
 			//	preset_save(PRESET_name);
 			//}
+		}
+		
+		//--
+
+		// theory
+
+		if (!SHOW_Presets && !SHOW_Theory && SHOW_Range && !SHOW_ColourLovers && !SHOW_Quantizer)
+		{
+			if (key == OF_KEY_UP)
+			{
+				lastRange--;
+				lastRange = (int)ofClamp(lastRange, 0, NUM_TYPES_RANGES - 1);
+
+				for (int i = 0; i < NUM_TYPES_RANGES; i++)
+				{
+					rangTypes[i].disableEvents();
+					rangTypes[i] = false;
+					rangTypes[i].enableEvents();
+				}
+				rangTypes[lastRange] = true;
+			}
+			if (key == OF_KEY_DOWN)
+			{
+				lastRange++;
+				lastRange = (int)ofClamp(lastRange, 0, NUM_TYPES_RANGES - 1);
+
+				for (int i = 0; i < NUM_TYPES_RANGES; i++)
+				{
+					rangTypes[i].disableEvents();
+					rangTypes[i] = false;
+					rangTypes[i].enableEvents();
+				}
+				rangTypes[lastRange] = true;
+			}
+		}
+
+		//--
+
+		// theory
+
+		if (!SHOW_Presets && SHOW_Theory && !SHOW_Range && !SHOW_ColourLovers && !SHOW_Quantizer)
+		{
+			if (key == OF_KEY_UP)
+			{
+				lastColorTheoryPicked_Palette--;
+				lastColorTheoryPicked_Palette = ofClamp(
+					lastColorTheoryPicked_Palette.get(),
+					lastColorTheoryPicked_Palette.getMin(),
+					lastColorTheoryPicked_Palette.getMax());
+
+				//poweroff
+				for (int i = 0; i < NUM_COLOR_THEORY_TYPES; i++)
+				{
+					theoryTypes[i].disableEvents();
+					theoryTypes[i] = false;
+					theoryTypes[i].disableEvents();
+				}
+				//enable
+				if (lastColorTheoryPicked_Palette >= 0 && 
+					lastColorTheoryPicked_Palette < NUM_COLOR_THEORY_TYPES)
+				{
+					theoryTypes[lastColorTheoryPicked_Palette] = true;
+				}
+			}
 		}
 
 		//----
