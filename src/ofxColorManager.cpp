@@ -347,15 +347,23 @@ void ofxColorManager::setup()
 	params_palette.add(bLock_palette);
 	//bRandomPalette.set("RANDOM PALETTE", false);
 	//params_palette.add(bRandomPalette);
-	
+
+	//-
+
+	//exclude
+	DEMO_Cam.setSerializable(false);
+	SHOW_AlgoPalettes.setSerializable(false);
 	SATURATION.setSerializable(false);
 	BRIGHTNESS.setSerializable(false);
+	color_backGround.setSerializable(false);
+	color_Picked.setSerializable(false);
 	color_HUE.setSerializable(false);
 	color_SAT.setSerializable(false);
 	color_BRG.setSerializable(false);
 	color_HUE_0.setSerializable(false);
 	color_SAT_0.setSerializable(false);
 	color_BRG_0.setSerializable(false);
+	//bColor_SAT.setSerializable(false);
 
 	ofAddListener(params_palette.parameterChangedE(), this, &ofxColorManager::Changed_Controls);
 
@@ -432,6 +440,7 @@ void ofxColorManager::setup()
 
 	//-
 
+	//TODO: delete
 	SHOW_AlgoPalettes.set("SHOW PALETTES", true);
 
 	//TODO: should delete
@@ -630,7 +639,7 @@ void ofxColorManager::setup()
 
 	color_Picked.addListener(this, &ofxColorManager::Changed_ColorPicked);
 	color_Clicked.addListener(this, &ofxColorManager::Changed_ColorClicked);
-
+	
 	//------------------------------------------------------
 
 	// startup settings
@@ -681,7 +690,7 @@ void ofxColorManager::setup()
 
 	params_AppState.add(gradient_HardMode);//gradient
 	params_AppState.add(bAuto_palette_recall);
-	params_AppState.add(paletteLibPage_param);
+	//params_AppState.add(paletteLibPage_param);
 
 	params_AppState.add(BRIGHTNESS);
 	params_AppState.add(SATURATION);
@@ -1151,8 +1160,11 @@ void ofxColorManager::draw_Info()
 
 	c0.set(0, 200);
 	c1.set(255, 200);
-	c0_Ghost.set(0, 0);
-	c1_Ghost.set(255, 0);
+
+	//c0_Ghost.set(0, 0);
+	//c1_Ghost.set(255, 0);
+	c0_Ghost.set(0, 32);
+	c1_Ghost.set(255, 32);
 
 	//TODO: create double line shadow draw methoid into ofxSurfingHelpers
 
@@ -1423,7 +1435,7 @@ void ofxColorManager::exit()
 
 	//app state
 	ofxSurfingHelpers::saveGroup(params_AppState, path_AppState);
-	
+
 	//-
 
 	curvesTool.save(path_Curves); //needed because it fills polyline
@@ -2068,7 +2080,7 @@ void ofxColorManager::gui_Theory()
 			case 6:
 				_total = complementTriad.size();
 				break;
-			}
+	}
 #endif
 
 #ifdef USE_RECTANGLE_INTERFACES
@@ -2115,7 +2127,7 @@ void ofxColorManager::gui_Theory()
 
 			//-
 
-			if (ofxSurfingHelpers::AddSmallButton(algoTypes[i], 150, _cSize)) 
+			if (ofxSurfingHelpers::AddSmallButton(algoTypes[i], 150, _cSize))
 			{
 				//theory_Name = algoTypes[i].getName();
 				//lastTheory = i;
@@ -2199,7 +2211,7 @@ void ofxColorManager::gui_Theory()
 
 				ImGui::PopID();
 			}
-		}
+}
 	}
 	ofxImGui::EndWindow(mainSettings);
 }
@@ -3679,7 +3691,7 @@ void ofxColorManager::gui_Presets()
 				}
 
 				if (MODE_newPreset) MODE_newPreset = false;
-				
+
 				//workflow
 				if (DEMO_Test) myDEMO.reStart();
 			}
@@ -5528,7 +5540,7 @@ void ofxColorManager::setup_Theory()
 	params_ColorTheory.add(colorScheme.set("Color Scheme", 6, 0, ColorWheelSchemes::colorSchemes.size() - 1));
 	params_ColorTheory.add(colorSchemeName);
 	params_ColorTheory.add(amountColors.set("Amnt Colors", 8, 2, 20));
-	params_ColorTheory.add(lastColorTheoryPicked_Palette.set("Last Theory Picked", 0, 0, NUM_COLOR_THEORY_TYPES-1));
+	params_ColorTheory.add(lastColorTheoryPicked_Palette.set("Last Theory Picked", 0, 0, NUM_COLOR_THEORY_TYPES - 1));
 
 	//toggles
 	for (int i = 0; i < NUM_COLOR_THEORY_TYPES; i++)
@@ -6707,8 +6719,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		if (key == OF_KEY_F2)//picker
 		{
 			SHOW_Picker = !SHOW_Picker;
-
-			if (SHOW_Picker) SHOW_BackGround = false;
+			//if (SHOW_Picker) SHOW_BackGround = false;
 		}
 		if (key == OF_KEY_F3)//library
 		{
@@ -6717,7 +6728,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		if (key == OF_KEY_F4)//bg
 		{
 			SHOW_BackGround = !SHOW_BackGround;
-			if (SHOW_BackGround) SHOW_Picker = false;
+			//if (SHOW_BackGround) SHOW_Picker = false;
 		}
 
 		if (key == OF_KEY_F5)//theory
@@ -6740,20 +6751,30 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		if (key == OF_KEY_F9)//curve
 		{
 			SHOW_Curve = !SHOW_Curve;
+
+			if (SHOW_Curve) {
+				SHOW_UserPalette = false;
+				SHOW_Picker = false;
+				SHOW_Library = false;
+				SHOW_BackGround = false;
+				SHOW_Theory = false;
+				SHOW_Range = false;
+				SHOW_ColourLovers = false;
+				SHOW_Quantizer = false;
+				//SHOW_Presets = false;
+			}
 		}
 		if (key == OF_KEY_F10)//all on
 		{
-			SHOW_UserPalette = true;
-			SHOW_Picker = true;
-			SHOW_Curve = true;
-			SHOW_Library = true;
+			SHOW_UserPalette = true;// F1
+			SHOW_Picker = true;// F2
+			SHOW_Curve = true;// F3
+			SHOW_Library = true;// F4
 			SHOW_BackGround = true;
-
-			SHOW_Theory = true;
-			SHOW_Range = true;
-			SHOW_ColourLovers = true;
-			SHOW_Quantizer = true;
-
+			SHOW_Theory = true;// F5
+			SHOW_Range = true;// F6
+			SHOW_ColourLovers = true;// F7
+			SHOW_Quantizer = true;// F8
 			SHOW_Presets = true;
 		}
 		if (key == OF_KEY_F11)//all off
@@ -6763,12 +6784,10 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			SHOW_Curve = false;
 			SHOW_Library = false;
 			SHOW_BackGround = false;
-
 			SHOW_Theory = false;
 			SHOW_Range = false;
 			SHOW_ColourLovers = false;
 			SHOW_Quantizer = false;
-
 			SHOW_Presets = false;
 		}
 
@@ -6954,10 +6973,10 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			//	preset_save(PRESET_name);
 			//}
 		}
-		
+
 		//--
 
-		// theory
+		// theory browse
 
 		if (!SHOW_Presets && !SHOW_Theory && SHOW_Range && !SHOW_ColourLovers && !SHOW_Quantizer)
 		{
@@ -7011,7 +7030,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 					theoryTypes[i].disableEvents();
 				}
 				//enable
-				if (lastColorTheoryPicked_Palette >= 0 && 
+				if (lastColorTheoryPicked_Palette >= 0 &&
 					lastColorTheoryPicked_Palette < NUM_COLOR_THEORY_TYPES)
 				{
 					theoryTypes[lastColorTheoryPicked_Palette] = true;
@@ -7096,7 +7115,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		else if (key == 'G')
 		{
 			SHOW_GuiInternal = !SHOW_GuiInternal;
-		}
+	}
 
 		//----
 
@@ -7362,7 +7381,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//
 		//    else if (key == OF_KEY_RETURN)
 		//        ColorBrowser.switch_sorted_Type();
-		}
+}
 	}
 
 //--------------------------------------------------------------

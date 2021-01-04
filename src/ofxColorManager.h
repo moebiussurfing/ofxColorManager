@@ -618,7 +618,7 @@ public:
 	int maxPages = totalNumColorsLib / numColorsPage - 1;
 
 	ofParameter<int> paletteLibPage{ "PAGE" , 0, 0, maxPages };
-	ofParameter<int> paletteLibPage_param{ "page", 0, 0, maxPages };
+	//ofParameter<int> paletteLibPage_param{ "page", 0, 0, maxPages };
 	ofParameter<bool>bPantoneCards{ "Mode Cards", false };
 	ofParameter<int> pantoneMaxColumns{ "Columns Max", 7, 1, 7 * 6 };
 	ofParameter<float> pantoneScale{ "Scale", 1, 0.5, 1.5 };
