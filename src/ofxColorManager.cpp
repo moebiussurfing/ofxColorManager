@@ -3047,13 +3047,6 @@ void ofxColorManager::gui_Range()
 
 		ofxImGui::AddParameter(autoPickColor2);
 
-		//-
-
-		ofxImGui::AddParameter(numColorsRange);
-		//ofxSurfingHelpers::AddSmallButton(bGetPaletteFromRange, 150, 30);
-
-		ImGui::Dummy(ImVec2(0.0f, 5));
-
 		//--
 
 		ImGui::Columns(1);
@@ -3095,14 +3088,21 @@ void ofxColorManager::gui_Range()
 
 		//-
 
+		ofxImGui::AddParameter(numColorsRange);
+		//ofxSurfingHelpers::AddSmallButton(bGetPaletteFromRange, 150, 30);
+
+		ImGui::Dummy(ImVec2(0.0f, 5));
+
+		//-
+
 		// 2.2 draw all palette colors grid
 
-		const int ncols = 11;//?
-		const int _total = ncols * ncols;
+		const int _nCols = 11;//?
+		const int _total = _nCols * _nCols;
 
-		//const int ncols = numColorsRange.get();
+		//const int _nCols = numColorsRange.get();
 		//const int ty = (int)NUM_TYPES_RANGES;
-		//const int _total = ncols * ty;
+		//const int _total = _nCols * ty;
 
 		static ImVec4 color;
 		color = color_Picked.get();
@@ -3129,7 +3129,7 @@ void ofxColorManager::gui_Range()
 			const int _row = n / numColorsRange.get();
 			//const int _row = n / 11;
 
-			if (n % ncols == 0)
+			if (n % _nCols == 0)
 			{
 				// label button
 
@@ -3172,7 +3172,7 @@ void ofxColorManager::gui_Range()
 				//ImGui::PushItemWidth(_w * 0.2);
 				//ImGui::PushStyleVar(ImGui::ImGuiStyleVar_FrameBorderSize), 1.0f;
 
-				if ((n % ncols) != 0)
+				if ((n % _nCols) != 0)
 				{
 					ImGui::SameLine(0.0f, ImGui::GetStyle().ItemSpacing.y);//vertical inter line
 				}

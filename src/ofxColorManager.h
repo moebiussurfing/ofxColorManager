@@ -8,7 +8,6 @@ TODO:
 
 + fix change num colors on algo palettes
 + fix range pickers
-+ raname xml params to avoid same names
 + store lovers state favs or history
 
 */
