@@ -13,8 +13,6 @@ class ofApp: public ofBaseApp{
 public:
     void setup();
 	void draw();
-	//void exit();
-
     void keyPressed(int key);
     void windowResized(int w, int h);
 	void dragEvent(ofDragInfo dragInfo);

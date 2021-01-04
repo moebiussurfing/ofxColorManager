@@ -80,7 +80,7 @@ public:
 
 private:
 	
-	string path = "settings/";
+	string path = "ofxColorManager/";
 	ofEasyCam cam;
 	vector<ofColor> *palette;
 

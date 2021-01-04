@@ -15,7 +15,7 @@ void ofApp::setup()
 #endif
     
     colorManager.setup();
-    colorManager.setColor_TARGET(color);
+	colorManager.setColor_TARGET(color); // we get color (using a reference)
 }
 
 //--------------------------------------------------------------
@@ -36,14 +36,14 @@ void ofApp::draw()
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key)
 {
-	if (false) {}
+	if (false) { }
 
 	else if (key == 'g')
 	{
 		colorManager.setToggleVisible();
 	}
 	
-	// get palette
+	// we get palette (without using pointers)
     else if (key == OF_KEY_TAB)
     {
         palette = colorManager.getPalette();
@@ -60,9 +60,3 @@ void ofApp::windowResized(int w, int h)
 void ofApp::dragEvent(ofDragInfo info) {
 	colorManager.dragEvent(info);
 }
-
-////--------------------------------------------------------------
-//void ofApp::exit()
-//{
-//	//colorManager.exit();
-//}

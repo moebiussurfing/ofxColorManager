@@ -15,11 +15,31 @@ ofxColorManager::ofxColorManager()
 	//default
 	fps = 60.0f;
 	dt = 1.f / fps;
+
+	//--
+
+	path_Global = "ofxColorManager/";
+	ofxSurfingHelpers::CheckFolder(path_Global);
+
+	path_Folder_Curves = path_Global + "curves/";
+	path_Curves = path_Folder_Curves + "curves.yml";
+	ofxSurfingHelpers::CheckFolder(path_Global);
+
+	path_Folder_Color = path_Global + "colors/";
+	path_Colors = path_Folder_Color + "liveColors.json";
+	ofxSurfingHelpers::CheckFolder(path_Global);
+
+	path_AppState = path_Global + "AppSettings.xml";
+	//path_AppState = path_Global + "ofxColorManager.xml";
 }
 
 //--------------------------------------------------------------
 void ofxColorManager::startup()
 {
+	//--
+
+	ofxSurfingHelpers::loadGroup(params_AppState, path_AppState);
+
 	bResetCurve = true;
 
 	//--
@@ -47,7 +67,7 @@ void ofxColorManager::startup()
 
 	//-
 
-	curvesTool.load("settings/curves.yml"); //needed because it fills polyline
+	curvesTool.load(path_Curves); //needed because it fills polyline
 
 	//-
 
@@ -288,6 +308,7 @@ void ofxColorManager::setup()
 	color_HUE.set("H", 0, 0, 255);
 	color_SAT.set("S", 0, 0, 255);
 	color_BRG.set("B", 0, 0, 255);
+
 	params_color.setName("COLOR");
 	params_color.add(color_HUE);
 	params_color.add(color_SAT);
@@ -297,6 +318,7 @@ void ofxColorManager::setup()
 	bColor_HUE.set("HUE", true);
 	bColor_BRG.set("BRG", true);
 	bColor_SAT.set("SAT", true);
+
 	color_HUE_0.set("H 0", 0, 0, 255);
 	color_SAT_0.set("S 0", 0, 0, 255);
 	color_BRG_0.set("B 0", 0, 0, 255);
@@ -325,6 +347,15 @@ void ofxColorManager::setup()
 	params_palette.add(bLock_palette);
 	//bRandomPalette.set("RANDOM PALETTE", false);
 	//params_palette.add(bRandomPalette);
+	
+	SATURATION.setSerializable(false);
+	BRIGHTNESS.setSerializable(false);
+	color_HUE.setSerializable(false);
+	color_SAT.setSerializable(false);
+	color_BRG.setSerializable(false);
+	color_HUE_0.setSerializable(false);
+	color_SAT_0.setSerializable(false);
+	color_BRG_0.setSerializable(false);
 
 	ofAddListener(params_palette.parameterChangedE(), this, &ofxColorManager::Changed_Controls);
 
@@ -344,7 +375,7 @@ void ofxColorManager::setup()
 	//random.generateRandom(amountColors_Alg);
 	update_Engine();
 	setup_Interface();
-	palettes_setup_labels();
+	setup_Labels();
 
 	//-
 
@@ -402,14 +433,19 @@ void ofxColorManager::setup()
 	//-
 
 	SHOW_AlgoPalettes.set("SHOW PALETTES", true);
-	SHOW_BrowserColors.set("SHOW BROWSER COLORS", true);
+
+	//TODO: should delete
+	SHOW_BrowserColors.set("SHOW BROWSER COLORS", false);
+	SHOW_BrowserColors.setSerializable(false);
+
 	//SHOW_CosineGradient.set("SHOW COSINE GRADIENT", true);
 
 	SHOW_ColourLovers_searcher.set("SHOW COLOUR LOVERS SEARCH", true);
 	SHOW_ColourLovers.set("LOVERS", true);
 	SHOW_Gradient.set("GRADIENT", true);
 	SHOW_Curve.set("CURVE", true);
-	MODE_Editor.set("Edit Layout", true);
+	MODE_Editor.set("Edit Layout", false);
+	MODE_Editor.setSerializable(false);
 
 	SHOW_Presets.set("PRESETS", true);
 	SHOW_PresetsPalette.set("Show Palette", false);
@@ -599,85 +635,80 @@ void ofxColorManager::setup()
 
 	// startup settings
 
-	XML_params.setName("ofxColorManager");
+	params_AppState.setName("ofxColorManager");
 
-	XML_params.add(SHOW_Presets);
-	XML_params.add(SHOW_PresetsPalette);
-	XML_params.add(SHOW_BackGround);
-	XML_params.add(SHOW_Library);
-	XML_params.add(SHOW_Picker);
-	XML_params.add(SHOW_Range);
-	XML_params.add(SHOW_Theory);
-	XML_params.add(SHOW_Panels);
-	XML_params.add(SHOW_Demo);
-	XML_params.add(SHOW_Quantizer);
-	XML_params.add(SHOW_ColourLovers);
-	XML_params.add(SHOW_AlgoPalettes);
-	XML_params.add(SHOW_Curve);
-	XML_params.add(SHOW_BrowserColors);
-	XML_params.add(SHOW_GuiInternal);
-	XML_params.add(SHOW_GUI_MINI);
-	XML_params.add(MODE_Editor);
+	params_AppState.add(SHOW_Presets);
+	params_AppState.add(SHOW_PresetsPalette);
+	params_AppState.add(SHOW_BackGround);
+	params_AppState.add(SHOW_Library);
+	params_AppState.add(SHOW_Picker);
+	params_AppState.add(SHOW_Range);
+	params_AppState.add(SHOW_Theory);
+	params_AppState.add(SHOW_Panels);
+	params_AppState.add(SHOW_Demo);
+	params_AppState.add(SHOW_Quantizer);
+	params_AppState.add(SHOW_ColourLovers);
+	params_AppState.add(SHOW_AlgoPalettes);
+	params_AppState.add(SHOW_Curve);
+	params_AppState.add(SHOW_BrowserColors);
+	params_AppState.add(SHOW_GuiInternal);
+	params_AppState.add(SHOW_GUI_MINI);
+	params_AppState.add(MODE_Editor);
 
-	//XML_params.add(SHOW_ColourLovers_searcher);
-	//XML_params.add(SHOW_Gradient);
-	//XML_params.add(SHOW_CosineGradient);
+	//params_AppState.add(SHOW_ColourLovers_searcher);
+	//params_AppState.add(SHOW_Gradient);
+	//params_AppState.add(SHOW_CosineGradient);
 
-	XML_params.add(color_Picked);
-	XML_params.add(color_backGround);
-	XML_params.add(color_backGround_Darker);
-	XML_params.add(color_background_AutoSet);
-	XML_params.add(backgroundDarkness);
+	params_AppState.add(color_Picked);
+	params_AppState.add(color_backGround);
+	params_AppState.add(color_backGround_Darker);
+	params_AppState.add(color_background_AutoSet);
+	params_AppState.add(backgroundDarkness);
 
-	XML_params.add(MODE_TweakSatBrg);//algorithmic palette
-	XML_params.add(amountColors_Alg);
-	XML_params.add(bPaletteEdit);//user palette
-	XML_params.add(bAuto_palette_recall);
-	XML_params.add(SHOW_UserPalette);
+	params_AppState.add(MODE_TweakSatBrg);//algorithmic palette
+	params_AppState.add(amountColors_Alg);
+	params_AppState.add(bPaletteEdit);//user palette
+	params_AppState.add(bAuto_palette_recall);
+	params_AppState.add(SHOW_UserPalette);
 
-	XML_params.add(TEST_Mode);
+	params_AppState.add(TEST_Mode);
 
-	XML_params.add(DEMO_Test);
-	XML_params.add(DEMO_Auto);
-	XML_params.add(DEMO_Timer);
-	XML_params.add(DEMO_Alpha);
-	XML_params.add(DEMO_Cam);
+	params_AppState.add(DEMO_Test);
+	params_AppState.add(DEMO_Auto);
+	params_AppState.add(DEMO_Timer);
+	params_AppState.add(DEMO_Alpha);
+	params_AppState.add(DEMO_Cam);
 
-	XML_params.add(gradient_HardMode);//gradient
-	XML_params.add(bAuto_palette_recall);
-	XML_params.add(paletteLibPage_param);
+	params_AppState.add(gradient_HardMode);//gradient
+	params_AppState.add(bAuto_palette_recall);
+	params_AppState.add(paletteLibPage_param);
 
-	XML_params.add(BRIGHTNESS);
-	XML_params.add(SATURATION);
-	XML_params.add(bColor_HUE);
-	XML_params.add(bColor_SAT);
-	XML_params.add(bColor_BRG);
-	XML_params.add(color_HUE_0);
-	XML_params.add(color_SAT_0);
-	XML_params.add(color_BRG_0);
-	XML_params.add(color_HUE_Power);
-	XML_params.add(color_SAT_Power);
-	XML_params.add(color_BRG_Power);
+	params_AppState.add(BRIGHTNESS);
+	params_AppState.add(SATURATION);
+	params_AppState.add(bColor_HUE);
+	params_AppState.add(bColor_SAT);
+	params_AppState.add(bColor_BRG);
+	params_AppState.add(color_HUE_0);
+	params_AppState.add(color_SAT_0);
+	params_AppState.add(color_BRG_0);
+	params_AppState.add(color_HUE_Power);
+	params_AppState.add(color_SAT_Power);
+	params_AppState.add(color_BRG_Power);
 
-	XML_params.add(paletteLibPage);
-	XML_params.add(pantoneMaxColumns);
-	XML_params.add(numLibLines);
-	XML_params.add(bPantoneCards);
-	XML_params.add(pantoneScale);
-	XML_params.add(rangeScale);
-	XML_params.add(bLibFillMode);
-	XML_params.add(bPagerized);
-	XML_params.add(sizeLibColBox);
+	params_AppState.add(paletteLibPage);
+	params_AppState.add(pantoneMaxColumns);
+	params_AppState.add(numLibLines);
+	params_AppState.add(bPantoneCards);
+	params_AppState.add(pantoneScale);
+	params_AppState.add(rangeScale);
+	params_AppState.add(bLibFillMode);
+	params_AppState.add(bPagerized);
+	params_AppState.add(sizeLibColBox);
 
-	XML_params.add(bPaletteFillMode);
-	XML_params.add(sizePaletteBox);
-	XML_params.add(boxRowsUser);
-	XML_params.add(boxScale);
-
-
-	//--
-
-	ofxSurfingHelpers::loadGroup(XML_params, XML_path);
+	params_AppState.add(bPaletteFillMode);
+	params_AppState.add(sizePaletteBox);
+	params_AppState.add(boxRowsUser);
+	params_AppState.add(boxScale);
 
 	//------------------------------------------------
 
@@ -806,7 +837,7 @@ void ofxColorManager::update(ofEventArgs & args)
 		// and forget the clicked color
 
 		// 1. get palette colors from colour lovers
-		palette_load_ColourLovers();
+		palette_load_FromColourLovers();
 
 		//-
 
@@ -988,7 +1019,7 @@ void ofxColorManager::update(ofEventArgs & args)
 
 	//-
 
-	ColorBrowser.update();
+	//ColorBrowser.update();
 
 	//-
 
@@ -1129,7 +1160,7 @@ void ofxColorManager::draw_Info()
 	h = padh;
 	y += h;
 
-	if (t0 != "") {//preset name
+	if (t0 != "" || txt_lineActive[0]) {//preset name
 		x = ofGetWidth() * 0.5 - _w0 * 0.5;
 		if (txt_lineActive[i]) ofSetColor(c0);
 		else ofSetColor(c0_Ghost);
@@ -1137,14 +1168,14 @@ void ofxColorManager::draw_Info()
 		if (txt_lineActive[i]) ofSetColor(c1);
 		else ofSetColor(c1_Ghost);
 		fontBig.drawString(t0, x, y);
-		i++;
 
+		i++;
 		padh = 25;
 		h = fontBig.getSize() + padh;
 		y += h;
 	}
 
-	if (t1 != "") {//palette name
+	if (t1 != "" || txt_lineActive[1]) {//palette name
 		x = ofGetWidth() * 0.5 - _w1 * 0.5;
 		if (txt_lineActive[i]) ofSetColor(c0);
 		else ofSetColor(c0_Ghost);
@@ -1152,14 +1183,14 @@ void ofxColorManager::draw_Info()
 		if (txt_lineActive[i]) ofSetColor(c1);
 		else ofSetColor(c1_Ghost);
 		fontBig.drawString(t1, x, y);
-		i++;
 
+		i++;
 		padh = -10;
 		h = fontBig.getSize() + padh;
 		y += h;
 	}
 
-	if (t2 != "") {//theory name
+	if (t2 != "" || txt_lineActive[2]) {//theory name
 		x = ofGetWidth() * 0.5 - _w2 * 0.5;
 		if (txt_lineActive[i]) ofSetColor(c0);
 		else ofSetColor(c0_Ghost);
@@ -1167,14 +1198,14 @@ void ofxColorManager::draw_Info()
 		if (txt_lineActive[i]) ofSetColor(c1);
 		else ofSetColor(c1_Ghost);
 		fontMedium.drawString(t2, x, y);
-		i++;
 
+		i++;
 		padh = 20;
 		h = fontMedium.getSize() + padh;
 		y += h;
 	}
 
-	if (t3 != "") {//range name
+	if (t3 != "" || txt_lineActive[3]) {//range name
 		x = ofGetWidth() * 0.5 - _w3 * 0.5;
 		if (txt_lineActive[i]) ofSetColor(c0);
 		else ofSetColor(c0_Ghost);
@@ -1182,7 +1213,6 @@ void ofxColorManager::draw_Info()
 		if (txt_lineActive[i]) ofSetColor(c1);
 		else ofSetColor(c1_Ghost);
 		fontSmall.drawString(t3, x, y);
-		//i++;
 	}
 
 	//-
@@ -1253,7 +1283,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 
 	// colors browser
 
-	if (SHOW_BrowserColors) ColorBrowser.draw();
+	//if (SHOW_BrowserColors) ColorBrowser.draw();
 
 	//--
 
@@ -1392,7 +1422,12 @@ void ofxColorManager::exit()
 	//palette_save("myPalette");
 
 	//app state
-	ofxSurfingHelpers::saveGroup(XML_params, XML_path);
+	ofxSurfingHelpers::saveGroup(params_AppState, path_AppState);
+	
+	//-
+
+	curvesTool.save(path_Curves); //needed because it fills polyline
+
 
 	//-
 
@@ -1402,6 +1437,7 @@ void ofxColorManager::exit()
 	//-
 
 	ColorBrowser.exit();
+
 #ifdef USE_COLOR_LOVERS
 	colourLoversHelper.exit();
 #endif
@@ -3318,6 +3354,7 @@ void ofxColorManager::gui_Curve()
 			ImGui::Dummy(ImVec2(0, 10));
 
 			ofxImGui::AddParameter(gradient_HardMode);
+			ImGui::Checkbox("toBackground", &TEST_toBackground);
 
 			ImGui::Dummy(ImVec2(0, 10));
 
@@ -3361,7 +3398,6 @@ void ofxColorManager::gui_Curve()
 				ImGui::Checkbox("LFO", &TEST_LFO_Mode);
 			}
 			ImGui::SliderFloat("Speed", &TEST_Speed, 0.0f, 1.0f);
-			ImGui::Checkbox(" > Background", &TEST_toBackground);
 
 			//ImGui::PopItemWidth();
 
@@ -3531,7 +3567,7 @@ void ofxColorManager::gui_Presets()
 		//            if (DEMO_Test) myDEMO.clear();
 		//        }
 		*/
-		
+
 		//--
 
 		ImGui::Text("Type Name:");
@@ -3623,7 +3659,7 @@ void ofxColorManager::gui_Presets()
 		// index preset / total
 		int numPalettes = files_Names.size() - 1;
 		ImGui::Text("%d/%d", currentFile, numPalettes);
-		
+
 		ImGui::Dummy(ImVec2(0.0f, 5));
 
 		ImGui::PushButtonRepeat(true);
@@ -3643,6 +3679,9 @@ void ofxColorManager::gui_Presets()
 				}
 
 				if (MODE_newPreset) MODE_newPreset = false;
+				
+				//workflow
+				if (DEMO_Test) myDEMO.reStart();
 			}
 		}
 
@@ -3664,8 +3703,11 @@ void ofxColorManager::gui_Presets()
 			}
 
 			if (MODE_newPreset) MODE_newPreset = false;
+
+			//workflow
+			if (DEMO_Test) myDEMO.reStart();
 		}
-		
+
 		ImGui::PopButtonRepeat();
 
 		ImGui::Dummy(ImVec2(0.0f, 5));
@@ -3827,7 +3869,7 @@ void ofxColorManager::gui_Presets()
 				preset_save(textInput_New);
 				preset_refreshFiles();
 
-				if (SHOW_Demo) myDEMO.clear()
+				if (SHOW_Demo) myDEMO.clear();
 			}
 
 			ImGui::PopStyleColor(1);
@@ -3839,9 +3881,9 @@ void ofxColorManager::gui_Presets()
 		// palette colors mini preview
 
 		ImGui::Dummy(ImVec2(0.0f, 10.f));
-		
+
 		ofxImGui::AddParameter(SHOW_PresetsPalette);
-		
+
 		ImGui::Dummy(ImVec2(0.0f, 5.f));
 
 		if (SHOW_PresetsPalette)
@@ -4623,7 +4665,7 @@ void ofxColorManager::setup_Interface()
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::palettes_setup_labels()
+void ofxColorManager::setup_Labels()
 {
 #ifdef USE_RECTANGLE_INTERFACES
 
@@ -4993,14 +5035,16 @@ void ofxColorManager::update_Engine()
 	if (MODE_TweakSatBrg)
 	{
 		// using hue only from picked color and forcing sat/(brg from algo sliders
-		base = ofFloatColor::fromHsb(color_Picked.get().getHue(),
-			ofMap(SATURATION, 0, 255, 0., 1.),
-			ofMap(BRIGHTNESS, 0, 255, 0., 1.));
+		base = ofFloatColor::fromHsb(
+			color_Picked.get().getHue(),
+			ofMap(SATURATION, 0, 255, 0.f, 1.f),
+			ofMap(BRIGHTNESS, 0, 255, 0.f, 1.f));
 	}
 	else
 	{
 		// check using hue + sat/brg from color ignoring algo panel SV sliders
-		base = color_Picked.get();
+		//base = color_Picked.get();
+		base.set(color_Picked.get());
 	}
 
 	color_TheoryBase = base;
@@ -5499,10 +5543,14 @@ void ofxColorManager::setup_Theory()
 
 	//---
 
-	//panel.setup();
-	//panel.add(group);
-	//panel.setPosition(1000, 400);
-	//
+//#ifdef USE_OFX_GUI
+//	//panel.setup();
+//	//panel.add(group);
+//	//panel.setPosition(1000, 400);
+//#endif
+
+	//-
+
 	//amountColors = amountColors_Alg;
 	//
 	////TEST
@@ -5558,7 +5606,7 @@ void ofxColorManager::update_Theory()
 	//	scheme->setPrimaryColor(primaryColor.get());
 	//	colors = scheme->interpolate(amountColors.get());
 
-		//--
+	//--
 
 	primaryColor.set(base);
 
@@ -5623,7 +5671,7 @@ void ofxColorManager::update_Theory()
 #pragma mark - PALETTE
 
 //--------------------------------------------------------------
-void ofxColorManager::palette_load_ColourLovers()
+void ofxColorManager::palette_load_FromColourLovers()
 {
 	ofLogNotice(__FUNCTION__);
 
@@ -6699,11 +6747,14 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			SHOW_Picker = true;
 			SHOW_Curve = true;
 			SHOW_Library = true;
+			SHOW_BackGround = true;
 
 			SHOW_Theory = true;
 			SHOW_Range = true;
 			SHOW_ColourLovers = true;
 			SHOW_Quantizer = true;
+
+			SHOW_Presets = true;
 		}
 		if (key == OF_KEY_F11)//all off
 		{
@@ -6711,11 +6762,14 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			SHOW_Picker = false;
 			SHOW_Curve = false;
 			SHOW_Library = false;
+			SHOW_BackGround = false;
 
 			SHOW_Theory = false;
 			SHOW_Range = false;
 			SHOW_ColourLovers = false;
 			SHOW_Quantizer = false;
+
+			SHOW_Presets = false;
 		}
 
 		//----
@@ -7244,8 +7298,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//
 		//    else if (key == OF_KEY_RETURN)
 		//        ColorBrowser.switch_sorted_Type();
+		}
 	}
-}
 
 //--------------------------------------------------------------
 void ofxColorManager::keyReleased(ofKeyEventArgs &eventArgs)
@@ -7393,7 +7447,12 @@ void ofxColorManager::enableListeners()
 void ofxColorManager::preset_refreshFiles()
 {
 	//TODO: why hardcoded?
-	std::string _path = "user_kits/presets";
+	//std::string _path = "user_kits/presets";
+	std::string path_Global = "ofxColorManager/";
+	std::string path_Presets = path_Global + "user_kits/presets/";
+	std::string path_Palettes = path_Global + "user_kits/palettes/";
+	std::string _path = path_Presets;
+	ofxSurfingHelpers::CheckFolder(_path);
 
 	ofDirectory dataDirectory(ofToDataPath(_path, true));
 	ofxSurfingHelpers::CheckFolder(_path);
@@ -7534,7 +7593,7 @@ void ofxColorManager::preset_save(std::string p)
 
 	//TODO:
 	//this is using pointers.. ?
-	
+
 	myPresetPalette.setName(p);
 	myPresetPalette.setCurveName(PRESET_curveName);
 	myPresetPalette.setBackgroundColor(color_backGround.get());
@@ -7794,12 +7853,9 @@ void ofxColorManager::saveColors()
 {
 	//TODO:
 	//make export dialog to set path for export outside /data
-	
-	std::string path_Folder_Color = "colors/";
-	ofxSurfingHelpers::CheckFolder(path_Folder_Color);
-
-	path_Colors = path_Folder_Color + "liveColors.json";
 	//path_Colors = "/Users/manu/Documents/openFrameworks/addons/ofxFontAnimator/4_ofxFontAnimatorNoise/bin/data/colors/liveColors.json";
+
+	ofxSurfingHelpers::CheckFolder(path_Folder_Color);
 
 	ofLogNotice(__FUNCTION__) << "path: " << path_Colors;
 

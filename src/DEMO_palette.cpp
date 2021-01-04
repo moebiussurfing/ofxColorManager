@@ -22,6 +22,7 @@ void DEMO_palette::setup() {
 
 	ofxLoadCamera(cam, path + _name);
 	//cam.reset();
+
 	cam.disableMouseInput();
 	//cam.enableOrtho();
 }
@@ -135,7 +136,7 @@ void DEMO_palette::draw(float alpha = 1.0f)
 
 		// DEMO 2 - ROTATING RECTANGLES
 
-		if (ENABLE_DEMO2)// && (palette->size() == 0)) 
+		if (ENABLE_DEMO2 )// && (palette->size() == 0)) 
 		{
 			cam.begin();
 
@@ -149,7 +150,8 @@ void DEMO_palette::draw(float alpha = 1.0f)
 			//int iDeg = 360/ (2*palette.size());
 			int iCol = 0;
 
-			for (int deg = 0; deg < 360; deg += iDeg) {
+			for (int deg = 0; deg < 360; deg += iDeg) 
+			{
 				float x = radius * cos(deg * DEG_TO_RAD);
 				float y = radius * sin(deg * DEG_TO_RAD);
 				ofColor c;
@@ -162,7 +164,8 @@ void DEMO_palette::draw(float alpha = 1.0f)
 	//			  // 2. color from palette//TODO
 	//            c.set((palette[iCol]);
 
-				if (palette != nullptr && palette->size() > 0) {
+				if (palette != nullptr && palette->size() > 0) 
+				{
 					c.set((*palette)[iCol]);
 
 					iCol++;

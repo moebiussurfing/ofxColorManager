@@ -45,7 +45,7 @@ ofColor PresetPalette::getBackground()
 void PresetPalette::preset_load(std::string p)
 {
 	ofLogNotice(__FUNCTION__) << p;
-	std::string path = path_presets + p + ".json";
+	std::string path = path_Presets + p + ".json";
 
 	ofFile file(path);
 
@@ -62,7 +62,7 @@ void PresetPalette::preset_load(std::string p)
 		ofLogNotice(__FUNCTION__) << "curveName  : " << presetData.curveName;
 		ofLogNotice(__FUNCTION__) << "background : " << presetData.background;
 
-		//curvesTool.load(path_presets + presetData.curveName + ".yml");
+		//curvesTool.load(path_Presets + presetData.curveName + ".yml");
 		//
 		//if (color_background_AutoSet)
 		//{
@@ -97,7 +97,7 @@ void PresetPalette::preset_load(std::string p)
 void PresetPalette::preset_save(std::string p)
 {
 	ofLogNotice(__FUNCTION__) << p;
-	std::string path = path_presets + p + ".json";
+	std::string path = path_Presets + p + ".json";
 
 	presetData.background = backCol;
 	//presetData.background = (*background_BACK);
@@ -111,14 +111,13 @@ void PresetPalette::preset_save(std::string p)
 	ofLogNotice(__FUNCTION__) << "presetData.palette: " << ofToString(presetData.palette);
 	ofLogNotice(__FUNCTION__) << "presetData.background: " << presetData.background;
 
-	//curvesTool.save(path_presets+presetData.curveName+".yml");
+	//curvesTool.save(path_Presets+presetData.curveName+".yml");
 
 	ofFile file(path, ofFile::WriteOnly);
 	jsonout jo(file);
 	jo << presetData;
 
 	ofLogNotice(__FUNCTION__) << "DONE! preset_save: " << p;
-	cout << endl;
 }
 
 //--------------------------------------------------------------
@@ -126,7 +125,7 @@ void PresetPalette::palette_load(std::string p)
 {
 	ofLogNotice(__FUNCTION__) << p;
 
-	std::string path = path_palettes + p + ".json";
+	std::string path = path_Palettes + p + ".json";
 	ofFile file(path);
 	if (file.exists())
 	{
@@ -152,7 +151,7 @@ void PresetPalette::palette_load(std::string p)
 void PresetPalette::palette_save(std::string p)
 {
 	ofLogNotice(__FUNCTION__) << p;
-	std::string path = path_palettes + p + ".json";
+	std::string path = path_Palettes + p + ".json";
 
 	paletteData.name = (*name_BACK);
 	paletteData.palette = (*palette_BACK);

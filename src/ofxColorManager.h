@@ -20,6 +20,7 @@ TODO:
 #define INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
 #define BUTTON_BIG_HEIGHT 50
 //#define INCL_LAYOUT
+//#define USE_OFX_GUI
 
 //--
 
@@ -61,7 +62,9 @@ using namespace ofxColorTheory;
 #include "ofxGuiPanelsLayout.h"
 #endif
 
+#ifdef USE_OFX_GUI
 #include "ofxGui.h"
+#endif
 
 #include "ofxImGui.h"
 //#include "imgui_demo.cpp"
@@ -81,6 +84,15 @@ using namespace ofxColorTheory;
 
 class ofxColorManager : public ofBaseApp
 {
+public:
+	std::string path_Global;
+	std::string path_Folder_Curves;
+	std::string path_Curves;
+	std::string path_Folder_Color;
+	std::string path_Colors;
+	std::string path_AppState;
+
+
 public:
 	ofParameter<bool> bLibFillMode;
 	ofParameter<bool> bPagerized;
@@ -155,7 +167,6 @@ private:
 public:
 
 	//live reload colors file
-	std::string path_Colors;
 	void saveColors();
 	bool bAutoExportPreset = true;
 
@@ -219,7 +230,10 @@ public:
 
 	//shared_ptr<ColorWheelScheme> scheme;
 	//vector<ofColor> colors;
-	//ofxPanel panel;
+
+//#ifdef USE_OFX_GUI
+////ofxPanel panel;
+//#endif
 
 	std::string scheme_Analogous_name;
 	std::string scheme_Complementary_name;
@@ -314,7 +328,8 @@ public:
 
 	//--
 
-	// TODO: TESTING
+	// TODO: 
+	//TESTING
 	ofParameter<bool> preview{ "Preview", false };
 	bool show_another_window;
 
@@ -462,7 +477,7 @@ public:
 	}
 
 	void setup_Interface();
-	void palettes_setup_labels();
+	void setup_Labels();
 	void update_Engine();
 	void palettes_resize();
 	void setVisible_Interface(bool b);
@@ -582,7 +597,7 @@ public:
 	void palette_rearrenge();//resize boxes when adding removing colors to user palette
 	void palette_touchedColor(std::string name);
 	void palette_recallFromPalettes(int p);
-	void palette_load_ColourLovers();
+	void palette_load_FromColourLovers();
 
 	//-
 
@@ -745,8 +760,7 @@ public:
 
 	void saveAppSettings(ofParameterGroup &g, std::string path);
 	void loadAppSettings(ofParameterGroup &g, std::string path);
-	ofParameterGroup XML_params;
-	std::string XML_path = "settings/ofxColorManager.xml";
+	ofParameterGroup params_AppState;
 
 	//--
 
