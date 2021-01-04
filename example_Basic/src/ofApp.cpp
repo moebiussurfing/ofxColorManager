@@ -18,11 +18,6 @@ void ofApp::setup()
     colorManager.setColor_TARGET(color);
 }
 
-////--------------------------------------------------------------
-//void ofApp::update()
-//{
-//}
-
 //--------------------------------------------------------------
 void ofApp::draw()
 {
@@ -62,12 +57,12 @@ void ofApp::windowResized(int w, int h)
 }
 
 //--------------------------------------------------------------
-void ofApp::exit()
-{
-	colorManager.exit();
-}
-
-//--------------------------------------------------------------
 void ofApp::dragEvent(ofDragInfo info) {
 	colorManager.dragEvent(info);
 }
+
+////--------------------------------------------------------------
+//void ofApp::exit()
+//{
+//	//colorManager.exit();
+//}

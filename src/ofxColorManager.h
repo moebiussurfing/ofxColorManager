@@ -14,13 +14,12 @@ TODO:
 
 //--
 
-//#define INCL_LAYOUT
 #define USE_RECTANGLE_INTERFACES // should be nice to completely disable! to disable ofxInterface
 #define USE_COLOR_LOVERS
 #define USE_IMAGE_QUANTIZER
 #define INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
-
 #define BUTTON_BIG_HEIGHT 50
+//#define INCL_LAYOUT
 
 //--
 
@@ -267,7 +266,7 @@ public:
 
 	// DEMO
 
-	DEMO_palette myDEMO_palette;
+	DEMO_palette myDEMO;
 
 	//--
 
@@ -365,6 +364,7 @@ public:
 	//ofParameter<bool> SHOW_Curve;
 	ofParameter<bool> SHOW_Panels;
 	ofParameter<bool> SHOW_Presets;
+	ofParameter<bool> SHOW_PresetsPalette;
 	ofParameter<bool> SHOW_Demo;
 	ofParameter<bool> SHOW_BackGround;
 	ofParameter<bool> SHOW_Picker;
@@ -705,6 +705,7 @@ public:
 	//demo
 	ofParameter<bool> DEMO_Test{ "ENABLE DEMO", false };
 	ofParameter<bool> DEMO_Auto{ "AUTO", false };
+	ofParameter<bool> DEMO_Cam{ "CAM", false };
 	ofParameter<float> DEMO_Timer{ "SPEED", 0.5, 0, 1 };
 	ofParameter<float> DEMO_Alpha{ "ALPHA", 0.8, 0, 1 };
 	int Demo_Timer = 0;

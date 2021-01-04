@@ -113,11 +113,11 @@ void DEMO_palette::update() {
 //--------------------------------------------------------------
 void DEMO_palette::draw(float alpha = 1.0f) 
 {
-	if ((colors.size() == 0 || palette->size() == 0))
 	{
 		// DEMO 1 - CIRCLES
 
-		if (ENABLE_DEMO1) {
+		if (ENABLE_DEMO1)// && colors.size() == 0) 
+		{
 			ofPushMatrix();
 			ofPushStyle();
 			ofTranslate(ofGetWidth() * 0.5, ofGetHeight() * 0.5);
@@ -135,7 +135,8 @@ void DEMO_palette::draw(float alpha = 1.0f)
 
 		// DEMO 2 - ROTATING RECTANGLES
 
-		if (ENABLE_DEMO2) {
+		if (ENABLE_DEMO2)// && (palette->size() == 0)) 
+		{
 			cam.begin();
 
 			ofPushMatrix();
@@ -158,8 +159,7 @@ void DEMO_palette::draw(float alpha = 1.0f)
 	//            // 1. color from gradient
 	//            float cnt = ofMap(deg, 0, 360, 0.f, 1.f);
 	//            c = getColorAtPercent(cnt);//gradient not in the class...
-
-				// 2. color from palette//TODO
+	//			  // 2. color from palette//TODO
 	//            c.set((palette[iCol]);
 
 				if (palette != nullptr && palette->size() > 0) {
