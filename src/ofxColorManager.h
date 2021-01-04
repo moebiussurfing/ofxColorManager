@@ -12,6 +12,7 @@ TODO:
 
 */
 
+//--
 
 //#define INCL_LAYOUT
 #define USE_RECTANGLE_INTERFACES // should be nice to completely disable! to disable ofxInterface
@@ -42,7 +43,6 @@ using namespace ofxColorTheory;
 
 #ifdef USE_IMAGE_QUANTIZER
 #include "ofxColorQuantizerHelper.h"
-//#define NUM_QUANTIZER_COLORS_PER_ROW 4
 #endif
 
 //ofxCurvesTool
@@ -71,12 +71,12 @@ using namespace ofxColorTheory;
 #include "PresetPalette.h"
 #include "DEMO_palette.h"
 
-//#include "ofxCosineGradient.h"
-
 #include "ofxSurfingHelpers.h"
 #include "ofxSurfing_ImGui.h"
 
 #include "ofxSerializer.h"
+
+//#include "ofxCosineGradient.h"
 
 //--
 
@@ -151,7 +151,7 @@ private:
 
 	//-
 
-	bool bErrorNoFiles = true;
+	//bool bErrorNoFiles = true;
 
 public:
 
@@ -283,12 +283,12 @@ public:
 	//-
 
 	// gui feedback display
-
 	int lastTheory = -1;
 	int lastRange = -1;
-
 	std::string theory_Name = "";
 	std::string range_Name = "";
+
+	//-
 
 	ofParameter<int> lastColorTheoryPicked_Palette;
 
@@ -703,7 +703,7 @@ public:
 	float framePrc;
 
 	//demo
-	ofParameter<bool> DEMO_Test{ "DEMO", false };
+	ofParameter<bool> DEMO_Test{ "ENABLE DEMO", false };
 	ofParameter<bool> DEMO_Auto{ "AUTO", false };
 	ofParameter<float> DEMO_Timer{ "SPEED", 0.5, 0, 1 };
 	ofParameter<float> DEMO_Alpha{ "ALPHA", 0.8, 0, 1 };
@@ -732,8 +732,8 @@ public:
 
 	// FILES
 
-	void preset_filesRefresh();
-	std::vector<std::string> fileNames;
+	void preset_refreshFiles();
+	std::vector<std::string> files_Names;
 	std::vector<ofFile> files;
 	int currentFile = 0;
 	std::string textInput_temp = "type name";

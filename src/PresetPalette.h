@@ -10,6 +10,7 @@
 #include "ofxColorGradient.h"
 #include "ofxCurvesTool.h"
 #include "ofxCereal.h"
+#include "ofxSurfingHelpers.h"
 
 //--
 
@@ -43,9 +44,7 @@ class PresetPalette
 
 public:
 
-    // constants
-
-    string preset_path = "user_kits/presets/";
+    string path_presets = "user_kits/presets/";
     string path_palettes = "user_kits/palettes/";
 
     //-
@@ -84,6 +83,7 @@ public:
 
     // preset (colors, gradient, curve)
     PresetData presetData;//bundle preset: palette+curve+gradient+background
+
     void preset_save(string p);
     void preset_load(string p);
 

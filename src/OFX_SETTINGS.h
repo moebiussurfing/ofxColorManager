@@ -2,6 +2,8 @@
 // Created by moebiussurfing on 8/5/19.
 //
 
+// used by gui panels layout..
+
 #ifndef INC_4_COLORMANAGER_OFX_SETTINGS_H
 #define INC_4_COLORMANAGER_OFX_SETTINGS_H
 
