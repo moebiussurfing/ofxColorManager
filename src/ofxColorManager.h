@@ -666,7 +666,7 @@ public:
 	// GRADIENT
 
 	ofxColorGradient<ofColor> gradient;//unmodified gradient with curveTool
-	ofParameter<bool> gradient_hard;//stepped
+	ofParameter<bool> gradient_HardMode;//stepped
 	void draw_Gradient();
 
 	//-
@@ -682,22 +682,22 @@ public:
 	int cAmt = 256;
 	std::string curveTool_name = "curves.yml";
 	ofImage curve_img_gradient;
-	ofParameter<float> curve_pos;
-	ofParameter<float> curve_pos_out;
+	ofParameter<float> curve_Ctrl_In;
+	ofParameter<float> curve_Ctrl_Out;
 	ofParameter<bool> bResetCurve;
 	ofParameter<float> curveMod;
 	int curve_Index = 0;
 
-	ofxSimpleSlider curveSlider_Tweak;
-	ofxSimpleSlider curveSlider_Test;
+	ofxSimpleSlider curve_SliderTweak;
+	ofxSimpleSlider curve_SliderTest;
 
 	//-
 
 	// TEST CURVE
 
-	ofParameter<bool> TEST_MODE{ "Enable", false };
+	ofParameter<bool> TEST_Mode{ "Enable", false };
 	float TEST_Speed = .75;
-	bool Test_LFO_MODE = true;
+	bool TEST_LFO_Mode = true;
 	int TEST_maxFrames = 300;//slowest period
 	bool TEST_toBackground = true;
 	float framePrc;

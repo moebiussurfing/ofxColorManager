@@ -349,14 +349,14 @@ void ofxColorManager::setup()
 
 	gradient.reset();
 	//gradient.setupAsTurbo(10); //with 10 samples
-	gradient_hard.set("Hard Steps", false);
-	gradient.setHardMode(gradient_hard);
+	gradient_HardMode.set("Hard Steps", false);
+	gradient.setHardMode(gradient_HardMode);
 	gradient.setDrawVertical(true);
 	gradient.setDrawDirFlip(true);
 
 	params_curve.setName("GRADIENT CURVE");
 	params_curve.add(MODE_Editor);
-	params_curve.add(gradient_hard);
+	params_curve.add(gradient_HardMode);
 
 	//-
 
@@ -629,13 +629,13 @@ void ofxColorManager::setup()
 	XML_params.add(bAuto_palette_recall);
 	XML_params.add(SHOW_UserPalette);
 
-	XML_params.add(TEST_MODE);
+	XML_params.add(TEST_Mode);
 	XML_params.add(DEMO_Test);
 	XML_params.add(DEMO_Auto);
 	XML_params.add(DEMO_Timer);
 	XML_params.add(DEMO_Alpha);
 
-	XML_params.add(gradient_hard);//gradient
+	XML_params.add(gradient_HardMode);//gradient
 	XML_params.add(bAuto_palette_recall);
 	XML_params.add(paletteLibPage_param);
 
@@ -723,13 +723,13 @@ void ofxColorManager::update(ofEventArgs & args)
 	int frameBuffer = (int)ofMap(TEST_Speed, 0., 1., TEST_maxFrames, 30);
 	int frameCurrent = ofGetFrameNum() % frameBuffer;//0 to maxFrames
 
-	if (TEST_MODE)
+	if (TEST_Mode)
 	{
 		if (!bTEST_pause)
 		{
 			framePrc = ofMap(frameCurrent, 0, frameBuffer, 0., 1.);
 			float control;
-			if (!Test_LFO_MODE) control = ofClamp(framePrc, 0., 1.);
+			if (!TEST_LFO_Mode) control = ofClamp(framePrc, 0., 1.);
 			else
 			{
 				float mySin = std::sin(PI * framePrc);
@@ -746,7 +746,7 @@ void ofxColorManager::update(ofEventArgs & args)
 
 			//round end position to clamp
 			float control;
-			if (!Test_LFO_MODE)
+			if (!TEST_LFO_Mode)
 			{
 				control = 1.;
 				framePrc = 1.;
@@ -995,7 +995,7 @@ void ofxColorManager::update(ofEventArgs & args)
 //--------------------------------------------------------------
 void ofxColorManager::update_Curve()
 {
-	float out = ofMap(curvesTool.getAtPercent(1.0 - curve_pos), 0, cAmt - 1, 1, 0);
+	float out = ofMap(curvesTool.getAtPercent(1.0 - curve_Ctrl_In), 0, cAmt - 1, 1, 0);
 	colCurveTest = gradient.getColorAtPercent(out);
 }
 
@@ -1429,8 +1429,8 @@ void ofxColorManager::exit()
 //--------------------------------------------------------------
 void ofxColorManager::refresh_Gui_Layout()
 {
-	curveSlider_Test.setVisible(SHOW_Curve);
-	curveSlider_Tweak.setVisible(SHOW_Curve);
+	curve_SliderTest.setVisible(SHOW_Curve);
+	curve_SliderTweak.setVisible(SHOW_Curve);
 
 	//-
 
@@ -1509,8 +1509,8 @@ void ofxColorManager::refresh_Gui_Layout()
 
 	//--
 
-	curveSlider_Test.setup(sliderMod_x, sliderMod_y, sliderMod_w, sliderMod_h, 0, 1, 0, true, true);
-	curveSlider_Tweak.setup(slider_x, slider_y, slider_w, slider_h, 0, 1, 0, true, true);
+	curve_SliderTest.setup(sliderMod_x, sliderMod_y, sliderMod_w, sliderMod_h, 0, 1, 0, true, true);
+	curve_SliderTweak.setup(slider_x, slider_y, slider_w, slider_h, 0, 1, 0, true, true);
 
 	//--	
 
@@ -2387,8 +2387,8 @@ void ofxColorManager::gui_Library()
 			// get clicked color
 
 			float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
-			float _w = ImGui::GetWindowContentRegionWidth() - 25;
-			//float _w = ImGui::GetWindowContentRegionWidth() - _spc;
+			//float _w = ImGui::GetWindowContentRegionWidth() - 25;
+			float _w = ImGui::GetWindowContentRegionWidth() - _spc;
 
 			int rCols;
 			if (bPantoneCards) {
@@ -3281,51 +3281,55 @@ void ofxColorManager::gui_Curve()
 {
 	if (ofxImGui::BeginWindow("CURVE", mainSettings, false))
 	{
+		float _spc;
+		float _w;
+		float _w50;
+		float _h;
+
+		_spc = ImGui::GetStyle().ItemInnerSpacing.x;
+		//_w = ImGui::GetWindowContentRegionWidth();
+		_w = ImGui::GetWindowContentRegionWidth() - _spc;
+		_w50 = _w * 0.5;
+		_h = 1. * BUTTON_BIG_HEIGHT;
+
 		//-
 
-		float _w = ImGui::GetWindowContentRegionWidth();
-		int _pad = 5;
-		//int _pad = _w * 0.1;
-		float _w50 = (_w * 0.5f) - (_pad * 0.5f);
-		float _w100 = _w - _pad;
-		//ImGui::PushItemWidth(_w100);
-
-		float _wb = _w100;
-		float _hb = BUTTON_BIG_HEIGHT;
-
-		//-
-
+		//if (ImGui::TreeNode("EDIT"))
 		if (ofxImGui::BeginTree("EDIT", mainSettings))
 		{
-
-
-			//if (ImGui::Button("Reset Layout")) {
-			if (ofxSurfingHelpers::AddBigButton(bResetCurve), _wb, _hb)
+			// reset
+			//ImGui::PushItemWidth(_w);
+			if (ImGui::Button(bResetCurve.getName().c_str(), ImVec2(_w, _h)))
 			{
+				bResetCurve = true;
 				//rPreview.setRect(600, 200, 755, 295);
 				//refresh_Gui_Layout();
 			}
+			//ImGui::PopItemWidth();
 
 			ImGui::Dummy(ImVec2(0, 10));
 
-			ofxImGui::AddParameter(gradient_hard);
+			ofxImGui::AddParameter(gradient_HardMode);
 
 			ImGui::Dummy(ImVec2(0, 10));
 
-			if (ofxImGui::AddParameter(curve_pos))
+			// ctrl in/out
+			ImGui::PushItemWidth(_w * 0.8);
+			if (ofxImGui::AddParameter(curve_Ctrl_In))
 			{
-				curveSlider_Tweak.setPercent(curve_pos.get());
+				curve_SliderTweak.setPercent(curve_Ctrl_In.get());
 			}
-
-			ofxImGui::AddParameter(curve_pos_out);
+			ofxImGui::AddParameter(curve_Ctrl_Out);
+			ImGui::PopItemWidth();
 
 			//ofxSurfingHelpers::AddBigButton(bResetCurve);
 			//ofxImGui::AddParameter(bResetCurve);
 			//ofxImGui::AddParameter(curveMod);
 			//ofxImGui::AddParameter(pos_CurveEditor);
 
-			//ImGui::PopItemWidth();
+			//-
 
+			//ImGui::TreePop();
 			ofxImGui::EndTree(mainSettings);
 		}
 
@@ -3333,25 +3337,29 @@ void ofxColorManager::gui_Curve()
 
 		//--
 
-		// test curve
+		// curve Test
 
-		//if (ImGui::CollapsingHeader("TEST"))
-		if (ofxImGui::BeginTree("TEST", mainSettings))
+		//if (ImGui::TreeNode("CURVE TEST"))
+		if (ofxImGui::BeginTree("CURVE TEST", mainSettings))
 		{
-			//ImGui::PushItemWidth(_w * 0.5);
+			//ImGui::PushItemWidth(_w);
 
-			ofxImGui::AddParameter(TEST_MODE);
-			//ImGui::Checkbox("Enable", &TEST_MODE); 
+			ofxImGui::AddParameter(TEST_Mode);
+			//ImGui::Checkbox("Enable", &TEST_Mode); 
 
-			if (TEST_MODE) {
+			if (TEST_Mode)
+			{
 				ImGui::SameLine();
-				ImGui::Checkbox("LFO", &Test_LFO_MODE);
+				ImGui::Checkbox("LFO", &TEST_LFO_Mode);
 			}
 			ImGui::SliderFloat("Speed", &TEST_Speed, 0.0f, 1.0f);
 			ImGui::Checkbox(" > Background", &TEST_toBackground);
 
 			//ImGui::PopItemWidth();
 
+			//-
+
+			//ImGui::TreePop();
 			ofxImGui::EndTree(mainSettings);
 		}
 
@@ -3359,8 +3367,13 @@ void ofxColorManager::gui_Curve()
 
 		ImGui::Dummy(ImVec2(0, 10));
 
-		//ofxImGui::AddParameter(MODE_Editor);
-		if (ofxSurfingHelpers::AddBigToggle(MODE_Editor), _wb, _hb) {
+		{
+			//ImGui::PushItemWidth(_w);
+			if (ofxSurfingHelpers::AddBigToggle(MODE_Editor, _w, _h))
+			{
+			}
+			//ofxImGui::AddParameter(MODE_Editor);
+			//ImGui::PopItemWidth();
 		}
 	}
 	ofxImGui::EndWindow(mainSettings);
@@ -3684,6 +3697,7 @@ void ofxColorManager::gui_Presets()
 
 		//export user palette colors to live reload from another parallel app!
 		ImGui::SameLine();
+
 		if (ImGui::Button("EXPORT", ImVec2(_w50, _h)))
 		{
 			ofLogNotice(__FUNCTION__) << "EXPORT";
@@ -3946,14 +3960,14 @@ void ofxColorManager::setup_CurveTool()
 
 	pos_CurveEditor.set("POS CURVE", glm::vec2(500), glm::vec2(0), glm::vec2(1920, 180));
 
-	curve_pos.set("in", 0., 0., 1.);
-	curve_pos_out.set("out", 0., 0., 1.);
+	curve_Ctrl_In.set("in", 0., 0., 1.);
+	curve_Ctrl_Out.set("out", 0., 0., 1.);
 	bResetCurve.set("Reset Curve", false);
 	SHOW_Curve.set("CURVE", false);
 	curveMod.set("GRADIENT TEST", 0.5, 0., 1.);
 
-	params_curve.add(curve_pos);
-	params_curve.add(curve_pos_out);
+	params_curve.add(curve_Ctrl_In);
+	params_curve.add(curve_Ctrl_Out);
 	params_curve.add(bResetCurve);
 	params_curve.add(SHOW_Curve);
 	params_curve.add(MODE_Editor);
@@ -3965,15 +3979,15 @@ void ofxColorManager::setup_CurveTool()
 	//-
 
 	// curve mod
-	curveSlider_Test.setup(sliderMod_x, sliderMod_y, sliderMod_w * 2, sliderMod_h, 0, 1, 0, true, true);
-	curveSlider_Test.setPercent(curveMod);
-	curveSlider_Test.setVisible(SHOW_Curve);
-	curveSlider_Test.setLabelString("Exp");
+	curve_SliderTest.setup(sliderMod_x, sliderMod_y, sliderMod_w * 2, sliderMod_h, 0, 1, 0, true, true);
+	curve_SliderTest.setPercent(curveMod);
+	curve_SliderTest.setVisible(SHOW_Curve);
+	curve_SliderTest.setLabelString("Exp");
 
 	// slider live test color out for this input
-	curveSlider_Tweak.setup(slider_x + (slider_w + pad), slider_y, 2 * slider_w, slider_h, 0, 1, 0, true, true);
-	curveSlider_Tweak.setVisible(SHOW_Curve);
-	curveSlider_Tweak.setLabelString("Pick");
+	curve_SliderTweak.setup(slider_x + (slider_w + pad), slider_y, 2 * slider_w, slider_h, 0, 1, 0, true, true);
+	curve_SliderTweak.setVisible(SHOW_Curve);
+	curve_SliderTweak.setLabelString("Pick");
 }
 
 
@@ -3983,11 +3997,11 @@ void ofxColorManager::update_CurveTool()
 	//----
 
 	// update values
-	curve_pos = curveSlider_Tweak.getValue();
-	curve_Index = (int)ofMap(curve_pos.get(), 0., 1., 0, cAmt - 1);
+	curve_Ctrl_In = curve_SliderTweak.getValue();
+	curve_Index = (int)ofMap(curve_Ctrl_In.get(), 0., 1., 0, cAmt - 1);
 
 	// curve modifier
-	curveMod = curveSlider_Test.getValue();
+	curveMod = curve_SliderTest.getValue();
 	int pointsSize = curvesTool.getPointSize();
 	int pointToModify = 1;//default 1 if size is 3 points
 	int pointY;
@@ -4028,7 +4042,7 @@ void ofxColorManager::update_CurveTool()
 	// UPDATE TARGET COLOR POINTER IN ofApp
 	if (color_TARGET != nullptr)//only if pointer is setted
 	{
-		float out = ofMap(curvesTool.getAtPercent(1.0 - curve_pos), 0, cAmt - 1, 1., 0.);
+		float out = ofMap(curvesTool.getAtPercent(1.0 - curve_Ctrl_In), 0, cAmt - 1, 1., 0.);
 		ofColor c = gradient.getColorAtPercent(out);
 		color_TARGET->set(c);//TODO: should reduce calls
 	}
@@ -4074,7 +4088,7 @@ void ofxColorManager::draw_CurveTools()
 
 		// NOTE: 
 		//sometimes we need some tricky hacking to avoid rare fliping from gradients
-		curve_pos_out = ofMap(curvesTool.getAtPercent(curve_pos), 0, cAmt - 1, 0., 1.);
+		curve_Ctrl_Out = ofMap(curvesTool.getAtPercent(curve_Ctrl_In), 0, cAmt - 1, 0., 1.);
 
 		//-
 
@@ -5833,8 +5847,8 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	{
 		if (SHOW_Curve)
 		{
-			curveSlider_Tweak.setVisible(SHOW_ALL_GUI);
-			curveSlider_Test.setVisible(SHOW_ALL_GUI);
+			curve_SliderTweak.setVisible(SHOW_ALL_GUI);
+			curve_SliderTest.setVisible(SHOW_ALL_GUI);
 		}
 	}
 
@@ -5904,8 +5918,8 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	//}
 	else if (name == "CURVE")
 	{
-		curveSlider_Test.setVisible(SHOW_Curve);
-		curveSlider_Tweak.setVisible(SHOW_Curve);
+		curve_SliderTest.setVisible(SHOW_Curve);
+		curve_SliderTweak.setVisible(SHOW_Curve);
 	}
 	else if (name == "PALETTE")
 	{
@@ -6175,12 +6189,12 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			curvesTool.add(ofVec2f(127, 127));
 			curvesTool.add(ofVec2f(255, 255));
 			curveMod = 0.5;
-			curveSlider_Test.setPercent(curveMod);
+			curve_SliderTest.setPercent(curveMod);
 		}
 	}
 	else if (name == "Hard Steps")
 	{
-		gradient.setHardMode(gradient_hard);
+		gradient.setHardMode(gradient_HardMode);
 	}
 
 	//-
@@ -6845,7 +6859,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 		if (key == 'T')
 		{
-			TEST_MODE = !TEST_MODE;
+			TEST_Mode = !TEST_Mode;
 		}
 
 		//-
@@ -7380,8 +7394,8 @@ void ofxColorManager::setColor_TARGET(ofColor &c)
 void ofxColorManager::setControl(float control)
 {
 	if (!MODE_Editor) {
-		curve_pos = control;
-		curveSlider_Tweak.setPercent(control);
+		curve_Ctrl_In = control;
+		curve_SliderTweak.setPercent(control);
 	}
 }
 
@@ -7404,8 +7418,8 @@ void ofxColorManager::setToggleVisible()
 
 	if (SHOW_Curve)
 	{
-		curveSlider_Tweak.setVisible(SHOW_ALL_GUI);
-		curveSlider_Test.setVisible(SHOW_ALL_GUI);
+		curve_SliderTweak.setVisible(SHOW_ALL_GUI);
+		curve_SliderTest.setVisible(SHOW_ALL_GUI);
 	}
 }
 
