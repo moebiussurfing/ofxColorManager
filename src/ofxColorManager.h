@@ -213,10 +213,10 @@ public:
 	//ofParameter<bool> bEditUserPalette;
 	ofParameter<int> boxSizeUser;
 	ofParameter<int> boxRowsUser;
-	ofParameter<float> boxScale;
+	ofParameter<float> scale_ColPalette;
 	ofParameter<bool> bFlipUserPalette;
 
-	ofParameter<float> rangeScale;
+	ofParameter<float> scale_ColRange;
 
 	//-
 
@@ -621,7 +621,7 @@ public:
 	//ofParameter<int> paletteLibPage_param{ "page", 0, 0, maxPages };
 	ofParameter<bool>bPantoneCards{ "Mode Cards", false };
 	ofParameter<int> pantoneMaxColumns{ "Columns Max", 7, 1, 7 * 6 };
-	ofParameter<float> pantoneScale{ "Scale", 1, 0.5, 1.5 };
+	ofParameter<float> scale_ColLib{ "Scale", 1, 0.5, 1.5 };
 	int lastPantoneIndex = -1;
 
 	//----

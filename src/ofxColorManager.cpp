@@ -489,7 +489,7 @@ void ofxColorManager::setup()
 
 	//-
 
-	rangeScale.set("Scale Rg", 1.f, 0.25f, 1.25f);
+	scale_ColRange.set("Scale Rg", 1.f, 0.25f, 1.25f);
 
 	//-
 
@@ -497,7 +497,7 @@ void ofxColorManager::setup()
 
 	boxSizeUser.set("Box Size", 40, 10, 200);
 	boxRowsUser.set("Max Rows", 10, 1, 20);
-	boxScale.set("Scale Pt", 1.f, 0.25f, 1.25f);
+	scale_ColPalette.set("Scale Pt", 1.f, 0.25f, 1.25f);
 	//bEditUserPalette.set("EDIT", false);
 	//bUserPaletteVertical.set("VERTICAL", false);
 	bFlipUserPalette.set("FLIP", false);
@@ -508,7 +508,7 @@ void ofxColorManager::setup()
 	params_UserPalette.add(bFlipUserPalette);
 	//params_UserPalette.add(boxSizeUser);
 	params_UserPalette.add(boxRowsUser);
-	params_UserPalette.add(boxScale);
+	params_UserPalette.add(scale_ColPalette);
 
 	ofAddListener(params_UserPalette.parameterChangedE(), this, &ofxColorManager::Changed_ColorUserPalette);
 
@@ -708,8 +708,8 @@ void ofxColorManager::setup()
 	params_AppState.add(pantoneMaxColumns);
 	params_AppState.add(numLibLines);
 	params_AppState.add(bPantoneCards);
-	params_AppState.add(pantoneScale);
-	params_AppState.add(rangeScale);
+	params_AppState.add(scale_ColLib);
+	params_AppState.add(scale_ColRange);
 	params_AppState.add(bLibFillMode);
 	params_AppState.add(bPagerized);
 	params_AppState.add(sizeLibColBox);
@@ -717,7 +717,7 @@ void ofxColorManager::setup()
 	params_AppState.add(bPaletteFillMode);
 	params_AppState.add(sizePaletteBox);
 	params_AppState.add(boxRowsUser);
-	params_AppState.add(boxScale);
+	params_AppState.add(scale_ColPalette);
 
 	//------------------------------------------------
 
@@ -2255,6 +2255,13 @@ void ofxColorManager::gui_Palette()
 
 		if (ImGui::CollapsingHeader("Advanced"))
 		{
+			if (ofxSurfingHelpers::AddSmallButton(bFlipUserPalette, 100, 0.5 * BUTTON_BIG_HEIGHT))
+			{
+				build_GradientPalette();
+			}
+
+			ImGui::Dummy(ImVec2(0.0f, 5));
+
 			ofxImGui::AddParameter(bPaletteFillMode);
 			if (bPaletteFillMode) {
 				ImGui::InputInt(sizePaletteBox.getName().c_str(), (int*)&sizePaletteBox.get(), 5, 100);
@@ -2267,8 +2274,8 @@ void ofxColorManager::gui_Palette()
 				boxRowsUser = ofClamp(boxRowsUser.get(), boxRowsUser.getMin(), boxRowsUser.getMax());
 				boxRowsUser.enableEvents();
 
-				//ofxImGui::AddParameter(boxScale);
-				ImGui::InputFloat(boxScale.getName().c_str(), (float *)&boxScale.get(), 0.005f, 0.010);
+				//ofxImGui::AddParameter(scale_ColPalette);
+				ImGui::InputFloat(scale_ColPalette.getName().c_str(), (float *)&scale_ColPalette.get(), 0.005f, 0.010);
 			}
 
 			//-
@@ -2278,13 +2285,6 @@ void ofxColorManager::gui_Palette()
 			if (ImGui::RadioButton("Copy", mode == Mode_Copy)) { mode = Mode_Copy; } ImGui::SameLine();
 			if (ImGui::RadioButton("Move", mode == Mode_Move)) { mode = Mode_Move; } ImGui::SameLine();
 			if (ImGui::RadioButton("Swap", mode == Mode_Swap)) { mode = Mode_Swap; }
-
-			ImGui::Dummy(ImVec2(0.0f, 5));
-
-			if (ofxSurfingHelpers::AddSmallButton(bFlipUserPalette, 100, 0.5 * BUTTON_BIG_HEIGHT))
-			{
-				build_GradientPalette();
-			}
 
 			ImGui::Dummy(ImVec2(0.0f, 10));
 		}
@@ -2342,8 +2342,8 @@ void ofxColorManager::gui_Palette()
 			int _r = (int)MIN(boxRowsUser.get(), palette.size());
 
 			int wb;
-			wb = (_w / _r) - _spc;
-			wb = wb * boxScale.get();
+			wb = (_w / _r) - (1.5 * _spc);
+			wb = wb * scale_ColPalette.get();
 
 			//--
 
@@ -2358,6 +2358,7 @@ void ofxColorManager::gui_Palette()
 			//--
 
 			// color box
+
 			ImVec2 bb;
 			if (bPaletteFillMode) bb = button_sz;
 			else bb = ImVec2(wb, wb);
@@ -2552,7 +2553,7 @@ void ofxColorManager::gui_Library()
 				// responsive buttons size
 				if (!bLibFillMode) {
 					ofxImGui::AddParameter(bPantoneCards);
-					ImGui::InputFloat(pantoneScale.getName().c_str(), (float *)&pantoneScale.get(), 0.02f, 0.1f);
+					ImGui::InputFloat(scale_ColLib.getName().c_str(), (float *)&scale_ColLib.get(), 0.02f, 0.1f);
 
 					if (!bPantoneCards)
 					{
@@ -2684,10 +2685,10 @@ void ofxColorManager::gui_Library()
 
 					ImVec2 _bb;
 					if (bLibFillMode) _bb = button_sz;
-					else _bb = ImVec2(sizeLibColBox * pantoneScale, sizeLibColBox * pantoneScale);
+					else _bb = ImVec2(sizeLibColBox * scale_ColLib, sizeLibColBox * scale_ColLib);
 					//button_sz))
 					//ImVec2(sizeLibColBox, sizeLibColBox)))
-					//ImVec2(sizeLibColBox * pantoneScale, sizeLibColBox * pantoneScale)))
+					//ImVec2(sizeLibColBox * scale_ColLib, sizeLibColBox * scale_ColLib)))
 
 					if (ImGui::ColorButton("##palette", saved_palette[n],
 						_flags,
@@ -3059,7 +3060,7 @@ void ofxColorManager::gui_Panels()
 //--------------------------------------------------------------
 void ofxColorManager::gui_Range()
 {
-	int _boxSize = 40 * rangeScale.get();
+	int _boxSize = 40 * scale_ColRange.get();
 	//static int _boxSize = 40;
 
 	if (ofxImGui::BeginWindow("RANGE", mainSettings, false))
@@ -3178,8 +3179,8 @@ void ofxColorManager::gui_Range()
 
 		ImGui::Dummy(ImVec2(0.0f, 10));
 
-		//ofxImGui::AddParameter(rangeScale);
-		ImGui::InputFloat(rangeScale.getName().c_str(), (float *)&rangeScale.get(), 0.02f, 0.1f);
+		//ofxImGui::AddParameter(scale_ColRange);
+		ImGui::InputFloat(scale_ColRange.getName().c_str(), (float *)&scale_ColRange.get(), 0.02f, 0.1f);
 
 		ImGui::Dummy(ImVec2(0.0f, 5));
 
@@ -3961,8 +3962,8 @@ void ofxColorManager::gui_Presets()
 				int _r = (int)MIN(boxRowsUser.get(), palette.size());
 
 				int wb;
-				wb = (_w / _r) - _spc;
-				wb = wb * boxScale.get();
+				wb = (_w / _r) - (1.5 * _spc);
+				wb = wb * scale_ColPalette.get();
 
 				//--
 
