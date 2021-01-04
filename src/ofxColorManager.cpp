@@ -639,7 +639,7 @@ void ofxColorManager::setup()
 
 	color_Picked.addListener(this, &ofxColorManager::Changed_ColorPicked);
 	color_Clicked.addListener(this, &ofxColorManager::Changed_ColorClicked);
-	
+
 	//------------------------------------------------------
 
 	// startup settings
@@ -1171,7 +1171,7 @@ void ofxColorManager::draw_Info()
 	padh = 15;
 	h = padh;
 	y += h;
-	
+
 	//t0 != "" ||
 	if (txt_lineActive[0]) {//preset name
 		x = ofGetWidth() * 0.5 - _w0 * 0.5;
@@ -1188,7 +1188,7 @@ void ofxColorManager::draw_Info()
 		y += h;
 	}
 
-	if ( txt_lineActive[1]) {//palette name
+	if (txt_lineActive[1]) {//palette name
 		x = ofGetWidth() * 0.5 - _w1 * 0.5;
 		if (txt_lineActive[i]) ofSetColor(c0);
 		else ofSetColor(c0_Ghost);
@@ -2081,7 +2081,7 @@ void ofxColorManager::gui_Theory()
 			case 6:
 				_total = complementTriad.size();
 				break;
-	}
+			}
 #endif
 
 #ifdef USE_RECTANGLE_INTERFACES
@@ -2212,7 +2212,7 @@ void ofxColorManager::gui_Theory()
 
 				ImGui::PopID();
 			}
-}
+		}
 	}
 	ofxImGui::EndWindow(mainSettings);
 }
@@ -2220,7 +2220,9 @@ void ofxColorManager::gui_Theory()
 //--------------------------------------------------------------
 void ofxColorManager::gui_Palette()
 {
-	//ImGuiColorEditFlags colorEdiFlags =
+	ImGuiColorEditFlags ImGuiColorEditFlags;
+
+	//colorEdiFlags =
 	//	ImGuiColorEditFlags_NoSmallPreview |
 	//	ImGuiColorEditFlags_NoTooltip |
 	//	ImGuiColorEditFlags_NoLabel |
@@ -2228,12 +2230,17 @@ void ofxColorManager::gui_Palette()
 	//	ImGuiColorEditFlags_NoInputs |
 	//	ImGuiColorEditFlags_NoAlpha;
 
-	ImGuiColorEditFlags ImGuiColorEditFlags = false;
+	ImGuiColorEditFlags = false;
 
 	//-
 
 	if (ofxImGui::BeginWindow("PALETE", mainSettings, false))
 	{
+		//-
+
+		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
+		float _w = ImGui::GetWindowContentRegionWidth() - 2 * _spc;
+		
 		//-
 
 		enum Mode
@@ -2329,11 +2336,6 @@ void ofxColorManager::gui_Palette()
 					}
 				}
 			}
-
-			//-
-
-			float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
-			float _w = ImGui::GetWindowContentRegionWidth() - _spc;
 
 			//-
 
@@ -3515,9 +3517,11 @@ void ofxColorManager::gui_Presets()
 	if (ofxImGui::BeginWindow("PRESETS", mainSettings))
 	{
 		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
-		float _w = ImGui::GetWindowContentRegionWidth() - _spc;
+		float _w = ImGui::GetWindowContentRegionWidth() - 2 * _spc;
 		float _w50 = _w * 0.5;
 		float _h = 0.5 * BUTTON_BIG_HEIGHT;
+
+		ImGuiColorEditFlags ImGuiColorEditFlags;
 
 		//--
 		////TODO:
@@ -3949,8 +3953,8 @@ void ofxColorManager::gui_Presets()
 
 				//----
 
-				float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
-				float _w = ImGui::GetWindowContentRegionWidth() - _spc;
+				//float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
+				//float _w = ImGui::GetWindowContentRegionWidth() - _spc;
 
 				//-
 
@@ -3962,7 +3966,7 @@ void ofxColorManager::gui_Presets()
 
 				//--
 
-				ImGuiColorEditFlags ImGuiColorEditFlags =
+				ImGuiColorEditFlags =
 					ImGuiColorEditFlags_NoSmallPreview |
 					ImGuiColorEditFlags_NoTooltip |
 					ImGuiColorEditFlags_NoLabel |
@@ -6749,7 +6753,24 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			SHOW_Quantizer = !SHOW_Quantizer;
 		}
 
-		if (key == OF_KEY_F9)//curve
+		if (key == OF_KEY_F9)//presets
+		{
+			SHOW_Presets = !SHOW_Presets;
+
+			if (SHOW_Presets) {
+				SHOW_UserPalette = false;
+				SHOW_Picker = false;
+				SHOW_Library = false;
+				SHOW_BackGround = false;
+				SHOW_Theory = false;
+				SHOW_Range = false;
+				SHOW_ColourLovers = false;
+				SHOW_Quantizer = false;
+				SHOW_Curve = false;
+			}
+		}
+
+		if (key == OF_KEY_F10)//curve
 		{
 			SHOW_Curve = !SHOW_Curve;
 
@@ -6765,19 +6786,19 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				//SHOW_Presets = false;
 			}
 		}
-		if (key == OF_KEY_F10)//all on
-		{
-			SHOW_UserPalette = true;// F1
-			SHOW_Picker = true;// F2
-			SHOW_Curve = true;// F3
-			SHOW_Library = true;// F4
-			SHOW_BackGround = true;
-			SHOW_Theory = true;// F5
-			SHOW_Range = true;// F6
-			SHOW_ColourLovers = true;// F7
-			SHOW_Quantizer = true;// F8
-			SHOW_Presets = true;
-		}
+		//if (key == OF_KEY_F10)//all on
+		//{
+		//	SHOW_UserPalette = true;// F1
+		//	SHOW_Picker = true;// F2
+		//	SHOW_Curve = true;// F3
+		//	SHOW_Library = true;// F4
+		//	SHOW_BackGround = true;
+		//	SHOW_Theory = true;// F5
+		//	SHOW_Range = true;// F6
+		//	SHOW_ColourLovers = true;// F7
+		//	SHOW_Quantizer = true;// F8
+		//	SHOW_Presets = true;
+		//}
 		if (key == OF_KEY_F11)//all off
 		{
 			SHOW_UserPalette = false;
@@ -7116,7 +7137,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		else if (key == 'G')
 		{
 			SHOW_GuiInternal = !SHOW_GuiInternal;
-	}
+		}
 
 		//----
 
@@ -7382,8 +7403,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//
 		//    else if (key == OF_KEY_RETURN)
 		//        ColorBrowser.switch_sorted_Type();
-}
 	}
+}
 
 //--------------------------------------------------------------
 void ofxColorManager::keyReleased(ofKeyEventArgs &eventArgs)
