@@ -339,7 +339,7 @@ void ofxColorManager::setup()
 	// ALGORITHMIC PALETTES
 
 	//random.generateRandom(amountColors_Alg);
-	palettes_update();
+	update_Engine();
 	setup_Interface();
 	palettes_setup_labels();
 
@@ -630,6 +630,7 @@ void ofxColorManager::setup()
 	XML_params.add(SHOW_UserPalette);
 
 	XML_params.add(TEST_Mode);
+
 	XML_params.add(DEMO_Test);
 	XML_params.add(DEMO_Auto);
 	XML_params.add(DEMO_Timer);
@@ -963,7 +964,7 @@ void ofxColorManager::update(ofEventArgs & args)
 		{
 			if (bAuto_palette_recall)
 			{
-				palettes_update();
+				update_Engine();
 
 #ifdef USE_RECTANGLE_INTERFACES
 				palette_recallFromPalettes(SELECTED_palette_LAST);//trig last choice
@@ -1778,10 +1779,11 @@ void ofxColorManager::gui_Theory()
 			ImGuiColorEditFlags_NoTooltip |
 			ImGuiColorEditFlags_NoLabel |
 			ImGuiColorEditFlags_NoSidePreview |
+			ImGuiColorEditFlags_NoAlpha |
 			//ImGuiColorEditFlags_HSV |
 			//ImGuiColorEditFlags_RGB |
-			//ImGuiColorEditFlags_NoInputs |
-			ImGuiColorEditFlags_NoAlpha |
+			//ImGuiColorEditFlags_HDR |
+			ImGuiColorEditFlags_NoInputs |
 			ImGuiColorEditFlags_PickerHueWheel;
 
 		//-
@@ -1836,11 +1838,11 @@ void ofxColorManager::gui_Theory()
 				ImGuiColorEditFlags_NoTooltip |
 				ImGuiColorEditFlags_NoLabel |
 				ImGuiColorEditFlags_NoSidePreview |
-				ImGuiColorEditFlags_NoInputs |
 				ImGuiColorEditFlags_NoAlpha |
 				//ImGuiColorEditFlags_HSV |
 				//ImGuiColorEditFlags_RGB |
 				//ImGuiColorEditFlags_HDR |
+				//ImGuiColorEditFlags_NoInputs |
 				ImGuiColorEditFlags_PickerHueBar;
 
 			ImGui::NextColumn();
@@ -2952,7 +2954,7 @@ void ofxColorManager::gui_Panels()
 {
 	if (ofxImGui::BeginWindow("PANELS", mainSettings, false))
 	{
-		ImGui::Dummy(ImVec2(0.0f, 10));
+		//ImGui::Dummy(ImVec2(0.0f, 10));
 
 		ImGui::Columns(3);
 
@@ -2962,9 +2964,8 @@ void ofxColorManager::gui_Panels()
 		ofxImGui::AddParameter(SHOW_Picker);
 		ofxImGui::AddParameter(SHOW_Curve);
 		ofxImGui::AddParameter(SHOW_Library);
-
-		ofxImGui::AddParameter(SHOW_Presets);
 		ofxImGui::AddParameter(SHOW_BackGround);
+		ofxImGui::AddParameter(SHOW_Presets);
 
 		ImGui::NextColumn();
 		//ImGui::Separator();
@@ -3271,7 +3272,7 @@ void ofxColorManager::build_GradientPalette()
 		gradient.addColor(palette[i]);
 
 	}
-	//palettes_update();
+	//update_Engine();
 	//setup_Interface();
 	//refresh_ColorTheory();
 }
@@ -3288,7 +3289,7 @@ void ofxColorManager::gui_Curve()
 
 		_spc = ImGui::GetStyle().ItemInnerSpacing.x;
 		//_w = ImGui::GetWindowContentRegionWidth();
-		_w = ImGui::GetWindowContentRegionWidth() - _spc;
+		_w = ImGui::GetWindowContentRegionWidth() - 3 * _spc;
 		_w50 = _w * 0.5;
 		_h = 1. * BUTTON_BIG_HEIGHT;
 
@@ -3771,7 +3772,7 @@ void ofxColorManager::gui_Demo()
 {
 	if (ofxImGui::BeginWindow("DEMO", mainSettings, false))
 	{
-		ImGui::Dummy(ImVec2(0.0f, 10.f));
+		//ImGui::Dummy(ImVec2(0.0f, 5.f));
 
 		ofxImGui::AddParameter(DEMO_Test);
 		ofxImGui::AddParameter(DEMO_Auto);
@@ -4458,11 +4459,11 @@ void ofxColorManager::palettes_setup_labels()
 			btn->setThisPaletteType(6);
 			btn->set_SELECTED_palette(SELECTED_palette);
 			break;
-			//            case 7:
-			//                btn->setup("RANDOM");
-			//                btn->setThisPaletteType(7);
-			//                btn->set_SELECTED_palette(SELECTED_palette);
-			//                break;
+//            case 7:
+//                btn->setup("RANDOM");
+//                btn->setThisPaletteType(7);
+//                btn->set_SELECTED_palette(SELECTED_palette);
+//                break;
 		}
 
 		btn->setPosition(x0, y0 + p * btn_plt_h);
@@ -4750,7 +4751,7 @@ void ofxColorManager::palette_recallFromPalettes(int p)
 
 
 //--------------------------------------------------------------
-void ofxColorManager::palettes_update()
+void ofxColorManager::update_Engine()
 {
 	// calculate base primary color
 	if (MODE_TweakSatBrg)
@@ -5086,7 +5087,7 @@ void ofxColorManager::palettes_resize()
 	//TODO
 
 	//random.generateRandom(amountColors_Alg);
-	palettes_update();
+	update_Engine();
 	setup_Interface();
 
 	//-
@@ -5682,8 +5683,8 @@ void ofxColorManager::Changed_ColorUserPalette(ofAbstractParameter &e)
 {
 	std::string name = e.getName();
 
-	//if (name != "in" &&
-	//	name != "out")
+	//if (name != "In" &&
+	//	name != "Out")
 	{
 		ofLogNotice(__FUNCTION__) << name << " : " << e;
 	}
@@ -5702,8 +5703,8 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 {
 	std::string name = e.getName();
 
-	//if (name != "in" &&
-	//	name != "out")
+	//if (name != "In" &&
+	//	name != "Out")
 	{
 		ofLogNotice(__FUNCTION__) << name << " : " << e;
 	}
@@ -5730,7 +5731,7 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 	{
 		amountColors_Alg = amountColors.get();
 
-		palettes_update();
+		update_Engine();
 		refresh_ColorTheory();
 	}
 
@@ -5778,11 +5779,11 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	std::string name = e.getName();
 
 	// TODO: should reduce callbacks in output..
-	//    if (name != "in" && name != "out" &&
+	//    if (name != "In" && name != "Out" &&
 	//            name!="H" && name!="S" && name!="B")
 
-	if (name != "in" &&
-		name != "out")
+	if (name != "In" &&
+		name != "Out")
 	{
 		ofLogNotice(__FUNCTION__) << name << " : " << e;
 	}
@@ -6133,7 +6134,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	//            bRandomPalette = false;
 	//
 	//            random.generateRandom(amountColors_Alg);
-	//            palettes_update();
+	//            update_Engine();
 	//            if (bAuto_palette_recall) {
 	//                //set random palette to user palette
 	//                palette_recallFromPalettes(7);
@@ -6159,7 +6160,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 	else if (name == "BRIGHTNESS" || name == "SATURATION")
 	{
-		palettes_update();
+		update_Engine();
 
 		// auto create user palette from algo palette
 		if (bAuto_palette_recall)
@@ -6224,7 +6225,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	else if (name == "Darkerkness")
 	{
 		//TODO: must improve
-		//palettes_update();
+		//update_Engine();
 
 		// auto create user palette from algo palette
 		if (bAuto_palette_recall)
@@ -6424,31 +6425,6 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 		// panels
 
-		if (key == OF_KEY_F11)//all off
-		{
-			SHOW_UserPalette = false;
-			SHOW_Picker = false;
-			SHOW_Curve = false;
-			SHOW_Library = false;
-
-			SHOW_Theory = false;
-			SHOW_Range = false;
-			SHOW_ColourLovers = false;
-			SHOW_Quantizer = false;
-		}
-		if (key == OF_KEY_F10)//all on
-		{
-			SHOW_UserPalette = true;
-			SHOW_Picker = true;
-			SHOW_Curve = true;
-			SHOW_Library = true;
-
-			SHOW_Theory = true;
-			SHOW_Range = true;
-			SHOW_ColourLovers = true;
-			SHOW_Quantizer = true;
-		}
-
 		if (key == OF_KEY_F1)//palette
 		{
 			SHOW_UserPalette = !SHOW_UserPalette;
@@ -6459,19 +6435,16 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 			if (SHOW_Picker) SHOW_BackGround = false;
 		}
-		if (key == OF_KEY_F9)//bg
+		if (key == OF_KEY_F3)//library
+		{
+			SHOW_Library = !SHOW_Library;
+		}
+		if (key == OF_KEY_F4)//bg
 		{
 			SHOW_BackGround = !SHOW_BackGround;
 			if (SHOW_BackGround) SHOW_Picker = false;
 		}
-		if (key == OF_KEY_F3)//curve
-		{
-			SHOW_Curve = !SHOW_Curve;
-		}
-		if (key == OF_KEY_F4)//library
-		{
-			SHOW_Library = !SHOW_Library;
-		}
+	
 		if (key == OF_KEY_F5)//theory
 		{
 			SHOW_Theory = !SHOW_Theory;
@@ -6487,6 +6460,35 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		if (key == OF_KEY_F8)//quantizer
 		{
 			SHOW_Quantizer = !SHOW_Quantizer;
+		}
+
+		if (key == OF_KEY_F9)//curve
+		{
+			SHOW_Curve = !SHOW_Curve;
+		}
+		if (key == OF_KEY_F10)//all on
+		{
+			SHOW_UserPalette = true;
+			SHOW_Picker = true;
+			SHOW_Curve = true;
+			SHOW_Library = true;
+
+			SHOW_Theory = true;
+			SHOW_Range = true;
+			SHOW_ColourLovers = true;
+			SHOW_Quantizer = true;
+		}
+		if (key == OF_KEY_F11)//all off
+		{
+			SHOW_UserPalette = false;
+			SHOW_Picker = false;
+			SHOW_Curve = false;
+			SHOW_Library = false;
+
+			SHOW_Theory = false;
+			SHOW_Range = false;
+			SHOW_ColourLovers = false;
+			SHOW_Quantizer = false;
 		}
 
 		//----
@@ -6574,7 +6576,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				if (palette.size() > 0)
 				{
 					color_Picked = ofFloatColor(palette[0]);
-					palettes_update();
+					update_Engine();
 				}
 			}
 
@@ -6601,7 +6603,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				if (palette.size() > 0)
 				{
 					color_Picked = ofFloatColor(palette[0]);
-					palettes_update();
+					update_Engine();
 				}
 			}
 		}
@@ -6761,7 +6763,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 			if (bAuto_palette_recall)
 			{
-				palettes_update();
+				update_Engine();
 
 #ifdef USE_RECTANGLE_INTERFACES
 				palette_recallFromPalettes(SELECTED_palette_LAST);//trig last choice
@@ -6805,7 +6807,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			//// A. create random palette
 
 			//random.generateRandom(amountColors_Alg);
-			//palettes_update();
+			//update_Engine();
 			//if (bAuto_palette_recall)
 			//{
 			//    //set random palette to user palette
@@ -6823,7 +6825,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			lastColorPicked = r;
 			lastColorPickedNameColor = ColorBrowser.pantoneNames[r];
 			color_Picked = ofColor(ColorBrowser_palette[r]);
-			palettes_update();
+			update_Engine();
 
 #ifdef USE_RECTANGLE_INTERFACES
 			palette_recallFromPalettes(SELECTED_palette_LAST);
@@ -7357,7 +7359,7 @@ void ofxColorManager::refresh_Picker_Touched()
 
 	if (bAuto_palette_recall)
 	{
-		palettes_update();
+		update_Engine();
 
 #ifdef USE_RECTANGLE_INTERFACES
 		palette_recallFromPalettes(SELECTED_palette_LAST);//trig last choiced algorithmic palette
@@ -7368,7 +7370,7 @@ void ofxColorManager::refresh_Picker_Touched()
 
 	if (!bLock_palette)
 	{
-		palettes_update();
+		update_Engine();
 	}
 
 	//-

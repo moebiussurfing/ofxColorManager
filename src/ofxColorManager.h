@@ -463,7 +463,7 @@ public:
 
 	void setup_Interface();
 	void palettes_setup_labels();
-	void palettes_update();
+	void update_Engine();
 	void palettes_resize();
 	void setVisible_Interface(bool b);
 
