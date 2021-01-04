@@ -1171,8 +1171,9 @@ void ofxColorManager::draw_Info()
 	padh = 15;
 	h = padh;
 	y += h;
-
-	if (t0 != "" || txt_lineActive[0]) {//preset name
+	
+	//t0 != "" ||
+	if (txt_lineActive[0]) {//preset name
 		x = ofGetWidth() * 0.5 - _w0 * 0.5;
 		if (txt_lineActive[i]) ofSetColor(c0);
 		else ofSetColor(c0_Ghost);
@@ -1187,7 +1188,7 @@ void ofxColorManager::draw_Info()
 		y += h;
 	}
 
-	if (t1 != "" || txt_lineActive[1]) {//palette name
+	if ( txt_lineActive[1]) {//palette name
 		x = ofGetWidth() * 0.5 - _w1 * 0.5;
 		if (txt_lineActive[i]) ofSetColor(c0);
 		else ofSetColor(c0_Ghost);
@@ -1202,7 +1203,7 @@ void ofxColorManager::draw_Info()
 		y += h;
 	}
 
-	if (t2 != "" || txt_lineActive[2]) {//theory name
+	if (txt_lineActive[2]) {//theory name
 		x = ofGetWidth() * 0.5 - _w2 * 0.5;
 		if (txt_lineActive[i]) ofSetColor(c0);
 		else ofSetColor(c0_Ghost);
@@ -1217,7 +1218,7 @@ void ofxColorManager::draw_Info()
 		y += h;
 	}
 
-	if (t3 != "" || txt_lineActive[3]) {//range name
+	if (txt_lineActive[3]) {//range name
 		x = ofGetWidth() * 0.5 - _w3 * 0.5;
 		if (txt_lineActive[i]) ofSetColor(c0);
 		else ofSetColor(c0_Ghost);
