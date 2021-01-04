@@ -212,8 +212,8 @@ public:
 
 	// ColorWheelSchemes
 
-	void palettes_colorTheory_setup();
-	void palettes_colorTheory_update();
+	void setup_Theory();
+	void update_Theory();
 	//void ColorWheel_draw();
 
 	ofParameter<ofColor> primaryColor;
@@ -461,11 +461,11 @@ public:
 		palettes_y = pos.y;
 	}
 
-	void palettes_setup();
+	void setup_Interface();
 	void palettes_setup_labels();
 	void palettes_update();
 	void palettes_resize();
-	void palettes_setVisible(bool b);
+	void setVisible_Interface(bool b);
 
 	void draw_palettes();
 
@@ -563,7 +563,7 @@ public:
 	void Changed_ColorPicked(ofFloatColor &color);
 	void Changed_ColorClicked(ofFloatColor &color);
 
-	void reBuildGradientPalette();
+	void build_GradientPalette();
 
 	// TEST
 	void refresh_Picker_Touched();
@@ -613,14 +613,14 @@ public:
 
 	// INTERFACE
 
-	void interface_setup();
+	void setup_Interface_Scene();
 
 #ifdef USE_RECTANGLE_INTERFACES
 	ofxInterface::Node *scene;
 	vector<ButtonExample *> btns_palette;//button color box for each color of all algorithmic palettes
 
-	void interface_update();
-	void interface_draw();
+	void update_Interface();
+	void draw_Interface_Scene();
 
 	bool bShowDebug = false;
 

@@ -52,7 +52,7 @@ void ofxColorManager::startup()
 	//-
 
 #ifdef USE_RECTANGLE_INTERFACES
-	palettes_setVisible(SHOW_AlgoPalettes);
+	setVisible_Interface(SHOW_AlgoPalettes);
 #endif
 
 	//----
@@ -175,7 +175,7 @@ void ofxColorManager::setup()
 
 	// theory
 
-	palettes_colorTheory_setup();
+	setup_Theory();
 
 	//--
 
@@ -331,7 +331,7 @@ void ofxColorManager::setup()
 
 	// INTERFACE
 #ifdef USE_RECTANGLE_INTERFACES
-	interface_setup();
+	setup_Interface_Scene();
 #endif
 
 	//-
@@ -340,7 +340,7 @@ void ofxColorManager::setup()
 
 	//random.generateRandom(amountColors_Alg);
 	palettes_update();
-	palettes_setup();
+	setup_Interface();
 	palettes_setup_labels();
 
 	//-
@@ -975,7 +975,7 @@ void ofxColorManager::update(ofEventArgs & args)
 	//-
 
 //#ifdef USE_RECTANGLE_INTERFACES
-//	//interface_update();
+//	//update_Interface();
 //#endif
 
 	//-
@@ -1355,7 +1355,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 
 	//// interface
 	//#ifdef USE_RECTANGLE_INTERFACES
-	////interface_draw();
+	////draw_Interface_Scene();
 	//#endif
 
 	//--
@@ -1562,7 +1562,7 @@ void ofxColorManager::refresh_Gui_Layout()
 
 
 //--------------------------------------------------------------
-void ofxColorManager::interface_setup()
+void ofxColorManager::setup_Interface_Scene()
 {
 #ifdef USE_RECTANGLE_INTERFACES
 	scene = new Node();
@@ -1660,7 +1660,7 @@ void ofxColorManager::palette_addColor_toInterface(ofColor c)
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::interface_update()
+void ofxColorManager::update_Interface()
 {
 	TouchManager::one().update();
 
@@ -1722,7 +1722,7 @@ void ofxColorManager::interface_update()
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::interface_draw()
+void ofxColorManager::draw_Interface_Scene()
 {
 	scene->render();
 
@@ -1873,7 +1873,7 @@ void ofxColorManager::gui_Theory()
 		//if (ImGui::InputInt(amountColors.getName().c_str(), (int*)&amountColors.get(), 1, 5))
 		if (ofxImGui::AddParameter(amountColors))
 		{
-			palettes_colorTheory_setup();
+			setup_Theory();
 		}
 
 		//-
@@ -2221,7 +2221,7 @@ void ofxColorManager::gui_Palette()
 
 			if (ofxSurfingHelpers::AddSmallButton(bFlipUserPalette, 100, 0.5 * BUTTON_BIG_HEIGHT))
 			{
-				reBuildGradientPalette();
+				build_GradientPalette();
 			}
 
 			ImGui::Dummy(ImVec2(0.0f, 10));
@@ -2353,7 +2353,7 @@ void ofxColorManager::gui_Palette()
 					// update all pallete (Curve)
 					ofLogNotice(__FUNCTION__) << "DONE Dragged color";
 
-					reBuildGradientPalette();
+					build_GradientPalette();
 				}
 				ImGui::EndDragDropTarget();
 			}
@@ -3264,7 +3264,7 @@ void ofxColorManager::gui_Range()
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::reBuildGradientPalette()
+void ofxColorManager::build_GradientPalette()
 {
 	gradient.reset();
 	for (int i = 0; i < palette.size(); i++) {
@@ -3272,7 +3272,7 @@ void ofxColorManager::reBuildGradientPalette()
 
 	}
 	//palettes_update();
-	//palettes_setup();
+	//setup_Interface();
 	//refresh_ColorTheory();
 }
 
@@ -3369,7 +3369,7 @@ void ofxColorManager::gui_Curve()
 
 		{
 			//ImGui::PushItemWidth(_w);
-			if (ofxSurfingHelpers::AddBigToggle(MODE_Editor, _w, _h))
+			if (ofxSurfingHelpers::AddBigToggle(MODE_Editor, _w,0.5* _h))
 			{
 			}
 			//ofxImGui::AddParameter(MODE_Editor);
@@ -3960,8 +3960,8 @@ void ofxColorManager::setup_CurveTool()
 
 	pos_CurveEditor.set("POS CURVE", glm::vec2(500), glm::vec2(0), glm::vec2(1920, 180));
 
-	curve_Ctrl_In.set("in", 0., 0., 1.);
-	curve_Ctrl_Out.set("out", 0., 0., 1.);
+	curve_Ctrl_In.set("In", 0., 0., 1.);
+	curve_Ctrl_Out.set("Out", 0., 0., 1.);
 	bResetCurve.set("Reset Curve", false);
 	SHOW_Curve.set("CURVE", false);
 	curveMod.set("GRADIENT TEST", 0.5, 0., 1.);
@@ -4125,7 +4125,7 @@ void ofxColorManager::draw_CurveTools()
 #pragma mark - PALETTES
 
 //--------------------------------------------------------------
-void ofxColorManager::palettes_setup()
+void ofxColorManager::setup_Interface()
 {
 #ifdef USE_RECTANGLE_INTERFACES
 
@@ -4847,7 +4847,7 @@ void ofxColorManager::palettes_update()
 
 	// 2. FROM OFX-COLOUR-THEORY
 
-	palettes_colorTheory_update();//TODO: reduce calls...
+	update_Theory();//TODO: reduce calls...
 
 	//--
 
@@ -5087,7 +5087,7 @@ void ofxColorManager::palettes_resize()
 
 	//random.generateRandom(amountColors_Alg);
 	palettes_update();
-	palettes_setup();
+	setup_Interface();
 
 	//-
 
@@ -5107,112 +5107,112 @@ void ofxColorManager::palettes_resize()
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::palettes_setVisible(bool b)
+void ofxColorManager::setVisible_Interface(bool b)
 {
-#ifdef USE_RECTANGLE_INTERFACES
-	// hide and disable touchs for buttons
-
-	// ALGORITHMIC COLOR PALETTES
-
-	//-
-
-	// 1. FROM OFX-COLOR-PALETTE
-
-	for (auto &btn : btns_plt_Triad)
-	{
-		btn->setVisible(b);
-		btn->setEnabled(b);
-	}
-	for (auto &btn : btns_plt_ComplTriad)
-	{
-		btn->setVisible(b);
-		btn->setEnabled(b);
-	}
-	for (auto &btn : btns_plt_CompSat)
-	{
-		btn->setVisible(b);
-		btn->setEnabled(b);
-	}
-	for (auto &btn : btns_plt_ComplBrgt)
-	{
-		btn->setVisible(b);
-		btn->setEnabled(b);
-	}
-	for (auto &btn : btns_plt_MonoSat)
-	{
-		btn->setVisible(b);
-		btn->setEnabled(b);
-	}
-	for (auto &btn : btns_plt_MonoBrgt)
-	{
-		btn->setVisible(b);
-		btn->setEnabled(b);
-	}
-	for (auto &btn : btns_plt_Analog)
-	{
-		btn->setVisible(b);
-		btn->setEnabled(b);
-	}
-	//    for (auto &btn : btns_plt_Random) {
-	//        btn->setVisible(b);
-	//        btn->setEnabled(b);
-	//    }
-
-	//-
-
-	// 2. FROM OFX-COLOUR-THEORY
-
-	for (auto &btn : btns_plt_CT_Analogous)
-	{
-		btn->setVisible(b);
-		btn->setEnabled(b);
-	}
-	for (auto &btn : btns_plt_CT_Complementary)
-	{
-		btn->setVisible(b);
-		btn->setEnabled(b);
-	}
-	for (auto &btn : btns_plt_CT_SplitComplementary)
-	{
-		btn->setVisible(b);
-		btn->setEnabled(b);
-	}
-	for (auto &btn : btns_plt_CT_Compound)
-	{
-		btn->setVisible(b);
-		btn->setEnabled(b);
-	}
-	for (auto &btn : btns_plt_CT_FlippedCompound)
-	{
-		btn->setVisible(b);
-		btn->setEnabled(b);
-	}
-	for (auto &btn : btns_plt_CT_Monochrome)
-	{
-		btn->setVisible(b);
-		btn->setEnabled(b);
-	}
-	for (auto &btn : btns_plt_CT_Triad)
-	{
-		btn->setVisible(b);
-		btn->setEnabled(b);
-	}
-	for (auto &btn : btns_plt_CT_Tetrad)
-	{
-		btn->setVisible(b);
-		btn->setEnabled(b);
-	}
-
-	//-
-
-	// 2. LABEL BUTTONS
-
-	for (auto &btn : btns_plt_Selector)
-	{
-		btn->setVisible(b);
-		btn->setLocked(!b);
-	}
-#endif
+//#ifdef USE_RECTANGLE_INTERFACES
+//	// hide and disable touchs for buttons
+//
+//	// ALGORITHMIC COLOR PALETTES
+//
+//	//-
+//
+//	// 1. FROM OFX-COLOR-PALETTE
+//
+//	for (auto &btn : btns_plt_Triad)
+//	{
+//		btn->setVisible(b);
+//		btn->setEnabled(b);
+//	}
+//	for (auto &btn : btns_plt_ComplTriad)
+//	{
+//		btn->setVisible(b);
+//		btn->setEnabled(b);
+//	}
+//	for (auto &btn : btns_plt_CompSat)
+//	{
+//		btn->setVisible(b);
+//		btn->setEnabled(b);
+//	}
+//	for (auto &btn : btns_plt_ComplBrgt)
+//	{
+//		btn->setVisible(b);
+//		btn->setEnabled(b);
+//	}
+//	for (auto &btn : btns_plt_MonoSat)
+//	{
+//		btn->setVisible(b);
+//		btn->setEnabled(b);
+//	}
+//	for (auto &btn : btns_plt_MonoBrgt)
+//	{
+//		btn->setVisible(b);
+//		btn->setEnabled(b);
+//	}
+//	for (auto &btn : btns_plt_Analog)
+//	{
+//		btn->setVisible(b);
+//		btn->setEnabled(b);
+//	}
+//	//    for (auto &btn : btns_plt_Random) {
+//	//        btn->setVisible(b);
+//	//        btn->setEnabled(b);
+//	//    }
+//
+//	//-
+//
+//	// 2. FROM OFX-COLOUR-THEORY
+//
+//	for (auto &btn : btns_plt_CT_Analogous)
+//	{
+//		btn->setVisible(b);
+//		btn->setEnabled(b);
+//	}
+//	for (auto &btn : btns_plt_CT_Complementary)
+//	{
+//		btn->setVisible(b);
+//		btn->setEnabled(b);
+//	}
+//	for (auto &btn : btns_plt_CT_SplitComplementary)
+//	{
+//		btn->setVisible(b);
+//		btn->setEnabled(b);
+//	}
+//	for (auto &btn : btns_plt_CT_Compound)
+//	{
+//		btn->setVisible(b);
+//		btn->setEnabled(b);
+//	}
+//	for (auto &btn : btns_plt_CT_FlippedCompound)
+//	{
+//		btn->setVisible(b);
+//		btn->setEnabled(b);
+//	}
+//	for (auto &btn : btns_plt_CT_Monochrome)
+//	{
+//		btn->setVisible(b);
+//		btn->setEnabled(b);
+//	}
+//	for (auto &btn : btns_plt_CT_Triad)
+//	{
+//		btn->setVisible(b);
+//		btn->setEnabled(b);
+//	}
+//	for (auto &btn : btns_plt_CT_Tetrad)
+//	{
+//		btn->setVisible(b);
+//		btn->setEnabled(b);
+//	}
+//
+//	//-
+//
+//	// 2. LABEL BUTTONS
+//
+//	for (auto &btn : btns_plt_Selector)
+//	{
+//		btn->setVisible(b);
+//		btn->setLocked(!b);
+//	}
+//#endif
 }
 
 //--------------------------------------------------------------
@@ -5236,7 +5236,7 @@ void ofxColorManager::refresh_ColorTheory()
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::palettes_colorTheory_setup()
+void ofxColorManager::setup_Theory()
 {
 	amountColors_Alg.makeReferenceTo(amountColors);
 	//amountColors.makeReferenceTo(amountColors_Alg);
@@ -5313,7 +5313,7 @@ void ofxColorManager::palettes_colorTheory_setup()
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::palettes_colorTheory_update()
+void ofxColorManager::update_Theory()
 {
 	//	//color theory
 	//	colorSchemeName.set(ColorWheelSchemes::colorSchemeNames[colorScheme.get()]);
@@ -5907,7 +5907,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 #endif
 	else if (name == "SHOW PALETTES")
 	{
-		palettes_setVisible(SHOW_AlgoPalettes);
+		setVisible_Interface(SHOW_AlgoPalettes);
 	}
 	else if (name == "SHOW BROWSER COLORS")
 	{
@@ -7327,7 +7327,7 @@ void ofxColorManager::refresh_Picker_Touched()
 	//TODO
 	//palettes
 	//primaryColor.set(color_Picked.get());
-	palettes_colorTheory_update();
+	update_Theory();
 
 	//--
 
@@ -7376,7 +7376,7 @@ void ofxColorManager::refresh_Picker_Touched()
 	//    //TODO
 	//    // palettes
 	////    primaryColor.set(color_Picked.get());
-	//    palettes_colorTheory_update();
+	//    update_Theory();
 }
 
 
