@@ -3,7 +3,7 @@
 #include "ofMain.h"
 
 /*
-	
+
 TODO:
 
 + fix change num colors on algo palettes
@@ -65,6 +65,7 @@ using namespace ofxColorTheory;
 #include "ofxGui.h"
 
 #include "ofxImGui.h"
+//#include "imgui_demo.cpp"
 
 #include "PresetManager.h"
 #include "PresetPalette.h"
@@ -184,7 +185,7 @@ public:
 	shared_ptr<ColorWheelScheme> scheme;
 	vector<ofColor> colorsTheory[NUM_COLOR_THEORY_TYPES];
 	ofParameterGroup params_ColorTheory;
-	ofParameter<ofColor> colorTheoryBase;
+	ofParameter<ofColor> color_TheoryBase;
 	ofParameter<int> colorScheme;
 	ofParameter<std::string> colorSchemeName;
 	ofParameter<int> amountColors;
@@ -364,6 +365,7 @@ public:
 	//ofParameter<bool> SHOW_Curve;
 	ofParameter<bool> SHOW_Panels;
 	ofParameter<bool> SHOW_Presets;
+	ofParameter<bool> SHOW_Demo;
 	ofParameter<bool> SHOW_BackGround;
 	ofParameter<bool> SHOW_Picker;
 	ofParameter<bool> SHOW_Library;
@@ -496,6 +498,7 @@ public:
 	void gui_Range();
 	void gui_Presets();
 	void gui_Panels();
+	void gui_Demo();
 	//void gui_Quantizer();
 
 	void refresh_Gui_Layout();
@@ -698,8 +701,14 @@ public:
 	int TEST_maxFrames = 300;//slowest period
 	bool TEST_toBackground = true;
 	float framePrc;
-	ofParameter<bool> TEST_DEMO{ "DEMO", false };
-	ofParameter<float> alpha_DEMO{ "ALPHA", 0.8, 0,1 };
+
+	//demo
+	ofParameter<bool> DEMO_Test{ "DEMO", false };
+	ofParameter<bool> DEMO_Auto{ "AUTO", false };
+	ofParameter<float> DEMO_Timer{ "SPEED", 0.5, 0, 1 };
+	ofParameter<float> DEMO_Alpha{ "ALPHA", 0.8, 0, 1 };
+	int Demo_Timer = 0;
+	int Demo_Timer_Max = 15000;
 
 	////TODO: make pauses between any test trig..
 	bool bTEST_pause = false;
@@ -854,4 +863,4 @@ private:
 		}
 	}
 
-	};
+};
