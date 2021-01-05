@@ -19,11 +19,14 @@ TODO:
 #define USE_IMAGE_QUANTIZER
 #define INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
 #define BUTTON_BIG_HEIGHT 50
+#define USE_OFX_COLOR_BROWSER
+#define MAX_PALETTE_COLORS 11
 //#define INCL_LAYOUT
 //#define USE_OFX_GUI
-#define USE_OFX_COLOR_BROWSER
 
 //--
+
+#include "ofxSuperLog.h"
 
 #include "ofxColorGradient.h"
 #include "ofxColorPalette.h"
@@ -382,7 +385,6 @@ public:
 	ofParameter<bool> SHOW_ALL_GUI;
 	ofParameter<bool> SHOW_GUI_MINI;
 	ofParameter<bool> SHOW_debugText;
-	//ofParameter<bool> SHOW_Curve;
 	ofParameter<bool> SHOW_Panels;
 	ofParameter<bool> SHOW_Presets;
 	ofParameter<bool> SHOW_PresetsPalette;
@@ -436,7 +438,7 @@ public:
 
 	ofParameterGroup params_data;
 	ofParameterGroup params_color;
-	ofParameterGroup params_palette;
+	ofParameterGroup params_Theory;
 	ofParameterGroup params_curve;
 	ofParameterGroup params_control;
 
@@ -484,7 +486,7 @@ public:
 	ofParameter<bool> MODE_TweakSatBrg;
 	// force SAT/BRG from panel SB sliders or all from color
 
-	ofFloatColor base;
+	ofFloatColor color_Base;
 
 	//--
 
@@ -532,7 +534,7 @@ public:
 	void setBackground_ENABLE(bool b);
 
 	// TEST
-	bool ENABLE_Callbacks = true;
+	bool ENABLE_Callbacks_cPickers = true;
 
 	void refresh_Picked_Update_To_HSV();
 
@@ -562,10 +564,11 @@ public:
 
 	// color clicked comes from algo palette colors
 	//TODO: pointer color to get click from button class
-	ofFloatColor color_clicked;
-	ofFloatColor color_clicked_PRE;
-	ofRectangle r_color_clicked;
-	bool bColor_clicked_DISABLED = false;
+	ofFloatColor color_Clicked2;
+	ofFloatColor color_Clicked2_PRE;
+
+	//ofRectangle r_color_clicked;
+	//bool bColor_clicked_DISABLED = false;
 
 	ofFloatColor color_BACK;
 	ofFloatColor color_BACK_PRE;

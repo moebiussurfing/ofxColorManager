@@ -6,12 +6,14 @@
 #define INC_4_COLORMANAGER_DEMO_PALETTE_H
 
 #include "ofMain.h";
+
 #include "ofxCameraSaveLoad.h"
 
 class DEMO_palette {
 
 private:
 	std::string _name = "DEMO_Cam";
+
 public:
 	~DEMO_palette() 
 	{
@@ -28,7 +30,7 @@ public:
 public:
 	void setup();
 	void update();
-	void draw(float alpha);
+	void draw(float alpha = 1.0f);
 
 	void clear() {
 		ofLogNotice(__FUNCTION__);

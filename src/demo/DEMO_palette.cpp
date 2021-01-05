@@ -112,7 +112,7 @@ void DEMO_palette::update() {
 }
 
 //--------------------------------------------------------------
-void DEMO_palette::draw(float alpha = 1.0f) 
+void DEMO_palette::draw(float alpha)
 {
 	{
 		// DEMO 1 - CIRCLES
@@ -136,66 +136,66 @@ void DEMO_palette::draw(float alpha = 1.0f)
 
 		// DEMO 2 - ROTATING RECTANGLES
 
-		if (ENABLE_DEMO2 )// && (palette->size() == 0)) 
+		if (ENABLE_DEMO2 && (*palette).size())// && (palette->size() == 0)) 
 		{
 			cam.begin();
 
 			ofPushMatrix();
 			ofPushStyle();
-
-			float scaleRects = 2.f;
-			float radius = 300;
-			int iDeg = 36;
-
-			//int iDeg = 360/ (2*palette.size());
-			int iCol = 0;
-
-			for (int deg = 0; deg < 360; deg += iDeg) 
 			{
-				float x = radius * cos(deg * DEG_TO_RAD);
-				float y = radius * sin(deg * DEG_TO_RAD);
-				ofColor c;
+				float scaleRects = 2.f;
+				float radius = 300;
+				int iDeg = 36;
 
-				//-
+				//int iDeg = 360/ (2*palette.size());
+				int iCol = 0;
 
-	//            // 1. color from gradient
-	//            float cnt = ofMap(deg, 0, 360, 0.f, 1.f);
-	//            c = getColorAtPercent(cnt);//gradient not in the class...
-	//			  // 2. color from palette//TODO
-	//            c.set((palette[iCol]);
-
-				if (palette != nullptr && palette->size() > 0) 
+				for (int deg = 0; deg < 360; deg += iDeg)
 				{
-					c.set((*palette)[iCol]);
+					float x = radius * cos(deg * DEG_TO_RAD);
+					float y = radius * sin(deg * DEG_TO_RAD);
+					ofColor c;
 
-					iCol++;
-					if (palette->size() > 0)
-						iCol = iCol % palette->size();
+					//-
+
+		//            // 1. color from gradient
+		//            float cnt = ofMap(deg, 0, 360, 0.f, 1.f);
+		//            c = getColorAtPercent(cnt);//gradient not in the class...
+		//			  // 2. color from palette//TODO
+		//            c.set((palette[iCol]);
+
+					if (palette != nullptr && palette->size() > 0)
+					{
+						c.set((*palette)[iCol]);
+
+						iCol++;
+						if (palette->size() > 0)
+							iCol = iCol % palette->size();
+					}
+
+					else
+					{
+						c.set(ofColor(ofRandom(255)));
+						iCol++;
+					}
+
+					//--
+
+					ofSetColor(c, 255 * alpha);
+
+					ofRotateZ(ofGetFrameNum() * 0.01);
+					//ofRotateZ(ofGetFrameNum() * 0.25);
+
+					ofPushMatrix();
+					ofTranslate(ofVec3f(x, y, 0));
+					ofRotateX(90);
+					ofRotateY(deg + 90);
+
+					ofRect(ofVec3f(0, 0, 0), scaleRects * 1000, scaleRects * 1000);
+
+					ofPopMatrix();
 				}
-
-				else
-				{
-					c.set(ofColor(ofRandom(255)));
-					iCol++;
-				}
-
-				//--
-
-				ofSetColor(c, 255 * alpha);
-
-				ofRotateZ(ofGetFrameNum() * 0.01);
-				//ofRotateZ(ofGetFrameNum() * 0.25);
-
-				ofPushMatrix();
-				ofTranslate(ofVec3f(x, y, 0));
-				ofRotateX(90);
-				ofRotateY(deg + 90);
-
-				ofRect(ofVec3f(0, 0, 0), scaleRects * 1000, scaleRects * 1000);
-
-				ofPopMatrix();
 			}
-
 			ofPopStyle();
 			ofPopMatrix();
 
