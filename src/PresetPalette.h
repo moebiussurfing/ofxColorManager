@@ -46,9 +46,15 @@ public:
 
 	PresetPalette() {
 		path_Global = "ofxColorManager/";
-		path_Presets = path_Global + "user_kits/presets/";
-		path_Palettes = path_Global + "user_kits/palettes/";
 
+		//path_Presets = path_Global + "user_kits/presets/";
+		//path_Palettes = path_Global + "user_kits/palettes/";
+
+		path_Kits = "kits/";
+		path_Presets = path_Global + path_Kits + "presets/";
+		path_Palettes = path_Global + path_Kits + "palettes/";
+
+		ofxSurfingHelpers::CheckFolder(path_Global + path_Kits);
 		ofxSurfingHelpers::CheckFolder(path_Global);
 		ofxSurfingHelpers::CheckFolder(path_Presets);
 		ofxSurfingHelpers::CheckFolder(path_Palettes);
@@ -59,6 +65,7 @@ public:
 	//string path_Presets = "user_kits/presets/";
 	//string path_Palettes = "user_kits/palettes/";
 	string path_Global;
+	string path_Kits;
 	string path_Presets;
 	string path_Palettes;
 

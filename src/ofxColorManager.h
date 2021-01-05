@@ -90,6 +90,7 @@ class ofxColorManager : public ofBaseApp
 {
 public:
 	std::string path_Global;
+	std::string path_Kits;
 	std::string path_Folder_Curves;
 	std::string path_Curves;
 	std::string path_Folder_Color;

@@ -3861,7 +3861,7 @@ void ofxColorManager::gui_Presets()
 			preset_refreshFiles();
 
 			//ofLogNotice(__FUNCTION__) << "DELETE:"<<str<<endl;
-			//dir.listDir("user_kits/presets");
+			//dir.listDir("");
 			//dir.allowExt("jpg");
 			//dir.allowExt("png");
 			//dir.sort();
@@ -7614,16 +7614,16 @@ void ofxColorManager::preset_refreshFiles()
 {
 	//TODO: why hardcoded?
 	//std::string _path = "user_kits/presets";
-	std::string path_Global = "ofxColorManager/";
-	std::string path_Kits = "kits/";
+	path_Global = "ofxColorManager/";
+	path_Kits = "kits/";
 	std::string path_Presets = path_Global + path_Kits + "presets/";
 	std::string path_Palettes = path_Global + path_Kits + "palettes/";
+	ofxSurfingHelpers::CheckFolder(path_Global + path_Kits);
+	
 	std::string _path = path_Presets;
 	ofxSurfingHelpers::CheckFolder(_path);
-	ofxSurfingHelpers::CheckFolder(path_Global + path_Kits);
 	ofDirectory dataDirectory(ofToDataPath(_path, true));
 	ofxSurfingHelpers::CheckFolder(_path);
-
 	ofLogNotice(__FUNCTION__) << _path;
 
 	// clear files and filenames vectors
