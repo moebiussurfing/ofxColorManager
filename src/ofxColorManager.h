@@ -55,8 +55,8 @@ using namespace ofxColorTheory;
 
 #ifdef USE_RECTANGLE_INTERFACES
 #include "ofxInterface.h"
-#include "ButtonPaletteSelector.h"
-#include "ButtonExample.h"
+#include "interface/ButtonPaletteSelector.h"
+#include "interface/ButtonExample.h"
 #endif
 
 #include "ofxUndoSimple.h"
@@ -73,9 +73,10 @@ using namespace ofxColorTheory;
 #include "ofxImGui.h"
 //#include "imgui_demo.cpp"
 
-#include "PresetManager.h"
-#include "PresetPalette.h"
-#include "DEMO_palette.h"
+#include "presets/PresetManager.h"
+#include "presets/PresetPalette.h"
+
+#include "demo/DEMO_palette.h"
 
 #include "ofxSurfingHelpers.h"
 #include "ofxSurfing_ImGui.h"

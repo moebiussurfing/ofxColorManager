@@ -13,7 +13,7 @@
 
 #include "ofMain.h"
 
-#include "OFX_SETTINGS.h"
+#include "OFX_SURFING_SETTINGS.h"
 
 #include "ofxSurfingHelpers.h"
 
