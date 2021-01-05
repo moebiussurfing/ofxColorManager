@@ -608,7 +608,10 @@ public:
 
 	//--
 
-	// PALETTE LIBRARY
+	// library palette
+
+	ofEventListener listener_Library;
+	ofEventListener listener_ModeSorting;
 
 #define NUM_COLORS_PANTONE 2310
 	int lib_RowSize = 7;//7 colors per row Pantone lib
@@ -618,15 +621,15 @@ public:
 	int last_Lib_Index = -1;
 
 	//rows per page
-	ofParameter<int> lib_NumLines{ "Rows Amnt" , 10, 5, 10 * 5 };
-	ofParameter<int> lib_PageIndex{ "PAGE" , 0, 0, lib_Page_Max };
+	ofParameter<int> lib_NumRows{ "Rows Amnt" , 10, 5, 10 * 5 };
+	ofParameter<int> lib_Page_Index{ "PAGE" , 0, 0, lib_Page_Max };
 	ofParameter<bool>lib_CardsMode{ "Mode Cards", false };
 	ofParameter<int> lib_MaxColumns{ "Columns Max", 7, 1, 7 * 6 };
 	ofParameter<float> scale_ColLib{ "Scale", 1, 0.5, 1.5 };
 
 	//----
 
-	// INTERFACE
+	// interface
 
 	void setup_Interface_Scene();
 
@@ -639,7 +642,8 @@ public:
 
 	bool bShowDebug = false;
 
-	// ALGORITHMIC PALETTES
+	// algorithmic palettes
+
 	vector<ButtonExample *> btns_plt_Triad;       // 1
 	vector<ButtonExample *> btns_plt_ComplTriad;  // 2
 	vector<ButtonExample *> btns_plt_CompSat;     // 3
@@ -678,7 +682,7 @@ public:
 
 	//----
 
-	// GRADIENT
+	// gradient
 
 	ofxColorGradient<ofColor> gradient;//unmodified gradient with curveTool
 	ofParameter<bool> gradient_HardMode;//stepped
@@ -686,7 +690,7 @@ public:
 
 	//-
 
-	// CURVES
+	// curves
 
 	ofxCurvesTool curvesTool;
 
@@ -708,7 +712,7 @@ public:
 
 	//-
 
-	// TEST CURVE
+	// test curve
 
 	ofParameter<bool> TEST_Mode{ "Enable", false };
 	float TEST_Speed = .75;
@@ -717,7 +721,10 @@ public:
 	bool TEST_toBackground = true;
 	float framePrc;
 
-	//demo
+	//-
+
+	// demo
+
 	ofParameter<bool> DEMO_Test{ "ENABLE DEMO", false };
 	ofParameter<bool> DEMO_Auto{ "AUTO", false };
 	ofParameter<bool> DEMO_Cam{ "CAM", false };
@@ -733,7 +740,7 @@ public:
 
 	//--
 
-	// PRESET MANAGER
+	// preset manager
 
 	void preset_save(std::string p);
 	void preset_load(std::string p);
@@ -746,7 +753,7 @@ public:
 
 	//-
 
-	// FILES
+	// files
 
 	void preset_refreshFiles();
 	std::vector<std::string> files_Names;
@@ -756,11 +763,11 @@ public:
 
 	//--
 
-	// APP SETTINGS XML
+	// app settings xml
 
+	ofParameterGroup params_AppState;
 	void saveAppSettings(ofParameterGroup &g, std::string path);
 	void loadAppSettings(ofParameterGroup &g, std::string path);
-	ofParameterGroup params_AppState;
 
 	//--
 
@@ -768,13 +775,14 @@ private:
 
 	//--
 
-	// LAYOUT
+	// layout
 
-	//int w_Gui;
-	int gui_x, gui_y, gui_w, gui_h;
-	int gui2_x, gui2_y, gui2_w, gui2_h;
-	int gui3_x, gui3_y, gui3_w, gui3_h;
-	int gui4_x, gui4_y, gui4_w, gui4_h;
+	////int w_Gui;
+	//int gui_x, gui_y, gui_w, gui_h;
+	//int gui2_x, gui2_y, gui2_w, gui2_h;
+	//int gui3_x, gui3_y, gui3_w, gui3_h;
+	//int gui4_x, gui4_y, gui4_w, gui4_h;
+
 	int box_size_user;//user palette colors
 	int box_size;//palettes colors
 	int pad; //global mini pad
@@ -811,21 +819,25 @@ private:
 
 	//--
 
-	// LISTENERS
+	// listeners
 
 	void keyPressed(ofKeyEventArgs &eventArgs);
 	void keyReleased(ofKeyEventArgs &eventArgs);
+
 	void mouseDragged(ofMouseEventArgs &eventArgs);
 	void mousePressed(ofMouseEventArgs &eventArgs);
 	void mouseReleased(ofMouseEventArgs &eventArgs);
+
 	void addKeysListeners();
 	void removeKeysListeners();
+
 	void addMouseListeners();
 	void removeMouseListeners();
 
 	//--
 
-	////COSINE GRADIENT
+	////cosine gradient
+	//
 	//ofxCosineGradient mCosineGradient;
 	//ofxImGui::Gui mGui;
 	//ofParameterGroup cosineGradient_params;

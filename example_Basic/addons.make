@@ -1,14 +1,14 @@
-ofxGui
-ofxOpenCv
-ofxXmlSettings
 ofxCereal
 ofxColorManager
 ofxColorQuantizer
 ofxColorQuantizerHelper
 ofxColourLoversHelper
+ofxGui
 ofxImGui
 ofxMouseRuler
+ofxOpenCv
 ofxPoco
 ofxScaleDragRect
 ofxSurfingHelpers
 ofxWindowApp
+ofxXmlSettings

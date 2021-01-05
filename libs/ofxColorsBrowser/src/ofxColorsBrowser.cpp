@@ -3,6 +3,7 @@
 
 //--------------------------------------------------------------
 // comparing colors to sorting methods
+
 bool compareName(const colorMapping_STRUCT &s1, const colorMapping_STRUCT &s2)
 {
 	return s1.name < s2.name;
@@ -28,6 +29,8 @@ bool comparePosition(const colorMapping_STRUCT &s1, const colorMapping_STRUCT &s
 	return s1.position < s2.position;
 }
 
+//----
+
 //--------------------------------------------------------------
 ofxColorsBrowser::ofxColorsBrowser()
 {
@@ -47,7 +50,6 @@ ofxColorsBrowser::ofxColorsBrowser()
 	ofxSurfingHelpers::CheckFolder(path_Global);
 }
 
-
 //--------------------------------------------------------------
 void ofxColorsBrowser::buildColors()
 {
@@ -55,6 +57,7 @@ void ofxColorsBrowser::buildColors()
 
 	colors_STRUCT.clear();
 	colorNameMap.clear();
+
 	//TODO: seems is not erasing last name colors..
 
 	//-
@@ -67,7 +70,7 @@ void ofxColorsBrowser::buildColors()
 
 	// 1. OFX_PANTONE_COLORS
 
-	if (MODE_COLOR == OFX_PANTONE_COLORS)
+	if (LibraryColors_Index == OFX_PANTONE_COLORS)
 	{
 		ofLogNotice(__FUNCTION__) << "OFX_PANTONE_COLORS";
 
@@ -109,7 +112,7 @@ void ofxColorsBrowser::buildColors()
 
 	// 2. OFX_OPEN_COLOR
 
-	else if (MODE_COLOR == OFX_OPEN_COLOR)
+	else if (LibraryColors_Index == OFX_OPEN_COLOR)
 	{
 		ofLogNotice(__FUNCTION__) << "OFX_OPEN_COLOR";
 
@@ -227,7 +230,7 @@ void ofxColorsBrowser::buildColors()
 
 	// 3. OFX_COLOR_NATIVE
 
-	else if (MODE_COLOR == OFX_COLOR_NATIVE)
+	else if (LibraryColors_Index == OFX_COLOR_NATIVE)
 	{
 		// dessired distribution for this palette
 		cardSize = 12;
@@ -466,7 +469,7 @@ void ofxColorsBrowser::setup()
 	MODE_COLOR_name.setSerializable(false);
 
 	params.setName("ofxColorsBrowser");
-	params.add(MODE_COLOR);
+	params.add(LibraryColors_Index);
 	params.add(MODE_SORTING);
 	params.add(MODE_COLOR_name);
 	params.add(MODE_COLOR_name);
@@ -474,16 +477,16 @@ void ofxColorsBrowser::setup()
 	//-
 
 	//--------------------------------------------------------------
-	ModeSorting = MODE_SORTING.newListener([this](int &i) {
+	listener_ModeSorting = MODE_SORTING.newListener([this](int &i) {
 		ofLogNotice("MODE_SORTING: ") << i;
 		//ofLogNotice(__FUNCTION__) << i;
 
 		if (MODE_SORTING == 0) { ofSort(colors_STRUCT, comparePosition); MODE_SORTING_name = "Original"; }
-		if (MODE_SORTING == 1) { ofSort(colors_STRUCT, compareName); MODE_SORTING_name = "Name"; }
-		if (MODE_SORTING == 2) { ofSort(colors_STRUCT, compareHue); MODE_SORTING_name = "Hue"; }
-		if (MODE_SORTING == 3) { ofSort(colors_STRUCT, compareBrightness); MODE_SORTING_name = "Brightness"; }
-		if (MODE_SORTING == 4) { ofSort(colors_STRUCT, compareSaturation); MODE_SORTING_name = "Saturation"; }
-		if (MODE_SORTING == 5) switch_sorted_Type();
+		else if (MODE_SORTING == 1) { ofSort(colors_STRUCT, compareName); MODE_SORTING_name = "Name"; }
+		else if (MODE_SORTING == 2) { ofSort(colors_STRUCT, compareHue); MODE_SORTING_name = "Hue"; }
+		else if (MODE_SORTING == 3) { ofSort(colors_STRUCT, compareBrightness); MODE_SORTING_name = "Brightness"; }
+		else if (MODE_SORTING == 4) { ofSort(colors_STRUCT, compareSaturation); MODE_SORTING_name = "Saturation"; }
+		else if (MODE_SORTING == 5) switch_sorted_Type();
 
 		clearInterface();
 		grid_create_boxes();
@@ -493,26 +496,26 @@ void ofxColorsBrowser::setup()
 	//-
 
 	//--------------------------------------------------------------
-	ModeColor = MODE_COLOR.newListener([this](int &i) {
-		ofLogNotice("MODE_COLOR: ") << i;
+	listener_Library = LibraryColors_Index.newListener([this](int &i) {
+		ofLogNotice("LibraryColors_Index: ") << i;
 		//ofLogNotice(__FUNCTION__) << i;
 
-		MODE_COLOR = MODE_COLOR % 3;
+		LibraryColors_Index = LibraryColors_Index % 3;
 
-		switch (MODE_COLOR)
+		switch (LibraryColors_Index)
 		{
 		case OFX_PANTONE_COLORS:
 			ofLogNotice(__FUNCTION__) << "OFX_PANTONE_COLORS";
 			MODE_COLOR_name = "Pantone";
 			break;
 
-		case OFX_OPEN_COLOR:
-			ofLogNotice(__FUNCTION__) << "OFX_OPEN_COLOR";
+		case OFX_COLOR_NATIVE:
+			ofLogNotice(__FUNCTION__) << "OFX_COLOR_NATIVE";
 			MODE_COLOR_name = "OF Native";
 			break;
 
-		case OFX_COLOR_NATIVE:
-			ofLogNotice(__FUNCTION__) << "OFX_COLOR_NATIVE";
+		case OFX_OPEN_COLOR:
+			ofLogNotice(__FUNCTION__) << "OFX_OPEN_COLOR";
 			MODE_COLOR_name = "Open Color";
 			break;
 		}
@@ -530,7 +533,7 @@ void ofxColorsBrowser::setup()
 #endif	
 		});
 
-	//-
+	//----
 
 	// pantone colors
 	load_Pantone_JSON();
@@ -542,7 +545,7 @@ void ofxColorsBrowser::setup()
 	// by name, at the start
 
 	// 2. default palette mode
-	MODE_COLOR = OFX_PANTONE_COLORS;
+	LibraryColors_Index = OFX_PANTONE_COLORS;
 
 	//--
 
@@ -791,7 +794,7 @@ void ofxColorsBrowser::draw()
 			//-
 
 			str = "LIBRARY: ";
-			switch (MODE_COLOR)
+			switch (LibraryColors_Index)
 			{
 			case OFX_PANTONE_COLORS:
 				str += "PANTONE COLORS";
@@ -967,7 +970,7 @@ void ofxColorsBrowser::keyPressed(ofKeyEventArgs &eventArgs)
 
 		if (key == OF_KEY_BACKSPACE)
 		{
-			MODE_COLOR++;
+			LibraryColors_Index++;
 		}
 
 		//-
@@ -1492,8 +1495,8 @@ void ofxColorsBrowser::setVisible(bool b)
 //--------------------------------------------------------------
 void ofxColorsBrowser::switch_palette_Type()
 {
-	MODE_COLOR = (MODE_COLOR + 1) % 2;
-	ofLogNotice(__FUNCTION__) << "switch_palette_Type: " << MODE_COLOR;
+	LibraryColors_Index = (LibraryColors_Index + 1) % 2;
+	ofLogNotice(__FUNCTION__) << "switch_palette_Type: " << LibraryColors_Index;
 
 	clearInterface();
 	buildColors();
@@ -1537,7 +1540,7 @@ void ofxColorsBrowser::switch_sorted_Type()
 //--------------------------------------------------------------
 void ofxColorsBrowser::set_palette_Type(int p)
 {
-	MODE_COLOR = p;
+	LibraryColors_Index = p;
 
 	clearInterface();
 	buildColors();
@@ -1788,7 +1791,7 @@ void ofxColorsBrowser::rectangles_draw()
 				ofSetColor(c);
 
 				string str;
-				if (MODE_COLOR == OFX_PANTONE_COLORS)
+				if (LibraryColors_Index == OFX_PANTONE_COLORS)
 					str += "PANTONE\n";
 				str += colors_STRUCT[iPad].name;
 
@@ -1924,16 +1927,16 @@ vector<ofColor> ofxColorsBrowser::getPalette()
 	int numColors = colors_STRUCT.size();
 	ofLogNotice(__FUNCTION__) << "numColors:" << numColors;
 
-	vector<ofColor> _palette;
-	_palette.resize(numColors);
+	vector<ofColor> p;
+	p.resize(numColors);
 
 	for (int i = 0; i < colors_STRUCT.size(); i++)
 	{
-		_palette[i] = colors_STRUCT[i].color;
-		//ofLogNotice(__FUNCTION__) << "color: "+ofToString(i)+"_"+ofToString( _palette[i] );
+		p[i] = colors_STRUCT[i].color;
+		ofLogVerbose(__FUNCTION__) << "color [" + ofToString(i) + "]  " + ofToString(p[i]);
 	}
 
-	return _palette;
+	return p;
 }
 
 //--------------------------------------------------------------

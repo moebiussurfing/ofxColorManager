@@ -56,6 +56,8 @@ private:
 	ofxFontStash font;
 #endif
 
+	//-
+
 public:
 	ofxColorsBrowser();
 	~ofxColorsBrowser();
@@ -83,7 +85,8 @@ public:
 	void set_sorted_Type(int p);
 
 	// TODO: resize buttons to fit..
-	void setSize(glm::vec2 size);
+	//void setSize(glm::vec2 size);
+
 	void setRowsSize(int rows);
 	void setBoxSize(float size);
 
@@ -93,6 +96,7 @@ public:
 	void setEnableClicks(bool b)
 	{
 		ENABLE_clicks = b;
+
 #ifdef USE_OFX_COLOR_BROWSER_INTERFACE
 		if (b)
 		{
@@ -110,6 +114,7 @@ public:
 	void setEnableKeys(bool b)
 	{
 		ENABLE_keys = b;
+
 #ifdef USE_OFX_COLOR_BROWSER_INTERFACE
 		if (ENABLE_keys) addKeysListeners();
 		else removeKeysListeners();
@@ -137,7 +142,7 @@ private:
 
 	//-
 
-	// SETTINGS
+private:
 
 	ofParameter<float> boxSize{ "BOX SIZE", 15, 10, 100 };//boxes
 	ofParameter<float> boxPad{ "PAD", 1, 0, 10 };
@@ -153,21 +158,27 @@ private:
 
 	//--
 
-	// MAIN STORAGE
+	// main storage
 
 	map<std::string, ofColor> colorNameMap;
+
+	//-
+
+public:
 	vector<colorMapping_STRUCT> colors_STRUCT;
 
 	//--
 
-	// PANTONE COLORS
+	// pantone colors
 
+private:
 	ofJson js;
 	vector<ofColor> colors_Pantone;
 
 	//-
 
 	// RECTANGLE MANAGER SYSTEM - OFXRECTANGLE
+
 #ifdef USE_OFX_COLOR_BROWSER_INTERFACE
 	//draggable, sortable, align...
 	std::vector<ofxRectangle> rectangles;
@@ -185,6 +196,8 @@ private:
 	std::vector<ofRectangle> packedRects;
 #endif
 
+	//-
+
 private:
 	void rectangles_update();
 	void rectangles_draw();
@@ -200,6 +213,7 @@ private:
 		convert >> std::hex >> aHex;
 		return aHex;
 	}
+
 	static void hexToColor(ofColor &col, std::string hex)
 	{
 		std::string r = hex.substr(0, 2);
@@ -211,24 +225,28 @@ private:
 		col.set(ri, gi, bi);
 	}
 
-	//-
+	//----
 
+public:
 	void keyPressed(ofKeyEventArgs &eventArgs);
 	void keyReleased(ofKeyEventArgs &eventArgs);
-	void addKeysListeners();
-	void removeKeysListeners();
-
+	
 	void mouseDragged(ofMouseEventArgs &eventArgs);
 	void mousePressed(ofMouseEventArgs &eventArgs);
 	void mouseReleased(ofMouseEventArgs &eventArgs);
+
+private:
+	void addKeysListeners();
+	void removeKeysListeners();
+
 	void addMouseListeners();
 	void removeMouseListeners();
 
 	//-
 
-private:
 	// modes and states
 
+private:
 	bool SHOW_debugText = false;
 	bool SHOW_ColorsBrowse = true;
 	bool ENABLE_clicks = true;
@@ -260,19 +278,21 @@ private:
 	glm::vec2 positionHelper;
 
 public:
-	// 0:PANTONE COLORS 1:OFX_COLOR_NATIVE, 2:OFX_OPEN_COLOR
-	ofParameter<int> MODE_COLOR{ "Palette Type", 1, 1, 3 };
-	//int MODE_COLOR;
+
+	// 0:PANTONE 1:OFX_NATIVE, 2:OFX_OPEN
+
+	ofParameter<int> LibraryColors_Index{ "Library", 0, 0, 2 };
 	ofParameter<std::string> MODE_COLOR_name{ "Library Name", "" };
 
 	// 0:ORIGINAL, 1:NAME, 2:HUE, 3:BRIGHTNESS, 4:SATURATION, 5:NEXT
-	ofParameter<int> MODE_SORTING{ "Sorting Mode", 0, 1, 5 };
-	//int MODE_SORTING;
+
+	ofParameter<int> MODE_SORTING{ "Sorting Mode", 0, 1, 4 };
 	ofParameter<std::string> MODE_SORTING_name{ "Sorting Name", "" };
 
 	ofParameterGroup params;
-	ofEventListener ModeColor;
-	ofEventListener ModeSorting;
+
+	ofEventListener listener_Library;
+	ofEventListener listener_ModeSorting;
 
 private:
 	// last clicked color box
