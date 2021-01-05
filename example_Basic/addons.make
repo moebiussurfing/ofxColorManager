@@ -1,14 +1,13 @@
 ofxCereal
 ofxColorManager
-ofxColorQuantizer
 ofxColorQuantizerHelper
+ofxColorsBrowser
 ofxColourLoversHelper
 ofxGui
 ofxImGui
 ofxMouseRuler
 ofxOpenCv
 ofxPoco
-ofxScaleDragRect
 ofxSurfingHelpers
 ofxWindowApp
 ofxXmlSettings
