@@ -68,7 +68,7 @@ void ofxColorsBrowser::buildColors()
 
 	//--
 
-	// 1. OFX_PANTONE_COLORS
+	// 0. OFX_PANTONE_COLORS
 
 	if (LibraryColors_Index == OFX_PANTONE_COLORS)
 	{
@@ -108,127 +108,9 @@ void ofxColorsBrowser::buildColors()
 		ofLogNotice(__FUNCTION__);
 	}
 
-	//--
+	//----
 
-	// 2. OFX_OPEN_COLOR
-
-	else if (LibraryColors_Index == OFX_OPEN_COLOR)
-	{
-		ofLogNotice(__FUNCTION__) << "OFX_OPEN_COLOR";
-
-#define NUM_COLORS_ROW 10
-		//that's the ideal distribution for open color palette
-
-		// dessired distribution for this palette
-		cardSize = 13;
-		cardsPerRow = 1;
-		boxSize = 30;
-		boxPad = 1;
-
-		cardColor_size = 65;
-		cardColor_pad = 5;
-
-		bool flipOrder = true;
-		int iFlip;
-		int pos = 0;//-1? to set correlative positions...
-
-		for (int i = 0; i < NUM_COLORS_ROW; i++)
-		{
-			// flip order: iFlip
-			if (flipOrder) iFlip = (NUM_COLORS_ROW - 1) - i;
-			else iFlip = i;
-
-			// 1.
-			colorNameMap["GREY " + ofToString(i)] = oc_gray_[iFlip];
-			colorNameMap["RED " + ofToString(i)] = oc_red_[iFlip];
-			colorNameMap["PINK " + ofToString(i)] = oc_pink_[iFlip];
-			colorNameMap["GRAPE " + ofToString(i)] = oc_grape_[iFlip];
-			colorNameMap["VIOLET " + ofToString(i)] = oc_violet_[iFlip];
-			colorNameMap["INDIGO " + ofToString(i)] = oc_indigo_[iFlip];
-			colorNameMap["BLUE " + ofToString(i)] = oc_blue_[iFlip];
-			colorNameMap["CYAN " + ofToString(i)] = oc_cyan_[iFlip];
-			colorNameMap["TEAL " + ofToString(i)] = oc_teal_[iFlip];
-			colorNameMap["GREEN " + ofToString(i)] = oc_green_[iFlip];
-			colorNameMap["LIME " + ofToString(i)] = oc_lime_[iFlip];
-			colorNameMap["YELLOW " + ofToString(i)] = oc_yellow_[iFlip];
-			colorNameMap["ORANGE " + ofToString(i)] = oc_orange_[iFlip];
-
-			// 2. vector
-			colorMapping_STRUCT colorGREY;
-			colorMapping_STRUCT colorRED;
-			colorMapping_STRUCT colorPINK;
-			colorMapping_STRUCT colorGRAPE;
-			colorMapping_STRUCT colorVIOLET;
-			colorMapping_STRUCT colorINDIGO;
-			colorMapping_STRUCT colorBLUE;
-			colorMapping_STRUCT colorCYAN;
-			colorMapping_STRUCT colorTEAL;
-			colorMapping_STRUCT colorGREEN;
-			colorMapping_STRUCT colorLIME;
-			colorMapping_STRUCT colorYELLOW;
-			colorMapping_STRUCT colorORANGE;
-
-			colorGREY.name = "GREY " + ofToString(i);
-			colorRED.name = "RED " + ofToString(i);
-			colorPINK.name = "PINK " + ofToString(i);
-			colorGRAPE.name = "GRAPE " + ofToString(i);
-			colorVIOLET.name = "VIOLET " + ofToString(i);
-			colorINDIGO.name = "INDIGO " + ofToString(i);
-			colorBLUE.name = "BLUE " + ofToString(i);
-			colorCYAN.name = "CYAN " + ofToString(i);
-			colorTEAL.name = "TEAL " + ofToString(i);
-			colorGREEN.name = "GREEN " + ofToString(i);
-			colorLIME.name = "LIME " + ofToString(i);
-			colorYELLOW.name = "YELLOW " + ofToString(i);
-			colorORANGE.name = "ORANGE " + ofToString(i);
-
-			colorGREY.color = oc_gray_[iFlip];
-			colorRED.color = oc_red_[iFlip];
-			colorPINK.color = oc_pink_[iFlip];
-			colorGRAPE.color = oc_grape_[iFlip];
-			colorVIOLET.color = oc_violet_[iFlip];
-			colorINDIGO.color = oc_indigo_[iFlip];
-			colorBLUE.color = oc_blue_[iFlip];
-			colorCYAN.color = oc_cyan_[iFlip];
-			colorTEAL.color = oc_teal_[iFlip];
-			colorGREEN.color = oc_green_[iFlip];
-			colorLIME.color = oc_lime_[iFlip];
-			colorYELLOW.color = oc_yellow_[iFlip];
-			colorORANGE.color = oc_orange_[iFlip];
-
-			colorGREY.position = pos++;
-			colorRED.position = pos++;
-			colorPINK.position = pos++;
-			colorGRAPE.position = pos++;
-			colorVIOLET.position = pos++;
-			colorINDIGO.position = pos++;
-			colorBLUE.position = pos++;
-			colorCYAN.position = pos++;
-			colorTEAL.position = pos++;
-			colorGREEN.position = pos++;
-			colorLIME.position = pos++;
-			colorYELLOW.position = pos++;
-			colorORANGE.position = pos++;
-
-			colors_STRUCT.push_back(colorGREY);
-			colors_STRUCT.push_back(colorRED);
-			colors_STRUCT.push_back(colorPINK);
-			colors_STRUCT.push_back(colorGRAPE);
-			colors_STRUCT.push_back(colorVIOLET);
-			colors_STRUCT.push_back(colorINDIGO);
-			colors_STRUCT.push_back(colorBLUE);
-			colors_STRUCT.push_back(colorCYAN);
-			colors_STRUCT.push_back(colorTEAL);
-			colors_STRUCT.push_back(colorGREEN);
-			colors_STRUCT.push_back(colorLIME);
-			colors_STRUCT.push_back(colorYELLOW);
-			colors_STRUCT.push_back(colorORANGE);
-		}
-	}
-
-	//--
-
-	// 3. OFX_COLOR_NATIVE
+	// 1. OFX_COLOR_NATIVE
 
 	else if (LibraryColors_Index == OFX_COLOR_NATIVE)
 	{
@@ -402,13 +284,133 @@ void ofxColorsBrowser::buildColors()
 			myColor.name = x.first;
 			myColor.color = x.second;
 			myColor.position = i;
+
 			colors_STRUCT.push_back(myColor);
 
 			i++;
 		}
 	}
-}
 
+	//----
+
+	// 2. OFX_OPEN_COLOR
+
+	else if (LibraryColors_Index == OFX_OPEN_COLOR)
+	{
+		ofLogNotice(__FUNCTION__) << "OFX_OPEN_COLOR";
+
+#define NUM_COLORS_ROW 10
+		//that's the ideal distribution for open color palette
+
+		// dessired distribution for this palette
+		cardSize = 13;
+		cardsPerRow = 1;
+		boxSize = 30;
+		boxPad = 1;
+
+		cardColor_size = 65;
+		cardColor_pad = 5;
+
+		bool flipOrder = true;
+		int iFlip;
+		int pos = 0;//-1? to set correlative positions...
+
+		for (int i = 0; i < NUM_COLORS_ROW; i++)
+		{
+			// flip order: iFlip
+			if (flipOrder) iFlip = (NUM_COLORS_ROW - 1) - i;
+			else iFlip = i;
+
+			// 1.
+			colorNameMap["GREY " + ofToString(i)] = oc_gray_[iFlip];
+			colorNameMap["RED " + ofToString(i)] = oc_red_[iFlip];
+			colorNameMap["PINK " + ofToString(i)] = oc_pink_[iFlip];
+			colorNameMap["GRAPE " + ofToString(i)] = oc_grape_[iFlip];
+			colorNameMap["VIOLET " + ofToString(i)] = oc_violet_[iFlip];
+			colorNameMap["INDIGO " + ofToString(i)] = oc_indigo_[iFlip];
+			colorNameMap["BLUE " + ofToString(i)] = oc_blue_[iFlip];
+			colorNameMap["CYAN " + ofToString(i)] = oc_cyan_[iFlip];
+			colorNameMap["TEAL " + ofToString(i)] = oc_teal_[iFlip];
+			colorNameMap["GREEN " + ofToString(i)] = oc_green_[iFlip];
+			colorNameMap["LIME " + ofToString(i)] = oc_lime_[iFlip];
+			colorNameMap["YELLOW " + ofToString(i)] = oc_yellow_[iFlip];
+			colorNameMap["ORANGE " + ofToString(i)] = oc_orange_[iFlip];
+
+			// 2. vector
+			colorMapping_STRUCT colorGREY;
+			colorMapping_STRUCT colorRED;
+			colorMapping_STRUCT colorPINK;
+			colorMapping_STRUCT colorGRAPE;
+			colorMapping_STRUCT colorVIOLET;
+			colorMapping_STRUCT colorINDIGO;
+			colorMapping_STRUCT colorBLUE;
+			colorMapping_STRUCT colorCYAN;
+			colorMapping_STRUCT colorTEAL;
+			colorMapping_STRUCT colorGREEN;
+			colorMapping_STRUCT colorLIME;
+			colorMapping_STRUCT colorYELLOW;
+			colorMapping_STRUCT colorORANGE;
+
+			colorGREY.name = "GREY " + ofToString(i);
+			colorRED.name = "RED " + ofToString(i);
+			colorPINK.name = "PINK " + ofToString(i);
+			colorGRAPE.name = "GRAPE " + ofToString(i);
+			colorVIOLET.name = "VIOLET " + ofToString(i);
+			colorINDIGO.name = "INDIGO " + ofToString(i);
+			colorBLUE.name = "BLUE " + ofToString(i);
+			colorCYAN.name = "CYAN " + ofToString(i);
+			colorTEAL.name = "TEAL " + ofToString(i);
+			colorGREEN.name = "GREEN " + ofToString(i);
+			colorLIME.name = "LIME " + ofToString(i);
+			colorYELLOW.name = "YELLOW " + ofToString(i);
+			colorORANGE.name = "ORANGE " + ofToString(i);
+
+			colorGREY.color = oc_gray_[iFlip];
+			colorRED.color = oc_red_[iFlip];
+			colorPINK.color = oc_pink_[iFlip];
+			colorGRAPE.color = oc_grape_[iFlip];
+			colorVIOLET.color = oc_violet_[iFlip];
+			colorINDIGO.color = oc_indigo_[iFlip];
+			colorBLUE.color = oc_blue_[iFlip];
+			colorCYAN.color = oc_cyan_[iFlip];
+			colorTEAL.color = oc_teal_[iFlip];
+			colorGREEN.color = oc_green_[iFlip];
+			colorLIME.color = oc_lime_[iFlip];
+			colorYELLOW.color = oc_yellow_[iFlip];
+			colorORANGE.color = oc_orange_[iFlip];
+
+			colorGREY.position = pos++;
+			colorRED.position = pos++;
+			colorPINK.position = pos++;
+			colorGRAPE.position = pos++;
+			colorVIOLET.position = pos++;
+			colorINDIGO.position = pos++;
+			colorBLUE.position = pos++;
+			colorCYAN.position = pos++;
+			colorTEAL.position = pos++;
+			colorGREEN.position = pos++;
+			colorLIME.position = pos++;
+			colorYELLOW.position = pos++;
+			colorORANGE.position = pos++;
+
+			//-
+
+			colors_STRUCT.push_back(colorGREY);
+			colors_STRUCT.push_back(colorRED);
+			colors_STRUCT.push_back(colorPINK);
+			colors_STRUCT.push_back(colorGRAPE);
+			colors_STRUCT.push_back(colorVIOLET);
+			colors_STRUCT.push_back(colorINDIGO);
+			colors_STRUCT.push_back(colorBLUE);
+			colors_STRUCT.push_back(colorCYAN);
+			colors_STRUCT.push_back(colorTEAL);
+			colors_STRUCT.push_back(colorGREEN);
+			colors_STRUCT.push_back(colorLIME);
+			colors_STRUCT.push_back(colorYELLOW);
+			colors_STRUCT.push_back(colorORANGE);
+		}
+	}
+}
 
 //--------------------------------------------------------------
 void ofxColorsBrowser::load_Pantone_JSON()
@@ -473,6 +475,7 @@ void ofxColorsBrowser::setup()
 	params.add(MODE_SORTING);
 	params.add(MODE_COLOR_name);
 	params.add(MODE_COLOR_name);
+	params.add(ENABLE_keys);
 
 	//-
 
@@ -522,15 +525,12 @@ void ofxColorsBrowser::setup()
 
 		//-
 
-#ifdef USE_OFX_COLOR_BROWSER_INTERFACE
 		clearInterface();
-#endif	
 
 		buildColors();
 
-#ifdef USE_OFX_COLOR_BROWSER_INTERFACE
 		grid_create_boxes();
-#endif	
+
 		});
 
 	//----
@@ -1172,7 +1172,6 @@ void ofxColorsBrowser::clearInterface()
 #ifdef USE_OFX_COLOR_BROWSER_INTERFACE
 	ofLogNotice(__FUNCTION__);
 
-	//colors_STRUCT.clear();
 	rectangles.clear();
 #endif	
 }
@@ -1180,9 +1179,6 @@ void ofxColorsBrowser::clearInterface()
 //--------------------------------------------------------------
 void ofxColorsBrowser::keyReleased(ofKeyEventArgs &eventArgs)
 {
-	//if (eventArgs.key == ' ')
-	//{
-	//}
 }
 
 //--------------------------------------------------------------
@@ -1496,10 +1492,12 @@ void ofxColorsBrowser::setVisible(bool b)
 void ofxColorsBrowser::switch_palette_Type()
 {
 	LibraryColors_Index = (LibraryColors_Index + 1) % 2;
-	ofLogNotice(__FUNCTION__) << "switch_palette_Type: " << LibraryColors_Index;
+	ofLogNotice(__FUNCTION__) << LibraryColors_Index;
 
 	clearInterface();
+
 	buildColors();
+
 	grid_create_boxes();
 }
 
@@ -1509,7 +1507,7 @@ void ofxColorsBrowser::switch_sorted_Type()
 	MODE_SORTING++;
 	MODE_SORTING = MODE_SORTING % 5;
 
-	ofLogNotice(__FUNCTION__) << "switch_sorted_Type: " << MODE_SORTING;
+	ofLogNotice(__FUNCTION__) << MODE_SORTING;
 
 	switch (MODE_SORTING)
 	{
@@ -1920,6 +1918,12 @@ void ofxColorsBrowser::rectangles_draw()
 }
 
 //--------------------------------------------------------------
+int ofxColorsBrowser::getSize() {
+	ofLogNotice(__FUNCTION__) << colors_STRUCT.size();
+	return colors_STRUCT.size();
+}
+
+//--------------------------------------------------------------
 vector<ofColor> ofxColorsBrowser::getPalette()
 {
 	ofLogNotice(__FUNCTION__);
@@ -1937,6 +1941,26 @@ vector<ofColor> ofxColorsBrowser::getPalette()
 	}
 
 	return p;
+}
+
+//--------------------------------------------------------------
+vector<std::string> ofxColorsBrowser::getNames()
+{
+	ofLogNotice(__FUNCTION__);
+
+	int numColors = colors_STRUCT.size();
+	ofLogNotice(__FUNCTION__) << "numColors:" << numColors;
+
+	vector<std::string> n;
+	n.resize(numColors);
+
+	for (int i = 0; i < colors_STRUCT.size(); i++)
+	{
+		n[i] = colors_STRUCT[i].name;
+		ofLogVerbose(__FUNCTION__) << "color [" + ofToString(i) + "]  " + ofToString(n[i]);
+	}
+
+	return n;
 }
 
 //--------------------------------------------------------------

@@ -420,17 +420,6 @@ public:
 
 	//--
 
-	// COLOR BROWSER
-#ifdef USE_OFX_COLOR_BROWSER
-	ofxColorsBrowser colorBrowser;
-#endif
-	vector<ofColor> palette_Lib;
-
-	ofFloatColor color_BACK;
-	ofFloatColor color_BACK_PRE;
-
-	//--
-
 	// USER PALETTE & CONTROL
 
 	ofParameter<bool> bPaletteEdit;
@@ -489,7 +478,7 @@ public:
 	void palettes_resize();
 	void setVisible_Interface(bool b);
 
-	void draw_palettes();
+	//void draw_palettes();
 
 	ofParameter<bool> MODE_TweakSatBrg;
 	// force SAT/BRG from panel SB sliders or all from color
@@ -577,6 +566,9 @@ public:
 	ofRectangle r_color_clicked;
 	bool bColor_clicked_DISABLED = false;
 
+	ofFloatColor color_BACK;
+	ofFloatColor color_BACK_PRE;
+
 	//-
 
 	// TODO: TEST LINKING
@@ -607,18 +599,36 @@ public:
 	void palette_recallFromPalettes(int p);
 	void palette_load_FromColourLovers();
 
-	//--
+	//----
 
 	// library palette
+	// color browser
+
+#ifdef USE_OFX_COLOR_BROWSER
+	ofxColorsBrowser colorBrowser;
+#endif
+
+	vector<ofColor> palette_Lib_Cols;
+	vector<std::string> palette_Lib_Names;
+	
+	//-
 
 	ofEventListener listener_Library;
 	ofEventListener listener_ModeSorting;
 
+	void update_Libs();
+
+	//hardcoded
+//#define INCLUDE_EXTRA_LIBRARIES
+
 #define NUM_COLORS_PANTONE 2310
+#define NUM_COLORS_OF_NATIVE 130//TODO:
+#define NUM_COLORS_OPEN 146//TODO:
 	int lib_RowSize = 7;//7 colors per row Pantone lib
 	int lib_Page_NumColors;
 	int lib_TotalColors = NUM_COLORS_PANTONE;//pantone
 	int lib_Page_Max;
+
 	int last_Lib_Index = -1;
 
 	//rows per page

@@ -128,6 +128,11 @@ public:
 public:
 	// main palette getter
 	vector<ofColor> getPalette();
+	vector<std::string> getNames();
+	int getSize();
+	int getLibIndex() {
+		return LibraryColors_Index.get();
+	}
 
 public:
 	vector<std::string> colors_PantoneNames;
@@ -230,7 +235,7 @@ private:
 public:
 	void keyPressed(ofKeyEventArgs &eventArgs);
 	void keyReleased(ofKeyEventArgs &eventArgs);
-	
+
 	void mouseDragged(ofMouseEventArgs &eventArgs);
 	void mousePressed(ofMouseEventArgs &eventArgs);
 	void mouseReleased(ofMouseEventArgs &eventArgs);
@@ -246,11 +251,14 @@ private:
 
 	// modes and states
 
+public:
+	ofParameter<bool> ENABLE_keys{ "Enable Keys", false };
+
 private:
 	bool SHOW_debugText = false;
 	bool SHOW_ColorsBrowse = true;
 	bool ENABLE_clicks = true;
-	bool ENABLE_keys = false;
+	//bool ENABLE_keys = false;
 
 	bool bShowDebug = false;//for rectangle manager
 
