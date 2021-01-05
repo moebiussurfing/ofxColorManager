@@ -64,9 +64,9 @@ void PresetPalette::preset_load(std::string p)
 
 		//curvesTool.load(path_Presets + presetData.curveName + ".yml");
 		//
-		//if (color_background_AutoSet)
+		//if (color_BackGround_AutoSet)
 		//{
-		//    color_backGround = presetData.background;
+		//    color_BackGround = presetData.background;
 		//}
 
 		ofLogNotice(__FUNCTION__) << "presetData.palette.size(): " << presetData.palette.size();

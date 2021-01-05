@@ -21,12 +21,16 @@ TODO:
 #define BUTTON_BIG_HEIGHT 50
 //#define INCL_LAYOUT
 //#define USE_OFX_GUI
+#define USE_OFX_COLOR_BROWSER
 
 //--
 
 #include "ofxColorGradient.h"
 #include "ofxColorPalette.h"
+
+#ifdef USE_OFX_COLOR_BROWSER
 #include "ofxColorsBrowser.h"
+#endif
 
 #include "ofxInteractiveRect.h" // engine to move the gui. TODO: add resize by mouse too.
 
@@ -143,7 +147,7 @@ private:
 	ofColor color;
 	ofFloatColor guiCol1;
 	ofFloatColor guiCol2;
-	std::vector<ofColor> paletteRange;
+	std::vector<ofColor> palette_Range;
 	std::vector<std::string> types;
 	bool bRefreshMorph;
 	ofParameter<bool> bRangeAutoGenerate;
@@ -305,8 +309,8 @@ public:
 
 	ofParameter<int> lastColorTheoryPicked_Palette;
 
-	std::string lastColorPickedNameColor = "";
-	int lastColorPicked;
+	std::string last_Lib_NameColor = "";
+	int last_ColorPicked_Lib;
 	int lastColorPicked_Palette;
 
 	ImVec4 color_Pick{ 1,1,1,0.5 };
@@ -416,9 +420,11 @@ public:
 	//--
 
 	// COLOR BROWSER
+#ifdef USE_OFX_COLOR_BROWSER
+	ofxColorsBrowser colorBrowser;
+#endif
+	vector<ofColor> palette_Lib;
 
-	ofxColorsBrowser ColorBrowser;
-	vector<ofColor> ColorBrowser_palette;
 	ofFloatColor color_BACK;
 	ofFloatColor color_BACK_PRE;
 
@@ -523,11 +529,11 @@ public:
 
 	// COLORS
 
-	ofParameter<ofFloatColor> color_backGround;//main color
+	ofParameter<ofFloatColor> color_BackGround;//main color
 	ofParameter<bool> color_backGround_SET;
-	ofParameter<bool> color_background_AutoSet;
-	ofParameter<bool> color_backGround_Darker;
-	ofParameter<float> backgroundDarkness;
+	ofParameter<bool> color_BackGround_AutoSet;
+	ofParameter<bool> color_BackGround_Darker;
+	ofParameter<float> color_BackGround_Darkness;
 	//float backgroundDarkness_PRE;
 
 	ofParameter<bool> background_Draw_ENABLE{ "Draw", false };
@@ -535,7 +541,7 @@ public:
 	void setBackground_ENABLE(bool b);
 
 	// TEST
-	bool bCallback_ENABLED = true;
+	bool ENABLE_Callbacks = true;
 
 	void refresh_Picked_Update_To_HSV();
 
@@ -545,6 +551,7 @@ public:
 	ofxUndoSimple<ofFloatColor> color_Undo;
 
 	ofRectangle r_color_picked;
+
 	ofParameter<int> color_HUE;
 	ofParameter<int> color_SAT;
 	ofParameter<int> color_BRG;
@@ -599,30 +606,23 @@ public:
 	void palette_recallFromPalettes(int p);
 	void palette_load_FromColourLovers();
 
-	//-
+	//--
 
 	// PALETTE LIBRARY
 
 #define NUM_COLORS_PANTONE 2310
-	//int palSize = IM_ARRAYSIZE(saved_palette);
-	int palSize = (NUM_COLORS_PANTONE);
-	int rowSizePal = 7;//7 colors per row Pantone lib
-	//bool doublePage;
+	int lib_RowSize = 7;//7 colors per row Pantone lib
+	int lib_Page_NumColors;
+	int lib_TotalColors = NUM_COLORS_PANTONE;//pantone
+	int lib_Page_Max;
+	int last_Lib_Index = -1;
 
 	//rows per page
-	//int numLibLines = 10;
-	ofParameter<int> numLibLines{ "Rows Amnt" , 10, 5, 10 * 5 };
-
-	int numColorsPage = numLibLines * rowSizePal;//70
-	int totalNumColorsLib = NUM_COLORS_PANTONE;//pantone
-	int maxPages = totalNumColorsLib / numColorsPage - 1;
-
-	ofParameter<int> paletteLibPage{ "PAGE" , 0, 0, maxPages };
-	//ofParameter<int> paletteLibPage_param{ "page", 0, 0, maxPages };
-	ofParameter<bool>bPantoneCards{ "Mode Cards", false };
-	ofParameter<int> pantoneMaxColumns{ "Columns Max", 7, 1, 7 * 6 };
+	ofParameter<int> lib_NumLines{ "Rows Amnt" , 10, 5, 10 * 5 };
+	ofParameter<int> lib_PageIndex{ "PAGE" , 0, 0, lib_Page_Max };
+	ofParameter<bool>lib_CardsMode{ "Mode Cards", false };
+	ofParameter<int> lib_MaxColumns{ "Columns Max", 7, 1, 7 * 6 };
 	ofParameter<float> scale_ColLib{ "Scale", 1, 0.5, 1.5 };
-	int lastPantoneIndex = -1;
 
 	//----
 
