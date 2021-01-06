@@ -42,14 +42,15 @@ ofColor PresetPalette::getBackground()
 }
 
 //--------------------------------------------------------------
-void PresetPalette::preset_load(std::string p)
+bool PresetPalette::preset_load(std::string p)
 {
 	ofLogNotice(__FUNCTION__) << p;
 	std::string path = path_Presets + p + ".json";
 
 	ofFile file(path);
+	bool b = file.exists();
 
-	if (file.exists())
+	if (b)
 	{
 		jsonin ji(file);
 		ji >> presetData;
@@ -91,6 +92,8 @@ void PresetPalette::preset_load(std::string p)
 	{
 		ofLogNotice(__FUNCTION__) << "File '" << path << "' NOT FOUND";
 	}
+
+	return b;
 }
 
 //--------------------------------------------------------------

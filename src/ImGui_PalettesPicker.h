@@ -1,6 +1,15 @@
 #pragma once
 #include "ofMain.h"
 
+/*
+
+TODO:
++ how make it functional?
+	+ to select a preset from the kit
+
+*/
+
+
 #include "ofxImGui.h"
 #define BUTTON_BIG_HEIGHT 50
 #define BUTTON_SLIM_HEIGHT 14
@@ -12,13 +21,17 @@
 namespace ImGui_PalettesPicker
 {
 	//--------------------------------------------------------------
-	inline void gui_Palettes(vector<PaletteData> kit)
+	inline int gui_Palettes(vector<PaletteData> kit)
 	{
 		static bool MODE_Slim = false;
+		int indexPick = -1;
 
 		ofxImGui::Settings mainSettings = ofxImGui::Settings();
 
-		if (ofxImGui::BeginTree("KIT", mainSettings))
+		ImGuiColorEditFlags _flagw;
+		_flagw = ImGuiTreeNodeFlags_None;
+
+		if (ImGui::CollapsingHeader("Kit", _flagw))
 		{
 			ImGuiColorEditFlags _flags;
 
@@ -30,14 +43,12 @@ namespace ImGui_PalettesPicker
 			//--
 
 			float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
-			float _w = ImGui::GetWindowContentRegionWidth() - 2 * _spc - 10;
+			float _w = ImGui::GetWindowContentRegionWidth() - (3 * _spc);
 			float _hb = BUTTON_BIG_HEIGHT;
-			int _hhB = 0.7 * BUTTON_BIG_HEIGHT;//button height
 
-			if (ImGui::Checkbox("Slim", &MODE_Slim))
-			{
-				_hhB = BUTTON_SLIM_HEIGHT;
-			}
+			int _hhB;
+			//_hhB = 0.7 * BUTTON_BIG_HEIGHT;//button height
+			_hhB = BUTTON_SLIM_HEIGHT;
 
 			//--
 
@@ -45,9 +56,13 @@ namespace ImGui_PalettesPicker
 
 			for (int p = 0; p < kit.size(); p++)
 			{
-
 				// colors in each palette
 				int _sizeP = kit[p].palette.size();
+
+				ImGui::Dummy(ImVec2(0, 10));
+				ImGui::Text(kit[p].name.c_str());
+
+				//ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, 0);
 
 				for (int c = 0; c < _sizeP; c++)
 				{
@@ -58,7 +73,7 @@ namespace ImGui_PalettesPicker
 					// same size for each color
 					int _wwB = _w / _sizeP - _spc;
 
-					std::string name = ("Kit_" + ofToString(p) + "_" + ofToString(c));
+					std::string name = (kit[p].name + "_" + ofToString(p) + "_" + ofToString(c));
 
 					//-
 
@@ -71,14 +86,20 @@ namespace ImGui_PalettesPicker
 						ImVec2(_wwB, _hhB)))
 					{
 						ofLogNotice(__FUNCTION__) << p << "," << c;
+
+						indexPick = p;
 					}
 
 					ImGui::PopID();
 				}
+
+				//ImGui::PopStyleVar(1);
 			}
 
-			ofxImGui::EndTree(mainSettings);
+			//ofxImGui::EndTree(mainSettings);
 		}
+
+		return indexPick;
 	}
 
 

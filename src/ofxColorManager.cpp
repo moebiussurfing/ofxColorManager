@@ -1350,7 +1350,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 	//if (SHOW_Presets)
 	//{
 	//	myPresetManager.draw();
-	//	//myPresetPalette.draw();
+	//	//palette_TEMP.draw();
 	//}
 
 	//--
@@ -2968,7 +2968,7 @@ void ofxColorManager::gui_Picker()
 
 			//--
 
-			_flagw = ImGuiTreeNodeFlags_Bullet;
+			_flagw = ImGuiTreeNodeFlags_None;
 			//_flagw = ImGuiTreeNodeFlags_DefaultOpen;
 			if (ImGui::CollapsingHeader("WHEEL", _flagw))
 			{
@@ -3787,11 +3787,11 @@ void ofxColorManager::gui_Presets()
 		//            ofLogNotice(__FUNCTION__) << "SAVE PALETTE";
 		//            PRESET_name = textInput_temp;
 		//
-		//            myPresetPalette.setName(PRESET_name);
-		//            myPresetPalette.setBackgroundColor(color_BackGround.get());
-		//            myPresetPalette.setPalette(palette);
+		//            palette_TEMP.setName(PRESET_name);
+		//            palette_TEMP.setBackgroundColor(color_BackGround.get());
+		//            palette_TEMP.setPalette(palette);
 		//
-		//            myPresetPalette.palette_save(PRESET_name);
+		//            palette_TEMP.palette_save(PRESET_name);
 		//        }
 		//
 		//        ImGui::SameLine();
@@ -3801,21 +3801,21 @@ void ofxColorManager::gui_Presets()
 		//            PRESET_name = textInput_temp;
 		//            ofLogNotice(__FUNCTION__) << "PRESET_name: " << PRESET_name;
 		//
-		//            myPresetPalette.palette_load(PRESET_name);
+		//            palette_TEMP.palette_load(PRESET_name);
 		//
 		//            //-
 		//
-		//            color_BackGround = myPresetPalette.getBackground();//TODO: temp solution because required pointer..
+		//            color_BackGround = palette_TEMP.getBackground();//TODO: temp solution because required pointer..
 		//
 		////            //TODO
 		////            // apply loaded preset to local system
-		////            vector<ofColor> _p = myPresetPalette.getPalette();
+		////            vector<ofColor> _p = palette_TEMP.getPalette();
 		////            palette_clear();
 		////            for (int i = 0; i < _p.size(); i++) {
 		////                palette_addColor(_p[i]);
 		////            }
 		////
-		////            color_BackGround = ofColor(myPresetPalette.getBackground());//get directly without pointing
+		////            color_BackGround = ofColor(palette_TEMP.getBackground());//get directly without pointing
 		//
 		//            //-
 		//
@@ -4138,11 +4138,14 @@ void ofxColorManager::gui_Presets()
 
 		ImGui::Dummy(ImVec2(0.0f, 10.f));
 
-		ofxImGui::AddParameter(SHOW_PresetsPalette);
+		//ofxImGui::AddParameter(SHOW_PresetsPalette);
+		//ImGui::Dummy(ImVec2(0.0f, 5.f));
 
-		ImGui::Dummy(ImVec2(0.0f, 5.f));
+		ImGuiColorEditFlags _flagw;
+		_flagw = ImGuiTreeNodeFlags_DefaultOpen;
 
-		if (SHOW_PresetsPalette)
+		//if (SHOW_PresetsPalette)
+		if (ImGui::CollapsingHeader("Palette Colors", _flagw))
 		{
 			//responsive
 			ImVec2 button_sz((float)sizePaletteBox.get(), (float)sizePaletteBox.get());
@@ -4280,7 +4283,8 @@ void ofxColorManager::gui_Presets()
 				//--
 
 				// responsive buttons size
-				if (bPaletteFillMode) {
+				if (bPaletteFillMode) 
+				{
 					ImGui::PopStyleColor();
 					float last_button_x2 = ImGui::GetItemRectMax().x;
 					float next_button_x2 = last_button_x2 + style.ItemSpacing.x + button_sz.x; // Expected position if next button was on same line
@@ -4288,14 +4292,16 @@ void ofxColorManager::gui_Presets()
 					ImGui::PopID();
 				}
 			}
-
-			ImGui::Dummy(ImVec2(0.0f, 10));
-
-			//----------
-
-			//vector<PaletteData> kit;
-			ImGui_PalettesPicker::gui_Palettes(kit);
 		}
+
+		ImGui::Dummy(ImVec2(0.0f, 10));
+
+		//----------
+
+		//add kit palettes browser
+
+		int indexPreset = gui_Palettes(kit);
+		if (indexPreset != -1) preset_load(files_Names[indexPreset]);
 
 		//-
 	}
@@ -7897,14 +7903,14 @@ void ofxColorManager::preset_refreshFiles()
 	//--
 
 	//kit
-	
+
 	//palettesKit.clear();
 	//palettesKit.resize(files_Names.size());
 	//for (int i = 0; i < files_Names.size(); i++)
 	//{
 	//	palettesKit[i].clear();//palettesKit[i].resize();
-	//	palettesKit[i] = myPresetPalette.preset_LoadPalette(files_Names[i]).palette;//TODO: not elegant.. bc using the main preset object..
-	//	//palettesKit[i].push_back(myPresetPalette.preset_LoadPalette(files_Names[i]).background);
+	//	palettesKit[i] = palette_TEMP.preset_LoadPalette(files_Names[i]).palette;//TODO: not elegant.. bc using the main preset object..
+	//	//palettesKit[i].push_back(palette_TEMP.preset_LoadPalette(files_Names[i]).background);
 
 	//	//log
 	//	ofLogNotice(__FUNCTION__) << "[ " << i << " ] " << files_Names[i];
@@ -7916,10 +7922,10 @@ void ofxColorManager::preset_refreshFiles()
 
 	//-
 
-	kit.resize(files_Names.size()); 
+	kit.resize(files_Names.size());
 	for (int i = 0; i < files_Names.size(); i++)
 	{
-		kit[i] = myPresetPalette.preset_LoadPalette(files_Names[i]);
+		kit[i] = palette_TEMP.preset_LoadPalette(files_Names[i]);
 
 		//log
 		ofLogNotice(__FUNCTION__) << "[ " << i << " ] " << files_Names[i];
@@ -7939,9 +7945,9 @@ void ofxColorManager::preset_load(std::string p)
 		ofLogNotice(__FUNCTION__) << p;
 
 		// setup linking pointers to get back on load
-		myPresetPalette.setName(p);
-		myPresetPalette.setCurveName(PRESET_curveName);
-		myPresetPalette.setPalette(palette);
+		palette_TEMP.setName(p);
+		palette_TEMP.setCurveName(PRESET_curveName);
+		palette_TEMP.setPalette(palette);
 
 		txt_lineActive[0] = true;//preset name
 		txt_lineActive[1] = false;//palette name
@@ -7949,7 +7955,13 @@ void ofxColorManager::preset_load(std::string p)
 		txt_lineActive[3] = false;//range name
 
 		// 1. load palette preset (target will be the above pointers) //TODO: should (late?) improve this..
-		myPresetPalette.preset_load(p);
+		bool b = palette_TEMP.preset_load(p);
+
+		if (!b)
+		{
+			ofLogError(__FUNCTION__) << "Preset file " << p << " not found! ";
+			return;
+		}
 
 		//--
 
@@ -7965,7 +7977,7 @@ void ofxColorManager::preset_load(std::string p)
 
 		palette_clear();
 
-		vector<ofColor> p = myPresetPalette.getPalette();
+		vector<ofColor> p = palette_TEMP.getPalette();
 
 		for (int i = 0; i < p.size(); i++)
 		{
@@ -7976,8 +7988,8 @@ void ofxColorManager::preset_load(std::string p)
 		//--
 
 		////TODO:
-		////myPresetPalette.setBackgroundColor(color_BackGround);//error ofParameter
-		//color_BackGround = ofColor(myPresetPalette.getBackground());//get directly without pointing
+		////palette_TEMP.setBackgroundColor(color_BackGround);//error ofParameter
+		//color_BackGround = ofColor(palette_TEMP.getBackground());//get directly without pointing
 
 		////TODO
 		//// curve & gradient
@@ -8010,13 +8022,13 @@ void ofxColorManager::preset_save(std::string p)
 	//TODO:
 	//this is using pointers.. ?
 
-	myPresetPalette.setName(p);
-	myPresetPalette.setCurveName(PRESET_curveName);
-	myPresetPalette.setBackgroundColor(color_BackGround.get());
-	myPresetPalette.setPalette(palette);
+	palette_TEMP.setName(p);
+	palette_TEMP.setCurveName(PRESET_curveName);
+	palette_TEMP.setBackgroundColor(color_BackGround.get());
+	palette_TEMP.setPalette(palette);
 
-	//myPresetPalette.preset_save(PRESET_name);
-	myPresetPalette.preset_save(p);
+	//palette_TEMP.preset_save(PRESET_name);
+	palette_TEMP.preset_save(p);
 }
 
 //--------------------------------------------------------------

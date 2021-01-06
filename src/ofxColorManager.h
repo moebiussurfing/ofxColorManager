@@ -75,7 +75,9 @@ using namespace ofxColorTheory;
 
 #include "ofxImGui.h"
 //#include "imgui_demo.cpp"
+
 #include "ImGui_PalettesPicker.h"
+using namespace ImGui_PalettesPicker;
 
 #include "presets/PresetManager.h"
 #include "presets/PresetPalette.h"
@@ -84,6 +86,7 @@ using namespace ofxColorTheory;
 
 #include "ofxSurfingHelpers.h"
 #include "ofxSurfing_ImGui.h"
+using namespace ofxSurfingHelpers;
 
 #include "ofxSerializer.h"
 
@@ -297,7 +300,7 @@ public:
 
 	// presets
 
-	PresetPalette myPresetPalette;
+	PresetPalette palette_TEMP;
 
 	//TODO
 	//BUG: should create a default preset because if myPreset is not detected it crashes

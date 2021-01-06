@@ -107,7 +107,7 @@ public:
 	PresetData presetData;//bundle preset: palette+curve+gradient+background
 
 	void preset_save(string p);
-	void preset_load(string p);
+	bool preset_load(string p);
 
 	PaletteData preset_LoadPalette(string name);//TODO: not elegant..
 
