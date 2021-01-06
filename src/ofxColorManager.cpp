@@ -45,15 +45,13 @@ void ofxColorManager::startup()
 
 	ofxSurfingHelpers::loadGroup(params_AppState, path_AppState);
 
-
-
 	//--
-
-	// edit layout
 
 	ENABLE_keys = true;
 
 	//--
+
+	// edit layout
 
 	// a. initialize
 	rPreview.setRect(600, 200, 755, 295);
@@ -78,9 +76,11 @@ void ofxColorManager::startup()
 	//bResetCurve = true;
 	curvesTool.load(path_Curves); //needed because it fills polyline
 
-	if (TEST_Mode) curve_SliderTest.setPercent(curve_Gradient_TEST_Prc);
-	else curve_SliderTest.setPercent(curve_Gradient_PickOut);
-	curve_SliderTest.setup(sliderMod_x, sliderMod_y, sliderMod_w, sliderMod_h, 0, 1, curve_Gradient_PickOut.get(), true, true);
+	if (TEST_Mode) curve_Slider_OutPick.setPercent(curve_Gradient_TEST_Prc);
+	else curve_Slider_OutPick.setPercent(curve_Gradient_OutPick);
+	curve_Slider_OutPick.setup(slider_Out_x, slider_Out_y, slider_Out_w, slider_Out_h, 0, 1, curve_Gradient_OutPick.get(), true, true);
+
+	curve_Slider_InExp.setup(slider_In_x, slider_In_y, slider_In_w, slider_In_h, 0, 1, curve_Gradient_InExp, true, true);
 
 	//-
 
@@ -143,7 +143,7 @@ void ofxColorManager::startup()
 	theoryTypes[lastTheory] = true;//on button
 
 	lastRange = 0;
-	rangTypes[lastRange] = false;//on button
+	rangTypes[lastRange] = true;//on button
 
 	//--
 }
@@ -633,7 +633,7 @@ void ofxColorManager::setup()
 		params_algoTypes.add(algoTypes[i]);
 	}
 
-	ofAddListener(params_algoTypes.parameterChangedE(), this, &ofxColorManager::Changed_ColorRange);
+	ofAddListener(params_algoTypes.parameterChangedE(), this, &ofxColorManager::Changed_ColorTheory);
 
 	//-
 
@@ -743,7 +743,9 @@ void ofxColorManager::setup()
 	params_AppState.add(DEMO_Alpha);
 	params_AppState.add(DEMO_Cam);
 
-	params_AppState.add(curve_Gradient_PickOut);
+	params_AppState.add(curve_Gradient_InExp);
+	params_AppState.add(curve_Gradient_OutPick);
+
 	params_AppState.add(gradient_HardMode);//gradient
 	//params_AppState.add(paletteLibPage_param);
 
@@ -1507,7 +1509,7 @@ void ofxColorManager::exit()
 	ofRemoveListener(params_curve.parameterChangedE(), this, &ofxColorManager::Changed_Controls);
 
 	ofRemoveListener(params_rangTypes.parameterChangedE(), this, &ofxColorManager::Changed_ColorRange);
-	ofRemoveListener(params_algoTypes.parameterChangedE(), this, &ofxColorManager::Changed_ColorRange);
+	ofRemoveListener(params_algoTypes.parameterChangedE(), this, &ofxColorManager::Changed_ColorTheory);
 
 	ofRemoveListener(params_ColorTheory.parameterChangedE(), this, &ofxColorManager::Changed_ColorTheory);
 	ofRemoveListener(params_UserPalette.parameterChangedE(), this, &ofxColorManager::Changed_ColorUserPalette);
@@ -1531,8 +1533,8 @@ void ofxColorManager::exit()
 //--------------------------------------------------------------
 void ofxColorManager::refresh_Gui_Layout()
 {
-	curve_SliderTest.setVisible(SHOW_Curve);
-	curve_SliderTweak.setVisible(SHOW_Curve);
+	curve_Slider_OutPick.setVisible(SHOW_Curve);
+	curve_Slider_InExp.setVisible(SHOW_Curve);
 
 	//-
 
@@ -1578,15 +1580,15 @@ void ofxColorManager::refresh_Gui_Layout()
 	//--
 
 	// curve mod slider
-	sliderMod_x = curveTool_x + curveTool_w + _pad2;
-	sliderMod_y = _yy;
-	sliderMod_w = box_size_user;
-	sliderMod_h = curveTool_h;
+	slider_Out_x = curveTool_x + curveTool_w + _pad2;
+	slider_Out_y = _yy;
+	slider_Out_w = box_size_user;
+	slider_Out_h = curveTool_h;
 
 	//--
 
 	// gradient-pre curve (bad sorted to the left but anchored to curve..)
-	grad_x = sliderMod_x + 0.5 * sliderMod_w + _pad2;
+	grad_x = slider_Out_x + 0.5 * slider_Out_w + _pad2;
 	grad_y = _yy + curveTool_h;
 	grad_w = box_size_user;
 	grad_h = curveTool_h;
@@ -1604,22 +1606,23 @@ void ofxColorManager::refresh_Gui_Layout()
 
 	// testing curve widgets
 	// curve out slider
-	slider_x = image_curvedGradient_x + image_curvedGradient_w + _pad2;
-	slider_y = _yy;
-	slider_w = box_size_user;
-	slider_h = curveTool_h;
+	slider_In_x = image_curvedGradient_x + image_curvedGradient_w + _pad2;
+	slider_In_y = _yy;
+	slider_In_w = box_size_user;
+	slider_In_h = curveTool_h;
 
 	//--
 
-	curve_SliderTest.setup(sliderMod_x, sliderMod_y, sliderMod_w, sliderMod_h, 0, 1, curve_Gradient_PickOut.get(), true, true);
-	//curve_SliderTest.setup(sliderMod_x, sliderMod_y, sliderMod_w, sliderMod_h, 0, 1, 0, true, true);
+	curve_Slider_OutPick.setup(slider_Out_x, slider_Out_y, slider_Out_w, slider_Out_h, 0, 1, curve_Gradient_OutPick.get(), true, true);
+	//curve_Slider_OutPick.setup(slider_Out_x, slider_Out_y, slider_Out_w, slider_Out_h, 0, 1, 0, true, true);
 
-	curve_SliderTweak.setup(slider_x, slider_y, slider_w, slider_h, 0, 1, 0, true, true);
+	curve_Slider_InExp.setup(slider_In_x, slider_In_y, slider_In_w, slider_In_h, 0, 1, curve_Gradient_InExp.get(), true, true);
+	//curve_Slider_InExp.setup(slider_In_x, slider_In_y, slider_In_w, slider_In_h, 0, 1, 0, true, true);
 
 	//--	
 
 	// current color box/bar (the one affected by slider position. just for testing gradient purpose)
-	currColor_x = slider_x + slider_w + _pad2;
+	currColor_x = slider_In_x + slider_In_w + _pad2;
 	currColor_y = _yy;
 
 	//----
@@ -3603,7 +3606,7 @@ void ofxColorManager::gui_Curve()
 			ImGui::PushItemWidth(_w * 0.8);
 			if (ofxImGui::AddParameter(curve_Ctrl_In))
 			{
-				curve_SliderTweak.setPercent(curve_Ctrl_In.get());
+				curve_Slider_InExp.setPercent(curve_Ctrl_In.get());
 			}
 			ofxImGui::AddParameter(curve_Ctrl_Out);
 			ImGui::PopItemWidth();
@@ -4573,19 +4576,19 @@ void ofxColorManager::setup_CurveTool()
 	//-
 
 	// curve mod
-	curve_SliderTest.setup(sliderMod_x, sliderMod_y, sliderMod_w, sliderMod_h, 0, 1, curve_Gradient_PickOut.get(), true, true);
-	//curve_SliderTest.setup(sliderMod_x, sliderMod_y, sliderMod_w * 2, sliderMod_h, 0, 1, 0, true, true);
+	curve_Slider_OutPick.setup(slider_Out_x, slider_Out_y, slider_Out_w, slider_Out_h, 0, 1, curve_Gradient_OutPick.get(), true, true);
+	//curve_Slider_OutPick.setup(slider_Out_x, slider_Out_y, slider_Out_w * 2, slider_Out_h, 0, 1, 0, true, true);
 
-	if (TEST_Mode) curve_SliderTest.setPercent(curve_Gradient_TEST_Prc);
-	else curve_SliderTest.setPercent(curve_Gradient_PickOut);
+	if (TEST_Mode) curve_Slider_OutPick.setPercent(curve_Gradient_TEST_Prc);
+	else curve_Slider_OutPick.setPercent(curve_Gradient_OutPick);
 
-	curve_SliderTest.setVisible(SHOW_Curve);
-	curve_SliderTest.setLabelString("Exp");
+	curve_Slider_OutPick.setVisible(SHOW_Curve);
+	curve_Slider_OutPick.setLabelString("Exp");
 
 	// slider live test color out for this input
-	curve_SliderTweak.setup(slider_x + (slider_w + pad), slider_y, 2 * slider_w, slider_h, 0, 1, 0, true, true);
-	curve_SliderTweak.setVisible(SHOW_Curve);
-	curve_SliderTweak.setLabelString("Pick");
+	curve_Slider_InExp.setup(slider_In_x + (slider_In_w + pad), slider_In_y, 2 * slider_In_w, slider_In_h, 0, 1, 0, true, true);
+	curve_Slider_InExp.setVisible(SHOW_Curve);
+	curve_Slider_InExp.setLabelString("Pick");
 }
 
 
@@ -4595,11 +4598,11 @@ void ofxColorManager::update_CurveTool()
 	//----
 
 	// update values
-	curve_Ctrl_In = curve_SliderTweak.getValue();
+	curve_Ctrl_In = curve_Slider_InExp.getValue();
 	curve_Index = (int)ofMap(curve_Ctrl_In.get(), 0., 1., 0, cAmt - 1);
 
 	// curve modifier
-	curve_Gradient_TEST_Prc = curve_SliderTest.getValue();
+	curve_Gradient_TEST_Prc = curve_Slider_OutPick.getValue();
 	int pointsSize = curvesTool.getPointSize();
 	int pointToModify = 1;//default 1 if size is 3 points
 	int pointY;
@@ -4708,7 +4711,7 @@ void ofxColorManager::draw_CurveTools()
 
 		ofRectangle r = ofRectangle(
 			image_curvedGradient_x, image_curvedGradient_y,
-			image_curvedGradient_w, slider_h);
+			image_curvedGradient_w, slider_In_h);
 
 		ofDrawRectangle(r);
 
@@ -6389,6 +6392,107 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 			}
 		}
 	}
+
+	//--
+
+	//TODO: !
+	//move to theory callback!
+
+	// algo/theory types
+
+	for (int i = 0; i < 7; i++)
+	{
+		if (name == algoTypes[i].getName() && algoTypes[i].get())
+		{
+			algoTypes[i] = false;//off button
+
+			vector<ofColor> _cols;
+			palette_clear();
+
+			//-
+
+			theory_Name = algoTypes[i].getName();
+			lastTheory = i + NUM_COLOR_THEORY_TYPES;
+
+			txt_lineActive[0] = false;//preset name
+			txt_lineActive[1] = false;//palette name
+			txt_lineActive[2] = true;//theory name
+			txt_lineActive[3] = false;//range name
+
+			// DEMO
+			if (DEMO_Test) myDEMO.reStart();
+
+			//-
+
+			switch (i)
+			{
+
+			case 0:
+				_cols.clear();
+				_cols.resize(complement.size());
+				for (int j = 0; j < complement.size(); j++) {
+					_cols[j] = complement[j];
+					palette_addColor(_cols[j]);
+				}
+				break;
+
+			case 1:
+				_cols.clear();
+				_cols.resize(complementBrightness.size());
+				for (int j = 0; j < complementBrightness.size(); j++) {
+					_cols[j] = complementBrightness[j];
+					palette_addColor(_cols[j]);
+				}
+				break;
+
+			case 2:
+				_cols.clear();
+				_cols.resize(monochrome.size());
+				for (int j = 0; j < monochrome.size(); j++) {
+					_cols[j] = monochrome[j];
+					palette_addColor(_cols[j]);
+				}
+				break;
+
+			case 3:
+				_cols.clear();
+				_cols.resize(monochromeBrightness.size());
+				for (int j = 0; j < monochromeBrightness.size(); j++) {
+					_cols[j] = monochromeBrightness[j];
+					palette_addColor(_cols[j]);
+				}
+				break;
+
+			case 4:
+				_cols.clear();
+				_cols.resize(analogue.size());
+				for (int j = 0; j < analogue.size(); j++) {
+					_cols[j] = analogue[j];
+					palette_addColor(_cols[j]);
+				}
+				break;
+
+			case 5:
+				_cols.clear();
+				_cols.resize(triad.size());
+				for (int j = 0; j < triad.size(); j++) {
+					_cols[j] = triad[j];
+					palette_addColor(_cols[j]);
+				}
+				break;
+
+			case 6:
+				_cols.clear();
+				_cols.resize(complementTriad.size());
+				for (int j = 0; j < complementTriad.size(); j++) {
+					_cols[j] = complementTriad[j];
+					palette_addColor(_cols[j]);
+				}
+				break;
+
+			}
+		}
+	}
 }
 
 //--------------------------------------------------------------
@@ -6497,8 +6601,8 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	{
 		if (SHOW_Curve)
 		{
-			curve_SliderTweak.setVisible(SHOW_ALL_GUI);
-			curve_SliderTest.setVisible(SHOW_ALL_GUI);
+			curve_Slider_InExp.setVisible(SHOW_ALL_GUI);
+			curve_Slider_OutPick.setVisible(SHOW_ALL_GUI);
 		}
 	}
 
@@ -6553,8 +6657,8 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	//}
 	else if (name == SHOW_Curve.getName())
 	{
-		curve_SliderTest.setVisible(SHOW_Curve);
-		curve_SliderTweak.setVisible(SHOW_Curve);
+		curve_Slider_OutPick.setVisible(SHOW_Curve);
+		curve_Slider_InExp.setVisible(SHOW_Curve);
 	}
 	else if (name == SHOW_UserPalette.getName())
 	{
@@ -6802,8 +6906,8 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			curve_Gradient_TEST_Prc = 0.5;
 			TEST_Mode = false;
 
-			if (TEST_Mode) curve_SliderTest.setPercent(curve_Gradient_TEST_Prc);
-			else curve_SliderTest.setPercent(curve_Gradient_PickOut.get());
+			if (TEST_Mode) curve_Slider_OutPick.setPercent(curve_Gradient_TEST_Prc);
+			else curve_Slider_OutPick.setPercent(curve_Gradient_OutPick.get());
 		}
 	}
 	else if (name == "Hard Steps")
@@ -6912,107 +7016,6 @@ void ofxColorManager::Changed_ColorRange(ofAbstractParameter &e)
 
 				// DEMO
 				if (DEMO_Test) myDEMO.reStart();
-			}
-		}
-
-		//--
-
-		//TODO: !
-		//move to theory callback!
-
-		// algo/theory types
-
-		for (int i = 0; i < 7; i++)
-		{
-			if (name == algoTypes[i].getName() && algoTypes[i].get())
-			{
-				algoTypes[i] = false;//off button
-
-				vector<ofColor> _cols;
-				palette_clear();
-
-				//-
-
-				theory_Name = algoTypes[i].getName();
-				lastTheory = i + NUM_COLOR_THEORY_TYPES;
-
-				txt_lineActive[0] = false;//preset name
-				txt_lineActive[1] = false;//palette name
-				txt_lineActive[2] = true;//theory name
-				txt_lineActive[3] = false;//range name
-
-				// DEMO
-				if (DEMO_Test) myDEMO.reStart();
-
-				//-
-
-				switch (i)
-				{
-
-				case 0:
-					_cols.clear();
-					_cols.resize(complement.size());
-					for (int j = 0; j < complement.size(); j++) {
-						_cols[j] = complement[j];
-						palette_addColor(_cols[j]);
-					}
-					break;
-
-				case 1:
-					_cols.clear();
-					_cols.resize(complementBrightness.size());
-					for (int j = 0; j < complementBrightness.size(); j++) {
-						_cols[j] = complementBrightness[j];
-						palette_addColor(_cols[j]);
-					}
-					break;
-
-				case 2:
-					_cols.clear();
-					_cols.resize(monochrome.size());
-					for (int j = 0; j < monochrome.size(); j++) {
-						_cols[j] = monochrome[j];
-						palette_addColor(_cols[j]);
-					}
-					break;
-
-				case 3:
-					_cols.clear();
-					_cols.resize(monochromeBrightness.size());
-					for (int j = 0; j < monochromeBrightness.size(); j++) {
-						_cols[j] = monochromeBrightness[j];
-						palette_addColor(_cols[j]);
-					}
-					break;
-
-				case 4:
-					_cols.clear();
-					_cols.resize(analogue.size());
-					for (int j = 0; j < analogue.size(); j++) {
-						_cols[j] = analogue[j];
-						palette_addColor(_cols[j]);
-					}
-					break;
-
-				case 5:
-					_cols.clear();
-					_cols.resize(triad.size());
-					for (int j = 0; j < triad.size(); j++) {
-						_cols[j] = triad[j];
-						palette_addColor(_cols[j]);
-					}
-					break;
-
-				case 6:
-					_cols.clear();
-					_cols.resize(complementTriad.size());
-					for (int j = 0; j < complementTriad.size(); j++) {
-						_cols[j] = complementTriad[j];
-						palette_addColor(_cols[j]);
-					}
-					break;
-
-				}
 			}
 		}
 	}
@@ -8249,7 +8252,7 @@ void ofxColorManager::setControl(float control)
 {
 	if (!MODE_Editor) {
 		curve_Ctrl_In = control;
-		curve_SliderTweak.setPercent(control);
+		curve_Slider_InExp.setPercent(control);
 	}
 }
 
@@ -8272,8 +8275,8 @@ void ofxColorManager::setToggleVisible()
 
 	if (SHOW_Curve)
 	{
-		curve_SliderTweak.setVisible(SHOW_ALL_GUI);
-		curve_SliderTest.setVisible(SHOW_ALL_GUI);
+		curve_Slider_InExp.setVisible(SHOW_ALL_GUI);
+		curve_Slider_OutPick.setVisible(SHOW_ALL_GUI);
 	}
 }
 

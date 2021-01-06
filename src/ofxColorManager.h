@@ -734,8 +734,8 @@ public:
 	ofParameter<float> curve_Gradient_TEST_Prc;
 	int curve_Index = 0;
 
-	ofxSimpleSlider curve_SliderTweak;
-	ofxSimpleSlider curve_SliderTest;
+	ofxSimpleSlider curve_Slider_InExp;
+	ofxSimpleSlider curve_Slider_OutPick;
 
 	//-
 
@@ -765,7 +765,8 @@ public:
 	//int TEST_pauseLong = 2000;
 	//int TEST_pauseChrono = 0;
 
-	ofParameter<float> curve_Gradient_PickOut{ "Gradient Pick", 0, 0, 1 };
+	ofParameter<float> curve_Gradient_OutPick{ "Gradient Pick", 0, 0, 1 };
+	ofParameter<float> curve_Gradient_InExp{ "Gradient Exp", 0, 0, 1 };
 
 	//--
 
@@ -828,14 +829,14 @@ private:
 	int image_curvedGradient_y;
 	int image_curvedGradient_w;
 	int image_curvedGradient_h;
-	int slider_x;
-	int slider_y;
-	int slider_w;
-	int slider_h;
-	int sliderMod_x;
-	int sliderMod_y;
-	int sliderMod_w;
-	int sliderMod_h;
+	int slider_In_x;
+	int slider_In_y;
+	int slider_In_w;
+	int slider_In_h;
+	int slider_Out_x;
+	int slider_Out_y;
+	int slider_Out_w;
+	int slider_Out_h;
 	int grad_x;
 	int grad_y;
 	int grad_w;
