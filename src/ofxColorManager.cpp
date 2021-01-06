@@ -26,9 +26,14 @@ ofxColorManager::ofxColorManager()
 	path_Global = "ofxColorManager/";
 	ofxSurfingHelpers::CheckFolder(path_Global);
 
+	path_Layout = path_Global + "layout/";
+	ofxSurfingHelpers::CheckFolder(path_Layout);
+
 	path_Folder_Curves = path_Global + "curves/";
-	path_Curves = path_Folder_Curves + "curves.yml";
-	ofxSurfingHelpers::CheckFolder(path_Global);
+	ofxSurfingHelpers::CheckFolder(path_Folder_Curves);
+
+	path_Curves_Lut = path_Folder_Curves + "myCurve.yml";
+	path_Curve_Preset = path_Folder_Curves + "myCurve.xml";
 
 	path_Folder_Color = path_Global + "colors/";
 	path_Colors = path_Folder_Color + "liveColors.json";
@@ -58,23 +63,21 @@ void ofxColorManager::startup()
 
 	// b. load settings
 	//rPreview.loadSettings();
-	rPreview.loadSettings("_Curve_Gui", path_Folder_Curves, false);
+	rPreview.loadSettings("_Curve_Gui", path_Layout, false);
 
 	refresh_Gui_Layout();
-
-	//----
-
-	// preset manager
-
-	preset_refreshFiles();
-	//preset_load(PRESET_name);
 
 	//-
 
 	// curve
 
 	//bResetCurve = true;
-	curvesTool.load(path_Curves); //needed because it fills polyline
+
+	// lut
+	curvesTool.load(path_Curves_Lut); //needed because it fills polyline
+
+	// preset
+	ofxSurfingHelpers::loadGroup(params_Curve, path_Curve_Preset);
 
 	curve_Slider_OutPick.setup(slider_Out_x, slider_Out_y, slider_Out_w, slider_Out_h, 0, 1, curve_Gradient_OutPick, true, true);
 	curve_Slider_OutPick.setPercent(curve_Gradient_OutPick);
@@ -87,6 +90,13 @@ void ofxColorManager::startup()
 //#ifdef USE_RECTANGLE_INTERFACES
 //	setVisible_Interface(SHOW_AlgoPalettes);
 //#endif
+
+	//----
+
+	// preset manager
+
+	preset_refreshFiles();
+	//preset_load(PRESET_name);
 
 	//----
 
@@ -111,7 +121,7 @@ void ofxColorManager::startup()
 
 	panels.addToggle(&SHOW_Curve);
 	panels.addToggle(&SHOW_Presets);
-	panels.addToggle(&SHOW_PresetsPalette);
+	//panels.addToggle(&SHOW_PresetsPalette);
 
 	panels.addToggle(&SHOW_ALL_GUI);
 	panels.addToggle(&SHOW_GUI_MINI);
@@ -144,6 +154,15 @@ void ofxColorManager::startup()
 
 	lastRange = 0;
 	rangTypes[lastRange] = true;//on button
+
+	//--
+
+	//load last session preset index
+	if (preset_Index < files.size())
+	{
+		PRESET_name = files_Names[preset_Index];
+		preset_load(PRESET_name);
+	}
 
 	//--
 }
@@ -510,7 +529,8 @@ void ofxColorManager::setup()
 	MODE_Editor.setSerializable(false);
 
 	SHOW_Presets.set("PRESETS", true);
-	SHOW_PresetsPalette.set("Show Palette", false);
+	SHOW_Kit.set("Kit", true);
+	//SHOW_PresetsPalette.set("Show Palette", false);
 	SHOW_BackGround.set("BACKGROUND", true);
 	SHOW_Picker.set("PICKER", true);
 	SHOW_Library.set("LIBRARY", false);
@@ -524,7 +544,7 @@ void ofxColorManager::setup()
 	params_control.add(SHOW_Curve);
 	params_control.add(MODE_Editor);
 	params_control.add(SHOW_Presets);
-	params_control.add(SHOW_PresetsPalette);
+	//params_control.add(SHOW_PresetsPalette);
 	params_control.add(SHOW_BackGround);
 	params_control.add(SHOW_Library);
 
@@ -698,82 +718,83 @@ void ofxColorManager::setup()
 	// startup settings
 
 	params_AppState.setName("ofxColorManager");
+	params_AppState.add(preset_Index);
+	params_AppState.add(TEST_Mode);
 
-	_p1.add(SHOW_Presets);
-	_p1.add(SHOW_PresetsPalette);
-	_p1.add(SHOW_UserPalette);
-	_p1.add(SHOW_BackGround);
-	_p1.add(SHOW_Library);
-	_p1.add(SHOW_Picker);
-	_p1.add(SHOW_Range);
-	_p1.add(SHOW_Theory);
-	_p1.add(SHOW_Panels);
-	_p1.add(SHOW_Demo);
-	_p1.add(SHOW_Quantizer);
-	_p1.add(SHOW_ColourLovers);
-	_p1.add(SHOW_AlgoPalettes);
-	_p1.add(SHOW_Curve);
-	_p1.add(SHOW_BrowserColors);
-	_p1.add(SHOW_GuiInternal);
-	_p1.add(SHOW_GUI_MINI);
-	_p1.add(TEST_Mode);
-	params_AppState.add(_p1);
+	params_Panels.add(SHOW_ALL_GUI);
+	params_Panels.add(SHOW_Presets);
+	params_Panels.add(SHOW_UserPalette);
+	params_Panels.add(SHOW_BackGround);
+	params_Panels.add(SHOW_Library);
+	params_Panels.add(SHOW_Picker);
+	params_Panels.add(SHOW_Range);
+	params_Panels.add(SHOW_Theory);
+	params_Panels.add(SHOW_Panels);
+	params_Panels.add(SHOW_Demo);
+	params_Panels.add(SHOW_Quantizer);
+	params_Panels.add(SHOW_ColourLovers);
+	params_Panels.add(SHOW_AlgoPalettes);
+	params_Panels.add(SHOW_Curve);
+	params_Panels.add(SHOW_BrowserColors);
+	params_Panels.add(SHOW_GuiInternal);
+	params_Panels.add(SHOW_GUI_MINI);
+	params_AppState.add(params_Panels);
 
-	_pbg.add(color_BackGround);
-	_pbg.add(color_BackGround_Darker);
-	_pbg.add(color_BackGround_AutoSet);
-	_pbg.add(color_BackGround_Darkness);
-	params_AppState.add(_pbg);
+	params_Background.add(color_BackGround);
+	params_Background.add(color_BackGround_Darker);
+	params_Background.add(color_BackGround_AutoSet);
+	params_Background.add(color_BackGround_Darkness);
+	params_AppState.add(params_Background);
 
-	_pd.add(DEMO_Test);
-	_pd.add(DEMO_Auto);
-	_pd.add(DEMO_Timer);
-	_pd.add(DEMO_Alpha);
-	_pd.add(DEMO_Cam);
-	params_AppState.add(_pd);
+	params_Demo.add(DEMO_Test);
+	params_Demo.add(DEMO_Auto);
+	params_Demo.add(DEMO_Timer);
+	params_Demo.add(DEMO_Alpha);
+	params_Demo.add(DEMO_Cam);
+	params_AppState.add(params_Demo);
 
-	_pcv.add(curve_Gradient_InExp);
-	_pcv.add(curve_Gradient_OutPick);
-	_pcv.add(gradient_HardMode);//gradient
-	_pcv.add(MODE_Editor);
-	//_pcv.add(paletteLibPage_param);
-	//_pcv.add(SHOW_Gradient);
-	//_pcv.add(SHOW_CosineGradient);
-	params_AppState.add(_pcv);
+	params_Curve.add(curve_Gradient_InExp);
+	params_Curve.add(curve_Gradient_OutPick);
+	params_Curve.add(gradient_HardMode);//gradient
+	params_Curve.add(MODE_Editor);
+	//params_Curve.add(paletteLibPage_param);
+	//params_Curve.add(SHOW_Gradient);
+	//params_Curve.add(SHOW_CosineGradient);
+	////params_AppState.add(params_Curve);
 
-	_pk.add(BRIGHTNESS);
-	_pk.add(SATURATION);
-	_pk.add(bColor_HUE);
-	_pk.add(bColor_SAT);
-	_pk.add(bColor_BRG);
-	_pk.add(color_HUE_0);
-	_pk.add(color_SAT_0);
-	_pk.add(color_BRG_0);
-	_pk.add(color_HUE_Power);
-	_pk.add(color_SAT_Power);
-	_pk.add(color_BRG_Power);
-	_pk.add(color_Picked);
-	params_AppState.add(_pk);
+	params_Picker.add(BRIGHTNESS);
+	params_Picker.add(SATURATION);
+	params_Picker.add(bColor_HUE);
+	params_Picker.add(bColor_SAT);
+	params_Picker.add(bColor_BRG);
+	params_Picker.add(color_HUE_0);
+	params_Picker.add(color_SAT_0);
+	params_Picker.add(color_BRG_0);
+	params_Picker.add(color_HUE_Power);
+	params_Picker.add(color_SAT_Power);
+	params_Picker.add(color_BRG_Power);
+	params_Picker.add(color_Picked);
+	params_AppState.add(params_Picker);
 
-	_lb.add(lib_Page_Index);
-	_lb.add(lib_MaxColumns);
-	_lb.add(lib_NumRows);
-	_lb.add(lib_CardsMode);
-	_lb.add(scale_ColLib);
-	_lb.add(scale_ColRange);
-	_lb.add(bLibFillMode);
-	_lb.add(bPagerized);
-	_lb.add(sizeLibColBox);
-	params_AppState.add(_lb);
+	params_Library.add(lib_Page_Index);
+	params_Library.add(lib_MaxColumns);
+	params_Library.add(lib_NumRows);
+	params_Library.add(lib_CardsMode);
+	params_Library.add(scale_ColLib);
+	params_Library.add(scale_ColRange);
+	params_Library.add(bLibFillMode);
+	params_Library.add(bPagerized);
+	params_Library.add(sizeLibColBox);
+	params_AppState.add(params_Library);
 
-	_pt.add(amountColors_Alg);
-	_pt.add(sizePaletteBox);
-	_pt.add(scale_ColPalette);
-	_pt.add(bPaletteFillMode);
-	_pt.add(boxRowsUser);
-	_pt.add(bPaletteEdit);
-	_pt.add(bAuto_TheoryToPalette);
-	params_AppState.add(_pt);
+	params_Palette2.add(amountColors_Alg);
+	params_Palette2.add(sizePaletteBox);
+	params_Palette2.add(scale_ColPalette);
+	params_Palette2.add(bPaletteFillMode);
+	params_Palette2.add(boxRowsUser);
+	params_Palette2.add(bPaletteEdit);
+	params_Palette2.add(bAuto_TheoryToPalette);
+	params_AppState.add(params_Palette2);
 
 	//------------------------------------------------
 
@@ -1489,16 +1510,21 @@ void ofxColorManager::exit()
 
 	// curve
 
-	//gradient curve
-	curvesTool.save(path_Curves);//needed because it fills polyline
-
-	//layout
+	// layout
 	//rPreview.saveSettings();
-	rPreview.saveSettings("_Curve_Gui", path_Folder_Curves, false);
+	rPreview.saveSettings("_Curve_Gui", path_Layout, false);
 
-	//refresh before save
+	// preset
+
+	// gradient curve
+	curvesTool.save(path_Curves_Lut);//needed because it fills polyline
+
+	// refresh before save
 	curve_Gradient_OutPick = curve_Slider_OutPick.getValue();
 	curve_Gradient_InExp = curve_Slider_InExp.getValue();
+
+	// curve preset
+	ofxSurfingHelpers::saveGroup(params_Curve, path_Curve_Preset);
 
 	//----
 
@@ -1522,10 +1548,10 @@ void ofxColorManager::exit()
 
 	ofRemoveListener(params_Palette.parameterChangedE(), this, &ofxColorManager::Changed_ParamsPalette);
 
+	//--
+
 	ofRemoveListener(ofEvents().update, this, &ofxColorManager::update);
 	ofRemoveListener(ofEvents().draw, this, &ofxColorManager::draw);
-
-	//--
 
 	removeKeysListeners();
 	removeMouseListeners();
@@ -2295,7 +2321,7 @@ void ofxColorManager::gui_Palette()
 		//-
 
 		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
-		float _w = ImGui::GetWindowContentRegionWidth() - 2 * _spc;
+		float _w = ImGui::GetWindowContentRegionWidth() - 3 * _spc;
 
 		//-
 
@@ -2306,44 +2332,6 @@ void ofxColorManager::gui_Palette()
 			Mode_Swap
 		};
 		static int mode = 2;
-
-		//-
-
-		if (ImGui::CollapsingHeader("Advanced"))
-		{
-			if (ofxSurfingHelpers::AddSmallButton(bFlipUserPalette, 100, 0.5 * BUTTON_BIG_HEIGHT))
-			{
-				build_GradientPalette();
-			}
-
-			ImGui::Dummy(ImVec2(0.0f, 5));
-
-			ofxImGui::AddParameter(bPaletteFillMode);
-			if (bPaletteFillMode) {
-				ImGui::InputInt(sizePaletteBox.getName().c_str(), (int*)&sizePaletteBox.get(), 5, 100);
-				//ofxImGui::AddParameter(sizePaletteBox);
-			}
-			if (!bPaletteFillMode) {
-				boxRowsUser.disableEvents();
-				ImGui::InputInt(boxRowsUser.getName().c_str(), (int*)&boxRowsUser.get(), 1, 5);
-				//ImGui::InputInt(boxRowsUser.getName().c_str(), (int *)&boxRowsUser.get());
-				boxRowsUser = ofClamp(boxRowsUser.get(), boxRowsUser.getMin(), boxRowsUser.getMax());
-				boxRowsUser.enableEvents();
-
-				//ofxImGui::AddParameter(scale_ColPalette);
-				ImGui::InputFloat(scale_ColPalette.getName().c_str(), (float *)&scale_ColPalette.get(), 0.005f, 0.010);
-			}
-
-			//-
-
-			ImGui::Dummy(ImVec2(0.0f, 5));
-
-			if (ImGui::RadioButton("Copy", mode == Mode_Copy)) { mode = Mode_Copy; } ImGui::SameLine();
-			if (ImGui::RadioButton("Move", mode == Mode_Move)) { mode = Mode_Move; } ImGui::SameLine();
-			if (ImGui::RadioButton("Swap", mode == Mode_Swap)) { mode = Mode_Swap; }
-
-			ImGui::Dummy(ImVec2(0.0f, 10));
-		}
 
 		//-
 
@@ -2393,7 +2381,7 @@ void ofxColorManager::gui_Palette()
 				}
 			}
 
-			//-
+			//--
 
 			int _r = (int)MIN(boxRowsUser.get(), palette.size());
 
@@ -2486,6 +2474,46 @@ void ofxColorManager::gui_Palette()
 		}
 
 		ImGui::Dummy(ImVec2(0.0f, 10));
+
+		//-
+
+		if (ImGui::CollapsingHeader("Advanced"))
+		{
+			if (ofxSurfingHelpers::AddSmallButton(bFlipUserPalette, 100, 0.5 * BUTTON_BIG_HEIGHT))
+			{
+				build_GradientPalette();
+			}
+
+			ImGui::Dummy(ImVec2(0.0f, 5));
+
+			ofxImGui::AddParameter(bPaletteFillMode);
+			if (bPaletteFillMode) 
+			{
+				ImGui::InputInt(sizePaletteBox.getName().c_str(), (int*)&sizePaletteBox.get(), 5, 100);
+				//ofxImGui::AddParameter(sizePaletteBox);
+			}
+			if (!bPaletteFillMode) 
+			{
+				boxRowsUser.disableEvents();
+				ImGui::InputInt(boxRowsUser.getName().c_str(), (int*)&boxRowsUser.get(), 1, 5);
+				//ImGui::InputInt(boxRowsUser.getName().c_str(), (int *)&boxRowsUser.get());
+				boxRowsUser = ofClamp(boxRowsUser.get(), boxRowsUser.getMin(), boxRowsUser.getMax());
+				boxRowsUser.enableEvents();
+
+				//ofxImGui::AddParameter(scale_ColPalette);
+				ImGui::InputFloat(scale_ColPalette.getName().c_str(), (float *)&scale_ColPalette.get(), 0.005f, 0.010);
+			}
+
+			//-
+
+			ImGui::Dummy(ImVec2(0.0f, 5));
+
+			if (ImGui::RadioButton("Copy", mode == Mode_Copy)) { mode = Mode_Copy; } ImGui::SameLine();
+			if (ImGui::RadioButton("Move", mode == Mode_Move)) { mode = Mode_Move; } ImGui::SameLine();
+			if (ImGui::RadioButton("Swap", mode == Mode_Swap)) { mode = Mode_Swap; }
+
+			ImGui::Dummy(ImVec2(0.0f, 10));
+		}
 
 		//-
 	}
@@ -2912,7 +2940,7 @@ void ofxColorManager::gui_Library()
 				}
 			}
 			//ofxImGui::EndTree(mainSettings);
-			}
+		}
 
 		//----
 
@@ -2920,9 +2948,9 @@ void ofxColorManager::gui_Library()
 		{
 			refresh_FromPicked();
 		}
-		}
-	ofxImGui::EndWindow(mainSettings);
 	}
+	ofxImGui::EndWindow(mainSettings);
+}
 
 //--------------------------------------------------------------
 void ofxColorManager::gui_Picker()
@@ -3762,67 +3790,6 @@ void ofxColorManager::gui_Presets()
 		ImGuiColorEditFlags _flags;
 
 		//--
-		////TODO:
-		////if (ImGui::BeginMenuBar())
-		//{
-		//	ImGui::PushItemWidth(50);
-		//	if (ImGui::BeginMenu("File"))
-		//	{
-		//		if (ImGui::MenuItem("Open..", "Ctrl+O")) { /* Do stuff */ }
-		//		if (ImGui::MenuItem("Save", "Ctrl+S")) { /* Do stuff */ }
-		//		if (ImGui::MenuItem("Close", "Ctrl+W")) {}
-		//		ImGui::EndMenu();
-		//	}
-		//	ImGui::EndMenuBar();
-		//	ImGui::PopItemWidth();
-		//}
-		//--
-		/*
-		//        // 1. palettes
-		//
-		//        ImGui::Text("PALETTE");
-		//
-		//        if (ImGui::Button("SAVE PALETTE")) {
-		//            ofLogNotice(__FUNCTION__) << "SAVE PALETTE";
-		//            PRESET_name = textInput_temp;
-		//
-		//            palette_TEMP.setName(PRESET_name);
-		//            palette_TEMP.setBackgroundColor(color_BackGround.get());
-		//            palette_TEMP.setPalette(palette);
-		//
-		//            palette_TEMP.palette_save(PRESET_name);
-		//        }
-		//
-		//        ImGui::SameLine();
-		//        if (ImGui::Button("LOAD PALETTE"))
-		//        {
-		//            ofLogNotice(__FUNCTION__) << "LOAD PALETTE";
-		//            PRESET_name = textInput_temp;
-		//            ofLogNotice(__FUNCTION__) << "PRESET_name: " << PRESET_name;
-		//
-		//            palette_TEMP.palette_load(PRESET_name);
-		//
-		//            //-
-		//
-		//            color_BackGround = palette_TEMP.getBackground();//TODO: temp solution because required pointer..
-		//
-		////            //TODO
-		////            // apply loaded preset to local system
-		////            vector<ofColor> _p = palette_TEMP.getPalette();
-		////            palette_clear();
-		////            for (int i = 0; i < _p.size(); i++) {
-		////                palette_addColor(_p[i]);
-		////            }
-		////
-		////            color_BackGround = ofColor(palette_TEMP.getBackground());//get directly without pointing
-		//
-		//            //-
-		//
-		//            if (DEMO_Test) myDEMO.clear();
-		//        }
-		*/
-
-		//--
 
 		ImGui::Text("Name");
 		//ImGui::Text("Type Name:");
@@ -3869,10 +3836,8 @@ void ofxColorManager::gui_Presets()
 		//		{
 		//			PRESET_name = files_Names[preset_Index];
 		//			ofLogNotice(__FUNCTION__) << "ARROW: PRESET_name: [" + ofToString(preset_Index) + "] " << PRESET_name;
-
 		//			preset_load(PRESET_name);
 		//		}
-
 		//		if (MODE_newPreset) MODE_newPreset = false;
 		//	}
 		//}
@@ -3890,11 +3855,9 @@ void ofxColorManager::gui_Presets()
 		//		{
 		//			PRESET_name = files_Names[preset_Index];
 		//			ofLogNotice(__FUNCTION__) << "ARROW: PRESET_name: [" + ofToString(preset_Index) + "] " << PRESET_name;
-
 		//			preset_load(PRESET_name);
 		//		}
 		//	}
-
 		//	if (MODE_newPreset) MODE_newPreset = false;
 		//}
 
@@ -3907,14 +3870,15 @@ void ofxColorManager::gui_Presets()
 
 		ImGui::Dummy(ImVec2(0.0f, 5));
 
-		int counter = preset_Index;
+		int counter = preset_Index.get();
 		//static int counter = preset_Index;
 
 		//----
 
 		// index preset / total
 		int numPalettes = files_Names.size() - 1;
-		ImGui::Text("%d/%d", preset_Index, numPalettes);
+		ImGui::Text("%d/%d", counter, numPalettes);
+		//ImGui::Text("%d/%d", preset_Index.get(), numPalettes);
 
 		ImGui::Dummy(ImVec2(0.0f, 5));
 
@@ -4187,10 +4151,12 @@ void ofxColorManager::gui_Presets()
 
 		// palette colors mini preview
 
-		ImGui::Dummy(ImVec2(0.0f, 10.f));
+		ImGui::Dummy(ImVec2(0, 5));
 
+		ofxImGui::AddParameter(SHOW_Kit);
 		//ofxImGui::AddParameter(SHOW_PresetsPalette);
-		//ImGui::Dummy(ImVec2(0.0f, 5.f));
+
+		ImGui::Dummy(ImVec2(0, 5));
 
 		ImGuiColorEditFlags _flagw;
 		_flagw = ImGuiTreeNodeFlags_DefaultOpen;
@@ -4246,11 +4212,6 @@ void ofxColorManager::gui_Presets()
 
 				//----
 
-				//float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
-				//float _w = ImGui::GetWindowContentRegionWidth() - _spc;
-
-				//-
-
 				int _r = (int)MIN(boxRowsUser.get(), palette.size());
 
 				int wb;
@@ -4285,7 +4246,6 @@ void ofxColorManager::gui_Presets()
 
 				/*
 				// dragggable boxes
-
 				//if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
 				//{
 				//	ImGui::SetDragDropPayload("DND_DEMO_CELL", &n, sizeof(int));
@@ -4294,14 +4254,12 @@ void ofxColorManager::gui_Presets()
 				//	if (mode == Mode_Swap) { ImGui::Text("Swap %s", ofToString(n).c_str()); }
 				//	ImGui::EndDragDropSource();
 				//}
-
 				//if (ImGui::BeginDragDropTarget())
 				//{
 				//	if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_DEMO_CELL"))
 				//	{
 				//		IM_ASSERT(payload->DataSize == sizeof(int));
 				//		int payload_n = *(const int*)payload->Data;
-
 				//		if (mode == Mode_Copy)
 				//		{
 				//			palette[n] = palette[payload_n];
@@ -4317,12 +4275,9 @@ void ofxColorManager::gui_Presets()
 				//			palette[n] = palette[payload_n];
 				//			palette[payload_n] = tmp;
 				//		}
-
 				//		//--
-
 				//		// update all pallete (Curve)
 				//		ofLogNotice(__FUNCTION__) << "DONE Dragged color";
-
 				//		build_GradientPalette();
 				//	}
 				//	ImGui::EndDragDropTarget();
@@ -4347,25 +4302,97 @@ void ofxColorManager::gui_Presets()
 
 		ImGui::Dummy(ImVec2(0.0f, 10));
 
-		//----------
+		//--
 
-		//add kit palettes browser
+		////TODO:
+		////if (ImGui::BeginMenuBar())
+		//{
+		//	ImGui::PushItemWidth(50);
+		//	if (ImGui::BeginMenu("File"))
+		//	{
+		//		if (ImGui::MenuItem("Open..", "Ctrl+O")) { /* Do stuff */ }
+		//		if (ImGui::MenuItem("Save", "Ctrl+S")) { /* Do stuff */ }
+		//		if (ImGui::MenuItem("Close", "Ctrl+W")) {}
+		//		ImGui::EndMenu();
+		//	}
+		//	ImGui::EndMenuBar();
+		//	ImGui::PopItemWidth();
+		//}
 
-		int indexPreset = gui_Palettes(kit, preset_Index);
-		if (indexPreset != -1)
-		{
-			preset_Index = indexPreset;
-			preset_load(files_Names[preset_Index]);
+		//--
 
-			//-
-
-			// DEMO
-			if (DEMO_Test) myDEMO.reStart();
-		}
-
-		//-
+		/*
+		//        // 1. palettes
+		//
+		//        ImGui::Text("PALETTE");
+		//
+		//        if (ImGui::Button("SAVE PALETTE")) {
+		//            ofLogNotice(__FUNCTION__) << "SAVE PALETTE";
+		//            PRESET_name = textInput_temp;
+		//
+		//            palette_TEMP.setName(PRESET_name);
+		//            palette_TEMP.setBackgroundColor(color_BackGround.get());
+		//            palette_TEMP.setPalette(palette);
+		//
+		//            palette_TEMP.palette_save(PRESET_name);
+		//        }
+		//
+		//        ImGui::SameLine();
+		//        if (ImGui::Button("LOAD PALETTE"))
+		//        {
+		//            ofLogNotice(__FUNCTION__) << "LOAD PALETTE";
+		//            PRESET_name = textInput_temp;
+		//            ofLogNotice(__FUNCTION__) << "PRESET_name: " << PRESET_name;
+		//
+		//            palette_TEMP.palette_load(PRESET_name);
+		//
+		//            //-
+		//
+		//            color_BackGround = palette_TEMP.getBackground();//TODO: temp solution because required pointer..
+		//
+		////            //TODO
+		////            // apply loaded preset to local system
+		////            vector<ofColor> _p = palette_TEMP.getPalette();
+		////            palette_clear();
+		////            for (int i = 0; i < _p.size(); i++) {
+		////                palette_addColor(_p[i]);
+		////            }
+		////
+		////            color_BackGround = ofColor(palette_TEMP.getBackground());//get directly without pointing
+		//
+		//            //-
+		//
+		//            if (DEMO_Test) myDEMO.clear();
+		//        }
+		*/
 	}
 	ofxImGui::EndWindow(mainSettings);
+
+
+	//----------
+
+	//add kit palettes browser
+	if (SHOW_Kit)
+	{
+		if (ofxImGui::BeginWindow("Kit", mainSettings))
+		{
+			// populate widgets
+			int indexPreset = gui_Palettes(kit, preset_Index);
+
+			// workflow
+			if (indexPreset != -1)
+			{
+				preset_Index = indexPreset;
+				preset_load(files_Names[preset_Index]);
+
+				//-
+
+				// DEMO
+				if (DEMO_Test) myDEMO.reStart();
+			}
+		}
+		ofxImGui::EndWindow(mainSettings);
+	}
 }
 
 //--------------------------------------------------------------
@@ -4411,10 +4438,10 @@ bool ofxColorManager::gui_Draw()
 
 	//--
 
-	if (SHOW_UserPalette) gui_Palette();
-
 	if (SHOW_ALL_GUI)
 	{
+		if (SHOW_UserPalette) gui_Palette();
+
 		if (SHOW_Presets) gui_Presets();
 
 		if (SHOW_Picker) gui_Picker();
@@ -4559,9 +4586,6 @@ void ofxColorManager::setup_CurveTool()
 	curve_img_gradient.allocate(image_curvedGradient_w, image_curvedGradient_h, OF_IMAGE_COLOR);
 
 	curvesTool.setup(cAmt);
-
-	//TODO: TEMP
-	//curvesTool.load("settings/curves.yml"); //needed because it fills polyline
 
 	pos_CurveEditor.set("POS CURVE", glm::vec2(500), glm::vec2(0), glm::vec2(1920, 180));
 
@@ -6911,12 +6935,14 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			curve_Gradient_TEST_Prc = 0.5;
 			TEST_Mode = false;
 
-			// curve mod
-			curve_Slider_OutPick.setup(slider_Out_x, slider_Out_y, slider_Out_w, slider_Out_h, 0, 1, curve_Gradient_OutPick.get(), true, true);
+			// out
+			curve_Gradient_OutPick = 0.5;
+			curve_Slider_OutPick.setup(slider_Out_x, slider_Out_y, slider_Out_w, slider_Out_h, 0, 1, curve_Gradient_OutPick, true, true);
 			curve_Slider_OutPick.setPercent(curve_Gradient_OutPick);
 
-			// slider live test color out for this input
-			curve_Slider_InExp.setup(slider_In_x + (slider_In_w + pad), slider_In_y, 2 * slider_In_w, slider_In_h, 0, 1, curve_Gradient_InExp, true, true);
+			// in
+			curve_Gradient_InExp = 0.5;
+			curve_Slider_InExp.setup(slider_In_x, slider_In_y, slider_In_w, slider_In_h, 0, 1, curve_Gradient_InExp, true, true);
 			curve_Slider_InExp.setPercent(curve_Gradient_InExp);
 		}
 	}
@@ -7738,8 +7764,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//
 		//    else if (key == OF_KEY_RETURN)
 		//        colorBrowser.switch_sorted_Type();
-		}
 	}
+}
 
 //--------------------------------------------------------------
 void ofxColorManager::keyReleased(ofKeyEventArgs &eventArgs)
@@ -7918,6 +7944,8 @@ void ofxColorManager::preset_refreshFiles()
 
 		ofLogNotice(__FUNCTION__) << files_Names[i];
 	}
+
+	preset_Index.setMax(files.size() - 1);
 
 	//-
 

@@ -100,7 +100,9 @@ public:
 	std::string path_Global;
 	std::string path_Kits;
 	std::string path_Folder_Curves;
-	std::string path_Curves;
+	std::string path_Layout;
+	std::string path_Curves_Lut;
+	std::string path_Curve_Preset;
 	std::string path_Folder_Color;
 	std::string path_Colors;
 	std::string path_AppState;
@@ -397,7 +399,8 @@ public:
 	ofParameter<bool> SHOW_debugText;
 	ofParameter<bool> SHOW_Panels;
 	ofParameter<bool> SHOW_Presets;
-	ofParameter<bool> SHOW_PresetsPalette;
+	ofParameter<bool> SHOW_Kit;
+	//ofParameter<bool> SHOW_PresetsPalette;
 	ofParameter<bool> SHOW_Demo;
 	ofParameter<bool> SHOW_BackGround;
 	ofParameter<bool> SHOW_Picker;
@@ -784,13 +787,14 @@ public:
 
 	//-
 
-	// files
+	// preset files
 
 	void preset_refreshFiles();
 	std::vector<std::string> files_Names;
 	std::vector<ofFile> files;
-	int preset_Index = 0;
 	std::string textInput_temp = "type name";
+	ofParameter<int> preset_Index{ "Preset Index", 0, 0, 0 };
+	//int preset_Index = 0;
 
 	vector<vector<ofColor>> palettesKit;
 	vector<PaletteData> kit;
@@ -801,16 +805,14 @@ public:
 
 	ofParameterGroup params_AppState;
 
-	void saveAppSettings(ofParameterGroup &g, std::string path);
-	void loadAppSettings(ofParameterGroup &g, std::string path);
-	
-	ofParameterGroup _p1{"PANELS"};
-	ofParameterGroup _pbg{ "BACKGROUND" };
-	ofParameterGroup _pd{ "DEMO" };
-	ofParameterGroup _pcv{ "CURVE" };
-	ofParameterGroup _pk{ "PICKER" };
-	ofParameterGroup _lb{ "LIBRARY" };
-	ofParameterGroup _pt{ "PALETTE" };
+	ofParameterGroup params_Panels{"PANELS"};
+	ofParameterGroup params_Background{ "BACKGROUND" };
+	ofParameterGroup params_Demo{ "DEMO" };
+	ofParameterGroup params_Picker{ "PICKER" };
+	ofParameterGroup params_Library{ "LIBRARY" };
+	ofParameterGroup params_Palette2{ "PALETTE" };
+
+	ofParameterGroup params_Curve{ "CURVE" };
 
 	//--
 

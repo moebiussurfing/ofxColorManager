@@ -18,7 +18,6 @@ TODO:
 #include "presets/PresetManager.h"
 #include "presets/PresetPalette.h"
 
-//class ImGui_PalettesPicker
 namespace ImGui_PalettesPicker
 {
 	//--------------------------------------------------------------
@@ -35,10 +34,9 @@ namespace ImGui_PalettesPicker
 
 		ofxImGui::Settings mainSettings = ofxImGui::Settings();
 
-		ImGuiColorEditFlags _flagw;
-		_flagw = ImGuiTreeNodeFlags_None;
-
-		if (ImGui::CollapsingHeader("Kit", _flagw))
+		//ImGuiColorEditFlags _flagw;
+		//_flagw = ImGuiTreeNodeFlags_None;
+		//if (ImGui::CollapsingHeader("Kit", _flagw))
 		{
 			ImGuiColorEditFlags _flags;
 
@@ -49,13 +47,15 @@ namespace ImGui_PalettesPicker
 
 			//--
 
-			float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
-			float _w = ImGui::GetWindowContentRegionWidth() - (3 * _spc);
+			//float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
+			//float _w = ImGui::GetWindowContentRegionWidth() - (1.0 * _spc);
+			
+			float _spc = 0;
+			float _w = ImGui::GetWindowContentRegionWidth(); 
+			
 			float _hb = BUTTON_BIG_HEIGHT;
 
 			int _hhB;
-			_hhB = BUTTON_SLIM_HEIGHT;
-			//_hhB = 0.7 * BUTTON_BIG_HEIGHT;//button height
 
 			float spacing1 = 6;//palettes spacing
 
@@ -65,11 +65,23 @@ namespace ImGui_PalettesPicker
 
 			for (int p = 0; p < kit.size(); p++)
 			{
+				if (p == indexExt)
+				{
+					_hhB = 3 * BUTTON_SLIM_HEIGHT;
+				}
+				else 
+				{
+					_hhB = BUTTON_SLIM_HEIGHT;
+				}
+				//_hhB = 0.7 * BUTTON_BIG_HEIGHT;//button height
+
+				//--
+
 				////TODO: trying to make a frame border to all palette elements
 				//ImGui::BeginGroup();
 				//ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(1,0,0,1));
 				//ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 2);
-				
+
 				//--
 
 				// colors in each palette
@@ -105,19 +117,21 @@ namespace ImGui_PalettesPicker
 
 				for (int c = 0; c < _sizeP; c++)
 				{
-					if (c != 0) {
-						//ImGui::SameLine();
+					if (c != 0)
+					{
 						ImGui::SameLine(0, 0);
+						//ImGui::SameLine();
 						//ImGui::SameLine(0.0f, ImGui::GetStyle().ItemSpacing.y);
 					}
 
 					ImGui::PushID(c);
 
+					//-
+
 					// same size for each color
-					int _wwB = _w / _sizeP - _spc;
+					int _wwB = (_w / _sizeP) - _spc;
 
 					std::string name = (kit[p].name + "_" + ofToString(p) + "_" + ofToString(c));
-					//-
 
 					//-
 
@@ -149,7 +163,7 @@ namespace ImGui_PalettesPicker
 				//ImGui::PopStyleVar(1);
 
 				//--
-				
+
 				////TODO: trying to make a frame border to all palette elements
 				//ImGui::PopStyleColor();
 				//ImGui::PopStyleVar(1);
