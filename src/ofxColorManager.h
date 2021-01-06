@@ -177,7 +177,7 @@ public:
 
 	//live reload colors file
 	void saveColors();
-	bool bAutoExportPreset = true;
+	//bool bAutoExportPreset = true;
 
 	//TODO
 	//BUG: trying to avoid bug moving mouse..
@@ -211,7 +211,7 @@ public:
 	ofParameter<bool> bAuto_TheoryFromPicker;
 
 	void Changed_ColorTheory(ofAbstractParameter &e);
-	void refresh_ColorTheory();
+	void refresh_Interface();
 
 	void Changed_ColorUserPalette(ofAbstractParameter &e);
 	ofParameterGroup params_UserPalette;
@@ -235,7 +235,7 @@ public:
 	void update_Theory();
 	//void ColorWheel_draw();
 
-	ofParameter<ofColor> primaryColor;
+	ofParameter<ofColor> color_TheoryBase2;
 
 	//shared_ptr<ColorWheelScheme> scheme;
 	//vector<ofColor> colors;
@@ -282,6 +282,7 @@ public:
 #ifdef INCL_LAYOUT
 	ofxGuiPanelsLayout panels;
 #endif
+
 	ofParameter<bool> SHOW_GuiInternal{ "GUI INTERNAL", false };
 	ofParameter<bool> SHOW_ImGui{ "ImGui", true };
 
@@ -479,7 +480,7 @@ public:
 
 	void setup_Interface();
 	void setup_Labels();
-	void update_Engine();
+	void refresh_TheoryEngine();
 	void palettes_resize();
 	void setVisible_Interface(bool b);
 
@@ -604,7 +605,7 @@ public:
 	void palette_addColor_toInterface(ofColor c);
 	void palette_rearrenge();//resize boxes when adding removing colors to user palette
 	void palette_touchedColor(std::string name);
-	void palette_recallFromPalettes(int p);
+	void palette_FromTheory(int p);
 	void palette_load_FromColourLovers();
 
 	//----

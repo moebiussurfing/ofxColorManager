@@ -133,6 +133,9 @@ void ofxColorManager::startup()
 	////workflow
 	//colourLoversHelper.nextPalette();
 
+	lastTheory = 0;
+	lastRange = 0;
+
 	//--
 }
 
@@ -422,7 +425,7 @@ void ofxColorManager::setup()
 	// ALGORITHMIC PALETTES
 
 	//random.generateRandom(amountColors_Alg);
-	update_Engine();
+	refresh_TheoryEngine();
 	setup_Interface();
 	setup_Labels();
 
@@ -911,14 +914,13 @@ void ofxColorManager::update(ofEventArgs & args)
 
 		//-
 
-		//workflow
-		if (bAutoExportPreset)
-		{
-			ofLogNotice(__FUNCTION__) << "bAutoExportPreset: " << bAutoExportPreset;
-			//ofLogNotice(__FUNCTION__) << "EXPORT";
-
-			saveColors();
-		}
+		////workflow
+		//if (bAutoExportPreset)
+		//{
+		//	ofLogNotice(__FUNCTION__) << "bAutoExportPreset: " << bAutoExportPreset;
+		//	//ofLogNotice(__FUNCTION__) << "EXPORT";
+		//	saveColors();
+		//}
 	}
 
 	//-
@@ -955,7 +957,7 @@ void ofxColorManager::update(ofEventArgs & args)
 				palette_clear();
 
 #ifdef USE_RECTANGLE_INTERFACES
-				palette_recallFromPalettes(SELECTED_palette_LAST);//trig last choice
+				palette_FromTheory(SELECTED_palette_LAST);//trig last choice
 #endif
 			}
 		}
@@ -981,7 +983,7 @@ void ofxColorManager::update(ofEventArgs & args)
 		// and load the palette into the user palette
 		// TODO: BUG should add this to avoid auto load to user palette
 #ifdef USE_RECTANGLE_INTERFACES
-		palette_recallFromPalettes(SELECTED_palette);
+		palette_FromTheory(SELECTED_palette);
 #endif
 
 		SELECTED_palette_LAST = SELECTED_palette;//memorize what was the last trigged palette
@@ -1050,10 +1052,10 @@ void ofxColorManager::update(ofEventArgs & args)
 		{
 			if (bAuto_TheoryToPalette)
 			{
-				update_Engine();
+				refresh_TheoryEngine();
 
 #ifdef USE_RECTANGLE_INTERFACES
-				palette_recallFromPalettes(SELECTED_palette_LAST);//trig last choice
+				palette_FromTheory(SELECTED_palette_LAST);//trig last choice
 #endif
 			}
 		}
@@ -3566,9 +3568,9 @@ void ofxColorManager::build_GradientPalette()
 		gradient.addColor(palette[i]);
 
 	}
-	//update_Engine();
+	//refresh_TheoryEngine();
 	//setup_Interface();
-	//refresh_ColorTheory();
+	//refresh_Interface();
 }
 
 //--------------------------------------------------------------
@@ -3918,7 +3920,7 @@ void ofxColorManager::gui_Presets()
 
 		ImGui::PushButtonRepeat(true);
 
-		if (ImGui::Button("Previous", ImVec2(_w50, _h)))
+		if (ImGui::Button("Previous", ImVec2(_w50, 2* _h)))
 		{
 			if (counter > 0)
 			{
@@ -3941,7 +3943,7 @@ void ofxColorManager::gui_Presets()
 
 		ImGui::SameLine();
 
-		if (ImGui::Button("Next", ImVec2(_w50, _h)))
+		if (ImGui::Button("Next", ImVec2(_w50, 2 * _h)))
 		{
 			if (counter < files.size() - 1)
 			{
@@ -5095,7 +5097,7 @@ void ofxColorManager::setup_Labels()
 
 #ifdef USE_RECTANGLE_INTERFACES
 //--------------------------------------------------------------
-void ofxColorManager::palette_recallFromPalettes(int p)
+void ofxColorManager::palette_FromTheory(int p)
 {
 	ofLogNotice(__FUNCTION__) << p;
 
@@ -5274,7 +5276,7 @@ void ofxColorManager::palette_recallFromPalettes(int p)
 #endif
 
 //--------------------------------------------------------------
-void ofxColorManager::update_Engine()
+void ofxColorManager::refresh_TheoryEngine()
 {
 	//// calculate base primary color
 	//if (MODE_TweakSatBrg)
@@ -5618,7 +5620,7 @@ void ofxColorManager::palettes_resize()
 	//TODO
 
 	//random.generateRandom(amountColors_Alg);
-	update_Engine();
+	refresh_TheoryEngine();
 	setup_Interface();
 
 	//-
@@ -5631,7 +5633,7 @@ void ofxColorManager::palettes_resize()
 		//-
 
 #ifdef USE_RECTANGLE_INTERFACES
-		palette_recallFromPalettes(SELECTED_palette_LAST);
+		palette_FromTheory(SELECTED_palette_LAST);
 #endif
 	}
 
@@ -5748,7 +5750,7 @@ void ofxColorManager::setVisible_Interface(bool b)
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::refresh_ColorTheory()
+void ofxColorManager::refresh_Interface()
 {
 	ofLogNotice(__FUNCTION__);
 
@@ -5790,7 +5792,7 @@ void ofxColorManager::setup_Theory()
 
 	ofAddListener(params_ColorTheory.parameterChangedE(), this, &ofxColorManager::Changed_ColorTheory);
 
-	refresh_ColorTheory();
+	refresh_Interface();
 
 	//---
 
@@ -5807,7 +5809,7 @@ void ofxColorManager::setup_Theory()
 	////TEST
 	//colorSchemeName.set(ColorWheelSchemes::colorSchemeNames[colorScheme.get()]);
 	//scheme = ColorWheelSchemes::colorSchemes[colorScheme.get()];
-	//scheme->setPrimaryColor(primaryColor);
+	//scheme->setPrimaryColor(color_TheoryBase2);
 	//colors = scheme->interpolate(amountColors.get());
 
 	//-
@@ -5856,45 +5858,45 @@ void ofxColorManager::update_Theory()
 	//	//color theory
 	//	colorSchemeName.set(ColorWheelSchemes::colorSchemeNames[colorScheme.get()]);
 	//	scheme = ColorWheelSchemes::colorSchemes[colorScheme.get()];
-	//	scheme->setPrimaryColor(primaryColor.get());
+	//	scheme->setPrimaryColor(color_TheoryBase2.get());
 	//	colors = scheme->interpolate(amountColors.get());
 
 	//--
 
-	primaryColor.set(color_TheoryBase);
+	color_TheoryBase2.set(color_TheoryBase);
 
 	//-
 
 	scheme_Analogous = ColorWheelSchemes::colorSchemes[0];
-	scheme_Analogous->setPrimaryColor(primaryColor);
+	scheme_Analogous->setPrimaryColor(color_TheoryBase2);
 	colors_Analogous = scheme_Analogous->interpolate(amountColors_Alg);
 
 	scheme_Complementary = ColorWheelSchemes::colorSchemes[1];
-	scheme_Complementary->setPrimaryColor(primaryColor);
+	scheme_Complementary->setPrimaryColor(color_TheoryBase2);
 	colors_Complementary = scheme_Complementary->interpolate(amountColors_Alg);
 
 	scheme_SplitComplementary = ColorWheelSchemes::colorSchemes[2];
-	scheme_SplitComplementary->setPrimaryColor(primaryColor);
+	scheme_SplitComplementary->setPrimaryColor(color_TheoryBase2);
 	colors_SplitComplementary = scheme_SplitComplementary->interpolate(amountColors_Alg);
 
 	scheme_Compound = ColorWheelSchemes::colorSchemes[3];
-	scheme_Compound->setPrimaryColor(primaryColor);
+	scheme_Compound->setPrimaryColor(color_TheoryBase2);
 	colors_Compound = scheme_Compound->interpolate(amountColors_Alg);
 
 	scheme_FlippedCompound = ColorWheelSchemes::colorSchemes[4];
-	scheme_FlippedCompound->setPrimaryColor(primaryColor);
+	scheme_FlippedCompound->setPrimaryColor(color_TheoryBase2);
 	colors_FlippedCompound = scheme_FlippedCompound->interpolate(amountColors_Alg);
 
 	scheme_Monochrome = ColorWheelSchemes::colorSchemes[5];
-	scheme_Monochrome->setPrimaryColor(primaryColor);
+	scheme_Monochrome->setPrimaryColor(color_TheoryBase2);
 	colors_Monochrome = scheme_Monochrome->interpolate(amountColors_Alg);
 
 	scheme_Tetrad = ColorWheelSchemes::colorSchemes[6];
-	scheme_Tetrad->setPrimaryColor(primaryColor);
+	scheme_Tetrad->setPrimaryColor(color_TheoryBase2);
 	colors_Tetrad = scheme_Tetrad->interpolate(amountColors_Alg);
 
 	scheme_Triad = ColorWheelSchemes::colorSchemes[7];
-	scheme_Triad->setPrimaryColor(primaryColor);
+	scheme_Triad->setPrimaryColor(color_TheoryBase2);
 	colors_Triad = scheme_Triad->interpolate(amountColors_Alg);
 
 	//    NOTE: RANDOM = 0, ANALOGOUS = 1, COMPLEMENTARY = 2,
@@ -6191,6 +6193,10 @@ void ofxColorManager::palette_clear()
 	btns_palette.clear();
 
 #endif
+
+	//-
+
+	if (DEMO_Test) myDEMO.clear();
 }
 
 #pragma mark - CALLBACKS
@@ -6263,7 +6269,7 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 
 	//colorSchemeName.set(ColorWheelSchemes::colorSchemeNames[colorScheme.get()]);
 	//scheme = ColorWheelSchemes::colorSchemes[colorScheme.get()];
-	//scheme->setPrimaryColor(primaryColor.get());
+	//scheme->setPrimaryColor(color_TheoryBase2.get());
 	//colors = scheme->interpolate(amountColors.get());
 
 	//-
@@ -6276,15 +6282,15 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 
 	else if (name == colorScheme.getName() || name == color_TheoryBase.getName())
 	{
-		refresh_ColorTheory();
+		refresh_Interface();
 	}
 
 	else if (name == amountColors.getName())
 	{
 		amountColors_Alg = amountColors.get();
 
-		update_Engine();
-		refresh_ColorTheory();
+		refresh_TheoryEngine();
+		refresh_Interface();
 	}
 
 	// toggles
@@ -6301,7 +6307,7 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 				for (int n = 0; n < amountColors; n++)
 				{
 					c = colorsTheory[i][n];
-					ofLogNotice(__FUNCTION__) << "_c [" << n << "] " << ofToString(c);
+					ofLogNotice(__FUNCTION__) << "  " << n << " : " << ofToString(c);
 					palette_addColor(c);
 				}
 
@@ -6687,10 +6693,10 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	//            bRandomPalette = false;
 	//
 	//            random.generateRandom(amountColors_Alg);
-	//            update_Engine();
+	//            refresh_TheoryEngine();
 	//            if (bAuto_TheoryToPalette) {
 	//                //set random palette to user palette
-	//                palette_recallFromPalettes(7);
+	//                palette_FromTheory(7);
 	//            }
 	//        }
 	//    }
@@ -6713,7 +6719,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 	else if (name == BRIGHTNESS.getName() || name == SATURATION.getName())
 	{
-		update_Engine();
+		refresh_TheoryEngine();
 
 		//-
 
@@ -6723,7 +6729,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			palette_clear();
 
 #ifdef USE_RECTANGLE_INTERFACES
-			palette_recallFromPalettes(SELECTED_palette_LAST);//trig last choice
+			palette_FromTheory(SELECTED_palette_LAST);//trig last choice
 #endif
 			// DEMO
 			if (DEMO_Test) myDEMO.reStart();
@@ -6771,16 +6777,16 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	}
 	else if (name == "BG")
 	{
-		//        if (color_BackGround.get().getBrightness()!=backgroundDarkness_PRE)
-		//            color_BackGround_Darkness = color_BackGround.get().getBrightness();
+		//if (color_BackGround.get().getBrightness()!=backgroundDarkness_PRE)
+		//color_BackGround_Darkness = color_BackGround.get().getBrightness();
 		//
-		////        if (backgroundDarkness_PRE!=color_BackGround_Darkness)
-		////            color_BackGround_Darkness = (int)darkness;
+		////if (backgroundDarkness_PRE!=color_BackGround_Darkness)
+		////color_BackGround_Darkness = (int)darkness;
 	}
-	else if (name == "Darkerkness")
+	else if (name == color_BackGround_Darkness.getName())
 	{
 		//TODO: must improve
-		//update_Engine();
+		//refresh_TheoryEngine();
 
 		// auto create user palette from algo palette
 		if (bAuto_TheoryToPalette)
@@ -6788,7 +6794,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			palette_clear();
 
 #ifdef USE_RECTANGLE_INTERFACES
-			palette_recallFromPalettes(SELECTED_palette_LAST);//trig last choice
+			palette_FromTheory(SELECTED_palette_LAST);//trig last choice
 #endif
 		}
 	}
@@ -7153,7 +7159,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				if (palette.size() > 0)
 				{
 					color_Picked = ofFloatColor(palette[0]);
-					update_Engine();
+					refresh_TheoryEngine();
 				}
 			}
 
@@ -7178,7 +7184,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				if (palette.size() > 0)
 				{
 					color_Picked = ofFloatColor(palette[0]);
-					update_Engine();
+					refresh_TheoryEngine();
 				}
 			}
 
@@ -7209,7 +7215,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				if (palette.size() > 0)
 				{
 					color_Picked = ofFloatColor(palette[0]);
-					update_Engine();
+					refresh_TheoryEngine();
 				}
 			}
 
@@ -7233,7 +7239,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				if (palette.size() > 0)
 				{
 					color_Picked = ofFloatColor(palette[0]);
-					update_Engine();
+					refresh_TheoryEngine();
 				}
 			}
 
@@ -7463,10 +7469,10 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 			if (bAuto_TheoryToPalette)
 			{
-				update_Engine();
+				refresh_TheoryEngine();
 
 #ifdef USE_RECTANGLE_INTERFACES
-				palette_recallFromPalettes(SELECTED_palette_LAST);//trig last choice
+				palette_FromTheory(SELECTED_palette_LAST);//trig last choice
 #endif
 			}
 
@@ -7507,11 +7513,11 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 //			//// A. create random palette
 //
 //			//random.generateRandom(amountColors_Alg);
-//			//update_Engine();
+//			//refresh_TheoryEngine();
 //			//if (bAuto_TheoryToPalette)
 //			//{
 //			//    //set random palette to user palette
-//			//    palette_recallFromPalettes(7);
+//			//    palette_FromTheory(7);
 //			//}
 //
 //			//-
@@ -7527,10 +7533,10 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 //			last_Lib_NameColor = palette_Lib_Names[r];
 //			//last_Lib_NameColor = colorBrowser.colors_PantoneNames[r];
 //			color_Picked = ofColor(palette_Lib_Cols[r]);
-//			update_Engine();
+//			refresh_TheoryEngine();
 //
 //#ifdef USE_RECTANGLE_INTERFACES
-//			palette_recallFromPalettes(SELECTED_palette_LAST);
+//			palette_FromTheory(SELECTED_palette_LAST);
 //#endif
 //			//----
 //
@@ -7972,6 +7978,12 @@ void ofxColorManager::preset_save(std::string p)
 //--------------------------------------------------------------
 void ofxColorManager::refresh_FromPicked()
 {
+	ofLogNotice(__FUNCTION__);
+
+	color_TheoryBase = color_Picked.get();
+	//color_TheoryBase.set(color_Picked);
+	refresh_TheoryEngine();
+
 	//refresh
 	ENABLE_Callbacks_cPickers = false;
 	refresh_Picked_toHSB();
@@ -8052,7 +8064,7 @@ void ofxColorManager::refresh_Picker_Touched()
 
 
 		// 5. palettes
-		//primaryColor.set(color_Picked.get());
+		//color_TheoryBase2.set(color_Picked.get());
 
 		//TODO:
 		update_Theory();
@@ -8084,13 +8096,14 @@ void ofxColorManager::refresh_Picker_Touched()
 		// 7. 
 		//workflow:
 		//if enabled, when color picked changes, auto trig and put generated palette to user palette
-
+		
 		if (bAuto_TheoryToPalette)
 		{
-			update_Engine();
+			refresh_TheoryEngine();
 
+			//TODO: not doing well!
 #ifdef USE_RECTANGLE_INTERFACES
-			palette_recallFromPalettes(SELECTED_palette_LAST);//trig last choiced algorithmic palette
+			palette_FromTheory(SELECTED_palette_LAST);//trig last choiced algorithmic palette
 #endif
 		}
 
@@ -8105,7 +8118,7 @@ void ofxColorManager::refresh_Picker_Touched()
 		//}
 		//else
 		//{
-		//	update_Engine();
+		//	refresh_TheoryEngine();
 
 		//}
 
@@ -8113,7 +8126,7 @@ void ofxColorManager::refresh_Picker_Touched()
 
 		////TODO
 		//// palettes
-		////primaryColor.set(color_Picked.get());
+		////color_TheoryBase2.set(color_Picked.get());
 		//update_Theory();
 	}
 }

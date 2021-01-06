@@ -10,6 +10,7 @@ void ofApp::setup()
 #ifdef USE_OFX_WINDOW_APP
 	WindowApp.setFrameRate(fps);
 	WindowApp.setVerticalSync(true);
+	WindowApp.setPositionDebugInfo(ofxWindowApp::DEBUG_POSITION_TOP);
 #else
 	ofSetFrameRate(fps);
 #endif

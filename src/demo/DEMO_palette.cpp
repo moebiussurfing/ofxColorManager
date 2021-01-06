@@ -117,7 +117,7 @@ void DEMO_palette::draw(float alpha)
 	{
 		// DEMO 1 - CIRCLES
 
-		if (ENABLE_DEMO1)// && colors.size() == 0) 
+		if (ENABLE_DEMO1 && colors.size() != 0) 
 		{
 			ofPushMatrix();
 			ofPushStyle();
@@ -136,7 +136,7 @@ void DEMO_palette::draw(float alpha)
 
 		// DEMO 2 - ROTATING RECTANGLES
 
-		if (ENABLE_DEMO2 && (*palette).size())// && (palette->size() == 0)) 
+		if (ENABLE_DEMO2 && (*palette).size() != 0)
 		{
 			cam.begin();
 
