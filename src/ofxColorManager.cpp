@@ -73,9 +73,14 @@ void ofxColorManager::startup()
 
 	//-
 
-	bResetCurve = true;
+	// curve
+
+	//bResetCurve = true;
 	curvesTool.load(path_Curves); //needed because it fills polyline
-	curve_SliderTest.setPercent(gradient_PickOut.get());
+
+	if (TEST_Mode) curve_SliderTest.setPercent(curve_Gradient_TEST_Prc);
+	else curve_SliderTest.setPercent(curve_Gradient_PickOut);
+	curve_SliderTest.setup(sliderMod_x, sliderMod_y, sliderMod_w, sliderMod_h, 0, 1, curve_Gradient_PickOut.get(), true, true);
 
 	//-
 
@@ -114,7 +119,6 @@ void ofxColorManager::startup()
 	panels.addToggle(&SHOW_Demo);
 	panels.addToggle(&DEMO_Test);
 
-	//panels.addToggle(&SHOW_ColourLovers_searcher);
 	//panels.addToggle(&SHOW_AlgoPalettes);
 	//panels.addToggle(&SHOW_BrowserColors);
 	//panels.addToggle(&SHOW_Gradient);
@@ -136,7 +140,10 @@ void ofxColorManager::startup()
 	//colourLoversHelper.nextPalette();
 
 	lastTheory = 0;
+	theoryTypes[lastTheory] = true;//on button
+
 	lastRange = 0;
+	rangTypes[lastRange] = false;//on button
 
 	//--
 }
@@ -223,7 +230,7 @@ void ofxColorManager::setup()
 
 	//--
 
-	myPresetManager.setup();
+	//myPresetManager.setup();
 
 	//----
 
@@ -692,6 +699,8 @@ void ofxColorManager::setup()
 
 	params_AppState.setName("ofxColorManager");
 
+	params_AppState.add(amountColors_Alg);
+
 	params_AppState.add(SHOW_Presets);
 	params_AppState.add(SHOW_PresetsPalette);
 	params_AppState.add(SHOW_BackGround);
@@ -704,16 +713,12 @@ void ofxColorManager::setup()
 	params_AppState.add(SHOW_Quantizer);
 	params_AppState.add(SHOW_ColourLovers);
 	params_AppState.add(SHOW_AlgoPalettes);
-
 	params_AppState.add(SHOW_Curve);
-	params_AppState.add(gradient_PickOut);
-
 	params_AppState.add(SHOW_BrowserColors);
 	params_AppState.add(SHOW_GuiInternal);
 	params_AppState.add(SHOW_GUI_MINI);
 	params_AppState.add(MODE_Editor);
 
-	//params_AppState.add(SHOW_ColourLovers_searcher);
 	//params_AppState.add(SHOW_Gradient);
 	//params_AppState.add(SHOW_CosineGradient);
 
@@ -725,7 +730,7 @@ void ofxColorManager::setup()
 	params_AppState.add(color_BackGround_Darkness);
 
 	//params_AppState.add(MODE_TweakSatBrg);//algorithmic palette
-	params_AppState.add(amountColors_Alg);
+
 	params_AppState.add(bPaletteEdit);//user palette
 	params_AppState.add(bAuto_TheoryToPalette);
 	params_AppState.add(SHOW_UserPalette);
@@ -738,6 +743,7 @@ void ofxColorManager::setup()
 	params_AppState.add(DEMO_Alpha);
 	params_AppState.add(DEMO_Cam);
 
+	params_AppState.add(curve_Gradient_PickOut);
 	params_AppState.add(gradient_HardMode);//gradient
 	//params_AppState.add(paletteLibPage_param);
 
@@ -780,16 +786,6 @@ void ofxColorManager::update(ofEventArgs & args)
 {
 	//-
 
-//	// window title
-//#ifdef INCL_LAYOUT
-//	std::string str;
-//	str += ("[PAGE " + ofToString(panels.group_Selected) + "] ");
-//	//str += ofToString((int)ofGetFrameRate()) + "FPS";
-//	ofSetWindowTitle(str);
-//#endif
-
-	//-
-
 	////cosine gradient
 	//cosineGradient_update();
 
@@ -797,7 +793,7 @@ void ofxColorManager::update(ofEventArgs & args)
 
 	// preset manager
 
-	myPresetManager.update();
+	//myPresetManager.update();
 
 	//--
 
@@ -1388,21 +1384,6 @@ void ofxColorManager::draw(ofEventArgs & args)
 #endif
 		//--
 
-		//TODO
-		//if (SHOW_ColourLovers || SHOW_ColourLovers_searcher)
-		//    colourLoversHelper.setEnableKeys(false);
-
-		//--
-
-		////TODO: 
-		//disables keys when using colour lovers
-		//if (SHOW_ColourLovers || SHOW_ColourLovers_searcher)
-		//{
-		//    ENABLE_keys = false;
-		//}
-
-		//--
-
 		draw_Info();
 	}
 
@@ -1448,8 +1429,8 @@ void ofxColorManager::draw(ofEventArgs & args)
 
 				//myDEMO.setEnableMouseCamera();
 			}
-		}
 	}
+}
 
 	//--
 
@@ -1630,7 +1611,9 @@ void ofxColorManager::refresh_Gui_Layout()
 
 	//--
 
-	curve_SliderTest.setup(sliderMod_x, sliderMod_y, sliderMod_w, sliderMod_h, 0, 1, 0, true, true);
+	curve_SliderTest.setup(sliderMod_x, sliderMod_y, sliderMod_w, sliderMod_h, 0, 1, curve_Gradient_PickOut.get(), true, true);
+	//curve_SliderTest.setup(sliderMod_x, sliderMod_y, sliderMod_w, sliderMod_h, 0, 1, 0, true, true);
+
 	curve_SliderTweak.setup(slider_x, slider_y, slider_w, slider_h, 0, 1, 0, true, true);
 
 	//--	
@@ -2719,7 +2702,7 @@ void ofxColorManager::gui_Library()
 				ofxImGui::AddParameter(lib_Page_Index);//page slider selector
 				//ImGui::SliderInt("PAGE", &lib_Page_Index, 0, lib_Page_Max);//page slider selector
 				//ImGui::DragInt("PAGE", (int *)&lib_Page_Index, 0, lib_Page_Max);//collide..
-			}
+				}
 
 			ImGui::Dummy(ImVec2(0.0f, 5));
 
@@ -2918,7 +2901,7 @@ void ofxColorManager::gui_Library()
 				}
 			}
 			//ofxImGui::EndTree(mainSettings);
-		}
+			}
 
 		//----
 
@@ -2926,9 +2909,9 @@ void ofxColorManager::gui_Library()
 		{
 			refresh_FromPicked();
 		}
-	}
+		}
 	ofxImGui::EndWindow(mainSettings);
-}
+	}
 
 //--------------------------------------------------------------
 void ofxColorManager::gui_Picker()
@@ -3282,7 +3265,6 @@ void ofxColorManager::gui_Panels()
 
 		//ofxImGui::AddParameter(SHOW_Gradient);
 		//ofxImGui::AddParameter(SHOW_AlgoPalettes);
-		//ofxImGui::AddParameter(SHOW_ColourLovers_searcher);
 		//ofxImGui::AddParameter(SHOW_BrowserColors);
 	}
 	ofxImGui::EndWindow(mainSettings);
@@ -3628,7 +3610,7 @@ void ofxColorManager::gui_Curve()
 
 			//ofxSurfingHelpers::AddBigButton(bResetCurve);
 			//ofxImGui::AddParameter(bResetCurve);
-			//ofxImGui::AddParameter(curveMod);
+			//ofxImGui::AddParameter(curve_Gradient_TEST_Prc);
 			//ofxImGui::AddParameter(pos_CurveEditor);
 
 			//-
@@ -4576,7 +4558,7 @@ void ofxColorManager::setup_CurveTool()
 	curve_Ctrl_Out.set("Out", 0., 0., 1.);
 	bResetCurve.set("Reset Curve", false);
 	SHOW_Curve.set("CURVE", false);
-	curveMod.set("GRADIENT TEST", 0.5, 0., 1.);
+	curve_Gradient_TEST_Prc.set("GRADIENT TEST", 0.5, 0., 1.);
 
 	params_curve.add(curve_Ctrl_In);
 	params_curve.add(curve_Ctrl_Out);
@@ -4591,8 +4573,12 @@ void ofxColorManager::setup_CurveTool()
 	//-
 
 	// curve mod
-	curve_SliderTest.setup(sliderMod_x, sliderMod_y, sliderMod_w * 2, sliderMod_h, 0, 1, 0, true, true);
-	curve_SliderTest.setPercent(curveMod);
+	curve_SliderTest.setup(sliderMod_x, sliderMod_y, sliderMod_w, sliderMod_h, 0, 1, curve_Gradient_PickOut.get(), true, true);
+	//curve_SliderTest.setup(sliderMod_x, sliderMod_y, sliderMod_w * 2, sliderMod_h, 0, 1, 0, true, true);
+
+	if (TEST_Mode) curve_SliderTest.setPercent(curve_Gradient_TEST_Prc);
+	else curve_SliderTest.setPercent(curve_Gradient_PickOut);
+
 	curve_SliderTest.setVisible(SHOW_Curve);
 	curve_SliderTest.setLabelString("Exp");
 
@@ -4613,7 +4599,7 @@ void ofxColorManager::update_CurveTool()
 	curve_Index = (int)ofMap(curve_Ctrl_In.get(), 0., 1., 0, cAmt - 1);
 
 	// curve modifier
-	curveMod = curve_SliderTest.getValue();
+	curve_Gradient_TEST_Prc = curve_SliderTest.getValue();
 	int pointsSize = curvesTool.getPointSize();
 	int pointToModify = 1;//default 1 if size is 3 points
 	int pointY;
@@ -4626,7 +4612,7 @@ void ofxColorManager::update_CurveTool()
 	//Windows
 	pointY = (curvesTool.getPoint(pointToModify)).x;
 
-	curvesTool.set(pointToModify, ofVec2f(pointY, ofMap(curveMod, 0., 1., 0, cAmt)));
+	curvesTool.set(pointToModify, ofVec2f(pointY, ofMap(curve_Gradient_TEST_Prc, 0., 1., 0, cAmt)));
 
 	//--
 
@@ -6552,21 +6538,6 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		//{
 		colourLoversHelper.setEnableKeys(SHOW_ColourLovers);
 		//}
-
-		//-
-
-		////workflow
-		//colourLoversHelper.setVisibleSearcher(SHOW_ColourLovers_searcher);
-		//if (SHOW_ColourLovers_searcher && !SHOW_ColourLovers)
-		//	SHOW_ColourLovers = true;
-
-		//-
-
-		////TODO
-		//if (ENABLE_keys)
-		//{
-		//    colourLoversHelper.setEnableKeys(true);
-		//}
 	}
 #endif
 	else if (name == SHOW_AlgoPalettes.getName())
@@ -6827,8 +6798,12 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			curvesTool.add(ofVec2f(0, 0));
 			curvesTool.add(ofVec2f(127, 127));
 			curvesTool.add(ofVec2f(255, 255));
-			curveMod = 0.5;
-			curve_SliderTest.setPercent(curveMod);
+
+			curve_Gradient_TEST_Prc = 0.5;
+			TEST_Mode = false;
+
+			if (TEST_Mode) curve_SliderTest.setPercent(curve_Gradient_TEST_Prc);
+			else curve_SliderTest.setPercent(curve_Gradient_PickOut.get());
 		}
 	}
 	else if (name == "Hard Steps")
@@ -6941,6 +6916,9 @@ void ofxColorManager::Changed_ColorRange(ofAbstractParameter &e)
 		}
 
 		//--
+
+		//TODO: !
+		//move to theory callback!
 
 		// algo/theory types
 

@@ -280,7 +280,7 @@ public:
 
 	//-
 
-	PresetManager myPresetManager;
+	//PresetManager myPresetManager;
 
 	//--
 
@@ -731,7 +731,7 @@ public:
 	ofParameter<float> curve_Ctrl_In;
 	ofParameter<float> curve_Ctrl_Out;
 	ofParameter<bool> bResetCurve;
-	ofParameter<float> curveMod;
+	ofParameter<float> curve_Gradient_TEST_Prc;
 	int curve_Index = 0;
 
 	ofxSimpleSlider curve_SliderTweak;
@@ -765,7 +765,7 @@ public:
 	//int TEST_pauseLong = 2000;
 	//int TEST_pauseChrono = 0;
 
-	ofParameter<float> gradient_PickOut{ "Gradient Pick", 0, 0, 1 };
+	ofParameter<float> curve_Gradient_PickOut{ "Gradient Pick", 0, 0, 1 };
 
 	//--
 
