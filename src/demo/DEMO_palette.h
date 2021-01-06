@@ -42,14 +42,14 @@ public:
 	}
 
 	void reStart() {
-		ofLogNotice(__FUNCTION__);
+		ofLogVerbose(__FUNCTION__);
 		//bDEMO1_clear = true;
 		clear();
 		pauseCreate = false;
 	}
 
 	void start() {
-		ofLogNotice(__FUNCTION__);
+		ofLogVerbose(__FUNCTION__);
 		pauseCreate = false;
 	}
 

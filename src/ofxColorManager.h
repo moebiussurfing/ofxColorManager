@@ -208,7 +208,7 @@ public:
 	ofParameter<int> colorScheme;
 	ofParameter<std::string> colorSchemeName;
 	ofParameter<int> amountColors;
-	ofParameter<bool> bGetFromPicker;
+	ofParameter<bool> bAuto_TheoryFromPicker;
 
 	void Changed_ColorTheory(ofAbstractParameter &e);
 	void refresh_ColorTheory();
@@ -329,9 +329,11 @@ public:
 #ifdef USE_COLOR_LOVERS
 	ofxColourLoversHelper colourLoversHelper;
 #endif
+	
 	std::string myPalette_Name = "";
 	ofColor myColor;
 	vector<ofColor> myPalette;
+
 	bool bUpdated_Palette_BACK = false;
 	bool bUpdated_Color_BACK = false;
 
@@ -465,8 +467,8 @@ public:
 	ofParameter<int> SATURATION;
 
 	ofParameter<bool> bRandomPalette;
-	ofParameter<bool> bAuto_palette_recall;//trig last used algo palette on click or change color
-	ofParameter<bool> bLock_palette;
+	ofParameter<bool> bAuto_TheoryToPalette;//trig last used algo palette on click or change color
+	//ofParameter<bool> bLock_palette;
 
 	//TODO
 	void palettes_setPosition(glm::vec2 pos)
@@ -483,10 +485,10 @@ public:
 
 	//void draw_palettes();
 
-	ofParameter<bool> MODE_TweakSatBrg;
+	//ofParameter<bool> MODE_TweakSatBrg;
 	// force SAT/BRG from panel SB sliders or all from color
 
-	ofFloatColor color_Base;
+	//ofFloatColor color_TheoryBase2;
 
 	//--
 
@@ -536,7 +538,7 @@ public:
 	// TEST
 	bool ENABLE_Callbacks_cPickers = true;
 
-	void refresh_Picked_Update_To_HSV();
+	void refresh_Picked_toHSB();
 
 	// MAIN COLOR
 	ofParameter<ofFloatColor> color_Picked;
@@ -581,6 +583,7 @@ public:
 
 	void Changed_ColorPicked(ofFloatColor &color);
 	void Changed_ColorClicked(ofFloatColor &color);
+	//void refresh_Picked();
 
 	void build_GradientPalette();
 
