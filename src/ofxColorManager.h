@@ -539,6 +539,7 @@ public:
 	bool ENABLE_Callbacks_cPickers = true;
 
 	void refresh_Picked_toHSB();
+	void refresh_FromPicked();
 
 	// MAIN COLOR
 	ofParameter<ofFloatColor> color_Picked;

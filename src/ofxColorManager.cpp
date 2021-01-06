@@ -1925,6 +1925,8 @@ void ofxColorManager::gui_Theory()
 
 		// two pickers
 
+		bool bUpdate = false;
+
 		if (ImGui::CollapsingHeader("BASE COLOR"))
 		{
 			ImGui::Columns(2, NULL, false);
@@ -1938,6 +1940,10 @@ void ofxColorManager::gui_Theory()
 
 				color_TheoryBase.set(tmpRef);
 				color_Picked = color_TheoryBase.get();
+
+				bUpdate = true;
+
+				//-
 			}
 
 			ImGui::PopItemWidth();
@@ -1970,6 +1976,8 @@ void ofxColorManager::gui_Theory()
 
 					color_TheoryBase.set(tmpRef);
 					color_Picked = color_TheoryBase.get();
+
+					bUpdate = true;
 				}
 			}
 
@@ -2001,22 +2009,18 @@ void ofxColorManager::gui_Theory()
 		//ofxImGui::AddParameter(amountColors_Alg);
 		//ofxImGui::AddParameter(colorScheme);
 		//ofxImGui::AddParameter(colorSchemeName);
-
 		//// algorithmic palettes
 		//if (ImGui::CollapsingHeader("ADVANCED"))
 		//{
 		//	//ImGui::PushItemWidth(_w * 0.5);
-
 		//	ofxImGui::AddParameter(MODE_TweakSatBrg);
 		//	//ofxImGui::AddParameter(amountColors_Alg);
-
 		//	if (MODE_TweakSatBrg)
 		//	{
 		//		ofxImGui::AddParameter(SATURATION);
 		//		ofxImGui::AddParameter(BRIGHTNESS);
 		//	}
 		//	ofxImGui::AddParameter(bLock_palette);
-
 		//	//ImGui::PopItemWidth();
 		//}
 
@@ -2257,6 +2261,13 @@ void ofxColorManager::gui_Theory()
 				ImGui::PopID();
 			}
 		}
+
+		//----
+
+		if (bUpdate)
+		{
+			refresh_FromPicked();
+		}
 	}
 	ofxImGui::EndWindow(mainSettings);
 }
@@ -2485,6 +2496,8 @@ void ofxColorManager::gui_Library()
 {
 	if (ofxImGui::BeginWindow("LIBRARY", mainSettings))
 	{
+		bool bUpdate = false;
+
 		{
 			//--
 
@@ -2808,6 +2821,10 @@ void ofxColorManager::gui_Library()
 								std::string str = "Lib Picked: [" + ofToString(last_ColorPicked_Lib) + "] " + last_Lib_NameColor;
 								ofLogNotice(__FUNCTION__) << str;
 							}
+
+							//-
+
+							bUpdate = true;
 						}
 					}
 
@@ -2894,6 +2911,13 @@ void ofxColorManager::gui_Library()
 			}
 			//ofxImGui::EndTree(mainSettings);
 		}
+		
+		//----
+
+		if (bUpdate)
+		{
+			refresh_FromPicked();
+		}
 	}
 	ofxImGui::EndWindow(mainSettings);
 }
@@ -2938,9 +2962,13 @@ void ofxColorManager::gui_Picker()
 
 		if (ofxImGui::BeginTree("COLOR PICKERS", mainSettings))//grouped folder
 		{
+			ImGuiColorEditFlags _flagw;
+
 			//--
 
-			if (ImGui::CollapsingHeader("WHEEL"))
+			_flagw = ImGuiTreeNodeFlags_Bullet;
+			//_flagw = ImGuiTreeNodeFlags_DefaultOpen;
+			if (ImGui::CollapsingHeader("WHEEL", _flagw))
 			{
 				// 1. color picker
 
@@ -2991,8 +3019,8 @@ void ofxColorManager::gui_Picker()
 			//--
 
 			// 2. square
-
-			if (ImGui::CollapsingHeader("SQUARE"))
+			_flagw = ImGuiTreeNodeFlags_DefaultOpen;
+			if (ImGui::CollapsingHeader("SQUARE", _flagw))
 			{
 				_flags =
 					ImGuiColorEditFlags_NoSmallPreview |
@@ -3104,39 +3132,23 @@ void ofxColorManager::gui_Picker()
 
 		if (ImGui::CollapsingHeader("RANDOMIZER"))
 		{
-			//ofxImGui::AddParameter(bRandomColor);
 			ofxSurfingHelpers::AddBigButton(bRandomColor, _w, _h);
+			//ofxImGui::AddParameter(bRandomColor);
 
 			//enablers
 			//ofxSurfingHelpers::AddBigToggle(bColor_HUE);
 			//ofxSurfingHelpers::AddBigToggle(bColor_SAT);
 			//ofxSurfingHelpers::AddBigToggle(bColor_BRG);
 
-			//ENABLE_Callbacks_cPickers = false; //disable callbacks
-
 			ImGui::Dummy(ImVec2(0.0f, 5));
 
-			if (bColor_HUE) {
-				color_HUE_0 = color_HUE;
-			}
-			if (bColor_SAT) {
-				color_SAT_0 = color_SAT;
-			}
-			if (bColor_BRG) {
-				color_BRG_0 = color_BRG;
-			}
+			if (bColor_HUE) color_HUE_0 = color_HUE;
+			if (bColor_SAT) color_SAT_0 = color_SAT;
+			if (bColor_BRG) color_BRG_0 = color_BRG;
 
-			if (ofxImGui::AddParameter(bColor_HUE))
-			{
-			}
-			ImGui::SameLine();
-			if (ofxImGui::AddParameter(bColor_SAT))
-			{
-			}
-			ImGui::SameLine();
-			if (ofxImGui::AddParameter(bColor_BRG))
-			{
-			}
+			if (ofxImGui::AddParameter(bColor_HUE)) {}ImGui::SameLine();
+			if (ofxImGui::AddParameter(bColor_SAT)) {}ImGui::SameLine();
+			if (ofxImGui::AddParameter(bColor_BRG)) {}
 
 			ImGui::Dummy(ImVec2(0.0f, 5));
 
@@ -3197,21 +3209,22 @@ void ofxColorManager::gui_Picker()
 
 		//to concentrate calbacks once
 		//color_Picked
-		if (bChg_Pick)
+		if (bChg_Pick && bChg_HSB) //all
 		{
-			ENABLE_Callbacks_cPickers = false;
-
-			refresh_Picked_toHSB();
-
-			ENABLE_Callbacks_cPickers = true;
+			refresh_FromPicked();
 		}
-		if (bChg_HSB)
+		else 
 		{
-
-		}
-		if (bChg_Pick || bChg_HSB)
-		{
-			refresh_Picker_Touched();
+			if (bChg_Pick)
+			{
+				ENABLE_Callbacks_cPickers = false;
+				refresh_Picked_toHSB();
+				ENABLE_Callbacks_cPickers = true;
+			}
+			if (bChg_Pick || bChg_HSB)
+			{
+				refresh_Picker_Touched();
+			}
 		}
 	}
 	ofxImGui::EndWindow(mainSettings);
@@ -5762,7 +5775,7 @@ void ofxColorManager::setup_Theory()
 
 	params_ColorTheory.setName("Color Theory");
 	params_ColorTheory.add(color_TheoryBase.set("Base", ofColor::magenta, ofColor(0), ofColor(255)));
-	params_ColorTheory.add(bAuto_TheoryFromPicker.set("Auto Picker", true));
+	params_ColorTheory.add(bAuto_TheoryFromPicker.set("Auto Get Picker", true));
 	params_ColorTheory.add(colorScheme.set("Color Scheme", 6, 0, ColorWheelSchemes::colorSchemes.size() - 1));
 	params_ColorTheory.add(colorSchemeName);
 	params_ColorTheory.add(amountColors.set("Amnt Colors", 8, 2, MAX_PALETTE_COLORS));
@@ -6154,6 +6167,7 @@ void ofxColorManager::palette_touchedColor(string name)
 void ofxColorManager::palette_clear()
 {
 	ofLogNotice(__FUNCTION__);
+	ofLogNotice(__FUNCTION__) << "----------------- CLEAR PALETTE -----------------";
 
 	// remove all colors from the user palette
 	palette.clear();
@@ -6701,7 +6715,9 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	{
 		update_Engine();
 
-		// auto create user palette from algo palette
+		//-
+
+		// auto create user palette from theory palette
 		if (bAuto_TheoryToPalette)
 		{
 			palette_clear();
@@ -7954,6 +7970,16 @@ void ofxColorManager::preset_save(std::string p)
 }
 
 //--------------------------------------------------------------
+void ofxColorManager::refresh_FromPicked()
+{
+	//refresh
+	ENABLE_Callbacks_cPickers = false;
+	refresh_Picked_toHSB();
+	ENABLE_Callbacks_cPickers = true;
+	refresh_Picker_Touched();
+}
+
+//--------------------------------------------------------------
 void ofxColorManager::refresh_Picked_toHSB()
 {
 	ofLogNotice(__FUNCTION__);
@@ -8027,7 +8053,7 @@ void ofxColorManager::refresh_Picker_Touched()
 
 		// 5. palettes
 		//primaryColor.set(color_Picked.get());
-		
+
 		//TODO:
 		update_Theory();
 
@@ -8036,7 +8062,7 @@ void ofxColorManager::refresh_Picker_Touched()
 		// 6. autosave edited color
 
 #ifdef USE_RECTANGLE_INTERFACES
-		if (bPaletteEdit && 
+		if (bPaletteEdit &&
 			palette_colorSelected != -1 &&
 			btns_palette.size() > palette_colorSelected)
 		{
