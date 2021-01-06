@@ -104,7 +104,10 @@ public:
 	std::string path_Folder_Color;
 	std::string path_Colors;
 	std::string path_AppState;
+	std::string path_Presets;
+	std::string path_Palettes;
 
+	//-
 
 public:
 	ofParameter<bool> bLibFillMode;
@@ -334,7 +337,7 @@ public:
 #ifdef USE_COLOR_LOVERS
 	ofxColourLoversHelper colourLoversHelper;
 #endif
-	
+
 	std::string myPalette_Name = "";
 	ofColor myColor;
 	vector<ofColor> myPalette;
@@ -623,7 +626,7 @@ public:
 
 	vector<ofColor> palette_Lib_Cols;
 	vector<std::string> palette_Lib_Names;
-	
+
 	//-
 
 	ofEventListener listener_Library;
@@ -762,6 +765,8 @@ public:
 	//int TEST_pauseLong = 2000;
 	//int TEST_pauseChrono = 0;
 
+	ofParameter<float> gradient_PickOut{ "Gradient Pick", 0, 0, 1 };
+
 	//--
 
 	// preset manager
@@ -783,7 +788,7 @@ public:
 	void preset_refreshFiles();
 	std::vector<std::string> files_Names;
 	std::vector<ofFile> files;
-	int currentFile = 0;
+	int preset_Index = 0;
 	std::string textInput_temp = "type name";
 
 	vector<vector<ofColor>> palettesKit;
