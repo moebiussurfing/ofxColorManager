@@ -21,10 +21,16 @@ TODO:
 namespace ImGui_PalettesPicker
 {
 	//--------------------------------------------------------------
-	inline int gui_Palettes(vector<PaletteData> kit)
+	inline int gui_Palettes(vector<PaletteData> &kit, int indexExt = -1)
 	{
 		static bool MODE_Slim = false;
 		int indexPick = -1;
+
+		ImVec4 color_Pick{ 0,0,0,0.4 };
+		//ImVec4 color_Pick{ 1,1,1,0.5 };
+		float linew_Pick = 3.0;
+
+		//--
 
 		ofxImGui::Settings mainSettings = ofxImGui::Settings();
 
@@ -47,8 +53,8 @@ namespace ImGui_PalettesPicker
 			float _hb = BUTTON_BIG_HEIGHT;
 
 			int _hhB;
-			//_hhB = 0.7 * BUTTON_BIG_HEIGHT;//button height
 			_hhB = BUTTON_SLIM_HEIGHT;
+			//_hhB = 0.7 * BUTTON_BIG_HEIGHT;//button height
 
 			//--
 
@@ -64,9 +70,30 @@ namespace ImGui_PalettesPicker
 
 				//ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, 0);
 
+				//--
+
+				bool bDrawBorder = false;
+				if (p == indexExt)
+				{
+					bDrawBorder = true;
+				}
+				if (bDrawBorder)
+				{
+					ImGui::PushStyleColor(ImGuiCol_Border, color_Pick);
+					ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, linew_Pick);
+				}
+
+				//--
+
+				// each palette colors
+
 				for (int c = 0; c < _sizeP; c++)
 				{
-					if (c != 0) ImGui::SameLine();
+					if (c != 0) {
+						//ImGui::SameLine();
+						ImGui::SameLine(0, 0);
+						//ImGui::SameLine(0.0f, ImGui::GetStyle().ItemSpacing.y);
+					}
 
 					ImGui::PushID(c);
 
@@ -74,6 +101,7 @@ namespace ImGui_PalettesPicker
 					int _wwB = _w / _sizeP - _spc;
 
 					std::string name = (kit[p].name + "_" + ofToString(p) + "_" + ofToString(c));
+					//-
 
 					//-
 
@@ -93,6 +121,18 @@ namespace ImGui_PalettesPicker
 					ImGui::PopID();
 				}
 
+
+				//--
+
+				// draw border to selected (colors ?)
+				if (bDrawBorder)
+				{
+					ImGui::PopStyleColor();
+					ImGui::PopStyleVar(1);
+				}
+
+				//--
+
 				//ImGui::PopStyleVar(1);
 			}
 
@@ -101,7 +141,5 @@ namespace ImGui_PalettesPicker
 
 		return indexPick;
 	}
-
-
 };
 

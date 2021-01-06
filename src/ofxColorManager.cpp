@@ -2764,7 +2764,8 @@ void ofxColorManager::gui_Library()
 
 					//ImGui::PushStyleVar(ImGui::ImGuiStyleVar_FrameBorderSize), 1.0f;
 
-					if (!bLibFillMode) {
+					if (!bLibFillMode) 
+					{
 						if ((n % _colsSize) != 0)
 						{
 							ImGui::SameLine(0.0f, ImGui::GetStyle().ItemSpacing.y);//vertical inter line
@@ -3758,7 +3759,7 @@ void ofxColorManager::gui_Presets()
 		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
 		float _w = ImGui::GetWindowContentRegionWidth() - 2 * _spc;
 		float _w50 = _w * 0.5;
-		float _h = 0.5 * BUTTON_BIG_HEIGHT;
+		float _h = BUTTON_BIG_HEIGHT;
 
 		ImGuiColorEditFlags _flags;
 
@@ -3908,7 +3909,8 @@ void ofxColorManager::gui_Presets()
 
 		ImGui::Dummy(ImVec2(0.0f, 5));
 
-		static int counter = currentFile;
+		int counter = currentFile;
+		//static int counter = currentFile;
 
 		//----
 
@@ -4023,7 +4025,7 @@ void ofxColorManager::gui_Presets()
 
 		ImGui::SameLine();
 
-		if (ImGui::Button("LOAD", ImVec2(_w50, _h)))//not required..
+		if (ImGui::Button("LOAD", ImVec2(_w50, _h * 0.5)))//not required..
 		{
 			ofLogNotice(__FUNCTION__) << "LOAD";
 			ofLogNotice(__FUNCTION__) << "PRESET_name: " << PRESET_name;
@@ -4032,7 +4034,7 @@ void ofxColorManager::gui_Presets()
 
 		//ImGui::SameLine();
 
-		if (ImGui::Button("DELETE", ImVec2(_w50, _h)))//current preset
+		if (ImGui::Button("DELETE", ImVec2(_w50, _h * 0.5)))//current preset
 		{
 			ofLogNotice(__FUNCTION__) << "DELETE";
 
@@ -4049,14 +4051,14 @@ void ofxColorManager::gui_Presets()
 		//export user palette colors to live reload from another parallel app!
 		ImGui::SameLine();
 
-		if (ImGui::Button("EXPORT", ImVec2(_w50, _h)))
+		if (ImGui::Button("EXPORT", ImVec2(_w50, _h * 0.5)))
 		{
 			ofLogNotice(__FUNCTION__) << "EXPORT";
 
 			saveColors();
 		}
 
-		if (ImGui::Button("UPDATE", ImVec2(_w50, _h)))
+		if (ImGui::Button("UPDATE", ImVec2(_w50, _h * 0.3)))
 		{
 			ofLogNotice(__FUNCTION__) << "UPDATE";
 
@@ -4070,6 +4072,14 @@ void ofxColorManager::gui_Presets()
 
 			//save new one
 			preset_save(PRESET_name);
+			preset_refreshFiles();
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::Button("REFRESH KIT", ImVec2(_w50, _h * 0.3)))
+		{
+			ofLogNotice(__FUNCTION__) << "REFRESH KIT";
 			preset_refreshFiles();
 		}
 
@@ -4122,8 +4132,15 @@ void ofxColorManager::gui_Presets()
 			{
 				MODE_newPreset = false;
 				ofLogNotice(__FUNCTION__) << "textInput_New: " << textInput_New;
+
 				preset_save(textInput_New);
 				preset_refreshFiles();
+
+				//-
+
+
+
+				//-
 
 				if (SHOW_Demo) myDEMO.clear();
 			}
@@ -4300,8 +4317,12 @@ void ofxColorManager::gui_Presets()
 
 		//add kit palettes browser
 
-		int indexPreset = gui_Palettes(kit);
-		if (indexPreset != -1) preset_load(files_Names[indexPreset]);
+		int indexPreset = gui_Palettes(kit, currentFile);
+		if (indexPreset != -1) 
+		{
+			currentFile = indexPreset;
+			preset_load(files_Names[currentFile]);
+		}
 
 		//-
 	}
@@ -7828,7 +7849,11 @@ void ofxColorManager::enableListeners()
 //--------------------------------------------------------------
 void ofxColorManager::preset_refreshFiles()
 {
-	//initialize
+	ofLogNotice(__FUNCTION__);
+
+	//-
+
+	// initialize
 
 	path_Global = "ofxColorManager/";
 	path_Kits = "kits/";
