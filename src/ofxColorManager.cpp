@@ -76,11 +76,11 @@ void ofxColorManager::startup()
 	//bResetCurve = true;
 	curvesTool.load(path_Curves); //needed because it fills polyline
 
-	if (TEST_Mode) curve_Slider_OutPick.setPercent(curve_Gradient_TEST_Prc);
-	else curve_Slider_OutPick.setPercent(curve_Gradient_OutPick);
-	curve_Slider_OutPick.setup(slider_Out_x, slider_Out_y, slider_Out_w, slider_Out_h, 0, 1, curve_Gradient_OutPick.get(), true, true);
+	curve_Slider_OutPick.setup(slider_Out_x, slider_Out_y, slider_Out_w, slider_Out_h, 0, 1, curve_Gradient_OutPick, true, true);
+	curve_Slider_OutPick.setPercent(curve_Gradient_OutPick);
 
 	curve_Slider_InExp.setup(slider_In_x, slider_In_y, slider_In_w, slider_In_h, 0, 1, curve_Gradient_InExp, true, true);
+	curve_Slider_InExp.setPercent(curve_Gradient_InExp);
 
 	//-
 
@@ -160,11 +160,11 @@ void ofxColorManager::setup()
 
 	//-
 
-	sizeLibColBox.set("Size Lb", 25, 10, 100);
+	sizeLibColBox.set("Size Lib", 25, 10, 100);
 	bLibFillMode.set("Responsive", false);
 	bPagerized.set("Mode Paging", false);
 
-	sizePaletteBox.set("Size Pt", 25, 10, 500);
+	sizePaletteBox.set("Size Plt", 25, 10, 500);
 	bPaletteFillMode.set("Responsive", false);
 
 	//-
@@ -555,15 +555,15 @@ void ofxColorManager::setup()
 	//bUserPaletteVertical.set("VERTICAL", false);
 	bFlipUserPalette.set("FLIP", false);
 
-	params_UserPalette.setName("USER PALETTE");
-	//params_UserPalette.add(bEditUserPalette);
-	//params_UserPalette.add(bUserPaletteVertical);
-	params_UserPalette.add(bFlipUserPalette);
-	//params_UserPalette.add(boxSizeUser);
-	params_UserPalette.add(boxRowsUser);
-	params_UserPalette.add(scale_ColPalette);
+	params_Palette.setName("USER PALETTE");
+	params_Palette.add(bFlipUserPalette);
+	params_Palette.add(boxRowsUser);
+	params_Palette.add(scale_ColPalette);
+	//params_Palette.add(bEditUserPalette);
+	//params_Palette.add(bUserPaletteVertical);
+	//params_Palette.add(boxSizeUser);
 
-	ofAddListener(params_UserPalette.parameterChangedE(), this, &ofxColorManager::Changed_ColorUserPalette);
+	ofAddListener(params_Palette.parameterChangedE(), this, &ofxColorManager::Changed_ParamsPalette);
 
 	//-
 
@@ -699,82 +699,81 @@ void ofxColorManager::setup()
 
 	params_AppState.setName("ofxColorManager");
 
-	params_AppState.add(amountColors_Alg);
+	_p1.add(SHOW_Presets);
+	_p1.add(SHOW_PresetsPalette);
+	_p1.add(SHOW_UserPalette);
+	_p1.add(SHOW_BackGround);
+	_p1.add(SHOW_Library);
+	_p1.add(SHOW_Picker);
+	_p1.add(SHOW_Range);
+	_p1.add(SHOW_Theory);
+	_p1.add(SHOW_Panels);
+	_p1.add(SHOW_Demo);
+	_p1.add(SHOW_Quantizer);
+	_p1.add(SHOW_ColourLovers);
+	_p1.add(SHOW_AlgoPalettes);
+	_p1.add(SHOW_Curve);
+	_p1.add(SHOW_BrowserColors);
+	_p1.add(SHOW_GuiInternal);
+	_p1.add(SHOW_GUI_MINI);
+	_p1.add(TEST_Mode);
+	params_AppState.add(_p1);
 
-	params_AppState.add(SHOW_Presets);
-	params_AppState.add(SHOW_PresetsPalette);
-	params_AppState.add(SHOW_BackGround);
-	params_AppState.add(SHOW_Library);
-	params_AppState.add(SHOW_Picker);
-	params_AppState.add(SHOW_Range);
-	params_AppState.add(SHOW_Theory);
-	params_AppState.add(SHOW_Panels);
-	params_AppState.add(SHOW_Demo);
-	params_AppState.add(SHOW_Quantizer);
-	params_AppState.add(SHOW_ColourLovers);
-	params_AppState.add(SHOW_AlgoPalettes);
-	params_AppState.add(SHOW_Curve);
-	params_AppState.add(SHOW_BrowserColors);
-	params_AppState.add(SHOW_GuiInternal);
-	params_AppState.add(SHOW_GUI_MINI);
-	params_AppState.add(MODE_Editor);
+	_pbg.add(color_BackGround);
+	_pbg.add(color_BackGround_Darker);
+	_pbg.add(color_BackGround_AutoSet);
+	_pbg.add(color_BackGround_Darkness);
+	params_AppState.add(_pbg);
 
-	//params_AppState.add(SHOW_Gradient);
-	//params_AppState.add(SHOW_CosineGradient);
+	_pd.add(DEMO_Test);
+	_pd.add(DEMO_Auto);
+	_pd.add(DEMO_Timer);
+	_pd.add(DEMO_Alpha);
+	_pd.add(DEMO_Cam);
+	params_AppState.add(_pd);
 
-	params_AppState.add(color_Picked);
-	params_AppState.add(color_BackGround);
+	_pcv.add(curve_Gradient_InExp);
+	_pcv.add(curve_Gradient_OutPick);
+	_pcv.add(gradient_HardMode);//gradient
+	_pcv.add(MODE_Editor);
+	//_pcv.add(paletteLibPage_param);
+	//_pcv.add(SHOW_Gradient);
+	//_pcv.add(SHOW_CosineGradient);
+	params_AppState.add(_pcv);
 
-	params_AppState.add(color_BackGround_Darker);
-	params_AppState.add(color_BackGround_AutoSet);
-	params_AppState.add(color_BackGround_Darkness);
+	_pk.add(BRIGHTNESS);
+	_pk.add(SATURATION);
+	_pk.add(bColor_HUE);
+	_pk.add(bColor_SAT);
+	_pk.add(bColor_BRG);
+	_pk.add(color_HUE_0);
+	_pk.add(color_SAT_0);
+	_pk.add(color_BRG_0);
+	_pk.add(color_HUE_Power);
+	_pk.add(color_SAT_Power);
+	_pk.add(color_BRG_Power);
+	_pk.add(color_Picked);
+	params_AppState.add(_pk);
 
-	//params_AppState.add(MODE_TweakSatBrg);//algorithmic palette
+	_lb.add(lib_Page_Index);
+	_lb.add(lib_MaxColumns);
+	_lb.add(lib_NumRows);
+	_lb.add(lib_CardsMode);
+	_lb.add(scale_ColLib);
+	_lb.add(scale_ColRange);
+	_lb.add(bLibFillMode);
+	_lb.add(bPagerized);
+	_lb.add(sizeLibColBox);
+	params_AppState.add(_lb);
 
-	params_AppState.add(bPaletteEdit);//user palette
-	params_AppState.add(bAuto_TheoryToPalette);
-	params_AppState.add(SHOW_UserPalette);
-
-	params_AppState.add(TEST_Mode);
-
-	params_AppState.add(DEMO_Test);
-	params_AppState.add(DEMO_Auto);
-	params_AppState.add(DEMO_Timer);
-	params_AppState.add(DEMO_Alpha);
-	params_AppState.add(DEMO_Cam);
-
-	params_AppState.add(curve_Gradient_InExp);
-	params_AppState.add(curve_Gradient_OutPick);
-
-	params_AppState.add(gradient_HardMode);//gradient
-	//params_AppState.add(paletteLibPage_param);
-
-	params_AppState.add(BRIGHTNESS);
-	params_AppState.add(SATURATION);
-	params_AppState.add(bColor_HUE);
-	params_AppState.add(bColor_SAT);
-	params_AppState.add(bColor_BRG);
-	params_AppState.add(color_HUE_0);
-	params_AppState.add(color_SAT_0);
-	params_AppState.add(color_BRG_0);
-	params_AppState.add(color_HUE_Power);
-	params_AppState.add(color_SAT_Power);
-	params_AppState.add(color_BRG_Power);
-
-	params_AppState.add(lib_Page_Index);
-	params_AppState.add(lib_MaxColumns);
-	params_AppState.add(lib_NumRows);
-	params_AppState.add(lib_CardsMode);
-	params_AppState.add(scale_ColLib);
-	params_AppState.add(scale_ColRange);
-	params_AppState.add(bLibFillMode);
-	params_AppState.add(bPagerized);
-	params_AppState.add(sizeLibColBox);
-
-	params_AppState.add(bPaletteFillMode);
-	params_AppState.add(sizePaletteBox);
-	params_AppState.add(boxRowsUser);
-	params_AppState.add(scale_ColPalette);
+	_pt.add(amountColors_Alg);
+	_pt.add(sizePaletteBox);
+	_pt.add(scale_ColPalette);
+	_pt.add(bPaletteFillMode);
+	_pt.add(boxRowsUser);
+	_pt.add(bPaletteEdit);
+	_pt.add(bAuto_TheoryToPalette);
+	params_AppState.add(_pt);
 
 	//------------------------------------------------
 
@@ -1431,8 +1430,8 @@ void ofxColorManager::draw(ofEventArgs & args)
 
 				//myDEMO.setEnableMouseCamera();
 			}
+		}
 	}
-}
 
 	//--
 
@@ -1486,22 +1485,30 @@ void ofxColorManager::exit()
 {
 	ofLogNotice(__FUNCTION__);
 
-	//palette_save("myPalette");
+	//----
 
-	//app state
-	ofxSurfingHelpers::saveGroup(params_AppState, path_AppState);
+	// curve
 
-	//-
+	//gradient curve
+	curvesTool.save(path_Curves);//needed because it fills polyline
 
-	curvesTool.save(path_Curves); //needed because it fills polyline
-
-	//-
-
-	//gui layout
+	//layout
 	//rPreview.saveSettings();
 	rPreview.saveSettings("_Curve_Gui", path_Folder_Curves, false);
 
-	//-
+	//refresh before save
+	curve_Gradient_OutPick = curve_Slider_OutPick.getValue();
+	curve_Gradient_InExp = curve_Slider_InExp.getValue();
+
+	//----
+
+	// app state
+	ofxSurfingHelpers::saveGroup(params_AppState, path_AppState);
+
+	//----
+
+	color_Picked.removeListener(this, &ofxColorManager::Changed_ColorPicked);
+	color_Clicked.removeListener(this, &ofxColorManager::Changed_ColorClicked);
 
 	ofRemoveListener(params_control.parameterChangedE(), this, &ofxColorManager::Changed_Controls);
 	ofRemoveListener(params_color.parameterChangedE(), this, &ofxColorManager::Changed_Controls);
@@ -1509,10 +1516,19 @@ void ofxColorManager::exit()
 	ofRemoveListener(params_curve.parameterChangedE(), this, &ofxColorManager::Changed_Controls);
 
 	ofRemoveListener(params_rangTypes.parameterChangedE(), this, &ofxColorManager::Changed_ColorRange);
-	ofRemoveListener(params_algoTypes.parameterChangedE(), this, &ofxColorManager::Changed_ColorTheory);
 
+	ofRemoveListener(params_algoTypes.parameterChangedE(), this, &ofxColorManager::Changed_ColorTheory);
 	ofRemoveListener(params_ColorTheory.parameterChangedE(), this, &ofxColorManager::Changed_ColorTheory);
-	ofRemoveListener(params_UserPalette.parameterChangedE(), this, &ofxColorManager::Changed_ColorUserPalette);
+
+	ofRemoveListener(params_Palette.parameterChangedE(), this, &ofxColorManager::Changed_ParamsPalette);
+
+	ofRemoveListener(ofEvents().update, this, &ofxColorManager::update);
+	ofRemoveListener(ofEvents().draw, this, &ofxColorManager::draw);
+
+	//--
+
+	removeKeysListeners();
+	removeMouseListeners();
 
 	//--
 
@@ -1520,14 +1536,6 @@ void ofxColorManager::exit()
 #ifdef INCL_LAYOUT
 	panels.exit();
 #endif
-
-	//--
-
-	removeKeysListeners();
-	removeMouseListeners();
-
-	ofRemoveListener(ofEvents().update, this, &ofxColorManager::update);
-	ofRemoveListener(ofEvents().draw, this, &ofxColorManager::draw);
 }
 
 //--------------------------------------------------------------
@@ -1613,10 +1621,10 @@ void ofxColorManager::refresh_Gui_Layout()
 
 	//--
 
-	curve_Slider_OutPick.setup(slider_Out_x, slider_Out_y, slider_Out_w, slider_Out_h, 0, 1, curve_Gradient_OutPick.get(), true, true);
+	curve_Slider_OutPick.setup(slider_Out_x, slider_Out_y, slider_Out_w, slider_Out_h, 0, 1, curve_Gradient_OutPick, true, true);
 	//curve_Slider_OutPick.setup(slider_Out_x, slider_Out_y, slider_Out_w, slider_Out_h, 0, 1, 0, true, true);
 
-	curve_Slider_InExp.setup(slider_In_x, slider_In_y, slider_In_w, slider_In_h, 0, 1, curve_Gradient_InExp.get(), true, true);
+	curve_Slider_InExp.setup(slider_In_x, slider_In_y, slider_In_w, slider_In_h, 0, 1, curve_Gradient_InExp, true, true);
 	//curve_Slider_InExp.setup(slider_In_x, slider_In_y, slider_In_w, slider_In_h, 0, 1, 0, true, true);
 
 	//--	
@@ -2705,7 +2713,7 @@ void ofxColorManager::gui_Library()
 				ofxImGui::AddParameter(lib_Page_Index);//page slider selector
 				//ImGui::SliderInt("PAGE", &lib_Page_Index, 0, lib_Page_Max);//page slider selector
 				//ImGui::DragInt("PAGE", (int *)&lib_Page_Index, 0, lib_Page_Max);//collide..
-				}
+			}
 
 			ImGui::Dummy(ImVec2(0.0f, 5));
 
@@ -4577,16 +4585,13 @@ void ofxColorManager::setup_CurveTool()
 
 	// curve mod
 	curve_Slider_OutPick.setup(slider_Out_x, slider_Out_y, slider_Out_w, slider_Out_h, 0, 1, curve_Gradient_OutPick.get(), true, true);
-	//curve_Slider_OutPick.setup(slider_Out_x, slider_Out_y, slider_Out_w * 2, slider_Out_h, 0, 1, 0, true, true);
-
-	if (TEST_Mode) curve_Slider_OutPick.setPercent(curve_Gradient_TEST_Prc);
-	else curve_Slider_OutPick.setPercent(curve_Gradient_OutPick);
-
+	curve_Slider_OutPick.setPercent(curve_Gradient_OutPick);
 	curve_Slider_OutPick.setVisible(SHOW_Curve);
 	curve_Slider_OutPick.setLabelString("Exp");
 
 	// slider live test color out for this input
-	curve_Slider_InExp.setup(slider_In_x + (slider_In_w + pad), slider_In_y, 2 * slider_In_w, slider_In_h, 0, 1, 0, true, true);
+	curve_Slider_InExp.setup(slider_In_x + (slider_In_w + pad), slider_In_y, 2 * slider_In_w, slider_In_h, 0, 1, curve_Gradient_InExp, true, true);
+	curve_Slider_InExp.setPercent(curve_Gradient_InExp);
 	curve_Slider_InExp.setVisible(SHOW_Curve);
 	curve_Slider_InExp.setLabelString("Pick");
 }
@@ -6284,10 +6289,10 @@ void ofxColorManager::palette_clear()
 //--------------------------------------------------------------
 void ofxColorManager::Changed_ColorPicked(ofFloatColor &c)
 {
+	ofLogNotice(__FUNCTION__) << ofToString(c);
+
 	//if (ENABLE_Callbacks_cPickers)
 	{
-		ofLogNotice(__FUNCTION__) << ofToString(c);
-
 		//refresh_Picked();
 	}
 }
@@ -6302,7 +6307,7 @@ void ofxColorManager::Changed_ColorClicked(ofFloatColor &c)
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::Changed_ColorUserPalette(ofAbstractParameter &e)
+void ofxColorManager::Changed_ParamsPalette(ofAbstractParameter &e)
 {
 	std::string name = e.getName();
 
@@ -6906,8 +6911,13 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			curve_Gradient_TEST_Prc = 0.5;
 			TEST_Mode = false;
 
-			if (TEST_Mode) curve_Slider_OutPick.setPercent(curve_Gradient_TEST_Prc);
-			else curve_Slider_OutPick.setPercent(curve_Gradient_OutPick.get());
+			// curve mod
+			curve_Slider_OutPick.setup(slider_Out_x, slider_Out_y, slider_Out_w, slider_Out_h, 0, 1, curve_Gradient_OutPick.get(), true, true);
+			curve_Slider_OutPick.setPercent(curve_Gradient_OutPick);
+
+			// slider live test color out for this input
+			curve_Slider_InExp.setup(slider_In_x + (slider_In_w + pad), slider_In_y, 2 * slider_In_w, slider_In_h, 0, 1, curve_Gradient_InExp, true, true);
+			curve_Slider_InExp.setPercent(curve_Gradient_InExp);
 		}
 	}
 	else if (name == "Hard Steps")
@@ -7728,8 +7738,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//
 		//    else if (key == OF_KEY_RETURN)
 		//        colorBrowser.switch_sorted_Type();
+		}
 	}
-}
 
 //--------------------------------------------------------------
 void ofxColorManager::keyReleased(ofKeyEventArgs &eventArgs)
@@ -8250,7 +8260,8 @@ void ofxColorManager::setColor_TARGET(ofColor &c)
 //--------------------------------------------------------------
 void ofxColorManager::setControl(float control)
 {
-	if (!MODE_Editor) {
+	if (!MODE_Editor)
+	{
 		curve_Ctrl_In = control;
 		curve_Slider_InExp.setPercent(control);
 	}

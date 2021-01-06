@@ -220,8 +220,8 @@ public:
 	void Changed_ColorTheory(ofAbstractParameter &e);
 	void refresh_Interface();
 
-	void Changed_ColorUserPalette(ofAbstractParameter &e);
-	ofParameterGroup params_UserPalette;
+	void Changed_ParamsPalette(ofAbstractParameter &e);
+	ofParameterGroup params_Palette;
 
 	//-
 
@@ -765,8 +765,8 @@ public:
 	//int TEST_pauseLong = 2000;
 	//int TEST_pauseChrono = 0;
 
-	ofParameter<float> curve_Gradient_OutPick{ "Gradient Pick", 0, 0, 1 };
 	ofParameter<float> curve_Gradient_InExp{ "Gradient Exp", 0, 0, 1 };
+	ofParameter<float> curve_Gradient_OutPick{ "Gradient Pick", 0, 0, 1 };
 
 	//--
 
@@ -800,8 +800,17 @@ public:
 	// app settings xml
 
 	ofParameterGroup params_AppState;
+
 	void saveAppSettings(ofParameterGroup &g, std::string path);
 	void loadAppSettings(ofParameterGroup &g, std::string path);
+	
+	ofParameterGroup _p1{"PANELS"};
+	ofParameterGroup _pbg{ "BACKGROUND" };
+	ofParameterGroup _pd{ "DEMO" };
+	ofParameterGroup _pcv{ "CURVE" };
+	ofParameterGroup _pk{ "PICKER" };
+	ofParameterGroup _lb{ "LIBRARY" };
+	ofParameterGroup _pt{ "PALETTE" };
 
 	//--
 
@@ -829,6 +838,10 @@ private:
 	int image_curvedGradient_y;
 	int image_curvedGradient_w;
 	int image_curvedGradient_h;
+	int grad_x;
+	int grad_y;
+	int grad_w;
+	int grad_h;
 	int slider_In_x;
 	int slider_In_y;
 	int slider_In_w;
@@ -837,10 +850,7 @@ private:
 	int slider_Out_y;
 	int slider_Out_w;
 	int slider_Out_h;
-	int grad_x;
-	int grad_y;
-	int grad_w;
-	int grad_h;
+
 	int palettes_x;
 	int palettes_y;
 	int palette_x;
