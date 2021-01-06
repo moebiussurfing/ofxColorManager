@@ -19,7 +19,7 @@ void PresetPalette::setCurveName(std::string &_curve)
 //--------------------------------------------------------------
 void PresetPalette::setBackgroundColor(ofColor _background)//TODO: now without pointer...
 {
-	backCol = _background;
+	color_BACK = _background;
 }
 
 //--------------------------------------------------------------
@@ -89,7 +89,7 @@ void PresetPalette::preset_load(std::string p)
 	}
 	else
 	{
-		ofLogNotice(__FUNCTION__) << "FILE '" << path << "' NOT FOUND";
+		ofLogNotice(__FUNCTION__) << "File '" << path << "' NOT FOUND";
 	}
 }
 
@@ -99,17 +99,17 @@ void PresetPalette::preset_save(std::string p)
 	ofLogNotice(__FUNCTION__) << p;
 	std::string path = path_Presets + p + ".json";
 
-	presetData.background = backCol;
+	presetData.background = color_BACK;
 	//presetData.background = (*background_BACK);
 
 	presetData.name = (*name_BACK);
 	presetData.curveName = (*curveName_BACK);
 	presetData.palette = (*palette_BACK);
 
-	ofLogNotice(__FUNCTION__) << "presetData.name: " << presetData.name;
-	ofLogNotice(__FUNCTION__) << "presetData.curveName: " << presetData.curveName;
-	ofLogNotice(__FUNCTION__) << "presetData.palette: " << ofToString(presetData.palette);
-	ofLogNotice(__FUNCTION__) << "presetData.background: " << presetData.background;
+	ofLogNotice(__FUNCTION__) << "name: " << presetData.name;
+	ofLogNotice(__FUNCTION__) << "curveName: " << presetData.curveName;
+	ofLogNotice(__FUNCTION__) << "palette: " << ofToString(presetData.palette);
+	ofLogNotice(__FUNCTION__) << "background: " << presetData.background;
 
 	//curvesTool.save(path_Presets+presetData.curveName+".yml");
 
@@ -121,29 +121,56 @@ void PresetPalette::preset_save(std::string p)
 }
 
 //--------------------------------------------------------------
-void PresetPalette::palette_load(std::string p)
+PaletteData PresetPalette::preset_LoadPalette(std::string name)//TODO: not elegant.. bc uses the target object..
 {
-	ofLogNotice(__FUNCTION__) << p;
+	ofLogNotice(__FUNCTION__) << name;
 
-	std::string path = path_Palettes + p + ".json";
+	std::string path = path_Presets + name + ".json";
 	ofFile file(path);
+	PaletteData pd;
+
+	if (file.exists())
+	{
+		jsonin ji(file);
+		ji >> pd;
+
+		ofLogNotice(__FUNCTION__) << "name       : " << pd.name;
+		ofLogNotice(__FUNCTION__) << "palette    : " << ofToString(pd.palette);
+		ofLogNotice(__FUNCTION__) << "background : " << pd.background;
+	}
+	else
+	{
+		ofLogNotice(__FUNCTION__) << "File '" << path << "' NOT FOUND";
+	}
+
+	return pd;
+}
+
+//--------------------------------------------------------------
+void PresetPalette::palette_load(std::string name)
+{
+	ofLogNotice(__FUNCTION__) << name;
+
+	std::string path = path_Palettes + name + ".json";
+	ofFile file(path);
+
 	if (file.exists())
 	{
 		jsonin ji(file);
 		ji >> paletteData;
 
-		ofLogNotice(__FUNCTION__) << "paletteData.name: " << paletteData.name;
-		ofLogNotice(__FUNCTION__) << "paletteData.palette: " << ofToString(paletteData.palette);
-		ofLogNotice(__FUNCTION__) << "paletteData.background: " << paletteData.background;
+		ofLogNotice(__FUNCTION__) << "name       : " << paletteData.name;
+		ofLogNotice(__FUNCTION__) << "palette    : " << ofToString(paletteData.palette);
+		ofLogNotice(__FUNCTION__) << "background : " << paletteData.background;
 
 		(*name_BACK) = paletteData.name;
 		(*palette_BACK) = paletteData.palette;
-		backCol = paletteData.background;
+		color_BACK = paletteData.background;
 		//+required pointer to be able to set background back!
 	}
 	else
 	{
-		ofLogNotice(__FUNCTION__) << "FILE '" << path << "' NOT FOUND";
+		ofLogNotice(__FUNCTION__) << "File '" << path << "' NOT FOUND";
 	}
 }
 
@@ -155,7 +182,7 @@ void PresetPalette::palette_save(std::string p)
 
 	paletteData.name = (*name_BACK);
 	paletteData.palette = (*palette_BACK);
-	paletteData.background = backCol;
+	paletteData.background = color_BACK;
 
 	ofLogNotice(__FUNCTION__) << "paletteData.name: " << paletteData.name;
 	ofLogNotice(__FUNCTION__) << "paletteData.palette: " << ofToString(paletteData.palette);

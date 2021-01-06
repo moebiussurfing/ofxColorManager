@@ -75,6 +75,7 @@ using namespace ofxColorTheory;
 
 #include "ofxImGui.h"
 //#include "imgui_demo.cpp"
+#include "ImGui_PalettesPicker.h"
 
 #include "presets/PresetManager.h"
 #include "presets/PresetPalette.h"
@@ -765,8 +766,9 @@ public:
 	void preset_save(std::string p);
 	void preset_load(std::string p);
 
-	void palette_save(std::string p);
-	void palette_load(std::string p);
+	//TODO: this a kind of kit of palettes ?
+	//void palette_save(std::string p);
+	//void palette_load(std::string p);
 
 	bool MODE_newPreset = false;
 	std::string textInput_New = "new preset";
@@ -780,6 +782,9 @@ public:
 	std::vector<ofFile> files;
 	int currentFile = 0;
 	std::string textInput_temp = "type name";
+
+	vector<vector<ofColor>> palettesKit;
+	vector<PaletteData> kit;
 
 	//--
 

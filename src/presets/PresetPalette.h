@@ -85,7 +85,7 @@ public:
 	string *curveName_BACK;
 	ofColor *background_BACK;
 
-	ofColor backCol;//TODO temp because not pointer
+	ofColor color_BACK;//TODO temp because not pointer
 
 	//--
 
@@ -108,6 +108,8 @@ public:
 
 	void preset_save(string p);
 	void preset_load(string p);
+
+	PaletteData preset_LoadPalette(string name);//TODO: not elegant..
 
 	//--
 

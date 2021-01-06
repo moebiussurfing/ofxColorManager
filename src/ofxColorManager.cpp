@@ -2913,7 +2913,7 @@ void ofxColorManager::gui_Library()
 			}
 			//ofxImGui::EndTree(mainSettings);
 		}
-		
+
 		//----
 
 		if (bUpdate)
@@ -3215,7 +3215,7 @@ void ofxColorManager::gui_Picker()
 		{
 			refresh_FromPicked();
 		}
-		else 
+		else
 		{
 			if (bChg_Pick)
 			{
@@ -3920,7 +3920,7 @@ void ofxColorManager::gui_Presets()
 
 		ImGui::PushButtonRepeat(true);
 
-		if (ImGui::Button("Previous", ImVec2(_w50, 2* _h)))
+		if (ImGui::Button("Previous", ImVec2(_w50, 2 * _h)))
 		{
 			if (counter > 0)
 			{
@@ -4290,6 +4290,11 @@ void ofxColorManager::gui_Presets()
 			}
 
 			ImGui::Dummy(ImVec2(0.0f, 10));
+
+			//----------
+
+			//vector<PaletteData> kit;
+			ImGui_PalettesPicker::gui_Palettes(kit);
 		}
 
 		//-
@@ -7817,8 +7822,8 @@ void ofxColorManager::enableListeners()
 //--------------------------------------------------------------
 void ofxColorManager::preset_refreshFiles()
 {
-	//TODO: why hardcoded?
-	//std::string _path = "user_kits/presets";
+	//initialize
+
 	path_Global = "ofxColorManager/";
 	path_Kits = "kits/";
 	std::string path_Presets = path_Global + path_Kits + "presets/";
@@ -7830,6 +7835,8 @@ void ofxColorManager::preset_refreshFiles()
 	ofDirectory dataDirectory(ofToDataPath(_path, true));
 	ofxSurfingHelpers::CheckFolder(_path);
 	ofLogNotice(__FUNCTION__) << _path;
+
+	//-
 
 	// clear files and filenames vectors
 	files.clear();
@@ -7846,6 +7853,8 @@ void ofxColorManager::preset_refreshFiles()
 	}
 
 	//-
+
+	//workflow
 
 	//TODO:
 	//void to go to 1st...
@@ -7884,6 +7893,41 @@ void ofxColorManager::preset_refreshFiles()
 	//{
 	//    ofLogError(__FUNCTION__) << "NOT FOUND ANY FILE PRESET!";
 	//}
+
+	//--
+
+	//kit
+	
+	//palettesKit.clear();
+	//palettesKit.resize(files_Names.size());
+	//for (int i = 0; i < files_Names.size(); i++)
+	//{
+	//	palettesKit[i].clear();//palettesKit[i].resize();
+	//	palettesKit[i] = myPresetPalette.preset_LoadPalette(files_Names[i]).palette;//TODO: not elegant.. bc using the main preset object..
+	//	//palettesKit[i].push_back(myPresetPalette.preset_LoadPalette(files_Names[i]).background);
+
+	//	//log
+	//	ofLogNotice(__FUNCTION__) << "[ " << i << " ] " << files_Names[i];
+	//	for (int c = 0; c < palettesKit[i].size(); c++) 
+	//	{
+	//		ofLogNotice(__FUNCTION__) << c << " : " << ofToString(palettesKit[i][c]);
+	//	}
+	//}
+
+	//-
+
+	kit.resize(files_Names.size()); 
+	for (int i = 0; i < files_Names.size(); i++)
+	{
+		kit[i] = myPresetPalette.preset_LoadPalette(files_Names[i]);
+
+		//log
+		ofLogNotice(__FUNCTION__) << "[ " << i << " ] " << files_Names[i];
+		for (int c = 0; c < kit[i].palette.size(); c++)
+		{
+			ofLogNotice(__FUNCTION__) << c << " : " << ofToString(kit[i].palette[c]);
+		}
+	}
 }
 
 //--------------------------------------------------------------
@@ -7904,7 +7948,7 @@ void ofxColorManager::preset_load(std::string p)
 		txt_lineActive[2] = false;//theory name
 		txt_lineActive[3] = false;//range name
 
-		// 1. load palette preset
+		// 1. load palette preset (target will be the above pointers) //TODO: should (late?) improve this..
 		myPresetPalette.preset_load(p);
 
 		//--
@@ -8096,7 +8140,7 @@ void ofxColorManager::refresh_Picker_Touched()
 		// 7. 
 		//workflow:
 		//if enabled, when color picked changes, auto trig and put generated palette to user palette
-		
+
 		if (bAuto_TheoryToPalette)
 		{
 			refresh_TheoryEngine();
