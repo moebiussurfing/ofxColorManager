@@ -6,9 +6,10 @@
 
 TODO:
 
-+ fix change num colors on algo palettes
-+ fix range pickers
++ fix change num colors on theory/range palettes
++ remove all interface/rect stuff
 + store lovers state favs or history
++ remove layout
 
 */
 
@@ -413,6 +414,8 @@ public:
 
 	void setColor_TARGET(ofColor &c);//backwards pointer ofApp color
 	ofColor *color_TARGET;//backwards pointer ofApp color
+
+	ofParameter<bool> bNewPreset{ "New Preset", false };
 
 	//-----------------------------------------------------------
 

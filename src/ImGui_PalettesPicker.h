@@ -26,8 +26,8 @@ namespace ImGui_PalettesPicker
 		static bool MODE_Slim = false;
 		int indexPick = -1;
 
-		float linew_Pick = 3.0;
-		ImVec4 color_Pick{ 0,0,0,0.4 };
+		float linew_Pick = 2.5;
+		ImVec4 color_Pick{ 0,0,0,0.5 };
 		//ImVec4 color_Pick{ 1,1,1,0.5 };
 
 		//--
@@ -49,15 +49,12 @@ namespace ImGui_PalettesPicker
 
 			//float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
 			//float _w = ImGui::GetWindowContentRegionWidth() - (1.0 * _spc);
-			
+
 			float _spc = 0;
-			float _w = ImGui::GetWindowContentRegionWidth(); 
-			
+			float _w = ImGui::GetWindowContentRegionWidth();
 			float _hb = BUTTON_BIG_HEIGHT;
-
-			int _hhB;
-
-			float spacing1 = 6;//palettes spacing
+			float _hhB;
+			float _spc2 = 6;//spacing between palettes 
 
 			//--
 
@@ -65,16 +62,6 @@ namespace ImGui_PalettesPicker
 
 			for (int p = 0; p < kit.size(); p++)
 			{
-				if (p == indexExt)
-				{
-					_hhB = 3 * BUTTON_SLIM_HEIGHT;
-				}
-				else 
-				{
-					_hhB = BUTTON_SLIM_HEIGHT;
-				}
-				//_hhB = 0.7 * BUTTON_BIG_HEIGHT;//button height
-
 				//--
 
 				////TODO: trying to make a frame border to all palette elements
@@ -87,7 +74,7 @@ namespace ImGui_PalettesPicker
 				// colors in each palette
 				int _sizeP = kit[p].palette.size();
 
-				ImGui::Dummy(ImVec2(0, spacing1));
+				ImGui::Dummy(ImVec2(0, _spc2));
 
 				ImGui::Text(kit[p].name.c_str());
 
@@ -101,15 +88,21 @@ namespace ImGui_PalettesPicker
 				//--
 
 				bool bDrawBorder = false;
-				if (p == indexExt)
+				if (p == indexExt)//highlight selected
 				{
 					bDrawBorder = true;
+					_hhB = 3 * BUTTON_SLIM_HEIGHT;
+				}
+				else 
+				{
+					_hhB = 1.0 * BUTTON_SLIM_HEIGHT;
 				}
 				if (bDrawBorder)
 				{
 					ImGui::PushStyleColor(ImGuiCol_Border, color_Pick);
 					ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, linew_Pick);
 				}
+				//_hhB = 0.7 * BUTTON_BIG_HEIGHT;//button height
 
 				//--
 

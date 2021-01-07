@@ -294,11 +294,15 @@ void ofxColorManager::setup()
 	colourLoversHelper.setPalette_BACK_Name(myPalette_Name);
 	colourLoversHelper.setPalette_BACK_Refresh(bUpdated_Palette_BACK);
 
+	//--------------------------------------------------------------
 	listener_LoverName = colourLoversHelper.lastPaletteName.newListener([this](std::string &n) {
 		txt_lineActive[0] = false;//preset name
-		txt_lineActive[1] = true;//palette name
+		txt_lineActive[1] = true;//lover name
 		txt_lineActive[2] = false;//theory name
 		txt_lineActive[3] = false;//range name
+
+		ofLogNotice("colourLoversHelper > Name Palette: ") << n;
+
 		});
 
 #endif
@@ -1272,10 +1276,10 @@ void ofxColorManager::draw_Info()
 		padh = 25;
 		h = fontBig.getSize() + padh;
 		y += h;
-		i++;
 	}
+	i++;
 
-	if (txt_lineActive[1]) {//palette name
+	if (txt_lineActive[1]) {//lover name
 		x = ofGetWidth() * 0.5 - _w1 * 0.5;
 		if (txt_lineActive[i]) ofSetColor(c0);
 		else ofSetColor(c0_Ghost);
@@ -1288,8 +1292,8 @@ void ofxColorManager::draw_Info()
 		padh = -10;
 		h = fontBig.getSize() + padh;
 		y += h;
-		i++;
 	}
+	i++;
 
 	if (txt_lineActive[2]) {//theory name
 		x = ofGetWidth() * 0.5 - _w2 * 0.5;
@@ -1304,8 +1308,8 @@ void ofxColorManager::draw_Info()
 		padh = 20;
 		h = fontMedium.getSize() + padh;
 		y += h;
-		i++;
 	}
+	i++;
 
 	if (txt_lineActive[3]) {//range name
 		x = ofGetWidth() * 0.5 - _w3 * 0.5;
@@ -2487,12 +2491,12 @@ void ofxColorManager::gui_Palette()
 			ImGui::Dummy(ImVec2(0.0f, 5));
 
 			ofxImGui::AddParameter(bPaletteFillMode);
-			if (bPaletteFillMode) 
+			if (bPaletteFillMode)
 			{
 				ImGui::InputInt(sizePaletteBox.getName().c_str(), (int*)&sizePaletteBox.get(), 5, 100);
 				//ofxImGui::AddParameter(sizePaletteBox);
 			}
-			if (!bPaletteFillMode) 
+			if (!bPaletteFillMode)
 			{
 				boxRowsUser.disableEvents();
 				ImGui::InputInt(boxRowsUser.getName().c_str(), (int*)&boxRowsUser.get(), 1, 5);
@@ -2555,11 +2559,13 @@ void ofxColorManager::gui_Library()
 			//pagerize
 			int lib_StartCol;
 			int lib_EndCol;
-			if (bPagerized) {
+			if (bPagerized)
+			{
 				lib_StartCol = lib_Page_Index * lib_Page_NumColors;
 				lib_EndCol = lib_StartCol + lib_Page_NumColors;
 			}
-			else {
+			else
+			{
 				lib_StartCol = 0;
 				lib_EndCol = lib_TotalColors - 1;
 			}
@@ -3923,6 +3929,17 @@ void ofxColorManager::gui_Presets()
 					preset_load(PRESET_name);
 				}
 			}
+			else {//cycle
+				if (files.size() > 0)
+				{
+					counter = 0;
+					preset_Index = counter;
+					PRESET_name = files_Names[preset_Index];
+					ofLogNotice(__FUNCTION__) << "ARROW: PRESET_name: [" + ofToString(preset_Index) + "] " << PRESET_name;
+
+					preset_load(PRESET_name);
+				}
+			}
 
 			if (MODE_newPreset) MODE_newPreset = false;
 
@@ -3965,7 +3982,7 @@ void ofxColorManager::gui_Presets()
 
 		ImGui::Dummy(ImVec2(0.0f, 10));
 
-		//-
+		//--
 
 		// 2. presets
 
@@ -4048,6 +4065,8 @@ void ofxColorManager::gui_Presets()
 			preset_refreshFiles();
 		}
 
+		ofxImGui::AddParameter(bNewPreset);
+
 		//ImGui::SameLine();
 		//if (ImGui::Button("REFRESH"))//current preset
 		//{
@@ -4059,11 +4078,15 @@ void ofxColorManager::gui_Presets()
 
 		//--
 
-		if (MODE_newPreset)
+		if (MODE_newPreset || bNewPreset)
 		{
-			ImGui::Separator();
 
+			//ImGuiHoveredFlags_ _flagw = ImGuiHoveredFlags_RootAndChildWindows;
+
+			ImGui::Separator();
 			ImGui::Dummy(ImVec2(0.0f, 10));
+
+			//-
 
 			ImGui::Text("NEW PRESET!");
 
@@ -4079,8 +4102,15 @@ void ofxColorManager::gui_Presets()
 			{
 				textInput_New = ofToString(tab);
 				ofLogNotice(__FUNCTION__) << "textInput_New:" << textInput_New;
+
+				ofLogNotice(__FUNCTION__) << "IsItemHovered: " << ImGui::IsItemHovered() << endl;
+				//cout << "mouse: " << ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow);
+				//ImGui::io.WantCaptureMous
+
 			}
 			ImGui::PopItemWidth();
+
+
 
 			//workflow: 
 			//when its editing a new preset..
@@ -4145,6 +4175,11 @@ void ofxColorManager::gui_Presets()
 
 			ImGui::PopStyleColor(1);
 			ImGui::PopID();
+
+			//-
+
+			ImGui::Dummy(ImVec2(0.0f, 10));
+			ImGui::Separator();
 		}
 
 		//----
