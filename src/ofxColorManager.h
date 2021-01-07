@@ -13,21 +13,30 @@ TODO:
 
 */
 
-//--
+//------
+
+//	OPTIONAL
 
 #define USE_RECTANGLE_INTERFACES // should be nice to completely disable! to disable ofxInterface
+
+//	modules
 #define USE_COLOR_LOVERS
 #define USE_IMAGE_QUANTIZER
+#define USE_OFX_COLOR_BROWSER
+//#define USE_SUPER_LOG
+//	layout
+#define MAX_PALETTE_COLORS 11
 #define INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
 #define BUTTON_BIG_HEIGHT 50
-#define USE_OFX_COLOR_BROWSER
-#define MAX_PALETTE_COLORS 11
+#define BUTTON_COLOR_SIZE 40
 //#define INCL_LAYOUT
 //#define USE_OFX_GUI
 
-//--
+//------
 
+#ifdef USE_SUPER_LOG
 #include "ofxSuperLog.h"
+#endif
 
 #include "ofxColorGradient.h"
 #include "ofxColorPalette.h"
@@ -154,23 +163,24 @@ public:
 	//ofxColorMorph
 
 public:
-	void generateRange(ofColor col1, ofColor col2);
+	void setup_Range();
+	void generate_Range(ofColor col1, ofColor col2);
 
 private:
-	ofParameter<ofColor> c1_Rng;
-	ofParameter<ofColor> c2_Rng;
-	ofColor color;
-	ofFloatColor guiCol1;
-	ofFloatColor guiCol2;
+	ofParameter<ofColor> color_1_Range;
+	ofParameter<ofColor> color_2_Range;
+	//ofColor color;
+	//ofFloatColor c1_Range_Gui;
+	//ofFloatColor c2_Range_Gui;
 	std::vector<ofColor> palette_Range;
-	std::vector<std::string> types;
-	bool bRefreshMorph;
-	ofParameter<bool> bRangeAutoGenerate;
-	ofParameter<bool> autoPickColor1;
-	ofParameter<bool> autoPickColor2;
+	std::vector<std::string> rangeTypes_names;
+	//bool bRefreshMorph;
+	ofParameter<bool> autoGenerate_Range;
+	ofParameter<bool> autoPick_RangeColor1;
+	ofParameter<bool> autoPick_RangeColor2;
 	ofParameter<bool> bGetPaletteFromRange;
-	ofParameter<int> numColorsRange;
-	ofParameterGroup params_rangTypes;
+	ofParameter<int> numColors_Range;
+	ofParameterGroup params_Ranges;
 #define NUM_TYPES_RANGES 12
 	ofParameter<bool> rangTypes[NUM_TYPES_RANGES];
 	void Changed_ColorRange(ofAbstractParameter &e);
@@ -217,7 +227,7 @@ public:
 	ofParameter<ofColor> color_TheoryBase;
 	ofParameter<int> colorScheme;
 	ofParameter<std::string> colorSchemeName;
-	ofParameter<int> amountColors;
+	ofParameter<int> numColors_Theory;
 	ofParameter<bool> bAuto_TheoryFromPicker;
 
 	void Changed_ColorTheory(ofAbstractParameter &e);
@@ -310,14 +320,15 @@ public:
 
 	//TODO
 	//BUG: should create a default preset because if myPreset is not detected it crashes
-	std::string PRESET_name = "_emptyPreset";//default preset
+	//default preset
+	std::string PRESET_name = "_emptyPreset";
 	std::string PRESET_curveName = "curve01";
 
 	//-
 
 	// gui feedback display
-	int lastTheory = -1;
-	int lastRange = -1;
+	int last_Index_Theory = -1;
+	int last_Index_Range = -1;
 	std::string theory_Name = "";
 	std::string range_Name = "";
 
@@ -474,7 +485,7 @@ public:
 	ofxColorPalette random;
 	//ofxColorPalette::ColorChannel mode;
 
-	ofParameter<int> amountColors_Alg;
+	ofParameter<int> numColors_Alg;
 	//number of colors. must be even sometimes to get same size in all palettes
 
 	ofParameter<int> BRIGHTNESS;

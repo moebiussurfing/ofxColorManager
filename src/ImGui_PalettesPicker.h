@@ -10,10 +10,10 @@ TODO:
 */
 
 //----
-
-#include "ofxImGui.h"
 #define BUTTON_BIG_HEIGHT 50
 #define BUTTON_SLIM_HEIGHT 14
+
+#include "ofxImGui.h"
 
 #include "presets/PresetManager.h"
 #include "presets/PresetPalette.h"
@@ -104,7 +104,7 @@ namespace ImGui_PalettesPicker
 				}
 				//_hhB = 0.7 * BUTTON_BIG_HEIGHT;//button height
 
-				//--
+				//----
 
 				// each palette colors
 
@@ -126,7 +126,7 @@ namespace ImGui_PalettesPicker
 
 					std::string name = (kit[p].name + "_" + ofToString(p) + "_" + ofToString(c));
 
-					//-
+					//----
 
 					// colored box
 
@@ -140,6 +140,8 @@ namespace ImGui_PalettesPicker
 
 						indexPick = p;
 					}
+					
+					//----
 
 					ImGui::PopID();
 				}
