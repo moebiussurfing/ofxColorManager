@@ -39,8 +39,7 @@ ofxColorManager::ofxColorManager()
 	path_Colors = path_Folder_Color + "liveColors.json";
 	ofxSurfingHelpers::CheckFolder(path_Global);
 
-	path_AppState = path_Global + "AppSettings.xml";
-	//path_AppState = path_Global + "ofxColorManager.xml";
+	path_AppState = path_Global + "ofxColorManager_Settings.xml";
 }
 
 //--------------------------------------------------------------
@@ -1907,7 +1906,7 @@ void ofxColorManager::gui_Theory()
 
 		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
 		float _w = ImGui::GetWindowContentRegionWidth() - _spc;
-		int _h = 20;
+		int _h = int(COLOR_STRIP_COLOR_HEIGHT);
 		float _w50 = MAX(150, _w * 0.33);
 
 		//-
@@ -1942,7 +1941,7 @@ void ofxColorManager::gui_Theory()
 		//-
 
 		//mini preview box
-		if (ImGui::ColorButton("##BoxTheory", *(ImVec4 *)&tmpRef.r, _flags, ImVec2(_w, _h * 0.5)))
+		if (ImGui::ColorButton("##BoxTheory", *(ImVec4 *)&tmpRef.r, _flags, ImVec2(_w, _h)))
 		{
 		}
 
@@ -2969,7 +2968,10 @@ void ofxColorManager::gui_Picker()
 	if (ofxImGui::BeginWindow("PICKER", mainSettings, false))
 	{
 		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
-		float _h = 0.5f * BUTTON_BIG_HEIGHT;
+
+		//float _h = 0.5f * BUTTON_BIG_HEIGHT;
+		int _h = int(COLOR_STRIP_COLOR_HEIGHT);
+
 		float _w = ImGui::GetWindowContentRegionWidth() - 2 * _spc;
 		float _w50 = _w * 0.5f;
 		float _w100 = _w + 2.5f * _spc;
@@ -3329,7 +3331,7 @@ void ofxColorManager::gui_Range()
 		float _sz = int(BUTTON_COLOR_SIZE) * scale_ColRange.get();
 		float _szLabel = 100;
 
-		int _h = 20;
+		int _h = int(COLOR_STRIP_COLOR_HEIGHT);
 		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
 		float _w = ImGui::GetWindowContentRegionWidth() - _spc;
 		float _w50 = _w * 0.35f;
@@ -3689,12 +3691,12 @@ void ofxColorManager::gui_Background()
 			// 0. color big
 
 			float _w = ImGui::GetWindowContentRegionWidth();
-			int _h = 20;
+			int _h = int(COLOR_STRIP_COLOR_HEIGHT);
 
 			ImGuiColorEditFlags _flags;
 			_flags = ImGuiColorEditFlags_NoOptions | ImGuiColorEditFlags_NoTooltip;
 
-			ImGui::ColorButton("MyColor##Picker", *(ImVec4 *)&color, _flags, ImVec2(_w, _h));
+			ImGui::ColorButton("##ColorBgPicker", *(ImVec4 *)&color, _flags, ImVec2(_w, _h));
 
 			ImGui::Dummy(ImVec2(0.0f, 10));
 
@@ -3770,19 +3772,40 @@ void ofxColorManager::gui_Presets()
 		tab2[sizeof(tab2) - 1] = 0;
 
 		ImGui::PushItemWidth(-1);
-
-		cout << "IsItemHovered: " << (ImGui::IsItemHovered()) << endl;
 		{
 			if (ImGui::InputText("", tab2, IM_ARRAYSIZE(tab2)))
 			{
+				//if (ImGui::IsItemHovered())
+				//	ImGui::SetTooltip("I am a tooltip over a popup");
+
 				ofLogNotice(__FUNCTION__) << "InputText:" << ofToString(tab2);
 				textInput_temp = ofToString(tab2);
 
 				if (MODE_newPreset) MODE_newPreset = false;
 			}
-		}
 
+			if (ImGui::IsItemHovered()) {
+				ImGui::SetTooltip("I am a tooltip");
+				ofLogNotice(__FUNCTION__) << "hover!";
+			}
+		}
 		ImGui::PopItemWidth();
+
+		//----
+
+		////TODO: TEST hover         
+		//ImGui::Separator();
+		//ImGui::Text("Tooltip here");
+		//if (ImGui::IsItemHovered())
+		//	ImGui::SetTooltip("I am a tooltip over a popup");
+
+		//static bool closable_group = true;
+		//if (ImGui::CollapsingHeader("Header with a close button", &closable_group))
+		//{
+		//	ImGui::Text("IsItemHovered: %d", ImGui::IsItemHovered());
+		//	for (int i = 0; i < 5; i++)
+		//		ImGui::Text("More content %d", i);
+		//}
 
 		//----
 
@@ -4077,16 +4100,18 @@ void ofxColorManager::gui_Presets()
 			tab[sizeof(tab) - 1] = 0;
 
 			ImGui::PushItemWidth(-1);
+
 			if (ImGui::InputText("", tab, IM_ARRAYSIZE(tab)))
 			{
 				textInput_New = ofToString(tab);
 				ofLogNotice(__FUNCTION__) << "textInput_New:" << textInput_New;
-
-				ofLogNotice(__FUNCTION__) << "IsItemHovered: " << ImGui::IsItemHovered() << endl;
-				//cout << "mouse: " << ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow);
-				//ImGui::io.WantCaptureMous
-
 			}
+
+			if (ImGui::IsItemHovered()) {
+				ImGui::SetTooltip("I am a tooltip");
+				ofLogNotice(__FUNCTION__) << "hover!";
+			}
+
 			ImGui::PopItemWidth();
 
 
