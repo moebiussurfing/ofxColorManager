@@ -165,6 +165,8 @@ public:
 public:
 	void setup_Range();
 	void generate_Range(ofColor col1, ofColor col2);
+	
+	void refresh_Range_AutoUpdate();
 
 private:
 	ofParameter<ofColor> color_1_Range;

@@ -786,7 +786,23 @@ void ofxColorManager::update(ofEventArgs & args)
 {
 	//TODO:
 	//cout << 
-		//ImGui::GetIO().WantCaptureMouse() = true;
+	//ImGui::GetIO().WantCaptureMouse() = true;
+
+	//-
+
+	if (SHOW_Range)
+	{
+		////workflow
+		////get main color from range picker
+		//if (autoPick_RangeColor1) color_Picked.set(color_1_Range.get());
+		//else if (autoPick_RangeColor2) color_Picked.set(color_2_Range.get());
+
+
+		//if (!autoPick_RangeColor1 && !autoPick_RangeColor2) autoPick_RangeColor1 = true;
+		//else if (autoPick_RangeColor1 && !autoPick_RangeColor2) autoPick_RangeColor2 = true;
+		//else if (!autoPick_RangeColor1 && autoPick_RangeColor2) autoPick_RangeColor1 = true;
+
+	}
 
 	//-
 
@@ -3318,7 +3334,7 @@ void ofxColorManager::gui_Range()
 		float _w = ImGui::GetWindowContentRegionWidth() - _spc;
 		float _w50 = _w * 0.35f;
 		float _w100 = _w;
-		
+
 		ofFloatColor _c1;
 		ofFloatColor _c2;
 
@@ -3365,12 +3381,14 @@ void ofxColorManager::gui_Range()
 			{
 				if (autoPick_RangeColor1) color_Picked.set(_c1[0]);
 				bChanged = true;
+				refresh_Range_AutoUpdate();
 			}
 
 			// mini box
 			if (ImGui::ColorButton("##C1", *(ImVec4 *)&_c1[0], _flags, ImVec2(_w50, _h)))
 			{
 				bChanged = true;
+				refresh_Range_AutoUpdate();
 			}
 
 			ImGui::PopItemWidth();
@@ -3394,12 +3412,14 @@ void ofxColorManager::gui_Range()
 			{
 				if (autoPick_RangeColor2) color_Picked.set(_c2[0]);
 				bChanged = true;
+				refresh_Range_AutoUpdate();
 			}
 
 			// mini box
 			if (ImGui::ColorButton("##C2", *(ImVec4 *)&_c2[0], _flags, ImVec2(_w50, _h)))
 			{
 				bChanged = true;
+				refresh_Range_AutoUpdate();
 			}
 
 			ImGui::PopItemWidth();
@@ -3419,6 +3439,11 @@ void ofxColorManager::gui_Range()
 			{
 				color_1_Range.set(_c1);
 				color_2_Range.set(_c2);
+
+				//workflow
+				//get main color from range picker
+				if (autoPick_RangeColor1) color_Picked.set(color_1_Range.get());
+				else if (autoPick_RangeColor2) color_Picked.set(color_2_Range.get());
 			}
 
 			//----
@@ -3432,8 +3457,8 @@ void ofxColorManager::gui_Range()
 				generate_Range(color_1_Range.get(), color_2_Range.get());
 			}
 
-			//if (ofxSurfingHelpers::AddBigButton("GENERATE"))
 			if (ImGui::Button("GENERATE", ImVec2(_w, 0.5 * BUTTON_BIG_HEIGHT)))
+				//if (ofxSurfingHelpers::AddBigButton("GENERATE"))
 			{
 				generate_Range(color_1_Range.get(), color_2_Range.get());
 			}
@@ -3745,13 +3770,18 @@ void ofxColorManager::gui_Presets()
 		tab2[sizeof(tab2) - 1] = 0;
 
 		ImGui::PushItemWidth(-1);
-		if (ImGui::InputText("", tab2, IM_ARRAYSIZE(tab2)))
-		{
-			ofLogNotice(__FUNCTION__) << "InputText:" << ofToString(tab2);
-			textInput_temp = ofToString(tab2);
 
-			if (MODE_newPreset) MODE_newPreset = false;
+		cout << "IsItemHovered: " << (ImGui::IsItemHovered()) << endl;
+		{
+			if (ImGui::InputText("", tab2, IM_ARRAYSIZE(tab2)))
+			{
+				ofLogNotice(__FUNCTION__) << "InputText:" << ofToString(tab2);
+				textInput_temp = ofToString(tab2);
+
+				if (MODE_newPreset) MODE_newPreset = false;
+			}
 		}
+
 		ImGui::PopItemWidth();
 
 		//----
@@ -6388,7 +6418,7 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 				last_Index_Theory = i;
 
 				txt_lineActive[0] = false;//preset name
-				txt_lineActive[1] = false;//palette name
+				txt_lineActive[1] = false;//lover name
 				txt_lineActive[2] = true;//theory name
 				txt_lineActive[3] = false;//range name
 
@@ -6420,7 +6450,7 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 			last_Index_Theory = i + NUM_COLOR_THEORY_TYPES;
 
 			txt_lineActive[0] = false;//preset name
-			txt_lineActive[1] = false;//palette name
+			txt_lineActive[1] = false;//lover name
 			txt_lineActive[2] = true;//theory name
 			txt_lineActive[3] = false;//range name
 
@@ -6990,6 +7020,9 @@ void ofxColorManager::Changed_ColorRange(ofAbstractParameter &e)
 	else if (name == numColors_Range.getName())
 	{
 		generate_Range(color_1_Range.get(), color_2_Range.get());
+
+		//auto create palette
+		refresh_Range_AutoUpdate();
 	}
 
 	else if (name == autoPick_RangeColor1.getName())
@@ -7030,9 +7063,8 @@ void ofxColorManager::Changed_ColorRange(ofAbstractParameter &e)
 				//index selected
 				last_Index_Range = i;
 				range_Name = rangTypes[i].getName();
-
 				txt_lineActive[0] = false;//preset name
-				txt_lineActive[1] = false;//palette name
+				txt_lineActive[1] = false;//lover name
 				txt_lineActive[2] = false;//theory name
 				txt_lineActive[3] = true;//range name
 
@@ -7040,6 +7072,23 @@ void ofxColorManager::Changed_ColorRange(ofAbstractParameter &e)
 				if (DEMO_Test) myDEMO.reStart();
 			}
 		}
+	}
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::refresh_Range_AutoUpdate()
+{
+	//auto create palette
+	if (autoGenerate_Range)
+	{
+		int i = last_Index_Range;
+
+		rangTypes[i] = true;
+		range_Name = rangTypes[i].getName();
+		txt_lineActive[0] = false;//preset name
+		txt_lineActive[1] = false;//lover name
+		txt_lineActive[2] = false;//theory name
+		txt_lineActive[3] = true;//range name
 	}
 }
 
@@ -8029,7 +8078,7 @@ void ofxColorManager::preset_load(std::string p)
 		palette_TEMP.setPalette(palette);
 
 		txt_lineActive[0] = true;//preset name
-		txt_lineActive[1] = false;//palette name
+		txt_lineActive[1] = false;//lover name
 		txt_lineActive[2] = false;//theory name
 		txt_lineActive[3] = false;//range name
 
@@ -8164,7 +8213,6 @@ void ofxColorManager::refresh_Picker_Touched()
 
 			if (autoPick_RangeColor1)
 			{
-				//_c1 = color_Picked.get();
 				color_1_Range = color_Picked.get();
 				if (autoGenerate_Range) generate_Range(color_1_Range.get(), color_2_Range.get());
 			}
@@ -8175,7 +8223,6 @@ void ofxColorManager::refresh_Picker_Touched()
 
 			if (autoPick_RangeColor2)
 			{
-				//_c2 = color_Picked.get();
 				color_2_Range = color_Picked.get();
 				if (autoGenerate_Range) generate_Range(color_1_Range.get(), color_2_Range.get());
 			}
@@ -8420,7 +8467,6 @@ void ofxColorManager::setup_Range()
 
 	//12 types
 	rangeTypes_names = { "RGB", "HSL", "HSV ", "HSB", "LUV ", "LAB", "HLAB", "LCH", "CMY", "CMYK", "YXY", "XYZ" };
-	//bRefreshMorph = false;
 
 	autoGenerate_Range.set("Auto Generate", true);
 	autoPick_RangeColor1.set("Auto Pick C1", true);
@@ -8446,7 +8492,6 @@ void ofxColorManager::setup_Range()
 	//--
 
 	generate_Range(color_1_Range.get(), color_2_Range.get());
-	//generate_Range(_c1, _c2);
 }
 
 //--------------------------------------------------------------
