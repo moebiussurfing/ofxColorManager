@@ -11,6 +11,9 @@
 #*.JSON
 #*.json
 
+imgui.ini
+#*.ini
+
 #*/bin/*
 #!*/bin/data/
 #[Bb]in/

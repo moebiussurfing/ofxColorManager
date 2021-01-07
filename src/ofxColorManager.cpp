@@ -8418,9 +8418,6 @@ void ofxColorManager::setup_Range()
 	color_1_Range.set("Color 1", ofColor::red, ofColor(0), ofColor(255));
 	color_2_Range.set("Color 2", ofColor::blue, ofColor(0), ofColor(255));
 
-	_c1 = color_1_Range.get();
-	_c2 = color_2_Range.get();
-
 	//12 types
 	rangeTypes_names = { "RGB", "HSL", "HSV ", "HSB", "LUV ", "LAB", "HLAB", "LCH", "CMY", "CMYK", "YXY", "XYZ" };
 	//bRefreshMorph = false;
