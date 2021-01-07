@@ -533,7 +533,7 @@ void ofxColorManager::setup()
 	MODE_Editor.setSerializable(false);
 
 	SHOW_Presets.set("PRESETS", true);
-	SHOW_Kit.set("Kit", true);
+	SHOW_Kit.set("Show Kit", true);
 	//SHOW_PresetsPalette.set("Show Palette", false);
 	SHOW_BackGround.set("BACKGROUND", true);
 	SHOW_Picker.set("PICKER", true);
@@ -3892,22 +3892,36 @@ void ofxColorManager::gui_Presets()
 
 		if (ImGui::Button("Previous", ImVec2(_w50, _h)))
 		{
-			if (counter > 0)
+			if (files.size() > 0)
 			{
-				counter--;
-				preset_Index = counter;
-				if (preset_Index < files.size())
+				if (counter > 0)
+				{
+					counter--;
+					preset_Index = counter;
+
+				}
+				else {
+					if (counter == 0)
+					{
+						counter = files.size() - 1;
+						preset_Index = counter;
+					}
+				}
+
+				if (preset_Index < files.size() && preset_Index>0)
 				{
 					PRESET_name = files_Names[preset_Index];
 					ofLogNotice(__FUNCTION__) << "ARROW: PRESET_name: [" + ofToString(preset_Index) + "] " << PRESET_name;
 
 					preset_load(PRESET_name);
+
+					//-
+
+					if (MODE_newPreset) MODE_newPreset = false;
+
+					//workflow
+					if (DEMO_Test) myDEMO.reStart();
 				}
-
-				if (MODE_newPreset) MODE_newPreset = false;
-
-				//workflow
-				if (DEMO_Test) myDEMO.reStart();
 			}
 		}
 
@@ -3917,34 +3931,34 @@ void ofxColorManager::gui_Presets()
 
 		if (ImGui::Button("Next", ImVec2(_w50, _h)))
 		{
-			if (counter < files.size() - 1)
+			if (files.size() > 0)
 			{
-				counter++;
-				preset_Index = counter;
-				if (preset_Index < files.size())
+				if (counter < files.size() - 1)
 				{
-					PRESET_name = files_Names[preset_Index];
-					ofLogNotice(__FUNCTION__) << "ARROW: PRESET_name: [" + ofToString(preset_Index) + "] " << PRESET_name;
-
-					preset_load(PRESET_name);
+					counter++;
+					preset_Index = counter;
 				}
-			}
-			else {//cycle
-				if (files.size() > 0)
-				{
+				else {//cycle
 					counter = 0;
 					preset_Index = counter;
+				}
+
+				if (preset_Index < files.size() && preset_Index>0)
+				{
 					PRESET_name = files_Names[preset_Index];
 					ofLogNotice(__FUNCTION__) << "ARROW: PRESET_name: [" + ofToString(preset_Index) + "] " << PRESET_name;
 
 					preset_load(PRESET_name);
+
+					//-
+
+					if (MODE_newPreset) MODE_newPreset = false;
+
+					//workflow
+					if (DEMO_Test) myDEMO.reStart();
 				}
+
 			}
-
-			if (MODE_newPreset) MODE_newPreset = false;
-
-			//workflow
-			if (DEMO_Test) myDEMO.reStart();
 		}
 
 		ImGui::PopButtonRepeat();
