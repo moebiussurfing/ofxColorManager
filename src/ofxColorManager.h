@@ -6,10 +6,9 @@
 
 TODO:
 
-+ fix change num colors on theory/range palettes
++ fix change num colors on theory
 + remove all interface/rect stuff
-+ store lovers state favs or history
-+ remove layout
++ remove layout addon ?
 
 */
 
