@@ -703,7 +703,7 @@ private:
 
 	// interface
 
-	void setup_Interface_Scene();
+	//void setup_Interface_Scene();
 
 #ifdef USE_RECTANGLE_INTERFACES
 	ofxInterface::Node *scene;
