@@ -2,9 +2,7 @@
 // Created by moebiussurfing on 7/31/19.
 //
 
-#ifndef INC_3_COLORMANAGER_PRESETPALETTE_H
-#define INC_3_COLORMANAGER_PRESETPALETTE_H
-
+#pragma once
 #include "ofMain.h"
 
 #include "ofxColorGradient.h"
@@ -20,7 +18,7 @@ using namespace ofxCereal;
 
 struct PaletteData
 {
-	string name;
+	std::string name;
 	vector<ofColor> palette;
 	ofColor background;
 
@@ -29,9 +27,9 @@ struct PaletteData
 
 struct PresetData
 {
-	string name;
+	std::string name;
 	vector<ofColor> palette;
-	string curveName;
+	std::string curveName;
 	ofColor background;
 
 	OFX_CEREAL_DEFINE(CEREAL_NVP(name), CEREAL_NVP(curveName), CEREAL_NVP(palette), CEREAL_NVP(background))
@@ -44,11 +42,9 @@ class PresetPalette
 
 public:
 
-	PresetPalette() {
+	PresetPalette() 
+	{
 		path_Global = "ofxColorManager/";
-
-		//path_Presets = path_Global + "user_kits/presets/";
-		//path_Palettes = path_Global + "user_kits/palettes/";
 
 		path_Kits = "kits/";
 		path_Presets = path_Global + path_Kits + "presets/";
@@ -62,37 +58,36 @@ public:
 
 	~PresetPalette() {};
 
-	//string path_Presets = "user_kits/presets/";
-	//string path_Palettes = "user_kits/palettes/";
-	string path_Global;
-	string path_Kits;
-	string path_Presets;
-	string path_Palettes;
+	std::string path_Global;
+	std::string path_Kits;
+	std::string path_Presets;
+	std::string path_Palettes;
 
 	//-
 
 	// local data
-	string name;
+	std::string name;
 	vector<ofColor> palette;
-	string curveName;
+	std::string curveName;
 	ofColor background;
 
 	//--
 
-	// outside data by pointers
-	string *name_BACK;
+	// out-of-scope (ofApp) data by pointers
+	std::string *name_BACK;
 	vector<ofColor> *palette_BACK;
-	string *curveName_BACK;
+	std::string *curveName_BACK;
 	ofColor *background_BACK;
 
-	ofColor color_BACK;//TODO temp because not pointer
+	ofColor color_BACK;
+	//TODO temp because not pointer
 
 	//--
 
 	// API
 
-	void setName(string &name);
-	void setCurveName(string &curve);
+	void setName(std::string &name);
+	void setCurveName(std::string &curve);
 	void setPalette(vector<ofColor> &palette);
 	void setBackgroundColor(ofColor _background);
 
@@ -106,19 +101,17 @@ public:
 	// preset (colors, gradient, curve)
 	PresetData presetData;//bundle preset: palette+curve+gradient+background
 
-	void preset_save(string p);
-	bool preset_load(string p);
+	void preset_save(std::string p);
+	bool preset_load(std::string p);
 
-	PaletteData preset_LoadPalette(string name);//TODO: not elegant..
+	PaletteData preset_LoadPalette(std::string name);//TODO: not elegant..
 
 	//--
 
 	// palette (only colors)
 	PaletteData paletteData;
-	void palette_save(string p);
-	void palette_load(string p);
+	void palette_save(std::string p);
+	void palette_load(std::string p);
 
 	//-
 };
-
-#endif //INC_3_COLORMANAGER_PRESETPALETTE_H

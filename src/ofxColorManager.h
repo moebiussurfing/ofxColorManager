@@ -379,11 +379,11 @@ public:
 	void setup();
 	void startup();
 
-	//void update();
-	//void draw();
+	void draw();
+	//void draw(ofEventArgs & args);//TODO: to allow auto update we must set the priority layer/drawing
 
 	void update(ofEventArgs & args);
-	void draw(ofEventArgs & args);
+	//void update();
 
 	void draw_Curve();
 	void update_Curve();

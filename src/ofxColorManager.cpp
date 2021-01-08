@@ -11,7 +11,7 @@ ofxColorManager::ofxColorManager()
 {//--
 
 	ofAddListener(ofEvents().update, this, &ofxColorManager::update);
-	ofAddListener(ofEvents().draw, this, &ofxColorManager::draw);
+	//ofAddListener(ofEvents().draw, this, &ofxColorManager::draw);
 
 	//default
 	fps = 60.0f;
@@ -1330,7 +1330,8 @@ void ofxColorManager::draw_Info()
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::draw(ofEventArgs & args)
+void ofxColorManager::draw()
+//void ofxColorManager::draw(ofEventArgs & args)
 {
 	// background
 
@@ -1556,7 +1557,7 @@ void ofxColorManager::exit()
 	//--
 
 	ofRemoveListener(ofEvents().update, this, &ofxColorManager::update);
-	ofRemoveListener(ofEvents().draw, this, &ofxColorManager::draw);
+	//ofRemoveListener(ofEvents().draw, this, &ofxColorManager::draw);
 
 	removeKeysListeners();
 	removeMouseListeners();
@@ -4598,13 +4599,13 @@ void ofxColorManager::update_CurveTool()
 
 	//-
 
-	// UPDATE TARGET COLOR POINTER IN ofApp
-	if (color_TARGET != nullptr)//only if pointer is setted
-	{
-		float out = ofMap(curvesTool.getAtPercent(1.0 - curve_Ctrl_In), 0, cAmt - 1, 1., 0.);
-		ofColor c = gradient.getColorAtPercent(out);
-		color_TARGET->set(c);//TODO: should reduce calls
-	}
+	//// update TARGET color pointer (ofApp)
+	//if (color_TARGET != nullptr)
+	//{
+	//	float out = ofMap(curvesTool.getAtPercent(1.0 - curve_Ctrl_In), 0, cAmt - 1, 1., 0.);
+	//	ofColor c = gradient.getColorAtPercent(out);
+	//	color_TARGET->set(c);
+	//}
 }
 
 //--------------------------------------------------------------
@@ -6243,12 +6244,24 @@ void ofxColorManager::palette_clear()
 void ofxColorManager::Changed_ColorPicked(ofFloatColor &c)
 {
 	ofLogNotice(__FUNCTION__) << ofToString(c);// color_Picked
+											   
+	// update TARGET color pointer (ofApp)
+	if (color_TARGET != nullptr)
+	{
+		color_TARGET->set(c);
+	}
 }
 
 //--------------------------------------------------------------
 void ofxColorManager::Changed_ColorClicked(ofFloatColor &c)
 {
-	ofLogNotice(__FUNCTION__) << ofToString(c);// color_Clicked
+	ofLogNotice(__FUNCTION__) << ofToString(c);// color_Clicked	
+
+	// update TARGET color pointer (ofApp)
+	if (color_TARGET != nullptr)
+	{
+		color_TARGET->set(c);
+	}
 }
 
 //--------------------------------------------------------------
