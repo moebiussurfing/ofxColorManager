@@ -669,7 +669,7 @@ public:
 	ofParameter<int> lib_Page_Index{ "Page" , 0, 0, lib_Page_Max };
 	ofParameter<bool>lib_CardsMode{ "Mode Cards", false };
 	ofParameter<int> lib_MaxColumns{ "Columns Max", 7, 1, 7 * 6 };
-	ofParameter<float> scale_ColLib{ "Scale", 1, 0.5, 1.5 };
+	ofParameter<float> scale_LibCol{ "Scale", 1, 0.5, 1.5 };
 
 	//----
 

@@ -173,7 +173,7 @@ void ofxColorManager::setup()
 	//ofSetLogLevel("ofxColorManager", OF_LOG_NOTICE);
 
 #ifdef USE_SUPER_LOG
-	string fileLoggingDirectory = "logs";
+	std::string fileLoggingDirectory = "logs";
 	bool logToConsole = 0;
 	bool logToScreen = true;
 	ofSetLoggerChannel(ofxSuperLog::getLogger(logToConsole, logToScreen, "logs"));
@@ -756,7 +756,7 @@ void ofxColorManager::setup()
 	params_Library.add(lib_MaxColumns);
 	params_Library.add(lib_NumRows);
 	params_Library.add(lib_CardsMode);
-	params_Library.add(scale_ColLib);
+	params_Library.add(scale_LibCol);
 	params_Library.add(scale_ColRange);
 	params_Library.add(lib_Responsive_Mode);
 	params_Library.add(bPagerized);
@@ -2356,7 +2356,7 @@ void ofxColorManager::gui_Palette()
 			if (bPaletteFillMode)
 			{
 				ImGui::PushID(n);
-				string name = ofToString(n);
+				std::string name = ofToString(n);
 
 				////customize colors
 				//if (n == indexBrowser)//when selected
@@ -2627,7 +2627,7 @@ void ofxColorManager::gui_Library()
 				if (!lib_Responsive_Mode)
 				{
 					ofxImGui::AddParameter(lib_CardsMode);
-					ImGui::InputFloat(scale_ColLib.getName().c_str(), (float *)&scale_ColLib.get(), 0.02f, 0.1f);
+					ImGui::InputFloat(scale_LibCol.getName().c_str(), (float *)&scale_LibCol.get(), 0.02f, 0.1f);
 
 					if (!lib_CardsMode)
 					{
@@ -2775,7 +2775,7 @@ void ofxColorManager::gui_Library()
 
 				ImVec2 _bb;
 				if (lib_Responsive_Mode) _bb = _sz;
-				else _bb = ImVec2(sizeLibColBox * scale_ColLib, sizeLibColBox * scale_ColLib);
+				else _bb = ImVec2(sizeLibColBox * scale_LibCol, sizeLibColBox * scale_LibCol);
 
 				ofFloatColor _c = ofColor(palette_Lib_Cols[n]);
 
@@ -4005,16 +4005,17 @@ void ofxColorManager::gui_Presets()
 
 			//-
 
-			//workflow: 
-			//when its editing a new preset..
-
-			int n = 30;
-			float a = ofMap(ofGetFrameNum() % n, 0, n, 0.0f, 1.0f);
+			//workflow
+			//when a new preset is editing
+			float freq = 0.075;//speed freq
+			float min = 0.25;
+			float max = 0.75;
+			float a = ofMap(glm::sin(freq * ofGetFrameNum()), -1, 1, min, max);
 
 			ImGui::PushID(1);
 			ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.5, 0.0f, 0.5f, a));
 
-			ImGui::Dummy(ImVec2(0.0f, 10.f));
+			ImGui::Dummy(ImVec2(0, 10));
 
 			if (ImGui::Button("SAVE NEW", ImVec2(_w, _h)))
 			{
@@ -4035,8 +4036,8 @@ void ofxColorManager::gui_Presets()
 				int ii = -1;
 				for (size_t i = 0; i < files.size() && ii == -1; i++)
 				{
-					string n = files_Names[i];
-					//string n = files[i].getBaseName();
+					std::string n = files_Names[i];
+					//std::string n = files[i].getBaseName();
 
 					ofLogNotice(__FUNCTION__) << files_Names[i];
 
@@ -4105,7 +4106,7 @@ void ofxColorManager::gui_Presets()
 				// responsive buttons size
 				if (bPaletteFillMode) {
 					ImGui::PushID(n);
-					string name = ofToString(n);
+					std::string name = ofToString(n);
 
 					////customize colors
 					//if (n == indexBrowser)//when selected
@@ -6156,7 +6157,7 @@ void ofxColorManager::palette_removeColorLast()
 
 #ifdef USE_RECTANGLE_INTERFACES
 //--------------------------------------------------------------
-void ofxColorManager::palette_touchedColor(string name)
+void ofxColorManager::palette_touchedColor(std::string name)
 {
 	//TODO:
 	//workflow: 
