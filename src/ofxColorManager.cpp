@@ -47,13 +47,11 @@ void ofxColorManager::startup()
 {
 	//--
 
-	ofxSurfingHelpers::loadGroup(params_AppState, path_AppState);
-
-	//--
-
 	ENABLE_keys = true;
 
 	//--
+
+	// curve
 
 	// edit layout
 
@@ -68,7 +66,7 @@ void ofxColorManager::startup()
 
 	//-
 
-	// curve
+	// preset
 
 	//bResetCurve = true;
 
@@ -142,6 +140,13 @@ void ofxColorManager::startup()
 	//workflow
 	panels.group_Selected = 0;
 #endif
+
+	//--
+
+	ofxSurfingHelpers::loadGroup(params_AppState, path_AppState);
+
+	// color ranges
+	setup_Range();
 
 	//--
 
@@ -593,7 +598,7 @@ void ofxColorManager::setup()
 	//-
 
 	// color ranges
-	setup_Range();
+	//setup_Range();
 
 	//-
 
@@ -764,7 +769,9 @@ void ofxColorManager::setup()
 	params_Library.add(sizeLibColBox);
 	params_AppState.add(params_Library);
 
+	params_Palette2.add(numColors_Range);
 	params_Palette2.add(numColors_Alg);
+
 	params_Palette2.add(sizePaletteBox);
 	params_Palette2.add(scale_ColPalette);
 	params_Palette2.add(bPaletteFillMode);
@@ -1255,8 +1262,8 @@ void ofxColorManager::draw_Info()
 	h = padh;
 	y += h;
 
-	//t0 != "" ||
-	if (txt_lineActive[0]) {//preset name
+	//if (txt_lineActive[0]) 
+	{//preset name
 		x = ofGetWidth() * 0.5 - _w0 * 0.5;
 		if (txt_lineActive[i]) ofSetColor(c0);
 		else ofSetColor(c0_Ghost);
@@ -1272,7 +1279,8 @@ void ofxColorManager::draw_Info()
 	}
 	i++;
 
-	if (txt_lineActive[1]) {//lover name
+	//if (txt_lineActive[1])
+	{//lover name
 		x = ofGetWidth() * 0.5 - _w1 * 0.5;
 		if (txt_lineActive[i]) ofSetColor(c0);
 		else ofSetColor(c0_Ghost);
@@ -1288,7 +1296,8 @@ void ofxColorManager::draw_Info()
 	}
 	i++;
 
-	if (txt_lineActive[2]) {//theory name
+	//if (txt_lineActive[2])
+	{//theory name
 		x = ofGetWidth() * 0.5 - _w2 * 0.5;
 		if (txt_lineActive[i]) ofSetColor(c0);
 		else ofSetColor(c0_Ghost);
@@ -1304,7 +1313,8 @@ void ofxColorManager::draw_Info()
 	}
 	i++;
 
-	if (txt_lineActive[3]) {//range name
+	//if (txt_lineActive[3]) 
+	{//range name
 		x = ofGetWidth() * 0.5 - _w3 * 0.5;
 		if (txt_lineActive[i]) ofSetColor(c0);
 		else ofSetColor(c0_Ghost);
@@ -7027,74 +7037,77 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 //--------------------------------------------------------------
 void ofxColorManager::Changed_ColorRange(ofAbstractParameter &e)
 {
-	std::string name = e.getName();
-	ofLogNotice(__FUNCTION__) << name << " : " << e;
-
-	if (false) {}
-
-	//else if (name == color_1_Range.getName())
-	//{
-	//	_c1 = color_1_Range.get();
-	//}
-	//else if (name == color_2_Range.getName())
-	//{
-	//	_c2 = color_2_Range.get();
-	//}
-
-	// num colors
-	else if (name == numColors_Range.getName())
+	if (bRange_Intitiated)
 	{
-		generate_Range(color_1_Range.get(), color_2_Range.get());
+		std::string name = e.getName();
+		ofLogNotice(__FUNCTION__) << name << " : " << e;
 
-		//auto create palette
-		refresh_Range_AutoUpdate();
-	}
+		if (false) {}
 
-	else if (name == autoPick_RangeColor1.getName())
-	{
-		if (autoPick_RangeColor1) autoPick_RangeColor2 = false;
-	}
-	else if (name == autoPick_RangeColor2.getName())
-	{
-		if (autoPick_RangeColor2) autoPick_RangeColor1 = false;
-	}
+		//else if (name == color_1_Range.getName())
+		//{
+		//	_c1 = color_1_Range.get();
+		//}
+		//else if (name == color_2_Range.getName())
+		//{
+		//	_c2 = color_2_Range.get();
+		//}
 
-	else
-	{
-		// ranges
-
-		for (int i = 0; i < NUM_TYPES_RANGES; i++)
+		// num colors
+		else if (name == numColors_Range.getName())
 		{
-			if (name == rangTypes[i].getName() && rangTypes[i].get())
+			generate_Range(color_1_Range.get(), color_2_Range.get());
+
+			//auto create palette
+			refresh_Range_AutoUpdate();
+		}
+
+		else if (name == autoPick_RangeColor1.getName())
+		{
+			if (autoPick_RangeColor1) autoPick_RangeColor2 = false;
+		}
+		else if (name == autoPick_RangeColor2.getName())
+		{
+			if (autoPick_RangeColor2) autoPick_RangeColor1 = false;
+		}
+
+		else
+		{
+			// ranges
+
+			for (int i = 0; i < NUM_TYPES_RANGES; i++)
 			{
-				rangTypes[i] = false;//off button
-
-				int st = i * numColors_Range.get();
-				int ed = st + numColors_Range.get();
-
-				// populate palette
-
-				palette_clear();
-				for (int j = st; j < ed; j++)
+				if (name == rangTypes[i].getName() && rangTypes[i].get())
 				{
-					ofColor c = palette_Range[j];
-					palette_addColor(c);
+					rangTypes[i] = false;//off button
 
-					ofLogNotice(__FUNCTION__) << "[" << i << "][" << (j - st) << "] > " << ofToString(c);
+					int st = i * numColors_Range.get();
+					int ed = st + numColors_Range.get();
+
+					// populate palette
+
+					palette_clear();
+					for (int j = st; j < ed; j++)
+					{
+						ofColor c = palette_Range[j];
+						palette_addColor(c);
+
+						ofLogNotice(__FUNCTION__) << "[" << i << "][" << (j - st) << "] > " << ofToString(c);
+					}
+
+					//-
+
+					//index selected
+					last_Index_Range = i;
+					range_Name = rangTypes[i].getName();
+					txt_lineActive[0] = false;//preset name
+					txt_lineActive[1] = false;//lover name
+					txt_lineActive[2] = false;//theory name
+					txt_lineActive[3] = true;//range name
+
+					// DEMO
+					if (DEMO_Test) myDEMO.reStart();
 				}
-
-				//-
-
-				//index selected
-				last_Index_Range = i;
-				range_Name = rangTypes[i].getName();
-				txt_lineActive[0] = false;//preset name
-				txt_lineActive[1] = false;//lover name
-				txt_lineActive[2] = false;//theory name
-				txt_lineActive[3] = true;//range name
-
-				// DEMO
-				if (DEMO_Test) myDEMO.reStart();
 			}
 		}
 	}
@@ -8490,7 +8503,7 @@ void ofxColorManager::setup_Range()
 	color_1_Range.set("Color 1", ofColor::red, ofColor(0), ofColor(255));
 	color_2_Range.set("Color 2", ofColor::blue, ofColor(0), ofColor(255));
 
-	//12 types
+	// 12 types
 	rangeTypes_names = { "RGB", "HSL", "HSV ", "HSB", "LUV ", "LAB", "HLAB", "LCH", "CMY", "CMYK", "YXY", "XYZ" };
 
 	autoGenerate_Range.set("Auto Generate", true);
@@ -8498,8 +8511,8 @@ void ofxColorManager::setup_Range()
 	autoPick_RangeColor2.set("Auto Pick C2", false);
 	bGetPaletteFromRange.set("To User Palette", false);
 
-	numColors_Range.set("Amnt Colors Rng", 11, 3, MAX_PALETTE_COLORS);
-	numColors_Range.setSerializable(false);
+	numColors_Range.set("Amnt Colors Rng", MAX_PALETTE_COLORS, 3, MAX_PALETTE_COLORS);
+	//numColors_Range.setSerializable(false);
 
 	params_Ranges.setName("Params Ranges");
 	for (int i = 0; i < int(NUM_TYPES_RANGES); i++) //12
@@ -8517,6 +8530,8 @@ void ofxColorManager::setup_Range()
 	//--
 
 	generate_Range(color_1_Range.get(), color_2_Range.get());
+
+	bRange_Intitiated = true;
 }
 
 //--------------------------------------------------------------
