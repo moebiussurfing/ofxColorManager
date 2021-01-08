@@ -316,7 +316,7 @@ void ofxColorManager::setup()
 	myPalette.resize(2);//pointer setter will clear/resize. nevermind the vector size here
 	myPalette[0] = ofColor::grey;
 	myPalette[1] = ofColor::black;
-	myPalette_Name = " ";
+	myPalette_Name = "";
 
 	//----
 
@@ -341,7 +341,7 @@ void ofxColorManager::setup()
 		ofLogNotice("ofxColorManager::MODE_SORTING: ") << i;
 
 		refresh_Libs();
-		
+
 		});
 
 	//-
@@ -1252,8 +1252,10 @@ void ofxColorManager::draw_Info()
 	h = padh;
 	y += h;
 
-	//if (txt_lineActive[0]) 
-	{//preset name
+	//preset name
+//if (txt_lineActive[0]) 
+	if (t0 != "")
+	{
 		x = ofGetWidth() * 0.5 - _w0 * 0.5;
 		if (txt_lineActive[i]) ofSetColor(c0);
 		else ofSetColor(c0_Ghost);
@@ -1269,8 +1271,10 @@ void ofxColorManager::draw_Info()
 	}
 	i++;
 
-	//if (txt_lineActive[1])
-	{//lover name
+	//lover name
+//if (txt_lineActive[1])
+	if (t1 != "")
+	{
 		x = ofGetWidth() * 0.5 - _w1 * 0.5;
 		if (txt_lineActive[i]) ofSetColor(c0);
 		else ofSetColor(c0_Ghost);
@@ -1286,8 +1290,10 @@ void ofxColorManager::draw_Info()
 	}
 	i++;
 
-	//if (txt_lineActive[2])
-	{//theory name
+	//theory name
+	if (t2 != "")
+		//if (txt_lineActive[2])
+	{
 		x = ofGetWidth() * 0.5 - _w2 * 0.5;
 		if (txt_lineActive[i]) ofSetColor(c0);
 		else ofSetColor(c0_Ghost);
@@ -1303,8 +1309,10 @@ void ofxColorManager::draw_Info()
 	}
 	i++;
 
-	//if (txt_lineActive[3]) 
-	{//range name
+	//range name
+	if (t3 != "")
+		//if (txt_lineActive[3]) 
+	{
 		x = ofGetWidth() * 0.5 - _w3 * 0.5;
 		if (txt_lineActive[i]) ofSetColor(c0);
 		else ofSetColor(c0_Ghost);
@@ -1448,8 +1456,8 @@ void ofxColorManager::draw(ofEventArgs & args)
 
 				//myDEMO.setEnableMouseCamera();
 			}
+		}
 	}
-}
 
 	//--
 
@@ -2153,7 +2161,7 @@ void ofxColorManager::gui_Theory()
 			case 6:
 				_total = complementTriad.size();
 				break;
-			}
+	}
 #endif
 
 #ifdef USE_RECTANGLE_INTERFACES
@@ -2202,8 +2210,6 @@ void ofxColorManager::gui_Theory()
 
 			if (ofxSurfingHelpers::AddSmallButton(algoTypes[i], 150, _cSize))
 			{
-				//theory_Name = algoTypes[i].getName();
-				//last_Index_Theory = i;
 			}
 
 			//-
@@ -2284,7 +2290,7 @@ void ofxColorManager::gui_Theory()
 
 				ImGui::PopID();
 			}
-		}
+}
 
 		//----
 
@@ -2583,27 +2589,24 @@ void ofxColorManager::gui_Library()
 
 		//--
 
-		ImGui::Dummy(ImVec2(0.0f, 5));
+		std::string s;
 
-		std::string s = "";
-		s += "PANTONE (c)";
-		s += "    ";
-		s += ofToString(last_Lib_Index) + "/" + ofToString(lib_TotalColors - 1);
+		ImGui::Dummy(ImVec2(0, 5));
 
+		// lib name
+		s = colorBrowser.getNameLib();
 		ImGui::Text(s.c_str());
 
-		ImGui::Dummy(ImVec2(0.0f, 5));
+		ImGui::Dummy(ImVec2(0, 5));
 
-		//-
+		// color name
+		ImGui::Text(last_Lib_NameColor.c_str());
 
-		// name color
-		// load tab2 with last_Lib_NameColor
-		char tab2[32];
-		strncpy(tab2, last_Lib_NameColor.c_str(), sizeof(tab2));
-		tab2[sizeof(tab2) - 1] = 0;
-		ImGui::Text("%s", tab2);//color name
+		ImGui::Dummy(ImVec2(0, 5));
 
-		ImGui::Dummy(ImVec2(0.0f, 5));
+		// index
+		s = ofToString(last_Lib_Index) + "/" + ofToString(lib_TotalColors - 1);
+		ImGui::Text(s.c_str());
 
 		//--
 
@@ -2619,7 +2622,8 @@ void ofxColorManager::gui_Library()
 
 				//-
 
-				// responsive buttons size
+				// responsive
+
 				if (!lib_Responsive_Mode)
 				{
 					ofxImGui::AddParameter(lib_CardsMode);
@@ -2698,6 +2702,7 @@ void ofxColorManager::gui_Library()
 
 			//-
 
+			// page
 			ofxImGui::AddParameter(lib_Page_Index);//page slider selector
 			//ImGui::SliderInt("PAGE", &lib_Page_Index, 0, lib_Page_Max);//page slider selector
 			//ImGui::DragInt("PAGE", (int *)&lib_Page_Index, 0, lib_Page_Max);//collide..
@@ -2772,11 +2777,7 @@ void ofxColorManager::gui_Library()
 				if (lib_Responsive_Mode) _bb = _sz;
 				else _bb = ImVec2(sizeLibColBox * scale_ColLib, sizeLibColBox * scale_ColLib);
 
-				//----
-
 				ofFloatColor _c = ofColor(palette_Lib_Cols[n]);
-
-				//-
 
 				if (ImGui::ColorButton("##paletteLib",
 					_c,
@@ -2796,7 +2797,7 @@ void ofxColorManager::gui_Library()
 					{
 						last_Lib_NameColor = palette_Lib_Names[n];
 
-						std::string str = "Lib Picked: [" + ofToString(last_ColorPicked_Lib) + "] " + 
+						std::string str = "Lib Picked: [" + ofToString(last_ColorPicked_Lib) + "] " +
 							last_Lib_NameColor;
 						ofLogNotice(__FUNCTION__) << str;
 					}
@@ -4002,7 +4003,7 @@ void ofxColorManager::gui_Presets()
 
 			ImGui::PopItemWidth();
 
-
+			//-
 
 			//workflow: 
 			//when its editing a new preset..
@@ -6328,6 +6329,7 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 				//-
 
 				theory_Name = theoryTypes[i].getName();
+
 				last_Index_Theory = i;
 
 				txt_lineActive[0] = false;//preset name
@@ -6337,6 +6339,9 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 
 				// DEMO
 				if (DEMO_Test) myDEMO.reStart();
+
+				textInput_New = theory_Name;
+				MODE_newPreset = true;
 			}
 		}
 	}
@@ -6369,6 +6374,9 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 
 			// DEMO
 			if (DEMO_Test) myDEMO.reStart();
+
+			textInput_New = theory_Name;
+			MODE_newPreset = true;
 
 			//-
 
@@ -6985,6 +6993,9 @@ void ofxColorManager::Changed_ColorRange(ofAbstractParameter &e)
 
 					// DEMO
 					if (DEMO_Test) myDEMO.reStart();
+
+					textInput_New = range_Name;
+					MODE_newPreset = true;
 				}
 			}
 		}
@@ -7005,6 +7016,9 @@ void ofxColorManager::refresh_Range_AutoUpdate()
 		txt_lineActive[1] = false;//lover name
 		txt_lineActive[2] = false;//theory name
 		txt_lineActive[3] = true;//range name
+
+		textInput_New = range_Name;
+		MODE_newPreset = true;
 	}
 }
 
@@ -7720,8 +7734,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//
 		//    else if (key == OF_KEY_RETURN)
 		//        colorBrowser.switch_sorted_Type();
-	}
-}
+			}
+		}
 
 //--------------------------------------------------------------
 void ofxColorManager::keyReleased(ofKeyEventArgs &eventArgs)
