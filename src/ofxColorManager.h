@@ -6,9 +6,8 @@
 
 TODO:
 
-+ fix change num colors on theory
-+ remove all interface/rect stuff
-+ remove layout addon ?
++ simplify num colors calls..
++ fix auto build palette wf
 
 */
 
@@ -278,6 +277,8 @@ private:
 #endif
 
 	//-
+	
+	ofParameter<int> numColors_TheoryEngines;
 
 private:
 	// color theory
@@ -727,7 +728,7 @@ private:
 	// test curve
 private:
 
-	ofParameter<bool> TEST_Mode{ "Enable", false };
+	ofParameter<bool> TEST_Mode{ "Curve TEST", false };
 	float TEST_Speed = .75;
 	bool TEST_LFO_Mode = true;
 	int TEST_maxFrames = 300;//slowest period
@@ -763,7 +764,7 @@ private:
 	void preset_save(std::string p);
 	void preset_load(std::string p);
 
-	//TODO: this a kind of kit of palettes ?
+	//TODO: this is to save an standalone palette
 	//void palette_save(std::string p);
 	//void palette_load(std::string p);
 
@@ -788,7 +789,6 @@ private:
 
 	// app settings xml
 private:
-
 	ofParameterGroup params_AppState;
 	ofParameterGroup params_Panels{ "PANELS" };
 	ofParameterGroup params_Background{ "BACKGROUND" };
@@ -801,9 +801,6 @@ private:
 	//--
 
 private:
-
-	//--
-
 	// layout
 	int box_size_user;//user palette colors
 	int box_size;//palettes colors
@@ -854,7 +851,6 @@ public:
 private:
 	void addKeysListeners();
 	void removeKeysListeners();
-
 	void addMouseListeners();
 	void removeMouseListeners();
 
