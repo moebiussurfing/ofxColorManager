@@ -3,7 +3,6 @@ ofxColorManager
 ofxColorQuantizerHelper
 ofxColorsBrowser
 ofxColourLoversHelper
-ofxFontStash
 ofxGui
 ofxImGui
 ofxMouseRuler

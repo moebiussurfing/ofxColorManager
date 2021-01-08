@@ -146,16 +146,6 @@ void ofxColorManager::setup()
 
 #ifdef USE_COLOR_LOVERS
 
-	// set positions and panel sizes
-	//glm::vec2 sizeGui(150, 375);
-	//glm::vec2 sizeGrid(150, ofGetHeight());
-	//glm::vec2 posGui(ofGetWidth() - (sizeGui.x + sizeGrid.x + 4), 0);
-	//glm::vec2 posGrid(posGui.x + sizeGui.x + 2, 0);
-
-	//// must be called before setup() to overwrite default settings
-	//colourLoversHelper.setGrid(posGrid, sizeGrid);
-	//colourLoversHelper.setup(posGui, sizeGui);
-
 	colourLoversHelper.setup();
 
 	//----
@@ -277,8 +267,6 @@ void ofxColorManager::setup()
 
 	// algorithmic palette
 
-	//MODE_TweakSatBrg.set("Tweak Sat/Brt", false);
-	//bLock_palette.set("Lock Palettes", false);
 
 	SATURATION.set("SATURATION", 200, 0, 255);
 	BRIGHTNESS.set("BRIGHTNESS", 200, 0, 255);
@@ -287,6 +275,7 @@ void ofxColorManager::setup()
 
 	numColors_Alg.set("Amnt Colors Alg", 6, 2, MAX_PALETTE_COLORS);
 
+	//bLock_palette.set("Lock Palettes", false);
 	//bRandomPalette.set("RANDOM PALETTE", false);
 
 	params_Theory.setName("ADVANCED");
@@ -313,11 +302,8 @@ void ofxColorManager::setup()
 	color_HUE_0.setSerializable(false);
 	color_SAT_0.setSerializable(false);
 	color_BRG_0.setSerializable(false);
-	//bColor_SAT.setSerializable(false);
 
 	ofAddListener(params_Theory.parameterChangedE(), this, &ofxColorManager::Changed_Controls);
-
-	//TODO: add ColorWheelSchemes alternative
 
 	//-
 
@@ -328,12 +314,7 @@ void ofxColorManager::setup()
 
 	//-
 
-	// algorithmic palettes
-
-	//random.generateRandom(numColors_Alg);
 	refresh_TheoryEngine();
-	//setup_Interface();
-	//setup_Labels();
 
 	//-
 
