@@ -4728,12 +4728,12 @@ void ofxColorManager::palette_FromTheory(int p)
 			palette_addColor(color);
 		}
 		break;
-//        case 7:
-//            for (int i = 0; i < btns_plt_Random.size(); i++) {
-//                color = btns_plt_Random[i]->getColor();
-//                palette_addColor(color);
-//            }
-//            break;
+		//        case 7:
+		//            for (int i = 0; i < btns_plt_Random.size(); i++) {
+		//                color = btns_plt_Random[i]->getColor();
+		//                palette_addColor(color);
+		//            }
+		//            break;
 	}
 
 	//-
@@ -4900,7 +4900,7 @@ void ofxColorManager::palettes_resize()
 
 //#ifdef USE_RECTANGLE_INTERFACES
 		palette_FromTheory(SELECTED_palette_LAST);
-//#endif
+		//#endif
 	}
 
 	//-
@@ -5373,7 +5373,7 @@ void ofxColorManager::palette_removeColorLast()
 			auto b = a->getName();
 			scene->removeChild(a, false);
 			ofLogVerbose(__FUNCTION__) << "removed children: " << b;
-	}
+		}
 		btns_palette.pop_back();
 	}
 
@@ -5440,7 +5440,7 @@ void ofxColorManager::palette_clear()
 		scene->removeChild(a, false);
 
 		ofLogVerbose(__FUNCTION__) << "removed children: " << b;
-}
+	}
 	btns_palette.clear();
 
 #endif
@@ -5531,11 +5531,6 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 		////refresh_TheoryEngine();
 		//////refresh_Interface();
 
-		palettes_resize();
-	}
-
-	else if (name == numColors_Alg.getName())
-	{
 		palettes_resize();
 	}
 
@@ -5698,8 +5693,14 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 {
 	std::string name = e.getName();
 
-	//if (name != "In" && name != "Out")
 	ofLogNotice(__FUNCTION__) << name << " : " << e;
+
+	//--
+
+	if (name == numColors_Alg.getName())
+	{
+		palettes_resize();
+	}
 
 	//----
 
@@ -5801,7 +5802,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		}
 	}
 
-	//position
+	//curve position
 	if (name == pos_CurveEditor.getName())
 	{
 	}
@@ -5825,7 +5826,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 	//-
 
-	// PANELS
+	// panels
 
 #ifdef USE_COLOR_LOVERS
 	if (name == "LOVERS")
@@ -5839,31 +5840,25 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		//}
 	}
 #endif
+
 	//else if (name == SHOW_AlgoPalettes.getName())
 	//{
 	//	setVisible_Interface(SHOW_AlgoPalettes);
 	//}
+
 	else if (name == SHOW_BrowserColors.getName())
 	{
 		colorBrowser.setVisible(SHOW_BrowserColors);
 	}
+
 	//else if (name == "SHOW CURVE TOOL")
 	//{
 	//}
+
 	else if (name == SHOW_Curve.getName())
 	{
 		curve_Slider_OutPick.setVisible(SHOW_Curve);
 		curve_Slider_InExp.setVisible(SHOW_Curve);
-	}
-	else if (name == SHOW_UserPalette.getName())
-	{
-#ifdef USE_RECTANGLE_INTERFACES
-		ofLogVerbose(__FUNCTION__) << "SHOW_UserPalette: " << SHOW_UserPalette;
-		for (int i = 0; i < btns_palette.size(); i++)
-		{
-			btns_palette[i]->setVisible(SHOW_UserPalette);
-		}
-#endif
 	}
 	else if (name == SHOW_Quantizer.getName())
 	{
@@ -5890,6 +5885,17 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		//}
 	}
 
+	//	else if (name == SHOW_UserPalette.getName())
+	//	{
+	//#ifdef USE_RECTANGLE_INTERFACES
+	//		ofLogVerbose(__FUNCTION__) << "SHOW_UserPalette: " << SHOW_UserPalette;
+	//		for (int i = 0; i < btns_palette.size(); i++)
+	//		{
+	//			btns_palette[i]->setVisible(SHOW_UserPalette);
+	//}
+	//#endif
+	//	}
+
 	//else if (name == SHOW_Presets.getName())
 	//{
 	//	//if (SHOW_Presets && SHOW_Quantizer)
@@ -5910,13 +5916,6 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			float _sat;
 			float _brg;
 
-			////TODO:
-			//color_HUE_0 = color_HUE;
-			//color_SAT_0 = color_SAT;
-			//color_BRG_0 = color_BRG;
-
-			//float _hue = ofRandom(color_HUE_0/255.f, color_HUE_Power / 255.f);
-
 			if (bColor_HUE) {
 				_hue = ofRandom(color_HUE_0 - 128.f * color_HUE_Power, color_HUE_0 + 128.f * color_HUE_Power);
 				color_HUE = _hue;
@@ -5935,7 +5934,6 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			//c.setBrightness(_brg);
 			//c.setHue(_hue);
 			//color_Picked = c;
-
 			//color_Picked = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
 		}
 	}
@@ -5962,8 +5960,8 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 				// 2. set last button from current added color
 				btns_palette[palette_colorSelected]->setSelected(true);//sets border only
 				ofLogNotice(__FUNCTION__) << "user palette selected last _c: " << palette_colorSelected;
-	}
-}
+			}
+		}
 #endif
 	}
 
@@ -5987,7 +5985,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			}
 		}
 
-		// WORKFLOW:
+		// workflow:
 		if (!bPaletteEdit)
 		{
 			palette_colorSelected = -1;
@@ -6081,12 +6079,12 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 #endif
 			// DEMO
 			if (DEMO_Test) myDEMO.reStart();
-	}
+		}
 	}
 
 	//--
 
-	// CURVE
+	// curve
 
 	else if (name == "Reset Curve")
 	{
@@ -6120,7 +6118,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 	//-
 
-	// BACKGROUND
+	// background
 
 	else if (name == "Refresh")
 	{
@@ -6130,18 +6128,18 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			color_BackGround.set(ofColor(color_Picked.get()));
 		}
 	}
-	else if (name == "AutoSet")
-	{
+	//else if (name == "AutoSet")
+	//{
 
-	}
-	else if (name == "BG")
-	{
-		//if (color_BackGround.get().getBrightness()!=backgroundDarkness_PRE)
-		//color_BackGround_Darkness = color_BackGround.get().getBrightness();
-		//
-		////if (backgroundDarkness_PRE!=color_BackGround_Darkness)
-		////color_BackGround_Darkness = (int)darkness;
-	}
+	//}
+	//else if (name == "BG")
+	//{
+	//	//if (color_BackGround.get().getBrightness()!=backgroundDarkness_PRE)
+	//	//color_BackGround_Darkness = color_BackGround.get().getBrightness();
+	//	//
+	//	////if (backgroundDarkness_PRE!=color_BackGround_Darkness)
+	//	////color_BackGround_Darkness = (int)darkness;
+	//}
 	else if (name == color_BackGround_Darkness.getName())
 	{
 		//TODO: must improve
@@ -6155,7 +6153,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 #ifdef USE_RECTANGLE_INTERFACES
 			palette_FromTheory(SELECTED_palette_LAST);//trig last choice
 #endif
-	}
+		}
 	}
 }
 
@@ -6170,16 +6168,10 @@ void ofxColorManager::Changed_ColorRange(ofAbstractParameter &e)
 
 		if (false) {}
 
-		//else if (name == color_1_Range.getName())
-		//{
-		//	_c1 = color_1_Range.get();
-		//}
-		//else if (name == color_2_Range.getName())
-		//{
-		//	_c2 = color_2_Range.get();
-		//}
+		//-
 
 		// num colors
+		
 		else if (name == numColors_Range.getName())
 		{
 			generate_Range(color_1_Range.get(), color_2_Range.get());
@@ -6187,6 +6179,8 @@ void ofxColorManager::Changed_ColorRange(ofAbstractParameter &e)
 			//auto create palette
 			refresh_Range_AutoUpdate();
 		}
+
+		//-
 
 		else if (name == autoPick_RangeColor1.getName())
 		{
@@ -6197,9 +6191,11 @@ void ofxColorManager::Changed_ColorRange(ofAbstractParameter &e)
 			if (autoPick_RangeColor2) autoPick_RangeColor1 = false;
 		}
 
+		//-
+
 		else
 		{
-			// ranges
+			// ranges label pickers
 
 			for (int i = 0; i < NUM_TYPES_RANGES; i++)
 			{
@@ -7404,7 +7400,7 @@ void ofxColorManager::refresh_Picker_Touched()
 			// 3. update gradient
 			if (palette_colorSelected < gradient.getNumColors())
 				gradient.replaceColorAtIndex(palette_colorSelected, color_Clicked2);
-	}
+		}
 #endif
 		//--
 
@@ -7420,7 +7416,7 @@ void ofxColorManager::refresh_Picker_Touched()
 #ifdef USE_RECTANGLE_INTERFACES
 			palette_FromTheory(SELECTED_palette_LAST);//trig last choiced algorithmic palette
 #endif
-}
+		}
 
 		//--
 
