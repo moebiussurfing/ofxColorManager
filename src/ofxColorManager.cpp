@@ -186,7 +186,7 @@ void ofxColorManager::setup()
 	//-
 
 	sizeLibColBox.set("Size Lib", 25, 10, 100);
-	bLibFillMode.set("Responsive", false);
+	lib_Responsive_Mode.set("Responsive", false);
 	bPagerized.set("Mode Paging", false);
 
 	sizePaletteBox.set("Size Plt", 25, 10, 500);
@@ -338,7 +338,7 @@ void ofxColorManager::setup()
 
 	//-
 
-	update_Libs();
+	refresh_Libs();
 
 	//-
 
@@ -356,7 +356,7 @@ void ofxColorManager::setup()
 
 		//TODO:
 		//refresh library
-		update_Libs();
+		refresh_Libs();
 
 		});
 
@@ -764,7 +764,7 @@ void ofxColorManager::setup()
 	params_Library.add(lib_CardsMode);
 	params_Library.add(scale_ColLib);
 	params_Library.add(scale_ColRange);
-	params_Library.add(bLibFillMode);
+	params_Library.add(lib_Responsive_Mode);
 	params_Library.add(bPagerized);
 	params_Library.add(sizeLibColBox);
 	params_AppState.add(params_Library);
@@ -1109,7 +1109,7 @@ void ofxColorManager::update(ofEventArgs & args)
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::update_Libs()
+void ofxColorManager::refresh_Libs()
 {
 	//TODO:
 	lib_TotalColors = colorBrowser.colors_STRUCT.size();
@@ -2428,7 +2428,7 @@ void ofxColorManager::gui_Palette()
 				_flags,
 				bb))
 			{
-				lastColorPicked_Palette = n;
+				last_ColorPicked_Palette = n;
 			}
 
 			//--
@@ -2545,422 +2545,308 @@ void ofxColorManager::gui_Library()
 	{
 		bool bUpdate = false;
 
+		//--
+
+		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
+		float _w = ImGui::GetWindowContentRegionWidth() - _spc;
+
+		int _colsSize;
+		if (lib_CardsMode) _colsSize = lib_RowSize;
+		else _colsSize = lib_MaxColumns;
+
+		//--
+
+		// a. pantone cards: 7 colors / row
+		//lib_Page_NumColors = lib_NumRows * lib_RowSize;
+
+		// b. responsive
+		lib_Page_NumColors = lib_NumRows * lib_MaxColumns.get();
+
+		lib_Page_Max = lib_TotalColors / (lib_Page_NumColors - 1);
+		lib_Page_Index.setMax(lib_Page_Max - 1);
+
+		//--
+
+		// pagerize
+		int lib_StartCol;
+		int lib_EndCol;
+
+		if (bPagerized)
 		{
-			//--
+			lib_StartCol = lib_Page_Index * lib_Page_NumColors;
+			lib_EndCol = lib_StartCol + lib_Page_NumColors;
+		}
+		else
+		{
+			lib_StartCol = 0;
+			lib_EndCol = lib_TotalColors - 1;
+		}
 
-			// get clicked color
+		//--
 
-			float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
-			float _w = ImGui::GetWindowContentRegionWidth() - _spc;
+		// get color from outside color picked
 
-			int _colsSize;
-			if (lib_CardsMode) _colsSize = lib_RowSize;
-			else _colsSize = lib_MaxColumns;
+		//maybe required because get() causes callbacks too (?)
+		ENABLE_Callbacks_cPickers = false;
+		ImVec4 _c = color_Picked.get();
+		ENABLE_Callbacks_cPickers = true;
 
-			//--
+		//--
 
-			// a. pantone cards: 7 colors / row
-			//lib_Page_NumColors = lib_NumRows * lib_RowSize;
+		ImGui::Dummy(ImVec2(0.0f, 5));
 
-			// b. responsive
-			lib_Page_NumColors = lib_NumRows * lib_MaxColumns.get();
+		std::string s = "";
+		s += "PANTONE (c)";
+		s += "    ";
+		s += ofToString(last_Lib_Index) + "/" + ofToString(lib_TotalColors - 1);
 
-			lib_Page_Max = lib_TotalColors / (lib_Page_NumColors - 1);
-			lib_Page_Index.setMax(lib_Page_Max - 1);
+		ImGui::Text(s.c_str());
 
-			//--
+		ImGui::Dummy(ImVec2(0.0f, 5));
 
-			//pagerize
-			int lib_StartCol;
-			int lib_EndCol;
-			if (bPagerized)
+		//-
+
+		// name color
+		// load tab2 with last_Lib_NameColor
+		char tab2[32];
+		strncpy(tab2, last_Lib_NameColor.c_str(), sizeof(tab2));
+		tab2[sizeof(tab2) - 1] = 0;
+		ImGui::Text("%s", tab2);//color name
+
+		ImGui::Dummy(ImVec2(0.0f, 5));
+
+		//--
+
+		// advanced
+
+		if (ImGui::CollapsingHeader("Advanced"))
+		{
+			if (ImGui::CollapsingHeader("Layout"))
 			{
-				lib_StartCol = lib_Page_Index * lib_Page_NumColors;
-				lib_EndCol = lib_StartCol + lib_Page_NumColors;
-			}
-			else
-			{
-				lib_StartCol = 0;
-				lib_EndCol = lib_TotalColors - 1;
-			}
-
-			//--
-
-			// get color from outside color picked
-
-			//maybe required because get() causes callbacks too (?)
-			ENABLE_Callbacks_cPickers = false;
-			ImVec4 _c = color_Picked.get();
-			//static ImVec4 _c = color_Picked.get();
-			ENABLE_Callbacks_cPickers = true;
-
-			//--
-
-			// 2 load/create palete from colorBrowser
-
-			//-
-
-			//TODO: static can't be variable size.. and can be defined only once.. (?)
-			static ImVec4 _p0[NUM_COLORS_PANTONE];
-			//static ImVec4 _p1[NUM_COLORS_OF_NATIVE];
-			//static ImVec4 _p2[NUM_COLORS_OPEN];
-
-			//-
-
-			// prepare temp pickable colors lib
-			static bool _bSaved = false;
-			if (!_bSaved)
-			{
-				for (int n = 0; n < IM_ARRAYSIZE(_p0); n++)
-				{
-					if (n < palette_Lib_Cols.size())
-					{
-						ofFloatColor c = ofColor(palette_Lib_Cols[n]);
-
-						////TODO:
-						//if (colorBrowser.getLibIndex() == 0) 
-						{
-							_p0[n].x = c.r;
-							_p0[n].y = c.g;
-							_p0[n].z = c.b;
-							_p0[n].w = 1.0f;//alpha
-						}
-						//else if (colorBrowser.getLibIndex() == 1)
-						//{
-						//	_p1[n].x = c.r;
-						//	_p1[n].y = c.g;
-						//	_p1[n].z = c.b;
-						//	_p1[n].w = 1.0f;//alpha
-						//}
-						//else if (colorBrowser.getLibIndex() == 2)
-						//{
-						//	_p2[n].x = c.r;
-						//	_p2[n].y = c.g;
-						//	_p2[n].z = c.b;
-						//	_p2[n].w = 1.0f;//alpha
-						//}
-					}
-				}
-			}
-			_bSaved = true;
-
-			//-
-
-			ImGui::Dummy(ImVec2(0.0f, 5));
-
-			std::string s = "";
-			s += "PANTONE (c)";
-			s += "    ";
-			s += ofToString(last_Lib_Index) + "/" + ofToString(lib_TotalColors - 1);
-
-			ImGui::Text(s.c_str());
-
-			ImGui::Dummy(ImVec2(0.0f, 5));
-
-			//-
-
-			// name color
-			// load tab2 with last_Lib_NameColor
-			char tab2[32];
-			strncpy(tab2, last_Lib_NameColor.c_str(), sizeof(tab2));
-			tab2[sizeof(tab2) - 1] = 0;
-			ImGui::Text("%s", tab2);//color name
-
-			ImGui::Dummy(ImVec2(0.0f, 5));
-
-			//--
-
-			// advanced
-
-			if (ImGui::CollapsingHeader("Advanced"))
-			{
-				if (ImGui::CollapsingHeader("Layout"))
-				{
-					ImGui::InputInt(sizeLibColBox.getName().c_str(), (int*)&sizeLibColBox.get(), 1, 5);
-					ofxImGui::AddParameter(bLibFillMode);
-					ofxImGui::AddParameter(bPagerized);
-
-					//-
-
-					// responsive buttons size
-					if (!bLibFillMode) {
-						ofxImGui::AddParameter(lib_CardsMode);
-						ImGui::InputFloat(scale_ColLib.getName().c_str(), (float *)&scale_ColLib.get(), 0.02f, 0.1f);
-
-						if (!lib_CardsMode)
-						{
-							ImGui::InputInt(lib_NumRows.getName().c_str(), (int*)&lib_NumRows.get(), 1, 5);
-							ImGui::InputInt(lib_MaxColumns.getName().c_str(), (int*)&lib_MaxColumns.get(), 1, 5);
-
-						}
-					}
-				}
-
-				//--
-
-				// 2.2 draw all palette colors grid
-
-				//--
-
-#ifdef INCLUDE_EXTRA_LIBRARIES
-				ImGui::Dummy(ImVec2(0.0f, 5));
-
-				if (ImGui::CollapsingHeader("Library"))
-				{
-					ofxImGui::AddParameter(colorBrowser.LibraryColors_Index);
-					ofxImGui::AddParameter(colorBrowser.MODE_COLOR_name);
-
-					ImGui::Dummy(ImVec2(0.0f, 5));
-
-					ofxImGui::AddParameter(colorBrowser.MODE_SORTING);
-					ofxImGui::AddParameter(colorBrowser.MODE_SORTING_name);
-
-					ImGui::Dummy(ImVec2(0.0f, 5));
-
-					ofxImGui::AddParameter(colorBrowser.ENABLE_keys);
-				}
-#endif
-			}
-
-			//--
-
-			// arrow buttons
-
-			ImGui::Dummy(ImVec2(0.0f, 5));
-
-			if (bPagerized) {
-
-				ImGui::PushButtonRepeat(true);
-
-				// prev
-				if (ImGui::ArrowButton("##left", ImGuiDir_Left))
-				{
-					if (lib_Page_Index > 0)
-					{
-						lib_Page_Index--;
-					}
-				}
-
-				ImGui::SameLine(0.0f, _spc);
-
-				// next
-				if (ImGui::ArrowButton("##right", ImGuiDir_Right))
-				{
-					if (lib_Page_Index < lib_Page_Max)
-					{
-						lib_Page_Index++;
-					}
-				}
-
-				ImGui::PopButtonRepeat();
-
-				ImGui::SameLine();
+				ImGui::InputInt(sizeLibColBox.getName().c_str(), (int*)&sizeLibColBox.get(), 1, 5);
+				ofxImGui::AddParameter(lib_Responsive_Mode);
+				ofxImGui::AddParameter(bPagerized);
 
 				//-
 
-				ofxImGui::AddParameter(lib_Page_Index);//page slider selector
-				//ImGui::SliderInt("PAGE", &lib_Page_Index, 0, lib_Page_Max);//page slider selector
-				//ImGui::DragInt("PAGE", (int *)&lib_Page_Index, 0, lib_Page_Max);//collide..
+				// responsive buttons size
+				if (!lib_Responsive_Mode)
+				{
+					ofxImGui::AddParameter(lib_CardsMode);
+					ImGui::InputFloat(scale_ColLib.getName().c_str(), (float *)&scale_ColLib.get(), 0.02f, 0.1f);
+
+					if (!lib_CardsMode)
+					{
+						ImGui::InputInt(lib_NumRows.getName().c_str(), (int*)&lib_NumRows.get(), 1, 5);
+						ImGui::InputInt(lib_MaxColumns.getName().c_str(), (int*)&lib_MaxColumns.get(), 1, 5);
+
+					}
+				}
 			}
-
-			ImGui::Dummy(ImVec2(0.0f, 5));
-
-			//----
-
-			// grid colors
-
-			// responsive
-			ImVec2 _sizeBtns((float)sizeLibColBox.get(), (float)sizeLibColBox.get());
-			ImGuiStyle& style = ImGui::GetStyle();
-			int _countBtns;
-			if (bLibFillMode) _countBtns = lib_TotalColors;
-			else _countBtns = lib_EndCol - lib_StartCol;
-			float _wx2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
 
 			//--
 
-			for (int n = lib_StartCol; n < lib_EndCol; n++)
+			// 2.2 draw all palette colors grid
+
+			//--
+
+#ifdef INCLUDE_EXTRA_LIBRARIES
+			ImGui::Dummy(ImVec2(0, 5));
+
+			if (ImGui::CollapsingHeader("Library"))
 			{
-				//--
+				ofxImGui::AddParameter(colorBrowser.LibraryColors_Index);
+				ofxImGui::AddParameter(colorBrowser.LibraryColors_Index_name);
 
-				// responsive buttons size
-				if (bLibFillMode)
+				ImGui::Dummy(ImVec2(0, 5));
+
+				ofxImGui::AddParameter(colorBrowser.MODE_SORTING);
+				ofxImGui::AddParameter(colorBrowser.MODE_SORTING_name);
+
+				ImGui::Dummy(ImVec2(0, 5));
+
+				ofxImGui::AddParameter(colorBrowser.ENABLE_keys);
+			}
+#endif
+		}
+
+		//--
+
+		// arrow buttons
+
+		ImGui::Dummy(ImVec2(0.0f, 5));
+
+		if (bPagerized)
+		{
+			ImGui::PushButtonRepeat(true);
+
+			// prev
+			if (ImGui::ArrowButton("##left", ImGuiDir_Left))
+			{
+				if (lib_Page_Index > 0)
 				{
-					ImGui::PushID(n);
-
-					string name = ofToString(n);
-
-					////customize colors
-					//if (n == indexBrowser)//when selected
-					//{
-					//	const ImVec4 color1 = ImVec4(0.1, 0.1, 0.1, 0.8);//changes button color to black
-					//	ImGui::PushStyleColor(ImGuiCol_Button, color1);
-					//}
-					//else //not selected
-					{
-						const ImVec4 color2 = style.Colors[ImGuiCol_Button];//do not changes the color
-						ImGui::PushStyleColor(ImGuiCol_Button, color2);
-					}
-				}
-
-				//--
-
-				if (n < lib_TotalColors) //to avoid empty colors at page end...
-				{
-					ImGui::PushID(n);
-
-					//ImGui::PushStyleVar(ImGui::ImGuiStyleVar_FrameBorderSize), 1.0f;
-
-					if (!bLibFillMode)
-					{
-						if ((n % _colsSize) != 0)
-						{
-							ImGui::SameLine(0.0f, ImGui::GetStyle().ItemSpacing.y);//vertical inter line
-						}
-					}
-
-					// draw border to selected color
-					bool bDrawBorder = false;
-					if (n == last_ColorPicked_Lib)
-					{
-						bDrawBorder = true;
-					}
-					if (bDrawBorder)
-					{
-						ImGui::PushStyleColor(ImGuiCol_Border, color_Pick);
-						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, linew_Pick);
-					}
-
-					//--
-
-					// color button
-
-					ImGuiColorEditFlags _flags =
-						ImGuiColorEditFlags_NoAlpha |
-						ImGuiColorEditFlags_NoPicker |
-						ImGuiColorEditFlags_NoTooltip;
-
-					ImVec2 _bb;
-					if (bLibFillMode) _bb = _sizeBtns;
-					else _bb = ImVec2(sizeLibColBox * scale_ColLib, sizeLibColBox * scale_ColLib);
-
-					//----
-
-					//TODO:
-					//if (colorBrowser.getLibIndex() == 0)
-					{
-						if (ImGui::ColorButton("##paletteLib",
-							_p0[n],
-							_flags,
-							_bb))
-
-						{
-							// picked
-							_c = ImVec4(_p0[n].x, _p0[n].y, _p0[n].z, _c.w); // Preserve alpha!
-							color_Picked = _c;
-
-							// index
-							last_ColorPicked_Lib = n;
-							last_Lib_Index = n;
-
-							// color name
-							if (n < palette_Lib_Names.size())
-							{
-								last_Lib_NameColor = palette_Lib_Names[n];
-
-								std::string str = "Lib Picked: [" + ofToString(last_ColorPicked_Lib) + "] " + last_Lib_NameColor;
-								ofLogNotice(__FUNCTION__) << str;
-							}
-
-							//-
-
-							bUpdate = true;
-						}
-					}
-
-					//else if (colorBrowser.getLibIndex() == 1)
-					//{
-					//	if (ImGui::ColorButton("##paletteLib",
-					//		_p1[n],
-					//		_flags,
-					//		_bb))
-
-					//	{
-					//		// picked
-					//		_c = ImVec4(_p1[n].x, _p1[n].y, _p1[n].z, _c.w); // Preserve alpha!
-					//		color_Picked = _c;
-
-					//		// index
-					//		last_ColorPicked_Lib = n;
-					//		last_Lib_Index = n;
-
-					//		// color name
-					//		if (n < palette_Lib_Names.size())
-					//		{
-					//			last_Lib_NameColor = palette_Lib_Names[n];
-
-					//			std::string str = "Lib Picked: [" + ofToString(last_ColorPicked_Lib) + "] " + last_Lib_NameColor;
-					//			ofLogNotice(__FUNCTION__) << str;
-					//		}
-					//	}
-					//}
-
-					//else if (colorBrowser.getLibIndex() == 2)
-					//{
-					//	if (ImGui::ColorButton("##paletteLib",
-					//		_p2[n],
-					//		_flags,
-					//		_bb))
-
-					//	{
-					//		// picked
-					//		_c = ImVec4(_p2[n].x, _p2[n].y, _p2[n].z, _c.w); // Preserve alpha!
-					//		color_Picked = _c;
-
-					//		// index
-					//		last_ColorPicked_Lib = n;
-					//		last_Lib_Index = n;
-
-					//		// color name
-					//		if (n < palette_Lib_Names.size())
-					//		{
-					//			last_Lib_NameColor = palette_Lib_Names[n];
-
-					//			std::string str = "Lib Picked: [" + ofToString(last_ColorPicked_Lib) + "] " + last_Lib_NameColor;
-					//			ofLogNotice(__FUNCTION__) << str;
-					//		}
-					//	}
-					//}
-
-					//----
-
-					//TODO: 
-					// draw border to selected color
-					if (bDrawBorder)
-					{
-						ImGui::PopStyleColor();
-						ImGui::PopStyleVar(1);
-					}
-
-					ImGui::PopID();
-				}
-
-				//--
-
-				// responsive buttons size
-				if (bLibFillMode)
-				{
-					ImGui::PopStyleColor();
-
-					float last_button_x2 = ImGui::GetItemRectMax().x;
-					float next_button_x2 = last_button_x2 + style.ItemSpacing.x + _sizeBtns.x; // Expected position if next button was on same line
-					if (n + 1 < _countBtns && next_button_x2 < _wx2) ImGui::SameLine();
-
-					ImGui::PopID();
+					lib_Page_Index--;
 				}
 			}
-			//ofxImGui::EndTree(mainSettings);
+
+			ImGui::SameLine(0, _spc);
+
+			// next
+			if (ImGui::ArrowButton("##right", ImGuiDir_Right))
+			{
+				if (lib_Page_Index < lib_Page_Max)
+				{
+					lib_Page_Index++;
+				}
+			}
+
+			ImGui::PopButtonRepeat();
+
+			ImGui::SameLine();
+
+			//-
+
+			ofxImGui::AddParameter(lib_Page_Index);//page slider selector
+			//ImGui::SliderInt("PAGE", &lib_Page_Index, 0, lib_Page_Max);//page slider selector
+			//ImGui::DragInt("PAGE", (int *)&lib_Page_Index, 0, lib_Page_Max);//collide..
 		}
+
+		ImGui::Dummy(ImVec2(0.0f, 5));
+
+		//----
+
+		// grid colors
+
+		// responsive
+		ImVec2 _sz((float)sizeLibColBox.get(), (float)sizeLibColBox.get());
+
+		ImGuiStyle& style = ImGui::GetStyle();
+		int _countBtns;
+		if (lib_Responsive_Mode) _countBtns = lib_TotalColors;
+		else _countBtns = lib_EndCol - lib_StartCol;
+		float _wx2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
+
+		//--
+
+		for (int n = lib_StartCol; n < lib_EndCol; n++)
+		{
+			//--
+
+			// responsive buttons size
+			if (lib_Responsive_Mode)
+			{
+				ImGui::PushID(n);
+
+				const ImVec4 color2 = style.Colors[ImGuiCol_Button];//do not changes the color
+				ImGui::PushStyleColor(ImGuiCol_Button, color2);
+			}
+
+			//--
+
+			// color box
+
+			if (n < lib_TotalColors) //to avoid empty colors at page end...
+			{
+				ImGui::PushID(n);
+
+				//ImGui::PushStyleVar(ImGui::ImGuiStyleVar_FrameBorderSize), 1.0f;
+
+				if (!lib_Responsive_Mode)
+				{
+					if ((n % _colsSize) != 0)
+					{
+						ImGui::SameLine(0, ImGui::GetStyle().ItemSpacing.y);//vertical inter line
+					}
+				}
+
+				// draw border to selected color
+				bool bDrawBorder = false;
+				if (n == last_ColorPicked_Lib)
+				{
+					bDrawBorder = true;
+					ImGui::PushStyleColor(ImGuiCol_Border, color_Pick);
+					ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, linew_Pick);
+				}
+
+				//--
+
+				// color button
+
+				ImGuiColorEditFlags _flags =
+					ImGuiColorEditFlags_NoAlpha |
+					ImGuiColorEditFlags_NoPicker |
+					ImGuiColorEditFlags_NoTooltip;
+
+				ImVec2 _bb;
+				if (lib_Responsive_Mode) _bb = _sz;
+				else _bb = ImVec2(sizeLibColBox * scale_ColLib, sizeLibColBox * scale_ColLib);
+
+				//----
+
+				ofFloatColor _c = ofColor(palette_Lib_Cols[n]);
+
+				//-
+
+				if (ImGui::ColorButton("##paletteLib",
+					_c,
+					_flags,
+					_bb))
+
+				{
+					// picked
+					color_Picked = _c;
+
+					//// index
+					//last_ColorPicked_Lib = n + ;
+					//last_Lib_Index = n;
+					//// color name
+					//if (n < palette_Lib_Names.size())
+					//{
+					//	last_Lib_NameColor = palette_Lib_Names[n];
+					//	std::string str = "Lib Picked: [" + ofToString(last_ColorPicked_Lib) + "] " + last_Lib_NameColor;
+					//	ofLogNotice(__FUNCTION__) << str;
+					//}
+
+					//-
+
+					bUpdate = true;
+				}
+
+				//----
+
+				//TODO: 
+				// draw border to selected color
+				if (bDrawBorder)
+				{
+					ImGui::PopStyleColor();
+					ImGui::PopStyleVar(1);
+				}
+
+				ImGui::PopID();
+			}
+
+			//--
+
+			// responsive buttons size
+			if (lib_Responsive_Mode)
+			{
+				ImGui::PopStyleColor();
+
+				float last_button_x2 = ImGui::GetItemRectMax().x;
+				
+				float next_button_x2 = last_button_x2 + style.ItemSpacing.x + _sz.x; // Expected position if next button was on same line
+				//float next_button_x2 = last_button_x2 + 0 + _sz.x; // Expected position if next button was on same line
+
+				if (n + 1 < _countBtns && next_button_x2 < _wx2) 
+				{
+					//ImGui::SameLine();
+					ImGui::SameLine(0, ImGui::GetStyle().ItemSpacing.y);//vertical inter line
+				}
+
+				ImGui::PopID();
+			}
+		}
+		//ofxImGui::EndTree(mainSettings);
 
 		//----
 
@@ -4288,7 +4174,7 @@ void ofxColorManager::gui_Presets()
 					_flags,
 					bb))
 				{
-					lastColorPicked_Palette = n;
+					last_ColorPicked_Palette = n;
 				}
 
 				//--

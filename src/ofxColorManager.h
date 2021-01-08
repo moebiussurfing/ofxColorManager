@@ -12,6 +12,8 @@ TODO:
 
 */
 
+//CIELAB color space
+
 //------
 
 //	OPTIONAL
@@ -31,7 +33,7 @@ TODO:
 #define COLOR_STRIP_COLOR_HEIGHT 15
 //#define INCL_LAYOUT
 //#define USE_OFX_GUI
-
+#define INCLUDE_EXTRA_LIBRARIES
 //------
 
 #ifdef USE_SUPER_LOG
@@ -122,7 +124,7 @@ public:
 	//-
 
 public:
-	ofParameter<bool> bLibFillMode;
+	ofParameter<bool> lib_Responsive_Mode;
 	ofParameter<bool> bPagerized;
 	ofParameter<int> sizeLibColBox;
 
@@ -340,14 +342,15 @@ public:
 
 	std::string last_Lib_NameColor = "";
 	int last_ColorPicked_Lib;
-	int lastColorPicked_Palette;
+
+	int last_ColorPicked_Palette;
 
 	ImVec4 color_Pick{ 1,1,1,0.5 };
 	float linew_Pick = 2.0;
 
 	//-
 
-	// COLOUR LOVERS
+	// colour lovers
 
 	void colourLovers_drawPreview();
 #ifdef USE_COLOR_LOVERS
@@ -636,6 +639,7 @@ public:
 
 	//----
 
+	// libs 
 	// library palette
 	// color browser
 
@@ -651,10 +655,9 @@ public:
 	ofEventListener listener_Library;
 	ofEventListener listener_ModeSorting;
 
-	void update_Libs();
+	void refresh_Libs();
 
 	//hardcoded
-//#define INCLUDE_EXTRA_LIBRARIES
 
 #define NUM_COLORS_PANTONE 2310
 #define NUM_COLORS_OF_NATIVE 130//TODO:
