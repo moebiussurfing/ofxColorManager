@@ -657,14 +657,9 @@ public:
 
 	void refresh_Libs();
 
-	//hardcoded
-
-#define NUM_COLORS_PANTONE 2310
-#define NUM_COLORS_OF_NATIVE 130//TODO:
-#define NUM_COLORS_OPEN 146//TODO:
 	int lib_RowSize = 7;//7 colors per row Pantone lib
 	int lib_Page_NumColors;
-	int lib_TotalColors = NUM_COLORS_PANTONE;//pantone
+	int lib_TotalColors;
 	int lib_Page_Max;
 
 	int last_Lib_Index = -1;

@@ -8,11 +8,7 @@ void ofxColorManager::dragEvent(ofDragInfo info) {
 
 //--------------------------------------------------------------
 ofxColorManager::ofxColorManager()
-{
-	lib_Page_NumColors = lib_NumRows * lib_RowSize;//70
-	lib_Page_Max = lib_TotalColors / lib_Page_NumColors - 1;
-
-	//--
+{//--
 
 	ofAddListener(ofEvents().update, this, &ofxColorManager::update);
 	ofAddListener(ofEvents().draw, this, &ofxColorManager::draw);
@@ -336,8 +332,6 @@ void ofxColorManager::setup()
 	colorBrowser.setup();
 	colorBrowser.setVisible(false);
 
-	//-
-
 	refresh_Libs();
 
 	//-
@@ -346,6 +340,8 @@ void ofxColorManager::setup()
 	listener_ModeSorting = colorBrowser.MODE_SORTING.newListener([this](int &i) {
 		ofLogNotice("ofxColorManager::MODE_SORTING: ") << i;
 
+		refresh_Libs();
+		
 		});
 
 	//-
@@ -354,8 +350,6 @@ void ofxColorManager::setup()
 	listener_Library = colorBrowser.LibraryColors_Index.newListener([this](int &i) {
 		ofLogNotice("ofxColorManager::LibraryColors_Index: ") << i;
 
-		//TODO:
-		//refresh library
 		refresh_Libs();
 
 		});
@@ -1111,15 +1105,11 @@ void ofxColorManager::update(ofEventArgs & args)
 //--------------------------------------------------------------
 void ofxColorManager::refresh_Libs()
 {
-	//TODO:
 	lib_TotalColors = colorBrowser.colors_STRUCT.size();
+	lib_MaxColumns = colorBrowser.getSizeCards();//better fit layout
 
-	//palette_Lib_Cols.clear();
-	//palette_Lib_Names.clear();
-	//for (int i = 0; i < lib_TotalColors; i++) {
-	//	palette_Lib_Cols.push_back(colorBrowser.colors_STRUCT[i].color);
-	//	palette_Lib_Names.push_back(colorBrowser.colors_STRUCT[i].name);
-	//}
+	lib_Page_NumColors = lib_NumRows * lib_RowSize;
+	lib_Page_Max = lib_TotalColors / lib_Page_NumColors - 1;
 
 	palette_Lib_Cols.clear();
 	palette_Lib_Cols = colorBrowser.getPalette();
@@ -1458,8 +1448,8 @@ void ofxColorManager::draw(ofEventArgs & args)
 
 				//myDEMO.setEnableMouseCamera();
 			}
-		}
 	}
+}
 
 	//--
 
@@ -2653,6 +2643,8 @@ void ofxColorManager::gui_Library()
 #ifdef INCLUDE_EXTRA_LIBRARIES
 			ImGui::Dummy(ImVec2(0, 5));
 
+			// library
+
 			if (ImGui::CollapsingHeader("Library"))
 			{
 				ofxImGui::AddParameter(colorBrowser.LibraryColors_Index);
@@ -2745,7 +2737,6 @@ void ofxColorManager::gui_Library()
 
 			// color box
 
-			if (n < lib_TotalColors) //to avoid empty colors at page end...
 			{
 				ImGui::PushID(n);
 
@@ -2796,16 +2787,19 @@ void ofxColorManager::gui_Library()
 					// picked
 					color_Picked = _c;
 
-					//// index
-					//last_ColorPicked_Lib = n + ;
-					//last_Lib_Index = n;
-					//// color name
-					//if (n < palette_Lib_Names.size())
-					//{
-					//	last_Lib_NameColor = palette_Lib_Names[n];
-					//	std::string str = "Lib Picked: [" + ofToString(last_ColorPicked_Lib) + "] " + last_Lib_NameColor;
-					//	ofLogNotice(__FUNCTION__) << str;
-					//}
+					// index
+					last_ColorPicked_Lib = n;
+					last_Lib_Index = n;
+
+					// color name
+					if (n < palette_Lib_Names.size())
+					{
+						last_Lib_NameColor = palette_Lib_Names[n];
+
+						std::string str = "Lib Picked: [" + ofToString(last_ColorPicked_Lib) + "] " + 
+							last_Lib_NameColor;
+						ofLogNotice(__FUNCTION__) << str;
+					}
 
 					//-
 
@@ -2833,13 +2827,11 @@ void ofxColorManager::gui_Library()
 				ImGui::PopStyleColor();
 
 				float last_button_x2 = ImGui::GetItemRectMax().x;
-				
-				float next_button_x2 = last_button_x2 + style.ItemSpacing.x + _sz.x; // Expected position if next button was on same line
-				//float next_button_x2 = last_button_x2 + 0 + _sz.x; // Expected position if next button was on same line
 
-				if (n + 1 < _countBtns && next_button_x2 < _wx2) 
+				float next_button_x2 = last_button_x2 + style.ItemSpacing.x + _sz.x; // Expected position if next button was on same line
+
+				if (n + 1 < _countBtns && next_button_x2 < _wx2)
 				{
-					//ImGui::SameLine();
 					ImGui::SameLine(0, ImGui::GetStyle().ItemSpacing.y);//vertical inter line
 				}
 
@@ -8090,6 +8082,7 @@ void ofxColorManager::refresh_FromPicked()
 
 	color_TheoryBase = color_Picked.get();
 	//color_TheoryBase.set(color_Picked);
+
 	refresh_TheoryEngine();
 
 	//refresh
