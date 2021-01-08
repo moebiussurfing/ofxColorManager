@@ -18,7 +18,7 @@ TODO:
 
 //	OPTIONAL
 
-#define USE_RECTANGLE_INTERFACES // should be nice to completely disable! to disable ofxInterface
+//#define USE_RECTANGLE_INTERFACES // should be nice to completely disable! to disable ofxInterface
 
 //	modules
 #define USE_COLOR_LOVERS
@@ -26,7 +26,7 @@ TODO:
 #define USE_OFX_COLOR_BROWSER
 //#define USE_SUPER_LOG
 //	layout
-#define MAX_PALETTE_COLORS 11
+#define MAX_PALETTE_COLORS 10
 #define INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
 #define BUTTON_BIG_HEIGHT 50
 #define BUTTON_COLOR_SIZE 40
@@ -530,11 +530,12 @@ private:
 	}
 
 private:
-	void setup_Interface();
-	void setup_Labels();
+	//void setup_Interface();
+	//void setup_Labels();
+	//void setVisible_Interface(bool b);
+
 	void refresh_TheoryEngine();
 	void palettes_resize();
-	void setVisible_Interface(bool b);
 
 	//void draw_palettes();
 

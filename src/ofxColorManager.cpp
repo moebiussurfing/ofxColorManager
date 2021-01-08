@@ -332,8 +332,8 @@ void ofxColorManager::setup()
 
 	//random.generateRandom(numColors_Alg);
 	refresh_TheoryEngine();
-	setup_Interface();
-	setup_Labels();
+	//setup_Interface();
+	//setup_Labels();
 
 	//-
 
@@ -645,6 +645,14 @@ void ofxColorManager::setup()
 	params_Palette2.add(bPaletteEdit);
 	params_Palette2.add(bAuto_TheoryToPalette);
 	params_AppState.add(params_Palette2);
+
+	//---
+
+//#ifdef USE_OFX_GUI
+//	//panel.setup();
+//	//panel.add(group);
+//	//panel.setPosition(1000, 400);
+//#endif
 
 	//------------------------------------------------
 
@@ -1719,16 +1727,7 @@ void ofxColorManager::refresh_Gui_Layout()
 //--------------------------------------------------------------
 void ofxColorManager::setup_Interface_Scene()
 {
-#ifdef USE_RECTANGLE_INTERFACES
-	scene = new Node();
-	scene->setSize(ofGetWidth(), ofGetHeight());
-	scene->setName("Scene");
 
-	TouchManager::one().setup(scene);
-
-	//TODO:
-	scene->deactivate();
-#endif
 }
 
 //--------------------------------------------------------------
@@ -2039,9 +2038,12 @@ void ofxColorManager::gui_Theory()
 		ofxImGui::AddParameter(bAuto_TheoryToPalette);
 
 		//if (ImGui::InputInt(numColors_Theory.getName().c_str(), (int*)&numColors_Theory.get(), 1, 5))
+
 		if (ofxImGui::AddParameter(numColors_Theory))
 		{
-			setup_Theory();
+		}
+		if (ofxImGui::AddParameter(numColors_Alg))
+		{
 		}
 
 		//-
@@ -2170,7 +2172,7 @@ void ofxColorManager::gui_Theory()
 			case 6:
 				_total = complementTriad.size();
 				break;
-	}
+			}
 #endif
 
 #ifdef USE_RECTANGLE_INTERFACES
@@ -2299,7 +2301,7 @@ void ofxColorManager::gui_Theory()
 
 				ImGui::PopID();
 			}
-}
+		}
 
 		//----
 
@@ -4565,8 +4567,10 @@ void ofxColorManager::update_CurveTool()
 	//----
 
 	// update values
-	curve_Ctrl_In = curve_Slider_InExp.getValue();
+	//curve_Ctrl_In = curve_Slider_InExp.getValue();
+	curve_Ctrl_In.setWithoutEventNotifications(curve_Slider_InExp.getValue());
 	curve_Index = (int)ofMap(curve_Ctrl_In.get(), 0., 1., 0, cAmt - 1);
+
 
 	// curve modifier
 	curve_Gradient_TEST_Prc = curve_Slider_OutPick.getValue();
@@ -4691,444 +4695,444 @@ void ofxColorManager::draw_CurveTools()
 
 
 #pragma mark - PALETTES
+//
+////--------------------------------------------------------------
+//void ofxColorManager::setup_Interface()
+//{
+//#ifdef USE_RECTANGLE_INTERFACES
+//
+//	int btn_pad_w;
+//	btn_pad_w = 210;//padding to place boxes right to the labels
+//	int x0;
+//	x0 = palettes_x + btn_pad_w;
+//	int y0 = palettes_y;
+//	int h0 = box_size + pad;
+//
+//	//--
+//
+//	// 1. FROM OFX-COLOR-PALETTE
+//
+//	// 1. triad
+//	for (int i = 0; i < triad.size(); i++)
+//	{
+//		ButtonExample *btn = new ButtonExample();
+//		btn->setup(x0, y0, box_size, box_size);
+//		btn->setup_colorBACK(color_Clicked2);
+//		btn->setLocked(true);
+//		btn->setName("triad" + ofToString(i));
+//		btn->setColor(triad[i]);
+//		scene->addChild(btn);
+//		btns_plt_Triad.push_back(btn);
+//		x0 += h0;
+//	}
+//
+//	// 2. complement triad
+//	x0 = palettes_x + btn_pad_w;
+//	y0 += h0;
+//	for (int i = 0; i < complementTriad.size(); i++)
+//	{
+//		ButtonExample *btn = new ButtonExample();
+//		btn->setup(x0, y0, box_size, box_size);
+//		btn->setup_colorBACK(color_Clicked2);
+//		btn->setLocked(true);
+//		btn->setName("compTriad" + ofToString(i));
+//		btn->setColor(complementTriad[i]);
+//		scene->addChild(btn);
+//		btns_plt_ComplTriad.push_back(btn);
+//		x0 += h0;
+//	}
+//
+//	// 3. complement sat
+//	x0 = palettes_x + btn_pad_w;
+//	y0 += h0;
+//	for (int i = 0; i < complement.size(); i++)
+//	{
+//		ButtonExample *btn = new ButtonExample();
+//		btn->setup(x0, y0, box_size, box_size);
+//		btn->setup_colorBACK(color_Clicked2);
+//		btn->setLocked(true);
+//		btn->setName("compSat" + ofToString(i));
+//		btn->setColor(complement[i]);
+//		scene->addChild(btn);
+//		btns_plt_CompSat.push_back(btn);
+//		x0 += h0;
+//	}
+//
+//	// 4. complement brgt
+//	x0 = palettes_x + btn_pad_w;
+//	y0 += h0;
+//	for (int i = 0; i < complementBrightness.size(); i++)
+//	{
+//		ButtonExample *btn = new ButtonExample();
+//		btn->setup(x0, y0, box_size, box_size);
+//		btn->setup_colorBACK(color_Clicked2);
+//		btn->setLocked(true);
+//		btn->setName("compBrgt" + ofToString(i));
+//		btn->setColor(complementBrightness[i]);
+//		scene->addChild(btn);
+//		btns_plt_ComplBrgt.push_back(btn);
+//		x0 += h0;
+//	}
+//
+//	// 5. mono sat
+//	x0 = palettes_x + btn_pad_w;
+//	y0 += h0;
+//	for (int i = 0; i < monochrome.size(); i++)
+//	{
+//		ButtonExample *btn = new ButtonExample();
+//		btn->setup(x0, y0, box_size, box_size);
+//		btn->setup_colorBACK(color_Clicked2);
+//		btn->setLocked(true);
+//		btn->setName("monoSat" + ofToString(i));
+//		btn->setColor(monochrome[i]);
+//		scene->addChild(btn);
+//		btns_plt_MonoSat.push_back(btn);
+//		x0 += h0;
+//	}
+//
+//	// 6. mono brgt
+//	x0 = palettes_x + btn_pad_w;
+//	y0 += h0;
+//	for (int i = 0; i < monochromeBrightness.size(); i++)
+//	{
+//		ButtonExample *btn = new ButtonExample();
+//		btn->setup(x0, y0, box_size, box_size);
+//		btn->setup_colorBACK(color_Clicked2);
+//		btn->setLocked(true);
+//		btn->setName("monoBrgt" + ofToString(i));
+//		btn->setColor(monochromeBrightness[i]);
+//		scene->addChild(btn);
+//		btns_plt_MonoBrgt.push_back(btn);
+//		x0 += h0;
+//	}
+//
+//	// 7. analogue
+//	x0 = palettes_x + btn_pad_w;
+//	y0 += h0;
+//	for (int i = 0; i < analogue.size(); i++)
+//	{
+//		ButtonExample *btn = new ButtonExample();
+//		btn->setup(x0, y0, box_size, box_size);
+//		btn->setup_colorBACK(color_Clicked2);
+//		btn->setLocked(true);
+//		btn->setName("analogue" + ofToString(i));
+//		btn->setColor(analogue[i]);
+//		scene->addChild(btn);
+//		btns_plt_Analog.push_back(btn);
+//		x0 += h0;
+//	}
+//
+//	//    // 8. random
+//	//    x0 = palettes_x + btn_pad_w;
+//	//    y0 += h0;
+//	//    for (int i = 0; i < random.size(); i++) {
+//	//        ButtonExample *btn = new ButtonExample();
+//	//        btn->setup(x0, y0, box_size, box_size);
+//	//        btn->setup_colorBACK(color_Clicked2);
+//	//        btn->setLocked(true);
+//	//        btn->setName("random" + ofToString(i));
+//	//        btn->setColor(random[i]);
+//	//        scene->addChild(btn);
+//	//        btns_plt_Random.push_back(btn);
+//	//        x0 += h0;
+//	//    }
+//
+//	//----
+//
+//	// 2. FROM OFX-COLOUR-THEORY
+//
+//	x0 = palettes_x + btn_pad_w;
+//	y0 += h0;
+//	for (int i = 0; i < colors_Analogous.size(); i++)
+//	{
+//		ButtonExample *btn = new ButtonExample();
+//		btn->setup(x0, y0, box_size, box_size);
+//		btn->setup_colorBACK(color_Clicked2);
+//		btn->setLocked(true);
+//		btn->setName("CT_Analogous" + ofToString(i));
+//		btn->setColor(colors_Analogous[i]);
+//		scene->addChild(btn);
+//		btns_plt_CT_Analogous.push_back(btn);
+//		x0 += h0;
+//	}
+//	x0 = palettes_x + btn_pad_w;
+//	y0 += h0;
+//	for (int i = 0; i < colors_Complementary.size(); i++)
+//	{
+//		ButtonExample *btn = new ButtonExample();
+//		btn->setup(x0, y0, box_size, box_size);
+//		btn->setup_colorBACK(color_Clicked2);
+//		btn->setLocked(true);
+//		btn->setName("CT_Complementary" + ofToString(i));
+//		btn->setColor(colors_Complementary[i]);
+//		scene->addChild(btn);
+//		btns_plt_CT_Complementary.push_back(btn);
+//		x0 += h0;
+//	}
+//	x0 = palettes_x + btn_pad_w;
+//	y0 += h0;
+//	for (int i = 0; i < colors_SplitComplementary.size(); i++)
+//	{
+//		ButtonExample *btn = new ButtonExample();
+//		btn->setup(x0, y0, box_size, box_size);
+//		btn->setup_colorBACK(color_Clicked2);
+//		btn->setLocked(true);
+//		btn->setName("CT_SplitComplementary" + ofToString(i));
+//		btn->setColor(colors_SplitComplementary[i]);
+//		scene->addChild(btn);
+//		btns_plt_CT_SplitComplementary.push_back(btn);
+//		x0 += h0;
+//	}
+//	x0 = palettes_x + btn_pad_w;
+//	y0 += h0;
+//	for (int i = 0; i < colors_Compound.size(); i++)
+//	{
+//		ButtonExample *btn = new ButtonExample();
+//		btn->setup(x0, y0, box_size, box_size);
+//		btn->setup_colorBACK(color_Clicked2);
+//		btn->setLocked(true);
+//		btn->setName("CT_Compound" + ofToString(i));
+//		btn->setColor(colors_Compound[i]);
+//		scene->addChild(btn);
+//		btns_plt_CT_Compound.push_back(btn);
+//		x0 += h0;
+//	}
+//	x0 = palettes_x + btn_pad_w;
+//	y0 += h0;
+//	for (int i = 0; i < colors_FlippedCompound.size(); i++)
+//	{
+//		ButtonExample *btn = new ButtonExample();
+//		btn->setup(x0, y0, box_size, box_size);
+//		btn->setup_colorBACK(color_Clicked2);
+//		btn->setLocked(true);
+//		btn->setName("CT_FlippedCompound" + ofToString(i));
+//		btn->setColor(colors_FlippedCompound[i]);
+//		scene->addChild(btn);
+//		btns_plt_CT_FlippedCompound.push_back(btn);
+//		x0 += h0;
+//	}
+//	x0 = palettes_x + btn_pad_w;
+//	y0 += h0;
+//	for (int i = 0; i < colors_Monochrome.size(); i++)
+//	{
+//		ButtonExample *btn = new ButtonExample();
+//		btn->setup(x0, y0, box_size, box_size);
+//		btn->setup_colorBACK(color_Clicked2);
+//		btn->setLocked(true);
+//		btn->setName("CT_Monochrome" + ofToString(i));
+//		btn->setColor(colors_Monochrome[i]);
+//		scene->addChild(btn);
+//		btns_plt_CT_Monochrome.push_back(btn);
+//		x0 += h0;
+//	}
+//	x0 = palettes_x + btn_pad_w;
+//	y0 += h0;
+//	for (int i = 0; i < colors_Triad.size(); i++)
+//	{
+//		ButtonExample *btn = new ButtonExample();
+//		btn->setup(x0, y0, box_size, box_size);
+//		btn->setup_colorBACK(color_Clicked2);
+//		btn->setLocked(true);
+//		btn->setName("CT_Triad" + ofToString(i));
+//		btn->setColor(colors_Triad[i]);
+//		scene->addChild(btn);
+//		btns_plt_CT_Triad.push_back(btn);
+//		x0 += h0;
+//	}
+//	x0 = palettes_x + btn_pad_w;
+//	y0 += h0;
+//	for (int i = 0; i < colors_Tetrad.size(); i++)
+//	{
+//		ButtonExample *btn = new ButtonExample();
+//		btn->setup(x0, y0, box_size, box_size);
+//		btn->setup_colorBACK(color_Clicked2);
+//		btn->setLocked(true);
+//		btn->setName("CT_Tetrad" + ofToString(i));
+//		btn->setColor(colors_Tetrad[i]);
+//		scene->addChild(btn);
+//		btns_plt_CT_Tetrad.push_back(btn);
+//		x0 += h0;
+//	}
+//
+//#endif
+//}
 
-//--------------------------------------------------------------
-void ofxColorManager::setup_Interface()
-{
-#ifdef USE_RECTANGLE_INTERFACES
-
-	int btn_pad_w;
-	btn_pad_w = 210;//padding to place boxes right to the labels
-	int x0;
-	x0 = palettes_x + btn_pad_w;
-	int y0 = palettes_y;
-	int h0 = box_size + pad;
-
-	//--
-
-	// 1. FROM OFX-COLOR-PALETTE
-
-	// 1. triad
-	for (int i = 0; i < triad.size(); i++)
-	{
-		ButtonExample *btn = new ButtonExample();
-		btn->setup(x0, y0, box_size, box_size);
-		btn->setup_colorBACK(color_Clicked2);
-		btn->setLocked(true);
-		btn->setName("triad" + ofToString(i));
-		btn->setColor(triad[i]);
-		scene->addChild(btn);
-		btns_plt_Triad.push_back(btn);
-		x0 += h0;
-	}
-
-	// 2. complement triad
-	x0 = palettes_x + btn_pad_w;
-	y0 += h0;
-	for (int i = 0; i < complementTriad.size(); i++)
-	{
-		ButtonExample *btn = new ButtonExample();
-		btn->setup(x0, y0, box_size, box_size);
-		btn->setup_colorBACK(color_Clicked2);
-		btn->setLocked(true);
-		btn->setName("compTriad" + ofToString(i));
-		btn->setColor(complementTriad[i]);
-		scene->addChild(btn);
-		btns_plt_ComplTriad.push_back(btn);
-		x0 += h0;
-	}
-
-	// 3. complement sat
-	x0 = palettes_x + btn_pad_w;
-	y0 += h0;
-	for (int i = 0; i < complement.size(); i++)
-	{
-		ButtonExample *btn = new ButtonExample();
-		btn->setup(x0, y0, box_size, box_size);
-		btn->setup_colorBACK(color_Clicked2);
-		btn->setLocked(true);
-		btn->setName("compSat" + ofToString(i));
-		btn->setColor(complement[i]);
-		scene->addChild(btn);
-		btns_plt_CompSat.push_back(btn);
-		x0 += h0;
-	}
-
-	// 4. complement brgt
-	x0 = palettes_x + btn_pad_w;
-	y0 += h0;
-	for (int i = 0; i < complementBrightness.size(); i++)
-	{
-		ButtonExample *btn = new ButtonExample();
-		btn->setup(x0, y0, box_size, box_size);
-		btn->setup_colorBACK(color_Clicked2);
-		btn->setLocked(true);
-		btn->setName("compBrgt" + ofToString(i));
-		btn->setColor(complementBrightness[i]);
-		scene->addChild(btn);
-		btns_plt_ComplBrgt.push_back(btn);
-		x0 += h0;
-	}
-
-	// 5. mono sat
-	x0 = palettes_x + btn_pad_w;
-	y0 += h0;
-	for (int i = 0; i < monochrome.size(); i++)
-	{
-		ButtonExample *btn = new ButtonExample();
-		btn->setup(x0, y0, box_size, box_size);
-		btn->setup_colorBACK(color_Clicked2);
-		btn->setLocked(true);
-		btn->setName("monoSat" + ofToString(i));
-		btn->setColor(monochrome[i]);
-		scene->addChild(btn);
-		btns_plt_MonoSat.push_back(btn);
-		x0 += h0;
-	}
-
-	// 6. mono brgt
-	x0 = palettes_x + btn_pad_w;
-	y0 += h0;
-	for (int i = 0; i < monochromeBrightness.size(); i++)
-	{
-		ButtonExample *btn = new ButtonExample();
-		btn->setup(x0, y0, box_size, box_size);
-		btn->setup_colorBACK(color_Clicked2);
-		btn->setLocked(true);
-		btn->setName("monoBrgt" + ofToString(i));
-		btn->setColor(monochromeBrightness[i]);
-		scene->addChild(btn);
-		btns_plt_MonoBrgt.push_back(btn);
-		x0 += h0;
-	}
-
-	// 7. analogue
-	x0 = palettes_x + btn_pad_w;
-	y0 += h0;
-	for (int i = 0; i < analogue.size(); i++)
-	{
-		ButtonExample *btn = new ButtonExample();
-		btn->setup(x0, y0, box_size, box_size);
-		btn->setup_colorBACK(color_Clicked2);
-		btn->setLocked(true);
-		btn->setName("analogue" + ofToString(i));
-		btn->setColor(analogue[i]);
-		scene->addChild(btn);
-		btns_plt_Analog.push_back(btn);
-		x0 += h0;
-	}
-
-	//    // 8. random
-	//    x0 = palettes_x + btn_pad_w;
-	//    y0 += h0;
-	//    for (int i = 0; i < random.size(); i++) {
-	//        ButtonExample *btn = new ButtonExample();
-	//        btn->setup(x0, y0, box_size, box_size);
-	//        btn->setup_colorBACK(color_Clicked2);
-	//        btn->setLocked(true);
-	//        btn->setName("random" + ofToString(i));
-	//        btn->setColor(random[i]);
-	//        scene->addChild(btn);
-	//        btns_plt_Random.push_back(btn);
-	//        x0 += h0;
-	//    }
-
-	//----
-
-	// 2. FROM OFX-COLOUR-THEORY
-
-	x0 = palettes_x + btn_pad_w;
-	y0 += h0;
-	for (int i = 0; i < colors_Analogous.size(); i++)
-	{
-		ButtonExample *btn = new ButtonExample();
-		btn->setup(x0, y0, box_size, box_size);
-		btn->setup_colorBACK(color_Clicked2);
-		btn->setLocked(true);
-		btn->setName("CT_Analogous" + ofToString(i));
-		btn->setColor(colors_Analogous[i]);
-		scene->addChild(btn);
-		btns_plt_CT_Analogous.push_back(btn);
-		x0 += h0;
-	}
-	x0 = palettes_x + btn_pad_w;
-	y0 += h0;
-	for (int i = 0; i < colors_Complementary.size(); i++)
-	{
-		ButtonExample *btn = new ButtonExample();
-		btn->setup(x0, y0, box_size, box_size);
-		btn->setup_colorBACK(color_Clicked2);
-		btn->setLocked(true);
-		btn->setName("CT_Complementary" + ofToString(i));
-		btn->setColor(colors_Complementary[i]);
-		scene->addChild(btn);
-		btns_plt_CT_Complementary.push_back(btn);
-		x0 += h0;
-	}
-	x0 = palettes_x + btn_pad_w;
-	y0 += h0;
-	for (int i = 0; i < colors_SplitComplementary.size(); i++)
-	{
-		ButtonExample *btn = new ButtonExample();
-		btn->setup(x0, y0, box_size, box_size);
-		btn->setup_colorBACK(color_Clicked2);
-		btn->setLocked(true);
-		btn->setName("CT_SplitComplementary" + ofToString(i));
-		btn->setColor(colors_SplitComplementary[i]);
-		scene->addChild(btn);
-		btns_plt_CT_SplitComplementary.push_back(btn);
-		x0 += h0;
-	}
-	x0 = palettes_x + btn_pad_w;
-	y0 += h0;
-	for (int i = 0; i < colors_Compound.size(); i++)
-	{
-		ButtonExample *btn = new ButtonExample();
-		btn->setup(x0, y0, box_size, box_size);
-		btn->setup_colorBACK(color_Clicked2);
-		btn->setLocked(true);
-		btn->setName("CT_Compound" + ofToString(i));
-		btn->setColor(colors_Compound[i]);
-		scene->addChild(btn);
-		btns_plt_CT_Compound.push_back(btn);
-		x0 += h0;
-	}
-	x0 = palettes_x + btn_pad_w;
-	y0 += h0;
-	for (int i = 0; i < colors_FlippedCompound.size(); i++)
-	{
-		ButtonExample *btn = new ButtonExample();
-		btn->setup(x0, y0, box_size, box_size);
-		btn->setup_colorBACK(color_Clicked2);
-		btn->setLocked(true);
-		btn->setName("CT_FlippedCompound" + ofToString(i));
-		btn->setColor(colors_FlippedCompound[i]);
-		scene->addChild(btn);
-		btns_plt_CT_FlippedCompound.push_back(btn);
-		x0 += h0;
-	}
-	x0 = palettes_x + btn_pad_w;
-	y0 += h0;
-	for (int i = 0; i < colors_Monochrome.size(); i++)
-	{
-		ButtonExample *btn = new ButtonExample();
-		btn->setup(x0, y0, box_size, box_size);
-		btn->setup_colorBACK(color_Clicked2);
-		btn->setLocked(true);
-		btn->setName("CT_Monochrome" + ofToString(i));
-		btn->setColor(colors_Monochrome[i]);
-		scene->addChild(btn);
-		btns_plt_CT_Monochrome.push_back(btn);
-		x0 += h0;
-	}
-	x0 = palettes_x + btn_pad_w;
-	y0 += h0;
-	for (int i = 0; i < colors_Triad.size(); i++)
-	{
-		ButtonExample *btn = new ButtonExample();
-		btn->setup(x0, y0, box_size, box_size);
-		btn->setup_colorBACK(color_Clicked2);
-		btn->setLocked(true);
-		btn->setName("CT_Triad" + ofToString(i));
-		btn->setColor(colors_Triad[i]);
-		scene->addChild(btn);
-		btns_plt_CT_Triad.push_back(btn);
-		x0 += h0;
-	}
-	x0 = palettes_x + btn_pad_w;
-	y0 += h0;
-	for (int i = 0; i < colors_Tetrad.size(); i++)
-	{
-		ButtonExample *btn = new ButtonExample();
-		btn->setup(x0, y0, box_size, box_size);
-		btn->setup_colorBACK(color_Clicked2);
-		btn->setLocked(true);
-		btn->setName("CT_Tetrad" + ofToString(i));
-		btn->setColor(colors_Tetrad[i]);
-		scene->addChild(btn);
-		btns_plt_CT_Tetrad.push_back(btn);
-		x0 += h0;
-	}
-
-#endif
-}
-
-//--------------------------------------------------------------
-void ofxColorManager::setup_Labels()
-{
-#ifdef USE_RECTANGLE_INTERFACES
-
-	// 1. populate label buttons to trig palettes
-
-	int x0 = palettes_x;
-	int padH = 5;
-	int y0 = palettes_y + padH;
-	int h0 = box_size + pad;
-
-	//--
-
-	// LABELS PICKER : TODO: maybe can use simpler thing than ofxInterface for this
-
-	// palettes labels
-
-	ofColor btn_plt_c;
-	btn_plt_c.set(ofColor(32));
-	int btn_plt_h;
-	btn_plt_h = h0;
-	x0 = palettes_x;
-
-	//-
-
-	//TODO: BUG
-	btns_plt_Selector.clear();
-
-	//-
-
-	// 1. FROM OFX-COLOR-PALETTE
-
-	for (int p = 0; p < NUM_PALETTES; p++)
-	{
-		ButtonPaletteSelector *btn = new ButtonPaletteSelector();
-		switch (p)
-		{
-		case 0:
-			btn->setup("TRIAD");
-			btn->setThisPaletteType(0);
-			btn->set_SELECTED_palette(SELECTED_palette);
-			break;
-		case 1:
-			btn->setup("COMPLEMENT TRIAD");
-			btn->setThisPaletteType(1);
-			btn->set_SELECTED_palette(SELECTED_palette);
-			break;
-		case 2:
-			btn->setup("COMPLEMENT (SATURATION)");
-			btn->setThisPaletteType(2);
-			btn->set_SELECTED_palette(SELECTED_palette);
-			break;
-		case 3:
-			btn->setup("COMPLEMENT (BRIGHTNESS)");
-			btn->setThisPaletteType(3);
-			btn->set_SELECTED_palette(SELECTED_palette);
-			break;
-		case 4:
-			btn->setup("MONOCHROME (SATURATION)");
-			btn->setThisPaletteType(4);
-			btn->set_SELECTED_palette(SELECTED_palette);
-			break;
-		case 5:
-			btn->setup("MONOCHROME (BRIGHTNESS)");
-			btn->setThisPaletteType(5);
-			btn->set_SELECTED_palette(SELECTED_palette);
-			break;
-		case 6:
-			btn->setup("ANALOGUE");
-			btn->setThisPaletteType(6);
-			btn->set_SELECTED_palette(SELECTED_palette);
-			break;
-			//            case 7:
-			//                btn->setup("RANDOM");
-			//                btn->setThisPaletteType(7);
-			//                btn->set_SELECTED_palette(SELECTED_palette);
-			//                break;
-		}
-
-		btn->setPosition(x0, y0 + p * btn_plt_h);
-		btn->setBGColor(btn_plt_c);
-		btn->setLabelColor(ofColor::white);
-		//btn->setBorderColor(ofColor(128));
-		btn->setBorder(false);
-		scene->addChild(btn);
-		btns_plt_Selector.push_back(btn);
-	}
-
-	//-
-
-	// 2. FROM OFX-COLOUR-THEORY
-
-	int iStart, iEnd;
-	iStart = NUM_PALETTES;
-	iEnd = NUM_PALETTES + NUM_CT_PALETTES;
-
-	for (int p = iStart; p < iEnd; p++)
-	{
-		ButtonPaletteSelector *btn = new ButtonPaletteSelector();
-
-		if (p == iStart + 0)
-		{
-			btn->setup("CT_ANALOGOUS");
-			btn->setThisPaletteType(iStart + 0);
-			btn->set_SELECTED_palette(SELECTED_palette);
-		}
-		else if (p == iStart + 1)
-		{
-			btn->setup("CT_COMPLEMENTARY");
-			btn->setThisPaletteType(iStart + 1);
-			btn->set_SELECTED_palette(SELECTED_palette);
-		}
-		else if (p == iStart + 2)
-		{
-			btn->setup("CT_SPLITCOMPLEMENTARY");
-			btn->setThisPaletteType(iStart + 2);
-			btn->set_SELECTED_palette(SELECTED_palette);
-		}
-		else if (p == iStart + 3)
-		{
-			btn->setup("CT_COMPOUND");
-			btn->setThisPaletteType(iStart + 3);
-			btn->set_SELECTED_palette(SELECTED_palette);
-		}
-		else if (p == iStart + 4)
-		{
-			btn->setup("CT_FLIPPEDCOMPOUND");
-			btn->setThisPaletteType(iStart + 4);
-			btn->set_SELECTED_palette(SELECTED_palette);
-		}
-		else if (p == iStart + 5)
-		{
-			btn->setup("CT_MONOCHROME");
-			btn->setThisPaletteType(iStart + 5);
-			btn->set_SELECTED_palette(SELECTED_palette);
-		}
-		else if (p == iStart + 6)
-		{
-			btn->setup("CT_TETRAD");
-			btn->setThisPaletteType(iStart + 6);
-			btn->set_SELECTED_palette(SELECTED_palette);
-		}
-		else if (p == iStart + 7)
-		{
-			btn->setup("CT_TRIAD");
-			btn->setThisPaletteType(iStart + 7);
-			btn->set_SELECTED_palette(SELECTED_palette);
-		}
-
-		//-
-
-		btn->setPosition(x0, y0 + p * btn_plt_h);
-		btn->setBGColor(btn_plt_c);
-		btn->setLabelColor(ofColor::white);
-		//btn->setBorderColor(ofColor(128));
-		btn->setBorder(false);
-		scene->addChild(btn);
-		btns_plt_Selector.push_back(btn);
-	}
-
-	//-
-
-	// 2. set to draw border to selected palette
-
-	if ((btns_plt_Selector.size() > 0) &&
-		(btns_plt_Selector.size() > SELECTED_palette_LAST))
-	{
-		btns_plt_Selector[SELECTED_palette_LAST]->setBorder(true);
-	}
-
-#endif
-}
+////--------------------------------------------------------------
+//void ofxColorManager::setup_Labels()
+//{
+//#ifdef USE_RECTANGLE_INTERFACES
+//
+//	// 1. populate label buttons to trig palettes
+//
+//	int x0 = palettes_x;
+//	int padH = 5;
+//	int y0 = palettes_y + padH;
+//	int h0 = box_size + pad;
+//
+//	//--
+//
+//	// LABELS PICKER : TODO: maybe can use simpler thing than ofxInterface for this
+//
+//	// palettes labels
+//
+//	ofColor btn_plt_c;
+//	btn_plt_c.set(ofColor(32));
+//	int btn_plt_h;
+//	btn_plt_h = h0;
+//	x0 = palettes_x;
+//
+//	//-
+//
+//	//TODO: BUG
+//	btns_plt_Selector.clear();
+//
+//	//-
+//
+//	// 1. FROM OFX-COLOR-PALETTE
+//
+//	for (int p = 0; p < NUM_PALETTES; p++)
+//	{
+//		ButtonPaletteSelector *btn = new ButtonPaletteSelector();
+//		switch (p)
+//		{
+//		case 0:
+//			btn->setup("TRIAD");
+//			btn->setThisPaletteType(0);
+//			btn->set_SELECTED_palette(SELECTED_palette);
+//			break;
+//		case 1:
+//			btn->setup("COMPLEMENT TRIAD");
+//			btn->setThisPaletteType(1);
+//			btn->set_SELECTED_palette(SELECTED_palette);
+//			break;
+//		case 2:
+//			btn->setup("COMPLEMENT (SATURATION)");
+//			btn->setThisPaletteType(2);
+//			btn->set_SELECTED_palette(SELECTED_palette);
+//			break;
+//		case 3:
+//			btn->setup("COMPLEMENT (BRIGHTNESS)");
+//			btn->setThisPaletteType(3);
+//			btn->set_SELECTED_palette(SELECTED_palette);
+//			break;
+//		case 4:
+//			btn->setup("MONOCHROME (SATURATION)");
+//			btn->setThisPaletteType(4);
+//			btn->set_SELECTED_palette(SELECTED_palette);
+//			break;
+//		case 5:
+//			btn->setup("MONOCHROME (BRIGHTNESS)");
+//			btn->setThisPaletteType(5);
+//			btn->set_SELECTED_palette(SELECTED_palette);
+//			break;
+//		case 6:
+//			btn->setup("ANALOGUE");
+//			btn->setThisPaletteType(6);
+//			btn->set_SELECTED_palette(SELECTED_palette);
+//			break;
+//			//            case 7:
+//			//                btn->setup("RANDOM");
+//			//                btn->setThisPaletteType(7);
+//			//                btn->set_SELECTED_palette(SELECTED_palette);
+//			//                break;
+//		}
+//
+//		btn->setPosition(x0, y0 + p * btn_plt_h);
+//		btn->setBGColor(btn_plt_c);
+//		btn->setLabelColor(ofColor::white);
+//		//btn->setBorderColor(ofColor(128));
+//		btn->setBorder(false);
+//		scene->addChild(btn);
+//		btns_plt_Selector.push_back(btn);
+//	}
+//
+//	//-
+//
+//	// 2. FROM OFX-COLOUR-THEORY
+//
+//	int iStart, iEnd;
+//	iStart = NUM_PALETTES;
+//	iEnd = NUM_PALETTES + NUM_CT_PALETTES;
+//
+//	for (int p = iStart; p < iEnd; p++)
+//	{
+//		ButtonPaletteSelector *btn = new ButtonPaletteSelector();
+//
+//		if (p == iStart + 0)
+//		{
+//			btn->setup("CT_ANALOGOUS");
+//			btn->setThisPaletteType(iStart + 0);
+//			btn->set_SELECTED_palette(SELECTED_palette);
+//		}
+//		else if (p == iStart + 1)
+//		{
+//			btn->setup("CT_COMPLEMENTARY");
+//			btn->setThisPaletteType(iStart + 1);
+//			btn->set_SELECTED_palette(SELECTED_palette);
+//		}
+//		else if (p == iStart + 2)
+//		{
+//			btn->setup("CT_SPLITCOMPLEMENTARY");
+//			btn->setThisPaletteType(iStart + 2);
+//			btn->set_SELECTED_palette(SELECTED_palette);
+//		}
+//		else if (p == iStart + 3)
+//		{
+//			btn->setup("CT_COMPOUND");
+//			btn->setThisPaletteType(iStart + 3);
+//			btn->set_SELECTED_palette(SELECTED_palette);
+//		}
+//		else if (p == iStart + 4)
+//		{
+//			btn->setup("CT_FLIPPEDCOMPOUND");
+//			btn->setThisPaletteType(iStart + 4);
+//			btn->set_SELECTED_palette(SELECTED_palette);
+//		}
+//		else if (p == iStart + 5)
+//		{
+//			btn->setup("CT_MONOCHROME");
+//			btn->setThisPaletteType(iStart + 5);
+//			btn->set_SELECTED_palette(SELECTED_palette);
+//		}
+//		else if (p == iStart + 6)
+//		{
+//			btn->setup("CT_TETRAD");
+//			btn->setThisPaletteType(iStart + 6);
+//			btn->set_SELECTED_palette(SELECTED_palette);
+//		}
+//		else if (p == iStart + 7)
+//		{
+//			btn->setup("CT_TRIAD");
+//			btn->setThisPaletteType(iStart + 7);
+//			btn->set_SELECTED_palette(SELECTED_palette);
+//		}
+//
+//		//-
+//
+//		btn->setPosition(x0, y0 + p * btn_plt_h);
+//		btn->setBGColor(btn_plt_c);
+//		btn->setLabelColor(ofColor::white);
+//		//btn->setBorderColor(ofColor(128));
+//		btn->setBorder(false);
+//		scene->addChild(btn);
+//		btns_plt_Selector.push_back(btn);
+//	}
+//
+//	//-
+//
+//	// 2. set to draw border to selected palette
+//
+//	if ((btns_plt_Selector.size() > 0) &&
+//		(btns_plt_Selector.size() > SELECTED_palette_LAST))
+//	{
+//		btns_plt_Selector[SELECTED_palette_LAST]->setBorder(true);
+//	}
+//
+//#endif
+//}
 
 
-#ifdef USE_RECTANGLE_INTERFACES
+//#ifdef USE_RECTANGLE_INTERFACES
 //--------------------------------------------------------------
 void ofxColorManager::palette_FromTheory(int p)
 {
@@ -5142,51 +5146,51 @@ void ofxColorManager::palette_FromTheory(int p)
 	switch (p)
 	{
 	case 0:
-		for (int i = 0; i < btns_plt_Triad.size(); i++)
+		for (int i = 0; i < triad.size(); i++)
 		{
-			color = btns_plt_Triad[i]->getColor();
+			color = triad[i];
 			palette_addColor(color);
 		}
 		break;
 	case 1:
-		for (int i = 0; i < btns_plt_ComplTriad.size(); i++)
+		for (int i = 0; i < complementTriad.size(); i++)
 		{
-			color = btns_plt_ComplTriad[i]->getColor();
+			color = complementTriad[i];
 			palette_addColor(color);
 		}
 		break;
 	case 2:
-		for (int i = 0; i < btns_plt_CompSat.size(); i++)
+		for (int i = 0; i < complement.size(); i++)
 		{
-			color = btns_plt_CompSat[i]->getColor();
+			color = complement[i];
 			palette_addColor(color);
 		}
 		break;
 	case 3:
-		for (int i = 0; i < btns_plt_ComplBrgt.size(); i++)
+		for (int i = 0; i < complementBrightness.size(); i++)
 		{
-			color = btns_plt_ComplBrgt[i]->getColor();
+			color = complementBrightness[i];
 			palette_addColor(color);
 		}
 		break;
 	case 4:
-		for (int i = 0; i < btns_plt_MonoSat.size(); i++)
+		for (int i = 0; i < monochrome.size(); i++)
 		{
-			color = btns_plt_MonoSat[i]->getColor();
+			color = monochrome[i];
 			palette_addColor(color);
 		}
 		break;
 	case 5:
-		for (int i = 0; i < btns_plt_MonoBrgt.size(); i++)
+		for (int i = 0; i < monochromeBrightness.size(); i++)
 		{
-			color = btns_plt_MonoBrgt[i]->getColor();
+			color = monochromeBrightness[i];
 			palette_addColor(color);
 		}
 		break;
 	case 6:
-		for (int i = 0; i < btns_plt_Analog.size(); i++)
+		for (int i = 0; i < analogue.size(); i++)
 		{
-			color = btns_plt_Analog[i]->getColor();
+			color = analogue[i];
 			palette_addColor(color);
 		}
 		break;
@@ -5205,58 +5209,58 @@ void ofxColorManager::palette_FromTheory(int p)
 	switch (p)
 	{
 	case 7:
-		for (int i = 0; i < btns_plt_CT_Analogous.size(); i++)
+		for (int i = 0; i < colors_Analogous.size(); i++)
 		{
-			color = btns_plt_CT_Analogous[i]->getColor();
+			color = colors_Analogous[i];
 			palette_addColor(color);
 		}
 		break;
 	case 8:
-		for (int i = 0; i < btns_plt_CT_Complementary.size(); i++)
+		for (int i = 0; i < colors_Complementary.size(); i++)
 		{
-			color = btns_plt_CT_Complementary[i]->getColor();
+			color = colors_Complementary[i];
 			palette_addColor(color);
 		}
 		break;
 	case 9:
-		for (int i = 0; i < btns_plt_CT_SplitComplementary.size(); i++)
+		for (int i = 0; i < colors_SplitComplementary.size(); i++)
 		{
-			color = btns_plt_CT_SplitComplementary[i]->getColor();
+			color = colors_SplitComplementary[i];
 			palette_addColor(color);
 		}
 		break;
 	case 10:
-		for (int i = 0; i < btns_plt_CT_Compound.size(); i++)
+		for (int i = 0; i < colors_Compound.size(); i++)
 		{
-			color = btns_plt_CT_Compound[i]->getColor();
+			color = colors_Compound[i];
 			palette_addColor(color);
 		}
 		break;
 	case 11:
-		for (int i = 0; i < btns_plt_CT_FlippedCompound.size(); i++)
+		for (int i = 0; i < colors_FlippedCompound.size(); i++)
 		{
-			color = btns_plt_CT_FlippedCompound[i]->getColor();
+			color = colors_FlippedCompound[i];
 			palette_addColor(color);
 		}
 		break;
 	case 12:
-		for (int i = 0; i < btns_plt_CT_Monochrome.size(); i++)
+		for (int i = 0; i < colors_Monochrome.size(); i++)
 		{
-			color = btns_plt_CT_Monochrome[i]->getColor();
+			color = colors_Monochrome[i];
 			palette_addColor(color);
 		}
 		break;
 	case 13:
-		for (int i = 0; i < btns_plt_CT_Triad.size(); i++)
+		for (int i = 0; i < colors_Triad.size(); i++)
 		{
-			color = btns_plt_CT_Triad[i]->getColor();
+			color = colors_Triad[i];
 			palette_addColor(color);
 		}
 		break;
 	case 14:
-		for (int i = 0; i < btns_plt_CT_Tetrad.size(); i++)
+		for (int i = 0; i < colors_Tetrad.size(); i++)
 		{
-			color = btns_plt_CT_Tetrad[i]->getColor();
+			color = colors_Tetrad[i];
 			palette_addColor(color);
 		}
 		break;
@@ -5282,6 +5286,8 @@ void ofxColorManager::palette_FromTheory(int p)
 			}
 			color_BackGround.set(c);
 
+			//-
+
 			//TODO: must improve
 			// modulate darker
 			//if (color_BackGround_Darker)
@@ -5306,36 +5312,11 @@ void ofxColorManager::palette_FromTheory(int p)
 
 	//-
 }
-#endif
+//#endif
 
 //--------------------------------------------------------------
 void ofxColorManager::refresh_TheoryEngine()
 {
-	//// calculate base primary color
-	//if (MODE_TweakSatBrg)
-	//{
-	//	// using hue only from picked color and forcing sat/(brg from algo sliders
-	//	ofFloatColor c = ofFloatColor::fromHsb(
-	//		color_Picked.get().getHue(),
-	//		ofMap(SATURATION, 0.f, 255.f, 0.f, 1.f),
-	//		ofMap(BRIGHTNESS, 0.f, 255.f, 0.f, 1.f));
-
-	//	color_TheoryBase = c;
-	//}
-	////else
-	////{
-	////	// check using hue + sat/brg from color ignoring algo panel SV sliders
-	////	//base = color_Picked.get();
-	////	//c.set(color_Picked.get());
-	////}
-
-	////if (bAuto_TheoryFromPicker)
-	//{
-	//	color_TheoryBase = c;
-	//}
-
-	//--
-
 	// 1. FROM OFX-COLOR-PALETTE
 
 	// update palettes
@@ -5358,441 +5339,151 @@ void ofxColorManager::refresh_TheoryEngine()
 
 	//---
 
-#ifdef USE_RECTANGLE_INTERFACES
-
-	// this will not runned on setup() because vectors are empty yet
-
-	// PALETTES
-
-	// 1. triad
-	for (int i = 0; i < btns_plt_Triad.size(); i++)
-	{
-		btns_plt_Triad[i]->setColor(triad[i]);
-	}
-	// 2. complement triad
-	for (int i = 0; i < btns_plt_ComplTriad.size(); i++)
-	{
-		btns_plt_ComplTriad[i]->setColor(complementTriad[i]);
-	}
-	// 3. complement sat
-	for (int i = 0; i < btns_plt_CompSat.size(); i++)
-	{
-		if (i < complement.size())//BUG: avoid crash
-			btns_plt_CompSat[i]->setColor(complement[i]);
-	}
-	// 4. complement brgt
-	for (int i = 0; i < btns_plt_ComplBrgt.size(); i++)
-	{
-		if (i < complementBrightness.size())//BUG: avoid crash
-			btns_plt_ComplBrgt[i]->setColor(complementBrightness[i]);
-	}
-	// 5. mono sat
-	for (int i = 0; i < btns_plt_MonoSat.size(); i++)
-	{
-		if (i < monochrome.size())//BUG: avoid crash
-			btns_plt_MonoSat[i]->setColor(monochrome[i]);
-	}
-	// 6. mono brgt
-	for (int i = 0; i < btns_plt_MonoBrgt.size(); i++)
-	{
-		if (i < monochromeBrightness.size())//BUG: avoid crash
-			btns_plt_MonoBrgt[i]->setColor(monochromeBrightness[i]);
-	}
-	// 7. analogue
-	for (int i = 0; i < btns_plt_Analog.size(); i++)
-	{
-		if (i < analogue.size())//BUG: avoid crash
-			btns_plt_Analog[i]->setColor(analogue[i]);
-	}
-	//// 8. random
-	//for (int i = 0; i < btns_plt_Random.size(); i++) {
-	//    btns_plt_Random[i]->setColor(random[i]);
-	//}
-#endif
-
-	//----
-
 	// 2. FROM OFX-COLOUR-THEORY
 
 	update_Theory();//TODO: reduce calls...
-
-	//--
-
-#ifdef USE_RECTANGLE_INTERFACES
-
-	// 0. btns_plt_CT_Analogous
-	for (int i = 0; i < btns_plt_CT_Analogous.size(); i++)
-	{
-		if (i < colors_Analogous.size())//BUG: avoid crash
-			btns_plt_CT_Analogous[i]->setColor(colors_Analogous[i]);
-	}
-	// 1. btns_plt_CT_Complementary
-	for (int i = 0; i < btns_plt_CT_Complementary.size(); i++)
-	{
-		if (i < colors_Complementary.size())//BUG: avoid crash
-			btns_plt_CT_Complementary[i]->setColor(colors_Complementary[i]);
-	}
-	// 2. btns_plt_CT_SplitComplementary
-	for (int i = 0; i < btns_plt_CT_SplitComplementary.size(); i++)
-	{
-		if (i < colors_SplitComplementary.size())//BUG: avoid crash
-			btns_plt_CT_SplitComplementary[i]->setColor(colors_SplitComplementary[i]);
-	}
-	// 3. btns_plt_CT_Compound
-	for (int i = 0; i < btns_plt_CT_Compound.size(); i++)
-	{
-		if (i < colors_Compound.size())//BUG: avoid crash
-			btns_plt_CT_Compound[i]->setColor(colors_Compound[i]);
-	}
-	// 4. btns_plt_CT_FlippedCompound
-	for (int i = 0; i < btns_plt_CT_FlippedCompound.size(); i++)
-	{
-		if (i < colors_FlippedCompound.size())//BUG: avoid crash
-			btns_plt_CT_FlippedCompound[i]->setColor(colors_FlippedCompound[i]);
-	}
-	// 5. btns_plt_CT_Monochrome
-	for (int i = 0; i < btns_plt_CT_Monochrome.size(); i++)
-	{
-		if (i < colors_Monochrome.size())//BUG: avoid crash
-			btns_plt_CT_Monochrome[i]->setColor(colors_Monochrome[i]);
-	}
-	// 6. btns_plt_CT_Tetrad
-	for (int i = 0; i < btns_plt_CT_Tetrad.size(); i++)
-	{
-		if (i < colors_Tetrad.size())//BUG: avoid crash
-			btns_plt_CT_Tetrad[i]->setColor(colors_Tetrad[i]);
-	}
-	// 7. btns_plt_CT_Triad
-	for (int i = 0; i < btns_plt_CT_Triad.size(); i++)
-	{
-		if (i < colors_Triad.size())//BUG: avoid crash
-			btns_plt_CT_Triad[i]->setColor(colors_Triad[i]);
-	}
-#endif
-
-	//--
 }
-
 
 //--------------------------------------------------------------
 void ofxColorManager::palettes_resize()
 {
-	// 1. remove all color boxes
-
-	//-
-
-#ifdef USE_RECTANGLE_INTERFACES
-	// 1. FROM OFX-COLOR-PALETTE
-
-	for (int i = 0; i < btns_plt_Triad.size(); i++)
-	{
-		std::string n = ("triad" + ofToString(i));
-		auto a = scene->getChildWithName(n, 1000);
-		auto b = a->getName();
-		scene->removeChild(a, false);
-		ofLogVerbose(__FUNCTION__) << "removed children: " << b;
-	}
-	btns_plt_Triad.clear();
-
-	for (int i = 0; i < btns_plt_ComplTriad.size(); i++)
-	{
-		std::string n = ("compTriad" + ofToString(i));
-		auto a = scene->getChildWithName(n, 1000);
-		auto b = a->getName();
-		scene->removeChild(a, false);
-		ofLogVerbose(__FUNCTION__) << "removed children: " << b;
-	}
-	btns_plt_ComplTriad.clear();
-
-	for (int i = 0; i < btns_plt_CompSat.size(); i++)
-	{
-		std::string n = ("compSat" + ofToString(i));
-		auto a = scene->getChildWithName(n, 1000);
-		auto b = a->getName();
-		scene->removeChild(a, false);
-		ofLogVerbose(__FUNCTION__) << "removed children: " << b;
-	}
-	btns_plt_CompSat.clear();
-
-	for (int i = 0; i < btns_plt_ComplBrgt.size(); i++)
-	{
-		std::string n = ("compBrgt" + ofToString(i));
-		auto a = scene->getChildWithName(n, 1000);
-		auto b = a->getName();
-		scene->removeChild(a, false);
-		ofLogVerbose(__FUNCTION__) << "removed children: " << b;
-	}
-	btns_plt_ComplBrgt.clear();
-
-	for (int i = 0; i < btns_plt_MonoSat.size(); i++)
-	{
-		std::string n = ("monoSat" + ofToString(i));
-		auto a = scene->getChildWithName(n, 1000);
-		auto b = a->getName();
-		scene->removeChild(a, false);
-		ofLogVerbose(__FUNCTION__) << "removed children: " << b;
-	}
-	btns_plt_MonoSat.clear();
-
-	for (int i = 0; i < btns_plt_MonoBrgt.size(); i++)
-	{
-		std::string n = ("monoBrgt" + ofToString(i));
-		auto a = scene->getChildWithName(n, 1000);
-		auto b = a->getName();
-		scene->removeChild(a, false);
-		ofLogVerbose(__FUNCTION__) << "removed children: " << b;
-	}
-	btns_plt_MonoBrgt.clear();
-
-	for (int i = 0; i < btns_plt_Analog.size(); i++)
-	{
-		std::string n = ("analogue" + ofToString(i));
-		auto a = scene->getChildWithName(n, 1000);
-		auto b = a->getName();
-		scene->removeChild(a, false);
-		ofLogVerbose(__FUNCTION__) << "removed children: " << b;
-	}
-	btns_plt_Analog.clear();
-
-	//    for (int i = 0; i < btns_plt_Random.size(); i++) {
-	//        std::string n = ("random" + ofToString(i));
-	//        auto a = scene->getChildWithName(n, 1000);
-	//        auto b = a->getName();
-	//        scene->removeChild(a, false);
-	//        ofLogVerbose(__FUNCTION__) << "removed children: " << b;
-	//    }
-	//    btns_plt_Random.clear();
-
-	//-
-
-	// 2. FROM OFX-COLOUR-THEORY
-
-	for (int i = 0; i < btns_plt_CT_Analogous.size(); i++)
-	{
-		std::string n = ("CT_Analogous" + ofToString(i));
-		auto a = scene->getChildWithName(n, 1000);
-		auto b = a->getName();
-		scene->removeChild(a, false);
-		ofLogVerbose(__FUNCTION__) << "removed children: " << b;
-	}
-	btns_plt_CT_Analogous.clear();
-
-	for (int i = 0; i < btns_plt_CT_Complementary.size(); i++)
-	{
-		std::string n = ("CT_Complementary" + ofToString(i));
-		auto a = scene->getChildWithName(n, 1000);
-		auto b = a->getName();
-		scene->removeChild(a, false);
-		ofLogVerbose(__FUNCTION__) << "removed children: " << b;
-	}
-	btns_plt_CT_Complementary.clear();
-
-	for (int i = 0; i < btns_plt_CT_SplitComplementary.size(); i++)
-	{
-		std::string n = ("CT_SplitComplementary" + ofToString(i));
-		auto a = scene->getChildWithName(n, 1000);
-		auto b = a->getName();
-		scene->removeChild(a, false);
-		ofLogVerbose(__FUNCTION__) << "removed children: " << b;
-	}
-	btns_plt_CT_SplitComplementary.clear();
-
-	for (int i = 0; i < btns_plt_CT_Compound.size(); i++)
-	{
-		std::string n = ("CT_Compound" + ofToString(i));
-		auto a = scene->getChildWithName(n, 1000);
-		auto b = a->getName();
-		scene->removeChild(a, false);
-		ofLogVerbose(__FUNCTION__) << "removed children: " << b;
-	}
-	btns_plt_CT_Compound.clear();
-
-	for (int i = 0; i < btns_plt_CT_FlippedCompound.size(); i++)
-	{
-		std::string n = ("CT_FlippedCompound" + ofToString(i));
-		auto a = scene->getChildWithName(n, 1000);
-		auto b = a->getName();
-		scene->removeChild(a, false);
-		ofLogVerbose(__FUNCTION__) << "removed children: " << b;
-	}
-	btns_plt_CT_FlippedCompound.clear();
-
-	for (int i = 0; i < btns_plt_CT_Monochrome.size(); i++)
-	{
-		std::string n = ("CT_Monochrome" + ofToString(i));
-		auto a = scene->getChildWithName(n, 1000);
-		auto b = a->getName();
-		scene->removeChild(a, false);
-		ofLogVerbose(__FUNCTION__) << "removed children: " << b;
-	}
-	btns_plt_CT_Monochrome.clear();
-
-	for (int i = 0; i < btns_plt_CT_Tetrad.size(); i++)
-	{
-		std::string n = ("CT_Tetrad" + ofToString(i));
-		auto a = scene->getChildWithName(n, 1000);
-		auto b = a->getName();
-		scene->removeChild(a, false);
-		ofLogVerbose(__FUNCTION__) << "removed children: " << b;
-	}
-	btns_plt_CT_Tetrad.clear();
-
-	for (int i = 0; i < btns_plt_CT_Triad.size(); i++)
-	{
-		std::string n = ("CT_Triad" + ofToString(i));
-		auto a = scene->getChildWithName(n, 1000);
-		auto b = a->getName();
-		scene->removeChild(a, false);
-		ofLogVerbose(__FUNCTION__) << "removed children: " << b;
-	}
-	btns_plt_CT_Triad.clear();
-#endif
-
-	//-
-
-	//TODO
-
 	//random.generateRandom(numColors_Alg);
+
 	refresh_TheoryEngine();
-	setup_Interface();
+	//setup_Interface();
 
 	//-
 
-	// WORKFLOW: trig last picked palette
+	// WORKFLOW: 
+	//trig last picked palette
 	if (bAuto_TheoryToPalette)
 	{
 		palette_clear();
 
 		//-
 
-#ifdef USE_RECTANGLE_INTERFACES
+//#ifdef USE_RECTANGLE_INTERFACES
 		palette_FromTheory(SELECTED_palette_LAST);
-#endif
+//#endif
 	}
 
 	//-
 }
 
-//--------------------------------------------------------------
-void ofxColorManager::setVisible_Interface(bool b)
-{
-	//#ifdef USE_RECTANGLE_INTERFACES
-	//	// hide and disable touchs for buttons
-	//
-	//	// ALGORITHMIC COLOR PALETTES
-	//
-	//	//-
-	//
-	//	// 1. FROM OFX-COLOR-PALETTE
-	//
-	//	for (auto &btn : btns_plt_Triad)
-	//	{
-	//		btn->setVisible(b);
-	//		btn->setEnabled(b);
-	//	}
-	//	for (auto &btn : btns_plt_ComplTriad)
-	//	{
-	//		btn->setVisible(b);
-	//		btn->setEnabled(b);
-	//	}
-	//	for (auto &btn : btns_plt_CompSat)
-	//	{
-	//		btn->setVisible(b);
-	//		btn->setEnabled(b);
-	//	}
-	//	for (auto &btn : btns_plt_ComplBrgt)
-	//	{
-	//		btn->setVisible(b);
-	//		btn->setEnabled(b);
-	//	}
-	//	for (auto &btn : btns_plt_MonoSat)
-	//	{
-	//		btn->setVisible(b);
-	//		btn->setEnabled(b);
-	//	}
-	//	for (auto &btn : btns_plt_MonoBrgt)
-	//	{
-	//		btn->setVisible(b);
-	//		btn->setEnabled(b);
-	//	}
-	//	for (auto &btn : btns_plt_Analog)
-	//	{
-	//		btn->setVisible(b);
-	//		btn->setEnabled(b);
-	//	}
-	//	//    for (auto &btn : btns_plt_Random) {
-	//	//        btn->setVisible(b);
-	//	//        btn->setEnabled(b);
-	//	//    }
-	//
-	//	//-
-	//
-	//	// 2. FROM OFX-COLOUR-THEORY
-	//
-	//	for (auto &btn : btns_plt_CT_Analogous)
-	//	{
-	//		btn->setVisible(b);
-	//		btn->setEnabled(b);
-	//	}
-	//	for (auto &btn : btns_plt_CT_Complementary)
-	//	{
-	//		btn->setVisible(b);
-	//		btn->setEnabled(b);
-	//	}
-	//	for (auto &btn : btns_plt_CT_SplitComplementary)
-	//	{
-	//		btn->setVisible(b);
-	//		btn->setEnabled(b);
-	//	}
-	//	for (auto &btn : btns_plt_CT_Compound)
-	//	{
-	//		btn->setVisible(b);
-	//		btn->setEnabled(b);
-	//	}
-	//	for (auto &btn : btns_plt_CT_FlippedCompound)
-	//	{
-	//		btn->setVisible(b);
-	//		btn->setEnabled(b);
-	//	}
-	//	for (auto &btn : btns_plt_CT_Monochrome)
-	//	{
-	//		btn->setVisible(b);
-	//		btn->setEnabled(b);
-	//	}
-	//	for (auto &btn : btns_plt_CT_Triad)
-	//	{
-	//		btn->setVisible(b);
-	//		btn->setEnabled(b);
-	//	}
-	//	for (auto &btn : btns_plt_CT_Tetrad)
-	//	{
-	//		btn->setVisible(b);
-	//		btn->setEnabled(b);
-	//	}
-	//
-	//	//-
-	//
-	//	// 2. LABEL BUTTONS
-	//
-	//	for (auto &btn : btns_plt_Selector)
-	//	{
-	//		btn->setVisible(b);
-	//		btn->setLocked(!b);
-	//	}
-	//#endif
-}
+////--------------------------------------------------------------
+//void ofxColorManager::setVisible_Interface(bool b)
+//{
+//	//#ifdef USE_RECTANGLE_INTERFACES
+//	//	// hide and disable touchs for buttons
+//	//
+//	//	// ALGORITHMIC COLOR PALETTES
+//	//
+//	//	//-
+//	//
+//	//	// 1. FROM OFX-COLOR-PALETTE
+//	//
+//	//	for (auto &btn : btns_plt_Triad)
+//	//	{
+//	//		btn->setVisible(b);
+//	//		btn->setEnabled(b);
+//	//	}
+//	//	for (auto &btn : btns_plt_ComplTriad)
+//	//	{
+//	//		btn->setVisible(b);
+//	//		btn->setEnabled(b);
+//	//	}
+//	//	for (auto &btn : btns_plt_CompSat)
+//	//	{
+//	//		btn->setVisible(b);
+//	//		btn->setEnabled(b);
+//	//	}
+//	//	for (auto &btn : btns_plt_ComplBrgt)
+//	//	{
+//	//		btn->setVisible(b);
+//	//		btn->setEnabled(b);
+//	//	}
+//	//	for (auto &btn : btns_plt_MonoSat)
+//	//	{
+//	//		btn->setVisible(b);
+//	//		btn->setEnabled(b);
+//	//	}
+//	//	for (auto &btn : btns_plt_MonoBrgt)
+//	//	{
+//	//		btn->setVisible(b);
+//	//		btn->setEnabled(b);
+//	//	}
+//	//	for (auto &btn : btns_plt_Analog)
+//	//	{
+//	//		btn->setVisible(b);
+//	//		btn->setEnabled(b);
+//	//	}
+//	//	//    for (auto &btn : btns_plt_Random) {
+//	//	//        btn->setVisible(b);
+//	//	//        btn->setEnabled(b);
+//	//	//    }
+//	//
+//	//	//-
+//	//
+//	//	// 2. FROM OFX-COLOUR-THEORY
+//	//
+//	//	for (auto &btn : btns_plt_CT_Analogous)
+//	//	{
+//	//		btn->setVisible(b);
+//	//		btn->setEnabled(b);
+//	//	}
+//	//	for (auto &btn : btns_plt_CT_Complementary)
+//	//	{
+//	//		btn->setVisible(b);
+//	//		btn->setEnabled(b);
+//	//	}
+//	//	for (auto &btn : btns_plt_CT_SplitComplementary)
+//	//	{
+//	//		btn->setVisible(b);
+//	//		btn->setEnabled(b);
+//	//	}
+//	//	for (auto &btn : btns_plt_CT_Compound)
+//	//	{
+//	//		btn->setVisible(b);
+//	//		btn->setEnabled(b);
+//	//	}
+//	//	for (auto &btn : btns_plt_CT_FlippedCompound)
+//	//	{
+//	//		btn->setVisible(b);
+//	//		btn->setEnabled(b);
+//	//	}
+//	//	for (auto &btn : btns_plt_CT_Monochrome)
+//	//	{
+//	//		btn->setVisible(b);
+//	//		btn->setEnabled(b);
+//	//	}
+//	//	for (auto &btn : btns_plt_CT_Triad)
+//	//	{
+//	//		btn->setVisible(b);
+//	//		btn->setEnabled(b);
+//	//	}
+//	//	for (auto &btn : btns_plt_CT_Tetrad)
+//	//	{
+//	//		btn->setVisible(b);
+//	//		btn->setEnabled(b);
+//	//	}
+//	//
+//	//	//-
+//	//
+//	//	// 2. LABEL BUTTONS
+//	//
+//	//	for (auto &btn : btns_plt_Selector)
+//	//	{
+//	//		btn->setVisible(b);
+//	//		btn->setLocked(!b);
+//	//	}
+//	//#endif
+//}
 
 //--------------------------------------------------------------
 void ofxColorManager::refresh_Interface()
 {
 	ofLogNotice(__FUNCTION__);
 
-	////selected
-	//colorSchemeName.set(ColorWheelSchemes::colorSchemeNames[colorScheme.get()]);
-	//scheme = ColorWheelSchemes::colorSchemes[colorScheme.get()];
-	//scheme->setPrimaryColor(color_TheoryBase.get());
-
-	//colorsTheory = scheme->interpolate(numColors_Theory.get());
 	for (int i = 0; i < NUM_COLOR_THEORY_TYPES; i++)
 	{
 		shared_ptr<ColorWheelScheme> _scheme;
@@ -5805,7 +5496,16 @@ void ofxColorManager::refresh_Interface()
 //--------------------------------------------------------------
 void ofxColorManager::setup_Theory()
 {
-	numColors_Alg.makeReferenceTo(numColors_Theory);
+	ofRemoveListener(params_ColorTheory.parameterChangedE(), this, &ofxColorManager::Changed_ColorTheory);
+	params_ColorTheory.clear();
+	for (int i = 0; i < NUM_COLOR_THEORY_TYPES; i++)
+	{
+		theoryTypes[i].set("-1", false);
+	}
+
+	//--
+
+	//numColors_Alg.makeReferenceTo(numColors_Theory);
 	//numColors_Theory.makeReferenceTo(numColors_Alg);
 
 	params_ColorTheory.setName("Color Theory");
@@ -5826,14 +5526,6 @@ void ofxColorManager::setup_Theory()
 	ofAddListener(params_ColorTheory.parameterChangedE(), this, &ofxColorManager::Changed_ColorTheory);
 
 	refresh_Interface();
-
-	//---
-
-//#ifdef USE_OFX_GUI
-//	//panel.setup();
-//	//panel.add(group);
-//	//panel.setPosition(1000, 400);
-//#endif
 
 	//-
 
@@ -6155,7 +5847,7 @@ void ofxColorManager::palette_removeColorLast()
 			auto b = a->getName();
 			scene->removeChild(a, false);
 			ofLogVerbose(__FUNCTION__) << "removed children: " << b;
-		}
+	}
 		btns_palette.pop_back();
 	}
 
@@ -6222,7 +5914,7 @@ void ofxColorManager::palette_clear()
 		scene->removeChild(a, false);
 
 		ofLogVerbose(__FUNCTION__) << "removed children: " << b;
-	}
+}
 	btns_palette.clear();
 
 #endif
@@ -6252,7 +5944,7 @@ void ofxColorManager::palette_clear()
 void ofxColorManager::Changed_ColorPicked(ofFloatColor &c)
 {
 	ofLogNotice(__FUNCTION__) << ofToString(c);// color_Picked
-											   
+
 	// update TARGET color pointer (ofApp)
 	if (color_TARGET != nullptr)
 	{
@@ -6277,11 +5969,7 @@ void ofxColorManager::Changed_ParamsPalette(ofAbstractParameter &e)
 {
 	std::string name = e.getName();
 
-	//if (name != "In" &&
-	//	name != "Out")
-	{
-		ofLogNotice(__FUNCTION__) << name << " : " << e;
-	}
+	ofLogNotice(__FUNCTION__) << name << " : " << e;
 
 	if (false) {}
 
@@ -6298,16 +5986,7 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 {
 	std::string name = e.getName();
 
-	//if (name != "In" &&
-	//	name != "Out")
-	{
-		ofLogNotice(__FUNCTION__) << name << " : " << e;
-	}
-
-	//colorSchemeName.set(ColorWheelSchemes::colorSchemeNames[colorScheme.get()]);
-	//scheme = ColorWheelSchemes::colorSchemes[colorScheme.get()];
-	//scheme->setPrimaryColor(color_TheoryBase2.get());
-	//colors = scheme->interpolate(numColors_Theory.get());
+	ofLogNotice(__FUNCTION__) << name << " : " << e;
 
 	//-
 
@@ -6322,13 +6001,28 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 		refresh_Interface();
 	}
 
+	//----
+
+	// num colors
+
 	else if (name == numColors_Theory.getName())
 	{
-		numColors_Alg = numColors_Theory.get();
+		//numColors_Alg = numColors_Theory.get();
+
+		setup_Theory();
 
 		refresh_TheoryEngine();
-		refresh_Interface();
+		//refresh_Interface();
+
+		palettes_resize();
 	}
+
+	else if (name == numColors_Alg.getName())
+	{
+		palettes_resize();
+	}
+
+	//----
 
 	// toggles
 	else
@@ -6478,11 +6172,8 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 {
 	std::string name = e.getName();
 
-	if (name != "In" &&
-		name != "Out")
-	{
-		ofLogNotice(__FUNCTION__) << name << " : " << e;
-	}
+	//if (name != "In" && name != "Out")
+	ofLogNotice(__FUNCTION__) << name << " : " << e;
 
 	//----
 
@@ -6622,10 +6313,10 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		//}
 	}
 #endif
-	else if (name == SHOW_AlgoPalettes.getName())
-	{
-		setVisible_Interface(SHOW_AlgoPalettes);
-	}
+	//else if (name == SHOW_AlgoPalettes.getName())
+	//{
+	//	setVisible_Interface(SHOW_AlgoPalettes);
+	//}
 	else if (name == SHOW_BrowserColors.getName())
 	{
 		colorBrowser.setVisible(SHOW_BrowserColors);
@@ -6745,8 +6436,8 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 				// 2. set last button from current added color
 				btns_palette[palette_colorSelected]->setSelected(true);//sets border only
 				ofLogNotice(__FUNCTION__) << "user palette selected last _c: " << palette_colorSelected;
-			}
-		}
+	}
+}
 #endif
 	}
 
@@ -6831,14 +6522,15 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	//        }
 	//    }
 
-	else if (name == numColors_Alg.getName())
-	{
-		palettes_resize();
-	}
-	else if (name == bAuto_TheoryToPalette.getName())
-	{
-		//if (bAuto_TheoryToPalette) bLock_palette = false;
-	}
+	//else if (name == numColors_Alg.getName())
+	//{
+	//	palettes_resize();
+	//}
+
+	//else if (name == bAuto_TheoryToPalette.getName())
+	//{
+	//	//if (bAuto_TheoryToPalette) bLock_palette = false;
+	//}
 
 	//else if (name == bLock_palette.getName())
 	//{
@@ -6863,7 +6555,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 #endif
 			// DEMO
 			if (DEMO_Test) myDEMO.reStart();
-		}
+	}
 	}
 
 	//--
@@ -6937,7 +6629,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 #ifdef USE_RECTANGLE_INTERFACES
 			palette_FromTheory(SELECTED_palette_LAST);//trig last choice
 #endif
-		}
+	}
 	}
 }
 
@@ -7536,50 +7228,50 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//TODO:
 		//randoms
 
-		// random user palette
-
-		// 1. randomize one color and build palette if enabled
-
-		else if (key == 'o')
-		{
-			//TODO
-			// WORKFLOW: when loading a colour lover palette we disable auto create from algo palettes
-			//if (!bAuto_TheoryToPalette)
-			//{
-			//bAuto_TheoryToPalette = true;
-			//}
-
-			//TODO: bug because some trigs are flags. we need direct functions
-			//bRandomColor = true;
-			color_Picked = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
-
-			if (bAuto_TheoryToPalette)
-			{
-				refresh_TheoryEngine();
-
-#ifdef USE_RECTANGLE_INTERFACES
-				palette_FromTheory(SELECTED_palette_LAST);//trig last choice
-#endif
-			}
-
-			//-
-
-			// undo
-			color_Undo = color_Picked.get();
-			color_Undo.store();
-
-			//-
-
-			// preset manager
-			if (!MODE_newPreset) MODE_newPreset = true;
-
-#ifdef USE_RECTANGLE_INTERFACES
-			textInput_New = "random_" + btns_plt_Selector[SELECTED_palette_LAST]->getName();
-#endif
-			//-
-
-			if (DEMO_Test) myDEMO.reStart();
-		}
+//		// random user palette
+//
+//		// 1. randomize one color and build palette if enabled
+//
+//		else if (key == 'o')
+//		{
+//			//TODO
+//			// WORKFLOW: when loading a colour lover palette we disable auto create from algo palettes
+//			//if (!bAuto_TheoryToPalette)
+//			//{
+//			//bAuto_TheoryToPalette = true;
+//			//}
+//
+//			//TODO: bug because some trigs are flags. we need direct functions
+//			//bRandomColor = true;
+//			color_Picked = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
+//
+//			if (bAuto_TheoryToPalette)
+//			{
+//				refresh_TheoryEngine();
+//
+//#ifdef USE_RECTANGLE_INTERFACES
+//				palette_FromTheory(SELECTED_palette_LAST);//trig last choice
+//#endif
+//			}
+//
+//			//-
+//
+//			// undo
+//			color_Undo = color_Picked.get();
+//			color_Undo.store();
+//
+//			//-
+//
+//			// preset manager
+//			if (!MODE_newPreset) MODE_newPreset = true;
+//
+//#ifdef USE_RECTANGLE_INTERFACES
+//			textInput_New = "random_" + btns_plt_Selector[SELECTED_palette_LAST]->getName();
+//#endif
+//			//-
+//
+//			if (DEMO_Test) myDEMO.reStart();
+//		}
 
 		//----
 
@@ -7756,8 +7448,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//
 		//    else if (key == OF_KEY_RETURN)
 		//        colorBrowser.switch_sorted_Type();
-			}
-		}
+	}
+}
 
 //--------------------------------------------------------------
 void ofxColorManager::keyReleased(ofKeyEventArgs &eventArgs)
@@ -7789,13 +7481,11 @@ void ofxColorManager::addKeysListeners()
 	ofAddListener(ofEvents().keyPressed, this, &ofxColorManager::keyPressed);
 }
 
-
 //--------------------------------------------------------------
 void ofxColorManager::removeKeysListeners()
 {
 	ofRemoveListener(ofEvents().keyPressed, this, &ofxColorManager::keyPressed);
 }
-
 
 //--------------------------------------------------------------
 void ofxColorManager::mouseDragged(ofMouseEventArgs &eventArgs)
@@ -7803,14 +7493,7 @@ void ofxColorManager::mouseDragged(ofMouseEventArgs &eventArgs)
 	const int &x = eventArgs.x;
 	const int &y = eventArgs.y;
 	const int &button = eventArgs.button;
-
-#ifdef USE_RECTANGLE_INTERFACES
-	TouchManager::one().touchMove(button, ofVec2f(x, y));
-#endif
-
-	//-
 }
-
 
 //--------------------------------------------------------------
 void ofxColorManager::mousePressed(ofMouseEventArgs &eventArgs)
@@ -7818,31 +7501,6 @@ void ofxColorManager::mousePressed(ofMouseEventArgs &eventArgs)
 	const int &x = eventArgs.x;
 	const int &y = eventArgs.y;
 	const int &button = eventArgs.button;
-
-#ifdef USE_RECTANGLE_INTERFACES
-	TouchManager::one().touchDown(button, ofVec2f(x, y));
-
-	//-
-
-	// filter touch if its an user palette color box button only
-	auto a = TouchManager::one().getComponentUnder(ofVec2f(x, y));
-	auto b = a->getName();
-	ofLogVerbose(__FUNCTION__) << "touched item: " << b;
-	auto str = ofSplitString(b, "btn");
-
-	//check if "btn" label is present to identify item as a color box from user palette
-	//instead of being another item like a palette label or others..
-
-	if (str.size() > 1)
-	{
-		ofLogVerbose(__FUNCTION__) << "detected palette touch: " << b;
-		palette_touchedColor(b);
-	}
-	else
-	{
-		//ofLogVerbose(__FUNCTION__) << "ignored touch: " << b;
-	}
-#endif
 
 	//-
 
@@ -7862,10 +7520,6 @@ void ofxColorManager::mouseReleased(ofMouseEventArgs &eventArgs)
 	const int &x = eventArgs.x;
 	const int &y = eventArgs.y;
 	const int &button = eventArgs.button;
-
-#ifdef USE_RECTANGLE_INTERFACES
-	TouchManager::one().touchUp(button, ofVec2f(x, y));
-#endif
 }
 
 //--------------------------------------------------------------
@@ -8224,7 +7878,7 @@ void ofxColorManager::refresh_Picker_Touched()
 			// 3. update gradient
 			if (palette_colorSelected < gradient.getNumColors())
 				gradient.replaceColorAtIndex(palette_colorSelected, color_Clicked2);
-		}
+	}
 #endif
 		//--
 
@@ -8240,7 +7894,7 @@ void ofxColorManager::refresh_Picker_Touched()
 #ifdef USE_RECTANGLE_INTERFACES
 			palette_FromTheory(SELECTED_palette_LAST);//trig last choiced algorithmic palette
 #endif
-		}
+}
 
 		//--
 
