@@ -11,7 +11,9 @@ ofxColorManager::ofxColorManager()
 {//--
 
 	ofAddListener(ofEvents().update, this, &ofxColorManager::update);
-	//ofAddListener(ofEvents().draw, this, &ofxColorManager::draw);
+#ifdef AUTO_DRAW_CALLBACK
+	ofAddListener(ofEvents().draw, this, &ofxColorManager::draw, OF_EVENT_ORDER_BEFORE_APP);
+#endif
 
 	//default
 	fps = 60.0f;
@@ -1330,8 +1332,12 @@ void ofxColorManager::draw_Info()
 }
 
 //--------------------------------------------------------------
+#ifndef AUTO_DRAW_CALLBACK
 void ofxColorManager::draw()
-//void ofxColorManager::draw(ofEventArgs & args)
+#endif
+#ifdef AUTO_DRAW_CALLBACK
+void ofxColorManager::draw(ofEventArgs & args)
+#endif
 {
 	// background
 
@@ -1557,7 +1563,9 @@ void ofxColorManager::exit()
 	//--
 
 	ofRemoveListener(ofEvents().update, this, &ofxColorManager::update);
-	//ofRemoveListener(ofEvents().draw, this, &ofxColorManager::draw);
+#ifdef AUTO_DRAW_CALLBACK
+	ofRemoveListener(ofEvents().draw, this, &ofxColorManager::draw);
+#endif
 
 	removeKeysListeners();
 	removeMouseListeners();

@@ -24,10 +24,12 @@ void ofApp::setup()
 //--------------------------------------------------------------
 void ofApp::draw()
 {
+#ifndef AUTO_DRAW_CALLBACK
 	colorManager.draw();
+#endif
 
-	//drawTest();
-	colorManager.draw_Mini();// internal preview
+	drawTest();
+	//colorManager.draw_Mini();// internal palette preview
 }
 
 //--------------------------------------------------------------

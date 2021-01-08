@@ -34,6 +34,8 @@ TODO:
 //#define INCL_LAYOUT
 //#define USE_OFX_GUI
 #define INCLUDE_EXTRA_LIBRARIES
+#define AUTO_DRAW_CALLBACK
+
 //------
 
 #ifdef USE_SUPER_LOG
@@ -117,9 +119,13 @@ public:
 	void setup();
 	void startup();
 
+#ifndef AUTO_DRAW_CALLBACK
 	void draw();
-	//void draw(ofEventArgs & args);
-	//TODO: to allow auto update we must set the priority layer/drawing
+#endif
+#ifdef AUTO_DRAW_CALLBACK
+	void draw(ofEventArgs & args);
+	//TODO: to allow auto update we must set the order priority layer/drawing
+#endif
 
 	void update(ofEventArgs & args);
 	//void update();
