@@ -8,8 +8,7 @@ void ofxColorManager::dragEvent(ofDragInfo info) {
 
 //--------------------------------------------------------------
 ofxColorManager::ofxColorManager()
-{//--
-
+{
 	ofAddListener(ofEvents().update, this, &ofxColorManager::update);
 #ifdef AUTO_DRAW_CALLBACK
 	ofAddListener(ofEvents().draw, this, &ofxColorManager::draw, OF_EVENT_ORDER_BEFORE_APP);
@@ -38,135 +37,6 @@ ofxColorManager::ofxColorManager()
 	ofxSurfingHelpers::CheckFolder(path_Global);
 
 	path_AppState = path_Global + "ofxColorManager_Settings.xml";
-}
-
-//--------------------------------------------------------------
-void ofxColorManager::startup()
-{
-	//--
-
-	ENABLE_keys = true;
-
-	//--
-
-	// curve
-
-	// edit layout
-
-	// a. initialize
-	rPreview.setRect(600, 200, 755, 295);
-
-	// b. load settings
-	//rPreview.loadSettings();
-	rPreview.loadSettings("_Curve_Gui", path_Layout, false);
-
-	refresh_Gui_Layout();
-
-	//-
-
-	// preset
-
-	//bResetCurve = true;
-
-	// lut
-	curvesTool.load(path_Curves_Lut); //needed because it fills polyline
-
-	// preset
-	ofxSurfingHelpers::loadGroup(params_Curve, path_Curve_Preset);
-
-	curve_Slider_OutPick.setup(slider_Out_x, slider_Out_y, slider_Out_w, slider_Out_h, 0, 1, curve_Gradient_OutPick, true, true);
-	curve_Slider_OutPick.setPercent(curve_Gradient_OutPick);
-
-	curve_Slider_InExp.setup(slider_In_x, slider_In_y, slider_In_w, slider_In_h, 0, 1, curve_Gradient_InExp, true, true);
-	curve_Slider_InExp.setPercent(curve_Gradient_InExp);
-
-	//-
-
-//#ifdef USE_RECTANGLE_INTERFACES
-//	setVisible_Interface(SHOW_AlgoPalettes);
-//#endif
-
-	//----
-
-	// preset manager
-
-	preset_refreshFiles();
-	//preset_load(PRESET_name);
-
-	//----
-
-	// ofxGuiPanelsLayout
-
-	//-
-
-	// add panels to manager
-#ifdef INCL_LAYOUT
-	panels.addToggle(&SHOW_ImGui);
-	panels.addToggle(&SHOW_Panels);
-
-	panels.addToggle(&SHOW_UserPalette);
-	panels.addToggle(&SHOW_Picker);
-	panels.addToggle(&SHOW_Library);
-	panels.addToggle(&SHOW_BackGround);
-
-	panels.addToggle(&SHOW_Theory);
-	panels.addToggle(&SHOW_Range);
-	panels.addToggle(&SHOW_ColourLovers);
-	panels.addToggle(&SHOW_Quantizer);
-
-	panels.addToggle(&SHOW_Curve);
-	panels.addToggle(&SHOW_Presets);
-	//panels.addToggle(&SHOW_PresetsPalette);
-
-	panels.addToggle(&SHOW_ALL_GUI);
-	panels.addToggle(&SHOW_GUI_MINI);
-
-	panels.addToggle(&SHOW_Demo);
-	panels.addToggle(&DEMO_Test);
-
-	//panels.addToggle(&SHOW_AlgoPalettes);
-	//panels.addToggle(&SHOW_BrowserColors);
-	//panels.addToggle(&SHOW_Gradient);
-	//panels.addToggle(&SHOW_debugText);
-	//panels.addToggle(&SHOW_CosineGradient);
-
-	//call after add the panels
-	panels.setup();
-
-	//----
-
-	//workflow
-	panels.group_Selected = 0;
-#endif
-
-	//--
-
-	ofxSurfingHelpers::loadGroup(params_AppState, path_AppState);
-
-	// color ranges
-	setup_Range();
-
-	//--
-
-	////workflow
-	//colourLoversHelper.nextPalette();
-
-	last_Index_Theory = 0;
-	theoryTypes[last_Index_Theory] = true;//on button
-
-	last_Index_Range = 0;
-	rangTypes[last_Index_Range] = true;//on button
-
-	//--
-
-	//load last session preset index
-	if (preset_Index < files.size())
-	{
-		PRESET_name = files_Names[preset_Index];
-		preset_load(PRESET_name);
-	}
-
-	//--
 }
 
 //--------------------------------------------------------------
@@ -202,7 +72,7 @@ void ofxColorManager::setup()
 	//strFont = _p + "PragmataProB_0822.ttf";
 	//strFont = _p + "Kazesawa-Extrabold.ttf";
 
-	fontBig.load(strFont, 70);
+	fontBig.load(strFont, 55);
 	fontMedium.load(strFont, 28);
 	fontSmall.load(strFont, 22);
 
@@ -781,6 +651,136 @@ void ofxColorManager::setup()
 	// startup
 
 	startup();
+}
+
+
+//--------------------------------------------------------------
+void ofxColorManager::startup()
+{
+	//--
+
+	ENABLE_keys = true;
+
+	//--
+
+	// curve
+
+	// edit layout
+
+	// a. initialize
+	rPreview.setRect(600, 200, 755, 295);
+
+	// b. load settings
+	//rPreview.loadSettings();
+	rPreview.loadSettings("_Curve_Gui", path_Layout, false);
+
+	refresh_Gui_Layout();
+
+	//-
+
+	// preset
+
+	//bResetCurve = true;
+
+	// lut
+	curvesTool.load(path_Curves_Lut); //needed because it fills polyline
+
+	// preset
+	ofxSurfingHelpers::loadGroup(params_Curve, path_Curve_Preset);
+
+	curve_Slider_OutPick.setup(slider_Out_x, slider_Out_y, slider_Out_w, slider_Out_h, 0, 1, curve_Gradient_OutPick, true, true);
+	curve_Slider_OutPick.setPercent(curve_Gradient_OutPick);
+
+	curve_Slider_InExp.setup(slider_In_x, slider_In_y, slider_In_w, slider_In_h, 0, 1, curve_Gradient_InExp, true, true);
+	curve_Slider_InExp.setPercent(curve_Gradient_InExp);
+
+	//-
+
+//#ifdef USE_RECTANGLE_INTERFACES
+//	setVisible_Interface(SHOW_AlgoPalettes);
+//#endif
+
+	//----
+
+	// preset manager
+
+	preset_refreshFiles();
+	//preset_load(PRESET_name);
+
+	//----
+
+	// ofxGuiPanelsLayout
+
+	//-
+
+	// add panels to manager
+#ifdef INCL_LAYOUT
+	panels.addToggle(&SHOW_ImGui);
+	panels.addToggle(&SHOW_Panels);
+
+	panels.addToggle(&SHOW_UserPalette);
+	panels.addToggle(&SHOW_Picker);
+	panels.addToggle(&SHOW_Library);
+	panels.addToggle(&SHOW_BackGround);
+
+	panels.addToggle(&SHOW_Theory);
+	panels.addToggle(&SHOW_Range);
+	panels.addToggle(&SHOW_ColourLovers);
+	panels.addToggle(&SHOW_Quantizer);
+
+	panels.addToggle(&SHOW_Curve);
+	panels.addToggle(&SHOW_Presets);
+	//panels.addToggle(&SHOW_PresetsPalette);
+
+	panels.addToggle(&SHOW_ALL_GUI);
+	panels.addToggle(&SHOW_GUI_MINI);
+
+	panels.addToggle(&SHOW_Demo);
+	panels.addToggle(&DEMO_Test);
+
+	//panels.addToggle(&SHOW_AlgoPalettes);
+	//panels.addToggle(&SHOW_BrowserColors);
+	//panels.addToggle(&SHOW_Gradient);
+	//panels.addToggle(&SHOW_debugText);
+	//panels.addToggle(&SHOW_CosineGradient);
+
+	//call after add the panels
+	panels.setup();
+
+	//----
+
+	//workflow
+	panels.group_Selected = 0;
+#endif
+
+	//--
+
+	ofxSurfingHelpers::loadGroup(params_AppState, path_AppState);
+
+	// color ranges
+	setup_Range();
+
+	//--
+
+	////workflow
+	//colourLoversHelper.nextPalette();
+
+	last_Index_Theory = 0;
+	theoryTypes[last_Index_Theory] = true;//on button
+
+	last_Index_Range = 0;
+	rangTypes[last_Index_Range] = true;//on button
+
+	//--
+
+	//load last session preset index
+	if (preset_Index < files.size())
+	{
+		PRESET_name = files_Names[preset_Index];
+		preset_load(PRESET_name);
+	}
+
+	//--
 }
 
 //--------------------------------------------------------------
