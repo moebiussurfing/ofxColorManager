@@ -4881,7 +4881,7 @@ void ofxColorManager::refresh_TheoryEngine()
 //--------------------------------------------------------------
 void ofxColorManager::palettes_resize()
 {
-	refresh_Interface();
+	//refresh_Interface();
 
 	setup_Theory();
 
@@ -5016,7 +5016,7 @@ void ofxColorManager::palettes_resize()
 //}
 
 //--------------------------------------------------------------
-void ofxColorManager::refresh_Interface()
+void ofxColorManager::refresh_Interface() //populates palettes
 {
 	ofLogNotice(__FUNCTION__);
 
@@ -5063,17 +5063,7 @@ void ofxColorManager::setup_Theory()
 
 	refresh_Interface();
 
-	//-
-
-	//numColors_Theory = numColors_Alg;
-	//
-	////TEST
-	//colorSchemeName.set(ColorWheelSchemes::colorSchemeNames[colorScheme.get()]);
-	//scheme = ColorWheelSchemes::colorSchemes[colorScheme.get()];
-	//scheme->setPrimaryColor(color_TheoryBase2);
-	//colors = scheme->interpolate(numColors_Theory.get());
-
-	//-
+	//---
 
 	//TODO:
 	// should reduce calls.. to setup only..
@@ -5114,40 +5104,36 @@ void ofxColorManager::setup_Theory()
 //--------------------------------------------------------------
 void ofxColorManager::update_Theory()
 {
-	color_TheoryBase2.set(color_TheoryBase);
-
-	//-
-
 	scheme_Analogous = ColorWheelSchemes::colorSchemes[0];
-	scheme_Analogous->setPrimaryColor(color_TheoryBase2);
+	scheme_Analogous->setPrimaryColor(color_TheoryBase);
 	colors_Analogous = scheme_Analogous->interpolate(numColors_Alg);
 
 	scheme_Complementary = ColorWheelSchemes::colorSchemes[1];
-	scheme_Complementary->setPrimaryColor(color_TheoryBase2);
+	scheme_Complementary->setPrimaryColor(color_TheoryBase);
 	colors_Complementary = scheme_Complementary->interpolate(numColors_Alg);
 
 	scheme_SplitComplementary = ColorWheelSchemes::colorSchemes[2];
-	scheme_SplitComplementary->setPrimaryColor(color_TheoryBase2);
+	scheme_SplitComplementary->setPrimaryColor(color_TheoryBase);
 	colors_SplitComplementary = scheme_SplitComplementary->interpolate(numColors_Alg);
 
 	scheme_Compound = ColorWheelSchemes::colorSchemes[3];
-	scheme_Compound->setPrimaryColor(color_TheoryBase2);
+	scheme_Compound->setPrimaryColor(color_TheoryBase);
 	colors_Compound = scheme_Compound->interpolate(numColors_Alg);
 
 	scheme_FlippedCompound = ColorWheelSchemes::colorSchemes[4];
-	scheme_FlippedCompound->setPrimaryColor(color_TheoryBase2);
+	scheme_FlippedCompound->setPrimaryColor(color_TheoryBase);
 	colors_FlippedCompound = scheme_FlippedCompound->interpolate(numColors_Alg);
 
 	scheme_Monochrome = ColorWheelSchemes::colorSchemes[5];
-	scheme_Monochrome->setPrimaryColor(color_TheoryBase2);
+	scheme_Monochrome->setPrimaryColor(color_TheoryBase);
 	colors_Monochrome = scheme_Monochrome->interpolate(numColors_Alg);
 
 	scheme_Tetrad = ColorWheelSchemes::colorSchemes[6];
-	scheme_Tetrad->setPrimaryColor(color_TheoryBase2);
+	scheme_Tetrad->setPrimaryColor(color_TheoryBase);
 	colors_Tetrad = scheme_Tetrad->interpolate(numColors_Alg);
 
 	scheme_Triad = ColorWheelSchemes::colorSchemes[7];
-	scheme_Triad->setPrimaryColor(color_TheoryBase2);
+	scheme_Triad->setPrimaryColor(color_TheoryBase);
 	colors_Triad = scheme_Triad->interpolate(numColors_Alg);
 
 	//    NOTE: RANDOM = 0, ANALOGOUS = 1, COMPLEMENTARY = 2,
@@ -5514,7 +5500,7 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 
 	ofLogNotice(__FUNCTION__) << name << " : " << e;
 
-	//-
+	//--
 
 	if (false) {}
 
@@ -5524,26 +5510,19 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 
 	else if (name == numColors_Theory.getName())
 	{
-		//numColors_Alg = numColors_Theory.get();
-
-		////setup_Theory();
-
-		////refresh_TheoryEngine();
-		//////refresh_Interface();
-
 		palettes_resize();
-	}
-
-	//----
-
-	else if (name == last_Theory_PickPalette.getName())
-	{
 	}
 
 	else if (name == colorScheme.getName() || name == color_TheoryBase.getName())
 	{
 		refresh_Interface();
 	}
+
+	else if (name == last_Theory_PickPalette.getName())
+	{
+	}
+
+	//----
 
 	// toggles
 	else
@@ -7375,7 +7354,7 @@ void ofxColorManager::refresh_Picker_Touched()
 
 
 		// 5. palettes
-		//color_TheoryBase2.set(color_Picked.get());
+		//color_TheoryBase.set(color_Picked.get());
 
 		//TODO:
 		update_Theory();
@@ -7437,7 +7416,7 @@ void ofxColorManager::refresh_Picker_Touched()
 
 		////TODO
 		//// palettes
-		////color_TheoryBase2.set(color_Picked.get());
+		////color_TheoryBase.set(color_Picked.get());
 		//update_Theory();
 	}
 }

@@ -313,19 +313,16 @@ private:
 
 private:
 	// ColorWheelSchemes
-
 	void setup_Theory();
 	void update_Theory();
 
-	ofParameter<ofColor> color_TheoryBase2;
-
-	//void ColorWheel_draw();
-	//shared_ptr<ColorWheelScheme> scheme;
-	//vector<ofColor> colors;
+	//-
 
 //#ifdef USE_OFX_GUI
 ////ofxPanel panel;
 //#endif
+
+	//-
 
 private:
 	std::string scheme_Analogous_name;
@@ -473,7 +470,7 @@ private:
 
 	//--
 
-	// USER PALETTE & CONTROL
+	// user palette & control
 
 private:
 	ofParameter<bool> bPaletteEdit;
@@ -485,7 +482,7 @@ private:
 
 	//--
 
-	// PARAMETERS
+	// parameters
 
 private:
 	ofParameterGroup params_data;
@@ -498,7 +495,7 @@ private:
 
 	//--
 
-	// ALGORITHMIC PALETTES
+	// algorithmic palettes
 
 private:
 	ofxColorPalette complement;
@@ -530,19 +527,8 @@ private:
 	}
 
 private:
-	//void setup_Interface();
-	//void setup_Labels();
-	//void setVisible_Interface(bool b);
-
 	void refresh_TheoryEngine();
 	void palettes_resize();
-
-	//void draw_palettes();
-
-	//ofParameter<bool> MODE_TweakSatBrg;
-	// force SAT/BRG from panel SB sliders or all from color
-
-	//ofFloatColor color_TheoryBase2;
 
 	//--
 
@@ -570,10 +556,8 @@ private:
 	void gui_Presets();
 	void gui_Panels();
 	void gui_Demo();
-	//void gui_Quantizer();
 
 	void refresh_Gui_Layout();
-	//void gui_imGui_Theme();
 
 	//--
 
@@ -591,14 +575,14 @@ private:
 
 	void setBackground_ENABLE(bool b);
 
-	// TEST
 	bool ENABLE_Callbacks_cPickers = true;
 
 	void refresh_Picked_toHSB();
 	void refresh_FromPicked();
 
-	// MAIN COLOR
+	// main color
 	ofParameter<ofFloatColor> color_Picked;
+
 	ofxUndoSimple<ofFloatColor> color_Undo;
 
 	ofRectangle r_color_picked;
@@ -625,34 +609,27 @@ private:
 	ofFloatColor color_Clicked2;
 	ofFloatColor color_Clicked2_PRE;
 
-	//ofRectangle r_color_clicked;
-	//bool bColor_clicked_DISABLED = false;
-
 	ofFloatColor color_BACK;
 	ofFloatColor color_BACK_PRE;
 
 	//-
-
-	// TODO: TEST LINKING
 
 private:
 	ofParameter<ofFloatColor> color_Clicked;
 
 	void Changed_ColorPicked(ofFloatColor &color);
 	void Changed_ColorClicked(ofFloatColor &color);
-	//void refresh_Picked();
 
 	void build_GradientPalette();
 
-	// TEST
 	void refresh_Picker_Touched();
 
 	//--
 
-	// USER PALETTE OF COLORS
+	// user palette of colors
 
 private:
-	vector<ofColor> palette;//main user palette
+	vector<ofColor> palette;// main user palette
 
 	void palette_addColor(ofColor c);
 	void palette_removeColorLast();
@@ -666,9 +643,9 @@ private:
 
 	//----
 
-	// libs 
-	// library palette
-	// color browser
+	// libs library palette
+	// using colorBrowser
+
 private:
 
 #ifdef USE_OFX_COLOR_BROWSER
@@ -699,49 +676,9 @@ private:
 	ofParameter<int> lib_MaxColumns{ "Columns Max", 7, 1, 7 * 6 };
 	ofParameter<float> scale_LibCol{ "Scale", 1, 0.5, 1.5 };
 
-	//----
-
-	// interface
-
-	//void setup_Interface_Scene();
-
-#ifdef USE_RECTANGLE_INTERFACES
-	ofxInterface::Node *scene;
-	vector<ButtonExample *> btns_palette;//button color box for each color of all algorithmic palettes
-
-	void update_Interface();
-	void draw_Interface_Scene();
-
-	bool bShowDebug = false;
-
-	// algorithmic palettes
-
-	vector<ButtonExample *> btns_plt_Triad;       // 1
-	vector<ButtonExample *> btns_plt_ComplTriad;  // 2
-	vector<ButtonExample *> btns_plt_CompSat;     // 3
-	vector<ButtonExample *> btns_plt_ComplBrgt;   // 4
-	vector<ButtonExample *> btns_plt_MonoSat;     // 5
-	vector<ButtonExample *> btns_plt_MonoBrgt;    // 6
-	vector<ButtonExample *> btns_plt_Analog;      // 7
-	//vector<ButtonExample *> btns_plt_Random;    // 8
-	//int NUM_PALETTES = 8;
-
-	// colour theory color palettes
-	vector<ButtonExample *> btns_plt_CT_Analogous;
-	vector<ButtonExample *> btns_plt_CT_Complementary;
-	vector<ButtonExample *> btns_plt_CT_SplitComplementary;
-	vector<ButtonExample *> btns_plt_CT_Compound;
-	vector<ButtonExample *> btns_plt_CT_FlippedCompound;
-	vector<ButtonExample *> btns_plt_CT_Monochrome;
-	vector<ButtonExample *> btns_plt_CT_Triad;
-	vector<ButtonExample *> btns_plt_CT_Tetrad;
-
-	// pointer back link the outside (ofApp) variable
-	vector<ButtonPaletteSelector *> btns_plt_Selector; // 1-8
-#endif
-
 	//-
 
+	//TODO:
 private:
 	int NUM_PALETTES = 7;//without random
 	int NUM_CT_PALETTES = 8;
@@ -762,7 +699,7 @@ private:
 	ofParameter<bool> gradient_HardMode;//stepped
 	void draw_Gradient();
 
-	//-
+	//--
 
 	// curves
 private:
@@ -785,7 +722,7 @@ private:
 	ofxSimpleSlider curve_Slider_InExp;
 	ofxSimpleSlider curve_Slider_OutPick;
 
-	//-
+	//--
 
 	// test curve
 private:
@@ -797,7 +734,7 @@ private:
 	bool TEST_toBackground = true;
 	float framePrc;
 
-	//-
+	//--
 
 	// demo
 private:
@@ -853,14 +790,12 @@ private:
 private:
 
 	ofParameterGroup params_AppState;
-
 	ofParameterGroup params_Panels{ "PANELS" };
 	ofParameterGroup params_Background{ "BACKGROUND" };
 	ofParameterGroup params_Demo{ "DEMO" };
 	ofParameterGroup params_Picker{ "PICKER" };
 	ofParameterGroup params_Library{ "LIBRARY" };
 	ofParameterGroup params_Palette2{ "PALETTE" };
-
 	ofParameterGroup params_Curve{ "CURVE" };
 
 	//--
@@ -870,13 +805,6 @@ private:
 	//--
 
 	// layout
-
-	////int w_Gui;
-	//int gui_x, gui_y, gui_w, gui_h;
-	//int gui2_x, gui2_y, gui2_w, gui2_h;
-	//int gui3_x, gui3_y, gui3_w, gui3_h;
-	//int gui4_x, gui4_y, gui4_w, gui4_h;
-
 	int box_size_user;//user palette colors
 	int box_size;//palettes colors
 	int pad; //global mini pad
@@ -901,7 +829,6 @@ private:
 	int slider_Out_y;
 	int slider_Out_w;
 	int slider_Out_h;
-
 	int palettes_x;
 	int palettes_y;
 	int palette_x;
@@ -915,6 +842,7 @@ private:
 	//--
 
 	// listeners
+
 public:
 	void keyPressed(ofKeyEventArgs &eventArgs);
 	void keyReleased(ofKeyEventArgs &eventArgs);
@@ -971,20 +899,19 @@ private:
 
 	//--
 
-private:
-	// Helper to display a little (?) mark which shows a tooltip when hovered.
-	// In your own code you may want to display an actual icon if you are using a merged icon fonts (see docs/FONTS.txt)
-	static void HelpMarker(const char* desc)
-	{
-		ImGui::TextDisabled("(?)");
-		if (ImGui::IsItemHovered())
-		{
-			ImGui::BeginTooltip();
-			ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-			ImGui::TextUnformatted(desc);
-			ImGui::PopTextWrapPos();
-			ImGui::EndTooltip();
-		}
-	}
-
+//private:
+//	// Helper to display a little (?) mark which shows a tooltip when hovered.
+//	// In your own code you may want to display an actual icon if you are using a merged icon fonts (see docs/FONTS.txt)
+//	static void HelpMarker(const char* desc)
+//	{
+//		ImGui::TextDisabled("(?)");
+//		if (ImGui::IsItemHovered())
+//		{
+//			ImGui::BeginTooltip();
+//			ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+//			ImGui::TextUnformatted(desc);
+//			ImGui::PopTextWrapPos();
+//			ImGui::EndTooltip();
+//		}
+//	}
 };
