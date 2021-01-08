@@ -22,6 +22,7 @@ public:
     // local palette and color (target pointers)
     vector<ofColor> palette;
     ofColor color;
+	void drawTest();
 
 #ifdef USE_OFX_WINDOW_APP
 	ofxWindowApp WindowApp;

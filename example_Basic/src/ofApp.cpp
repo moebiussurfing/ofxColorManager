@@ -16,7 +16,9 @@ void ofApp::setup()
 #endif
 
 	colorManager.setup();
+
 	colorManager.setColor_TARGET(color); // we subscribe to the color to be autoupdated (by reference from color picker)
+	palette = colorManager.getPalette(); // get current default palette. Press TAB key to refresh!
 }
 
 //--------------------------------------------------------------
@@ -24,13 +26,18 @@ void ofApp::draw()
 {
 	colorManager.draw();
 
-	//-
+	//drawTest();
+	colorManager.draw_Mini();// internal preview
+}
 
+//--------------------------------------------------------------
+void ofApp::drawTest()
+{
 	//  draw test scene
 	ofPushStyle();
 	ofPushMatrix();
 	{
-		int sz = 100;
+		int sz = 70;
 		ofTranslate(10, 10);
 		ofFill();
 		ofSetColor(color);
@@ -56,7 +63,8 @@ void ofApp::keyPressed(int key)
 		colorManager.setToggleVisible();
 	}
 
-	// we can get the palette (without using pointers)
+	// we can get the palette 
+	// (we need to use pointers if we want auto refresh!)
 	else if (key == OF_KEY_TAB)
 	{
 		palette = colorManager.getPalette();

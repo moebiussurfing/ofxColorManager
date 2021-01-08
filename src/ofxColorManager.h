@@ -108,7 +108,68 @@ using namespace ofxSurfingHelpers;
 
 class ofxColorManager : public ofBaseApp
 {
+	//--
+
 public:
+	ofxColorManager();
+	~ofxColorManager();
+
+	void setup();
+	void startup();
+
+	void draw();
+	//void draw(ofEventArgs & args);
+	//TODO: to allow auto update we must set the priority layer/drawing
+
+	void update(ofEventArgs & args);
+	//void update();
+
+	void exit();
+	void windowResized(int w, int h);
+
+	//--
+
+private:
+	void draw_Curve();
+	void update_Curve();
+
+	void draw_Info();
+
+	//--
+
+private:
+	float dt;
+	float fps;
+
+	//-
+
+private:
+	ofParameter<bool> SHOW_ColourLovers;
+	ofParameter<bool> SHOW_ColourLovers_searcher;
+	ofParameter<bool> SHOW_AlgoPalettes;
+	ofParameter<bool> SHOW_BrowserColors;
+	ofParameter<bool> SHOW_Gradient;
+	ofParameter<bool> SHOW_Curve;
+	ofParameter<bool> SHOW_ALL_GUI;
+	ofParameter<bool> SHOW_GUI_MINI;
+	ofParameter<bool> SHOW_debugText;
+	ofParameter<bool> SHOW_Panels;
+	ofParameter<bool> SHOW_Presets;
+	ofParameter<bool> SHOW_Kit;
+	ofParameter<bool> SHOW_Demo;
+	ofParameter<bool> SHOW_BackGround;
+	ofParameter<bool> SHOW_Picker;
+	ofParameter<bool> SHOW_Library;
+	ofParameter<bool> SHOW_Range;
+	ofParameter<bool> SHOW_UserPalette;
+	ofParameter<bool> SHOW_Theory;
+	ofParameter<bool> SHOW_Quantizer;
+	//ofParameter<bool> SHOW_CosineGradient;
+
+	//-
+
+
+private:
 	std::string path_Global;
 	std::string path_Kits;
 	std::string path_Folder_Curves;
@@ -173,12 +234,8 @@ public:
 private:
 	ofParameter<ofColor> color_1_Range;
 	ofParameter<ofColor> color_2_Range;
-	//ofColor color;
-	//ofFloatColor c1_Range_Gui;
-	//ofFloatColor c2_Range_Gui;
 	std::vector<ofColor> palette_Range;
 	std::vector<std::string> rangeTypes_names;
-	//bool bRefreshMorph;
 	ofParameter<bool> autoGenerate_Range;
 	ofParameter<bool> autoPick_RangeColor1;
 	ofParameter<bool> autoPick_RangeColor2;
@@ -195,14 +252,12 @@ private:
 
 	//-
 
-	//bool bErrorNoFiles = true;
-
 public:
 
 	//live reload colors file
 	void saveColors();
-	//bool bAutoExportPreset = true;
 
+private:
 	//TODO
 	//BUG: trying to avoid bug moving mouse..
 	//void mouseEvent(ofxMacMouseEventArg &arg) {
@@ -210,18 +265,15 @@ public:
 	//}
 
 	bool ENABLE_keys = false;
-	//bool ENABLE_keys_PRE = false;
 
 	// colorQuantizer
 #ifdef USE_IMAGE_QUANTIZER
 	ofxColorQuantizerHelper colorQuantizer;
-	//ofTexture tex;
-	//ofFbo fbo;
-	//void quantizerRefreshImage();
 #endif
 
 	//-
 
+private:
 	// color theory
 #define NUM_COLOR_THEORY_TYPES 8
 	ofParameter<bool> theoryTypes[NUM_COLOR_THEORY_TYPES];
@@ -242,8 +294,8 @@ public:
 
 	//-
 
+private:
 	//user palette
-	//ofParameter<bool> bEditUserPalette;
 	ofParameter<int> boxSizeUser;
 	ofParameter<int> boxRowsUser;
 	ofParameter<float> scale_ColPalette;
@@ -253,14 +305,15 @@ public:
 
 	//-
 
+private:
 	// ColorWheelSchemes
 
 	void setup_Theory();
 	void update_Theory();
-	//void ColorWheel_draw();
 
 	ofParameter<ofColor> color_TheoryBase2;
 
+	//void ColorWheel_draw();
 	//shared_ptr<ColorWheelScheme> scheme;
 	//vector<ofColor> colors;
 
@@ -268,6 +321,7 @@ public:
 ////ofxPanel panel;
 //#endif
 
+private:
 	std::string scheme_Analogous_name;
 	std::string scheme_Complementary_name;
 	std::string scheme_SplitComplementary_name;
@@ -295,13 +349,10 @@ public:
 	vector<ofColor> colors_Tetrad;
 	vector<ofColor> colors_Triad;
 
-	//-
-
-	//PresetManager myPresetManager;
-
 	//--
 
 	// ofxGuiPanelsLayout
+private:
 
 #ifdef INCL_LAYOUT
 	ofxGuiPanelsLayout panels;
@@ -322,6 +373,9 @@ public:
 
 	PresetPalette palette_TEMP;
 
+	//TODO:
+	//PresetManager myPresetManager;
+
 	//TODO
 	//BUG: should create a default preset because if myPreset is not detected it crashes
 	//default preset
@@ -330,7 +384,7 @@ public:
 
 	//-
 
-	// gui feedback display
+	// gui info display
 	int last_Index_Theory = -1;
 	int last_Index_Range = -1;
 	std::string theory_Name = "";
@@ -338,7 +392,7 @@ public:
 
 	//-
 
-	ofParameter<int> lastColorTheoryPicked_Palette;
+	ofParameter<int> last_Theory_PickPalette;
 
 	std::string last_Lib_NameColor = "";
 	int last_ColorPicked_Lib;
@@ -351,6 +405,7 @@ public:
 	//-
 
 	// colour lovers
+private:
 
 	void colourLovers_drawPreview();
 #ifdef USE_COLOR_LOVERS
@@ -371,33 +426,7 @@ public:
 	ofParameter<bool> preview{ "Preview", false };
 	bool show_another_window;
 
-	//--
-
-	ofxColorManager();
-	~ofxColorManager();
-
-	void setup();
-	void startup();
-
-	void draw();
-	//void draw(ofEventArgs & args);//TODO: to allow auto update we must set the priority layer/drawing
-
-	void update(ofEventArgs & args);
-	//void update();
-
-	void draw_Curve();
-	void update_Curve();
-
-	void draw_Info();
-
-	void exit();
-	void windowResized(int w, int h);
-
-	//--
-
-	float dt;
-	float fps;
-
+public:
 	//--------------------------------------------------------------
 	void setFps(float _fps)
 	{
@@ -405,38 +434,16 @@ public:
 		dt = 1. / fps;
 	}
 
-	ofParameter<bool> SHOW_ColourLovers;
-	ofParameter<bool> SHOW_ColourLovers_searcher;
-	ofParameter<bool> SHOW_AlgoPalettes;
-	ofParameter<bool> SHOW_BrowserColors;
-	ofParameter<bool> SHOW_Gradient;
-	ofParameter<bool> SHOW_Curve;
-	ofParameter<bool> SHOW_ALL_GUI;
-	ofParameter<bool> SHOW_GUI_MINI;
-	ofParameter<bool> SHOW_debugText;
-	ofParameter<bool> SHOW_Panels;
-	ofParameter<bool> SHOW_Presets;
-	ofParameter<bool> SHOW_Kit;
-	//ofParameter<bool> SHOW_PresetsPalette;
-	ofParameter<bool> SHOW_Demo;
-	ofParameter<bool> SHOW_BackGround;
-	ofParameter<bool> SHOW_Picker;
-	ofParameter<bool> SHOW_Library;
-	ofParameter<bool> SHOW_Range;
-	ofParameter<bool> SHOW_UserPalette;
-	ofParameter<bool> SHOW_Theory;
-	ofParameter<bool> SHOW_Quantizer;
-	//ofParameter<bool> SHOW_CosineGradient;
-
 	void setColor_TARGET(ofColor &c);//backwards pointer ofApp color
 	ofColor *color_TARGET;//backwards pointer ofApp color
 
+private:
 	ofParameter<bool> bNewPreset{ "New Preset", false };
 
 	//-----------------------------------------------------------
 
 	// API
-
+public:
 	vector<ofColor> getPalette();
 	ofColor getColorAtPercent(float control);
 	void setControl(float control);
@@ -444,19 +451,25 @@ public:
 	void setToggleVisible();
 	void setVisible_GUI_MINI(bool b);
 	void setVisible_debugText(bool b);
+
+public:
 	void draw_Mini();
 	void draw_GradientPreview(glm::vec2 pos, bool horizontal);
+
+private:
 	void disableListeners();
 	void enableListeners();
 
 	//-----------------------------------------------------------
 
+private:
 	ofxMouseRuler mouseRuler;
 
 	//--
 
 	// USER PALETTE & CONTROL
 
+private:
 	ofParameter<bool> bPaletteEdit;
 	ofParameter<bool> bRandomColor;
 	ofParameter<bool> bAddColor;
@@ -468,6 +481,7 @@ public:
 
 	// PARAMETERS
 
+private:
 	ofParameterGroup params_data;
 	ofParameterGroup params_color;
 	ofParameterGroup params_Theory;
@@ -480,6 +494,7 @@ public:
 
 	// ALGORITHMIC PALETTES
 
+private:
 	ofxColorPalette complement;
 	ofxColorPalette complementBrightness;
 	ofxColorPalette triad;
@@ -501,12 +516,14 @@ public:
 	//ofParameter<bool> bLock_palette;
 
 	//TODO
+private:
 	void palettes_setPosition(glm::vec2 pos)
 	{
 		palettes_x = pos.x;
 		palettes_y = pos.y;
 	}
 
+private:
 	void setup_Interface();
 	void setup_Labels();
 	void refresh_TheoryEngine();
@@ -524,6 +541,7 @@ public:
 
 	// GUI
 
+private:
 	ofxImGui::Gui gui;
 
 	bool guiVisible;
@@ -554,6 +572,7 @@ public:
 
 	// COLORS
 
+private:
 	ofParameter<ofFloatColor> color_BackGround;//main color
 	ofParameter<bool> color_backGround_SET;
 	ofParameter<bool> color_BackGround_AutoSet;
@@ -573,7 +592,6 @@ public:
 
 	// MAIN COLOR
 	ofParameter<ofFloatColor> color_Picked;
-	//ofParameter<ofFloatColor> color_picked2;
 	ofxUndoSimple<ofFloatColor> color_Undo;
 
 	ofRectangle r_color_picked;
@@ -610,6 +628,7 @@ public:
 
 	// TODO: TEST LINKING
 
+private:
 	ofParameter<ofFloatColor> color_Clicked;
 
 	void Changed_ColorPicked(ofFloatColor &color);
@@ -625,6 +644,7 @@ public:
 
 	// USER PALETTE OF COLORS
 
+private:
 	vector<ofColor> palette;//main user palette
 
 	void palette_addColor(ofColor c);
@@ -642,6 +662,7 @@ public:
 	// libs 
 	// library palette
 	// color browser
+private:
 
 #ifdef USE_OFX_COLOR_BROWSER
 	ofxColorsBrowser colorBrowser;
@@ -714,6 +735,7 @@ public:
 
 	//-
 
+private:
 	int NUM_PALETTES = 7;//without random
 	int NUM_CT_PALETTES = 8;
 
@@ -728,6 +750,7 @@ public:
 
 	// gradient
 
+private:
 	ofxColorGradient<ofColor> gradient;//unmodified gradient with curveTool
 	ofParameter<bool> gradient_HardMode;//stepped
 	void draw_Gradient();
@@ -735,6 +758,7 @@ public:
 	//-
 
 	// curves
+private:
 
 	ofxCurvesTool curvesTool;
 
@@ -757,6 +781,7 @@ public:
 	//-
 
 	// test curve
+private:
 
 	ofParameter<bool> TEST_Mode{ "Enable", false };
 	float TEST_Speed = .75;
@@ -768,6 +793,7 @@ public:
 	//-
 
 	// demo
+private:
 
 	ofParameter<bool> DEMO_Test{ "ENABLE DEMO", false };
 	ofParameter<bool> DEMO_Auto{ "AUTO", false };
@@ -788,6 +814,7 @@ public:
 	//--
 
 	// preset manager
+private:
 
 	void preset_save(std::string p);
 	void preset_load(std::string p);
@@ -816,10 +843,11 @@ public:
 	//--
 
 	// app settings xml
+private:
 
 	ofParameterGroup params_AppState;
 
-	ofParameterGroup params_Panels{"PANELS"};
+	ofParameterGroup params_Panels{ "PANELS" };
 	ofParameterGroup params_Background{ "BACKGROUND" };
 	ofParameterGroup params_Demo{ "DEMO" };
 	ofParameterGroup params_Picker{ "PICKER" };
@@ -880,7 +908,7 @@ private:
 	//--
 
 	// listeners
-
+public:
 	void keyPressed(ofKeyEventArgs &eventArgs);
 	void keyReleased(ofKeyEventArgs &eventArgs);
 
@@ -888,6 +916,7 @@ private:
 	void mousePressed(ofMouseEventArgs &eventArgs);
 	void mouseReleased(ofMouseEventArgs &eventArgs);
 
+private:
 	void addKeysListeners();
 	void removeKeysListeners();
 
@@ -935,6 +964,7 @@ private:
 
 	//--
 
+private:
 	// Helper to display a little (?) mark which shows a tooltip when hovered.
 	// In your own code you may want to display an actual icon if you are using a merged icon fonts (see docs/FONTS.txt)
 	static void HelpMarker(const char* desc)
