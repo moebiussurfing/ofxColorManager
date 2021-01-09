@@ -462,6 +462,7 @@ void ofxColorManager::setup()
 
 	params_control.setName("ofxColorManager");
 
+	params_control.add(bNewPreset);
 	params_control.add(numColors_TheoryEngines);
 	//params_control.add(color_Picked);
 	//params_control.add(color_BackGround);
@@ -903,7 +904,7 @@ void ofxColorManager::update(ofEventArgs & args)
 
 		// presets
 
-		if (!MODE_newPreset) MODE_newPreset = true;
+		if (!MODE_newPreset) bNewPreset = true;
 		textInput_New = myPalette_Name;
 
 		//-
@@ -962,7 +963,7 @@ void ofxColorManager::update(ofEventArgs & args)
 		}
 #endif
 
-		if (!MODE_newPreset) MODE_newPreset = true;
+		if (!bNewPreset) bNewPreset = true;
 
 		// DEMO
 		if (DEMO_Test) myDEMO.reStart();
@@ -1013,7 +1014,7 @@ void ofxColorManager::update(ofEventArgs & args)
 
 		// presets 
 
-		if (!MODE_newPreset) MODE_newPreset = true;
+		if (!bNewPreset) bNewPreset = true;
 
 #ifdef USE_RECTANGLE_INTERFACES
 		textInput_New = btns_plt_Selector[SELECTED_palette_LAST]->getName();
@@ -3379,60 +3380,16 @@ void ofxColorManager::gui_Presets()
 
 		//--
 
-		ImGui::Text("Name");
-		//ImGui::Text("Type Name:");
-
+		//ImGui::Text("Name");
 		ImGui::Dummy(ImVec2(0.0f, 5));
-
-		std::string textInput_temp = PRESET_name;
-
-		// loaded string into char array
-		char tab2[32];
-		strncpy(tab2, textInput_temp.c_str(), sizeof(tab2));
-		tab2[sizeof(tab2) - 1] = 0;
-
-		ImGui::PushItemWidth(-1);
-		{
-			if (ImGui::InputText("", tab2, IM_ARRAYSIZE(tab2)))
-			{
-				//if (ImGui::IsItemHovered())
-				//	ImGui::SetTooltip("I am a tooltip over a popup");
-
-				ofLogNotice(__FUNCTION__) << "InputText:" << ofToString(tab2);
-				textInput_temp = ofToString(tab2);
-
-				if (MODE_newPreset) MODE_newPreset = false;
-			}
-
-			if (ImGui::IsItemHovered()) {
-				ImGui::SetTooltip("I am a tooltip");
-				ofLogNotice(__FUNCTION__) << "hover!";
-			}
-		}
-		ImGui::PopItemWidth();
-
-		//----
-
-		////TODO: TEST hover         
-		//ImGui::Separator();
-		//ImGui::Text("Tooltip here");
-		//if (ImGui::IsItemHovered())
-		//	ImGui::SetTooltip("I am a tooltip over a popup");
-
-		//static bool closable_group = true;
-		//if (ImGui::CollapsingHeader("Header with a close button", &closable_group))
-		//{
-		//	ImGui::Text("IsItemHovered: %d", ImGui::IsItemHovered());
-		//	for (int i = 0; i < 5; i++)
-		//		ImGui::Text("More content %d", i);
-		//}
+		ImGui::Text(PRESET_name.c_str());
 
 		//----
 
 		/*
-		//ImGui::Dummy(ImVec2(0.0f, 10));
-
 		//// arrow buttons
+
+		//ImGui::Dummy(ImVec2(0.0f, 10));
 
 		//static int counter = preset_Index;
 
@@ -3449,10 +3406,10 @@ void ofxColorManager::gui_Presets()
 		//		if (preset_Index < files.size())
 		//		{
 		//			PRESET_name = files_Names[preset_Index];
-		//			ofLogNotice(__FUNCTION__) << "ARROW: PRESET_name: [" + ofToString(preset_Index) + "] " << PRESET_name;
+		//			ofLogNotice(__FUNCTION__) << "PRESET: [" + ofToString(preset_Index) + "] " << PRESET_name;
 		//			preset_load(PRESET_name);
 		//		}
-		//		if (MODE_newPreset) MODE_newPreset = false;
+		//		if (bNewPreset) bNewPreset = false;
 		//	}
 		//}
 
@@ -3468,17 +3425,17 @@ void ofxColorManager::gui_Presets()
 		//		if (preset_Index < files.size())
 		//		{
 		//			PRESET_name = files_Names[preset_Index];
-		//			ofLogNotice(__FUNCTION__) << "ARROW: PRESET_name: [" + ofToString(preset_Index) + "] " << PRESET_name;
+		//			ofLogNotice(__FUNCTION__) << "PRESET: [" + ofToString(preset_Index) + "] " << PRESET_name;
 		//			preset_load(PRESET_name);
 		//		}
 		//	}
-		//	if (MODE_newPreset) MODE_newPreset = false;
+		//	if (bNewPreset) bNewPreset = false;
 		//}
 
 		//ImGui::PopButtonRepeat();
-		*/
-
 		//ImGui::SameLine();
+
+		*/
 
 		//----
 
@@ -3508,7 +3465,8 @@ void ofxColorManager::gui_Presets()
 					preset_Index = counter;
 
 				}
-				else {
+				else
+				{
 					if (counter == 0)
 					{
 						counter = files.size() - 1;
@@ -3519,13 +3477,13 @@ void ofxColorManager::gui_Presets()
 				if (preset_Index < files.size() && preset_Index>0)
 				{
 					PRESET_name = files_Names[preset_Index];
-					ofLogNotice(__FUNCTION__) << "ARROW: PRESET_name: [" + ofToString(preset_Index) + "] " << PRESET_name;
+					ofLogNotice(__FUNCTION__) << "PRESET: [" + ofToString(preset_Index) + "] " << PRESET_name;
 
 					preset_load(PRESET_name);
 
 					//-
 
-					if (MODE_newPreset) MODE_newPreset = false;
+					if (bNewPreset) bNewPreset = false;
 
 					//workflow
 					if (DEMO_Test) myDEMO.reStart();
@@ -3554,13 +3512,13 @@ void ofxColorManager::gui_Presets()
 				if (preset_Index < files.size() && preset_Index>0)
 				{
 					PRESET_name = files_Names[preset_Index];
-					ofLogNotice(__FUNCTION__) << "ARROW: PRESET_name: [" + ofToString(preset_Index) + "] " << PRESET_name;
+					ofLogNotice(__FUNCTION__) << "PRESET: [" + ofToString(preset_Index) + "] " << PRESET_name;
 
 					preset_load(PRESET_name);
 
 					//-
 
-					if (MODE_newPreset) MODE_newPreset = false;
+					if (bNewPreset) bNewPreset = false;
 
 					//workflow
 					if (DEMO_Test) myDEMO.reStart();
@@ -3596,7 +3554,7 @@ void ofxColorManager::gui_Presets()
 					preset_load(PRESET_name);
 				}
 
-				if (MODE_newPreset) MODE_newPreset = false;
+				if (bNewPreset) bNewPreset = false;
 			}
 
 			ImGui::PopItemWidth();
@@ -3700,26 +3658,39 @@ void ofxColorManager::gui_Presets()
 
 		//--
 
-		if (MODE_newPreset || bNewPreset)
+		if (MODE_newPreset && bNewPreset)
 		{
+			//workflow
 
-			//ImGuiHoveredFlags_ _flagw = ImGuiHoveredFlags_RootAndChildWindows;
+			//blink when a new preset is editing
+			float freq = 0.075;//speed freq
+			float min = 0.25;
+			float max = 0.75;
+			float a = ofMap(glm::sin(freq * ofGetFrameNum()), -1, 1, min, max);
+
+			//-
 
 			ImGui::Separator();
 			ImGui::Dummy(ImVec2(0.0f, 10));
 
 			//-
+			
+			ImGui::PushID(1);
+			ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.5, 0.0f, 0.5f, a));
+			ImGui::Text("NEW PRESET");
+			ImGui::PopStyleColor(1);
+			ImGui::PopID();
 
-			ImGui::Text("NEW PRESET!");
+			//-
 
-			ImGui::Dummy(ImVec2(0.0f, 10));
+			ImGui::Dummy(ImVec2(0, 10));
+
+			ImGui::PushItemWidth(-1);
 
 			// loaded string into char array
 			char tab[32];
 			strncpy(tab, textInput_New.c_str(), sizeof(tab));
 			tab[sizeof(tab) - 1] = 0;
-
-			ImGui::PushItemWidth(-1);
 
 			if (ImGui::InputText("", tab, IM_ARRAYSIZE(tab)))
 			{
@@ -3727,21 +3698,29 @@ void ofxColorManager::gui_Presets()
 				ofLogNotice(__FUNCTION__) << "textInput_New:" << textInput_New;
 			}
 
-			if (ImGui::IsItemHovered()) {
-				ImGui::SetTooltip("I am a tooltip");
-				ofLogNotice(__FUNCTION__) << "hover!";
+			//--
+
+			/*
+			//TODO:
+			//focus_1 = ImGui::Button("Focus on 1"); ImGui::SameLine();
+			has_focus = 0;
+			//static char tab[128] = "click on a button to set focus";
+			//char tab[128];
+			strncpy(tab, textInput_New.c_str(), sizeof(tab));
+			tab[sizeof(tab) - 1] = 0;
+			if (focus_1) ImGui::SetKeyboardFocusHere();
+			ImGui::InputText("", tab, IM_ARRAYSIZE(tab));
+			if (ImGui::IsItemActive())
+			{
+				has_focus = 1;
+				textInput_New = ofToString(tab);
+				ofLogNotice(__FUNCTION__) << "textInput_New:" << textInput_New;
 			}
+			*/
 
 			ImGui::PopItemWidth();
 
-			//-
-
-			//workflow
-			//when a new preset is editing
-			float freq = 0.075;//speed freq
-			float min = 0.25;
-			float max = 0.75;
-			float a = ofMap(glm::sin(freq * ofGetFrameNum()), -1, 1, min, max);
+			//--
 
 			ImGui::PushID(1);
 			ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.5, 0.0f, 0.5f, a));
@@ -3750,7 +3729,9 @@ void ofxColorManager::gui_Presets()
 
 			if (ImGui::Button("SAVE NEW", ImVec2(_w, _h)))
 			{
-				MODE_newPreset = false;
+				has_focus = 0;
+				bNewPreset = false;
+
 				ofLogNotice(__FUNCTION__) << "textInput_New: " << textInput_New;
 
 				preset_save(textInput_New);
@@ -3795,7 +3776,6 @@ void ofxColorManager::gui_Presets()
 
 				// DEMO
 				if (SHOW_Demo) myDEMO.reStart();
-				//if (SHOW_Demo) myDEMO.clear();
 			}
 
 			ImGui::PopStyleColor(1);
@@ -5031,7 +5011,7 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 				if (DEMO_Test) myDEMO.reStart();
 
 				textInput_New = theory_Name;
-				MODE_newPreset = true;
+				bNewPreset = true;
 			}
 		}
 	}
@@ -5066,7 +5046,7 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 			if (DEMO_Test) myDEMO.reStart();
 
 			textInput_New = theory_Name;
-			MODE_newPreset = true;
+			bNewPreset = true;
 
 			//-
 
@@ -5149,6 +5129,13 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	ofLogNotice(__FUNCTION__) << name << " : " << e;
 
 	//----
+
+	if (name == bNewPreset.getName())
+	{
+		MODE_newPreset = bNewPreset;
+
+		focus_1 = bNewPreset;
+	}
 
 	// num colors
 
@@ -5659,7 +5646,7 @@ void ofxColorManager::Changed_ColorRange(ofAbstractParameter &e)
 					if (DEMO_Test) myDEMO.reStart();
 
 					textInput_New = range_Name;
-					MODE_newPreset = true;
+					bNewPreset = true;
 				}
 			}
 		}
@@ -5682,7 +5669,7 @@ void ofxColorManager::refresh_Range_AutoUpdate()
 		txt_lineActive[3] = true;//range name
 
 		textInput_New = range_Name;
-		MODE_newPreset = true;
+		bNewPreset = true;
 	}
 }
 
@@ -5875,7 +5862,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				}
 
 				// new preset
-				if (MODE_newPreset) MODE_newPreset = false;
+				if (MODE_newPreset) bNewPreset = false;
+
 				// demo mode
 				if (DEMO_Test) myDEMO.reStart();
 				//load first color from preset to algorothmic palettes
@@ -5900,7 +5888,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				}
 
 				// new preset
-				if (MODE_newPreset) MODE_newPreset = false;
+				if (MODE_newPreset) bNewPreset = false;
 				// demo mode
 				if (DEMO_Test) myDEMO.reStart();
 				// load first color
@@ -5931,7 +5919,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				}
 
 				// new preset
-				if (MODE_newPreset) MODE_newPreset = false;
+				if (MODE_newPreset) bNewPreset = false;
 				// demo mode
 				if (DEMO_Test) myDEMO.reStart();
 				// load first color
@@ -5955,7 +5943,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				}
 
 				// new preset
-				if (MODE_newPreset) MODE_newPreset = false;
+				if (MODE_newPreset) bNewPreset = false;
 				//demo mode
 				if (DEMO_Test) myDEMO.reStart();
 				//load first color
@@ -6213,7 +6201,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 //			//-
 //
 //			// preset manager
-//			if (!MODE_newPreset) MODE_newPreset = true;
+//			if (!MODE_newPreset) bNewPreset = true;
 //
 //#ifdef USE_RECTANGLE_INTERFACES
 //			textInput_New = "random_" + btns_plt_Selector[SELECTED_palette_LAST]->getName();
@@ -6279,7 +6267,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 //
 //			// presets
 //
-//			if (!MODE_newPreset) MODE_newPreset = true;
+//			if (!MODE_newPreset) bNewPreset = true;
 //
 //			textInput_New = colorBrowser.colors_PantoneNames[last_ColorPicked_Lib] + "_";
 //

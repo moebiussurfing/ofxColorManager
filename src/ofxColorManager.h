@@ -444,9 +444,6 @@ public:
 	void setColor_TARGET(ofColor &c);//backwards pointer ofApp color
 	ofColor *color_TARGET;//backwards pointer ofApp color
 
-private:
-	ofParameter<bool> bNewPreset{ "New Preset", false };
-
 	//-----------------------------------------------------------
 
 	// API
@@ -771,8 +768,13 @@ private:
 	//void palette_save(std::string p);
 	//void palette_load(std::string p);
 
+private:
+	ofParameter<bool> bNewPreset{ "New Preset", false };
 	bool MODE_newPreset = false;
 	std::string textInput_New = "new preset";
+	bool focus_1;
+	int has_focus = 0;
+	char tab[128];
 
 	//-
 
