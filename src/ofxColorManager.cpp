@@ -58,6 +58,9 @@ ofxColorManager::ofxColorManager()
 	infoHelp += "F6                  RANGE\n";
 	infoHelp += "F7                  LOVERS\n";
 	infoHelp += "F8                  PICTURE\n";
+	infoHelp += "F9                  PRESETS\n";
+	infoHelp += "F10                 GRADIENT\n";
+	infoHelp += "F11                 HIDE ALL\n";
 	infoHelp += "\n";
 	infoHelp += "TEST\n";
 	infoHelp += "D                   DEMO SCENE\n";
@@ -3323,7 +3326,7 @@ void ofxColorManager::gui_Curve()
 			ImGui::Dummy(ImVec2(0, 5));
 
 			// reset
-			
+
 			//ImGui::PushItemWidth(_w);
 			if (ImGui::Button(bResetCurve.getName().c_str(), ImVec2(_w, _h)))
 			{
@@ -3491,8 +3494,8 @@ void ofxColorManager::gui_Presets()
 	static bool auto_resize = true;
 	float ww, hh;
 	ww = PANEL_WIDGETS_WIDTH;
-	hh = 500;
-	ImGui::SetWindowSize(ImVec2(ww, hh));
+	hh = 700;
+	//ImGui::SetWindowSize(ImVec2(ww, hh));
 	//ImGuiWindowFlags flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : 0;
 	ImGuiWindowFlags flags = false;
 	//TODO: not working..non stop grow
@@ -4207,7 +4210,7 @@ void ofxColorManager::gui_Presets()
 	if (SHOW_Kit)
 	{
 		ww = PANEL_WIDGETS_WIDTH;
-		hh = 500;
+		hh = 700;
 		ImGui::SetWindowSize(ImVec2(ww, hh));
 		//ImGuiWindowFlags flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : 0;
 
@@ -5040,7 +5043,7 @@ void ofxColorManager::palette_removeColor(int c)
 			auto b = a->getName();
 			scene->removeChild(a, false);
 			ofLogNotice(__FUNCTION__) << "removed children: " << b;
-	}
+		}
 		btns_palette.clear();
 #endif
 
@@ -5057,7 +5060,7 @@ void ofxColorManager::palette_removeColor(int c)
 
 		// 5. make positions & resizes to fill bar
 		palette_rearrenge();
-}
+	}
 }
 
 
@@ -5159,7 +5162,9 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 	// num colors
 
 	else if (name == numColors_Theory.getName())
-	{
+	{		
+		numColors_Alg.setWithoutEventNotifications(numColors_TheoryEngines);
+
 		palettes_resize();
 	}
 
@@ -5465,6 +5470,8 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 	else if (name == numColors_Alg.getName())
 	{
+		numColors_Theory.setWithoutEventNotifications(numColors_TheoryEngines);
+
 		palettes_resize();
 	}
 
@@ -5810,7 +5817,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 #endif
 			// DEMO
 			if (DEMO_Test) myDEMO.reStart();
-	}
+		}
 	}
 
 	//--
@@ -5886,7 +5893,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 #ifdef USE_RECTANGLE_INTERFACES
 			palette_FromTheory(SELECTED_palette_LAST);//trig last choice
 #endif
-	}
+		}
 	}
 }
 
