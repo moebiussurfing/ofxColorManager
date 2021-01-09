@@ -40,26 +40,28 @@ ofxColorManager::ofxColorManager()
 
 	//--
 
-	infoHelp = "ofxColorManager INFO\n\n";
-	infoHelp += "H                   HELP";
+	infoHelp = "HELP INFO\n\n";
+	infoHelp += "H                   HELP\n";
+	infoHelp += "G                   GUI\n";
+	infoHelp += "SPACE               NEXT\n";
+	infoHelp += "TAB                 MODES\n";
+	infoHelp += "+|-                 AMOUNT COLORS\n";
 	infoHelp += "\n";
-	infoHelp += "G                   GUI";
+	infoHelp += "PANELS\n";
+	infoHelp += "F1                  PALETTE\n";
+	infoHelp += "F2                  PICKER\n";
+	infoHelp += "F3                  LIBRARY\n";
+	infoHelp += "F4                  BACKGROUND\n";
 	infoHelp += "\n";
-	infoHelp += "SPACE               NEXT";
+	infoHelp += "MODES\n";
+	infoHelp += "F5                  THEORY\n";
+	infoHelp += "F6                  RANGE\n";
+	infoHelp += "F7                  LOVERS\n";
+	infoHelp += "F8                  PICTURE\n";
 	infoHelp += "\n";
-	infoHelp += "D                   DEMO";
-	infoHelp += "\n";
-	infoHelp += "T                   TEST";
-	infoHelp += "\n";
-	infoHelp += "   +|-              AMOUNT COLORS";
-	infoHelp += "\n";
-	infoHelp += "TAB                 MODES";
-	infoHelp += "\n";
-	infoHelp += "  Up|Down           SORT TYPE";
-	infoHelp += "\n";
-	//infoHelp += "Path/Url         " + currentImage_name.get();
-	infoHelp += "\n";
-	infoHelp += "Drag images here!";
+	infoHelp += "TEST\n";
+	infoHelp += "D                   DEMO SCENE\n";
+	infoHelp += "T                   GRADIENT TEST\n";
 }
 
 //--------------------------------------------------------------
@@ -73,6 +75,9 @@ void ofxColorManager::setup()
 	bool logToScreen = true;
 	ofSetLoggerChannel(ofxSuperLog::getLogger(logToConsole, logToScreen, "logs"));
 #endif
+
+	ENABLE_HelpInfo.set("Help Info", false);
+	ENABLE_HelpInfo.setSerializable(false);
 
 	//-
 
@@ -103,6 +108,12 @@ void ofxColorManager::setup()
 	txt_lineActive[1] = false;
 	txt_lineActive[2] = false;
 	txt_lineActive[3] = false;
+
+	//-
+
+	font.load("assets/fonts/telegrama_render.otf", 11, true, true);
+	//font.load("assets/fonts/LCD_Solid.ttf", 11, true, true);
+	//font.load("assets/fonts/overpass-mono-bold.otf", 9, true, true);
 
 	//-
 
@@ -576,6 +587,9 @@ void ofxColorManager::setup()
 	params_AppState.setName("ofxColorManager");
 	params_AppState.add(preset_Index);
 	params_AppState.add(AppMode);
+	params_AppState.add(numColors_TheoryEngines);
+	//params_AppState.add(numColors_Range);
+	//params_AppState.add(numColors_Alg);
 
 	params_Panels.add(SHOW_ALL_GUI);
 	params_Panels.add(SHOW_Presets);
@@ -612,6 +626,7 @@ void ofxColorManager::setup()
 	params_Demo.add(DEMO_Cam);
 	params_AppState.add(params_Demo);
 
+	//hide
 	params_Curve.add(curve_Gradient_InExp);
 	params_Curve.add(curve_Gradient_OutPick);
 	params_Curve.add(gradient_HardMode);//gradient
@@ -645,10 +660,6 @@ void ofxColorManager::setup()
 	params_Library.add(bPagerized);
 	params_Library.add(sizeLibColBox);
 	params_AppState.add(params_Library);
-
-	params_Palette2.add(numColors_TheoryEngines);
-	//params_Palette2.add(numColors_Range);
-	//params_Palette2.add(numColors_Alg);
 
 	params_Palette2.add(sizePaletteBox);
 	params_Palette2.add(scale_ColPalette);
@@ -1416,7 +1427,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 		if (guiVisible)
 		{
 			mouseOverGui = draw_Gui();
-			mouseOverGui = ofxImGui::IsMouseOverGui();
+			//mouseOverGui = ofxImGui::IsMouseOverGui();
 
 			if (mouseOverGui != mouseOverGui_PRE)
 			{
@@ -1436,6 +1447,23 @@ void ofxColorManager::draw(ofEventArgs & args)
 				//myDEMO.setEnableMouseCamera();
 			}
 		}
+	}
+
+	//----
+
+	// 1. help info
+	if (ENABLE_HelpInfo) {
+		std::string str = infoHelp;
+		ofPushMatrix();
+		{
+			//center box
+			int w = ofxSurfingHelpers::getWidthBBtextBoxed(font, str);
+			int h = ofxSurfingHelpers::getHeightBBtextBoxed(font, str);
+			ofTranslate(ofGetWidth() * 0.5 - w * 0.5, ofGetHeight() * 0.5 - h * 0.5);
+			ofSetColor(255, 255);
+			ofxSurfingHelpers::drawTextBoxed(font, str);
+		}
+		ofPopMatrix();
 	}
 }
 
@@ -3262,7 +3290,16 @@ void ofxColorManager::build_GradientPalette()
 //--------------------------------------------------------------
 void ofxColorManager::gui_Curve()
 {
-	if (ofxImGui::BeginWindow("CURVE", mainSettings, false))
+	static bool auto_resize = true;
+	float ww, hh;
+	ww = PANEL_WIDGETS_WIDTH;
+	hh = 500;
+	ImGui::SetWindowSize(ImVec2(ww, hh));
+	ImGuiWindowFlags flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : 0;
+
+	//--
+
+	if (ofxImGui::BeginWindow("CURVE", mainSettings, flags))
 	{
 		float _spc;
 		float _w;
@@ -3275,12 +3312,18 @@ void ofxColorManager::gui_Curve()
 		_w50 = _w * 0.5;
 		_h = 1. * BUTTON_BIG_HEIGHT;
 
+		ImGuiColorEditFlags _flagw;
+		_flagw = false;
+
 		//-
 
 		//if (ImGui::TreeNode("EDIT"))
 		if (ofxImGui::BeginTree("EDIT", mainSettings))
 		{
+			ImGui::Dummy(ImVec2(0, 5));
+
 			// reset
+			
 			//ImGui::PushItemWidth(_w);
 			if (ImGui::Button(bResetCurve.getName().c_str(), ImVec2(_w, _h)))
 			{
@@ -3290,21 +3333,10 @@ void ofxColorManager::gui_Curve()
 			}
 			//ImGui::PopItemWidth();
 
-			ImGui::Dummy(ImVec2(0, 10));
+			ImGui::Dummy(ImVec2(0, 5));
 
 			ofxImGui::AddParameter(gradient_HardMode);
 			ImGui::Checkbox("toBackground", &TEST_toBackground);
-
-			ImGui::Dummy(ImVec2(0, 10));
-
-			// ctrl in/out
-			ImGui::PushItemWidth(_w * 0.8);
-			if (ofxImGui::AddParameter(curve_Ctrl_In))
-			{
-				curve_Slider_InExp.setPercent(curve_Ctrl_In.get());
-			}
-			ofxImGui::AddParameter(curve_Ctrl_Out);
-			ImGui::PopItemWidth();
 
 			//ofxSurfingHelpers::AddBigButton(bResetCurve);
 			//ofxImGui::AddParameter(bResetCurve);
@@ -3324,7 +3356,8 @@ void ofxColorManager::gui_Curve()
 		// curve Test
 
 		//if (ImGui::TreeNode("CURVE TEST"))
-		if (ofxImGui::BeginTree("CURVE TEST", mainSettings))
+		//if (ofxImGui::BeginTree("CURVE TEST", mainSettings))
+		if (ImGui::CollapsingHeader("CURVE TEST", _flagw))
 		{
 			//ImGui::PushItemWidth(_w);
 
@@ -3343,14 +3376,30 @@ void ofxColorManager::gui_Curve()
 			//-
 
 			//ImGui::TreePop();
-			ofxImGui::EndTree(mainSettings);
+			//ofxImGui::EndTree(mainSettings);
 		}
-
-		//-
 
 		ImGui::Dummy(ImVec2(0, 10));
 
+		//-
+
+		if (ImGui::CollapsingHeader("ADVANCED", _flagw))
 		{
+			// ctrl in/out
+			ImGui::PushItemWidth(_w * 0.8);
+
+			if (ofxImGui::AddParameter(curve_Ctrl_In))
+			{
+				curve_Slider_InExp.setPercent(curve_Ctrl_In.get());
+			}
+			ofxImGui::AddParameter(curve_Ctrl_Out);
+
+			ImGui::PopItemWidth();
+
+			//-
+
+			ImGui::Dummy(ImVec2(0, 10));
+
 			//ImGui::PushItemWidth(_w);
 			if (ofxSurfingHelpers::AddBigToggle(MODE_Editor, _w, 0.5* _h))
 			{
@@ -4249,14 +4298,7 @@ bool ofxColorManager::draw_Gui()
 
 	gui.end();
 
-	//-
-
-	// 2 different modes:
-	// mouse over any panel or over text input only
-	if (bCheckMouseOverTextInput) return bTextInputActive;
-	else return mainSettings.mouseOverGui;
-
-	//-
+	//--
 
 	// TODO: must make another key disabler but when mouse is in text-input panels..
 	// TODO: bug fix for disabled mouse on startup
@@ -4280,6 +4322,13 @@ bool ofxColorManager::draw_Gui()
 	//
 	//    return false;
 	//}
+
+	//-
+
+	// 2 different modes:
+	// mouse over any panel or over text input only
+	if (bCheckMouseOverTextInput) return bTextInputActive;
+	else return mainSettings.mouseOverGui;
 }
 
 #pragma mark - CURVE TOOL
@@ -4889,36 +4938,49 @@ void ofxColorManager::draw_Mini()
 {
 	ofPushMatrix();
 	ofPushStyle();
-
-	glm::vec2 _pos;
-	int _w = 60;
-	int _p = 0;
-	int _inner = 20;
-	int _size = _w + _p;
-	ofRectangle _r;
-
-	// left top corner
-	_pos = glm::vec2(_inner, _inner);
-	//// right top corner
-	//_pos = glm::vec2(ofGetWidth() - palette.size()*_size, 2*_p);
-
-	ofTranslate(_pos);
-
-	ofDrawBitmapStringHighlight(PRESET_name, glm::vec2(4, _w + _inner - 7), ofColor::black, ofColor::white);
-
-	for (int col = 0; col < palette.size(); col++)
 	{
-		_r = ofRectangle(col * _size, 0, _w, _w);
+		glm::vec2 _pos;
+		int _w = 60;
+		int _p = 0;
+		int _inner = 20;
+		int _size = _w + _p;
+		ofRectangle _r;
+		ofRectangle _rBg;
 
+		ofColor _cb = ofColor(ofColor::white, 64);//border color
+
+		// left top corner
+		_pos = glm::vec2(_inner, _inner);
+		//// right top corner
+		//_pos = glm::vec2(ofGetWidth() - palette.size()*_size, 2*_p);
+
+		ofTranslate(_pos);
+
+		//1. bg
+		int _hBg = 21;
+		_rBg = ofRectangle(0, _w, palette.size() * _size, _hBg);
 		ofFill();
-		ofSetColor(palette[col]);
-		ofDrawRectangle(_r);
+		ofSetColor(color_BackGround.get());
+		ofDrawRectangle(_rBg);
 		ofNoFill();
-		ofSetColor(ofColor(ofColor::white, 64));
+		ofSetColor(_cb);
+		ofDrawRectangle(_rBg);
 
-		ofDrawRectangle(_r);
+		//2. palette name
+		ofDrawBitmapStringHighlight(PRESET_name, glm::vec2(4, _w + _inner - 7), ofColor::black, ofColor::white);
+
+		//3. palette colors
+		for (int col = 0; col < palette.size(); col++)
+		{
+			_r = ofRectangle(col * _size, 0, _w, _w);
+			ofFill();
+			ofSetColor(palette[col]);
+			ofDrawRectangle(_r);
+			ofNoFill();
+			ofSetColor(_cb);
+			ofDrawRectangle(_r);
+		}
 	}
-
 	ofPopStyle();
 	ofPopMatrix();
 }
@@ -4978,7 +5040,7 @@ void ofxColorManager::palette_removeColor(int c)
 			auto b = a->getName();
 			scene->removeChild(a, false);
 			ofLogNotice(__FUNCTION__) << "removed children: " << b;
-		}
+	}
 		btns_palette.clear();
 #endif
 
@@ -4995,7 +5057,7 @@ void ofxColorManager::palette_removeColor(int c)
 
 		// 5. make positions & resizes to fill bar
 		palette_rearrenge();
-	}
+}
 }
 
 
@@ -5268,6 +5330,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 	if (name == AppMode.getName())
 	{
+		//clamp
 		//AppMode = ofClamp(
 		//	AppMode.get(),
 		//	AppMode.getMin(),
@@ -5676,9 +5739,9 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 			// autoload color on picker
 			color_Picked = palette[palette_colorSelected];
-	}
+		}
 #endif
-}
+	}
 
 	else if (name == bRemoveColor.getName())
 	{
@@ -5747,7 +5810,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 #endif
 			// DEMO
 			if (DEMO_Test) myDEMO.reStart();
-		}
+	}
 	}
 
 	//--
@@ -5823,7 +5886,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 #ifdef USE_RECTANGLE_INTERFACES
 			palette_FromTheory(SELECTED_palette_LAST);//trig last choice
 #endif
-		}
+	}
 	}
 }
 
@@ -5951,6 +6014,13 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		}
 		else if (key == '+') {
 			numColors_TheoryEngines++;
+		}
+
+		//--
+
+		// help
+		else if (key == 'h' || key == 'H') {
+			ENABLE_HelpInfo = !ENABLE_HelpInfo;
 		}
 
 		//--
@@ -7112,7 +7182,7 @@ void ofxColorManager::refresh_Picker_Touched()
 		////color_TheoryBase.set(color_Picked.get());
 		//update_Theory();
 }
-		}
+}
 
 //----
 

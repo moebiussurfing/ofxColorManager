@@ -240,6 +240,8 @@ public:
 
 	bool txt_lineActive[4];
 
+	ofTrueTypeFont font;
+
 	//-
 
 	//ofxColorMorph
@@ -378,6 +380,7 @@ private:
 
 	ofParameter<bool> SHOW_GuiInternal{ "GUI INTERNAL", false };
 	ofParameter<bool> SHOW_ImGui{ "ImGui", true };
+	ofParameter<bool> ENABLE_HelpInfo;// { "HELP INFO", false };
 
 	//--
 
@@ -578,7 +581,7 @@ private:
 	// COLORS
 
 private:
-	ofParameter<ofFloatColor> color_BackGround;//main color
+	ofParameter<ofFloatColor> color_BackGround;//main bg color
 	ofParameter<bool> color_backGround_SET;
 	ofParameter<bool> color_BackGround_AutoSet;
 	ofParameter<bool> color_BackGround_Darker;
@@ -741,7 +744,7 @@ private:
 	// test curve
 private:
 
-	ofParameter<bool> TEST_Mode{ "Curve TEST", false };
+	ofParameter<bool> TEST_Mode{ "Enable Test", false };
 	float TEST_Speed = .75;
 	bool TEST_LFO_Mode = true;
 	int TEST_maxFrames = 300;//slowest period
