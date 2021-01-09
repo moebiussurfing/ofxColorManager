@@ -26,9 +26,10 @@ namespace ImGui_PalettesPicker
 		static bool MODE_Slim = false;
 		int indexPick = -1;
 
+		//border style
 		float linew_Pick = 2.5;
 		ImVec4 color_Pick{ 0,0,0,0.5 };
-		//ImVec4 color_Pick{ 1,1,1,0.5 };
+		auto color_Pick32 = IM_COL32(color_Pick.x*255.f, color_Pick.y*255.f, color_Pick.z*255.f, color_Pick.w*255.f);
 
 		//--
 
@@ -73,8 +74,6 @@ namespace ImGui_PalettesPicker
 
 				//group border
 				auto pos1 = ImGui::GetCursorScreenPos();
-				//auto color_Pick32 = IM_COL32( 255, 255, 255, 128 );
-				auto color_Pick32 = IM_COL32(color_Pick.x*255.f, color_Pick.y*255.f, color_Pick.z*255.f, color_Pick.w*255.f);
 
 				//-
 
@@ -119,7 +118,8 @@ namespace ImGui_PalettesPicker
 					ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, linew_Pick);
 
 					//-
-
+					
+					//group border
 					ImGui::BeginGroup();
 				}
 				//_hhB = 0.7 * BUTTON_BIG_HEIGHT;//button height
@@ -176,11 +176,10 @@ namespace ImGui_PalettesPicker
 
 					//ImGui::GetWindowDrawList()->AddRect(ImGui::GetItemRectMin(), ImGui::GetItemRectMax(), IM_COL32(255, 255, 0, 255));
 
+					//group border
 					ImGui::EndGroup();
-
 					auto pos2 = ImGui::GetCursorScreenPos();
 					float pad = 2.0f;
-					// IM_COL32(255, 255, 0, 255)
 					ImGui::GetWindowDrawList()->AddRect(ImVec2(pos1.x - pad, pos1.y), ImVec2(pos1.x + _w + pad, pos2.y + pad), color_Pick32);
 				}
 

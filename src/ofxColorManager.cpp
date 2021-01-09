@@ -376,7 +376,7 @@ void ofxColorManager::setup()
 
 	SHOW_Presets.set("PRESETS", true);
 	SHOW_Kit.set("Show Kit", true);
-	AutoScroll.set("AutoScrollKit", true);
+	AutoScroll.set("AutoScroll", true);
 	//SHOW_PresetsPalette.set("Show Palette", false);
 	SHOW_BackGround.set("BACKGROUND", true);
 	SHOW_Picker.set("PICKER", true);
