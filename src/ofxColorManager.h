@@ -550,7 +550,7 @@ private:
 
 	bool bCheckMouseOverTextInput = true;//to return mouse over any gui panel or over text input only!
 
-	bool gui_Draw();
+	bool draw_Gui();
 	void gui_Palette();
 	void gui_Theory();
 	void gui_Picker();
