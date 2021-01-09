@@ -21,7 +21,7 @@ TODO:
 namespace ImGui_PalettesPicker
 {
 	//--------------------------------------------------------------
-	inline int gui_Palettes(vector<PaletteData> &kit, int indexExt = -1)
+	inline int gui_GridPalettes(vector<PaletteData> &kit, int indexExt = -1)
 	{
 		static bool MODE_Slim = false;
 		int indexPick = -1;
@@ -71,6 +71,13 @@ namespace ImGui_PalettesPicker
 
 				//--
 
+				//group border
+				auto pos1 = ImGui::GetCursorScreenPos();
+				//auto color_Pick32 = IM_COL32( 255, 255, 255, 128 );
+				auto color_Pick32 = IM_COL32( color_Pick.x*255.f, color_Pick.y*255.f, color_Pick.z*255.f, color_Pick.w*255.f );
+
+				//--
+
 				// colors in each palette
 				int _sizeP = kit[p].palette.size();
 
@@ -93,14 +100,19 @@ namespace ImGui_PalettesPicker
 					bDrawBorder = true;
 					_hhB = 3 * BUTTON_SLIM_HEIGHT;
 				}
-				else 
+				else
 				{
 					_hhB = 1.0 * BUTTON_SLIM_HEIGHT;
 				}
+
 				if (bDrawBorder)
 				{
 					ImGui::PushStyleColor(ImGuiCol_Border, color_Pick);
 					ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, linew_Pick);
+
+					//-
+
+					ImGui::BeginGroup();
 				}
 				//_hhB = 0.7 * BUTTON_BIG_HEIGHT;//button height
 
@@ -140,7 +152,7 @@ namespace ImGui_PalettesPicker
 
 						indexPick = p;
 					}
-					
+
 					//----
 
 					ImGui::PopID();
@@ -153,6 +165,15 @@ namespace ImGui_PalettesPicker
 				{
 					ImGui::PopStyleColor();
 					ImGui::PopStyleVar(1);
+
+					//ImGui::GetWindowDrawList()->AddRect(ImGui::GetItemRectMin(), ImGui::GetItemRectMax(), IM_COL32(255, 255, 0, 255));
+
+					ImGui::EndGroup();
+
+					auto pos2 = ImGui::GetCursorScreenPos();
+					float pad = 2.0f;
+					// IM_COL32(255, 255, 0, 255)
+					ImGui::GetWindowDrawList()->AddRect(ImVec2(pos1.x - pad, pos1.y), ImVec2(pos1.x + _w + pad, pos2.y+pad), color_Pick32);
 				}
 
 				//ImGui::PopStyleVar(1);

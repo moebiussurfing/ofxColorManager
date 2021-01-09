@@ -11,9 +11,8 @@ TODO:
 
 */
 
-//CIELAB color space
 
-//------
+//----------
 
 //	OPTIONAL
 
@@ -23,19 +22,23 @@ TODO:
 #define USE_COLOR_LOVERS
 #define USE_IMAGE_QUANTIZER
 #define USE_OFX_COLOR_BROWSER
+#define USE_EXTRA_LIBRARIES
 //#define USE_SUPER_LOG
+
 //	layout
 #define MAX_PALETTE_COLORS 10
 #define INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
 #define BUTTON_BIG_HEIGHT 50
 #define BUTTON_COLOR_SIZE 40
 #define COLOR_STRIP_COLOR_HEIGHT 15
+#define PANEL_WIDGETS_WIDTH 200
 //#define INCL_LAYOUT
 //#define USE_OFX_GUI
-#define INCLUDE_EXTRA_LIBRARIES
+
 #define AUTO_DRAW_CALLBACK
 
 //------
+
 
 #ifdef USE_SUPER_LOG
 #include "ofxSuperLog.h"
@@ -195,7 +198,7 @@ public:
 	ofParameter<int> sizeLibColBox;
 
 public:
-	ofParameter<bool> bPaletteFillMode;
+	ofParameter<bool> bResponsive_Presets;
 	ofParameter<int> sizePaletteBox;
 
 public:

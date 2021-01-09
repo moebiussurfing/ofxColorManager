@@ -58,7 +58,7 @@ void ofxColorManager::setup()
 	bPagerized.set("Mode Paging", false);
 
 	sizePaletteBox.set("Size Plt", 25, 10, 500);
-	bPaletteFillMode.set("Responsive", false);
+	bResponsive_Presets.set("Responsive", false);
 
 	//-
 
@@ -561,6 +561,7 @@ void ofxColorManager::setup()
 	params_Panels.add(SHOW_BrowserColors);
 	params_Panels.add(SHOW_GuiInternal);
 	params_Panels.add(SHOW_GUI_MINI);
+	params_Panels.add(SHOW_Kit);
 	params_AppState.add(params_Panels);
 
 	params_Background.add(color_BackGround);
@@ -617,7 +618,7 @@ void ofxColorManager::setup()
 
 	params_Palette2.add(sizePaletteBox);
 	params_Palette2.add(scale_ColPalette);
-	params_Palette2.add(bPaletteFillMode);
+	params_Palette2.add(bResponsive_Presets);
 	params_Palette2.add(boxRowsUser);
 	params_Palette2.add(bPaletteEdit);
 	params_Palette2.add(bAuto_TheoryToPalette);
@@ -1318,8 +1319,8 @@ void ofxColorManager::draw(ofEventArgs & args)
 		else
 		{
 			ofClear(ofColor(color_BackGround.get()));
+		}
 	}
-}
 
 	//--
 
@@ -1802,9 +1803,22 @@ void ofxColorManager::gui_Theory()
 		ofxImGui::AddParameter(bAuto_TheoryToPalette);
 
 		// amount colors
-		if (ofxImGui::AddParameter(numColors_TheoryEngines))
+		//if (ofxImGui::AddParameter(numColors_TheoryEngines))
+		//{
+		//}
+		if (ofxSurfingHelpers::AddIntStepped(numColors_TheoryEngines))
 		{
 		}
+
+		//auto tmpRefi = numColors_TheoryEngines.get();
+		//const ImU32 u32_one = 1;
+		//static bool inputs_step = true;
+		//if (ImGui::InputScalar("input u32", ImGuiDataType_U32, (int *)&tmpRefi, inputs_step ? &u32_one : NULL, NULL, "%u"))
+		//{
+		//	tmpRefi = ofClamp(tmpRefi, numColors_TheoryEngines.getMin(), numColors_TheoryEngines.getMax());
+		//	numColors_TheoryEngines.set(tmpRefi);
+		//}
+
 		//if (ImGui::InputInt(numColors_Theory.getName().c_str(), (int*)&numColors_Theory.get(), 1, 5))
 		//if (ofxImGui::AddParameter(numColors_Theory))
 		//{
@@ -2017,7 +2031,7 @@ void ofxColorManager::gui_Theory()
 
 				ImGui::PopID();
 			}
-			}
+		}
 
 		//----
 
@@ -2025,9 +2039,9 @@ void ofxColorManager::gui_Theory()
 		{
 			refresh_FromPicked();
 		}
-		}
-	ofxImGui::EndWindow(mainSettings);
 	}
+	ofxImGui::EndWindow(mainSettings);
+}
 
 //--------------------------------------------------------------
 void ofxColorManager::gui_Palette()
@@ -2080,7 +2094,7 @@ void ofxColorManager::gui_Palette()
 		for (int n = 0; n < palette.size(); n++)
 		{
 			// responsive buttons size
-			if (bPaletteFillMode)
+			if (bResponsive_Presets)
 			{
 				ImGui::PushID(n);
 				std::string name = ofToString(n);
@@ -2102,7 +2116,7 @@ void ofxColorManager::gui_Palette()
 
 			ImGui::PushID(n);
 
-			if (!bPaletteFillMode)
+			if (!bResponsive_Presets)
 			{
 				//split in rows
 				if (boxRowsUser != 0)
@@ -2143,7 +2157,7 @@ void ofxColorManager::gui_Palette()
 			// color box
 
 			ImVec2 bb;//size
-			if (bPaletteFillMode) bb = button_sz;
+			if (bResponsive_Presets) bb = button_sz;
 			else bb = ImVec2(wb, wb);
 
 			if (ImGui::ColorButton("##paletteDrag",
@@ -2204,7 +2218,7 @@ void ofxColorManager::gui_Palette()
 			//--
 
 			// responsive buttons size
-			if (bPaletteFillMode)
+			if (bResponsive_Presets)
 			{
 				ImGui::PopStyleColor();
 				float last_button_x2 = ImGui::GetItemRectMax().x;
@@ -2227,13 +2241,13 @@ void ofxColorManager::gui_Palette()
 
 			ImGui::Dummy(ImVec2(0.0f, 5));
 
-			ofxImGui::AddParameter(bPaletteFillMode);
-			if (bPaletteFillMode)
+			ofxImGui::AddParameter(bResponsive_Presets);
+			if (bResponsive_Presets)
 			{
 				ImGui::InputInt(sizePaletteBox.getName().c_str(), (int*)&sizePaletteBox.get(), 5, 100);
 				//ofxImGui::AddParameter(sizePaletteBox);
 			}
-			if (!bPaletteFillMode)
+			if (!bResponsive_Presets)
 			{
 				boxRowsUser.disableEvents();
 				ImGui::InputInt(boxRowsUser.getName().c_str(), (int*)&boxRowsUser.get(), 1, 5);
@@ -2371,7 +2385,7 @@ void ofxColorManager::gui_Library()
 
 			//--
 
-#ifdef INCLUDE_EXTRA_LIBRARIES
+#ifdef USE_EXTRA_LIBRARIES
 			ImGui::Dummy(ImVec2(0, 5));
 
 			// library
@@ -3090,7 +3104,10 @@ void ofxColorManager::gui_Range()
 
 			//-
 
-			ofxImGui::AddParameter(numColors_Range);
+			if (ofxSurfingHelpers::AddIntStepped(numColors_Range))
+			{
+			}
+			//ofxImGui::AddParameter(numColors_Range);
 			//if (ImGui::InputInt(numColors_Range.getName().c_str(), (int *)&numColors_Range.get(), 1, 2))
 			//{}
 
@@ -3826,7 +3843,8 @@ void ofxColorManager::gui_Presets()
 			for (int n = 0; n < palette.size(); n++)
 			{
 				// responsive buttons size
-				if (bPaletteFillMode) {
+				if (bResponsive_Presets)
+				{
 					ImGui::PushID(n);
 					std::string name = ofToString(n);
 
@@ -3847,7 +3865,8 @@ void ofxColorManager::gui_Presets()
 
 				ImGui::PushID(n);
 
-				if (!bPaletteFillMode) {
+				if (!bResponsive_Presets)
+				{
 					//split in rows
 					if (boxRowsUser != 0)
 					{
@@ -3883,7 +3902,7 @@ void ofxColorManager::gui_Presets()
 
 				// color box
 				ImVec2 bb;
-				if (bPaletteFillMode) bb = button_sz;
+				if (bResponsive_Presets) bb = button_sz;
 				else bb = ImVec2(wb, wb);
 				if (ImGui::ColorButton("##paletteDragPrst",
 					palette[n],
@@ -3940,7 +3959,7 @@ void ofxColorManager::gui_Presets()
 				//--
 
 				// responsive buttons size
-				if (bPaletteFillMode)
+				if (bResponsive_Presets)
 				{
 					ImGui::PopStyleColor();
 					float last_button_x2 = ImGui::GetItemRectMax().x;
@@ -4028,7 +4047,7 @@ void ofxColorManager::gui_Presets()
 		if (ofxImGui::BeginWindow("Kit", mainSettings))
 		{
 			// populate widgets
-			int indexPreset = gui_Palettes(kit, preset_Index);
+			int indexPreset = gui_GridPalettes(kit, preset_Index);
 
 			// workflow
 			if (indexPreset != -1)
@@ -4300,7 +4319,8 @@ void ofxColorManager::draw_CurveTools()
 
 		// NOTE: 
 		//sometimes we need some tricky hacking to avoid rare fliping from gradients
-		curve_Ctrl_Out = ofMap(curvesTool.getAtPercent(curve_Ctrl_In), 0, cAmt - 1, 0., 1.);
+		curve_Ctrl_Out.setWithoutEventNotifications(ofMap(curvesTool.getAtPercent(curve_Ctrl_In), 0.f, cAmt - 1, 0.f, 1.f));
+		//curve_Ctrl_Out = ofMap(curvesTool.getAtPercent(curve_Ctrl_In), 0, cAmt - 1, 0., 1.);
 
 		//-
 
@@ -4577,6 +4597,7 @@ void ofxColorManager::refresh_Interface() //populates palettes
 	{
 		shared_ptr<ColorWheelScheme> _scheme;
 		_scheme = ColorWheelSchemes::colorSchemes[i];
+		ofLogNotice(__FUNCTION__) << i;
 		_scheme->setPrimaryColor(color_TheoryBase.get());
 		colorsTheory[i] = _scheme->interpolate(numColors_Theory.get());
 	}
@@ -4613,40 +4634,40 @@ void ofxColorManager::setup_Theory()
 
 	//---
 
-	//TODO:
-	// should reduce calls.. to setup only..
+	////TODO:
+	//// should reduce calls.. to setup only..
 
-	scheme_Analogous_name = (ColorWheelSchemes::colorSchemeNames[0]);
-	scheme_Analogous = ColorWheelSchemes::colorSchemes[0];
-	colors_Analogous = scheme_Analogous->interpolate(numColors_Alg);
+	//scheme_Analogous_name = (ColorWheelSchemes::colorSchemeNames[0]);
+	//scheme_Analogous = ColorWheelSchemes::colorSchemes[0];
+	//colors_Analogous = scheme_Analogous->interpolate(numColors_Alg);
 
-	scheme_Complementary_name = (ColorWheelSchemes::colorSchemeNames[1]);
-	scheme_Complementary = ColorWheelSchemes::colorSchemes[1];
-	colors_Complementary = scheme_Complementary->interpolate(numColors_Alg);
+	//scheme_Complementary_name = (ColorWheelSchemes::colorSchemeNames[1]);
+	//scheme_Complementary = ColorWheelSchemes::colorSchemes[1];
+	//colors_Complementary = scheme_Complementary->interpolate(numColors_Alg);
 
-	scheme_SplitComplementary_name = (ColorWheelSchemes::colorSchemeNames[2]);
-	scheme_SplitComplementary = ColorWheelSchemes::colorSchemes[2];
-	colors_SplitComplementary = scheme_SplitComplementary->interpolate(numColors_Alg);
+	//scheme_SplitComplementary_name = (ColorWheelSchemes::colorSchemeNames[2]);
+	//scheme_SplitComplementary = ColorWheelSchemes::colorSchemes[2];
+	//colors_SplitComplementary = scheme_SplitComplementary->interpolate(numColors_Alg);
 
-	scheme_Compound_name = (ColorWheelSchemes::colorSchemeNames[3]);
-	scheme_Compound = ColorWheelSchemes::colorSchemes[3];
-	colors_Compound = scheme_Compound->interpolate(numColors_Alg);
+	//scheme_Compound_name = (ColorWheelSchemes::colorSchemeNames[3]);
+	//scheme_Compound = ColorWheelSchemes::colorSchemes[3];
+	//colors_Compound = scheme_Compound->interpolate(numColors_Alg);
 
-	scheme_FlippedCompound_name = (ColorWheelSchemes::colorSchemeNames[4]);
-	scheme_FlippedCompound = ColorWheelSchemes::colorSchemes[4];
-	colors_FlippedCompound = scheme_FlippedCompound->interpolate(numColors_Alg);
+	//scheme_FlippedCompound_name = (ColorWheelSchemes::colorSchemeNames[4]);
+	//scheme_FlippedCompound = ColorWheelSchemes::colorSchemes[4];
+	//colors_FlippedCompound = scheme_FlippedCompound->interpolate(numColors_Alg);
 
-	scheme_Monochrome_name = (ColorWheelSchemes::colorSchemeNames[5]);
-	scheme_Monochrome = ColorWheelSchemes::colorSchemes[5];
-	colors_Monochrome = scheme_Monochrome->interpolate(numColors_Alg);
+	//scheme_Monochrome_name = (ColorWheelSchemes::colorSchemeNames[5]);
+	//scheme_Monochrome = ColorWheelSchemes::colorSchemes[5];
+	//colors_Monochrome = scheme_Monochrome->interpolate(numColors_Alg);
 
-	scheme_Tetrad_name = (ColorWheelSchemes::colorSchemeNames[6]);
-	scheme_Tetrad = ColorWheelSchemes::colorSchemes[6];
-	colors_Tetrad = scheme_Tetrad->interpolate(numColors_Alg);
+	//scheme_Tetrad_name = (ColorWheelSchemes::colorSchemeNames[6]);
+	//scheme_Tetrad = ColorWheelSchemes::colorSchemes[6];
+	//colors_Tetrad = scheme_Tetrad->interpolate(numColors_Alg);
 
-	scheme_Triad_name = (ColorWheelSchemes::colorSchemeNames[7]);
-	scheme_Triad = ColorWheelSchemes::colorSchemes[7];
-	colors_Triad = scheme_Triad->interpolate(numColors_Alg);
+	//scheme_Triad_name = (ColorWheelSchemes::colorSchemeNames[7]);
+	//scheme_Triad = ColorWheelSchemes::colorSchemes[7];
+	//colors_Triad = scheme_Triad->interpolate(numColors_Alg);
 }
 
 //--------------------------------------------------------------
@@ -4851,7 +4872,7 @@ void ofxColorManager::palette_removeColor(int c)
 			auto b = a->getName();
 			scene->removeChild(a, false);
 			ofLogNotice(__FUNCTION__) << "removed children: " << b;
-		}
+	}
 		btns_palette.clear();
 #endif
 
@@ -4868,7 +4889,7 @@ void ofxColorManager::palette_removeColor(int c)
 
 		// 5. make positions & resizes to fill bar
 		palette_rearrenge();
-	}
+}
 }
 
 
@@ -5380,8 +5401,8 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 				// 2. set last button from current added color
 				btns_palette[palette_colorSelected]->setSelected(true);//sets border only
 				ofLogNotice(__FUNCTION__) << "user palette selected last _c: " << palette_colorSelected;
-			}
-		}
+}
+}
 #endif
 	}
 
@@ -6795,7 +6816,7 @@ void ofxColorManager::refresh_Picker_Touched()
 			// 3. update gradient
 			if (palette_colorSelected < gradient.getNumColors())
 				gradient.replaceColorAtIndex(palette_colorSelected, color_Clicked2);
-		}
+	}
 #endif
 		//--
 
@@ -6834,7 +6855,7 @@ void ofxColorManager::refresh_Picker_Touched()
 		//// palettes
 		////color_TheoryBase.set(color_Picked.get());
 		//update_Theory();
-	}
+}
 }
 
 //----
@@ -6852,7 +6873,9 @@ void ofxColorManager::setControl(float control)
 {
 	if (!MODE_Editor)
 	{
-		curve_Ctrl_In = control;
+		curve_Ctrl_In.setWithoutEventNotifications(control);
+		//curve_Ctrl_In = control;
+
 		curve_Slider_InExp.setPercent(control);
 	}
 }
