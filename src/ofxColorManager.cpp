@@ -376,6 +376,7 @@ void ofxColorManager::setup()
 
 	SHOW_Presets.set("PRESETS", true);
 	SHOW_Kit.set("Show Kit", true);
+	AutoScroll.set("AutoScrollKit", true);
 	//SHOW_PresetsPalette.set("Show Palette", false);
 	SHOW_BackGround.set("BACKGROUND", true);
 	SHOW_Picker.set("PICKER", true);
@@ -563,6 +564,7 @@ void ofxColorManager::setup()
 	params_Panels.add(SHOW_GuiInternal);
 	params_Panels.add(SHOW_GUI_MINI);
 	params_Panels.add(SHOW_Kit);
+	params_Panels.add(AutoScroll);
 	params_AppState.add(params_Panels);
 
 	params_Background.add(color_BackGround);
@@ -3379,9 +3381,20 @@ void ofxColorManager::gui_Presets()
 		ImGuiColorEditFlags _flags;
 
 		//--
+		
+		//workflow
+
+		//blink when a new preset is editing
+		float freq = 0.075;//speed freq
+		float min = 0.25;
+		float max = 0.75;
+		float a = ofMap(glm::sin(freq * ofGetFrameNum()), -1, 1, min, max);
+
+		//-
 
 		//ImGui::Text("Name");
 		ImGui::Dummy(ImVec2(0.0f, 5));
+
 		ImGui::Text(PRESET_name.c_str());
 
 		//----
@@ -3595,28 +3608,87 @@ void ofxColorManager::gui_Presets()
 
 		//ImGui::SameLine();
 
-		if (ImGui::Button("DELETE", ImVec2(_w50, _h * 0.5)))//current preset
+		if (ImGui::Button("DELETE", ImVec2(_w50, _h * 0.5)))
+			ImGui::OpenPopup("DELETE?");
+		if (ImGui::BeginPopupModal("DELETE?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
 		{
-			ofLogNotice(__FUNCTION__) << "DELETE";
+			ImGui::Text("Current Preset will be deleted.\nThis operation cannot be undone!\n\n");
+			ImGui::Separator();
 
-			files[preset_Index].remove();
-			preset_refreshFiles();
+			static bool dont_ask_me_next_time = false;
+			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+			ImGui::Checkbox("Don't ask me next time", &dont_ask_me_next_time);
+			ImGui::PopStyleVar();
 
-			//ofLogNotice(__FUNCTION__) << "DELETE:"<<str<<endl;
-			//dir.listDir("");
-			//dir.allowExt("jpg");
-			//dir.allowExt("png");
-			//dir.sort();
+			if (ImGui::Button("OK", ImVec2(120, 0))) {
+				ofLogNotice(__FUNCTION__) << "DELETE";
+				files[preset_Index].remove();
+				preset_refreshFiles();
+
+				ImGui::CloseCurrentPopup();
+			}
+			ImGui::SetItemDefaultFocus();
+			ImGui::SameLine();
+			if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
+			ImGui::EndPopup();
 		}
+
+		//if (ImGui::Button("DELETE", ImVec2(_w50, _h * 0.5)))//current preset
+		//{
+		//	ofLogNotice(__FUNCTION__) << "DELETE";
+		//	files[preset_Index].remove();
+		//	preset_refreshFiles();
+		//}
 
 		//export user palette colors to live reload from another parallel app!
 		ImGui::SameLine();
 
-		if (ImGui::Button("EXPORT", ImVec2(_w50, _h * 0.5)))
-		{
-			ofLogNotice(__FUNCTION__) << "EXPORT";
+		//if (ImGui::Button("EXPORT", ImVec2(_w50, _h * 0.5)))
+		//{
+		//	ofLogNotice(__FUNCTION__) << "EXPORT";
+		//	saveColors();
+		//}
 
-			saveColors();
+		if (ImGui::Button("EXPORT", ImVec2(_w50, _h * 0.5)))
+			ImGui::OpenPopup("EXPORT ");
+		if (ImGui::BeginPopupModal("EXPORT ", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			//ImGui::Text("Pick export path..\n\n");
+			//ImGui::Separator();
+
+			static bool dont_ask_me_next_time = false;
+			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+			ImGui::Checkbox("Don't ask me next time", &dont_ask_me_next_time);
+			ImGui::PopStyleVar();
+
+			if (!dont_ask_me_next_time) {
+				if (ImGui::Button("OK", ImVec2(120, 0))) {
+					ofLogNotice(__FUNCTION__) << "EXPORT";
+					//path_Folder_Color = ;
+					saveColors();
+
+					ImGui::CloseCurrentPopup();
+				}
+
+				if (ImGui::Button("SET PATH", ImVec2(120, 0))) {
+					ofLogNotice(__FUNCTION__) << "SET EXPORT PATH";
+					ImGui::Text("Pick export path..\n\n");
+
+					// TODO:
+					//path_Folder_Color = ;
+
+					//ImGui::CloseCurrentPopup();
+				}
+
+				ImGui::SetItemDefaultFocus();
+				ImGui::SameLine();
+				if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
+			}
+			else {
+				saveColors();
+			}
+
+			ImGui::EndPopup();
 		}
 
 		if (ImGui::Button("UPDATE", ImVec2(_w50, _h * 0.4)))
@@ -3629,7 +3701,6 @@ void ofxColorManager::gui_Presets()
 
 			//delete old file
 			files[preset_Index].remove();
-			//preset_refreshFiles();
 
 			//save new one
 			preset_save(PRESET_name);
@@ -3637,6 +3708,20 @@ void ofxColorManager::gui_Presets()
 		}
 
 		ImGui::SameLine();
+
+		if (ImGui::Button("COPY", ImVec2(_w50, _h * 0.4)))
+		{
+			ofLogNotice(__FUNCTION__) << "COPY";
+
+			textInput_New = textInput_New + "_copy";
+
+			preset_save(textInput_New);
+			preset_refreshFiles();
+
+			//--
+
+			refresh_RearrengeFiles(textInput_New);
+		}
 
 		if (ImGui::Button("REFRESH KIT", ImVec2(_w50, _h * 0.4)))
 		{
@@ -3660,23 +3745,14 @@ void ofxColorManager::gui_Presets()
 
 		if (MODE_newPreset && bNewPreset)
 		{
-			//workflow
-
-			//blink when a new preset is editing
-			float freq = 0.075;//speed freq
-			float min = 0.25;
-			float max = 0.75;
-			float a = ofMap(glm::sin(freq * ofGetFrameNum()), -1, 1, min, max);
-
-			//-
-
 			ImGui::Separator();
-			ImGui::Dummy(ImVec2(0.0f, 10));
+			ImGui::Dummy(ImVec2(0, 10));
 
 			//-
-			
+
 			ImGui::PushID(1);
-			ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.5, 0.0f, 0.5f, a));
+			ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)ImColor::ImColor(1.0f, 1.0f, 1.0f, a));
+			//ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)ImColor::HSV(0.5, 0.0f, 1.0f, a));
 			ImGui::Text("NEW PRESET");
 			ImGui::PopStyleColor(1);
 			ImGui::PopID();
@@ -3692,31 +3768,28 @@ void ofxColorManager::gui_Presets()
 			strncpy(tab, textInput_New.c_str(), sizeof(tab));
 			tab[sizeof(tab) - 1] = 0;
 
+			//-
+
 			if (ImGui::InputText("", tab, IM_ARRAYSIZE(tab)))
 			{
 				textInput_New = ofToString(tab);
 				ofLogNotice(__FUNCTION__) << "textInput_New:" << textInput_New;
 			}
 
-			//--
+			//-
 
-			/*
-			//TODO:
-			//focus_1 = ImGui::Button("Focus on 1"); ImGui::SameLine();
-			has_focus = 0;
-			//static char tab[128] = "click on a button to set focus";
-			//char tab[128];
-			strncpy(tab, textInput_New.c_str(), sizeof(tab));
-			tab[sizeof(tab) - 1] = 0;
-			if (focus_1) ImGui::SetKeyboardFocusHere();
-			ImGui::InputText("", tab, IM_ARRAYSIZE(tab));
-			if (ImGui::IsItemActive())
-			{
-				has_focus = 1;
-				textInput_New = ofToString(tab);
-				ofLogNotice(__FUNCTION__) << "textInput_New:" << textInput_New;
-			}
-			*/
+			////TODO: ??
+			//has_focus = 0;
+			//if (focus_1) ImGui::SetKeyboardFocusHere();
+			//ImGui::InputText("", tab, IM_ARRAYSIZE(tab));
+			//if (ImGui::IsItemActive())
+			//{
+			//	has_focus = 1;
+			//	textInput_New = ofToString(tab);
+			//	ofLogNotice(__FUNCTION__) << "textInput_New:" << textInput_New;
+			//}
+
+			//-
 
 			ImGui::PopItemWidth();
 
@@ -3736,41 +3809,10 @@ void ofxColorManager::gui_Presets()
 
 				preset_save(textInput_New);
 				preset_refreshFiles();
-
+				
 				//--
-
-				//workflow
-				//go to ne index after adding a new preset
-				ofLogNotice(__FUNCTION__) << "Rearrenge index file";
-				//std::string path = path_Presets + textInput_New + ".json";
-
-				//locate new position of old (saved) preset
-				int ii = -1;
-				for (size_t i = 0; i < files.size() && ii == -1; i++)
-				{
-					std::string n = files_Names[i];
-					//std::string n = files[i].getBaseName();
-
-					ofLogNotice(__FUNCTION__) << files_Names[i];
-
-					if (n == textInput_New)
-					{
-						ii = int(i);
-						ofLogNotice(__FUNCTION__) << "Found " << files_Names[i] << " at " << i << " index";
-					}
-				}
-
-				//reload the same preset at newer index
-				if (ii != -1)
-				{
-					//preset_load(textInput_New);;
-
-					preset_Index = ii;
-					PRESET_name = files_Names[preset_Index];
-					ofLogNotice(__FUNCTION__) << PRESET_name;
-
-					preset_load(PRESET_name);
-				}
+				
+				refresh_RearrengeFiles(textInput_New);
 
 				//--
 
@@ -3794,6 +3836,7 @@ void ofxColorManager::gui_Presets()
 		ImGui::Dummy(ImVec2(0, 5));
 
 		ofxImGui::AddParameter(SHOW_Kit);
+		ofxImGui::AddParameter(AutoScroll);
 		//ofxImGui::AddParameter(SHOW_PresetsPalette);
 
 		ImGui::Dummy(ImVec2(0, 5));
@@ -3814,6 +3857,13 @@ void ofxColorManager::gui_Presets()
 
 			for (int n = 0; n < palette.size(); n++)
 			{
+				if (n == last_ColorPicked_Palette)
+				{
+					ImGui::SetScrollHereY(0.5f); // 0.0f:top, 0.5f:center, 1.0f:bottom
+				}
+
+				//-
+
 				// responsive buttons size
 				if (bResponsive_Presets)
 				{
@@ -4019,7 +4069,7 @@ void ofxColorManager::gui_Presets()
 		if (ofxImGui::BeginWindow("Kit", mainSettings))
 		{
 			// populate widgets
-			int indexPreset = gui_GridPalettes(kit, preset_Index);
+			int indexPreset = gui_GridPalettes(kit, preset_Index, AutoScroll.get());
 
 			// workflow
 			if (indexPreset != -1)
@@ -4844,7 +4894,7 @@ void ofxColorManager::palette_removeColor(int c)
 			auto b = a->getName();
 			scene->removeChild(a, false);
 			ofLogNotice(__FUNCTION__) << "removed children: " << b;
-	}
+		}
 		btns_palette.clear();
 #endif
 
@@ -4861,7 +4911,7 @@ void ofxColorManager::palette_removeColor(int c)
 
 		// 5. make positions & resizes to fill bar
 		palette_rearrenge();
-}
+	}
 }
 
 
@@ -4902,7 +4952,7 @@ void ofxColorManager::palette_clear()
 	//-
 
 	if (DEMO_Test) myDEMO.clear();
-}
+	}
 
 #pragma mark - CALLBACKS
 
@@ -5380,8 +5430,8 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 				// 2. set last button from current added color
 				btns_palette[palette_colorSelected]->setSelected(true);//sets border only
 				ofLogNotice(__FUNCTION__) << "user palette selected last _c: " << palette_colorSelected;
-}
-}
+			}
+		}
 #endif
 	}
 
@@ -5439,8 +5489,8 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			// 2. remove selected
 			palette_removeColor(palette_colorSelected);
 
+			}
 		}
-	}
 	else if (name == bClearPalette.getName())
 	{
 		if (bClearPalette)
@@ -5570,7 +5620,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 #endif
 		}
 	}
-}
+		}
 
 //load user palette from range
 //--------------------------------------------------------------
@@ -6493,6 +6543,44 @@ void ofxColorManager::enableListeners()
 #pragma mark - SETTINGS
 
 //--------------------------------------------------------------
+void ofxColorManager::refresh_RearrengeFiles(std::string name)
+{
+	//--
+
+	//workflow
+	//go to ne index after adding a new preset
+	ofLogNotice(__FUNCTION__) << "Rearrenge index file";
+	//std::string path = path_Presets + textInput_New + ".json";
+
+	//locate new position of old (saved) preset
+	int ii = -1;
+	for (size_t i = 0; i < files.size() && ii == -1; i++)
+	{
+		std::string n = files_Names[i];
+		//std::string n = files[i].getBaseName();
+
+		ofLogNotice(__FUNCTION__) << files_Names[i];
+
+		if (n == name)
+		{
+			ii = int(i);
+			ofLogNotice(__FUNCTION__) << "Found " << files_Names[i] << " at " << i << " index";
+		}
+	}
+
+	//reload the same preset at newer index
+	if (ii != -1)
+	{
+		//preset_load(textInput_New);;
+
+		preset_Index = ii;
+		PRESET_name = files_Names[preset_Index];
+		ofLogNotice(__FUNCTION__) << PRESET_name;
+
+		preset_load(PRESET_name);
+	}
+}
+//--------------------------------------------------------------
 void ofxColorManager::preset_refreshFiles()
 {
 	ofLogNotice(__FUNCTION__);
@@ -6796,7 +6884,7 @@ void ofxColorManager::refresh_Picker_Touched()
 			// 3. update gradient
 			if (palette_colorSelected < gradient.getNumColors())
 				gradient.replaceColorAtIndex(palette_colorSelected, color_Clicked2);
-	}
+		}
 #endif
 		//--
 
@@ -6835,8 +6923,8 @@ void ofxColorManager::refresh_Picker_Touched()
 		//// palettes
 		////color_TheoryBase.set(color_Picked.get());
 		//update_Theory();
-}
-}
+		}
+	}
 
 //----
 
@@ -7031,7 +7119,6 @@ void ofxColorManager::saveColors()
 	//path_Colors = "/Users/manu/Documents/openFrameworks/addons/ofxFontAnimator/4_ofxFontAnimatorNoise/bin/data/colors/liveColors.json";
 
 	ofxSurfingHelpers::CheckFolder(path_Folder_Color);
-
 	ofLogNotice(__FUNCTION__) << "path: " << path_Colors;
 
 	//ofxSerializer
