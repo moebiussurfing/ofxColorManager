@@ -164,6 +164,7 @@ private:
 	ofParameter<bool> SHOW_Panels;
 	ofParameter<bool> SHOW_Presets;
 	ofParameter<bool> SHOW_Kit;
+	ofParameter<bool> AutoScroll;
 	ofParameter<bool> SHOW_Demo;
 	ofParameter<bool> SHOW_BackGround;
 	ofParameter<bool> SHOW_Picker;
@@ -775,7 +776,7 @@ private:
 	bool focus_1;
 	int has_focus = 0;
 	char tab[128];
-	void refresh_RearrengeFiles();
+	void refresh_RearrengeFiles(std::string name);
 
 	//-
 

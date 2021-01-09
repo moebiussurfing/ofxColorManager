@@ -21,7 +21,7 @@ TODO:
 namespace ImGui_PalettesPicker
 {
 	//--------------------------------------------------------------
-	inline int gui_GridPalettes(vector<PaletteData> &kit, int indexExt = -1)
+	inline int gui_GridPalettes(vector<PaletteData> &kit, int indexExt = -1, bool autoscroll = true)
 	{
 		static bool MODE_Slim = false;
 		int indexPick = -1;
@@ -74,7 +74,12 @@ namespace ImGui_PalettesPicker
 				//group border
 				auto pos1 = ImGui::GetCursorScreenPos();
 				//auto color_Pick32 = IM_COL32( 255, 255, 255, 128 );
-				auto color_Pick32 = IM_COL32( color_Pick.x*255.f, color_Pick.y*255.f, color_Pick.z*255.f, color_Pick.w*255.f );
+				auto color_Pick32 = IM_COL32(color_Pick.x*255.f, color_Pick.y*255.f, color_Pick.z*255.f, color_Pick.w*255.f);
+
+				//-
+
+				//ImGui::SetScrollFromPosY(ImGui::GetCursorStartPos().y + 200, 0.5f);
+				//ImGui::SetScrollHereY(0.5f); // 0.0f:top, 0.5f:center, 1.0f:bottom
 
 				//--
 
@@ -99,6 +104,9 @@ namespace ImGui_PalettesPicker
 				{
 					bDrawBorder = true;
 					_hhB = 3 * BUTTON_SLIM_HEIGHT;
+
+					if (autoscroll)
+						ImGui::SetScrollHereY(0.5f); // 0.0f:top, 0.5f:center, 1.0f:bottom
 				}
 				else
 				{
@@ -173,7 +181,7 @@ namespace ImGui_PalettesPicker
 					auto pos2 = ImGui::GetCursorScreenPos();
 					float pad = 2.0f;
 					// IM_COL32(255, 255, 0, 255)
-					ImGui::GetWindowDrawList()->AddRect(ImVec2(pos1.x - pad, pos1.y), ImVec2(pos1.x + _w + pad, pos2.y+pad), color_Pick32);
+					ImGui::GetWindowDrawList()->AddRect(ImVec2(pos1.x - pad, pos1.y), ImVec2(pos1.x + _w + pad, pos2.y + pad), color_Pick32);
 				}
 
 				//ImGui::PopStyleVar(1);
