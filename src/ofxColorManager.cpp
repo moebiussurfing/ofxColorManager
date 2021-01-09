@@ -4957,13 +4957,14 @@ void ofxColorManager::draw_Mini()
 
 		// left top corner
 		_pos = glm::vec2(_inner, _inner);
+
 		//// right top corner
 		//_pos = glm::vec2(ofGetWidth() - palette.size()*_size, 2*_p);
 
 		ofTranslate(_pos);
 
 		//1. bg
-		int _hBg = 22;
+		int _hBg = 20;
 		_rBg = ofRectangle(0, _w, palette.size() * _size, _hBg);
 		ofFill();
 		ofSetColor(color_BackGround.get());
