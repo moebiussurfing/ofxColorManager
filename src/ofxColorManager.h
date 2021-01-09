@@ -150,6 +150,8 @@ private:
 	float fps;
 
 	//-
+	
+	std::string infoHelp;//key commands
 
 private:
 	ofParameter<bool> SHOW_ColourLovers;
@@ -174,6 +176,13 @@ private:
 	ofParameter<bool> SHOW_Theory;
 	ofParameter<bool> SHOW_Quantizer;
 	//ofParameter<bool> SHOW_CosineGradient;
+
+	ofParameter<int> AppMode;
+	ofParameter<std::string> AppMode_name;
+
+	enum Element { Element_0, Element_1, Element_2, Element_3, Element_4, Element_5, Element_COUNT };
+	const char* element_names[Element_COUNT] = { "PRESETS", "THEORY", "RANGE", "LOVERS", "PICTURE", "GRADIENT" };
+	int current_element = Element_0;
 
 	//-
 
