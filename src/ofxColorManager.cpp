@@ -906,7 +906,7 @@ void ofxColorManager::update(ofEventArgs & args)
 
 		// presets
 
-		if (!MODE_newPreset) bNewPreset = true;
+		if (!MODE_NewPreset) bNewPreset = true;
 		textInput_New = myPalette_Name;
 
 		//-
@@ -1690,7 +1690,7 @@ void ofxColorManager::gui_Theory()
 
 	if (ofxImGui::BeginWindow("THEORY", mainSettings, false))
 	{
-		ImGui::Dummy(ImVec2(0.0f, 10.f));
+		ImGui::Dummy(ImVec2(0, 10.f));
 
 		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
 		float _w = ImGui::GetWindowContentRegionWidth() - _spc;
@@ -1798,7 +1798,7 @@ void ofxColorManager::gui_Theory()
 
 		// controls
 
-		ImGui::Dummy(ImVec2(0.0f, 5));
+		ImGui::Dummy(ImVec2(0, 5));
 
 		//ImGui::SameLine();
 
@@ -1824,7 +1824,7 @@ void ofxColorManager::gui_Theory()
 
 		//--
 
-		ImGui::Dummy(ImVec2(0.0f, 5));
+		ImGui::Dummy(ImVec2(0, 5));
 
 		//--
 
@@ -2223,7 +2223,7 @@ void ofxColorManager::gui_Palette()
 			}
 		}
 
-		ImGui::Dummy(ImVec2(0.0f, 10));
+		ImGui::Dummy(ImVec2(0, 10));
 
 		//-
 
@@ -2234,7 +2234,7 @@ void ofxColorManager::gui_Palette()
 				build_GradientPalette();
 			}
 
-			ImGui::Dummy(ImVec2(0.0f, 5));
+			ImGui::Dummy(ImVec2(0, 5));
 
 			ofxImGui::AddParameter(bResponsive_Presets);
 			if (bResponsive_Presets)
@@ -2256,13 +2256,13 @@ void ofxColorManager::gui_Palette()
 
 			//-
 
-			ImGui::Dummy(ImVec2(0.0f, 5));
+			ImGui::Dummy(ImVec2(0, 5));
 
 			if (ImGui::RadioButton("Copy", mode == Mode_Copy)) { mode = Mode_Copy; } ImGui::SameLine();
 			if (ImGui::RadioButton("Move", mode == Mode_Move)) { mode = Mode_Move; } ImGui::SameLine();
 			if (ImGui::RadioButton("Swap", mode == Mode_Swap)) { mode = Mode_Swap; }
 
-			ImGui::Dummy(ImVec2(0.0f, 10));
+			ImGui::Dummy(ImVec2(0, 10));
 		}
 
 		//-
@@ -2406,7 +2406,7 @@ void ofxColorManager::gui_Library()
 
 		// arrow buttons
 
-		ImGui::Dummy(ImVec2(0.0f, 5));
+		ImGui::Dummy(ImVec2(0, 5));
 
 		if (bPagerized)
 		{
@@ -2444,7 +2444,7 @@ void ofxColorManager::gui_Library()
 			//ImGui::DragInt("PAGE", (int *)&lib_Page_Index, 0, lib_Page_Max);//collide..
 		}
 
-		ImGui::Dummy(ImVec2(0.0f, 5));
+		ImGui::Dummy(ImVec2(0, 5));
 
 		//----
 
@@ -2808,7 +2808,7 @@ void ofxColorManager::gui_Picker()
 			//ofxSurfingHelpers::AddBigToggle(bColor_SAT);
 			//ofxSurfingHelpers::AddBigToggle(bColor_BRG);
 
-			ImGui::Dummy(ImVec2(0.0f, 5));
+			ImGui::Dummy(ImVec2(0, 5));
 
 			if (bColor_HUE) color_HUE_0 = color_HUE;
 			if (bColor_SAT) color_SAT_0 = color_SAT;
@@ -2818,7 +2818,7 @@ void ofxColorManager::gui_Picker()
 			if (ofxImGui::AddParameter(bColor_SAT)) {}ImGui::SameLine();
 			if (ofxImGui::AddParameter(bColor_BRG)) {}
 
-			ImGui::Dummy(ImVec2(0.0f, 5));
+			ImGui::Dummy(ImVec2(0, 5));
 
 			//if (ofxImGui::AddParameter(color_HUE_0))
 			//{
@@ -2842,7 +2842,7 @@ void ofxColorManager::gui_Picker()
 			//	}
 			//}
 
-			ImGui::Dummy(ImVec2(0.0f, 5));
+			ImGui::Dummy(ImVec2(0, 5));
 
 			if (ofxImGui::AddParameter(color_HUE_Power))
 			{
@@ -2935,10 +2935,10 @@ void ofxColorManager::gui_Panels()
 #endif
 
 		//ImGui::Separator();
-		ImGui::Dummy(ImVec2(0.0f, 10));
+		ImGui::Dummy(ImVec2(0, 10));
 
 		//ImGui::Separator();
-		//ImGui::Dummy(ImVec2(0.0f, 10));
+		//ImGui::Dummy(ImVec2(0, 10));
 		//ofxImGui::AddParameter(SHOW_Gradient);
 		//ofxImGui::AddParameter(SHOW_AlgoPalettes);
 		//ofxImGui::AddParameter(SHOW_BrowserColors);
@@ -3090,12 +3090,12 @@ void ofxColorManager::gui_Range()
 
 			//-
 
-			ImGui::Dummy(ImVec2(0.0f, 10));
+			ImGui::Dummy(ImVec2(0, 10));
 
 			ImGui::InputFloat(scale_ColRange.getName().c_str(), (float *)&scale_ColRange.get(), 0.02f, 0.1f);
 			//ofxImGui::AddParameter(scale_ColRange);
 
-			ImGui::Dummy(ImVec2(0.0f, 5));
+			ImGui::Dummy(ImVec2(0, 5));
 
 			//-
 
@@ -3108,7 +3108,7 @@ void ofxColorManager::gui_Range()
 
 			//ofxSurfingHelpers::AddSmallButton(bGetPaletteFromRange, 150, 30);
 
-			ImGui::Dummy(ImVec2(0.0f, 5));
+			ImGui::Dummy(ImVec2(0, 5));
 		}
 
 		//----
@@ -3307,7 +3307,7 @@ void ofxColorManager::gui_Background()
 			static ImVec4 color;
 			color = color_BackGround.get();
 
-			ImGui::Dummy(ImVec2(0.0f, 10));
+			ImGui::Dummy(ImVec2(0, 10));
 
 			//-
 
@@ -3321,7 +3321,7 @@ void ofxColorManager::gui_Background()
 
 			ImGui::ColorButton("##ColorBgPicker", *(ImVec4 *)&color, _flags, ImVec2(_w, _h));
 
-			ImGui::Dummy(ImVec2(0.0f, 10));
+			ImGui::Dummy(ImVec2(0, 10));
 
 			//-
 
@@ -3348,7 +3348,7 @@ void ofxColorManager::gui_Background()
 
 			ImGui::PopItemWidth();
 
-			ImGui::Dummy(ImVec2(0.0f, 15));
+			ImGui::Dummy(ImVec2(0, 15));
 
 			//-
 
@@ -3381,7 +3381,7 @@ void ofxColorManager::gui_Presets()
 		ImGuiColorEditFlags _flags;
 
 		//--
-		
+
 		//workflow
 
 		//blink when a new preset is editing
@@ -3393,7 +3393,7 @@ void ofxColorManager::gui_Presets()
 		//-
 
 		//ImGui::Text("Name");
-		ImGui::Dummy(ImVec2(0.0f, 5));
+		ImGui::Dummy(ImVec2(0, 5));
 
 		ImGui::Text(PRESET_name.c_str());
 
@@ -3402,7 +3402,7 @@ void ofxColorManager::gui_Presets()
 		/*
 		//// arrow buttons
 
-		//ImGui::Dummy(ImVec2(0.0f, 10));
+		//ImGui::Dummy(ImVec2(0, 10));
 
 		//static int counter = preset_Index;
 
@@ -3452,7 +3452,7 @@ void ofxColorManager::gui_Presets()
 
 		//----
 
-		ImGui::Dummy(ImVec2(0.0f, 5));
+		ImGui::Dummy(ImVec2(0, 5));
 
 		int counter = preset_Index.get();
 		//static int counter = preset_Index;
@@ -3464,7 +3464,7 @@ void ofxColorManager::gui_Presets()
 		ImGui::Text("%d/%d", counter, numPalettes);
 		//ImGui::Text("%d/%d", preset_Index.get(), numPalettes);
 
-		ImGui::Dummy(ImVec2(0.0f, 5));
+		ImGui::Dummy(ImVec2(0, 5));
 
 		ImGui::PushButtonRepeat(true);
 
@@ -3542,7 +3542,7 @@ void ofxColorManager::gui_Presets()
 
 		ImGui::PopButtonRepeat();
 
-		ImGui::Dummy(ImVec2(0.0f, 5));
+		ImGui::Dummy(ImVec2(0, 5));
 
 		//----
 
@@ -3573,7 +3573,7 @@ void ofxColorManager::gui_Presets()
 			ImGui::PopItemWidth();
 		}
 
-		ImGui::Dummy(ImVec2(0.0f, 10));
+		ImGui::Dummy(ImVec2(0, 10));
 
 		//--
 
@@ -3739,11 +3739,11 @@ void ofxColorManager::gui_Presets()
 		//    preset_refreshFiles();
 		//}
 
-		ImGui::Dummy(ImVec2(0.0f, 10));
+		ImGui::Dummy(ImVec2(0, 10));
 
 		//--
 
-		if (MODE_newPreset && bNewPreset)
+		if (MODE_NewPreset && bNewPreset)
 		{
 			ImGui::Separator();
 			ImGui::Dummy(ImVec2(0, 10));
@@ -3752,7 +3752,6 @@ void ofxColorManager::gui_Presets()
 
 			ImGui::PushID(1);
 			ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)ImColor::ImColor(1.0f, 1.0f, 1.0f, a));
-			//ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)ImColor::HSV(0.5, 0.0f, 1.0f, a));
 			ImGui::Text("NEW PRESET");
 			ImGui::PopStyleColor(1);
 			ImGui::PopID();
@@ -3775,6 +3774,12 @@ void ofxColorManager::gui_Presets()
 				textInput_New = ofToString(tab);
 				ofLogNotice(__FUNCTION__) << "textInput_New:" << textInput_New;
 			}
+
+			//TODO:
+			bool b = bTextInputActive;
+			bTextInputActive = ImGui::IsItemActive();
+			if (bTextInputActive != b)
+				ofLogNotice(__FUNCTION__) << "TextInput : " << (bTextInputActive?"ACTIVE":"DISABLED");
 
 			//-
 
@@ -3809,9 +3814,9 @@ void ofxColorManager::gui_Presets()
 
 				preset_save(textInput_New);
 				preset_refreshFiles();
-				
+
 				//--
-				
+
 				refresh_RearrengeFiles(textInput_New);
 
 				//--
@@ -3825,7 +3830,7 @@ void ofxColorManager::gui_Presets()
 
 			//-
 
-			ImGui::Dummy(ImVec2(0.0f, 10));
+			ImGui::Dummy(ImVec2(0, 10));
 			ImGui::Separator();
 		}
 
@@ -3992,7 +3997,7 @@ void ofxColorManager::gui_Presets()
 			}
 		}
 
-		ImGui::Dummy(ImVec2(0.0f, 10));
+		ImGui::Dummy(ImVec2(0, 10));
 
 		//--
 
@@ -4092,8 +4097,6 @@ void ofxColorManager::gui_Demo()
 {
 	if (ofxImGui::BeginWindow("DEMO", mainSettings, false))
 	{
-		//ImGui::Dummy(ImVec2(0.0f, 5.f));
-
 		ofxImGui::AddParameter(DEMO_Test);
 		ofxImGui::AddParameter(DEMO_Auto);
 		ofxImGui::AddParameter(DEMO_Timer);
@@ -4133,36 +4136,32 @@ bool ofxColorManager::gui_Draw()
 	if (SHOW_ALL_GUI)
 	{
 		if (SHOW_UserPalette) gui_Palette();
-
 		if (SHOW_Presets) gui_Presets();
-
 		if (SHOW_Picker) gui_Picker();
-
 		if (SHOW_Library) gui_Library();
-
 		if (SHOW_BackGround) gui_Background();
-
 		if (SHOW_Curve) draw_Curve();
-
 		if (SHOW_Theory) gui_Theory();
-
 		if (SHOW_Range) gui_Range();
-
 #ifdef USE_COLOR_LOVERS
 		if (SHOW_ColourLovers) colourLoversHelper.draw();
 #endif
 		if (SHOW_Quantizer) colorQuantizer.gui_Quantizer();
-
 		if (SHOW_Panels) gui_Panels();
-
 		if (SHOW_Demo) gui_Demo();
-
 		//if (SHOW_CosineGradient) gui_imGui_CosineGradient();
 	}
 
 	//--
 
 	gui.end();
+
+	//-
+
+	if (bCheckMouseOverTextInput) return bTextInputActive;
+	else return mainSettings.mouseOverGui;
+
+	//-
 
 	// TODO: must make another key disabler but when mouse is in text-input panels..
 	// TODO: bug fix for disabled mouse on startup
@@ -4185,16 +4184,6 @@ bool ofxColorManager::gui_Draw()
 	//    //XCloseDisplay(display);
 	//
 	//    return false;
-	//}
-
-	//// TODO: BUG: startup disabled keys..
-	//if (ofGetFrameNum() < 60)
-	//{
-	//    return false;
-	//}
-	//else
-	//{
-	return mainSettings.mouseOverGui;
 	//}
 }
 
@@ -5182,7 +5171,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 	if (name == bNewPreset.getName())
 	{
-		MODE_newPreset = bNewPreset;
+		MODE_NewPreset = bNewPreset;
 
 		focus_1 = bNewPreset;
 	}
@@ -5912,7 +5901,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				}
 
 				// new preset
-				if (MODE_newPreset) bNewPreset = false;
+				if (MODE_NewPreset) bNewPreset = false;
 
 				// demo mode
 				if (DEMO_Test) myDEMO.reStart();
@@ -5938,7 +5927,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				}
 
 				// new preset
-				if (MODE_newPreset) bNewPreset = false;
+				if (MODE_NewPreset) bNewPreset = false;
 				// demo mode
 				if (DEMO_Test) myDEMO.reStart();
 				// load first color
@@ -5969,7 +5958,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				}
 
 				// new preset
-				if (MODE_newPreset) bNewPreset = false;
+				if (MODE_NewPreset) bNewPreset = false;
 				// demo mode
 				if (DEMO_Test) myDEMO.reStart();
 				// load first color
@@ -5993,7 +5982,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				}
 
 				// new preset
-				if (MODE_newPreset) bNewPreset = false;
+				if (MODE_NewPreset) bNewPreset = false;
 				//demo mode
 				if (DEMO_Test) myDEMO.reStart();
 				//load first color
@@ -6251,7 +6240,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 //			//-
 //
 //			// preset manager
-//			if (!MODE_newPreset) bNewPreset = true;
+//			if (!MODE_NewPreset) bNewPreset = true;
 //
 //#ifdef USE_RECTANGLE_INTERFACES
 //			textInput_New = "random_" + btns_plt_Selector[SELECTED_palette_LAST]->getName();
@@ -6317,7 +6306,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 //
 //			// presets
 //
-//			if (!MODE_newPreset) bNewPreset = true;
+//			if (!MODE_NewPreset) bNewPreset = true;
 //
 //			textInput_New = colorBrowser.colors_PantoneNames[last_ColorPicked_Lib] + "_";
 //

@@ -177,6 +177,7 @@ private:
 
 	//-
 
+	bool bTextInputActive = false;
 
 private:
 	std::string path_Global;
@@ -547,6 +548,8 @@ private:
 	float widgetFactor = 0.9;
 	ofxImGui::Settings mainSettings = ofxImGui::Settings();
 
+	bool bCheckMouseOverTextInput = true;//to return mouse over any gui panel or over text input only!
+
 	bool gui_Draw();
 	void gui_Palette();
 	void gui_Theory();
@@ -771,7 +774,7 @@ private:
 
 private:
 	ofParameter<bool> bNewPreset{ "New Preset", false };
-	bool MODE_newPreset = false;
+	bool MODE_NewPreset = false;
 	std::string textInput_New = "new preset";
 	bool focus_1;
 	int has_focus = 0;
