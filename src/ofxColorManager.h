@@ -775,6 +775,7 @@ private:
 	bool focus_1;
 	int has_focus = 0;
 	char tab[128];
+	void refresh_RearrengeFiles();
 
 	//-
 
