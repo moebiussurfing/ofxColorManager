@@ -308,7 +308,7 @@ void ofxColorManager::setup()
 	SATURATION.set("SATURATION", 200, 0, 255);
 	BRIGHTNESS.set("BRIGHTNESS", 200, 0, 255);
 
-	bAuto_TheoryToPalette.set("Auto Build Palette", false);
+	bAuto_TheoryToPalette.set("Auto Build Palette", true);
 
 	numColors_Alg.set("Amnt Colors Alg", 6, 2, MAX_PALETTE_COLORS);
 
@@ -669,7 +669,7 @@ void ofxColorManager::setup()
 	params_Palette2.add(bResponsive_Presets);
 	params_Palette2.add(boxRowsUser);
 	params_Palette2.add(bPaletteEdit);
-	params_Palette2.add(bAuto_TheoryToPalette);
+	//params_Palette2.add(bAuto_TheoryToPalette);
 	params_AppState.add(params_Palette2);
 
 	//---
@@ -1003,9 +1003,9 @@ void ofxColorManager::update(ofEventArgs & args)
 			{
 				palette_clear();
 
-#ifdef USE_RECTANGLE_INTERFACES
+//#ifdef USE_RECTANGLE_INTERFACES
 				palette_FromTheory(SELECTED_palette_LAST);//trig last choice
-#endif
+//#endif
 			}
 		}
 #endif
@@ -1876,9 +1876,12 @@ void ofxColorManager::gui_Theory()
 		ImGui::Dummy(ImVec2(0, 5));
 
 		//ImGui::SameLine();
-
-		ofxImGui::AddParameter(bAuto_TheoryFromPicker);
-		ofxImGui::AddParameter(bAuto_TheoryToPalette);
+		
+		if (ImGui::CollapsingHeader("Advanced"))
+		{
+			ofxImGui::AddParameter(bAuto_TheoryFromPicker);
+			ofxImGui::AddParameter(bAuto_TheoryToPalette);
+		}
 
 		// amount colors
 		//if (ofxImGui::AddParameter(numColors_TheoryEngines))
@@ -3386,7 +3389,7 @@ void ofxColorManager::gui_Curve()
 
 		//-
 
-		if (ImGui::CollapsingHeader("ADVANCED", _flagw))
+		if (ImGui::CollapsingHeader("Advanced", _flagw))
 		{
 			// ctrl in/out
 			ImGui::PushItemWidth(_w * 0.8);
@@ -4960,7 +4963,7 @@ void ofxColorManager::draw_Mini()
 		ofTranslate(_pos);
 
 		//1. bg
-		int _hBg = 21;
+		int _hBg = 22;
 		_rBg = ofRectangle(0, _w, palette.size() * _size, _hBg);
 		ofFill();
 		ofSetColor(color_BackGround.get());
