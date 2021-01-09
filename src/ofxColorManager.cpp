@@ -1810,14 +1810,6 @@ void ofxColorManager::gui_Theory()
 		{
 		}
 
-		//auto tmpRefi = numColors_TheoryEngines.get();
-		//const ImU32 u32_one = 1;
-		//static bool inputs_step = true;
-		//if (ImGui::InputScalar("input u32", ImGuiDataType_U32, (int *)&tmpRefi, inputs_step ? &u32_one : NULL, NULL, "%u"))
-		//{
-		//	tmpRefi = ofClamp(tmpRefi, numColors_TheoryEngines.getMin(), numColors_TheoryEngines.getMax());
-		//	numColors_TheoryEngines.set(tmpRefi);
-		//}
 
 		//if (ImGui::InputInt(numColors_Theory.getName().c_str(), (int*)&numColors_Theory.get(), 1, 5))
 		//if (ofxImGui::AddParameter(numColors_Theory))
