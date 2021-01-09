@@ -831,7 +831,7 @@ void ofxColorManager::update(ofEventArgs & args)
 
 	//myPresetManager.update();
 
-	//--
+	//----
 
 	// ofxGuiPanelsLayout
 
@@ -839,71 +839,71 @@ void ofxColorManager::update(ofEventArgs & args)
 	panels.update();
 #endif
 
-	//--
+	//----
 
 	// DEMO
-
-	if (DEMO_Test) myDEMO.update();
-
-	if (DEMO_Test && DEMO_Auto)
-		if ((ofGetElapsedTimeMillis() - Demo_Timer) > MAX(Demo_Timer_Max * (1 - DEMO_Timer), 10))
-		{
-			Demo_Timer = ofGetElapsedTimeMillis();
-
-			myDEMO.start();
-		}
-
-	//--
-
-	// TEST CURVE
-
-	int frameBuffer = (int)ofMap(TEST_Speed, 0., 1., TEST_maxFrames, 30);
-	int frameCurrent = ofGetFrameNum() % frameBuffer;//0 to maxFrames
-
-	if (TEST_Mode)
 	{
-		if (!bTEST_pause)
-		{
-			framePrc = ofMap(frameCurrent, 0, frameBuffer, 0., 1.);
-			float control;
-			if (!TEST_LFO_Mode) control = ofClamp(framePrc, 0., 1.);
-			else
+		if (DEMO_Test) myDEMO.update();
+
+		if (DEMO_Test && DEMO_Auto)
+			if ((ofGetElapsedTimeMillis() - Demo_Timer) > MAX(Demo_Timer_Max * (1 - DEMO_Timer), 10))
 			{
-				float mySin = std::sin(PI * framePrc);
-				control = ofClamp(mySin, 0., 1.);
+				Demo_Timer = ofGetElapsedTimeMillis();
+
+				myDEMO.start();
 			}
-			if (TEST_toBackground) color_BackGround.set(getColorAtPercent(control));
-
-			setControl(control);
-		}
-
-		if (frameCurrent == frameBuffer - 1)
-		{
-			bTEST_pause = !bTEST_pause;
-
-			//round end position to clamp
-			float control;
-			if (!TEST_LFO_Mode)
-			{
-				control = 1.;
-				framePrc = 1.;
-			}
-			else
-			{
-				control = 0.;
-				framePrc = 1.;
-			}
-			if (TEST_toBackground) color_BackGround.set(getColorAtPercent(control));
-
-			setControl(control);
-		}
 	}
+	//----
+	{
+		// TEST CURVE
 
-	//--
+		int frameBuffer = (int)ofMap(TEST_Speed, 0., 1., TEST_maxFrames, 30);
+		int frameCurrent = ofGetFrameNum() % frameBuffer;//0 to maxFrames
 
-	update_Curve();
+		if (TEST_Mode)
+		{
+			if (!bTEST_pause)
+			{
+				framePrc = ofMap(frameCurrent, 0, frameBuffer, 0., 1.);
+				float control;
+				if (!TEST_LFO_Mode) control = ofClamp(framePrc, 0., 1.);
+				else
+				{
+					float mySin = std::sin(PI * framePrc);
+					control = ofClamp(mySin, 0., 1.);
+				}
+				if (TEST_toBackground) color_BackGround.set(getColorAtPercent(control));
 
-	//--
+				setControl(control);
+			}
+
+			if (frameCurrent == frameBuffer - 1)
+			{
+				bTEST_pause = !bTEST_pause;
+
+				//round end position to clamp
+				float control;
+				if (!TEST_LFO_Mode)
+				{
+					control = 1.;
+					framePrc = 1.;
+				}
+				else
+				{
+					control = 0.;
+					framePrc = 1.;
+				}
+				if (TEST_toBackground) color_BackGround.set(getColorAtPercent(control));
+
+				setControl(control);
+			}
+		}
+
+		//--
+
+		update_Curve();
+	}
+	//----
 
 	// colour lovers
 
@@ -916,12 +916,11 @@ void ofxColorManager::update(ofEventArgs & args)
 	if (bUpdated_Palette_BACK)
 	{
 		bUpdated_Palette_BACK = false;
-		ofLogNotice(__FUNCTION__) << "  >  bUpdated_Palette_BACK: " << bUpdated_Palette_BACK;
+
+		ofLogNotice(__FUNCTION__) << "  >  bUpdated_Palette_BACK : " << bUpdated_Palette_BACK;
 
 		// TODO: WORKFLOW: if mode is palette&color should load first palette color
 		// and forget the clicked color
-
-
 
 		//-
 
@@ -947,7 +946,6 @@ void ofxColorManager::update(ofEventArgs & args)
 		// presets
 
 		if (!bNewPreset) bNewPreset = true;
-		//if (!MODE_NewPreset) bNewPreset = true;
 		textInput_New = myPalette_Name;
 
 		//-
@@ -967,16 +965,17 @@ void ofxColorManager::update(ofEventArgs & args)
 		//}
 	}
 
-	//-
+	//----
 
 	// 2. color pick from palette clicked
 
 	if (bUpdated_Color_BACK)
 	{
 		bUpdated_Color_BACK = false;
-		ofLogWarning(__FUNCTION__) << "bUpdated_Color_BACK: " << bUpdated_Color_BACK;
+		ofLogWarning(__FUNCTION__) << "  >  bUpdated_Color_BACK : " << bUpdated_Color_BACK;
 
-		// WORKFLOW: 
+		// workflow: 
+
 		//TODO: disable to avoid overwrite the selected color into the palette just created
 		if (colourLoversHelper.MODE_PickPalette_BACK && colourLoversHelper.MODE_PickColor_BACK)
 		{
@@ -1001,6 +1000,7 @@ void ofxColorManager::update(ofEventArgs & args)
 			}
 		}
 
+		// presets
 		if (!bNewPreset) bNewPreset = true;
 
 		// DEMO
@@ -1015,7 +1015,7 @@ void ofxColorManager::update(ofEventArgs & args)
 
 	if (SELECTED_palette != SELECTED_palette_PRE)
 	{
-		ofLogNotice(__FUNCTION__) << "CHANGED SELECTED_palette: " << SELECTED_palette;
+		ofLogNotice(__FUNCTION__) << "  >  SELECTED_palette ! : " << SELECTED_palette;
 
 		// WORKFLOW: when a label palette is clicked, will always trig
 		// and load the palette into the user palette
@@ -1051,30 +1051,36 @@ void ofxColorManager::update(ofEventArgs & args)
 	// 3. color clicked
 	if (color_Clicked2 != color_Clicked2_PRE && SHOW_ColourLovers)
 	{
-		ofLogNotice(__FUNCTION__) << "Changed color_Clicked2";
+		ofLogNotice(__FUNCTION__) << "  >  color_Clicked2 !";
 		color_Clicked2_PRE = color_Clicked2;
 		color_Picked.set(color_Clicked2);
 	}
 
-	//-
+	//---
 
 	// 4. set the local scope color pointer that is into ofxColorBrowser that whill be used as color picked too
 
 	if (color_BACK != color_BACK_PRE)
 	{
 		color_BACK_PRE = color_BACK;
-		ofLogNotice(__FUNCTION__) << "Changed color_BACK pointer";
+
+		ofLogNotice(__FUNCTION__) << "  >  color_BACK ! ";
+		//ofLogNotice(__FUNCTION__) << "Changed color_BACK pointer";
+
 		color_Picked.set(color_BACK);
 
-		if (!bPaletteEdit)
+		//if (!bPaletteEdit)
 		{
 			if (bAuto_TheoryToPalette)
 			{
 				refresh_TheoryEngine();
 
-//#ifdef USE_RECTANGLE_INTERFACES
-				palette_FromTheory(SELECTED_palette_LAST);//trig last choice
-//#endif
+				//palette_FromTheory(SELECTED_palette_LAST);//trig last choice
+				//if (SHOW_Theory) palette_FromTheory(SELECTED_palette_LAST);
+
+				if (SHOW_Theory) palette_FromTheory(last_Index_Theory);
+
+				if (SHOW_Range) palette_FromRange();
 			}
 		}
 	}
@@ -3156,6 +3162,7 @@ void ofxColorManager::gui_Range()
 
 			// autogenerate
 
+			ofxImGui::AddParameter(bAuto_TheoryToPalette);
 			ofxImGui::AddParameter(autoGenerate_Range);
 
 			if (autoGenerate_Range && bChanged)
@@ -4993,7 +5000,7 @@ void ofxColorManager::palette_removeColor(int c)
 			auto b = a->getName();
 			scene->removeChild(a, false);
 			ofLogNotice(__FUNCTION__) << "removed children: " << b;
-	}
+		}
 		btns_palette.clear();
 #endif
 
@@ -5010,7 +5017,7 @@ void ofxColorManager::palette_removeColor(int c)
 
 		// 5. make positions & resizes to fill bar
 		palette_rearrenge();
-}
+	}
 }
 
 
@@ -5064,6 +5071,21 @@ void ofxColorManager::Changed_ColorPicked(ofFloatColor &c)
 	if (color_TARGET != nullptr)
 	{
 		color_TARGET->set(c);
+	}
+
+	//--
+
+	//TODO:
+	if (bAuto_TheoryToPalette)
+	{
+		refresh_TheoryEngine();
+
+		//palette_FromTheory(SELECTED_palette_LAST);//trig last choice
+		//if (SHOW_Theory) palette_FromTheory(SELECTED_palette_LAST);
+
+		if (SHOW_Theory) palette_FromTheory(last_Index_Theory);
+
+		if (SHOW_Range) palette_FromRange();
 	}
 }
 
@@ -5655,7 +5677,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 				// 2. set last button from current added color
 				btns_palette[palette_colorSelected]->setSelected(true);//sets border only
 				ofLogNotice(__FUNCTION__) << "user palette selected last _c: " << palette_colorSelected;
-		}
+			}
 		}
 #endif
 	}
@@ -5698,9 +5720,9 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 			// autoload color on picker
 			color_Picked = palette[palette_colorSelected];
-	}
+		}
 #endif
-}
+	}
 
 	else if (name == bRemoveColor.getName())
 	{
@@ -5948,12 +5970,12 @@ void ofxColorManager::palette_FromQuantizer()
 	auto p = colorQuantizer.getPalette();
 
 	palette_clear();
+
 	for (int j = 0; j < p.size(); j++)
 	{
 		ofColor c = p[j];
 		palette_addColor(c);
-
-		ofLogNotice(__FUNCTION__) << "[" << last_Index_Range << "][" << j << "] > " << ofToString(c);
+		ofLogNotice(__FUNCTION__) << "[" << j << "] > " << ofToString(c);
 	}
 
 	//--
@@ -5975,6 +5997,7 @@ void ofxColorManager::palette_FromQuantizer()
 				b = ofClamp(b, 0.0, 1.0);
 				c.setBrightness(b);
 			}
+
 			color_BackGround.set(c);
 		}
 	}
@@ -5991,6 +6014,7 @@ void ofxColorManager::palette_FromRange()
 	int ed = st + numColors_Range.get();
 
 	palette_clear();
+
 	for (int j = st; j < ed; j++)
 	{
 		ofColor c = palette_Range[j];
@@ -6751,8 +6775,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//
 		//    else if (key == OF_KEY_RETURN)
 		//        colorBrowser.switch_sorted_Type();
-		}
 	}
+}
 
 //--------------------------------------------------------------
 void ofxColorManager::keyReleased(ofKeyEventArgs &eventArgs)
@@ -7199,7 +7223,7 @@ void ofxColorManager::refresh_Picker_Touched()
 			// 3. update gradient
 			if (palette_colorSelected < gradient.getNumColors())
 				gradient.replaceColorAtIndex(palette_colorSelected, color_Clicked2);
-	}
+		}
 #endif
 		//--
 
@@ -7238,7 +7262,7 @@ void ofxColorManager::refresh_Picker_Touched()
 		//// palettes
 		////color_TheoryBase.set(color_Picked.get());
 		//update_Theory();
-}
+	}
 }
 
 //----
