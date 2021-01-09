@@ -251,6 +251,7 @@ public:
 	void generate_Range(ofColor col1, ofColor col2);
 	bool bRange_Intitiated = false;
 	void refresh_Range_AutoUpdate();
+	void palette_FromRange();
 
 private:
 	ofParameter<ofColor> color_1_Range;
@@ -655,8 +656,10 @@ private:
 	void palette_addColor_toInterface(ofColor c);
 	void palette_rearrenge();//resize boxes when adding removing colors to user palette
 	void palette_touchedColor(std::string name);
+
 	void palette_FromTheory(int p);
-	void palette_load_FromColourLovers();
+	void palette_FromColourLovers();
+	void palette_FromQuantizer();
 
 	//----
 
