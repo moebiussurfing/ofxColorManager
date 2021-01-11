@@ -97,14 +97,17 @@ bool PresetPalette::preset_load(std::string p)
 }
 
 //--------------------------------------------------------------
-void PresetPalette::preset_save(std::string p)
+void PresetPalette::preset_save(std::string p, bool absolutePath)
 {
 	ofLogNotice(__FUNCTION__) << p;
-	std::string path = path_Presets + p + ".json";
+	std::string path;
+	
+	if(!absolutePath) path = path_Presets + p + ".json";
+	else path = p + ".json";
 
-	presetData.background = color_BACK;
 	//presetData.background = (*background_BACK);
-
+	
+	presetData.background = color_BACK;
 	presetData.name = (*name_BACK);
 	presetData.curveName = (*curveName_BACK);
 	presetData.palette = (*palette_BACK);

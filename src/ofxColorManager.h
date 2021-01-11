@@ -207,7 +207,6 @@ private:
 	std::string path_Layout;
 	std::string path_Curves_Lut;
 	std::string path_Curve_Preset;
-	std::string path_Folder_Color;
 	std::string path_Colors;
 	std::string path_AppState;
 	std::string path_Presets;
@@ -289,7 +288,11 @@ private:
 public:
 
 	//live reload colors file
+	ofParameterGroup params_ExportColors;
 	void saveColors();
+	ofParameter<bool> bAutoExportPreset;
+	ofParameter<bool> bExportPreset_DefaultPath;
+	ofParameter <std::string> path_Folder_Color;
 
 private:
 	//TODO

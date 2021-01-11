@@ -33,7 +33,7 @@ ofxColorManager::ofxColorManager()
 	path_Curve_Preset = path_Folder_Curves + "myCurve.xml";
 
 	path_Folder_Color = path_Global + "colors/";
-	path_Colors = path_Folder_Color + "liveColors.json";
+	path_Colors = path_Folder_Color.get() + "liveColors.json";
 	ofxSurfingHelpers::CheckFolder(path_Global);
 
 	path_AppState = path_Global + "ofxColorManager_Settings.xml";
@@ -189,7 +189,7 @@ void ofxColorManager::setup()
 	//----
 
 	// pointers back
-
+	//TODO:
 	colourLoversHelper.setColor_BACK(myColor);
 	colourLoversHelper.setColor_BACK_Refresh(bUpdated_Color_BACK);
 	colourLoversHelper.setPalette_BACK(myPalette);
@@ -419,6 +419,10 @@ void ofxColorManager::setup()
 	SHOW_Range.set("RANGE", true);
 	SHOW_Panels.set("PANELS", true);
 	SHOW_Demo.set("DEMO", false);
+	
+	bAutoExportPreset.set("Auto Export", false);
+	bExportPreset_DefaultPath.set("bin/data", true);
+	path_Folder_Color.set("ExportPath", "");
 
 	//-
 
@@ -590,6 +594,14 @@ void ofxColorManager::setup()
 	params_AppState.add(AppMode);
 	params_AppState.add(SHOW_Scene);
 
+	// export colors
+	params_ExportColors.setName("ExportColors");
+	params_ExportColors.add(bAutoExportPreset);
+	params_ExportColors.add(bExportPreset_DefaultPath);
+	params_ExportColors.add(path_Folder_Color);
+	params_AppState.add(params_ExportColors);
+
+	// amount colors
 	params_AppState.add(numColors_TheoryEngines);
 	//params_AppState.add(numColors_Range);
 	//params_AppState.add(numColors_Alg);
@@ -631,6 +643,7 @@ void ofxColorManager::setup()
 	params_Demo.add(DEMO_Cam);
 	params_AppState.add(params_Demo);
 
+	//TODO: must included/linked as presets
 	//hide
 	params_Gradient.add(curve_Gradient_InExp);
 	params_Gradient.add(curve_Gradient_OutPick);
@@ -2997,7 +3010,7 @@ void ofxColorManager::gui_Panels()
 	flags = ImGuiWindowFlags_None;
 	
 	//static bool auto_resize = true;
-	//flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : 0;
+	//flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : 0;//TODO: not working for my toggles
 
 	//static bool bResize = false;
 	//if (!bResize) {
@@ -3016,7 +3029,7 @@ void ofxColorManager::gui_Panels()
 
 	//----
 
-	if (ofxImGui::BeginWindow("PANELS", mainSettings, flags))
+	if (ofxImGui::BeginWindow("MAIN PANEL", mainSettings, flags))
 	{
 		//ImGui::Columns(1);
 
@@ -3064,6 +3077,24 @@ void ofxColorManager::gui_Panels()
 
 		//ImGui::Separator();
 		ImGui::Dummy(ImVec2(0, 10));
+
+		if (ImGui::CollapsingHeader("Live Export"))
+		{
+			if (ImGui::Button("Export"))
+			{
+				saveColors();
+			}
+			ofxImGui::AddParameter(bAutoExportPreset);
+			ofxImGui::AddParameter(bExportPreset_DefaultPath);
+			if (ImGui::Button("Set Path")) 
+			{
+				//TODO: prompt
+				bExportPreset_DefaultPath = false;
+				path_Folder_Color = "";
+				path_Colors = path_Folder_Color.get() + "liveColors.json";
+			}
+			ImGui::Text(path_Folder_Color.get().c_str());
+		}
 
 		//ImGui::Separator();
 		//ImGui::Dummy(ImVec2(0, 10));
@@ -3887,12 +3918,12 @@ void ofxColorManager::gui_Presets()
 		{
 			ofLogNotice(__FUNCTION__) << "UPDATE";
 
-			PRESET_name = textInput_temp;
+			//PRESET_name = textInput_temp;
 
 			ofLogNotice(__FUNCTION__) << "PRESET_name: " << PRESET_name;
 
 			//delete old file
-			files[preset_Index].remove();
+			//files[preset_Index].remove();
 
 			//save new one
 			preset_save(PRESET_name);
@@ -7216,11 +7247,11 @@ void ofxColorManager::preset_load(std::string p)
 			palette_addColor(p[i]);
 		}
 
+		color_BackGround = ofColor(palette_TEMP.getBackground());//get directly without pointing
+		////palette_TEMP.setBackgroundColor(color_BackGround);//error ofParameter
+	
 		//--
 
-		////TODO:
-		////palette_TEMP.setBackgroundColor(color_BackGround);//error ofParameter
-		//color_BackGround = ofColor(palette_TEMP.getBackground());//get directly without pointing
 
 		////TODO
 		//// curve & gradient
@@ -7237,11 +7268,12 @@ void ofxColorManager::preset_load(std::string p)
 		//--
 
 		//workflow
-		//if (bAutoExportPreset)
-		//{
-		//	ofLogNotice(__FUNCTION__) << "EXPORT";
-		//	saveColors();
-		//}
+
+		if (bAutoExportPreset)
+		{
+			ofLogNotice(__FUNCTION__) << "EXPORT";
+			saveColors();
+		}
 	}
 }
 
@@ -7663,10 +7695,17 @@ void ofxColorManager::saveColors()
 	ofxSurfingHelpers::CheckFolder(path_Folder_Color);
 	ofLogNotice(__FUNCTION__) << "path: " << path_Colors;
 
+	// A. save palette colors only
 	//ofxSerializer
 	ofJson j = palette;
 	ofSavePrettyJson(path_Colors, j);
 	ofLogNotice(__FUNCTION__) << "\n" << ofToString(j);
+
+	// B. save full preset
+	//TODO:
+	//should save colors + bakground too + gradient! = preset
+	palette_TEMP.preset_save(path_Folder_Color, true);
+	//preset_save(path_Folder_Color, true);
 }
 
 //--------------------------------------------------------------

@@ -101,7 +101,7 @@ public:
 	// preset (colors, gradient, curve)
 	PresetData presetData;//bundle preset: palette+curve+gradient+background
 
-	void preset_save(std::string p);
+	void preset_save(std::string p, bool absolutePath = false);
 	bool preset_load(std::string p);
 
 	PaletteData preset_LoadPalette(std::string name);//TODO: not elegant..
