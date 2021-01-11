@@ -3,6 +3,8 @@
 
 #include "ofxColorManager.h"
 
+#include "ofxGui.h"
+
 class ofApp: public ofBaseApp{
 
 public:
@@ -14,9 +16,13 @@ public:
 
     ofxColorManager colorManager;
 
-    // local palette and color (target pointers)
+    // local palette and color 
+	// as target registered pointers
     vector<ofColor> palette;
     ofColor color;
 
-	void drawTest();
+	ofxPanel gui;
+	ofParameter<bool> bScene{ "Show Scene", false };
+
+	void drawTest();// test scene
 };

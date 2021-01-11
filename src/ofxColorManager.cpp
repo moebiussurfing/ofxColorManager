@@ -377,6 +377,9 @@ void ofxColorManager::setup()
 	bRemoveColor.set("REMOVE COLOR", false);
 	bClearPalette.set("CLEAR PALETTE", false);
 
+	SHOW_Scene.set("SCENE", true);
+	//SHOW_Scene.setSerializable(false);
+
 	//-
 
 	// panels
@@ -585,6 +588,7 @@ void ofxColorManager::setup()
 	params_AppState.setName("ofxColorManager");
 	params_AppState.add(preset_Index);
 	params_AppState.add(AppMode);
+	params_AppState.add(SHOW_Scene);
 
 	params_AppState.add(numColors_TheoryEngines);
 	//params_AppState.add(numColors_Range);
@@ -605,7 +609,7 @@ void ofxColorManager::setup()
 	params_Panels.add(SHOW_AlgoPalettes);
 	params_Panels.add(SHOW_Curve);
 	params_Panels.add(SHOW_BrowserColors);
-	params_Panels.add(SHOW_GuiInternal);
+	params_Panels.add(SHOW_Gui_Internal);
 	params_Panels.add(SHOW_MINI_Preview);
 	params_Panels.add(SHOW_Kit);
 	params_Panels.add(AutoScroll);
@@ -1331,58 +1335,62 @@ void ofxColorManager::draw()
 void ofxColorManager::draw(ofEventArgs & args)
 #endif
 {
-	// background
 
-	if (background_Draw_ENABLE)
+	if (SHOW_Scene)
 	{
-		if (color_BackGround_AutoSet.get())// && SHOW_Curve.get()) 
+		// background
+
+		if (background_Draw_ENABLE)
 		{
-			ofClear(colCurveTest);
+			if (color_BackGround_AutoSet.get())// && SHOW_Curve.get()) 
+			{
+				ofClear(colCurveTest);
 
-			//workflow
-			color_BackGround.set(colCurveTest);
+				//workflow
+				color_BackGround.set(colCurveTest);
+			}
+			else
+			{
+				ofClear(ofColor(color_BackGround.get()));
+			}
 		}
-		else
-		{
-			ofClear(ofColor(color_BackGround.get()));
-		}
-	}
 
-	//--
-
-	//// cosine gradient
-	//if (SHOW_CosineGradient)
-	//{
-	//    mCosineGradient.render(glm::vec2(0), ofGetWidth(), ofGetHeight());
-	//}
-
-	//--
-
-	// presets
-
-	//if (SHOW_Presets)
-	//{
-	//	myPresetManager.draw();
-	//	//palette_TEMP.draw();
-	//}
-
-	//--
-
-	// DEMO
-	if (DEMO_Test) myDEMO.draw(DEMO_Alpha);
-
-	//--
-
-	if (SHOW_ImGui)
-	{
-		// quantizer
-
-#ifdef USE_IMAGE_QUANTIZER
-		if (SHOW_Quantizer) colorQuantizer.draw();
-#endif
 		//--
 
-		draw_Info();
+		//// cosine gradient
+		//if (SHOW_CosineGradient)
+		//{
+		//    mCosineGradient.render(glm::vec2(0), ofGetWidth(), ofGetHeight());
+		//}
+
+		//--
+
+		// presets
+
+		//if (SHOW_Presets)
+		//{
+		//	myPresetManager.draw();
+		//	//palette_TEMP.draw();
+		//}
+
+		//--
+
+		// DEMO
+		if (DEMO_Test) myDEMO.draw(DEMO_Alpha);
+
+		//--
+
+		if (SHOW_ImGui)
+		{
+			// quantizer
+
+#ifdef USE_IMAGE_QUANTIZER
+			if (SHOW_Quantizer) colorQuantizer.draw();
+#endif
+			//--
+
+			draw_Info();
+		}
 	}
 
 	//--
@@ -1396,12 +1404,12 @@ void ofxColorManager::draw(ofEventArgs & args)
 	// ofxGuiPanelsLayout
 
 #ifdef INCL_LAYOUT
-	if (SHOW_GuiInternal) panels.draw();
+	if (SHOW_Gui_Internal) panels.draw();
 #endif
 
 	//--
 
-	// GUI
+	// gui
 
 	if (SHOW_ImGui)
 	{
@@ -1433,7 +1441,8 @@ void ofxColorManager::draw(ofEventArgs & args)
 	//----
 
 	// 1. help info
-	if (ENABLE_HelpInfo) {
+	if (ENABLE_HelpInfo) 
+	{
 		std::string str = infoHelp;
 		ofPushMatrix();
 		{
@@ -3001,7 +3010,7 @@ void ofxColorManager::gui_Panels()
 		ofxImGui::AddParameter(SHOW_Presets);
 
 #ifdef INCL_LAYOUT
-		ofxImGui::AddParameter(SHOW_GuiInternal);
+		ofxImGui::AddParameter(SHOW_Gui_Internal);
 #endif
 
 		//ImGui::Separator();
@@ -4921,7 +4930,7 @@ void ofxColorManager::draw_MiniPreview()
 
 		ofTranslate(_pos);
 
-		ofDrawBitmapStringHighlight("MiniPreview : " + PRESET_name, glm::vec2(4, - 5), ofColor::black, ofColor::white);
+		ofDrawBitmapStringHighlight("Mini Preview: " + PRESET_name, glm::vec2(4, -5), ofColor::black, ofColor::white);
 
 
 		//1. bg
@@ -6517,7 +6526,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 		else if (key == 'G')
 		{
-			SHOW_GuiInternal = !SHOW_GuiInternal;
+			SHOW_Gui_Internal = !SHOW_Gui_Internal;
 		}
 
 		//else if (key == 'g') {
@@ -7291,6 +7300,39 @@ void ofxColorManager::setControl(float control)
 
 		curve_Slider_InExp.setPercent(control);
 	}
+}
+
+//--------------------------------------------------------------
+std::string ofxColorManager::getPaletteName() {
+	return PRESET_name;
+}
+
+//--------------------------------------------------------------
+ofColor ofxColorManager::getColor(int index)
+{
+	ofLogNotice(__FUNCTION__) << index;
+
+	ofColor c;
+	if (index == -1) c = ofColor(0, 255);
+	else
+	{
+		if (index < palette.size()) 
+		{
+			c = palette[index];
+		}
+		else if (palette.size() > 0)
+		{
+			c = palette[0];
+			ofLogError(__FUNCTION__) << "Index out of palette size. Get first color";
+		}
+		else {
+			c = ofColor(0, 255);
+			ofLogError(__FUNCTION__) << "No colors on palette: Empty! Return black";
+		}
+	}
+
+	ofLogNotice(__FUNCTION__) << ofToString(c);
+	return c;
 }
 
 //--------------------------------------------------------------

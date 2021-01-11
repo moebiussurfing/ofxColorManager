@@ -162,6 +162,11 @@ private:
 
 	std::string infoHelp;//key commands
 
+public:
+	ofParameter<bool> SHOW_MINI_Preview;
+	ofParameter<bool> SHOW_ALL_GUI;
+	ofParameter<bool> SHOW_Scene;
+
 private:
 	ofParameter<bool> SHOW_ColourLovers;
 	ofParameter<bool> SHOW_ColourLovers_searcher;
@@ -169,8 +174,6 @@ private:
 	ofParameter<bool> SHOW_BrowserColors;
 	ofParameter<bool> SHOW_Gradient;
 	ofParameter<bool> SHOW_Curve;
-	ofParameter<bool> SHOW_ALL_GUI;
-	ofParameter<bool> SHOW_MINI_Preview;
 	ofParameter<bool> SHOW_debugText;
 	ofParameter<bool> SHOW_Panels;
 	ofParameter<bool> SHOW_Presets;
@@ -382,13 +385,18 @@ private:
 	//--
 
 	// ofxGuiPanelsLayout
-private:
 
 #ifdef INCL_LAYOUT
+private:
 	ofxGuiPanelsLayout panels;
 #endif
 
-	ofParameter<bool> SHOW_GuiInternal{ "GUI INTERNAL", false };
+public:
+#ifdef INCL_LAYOUT
+	ofParameter<bool> SHOW_Gui_Internal{ "GUI", false };
+#endif
+
+private:
 	ofParameter<bool> SHOW_ImGui{ "ImGui", true };
 	ofParameter<bool> ENABLE_HelpInfo;// { "HELP INFO", false };
 
@@ -473,7 +481,12 @@ public:
 	// API
 public:
 	vector<ofColor> getPalette();
-	ofColor getColorAtPercent(float control);
+	std::string getPaletteName();
+	ofColor getColor(int index = -1);
+
+	ofColor getColorAtPercent(float control);//from gradient
+
+public:
 	void setControl(float control);
 	void setVisible(bool b);
 	void setToggleVisible();

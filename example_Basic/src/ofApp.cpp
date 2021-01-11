@@ -4,22 +4,31 @@
 void ofApp::setup()
 {
 	ofEnableAlphaBlending();
-
-	//window
-	float fps = 60.0f;
-	ofSetFrameRate(fps);
+	ofSetFrameRate(60);
 
 	colorManager.setup();
 
 	colorManager.setColor_TARGET(color); // we subscribe to the color to be autoupdated (by reference from color picker)
 	palette = colorManager.getPalette(); // get current default palette. Press TAB key to refresh!
+
+	//--
+
+	gui.setup("ofApp");
+	gui.add(bScene);
+	gui.add(colorManager.SHOW_Scene);
+	gui.add(colorManager.SHOW_ALL_GUI);
+	gui.add(colorManager.SHOW_MINI_Preview);
+	gui.setPosition(500, 500);
 }
 
 //--------------------------------------------------------------
 void ofApp::draw()
 {
-	//drawTest();
+	if (bScene) drawTest();
+
 	//colorManager.draw_MiniPreview();// internal palette preview
+
+	gui.draw();
 }
 
 //--------------------------------------------------------------
@@ -32,11 +41,15 @@ void ofApp::drawTest()
 		int sz = 70;
 		ofTranslate(10, 10);
 		ofFill();
-		ofSetColor(color);
+		
+		ofSetColor(color);// the picker color
+
 		ofDrawRectangle(0, 0, sz, sz);
 		ofTranslate(0, sz);
 		for (auto p : palette) {
-			ofSetColor(p);
+		
+			ofSetColor(p);// the palette colors
+			
 			ofDrawRectangle(0, 0, sz, sz);
 			ofTranslate(sz, 0);
 		}
