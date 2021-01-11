@@ -1,8 +1,9 @@
-ofxAddonTemplateCustomApp
-=============================
+ofxColorManager 
+-------------------
 
 # Overview
-**ofxAddonTemplateCustomApp** is an **openFrameworks** addon template for MYSELF.
+
+**ofxColorManager** is an **openFrameworks** addon as palettes manager with many algorithmic palettes, curved gradients and user presets kit handler.
 
 ## Screenshot
 ![image](/readme_images/Capture.PNG?raw=true "image")
@@ -39,7 +40,17 @@ ofApp::draw(){
 ```
 
 ## Dependencies
-- 
+* ofxGui
+* ofxOpenCv
+* ofxPoco
+* ofxXmlSettings
+* [ofxSurfingHelpers](https://github.com/moebiussurfing/ofxSurfingHelpers)  
+
+Already packed into ```/libs```. No need to add:  
+* [ofxColorQuantizerHelper](https://github.com/moebiussurfing/ofxColorQuantizerHelper)
+* [ofxColorsBrowser](https://github.com/moebiussurfing/ofxColorsBrowser)
+* [ofxColourLoversHelper](https://github.com/moebiussurfing/ofxColourLoversHelper)
+
 
 ## Tested systems
 - **Windows10** / **VS2017** / **OF ~0.11**

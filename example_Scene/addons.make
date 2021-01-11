@@ -1,0 +1,14 @@
+ofxCereal
+ofxColorManager
+ofxColorQuantizerHelper
+ofxColorsBrowser
+ofxColourLoversHelper
+ofxGui
+ofxImGui
+ofxMouseRuler
+ofxOpenCv
+ofxPoco
+ofxSuperLog
+ofxSurfingHelpers
+ofxWindowApp
+ofxXmlSettings

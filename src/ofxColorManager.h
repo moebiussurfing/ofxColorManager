@@ -79,6 +79,7 @@ using namespace ofxColorTheory;
 #endif
 
 #include "ofxUndoSimple.h"
+
 #include "ofxMouseRuler.h"
 
 #ifdef INCL_LAYOUT

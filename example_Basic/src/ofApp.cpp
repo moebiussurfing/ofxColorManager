@@ -7,13 +7,7 @@ void ofApp::setup()
 
 	//window
 	float fps = 60.0f;
-#ifdef USE_OFX_WINDOW_APP
-	WindowApp.setFrameRate(fps);
-	WindowApp.setVerticalSync(true);
-	WindowApp.setPositionDebugInfo(ofxWindowApp::DEBUG_POSITION_TOP);
-#else
 	ofSetFrameRate(fps);
-#endif
 
 	colorManager.setup();
 

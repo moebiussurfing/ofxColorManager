@@ -1,3 +1,15 @@
+**NOTE** from *@moebiussurfing*:  
+
+There's several **ofxImGui** forks.  
+This fork is currently based into:  
+https://github.com/MacFurax/ofxImGui/tree/docking  
+My plans are to jump to this (recommended) new fork from *@Daandelange* soon:  
+https://github.com/Daandelange/ofxImGui
+
+
+------------------------------
+
+
 # I have added
 ## Docking (in docking branch)
 

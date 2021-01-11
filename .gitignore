@@ -5,6 +5,7 @@
 ##-------------------------------
 
 ## can exclude some sttings files
+ignore.ps1
 
 #*.XML
 #*.xml
