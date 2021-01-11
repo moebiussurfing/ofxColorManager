@@ -4942,27 +4942,27 @@ void ofxColorManager::draw_MiniPreview()
 	ofPushMatrix();
 	ofPushStyle();
 	{
-		int _x = 20;
-		int _y = 20;
+		int _x = 30;
+		int _y = 30;
 		glm::vec2 _pos;
 
-		int _sz = 60;
-		int _p = 0;//pad
+		int _sz = 60;//size boxes
+		int _p = 3;//pad between colors
 		int _sz2 = _sz + _p;
-		int _pad = 30;
+		int _pad = 35;
+		int _pad2 = 35;
 		int _hBg = 15;
 		float _round = 5;
-		ofColor _cb = ofColor(ofColor::black, 64);//border color
-		//ofColor _cb = ofColor(ofColor::white, 64);//border color
-		ofColor colorBackground{ 0, 225 };//bg box
 		ofRectangle _rBg;
+		ofColor colorBackground{ 0, 225 };//bg box
+		ofColor _cb = ofColor(ofColor::black, 64);//border color black
+		//ofColor _cb = ofColor(ofColor::white, 64);//border color white
 
 		//-
 
-		int _pad2 = 40;
-
 		// 1. left top corner
-		_pos = glm::vec2(_x, _y + _pad2);
+		_pos = glm::vec2(_x, _y);
+		//_pos = glm::vec2(_x, _y + _pad2);
 		//// 2. right top corner
 		//_pos = glm::vec2(ofGetWidth() - palette.size()*_sz2, 2*_p);
 
@@ -4972,7 +4972,8 @@ void ofxColorManager::draw_MiniPreview()
 
 		//prepare bg box
 		ofRectangle _r{
-			0, 0, float(palette.size() * _sz2 - _p), float(_pad2 + _sz2 + _hBg) };
+			0, 0, 
+			float(palette.size() * _sz2 - _p), float(_pad2 + _sz2 + _hBg) };
 		_r.setHeight(_r.getHeight() + _pad);
 		_r.setX(_r.getPosition().x - _pad / 2.);
 		_r.setY(_r.getPosition().y - _pad / 2.);
@@ -5012,10 +5013,10 @@ void ofxColorManager::draw_MiniPreview()
 			ofDrawRectangle(_r);
 		}
 
-		ofTranslate(0, _sz);
+		ofTranslate(0, _sz + _p);
 
 		//1. background color box
-		_rBg = ofRectangle(0, 0, palette.size() * _sz2 - (_p * 0.5), _hBg);
+		_rBg = ofRectangle(0, 0, palette.size() * _sz2 - _p, _hBg);
 		ofFill();
 		ofSetColor(color_BackGround.get());
 		ofDrawRectangle(_rBg);
