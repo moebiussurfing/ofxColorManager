@@ -23,7 +23,6 @@ TODO:
 #define USE_IMAGE_QUANTIZER
 #define USE_OFX_COLOR_BROWSER
 #define USE_EXTRA_LIBRARIES
-//#define USE_SUPER_LOG
 
 //	layout
 #define MAX_PALETTE_COLORS 10
@@ -32,6 +31,11 @@ TODO:
 #define BUTTON_COLOR_SIZE 40
 #define COLOR_STRIP_COLOR_HEIGHT 15
 #define PANEL_WIDGETS_WIDTH 200
+
+// extra
+//#define USE_UNDO_ENGINE
+//#define USE_DEBUG_LAYOUT
+//#define USE_SUPER_LOG
 //#define INCL_LAYOUT
 //#define USE_OFX_GUI
 
@@ -39,10 +43,6 @@ TODO:
 
 //------
 
-
-#ifdef USE_SUPER_LOG
-#include "ofxSuperLog.h"
-#endif
 
 #include "ofxColorGradient.h"
 #include "ofxColorPalette.h"
@@ -78,9 +78,17 @@ using namespace ofxColorTheory;
 #include "interface/ButtonExample.h"
 #endif
 
+#ifdef USE_UNDO_ENGINE
 #include "ofxUndoSimple.h"
+#endif
 
+#ifdef USE_DEBUG_LAYOUT
 #include "ofxMouseRuler.h"
+#endif
+
+#ifdef USE_SUPER_LOG
+#include "ofxSuperLog.h"
+#endif
 
 #ifdef INCL_LAYOUT
 #include "ofxGuiPanelsLayout.h"
@@ -481,9 +489,11 @@ private:
 	void enableListeners();
 
 	//-----------------------------------------------------------
-
+	
+#ifdef USE_DEBUG_LAYOUT
 private:
 	ofxMouseRuler mouseRuler;
+#endif
 
 	//--
 

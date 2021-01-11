@@ -172,10 +172,11 @@ void ofxColorManager::setup()
 
 	//----
 
-	// mouse debugger
-
+#ifdef USE_DEBUG_LAYOUT
+// mouse debugger
 	mouseRuler.setup();
 	mouseRuler.toggleVisibility();
+#endif
 
 	//----
 
@@ -6537,12 +6538,14 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//        bLock_palette = !bLock_palette;
 		//    }
 
+#ifdef USE_DEBUG_LAYOUT
 		else if (key == 'M')
 		{
 			mouseRuler.toggleVisibility();
 
 			//myDEMO.toggleMouseCamera();
 		}
+#endif
 
 		//else if (key == 'd')
 		//{
