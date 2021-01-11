@@ -1,6 +1,8 @@
-ofxColorManager
 ofxGui
 ofxOpenCv
-ofxPoco
-ofxSurfingHelpers
 ofxXmlSettings
+ofxColorManager
+ofxMouseRuler
+ofxPoco
+ofxSuperLog
+ofxSurfingHelpers

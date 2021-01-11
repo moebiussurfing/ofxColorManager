@@ -5,6 +5,9 @@ void ofApp::setup()
 {
 	ofEnableAlphaBlending();
 	ofSetFrameRate(60);
+	//ofSetWindowPosition(1920 * 2, 0);
+
+	//--
 
 	colorManager.setup();
 
@@ -15,15 +18,13 @@ void ofApp::setup()
 	//--
 
 	gui.setup("ofApp");
-	gui.setPosition(500, 500);
-
 	gui.add(bDrawOfApp);
-
 	ofParameterGroup pg{ "ofxColorManager" };
 	pg.add(colorManager.SHOW_Scene);
 	pg.add(colorManager.SHOW_ALL_GUI);
 	pg.add(colorManager.SHOW_MINI_Preview);
 	gui.add(pg);
+	gui.setPosition(500, 20);
 }
 
 //--------------------------------------------------------------
@@ -59,7 +60,7 @@ void ofApp::drawOfApp()
 		//ofTranslate(sz + 5, 0);
 		ofTranslate(0, sz);
 
-		for (auto p : palette) 
+		for (auto p : palette)
 		{
 			ofSetColor(p);// the palette colors
 

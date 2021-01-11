@@ -34,8 +34,8 @@ TODO:
 
 // extra
 //#define USE_UNDO_ENGINE
-//#define USE_DEBUG_LAYOUT
-//#define USE_SUPER_LOG
+#define USE_DEBUG_LAYOUT // includes mouse ruler
+#define USE_SUPER_LOG
 //#define INCL_LAYOUT
 //#define USE_OFX_GUI
 
@@ -172,8 +172,8 @@ private:
 	ofParameter<bool> SHOW_ColourLovers_searcher;
 	ofParameter<bool> SHOW_AlgoPalettes;
 	ofParameter<bool> SHOW_BrowserColors;
-	ofParameter<bool> SHOW_Gradient;
-	ofParameter<bool> SHOW_Curve;
+	//ofParameter<bool> SHOW_Gradient;
+	ofParameter<bool> SHOW_GradientCurve;
 	ofParameter<bool> SHOW_debugText;
 	ofParameter<bool> SHOW_Panels;
 	ofParameter<bool> SHOW_Presets;
@@ -858,7 +858,7 @@ private:
 	ofParameterGroup params_Picker{ "PICKER" };
 	ofParameterGroup params_Library{ "LIBRARY" };
 	ofParameterGroup params_Palette2{ "PALETTE" };
-	ofParameterGroup params_Curve{ "CURVE" };
+	ofParameterGroup params_Gradient{ "GRADIENT" };
 
 	//--
 

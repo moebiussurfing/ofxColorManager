@@ -272,21 +272,30 @@ void ofxColourLoversHelper::drawImGui()
 				ImGui::Text("All History will be deleted.\nThis operation cannot be undone!\n\n");
 				ImGui::Separator();
 
-				static bool dont_ask_me_next_time_History = false;
+				static bool dont_ask_me_next_time = false;
 				ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
-				ImGui::Checkbox("Don't ask me next time", &dont_ask_me_next_time_History);
+				ImGui::Checkbox("Don't ask me next time", &dont_ask_me_next_time);
 				ImGui::PopStyleVar();
 
-				if (ImGui::Button("OK", ImVec2(120, 0))) {
+				if (!dont_ask_me_next_time) {
+					if (ImGui::Button("OK", ImVec2(120, 0))) {
+						clearHistory();
+						//workflow
+						loadHistory();
+
+						ImGui::CloseCurrentPopup();
+					}
+					ImGui::SetItemDefaultFocus();
+					ImGui::SameLine();
+					if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
+				}
+				else {
 					clearHistory();
 					//workflow
 					loadHistory();
 
-					ImGui::CloseCurrentPopup();
+					//ImGui::CloseCurrentPopup();
 				}
-				ImGui::SetItemDefaultFocus();
-				ImGui::SameLine();
-				if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
 				ImGui::EndPopup();
 			}
 
