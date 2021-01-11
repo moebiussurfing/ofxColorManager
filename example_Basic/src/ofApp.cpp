@@ -37,13 +37,14 @@ void ofApp::draw()
 //--------------------------------------------------------------
 void ofApp::drawOfApp()
 {
-	//  draw test scene
+	// draw local (ofApp) test scene
 	ofPushStyle();
 	ofPushMatrix();
 	{
 		int sz = 70;
 
-		ofTranslate(ofGetWidth() * 0.5 - sz * palette.size() * 0.5, ofGetHeight() - 2 * sz - 30);
+		ofTranslate(ofGetWidth() * 0.5 - sz * palette.size() * 0.5, 200);
+		//ofTranslate(ofGetWidth() * 0.5 - sz * palette.size() * 0.5, ofGetHeight() - 2 * sz - 30);
 		//ofTranslate(10, 10);
 
 		ofDrawBitmapStringHighlight("ofApp", 4, -7 - 14, ofColor::black, ofColor::white);
@@ -54,7 +55,10 @@ void ofApp::drawOfApp()
 		ofSetColor(color);// the picker color
 
 		ofDrawRectangle(0, 0, sz, sz);
+
+		//ofTranslate(sz + 5, 0);
 		ofTranslate(0, sz);
+
 		for (auto p : palette) 
 		{
 			ofSetColor(p);// the palette colors
