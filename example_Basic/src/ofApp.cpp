@@ -31,8 +31,6 @@ void ofApp::draw()
 {
 	if (bDrawOfApp) drawOfApp();
 
-	//colorManager.draw_MiniPreview();// internal palette preview
-
 	gui.draw();
 }
 
@@ -48,7 +46,8 @@ void ofApp::drawOfApp()
 		ofTranslate(ofGetWidth() * 0.5 - sz * palette.size() * 0.5, ofGetHeight() - 2 * sz - 30);
 		//ofTranslate(10, 10);
 
-		ofDrawBitmapStringHighlight(colorManager.getPaletteName(), 4, -7, ofColor::black, ofColor::white);
+		ofDrawBitmapStringHighlight("ofApp", 4, -7 - 14, ofColor::black, ofColor::white);
+		ofDrawBitmapStringHighlight(colorManager.getPaletteName(), 4, -6, ofColor::black, ofColor::white);
 
 		ofFill();
 

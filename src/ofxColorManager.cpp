@@ -1256,7 +1256,8 @@ void ofxColorManager::draw_Info()
 	y += h;
 
 	//preset name
-	if (t0 != "" || txt_lineActive[0])//hide now used lines vs draw but transparent
+	//if (t0 != "" || txt_lineActive[0])//hide now used lines vs draw but transparent
+	if (txt_lineActive[0])//hide now used lines vs draw but transparent
 	{
 		x = ofGetWidth() * 0.5 - _w0 * 0.5;
 		if (txt_lineActive[i]) ofSetColor(c0);
@@ -1274,7 +1275,8 @@ void ofxColorManager::draw_Info()
 	i++;
 
 	//lover name
-	if (t1 != "" || txt_lineActive[0])
+	//if (t1 != "" || txt_lineActive[1])
+	if (txt_lineActive[1])
 	{
 		x = ofGetWidth() * 0.5 - _w1 * 0.5;
 		if (txt_lineActive[i]) ofSetColor(c0);
@@ -1292,7 +1294,8 @@ void ofxColorManager::draw_Info()
 	i++;
 
 	//theory name
-	if (t2 != "" || txt_lineActive[0])
+	//if (t2 != "" || txt_lineActive[1])
+	if (txt_lineActive[1])
 	{
 		x = ofGetWidth() * 0.5 - _w2 * 0.5;
 		if (txt_lineActive[i]) ofSetColor(c0);
@@ -1310,7 +1313,8 @@ void ofxColorManager::draw_Info()
 	i++;
 
 	//range name
-	if (t3 != "" || txt_lineActive[3])
+	//if (t3 != "" || txt_lineActive[3])
+	if (txt_lineActive[3])
 	{
 		x = ofGetWidth() * 0.5 - _w3 * 0.5;
 		if (txt_lineActive[i]) ofSetColor(c0);
@@ -4988,7 +4992,7 @@ void ofxColorManager::draw_MiniPreview()
 		float _ww2 = font.getStringBoundingBox(s, 0, 0).getWidth();
 
 		//draw bg box
-		_r.setWidth(MAX(_r.getWidth() + _pad, _ww2));
+		_r.setWidth(MAX(_r.getWidth() + _pad, _ww2 + _pad));
 		ofSetColor(colorBackground);
 		ofFill(); 
 		ofDrawRectRounded(_r, _round);
