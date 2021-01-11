@@ -105,7 +105,7 @@ namespace ImGui_PalettesPicker
 					_hhB = 3 * BUTTON_SLIM_HEIGHT;
 
 					if (autoscroll)
-						ImGui::SetScrollHereY(0.5f); // 0.0f:top, 0.5f:center, 1.0f:bottom
+						ImGui::SetScrollHereY(0.2f); // 0.0f:top, 0.5f:center, 1.0f:bottom
 				}
 				else
 				{

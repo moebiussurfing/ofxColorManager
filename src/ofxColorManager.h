@@ -159,7 +159,7 @@ private:
 	float fps;
 
 	//-
-	
+
 	std::string infoHelp;//key commands
 
 private:
@@ -170,7 +170,7 @@ private:
 	ofParameter<bool> SHOW_Gradient;
 	ofParameter<bool> SHOW_Curve;
 	ofParameter<bool> SHOW_ALL_GUI;
-	ofParameter<bool> SHOW_GUI_MINI;
+	ofParameter<bool> SHOW_MINI_Preview;
 	ofParameter<bool> SHOW_debugText;
 	ofParameter<bool> SHOW_Panels;
 	ofParameter<bool> SHOW_Presets;
@@ -303,7 +303,7 @@ private:
 #endif
 
 	//-
-	
+
 	ofParameter<int> numColors_TheoryEngines;
 
 private:
@@ -481,7 +481,7 @@ public:
 	void setVisible_debugText(bool b);
 
 public:
-	void draw_Mini();
+	void draw_MiniPreview();
 	void draw_GradientPreview(glm::vec2 pos, bool horizontal);
 
 private:
@@ -489,7 +489,7 @@ private:
 	void enableListeners();
 
 	//-----------------------------------------------------------
-	
+
 #ifdef USE_DEBUG_LAYOUT
 private:
 	ofxMouseRuler mouseRuler;
@@ -590,7 +590,7 @@ private:
 
 	//--
 
-	// COLORS
+	// colors
 
 private:
 	ofParameter<ofFloatColor> color_BackGround;//main bg color
@@ -612,7 +612,10 @@ private:
 	// main color
 	ofParameter<ofFloatColor> color_Picked;
 
+	// undo engine
+#ifdef USE_UNDO_ENGINE
 	ofxUndoSimple<ofFloatColor> color_Undo;
+#endif
 
 	ofRectangle r_color_picked;
 

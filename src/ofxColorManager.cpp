@@ -382,7 +382,7 @@ void ofxColorManager::setup()
 	// panels
 
 	SHOW_ALL_GUI.setName("GUI MAIN");
-	SHOW_GUI_MINI.setName("GUI MINI");
+	SHOW_MINI_Preview.setName("MINI PREVIEW");
 	SHOW_UserPalette.setName("PALETTE");
 	SHOW_Theory.setName("THEORY");
 	SHOW_debugText.setName("SHOW debug");
@@ -483,7 +483,7 @@ void ofxColorManager::setup()
 
 	SHOW_ALL_GUI = true;
 	SHOW_debugText = false;
-	SHOW_GUI_MINI = false;
+	SHOW_MINI_Preview = false;
 
 	//--
 
@@ -606,7 +606,7 @@ void ofxColorManager::setup()
 	params_Panels.add(SHOW_Curve);
 	params_Panels.add(SHOW_BrowserColors);
 	params_Panels.add(SHOW_GuiInternal);
-	params_Panels.add(SHOW_GUI_MINI);
+	params_Panels.add(SHOW_MINI_Preview);
 	params_Panels.add(SHOW_Kit);
 	params_Panels.add(AutoScroll);
 	params_AppState.add(params_Panels);
@@ -756,7 +756,7 @@ void ofxColorManager::startup()
 	//panels.addToggle(&SHOW_PresetsPalette);
 
 	panels.addToggle(&SHOW_ALL_GUI);
-	panels.addToggle(&SHOW_GUI_MINI);
+	panels.addToggle(&SHOW_MINI_Preview);
 
 	panels.addToggle(&SHOW_Demo);
 	panels.addToggle(&DEMO_Test);
@@ -1389,7 +1389,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 
 	// mini
 
-	if (SHOW_GUI_MINI) draw_Mini();
+	if (SHOW_MINI_Preview) draw_MiniPreview();
 
 	//--
 
@@ -2996,7 +2996,7 @@ void ofxColorManager::gui_Panels()
 		//ImGui::Separator();
 
 		ofxImGui::AddParameter(SHOW_ALL_GUI);
-		ofxImGui::AddParameter(SHOW_GUI_MINI);
+		ofxImGui::AddParameter(SHOW_MINI_Preview);
 		ofxImGui::AddParameter(SHOW_Demo);
 		ofxImGui::AddParameter(SHOW_Presets);
 
@@ -4898,7 +4898,7 @@ void ofxColorManager::palette_FromColourLovers() // ?
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::draw_Mini()
+void ofxColorManager::draw_MiniPreview()
 {
 	ofPushMatrix();
 	ofPushStyle();
@@ -4913,16 +4913,19 @@ void ofxColorManager::draw_Mini()
 
 		ofColor _cb = ofColor(ofColor::white, 64);//border color
 
-		// left top corner
-		_pos = glm::vec2(_inner, _inner);
+		// 1. left top corner
+		_pos = glm::vec2(_inner, 2 * _inner);
 
-		//// right top corner
+		//// 2. right top corner
 		//_pos = glm::vec2(ofGetWidth() - palette.size()*_size, 2*_p);
 
 		ofTranslate(_pos);
 
+		ofDrawBitmapStringHighlight("MiniPreview : " + PRESET_name, glm::vec2(4, - 5), ofColor::black, ofColor::white);
+
+
 		//1. bg
-		int _hBg = 19;
+		int _hBg = 15;
 		_rBg = ofRectangle(0, _w, palette.size() * _size, _hBg);
 		ofFill();
 		ofSetColor(color_BackGround.get());
@@ -4932,7 +4935,7 @@ void ofxColorManager::draw_Mini()
 		ofDrawRectangle(_rBg);
 
 		//2. palette name
-		ofDrawBitmapStringHighlight(PRESET_name, glm::vec2(4, _w + _inner - 7), ofColor::black, ofColor::white);
+		//ofDrawBitmapStringHighlight(PRESET_name, glm::vec2(4, _w + _inner - 7), ofColor::black, ofColor::white);
 
 		//3. palette colors
 		for (int col = 0; col < palette.size(); col++)
@@ -7331,7 +7334,7 @@ ofColor ofxColorManager::getColorAtPercent(float control)
 //--------------------------------------------------------------
 void ofxColorManager::setVisible_GUI_MINI(bool b)
 {
-	SHOW_GUI_MINI = b;
+	SHOW_MINI_Preview = b;
 }
 
 //--------------------------------------------------------------

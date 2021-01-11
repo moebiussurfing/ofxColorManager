@@ -19,7 +19,7 @@ void ofApp::setup()
 void ofApp::draw()
 {
 	//drawTest();
-	//colorManager.draw_Mini();// internal palette preview
+	//colorManager.draw_MiniPreview();// internal palette preview
 }
 
 //--------------------------------------------------------------
