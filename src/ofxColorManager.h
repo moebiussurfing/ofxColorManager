@@ -446,7 +446,7 @@ private:
 	// colour lovers
 private:
 
-	void colourLovers_drawPreview();
+	//void colourLovers_drawPreview();
 #ifdef USE_COLOR_LOVERS
 	ofxColourLoversHelper colourLoversHelper;
 #endif
@@ -473,16 +473,26 @@ public:
 		dt = 1. / fps;
 	}
 
-	void setColor_TARGET(ofColor &c);//backwards pointer ofApp color
-	ofColor *color_TARGET;//backwards pointer ofApp color
+	//-
+
+	// API initializer setup
+
+	void setColor_TARGET(ofColor &c);
+	ofColor *color_TARGET;//backwards pointer to ofApp color
+
+	void setPalette_TARGET(vector<ofColor> &p);
+	vector<ofColor> *palette_TARGET;//backwards pointer to ofApp palette
+	void refresh_Palette_TARGET(vector<ofColor> &p);
 
 	//-----------------------------------------------------------
 
-	// API
+	// API getter
 public:
 	vector<ofColor> getPalette();
 	std::string getPaletteName();
 	ofColor getColor(int index = -1);
+
+	//-
 
 	ofColor getColorAtPercent(float control);//from gradient
 

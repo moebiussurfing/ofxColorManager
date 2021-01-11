@@ -474,7 +474,7 @@ void ofxColourLoversHelper::drawImGui()
 				if (i == currPalette)
 				{
 					if (AutoScroll)
-						ImGui::SetScrollHereY(0.5f); // 0.0f:top, 0.5f:center, 1.0f:bottom
+						ImGui::SetScrollHereY(0.20f); // 0.0f:top, 0.5f:center, 1.0f:bottom
 				}
 
 				//-

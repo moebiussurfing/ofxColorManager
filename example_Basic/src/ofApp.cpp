@@ -8,23 +8,28 @@ void ofApp::setup()
 
 	colorManager.setup();
 
-	colorManager.setColor_TARGET(color); // we subscribe to the color to be autoupdated (by reference from color picker)
-	palette = colorManager.getPalette(); // get current default palette. Press TAB key to refresh!
+	// we subscribe using pointers references
+	colorManager.setColor_TARGET(color); // color to be autoupdated
+	colorManager.setPalette_TARGET(palette); // palette to be autoupdated
 
 	//--
 
 	gui.setup("ofApp");
-	gui.add(bScene);
-	gui.add(colorManager.SHOW_Scene);
-	gui.add(colorManager.SHOW_ALL_GUI);
-	gui.add(colorManager.SHOW_MINI_Preview);
 	gui.setPosition(500, 500);
+
+	gui.add(bDrawOfApp);
+
+	ofParameterGroup pg{ "ofxColorManager" };
+	pg.add(colorManager.SHOW_Scene);
+	pg.add(colorManager.SHOW_ALL_GUI);
+	pg.add(colorManager.SHOW_MINI_Preview);
+	gui.add(pg);
 }
 
 //--------------------------------------------------------------
 void ofApp::draw()
 {
-	if (bScene) drawTest();
+	if (bDrawOfApp) drawOfApp();
 
 	//colorManager.draw_MiniPreview();// internal palette preview
 
@@ -32,24 +37,29 @@ void ofApp::draw()
 }
 
 //--------------------------------------------------------------
-void ofApp::drawTest()
+void ofApp::drawOfApp()
 {
 	//  draw test scene
 	ofPushStyle();
 	ofPushMatrix();
 	{
 		int sz = 70;
-		ofTranslate(10, 10);
+
+		ofTranslate(ofGetWidth() * 0.5 - sz * palette.size() * 0.5, ofGetHeight() - 2 * sz - 30);
+		//ofTranslate(10, 10);
+
+		ofDrawBitmapStringHighlight(colorManager.getPaletteName(), 4, -7, ofColor::black, ofColor::white);
+
 		ofFill();
-		
+
 		ofSetColor(color);// the picker color
 
 		ofDrawRectangle(0, 0, sz, sz);
 		ofTranslate(0, sz);
-		for (auto p : palette) {
-		
+		for (auto p : palette) 
+		{
 			ofSetColor(p);// the palette colors
-			
+
 			ofDrawRectangle(0, 0, sz, sz);
 			ofTranslate(sz, 0);
 		}

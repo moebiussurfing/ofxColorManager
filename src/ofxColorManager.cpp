@@ -114,7 +114,7 @@ void ofxColorManager::setup()
 
 	//-
 
-	font.load("assets/fonts/telegrama_render.otf", 11, true, true);
+	font.load("assets/fonts/telegrama_render.otf", 11, true, true, true);
 	//font.load("assets/fonts/LCD_Solid.ttf", 11, true, true);
 	//font.load("assets/fonts/overpass-mono-bold.otf", 9, true, true);
 
@@ -609,7 +609,9 @@ void ofxColorManager::setup()
 	params_Panels.add(SHOW_AlgoPalettes);
 	params_Panels.add(SHOW_Curve);
 	params_Panels.add(SHOW_BrowserColors);
+#ifdef INCL_LAYOUT
 	params_Panels.add(SHOW_Gui_Internal);
+#endif
 	params_Panels.add(SHOW_MINI_Preview);
 	params_Panels.add(SHOW_Kit);
 	params_Panels.add(AutoScroll);
@@ -811,38 +813,6 @@ void ofxColorManager::startup()
 //--------------------------------------------------------------
 void ofxColorManager::update(ofEventArgs & args)
 {
-	//--
-
-	//if (SHOW_Range)
-	//{
-	//	//workflow
-	//	//get main color from range picker
-	//	if (autoPick_RangeColor1) color_Picked.set(color_1_Range.get());
-	//	else if (autoPick_RangeColor2) color_Picked.set(color_2_Range.get());
-
-	//	if (!autoPick_RangeColor1 && !autoPick_RangeColor2) autoPick_RangeColor1 = true;
-	//	else if (autoPick_RangeColor1 && !autoPick_RangeColor2) autoPick_RangeColor2 = true;
-	//	else if (!autoPick_RangeColor1 && autoPick_RangeColor2) autoPick_RangeColor1 = true;
-	//}
-
-	//--
-
-	////cosine gradient
-	//cosineGradient_update();
-
-	//--
-
-	// preset manager
-
-	//myPresetManager.update();
-
-	//----
-
-	// ofxGuiPanelsLayout
-
-#ifdef INCL_LAYOUT
-	panels.update();
-#endif
 
 	//----
 
@@ -858,7 +828,9 @@ void ofxColorManager::update(ofEventArgs & args)
 				myDEMO.start();
 			}
 	}
+
 	//----
+
 	{
 		// TEST CURVE
 
@@ -903,6 +875,8 @@ void ofxColorManager::update(ofEventArgs & args)
 				setControl(control);
 			}
 		}
+
+		update_CurveTool();
 
 		//--
 
@@ -1092,12 +1066,43 @@ void ofxColorManager::update(ofEventArgs & args)
 
 	//-
 
-	update_CurveTool();
-
 	if (MODE_Editor)
 	{
 		refresh_Gui_Layout();
 	}
+
+	//--
+
+	//if (SHOW_Range)
+	//{
+	//	//workflow
+	//	//get main color from range picker
+	//	if (autoPick_RangeColor1) color_Picked.set(color_1_Range.get());
+	//	else if (autoPick_RangeColor2) color_Picked.set(color_2_Range.get());
+
+	//	if (!autoPick_RangeColor1 && !autoPick_RangeColor2) autoPick_RangeColor1 = true;
+	//	else if (autoPick_RangeColor1 && !autoPick_RangeColor2) autoPick_RangeColor2 = true;
+	//	else if (!autoPick_RangeColor1 && autoPick_RangeColor2) autoPick_RangeColor1 = true;
+	//}
+
+	//--
+
+	////cosine gradient
+	//cosineGradient_update();
+
+	//--
+
+	// preset manager
+
+	//myPresetManager.update();
+
+	//----
+
+	// ofxGuiPanelsLayout
+
+#ifdef INCL_LAYOUT
+	panels.update();
+#endif
 }
 
 //--------------------------------------------------------------
@@ -1251,8 +1256,7 @@ void ofxColorManager::draw_Info()
 	y += h;
 
 	//preset name
-	//if (txt_lineActive[0]) 
-	if (t0 != "")
+	if (t0 != "" || txt_lineActive[0])//hide now used lines vs draw but transparent
 	{
 		x = ofGetWidth() * 0.5 - _w0 * 0.5;
 		if (txt_lineActive[i]) ofSetColor(c0);
@@ -1270,8 +1274,7 @@ void ofxColorManager::draw_Info()
 	i++;
 
 	//lover name
-	//if (txt_lineActive[1])
-	if (t1 != "")
+	if (t1 != "" || txt_lineActive[0])
 	{
 		x = ofGetWidth() * 0.5 - _w1 * 0.5;
 		if (txt_lineActive[i]) ofSetColor(c0);
@@ -1289,8 +1292,7 @@ void ofxColorManager::draw_Info()
 	i++;
 
 	//theory name
-	//if (txt_lineActive[2])
-	if (t2 != "")
+	if (t2 != "" || txt_lineActive[0])
 	{
 		x = ofGetWidth() * 0.5 - _w2 * 0.5;
 		if (txt_lineActive[i]) ofSetColor(c0);
@@ -1308,8 +1310,7 @@ void ofxColorManager::draw_Info()
 	i++;
 
 	//range name
-	//if (txt_lineActive[3]) 
-	if (t3 != "")
+	if (t3 != "" || txt_lineActive[3])
 	{
 		x = ofGetWidth() * 0.5 - _w3 * 0.5;
 		if (txt_lineActive[i]) ofSetColor(c0);
@@ -1441,7 +1442,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 	//----
 
 	// 1. help info
-	if (ENABLE_HelpInfo) 
+	if (ENABLE_HelpInfo)
 	{
 		std::string str = infoHelp;
 		ofPushMatrix();
@@ -1661,6 +1662,10 @@ void ofxColorManager::palette_rearrenge()
 		a->setSize(w, h);
 	}
 #endif
+
+	//--
+
+	refresh_Palette_TARGET(palette);
 }
 
 #ifdef USE_RECTANGLE_INTERFACES
@@ -4683,7 +4688,9 @@ void ofxColorManager::palette_FromTheory(int p)
 		}
 	}
 
-	//-
+	//--
+
+	refresh_Palette_TARGET(palette);
 }
 
 //--------------------------------------------------------------
@@ -4860,14 +4867,14 @@ void ofxColorManager::palette_FromColourLovers() // ?
 	// 2. get color from colour lovers
 	if (palette.size() > 0)
 	{
-		ofColor c;
-		c = palette[0];//get first color
+		ofColor c = palette[0];//get first color
 		color_Clicked2 = ofColor(c);
 	}
 
 	//-
 
-	// WORKFLOW: set background color from first/last palette color
+	// workflow: 
+	//set background color from first/last palette color
 	if (color_BackGround_AutoSet)
 	{
 		if (palette.size() > 0)
@@ -4904,6 +4911,29 @@ void ofxColorManager::palette_FromColourLovers() // ?
 			color_BackGround.set(c);
 		}
 	}
+
+	//--
+
+	refresh_Palette_TARGET(palette);
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::refresh_Palette_TARGET(vector<ofColor> &p)
+{
+	// update TARGET color pointer (ofApp)
+	if (palette_TARGET != nullptr)
+	{
+		//palette_TARGET = (vector<ofColor>)(p);//TODO. faster mode ?
+
+		palette_TARGET->clear();
+		palette_TARGET->resize(p.size());
+
+		//TODO:
+		for (int c = 0; c < p.size(); c++)
+		{
+			//palette_TARGET[c]->set(p[c]);
+		}
+	}
 }
 
 //--------------------------------------------------------------
@@ -4912,44 +4942,68 @@ void ofxColorManager::draw_MiniPreview()
 	ofPushMatrix();
 	ofPushStyle();
 	{
+		int _x = 20;
+		int _y = 20;
 		glm::vec2 _pos;
-		int _w = 60;
-		int _p = 0;
-		int _inner = 20;
-		int _size = _w + _p;
-		ofRectangle _r;
+
+		int _sz = 60;
+		int _p = 0;//pad
+		int _sz2 = _sz + _p;
+		int _pad = 30;
+		int _hBg = 15;
+		float _round = 5;
+		ofColor _cb = ofColor(ofColor::black, 64);//border color
+		//ofColor _cb = ofColor(ofColor::white, 64);//border color
+		ofColor colorBackground{ 0, 225 };//bg box
 		ofRectangle _rBg;
 
-		ofColor _cb = ofColor(ofColor::white, 64);//border color
+		//-
+
+		int _pad2 = 40;
 
 		// 1. left top corner
-		_pos = glm::vec2(_inner, 2 * _inner);
-
+		_pos = glm::vec2(_x, _y + _pad2);
 		//// 2. right top corner
-		//_pos = glm::vec2(ofGetWidth() - palette.size()*_size, 2*_p);
+		//_pos = glm::vec2(ofGetWidth() - palette.size()*_sz2, 2*_p);
 
 		ofTranslate(_pos);
 
-		ofDrawBitmapStringHighlight("Mini Preview: " + PRESET_name, glm::vec2(4, -5), ofColor::black, ofColor::white);
+		//-
 
+		//prepare bg box
+		ofRectangle _r{
+			0, 0, float(palette.size() * _sz2 - _p), float(_pad2 + _sz2 + _hBg) };
+		_r.setHeight(_r.getHeight() + _pad);
+		_r.setX(_r.getPosition().x - _pad / 2.);
+		_r.setY(_r.getPosition().y - _pad / 2.);
 
-		//1. bg
-		int _hBg = 15;
-		_rBg = ofRectangle(0, _w, palette.size() * _size, _hBg);
-		ofFill();
-		ofSetColor(color_BackGround.get());
-		ofDrawRectangle(_rBg);
-		ofNoFill();
-		ofSetColor(_cb);
-		ofDrawRectangle(_rBg);
+		//-
 
-		//2. palette name
-		//ofDrawBitmapStringHighlight(PRESET_name, glm::vec2(4, _w + _inner - 7), ofColor::black, ofColor::white);
+		// preset name
+
+		//label + name
+		std::string s = PRESET_name;
+		ofColor font0_Color{ 255, 255 };
+		float _ww2 = font.getStringBoundingBox(s, 0, 0).getWidth();
+
+		//draw bg box
+		_r.setWidth(MAX(_r.getWidth() + _pad, _ww2));
+		ofSetColor(colorBackground);
+		ofFill(); 
+		ofDrawRectRounded(_r, _round);
+
+		//draw text
+		ofSetColor(font0_Color);
+		font.drawString(s, 0, 0 + _pad * 0.5);
+
+		//-
+
+		ofTranslate(0, 35);
 
 		//3. palette colors
 		for (int col = 0; col < palette.size(); col++)
 		{
-			_r = ofRectangle(col * _size, 0, _w, _w);
+			_r = ofRectangle(col * _sz2, 0, _sz, _sz);
 			ofFill();
 			ofSetColor(palette[col]);
 			ofDrawRectangle(_r);
@@ -4957,6 +5011,17 @@ void ofxColorManager::draw_MiniPreview()
 			ofSetColor(_cb);
 			ofDrawRectangle(_r);
 		}
+
+		ofTranslate(0, _sz);
+
+		//1. background color box
+		_rBg = ofRectangle(0, 0, palette.size() * _sz2 - (_p * 0.5), _hBg);
+		ofFill();
+		ofSetColor(color_BackGround.get());
+		ofDrawRectangle(_rBg);
+		ofNoFill();
+		ofSetColor(_cb);
+		ofDrawRectangle(_rBg);
 	}
 	ofPopStyle();
 	ofPopMatrix();
@@ -4970,7 +5035,7 @@ void ofxColorManager::palette_addColor(ofColor c)
 	palette.push_back(c);
 	gradient.addColor(c);
 
-	//-
+	//--
 
 	//// TODO: BUG
 	//// WORKFLOW: select last one, just the one created now
@@ -4978,6 +5043,10 @@ void ofxColorManager::palette_addColor(ofColor c)
 	//{
 	//    palette_colorSelected = palette.size() - 1;
 	//}
+
+	//--
+
+	refresh_Palette_TARGET(palette);
 }
 
 //--------------------------------------------------------------
@@ -5071,6 +5140,10 @@ void ofxColorManager::palette_clear()
 	//-
 
 	if (DEMO_Test) myDEMO.clear();
+
+	//--
+
+	refresh_Palette_TARGET(palette);
 }
 
 #pragma mark - CALLBACKS
@@ -6014,6 +6087,10 @@ void ofxColorManager::palette_FromQuantizer()
 			color_BackGround.set(c);
 		}
 	}
+
+	//--
+
+	refresh_Palette_TARGET(palette);
 }
 
 //--------------------------------------------------------------
@@ -6524,10 +6601,12 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 #endif
 		//----
 
+#ifdef INCL_LAYOUT
 		else if (key == 'G')
 		{
 			SHOW_Gui_Internal = !SHOW_Gui_Internal;
 		}
+#endif
 
 		//else if (key == 'g') {
 		//    SHOW_ALL_GUI = !SHOW_ALL_GUI;
@@ -7125,6 +7204,8 @@ void ofxColorManager::preset_save(std::string p)
 	palette_TEMP.preset_save(p);
 }
 
+//----
+
 //--------------------------------------------------------------
 void ofxColorManager::refresh_FromPicked()
 {
@@ -7155,9 +7236,6 @@ void ofxColorManager::refresh_Picked_toHSB()
 //--------------------------------------------------------------
 void ofxColorManager::refresh_Picker_Touched()
 {
-	//TODO:
-	//BUG:
-	//if (ENABLE_Callbacks_cPickers)
 	{
 		// workflow
 
@@ -7282,17 +7360,29 @@ void ofxColorManager::refresh_Picker_Touched()
 
 //----
 
-// API
+// API - pointer references to ofApp color and palette
 
 //--------------------------------------------------------------
 void ofxColorManager::setColor_TARGET(ofColor &c)
 {
+	ofLogNotice(__FUNCTION__) << ofToString(c);
 	color_TARGET = &c;
 }
 
 //--------------------------------------------------------------
+void ofxColorManager::setPalette_TARGET(vector<ofColor> &p)
+{
+	ofLogNotice(__FUNCTION__) << ofToString(p);
+	palette_TARGET = &p;
+}
+
+//--
+
+//--------------------------------------------------------------
 void ofxColorManager::setControl(float control)
 {
+	ofLogNotice(__FUNCTION__) << control;
+
 	if (!MODE_Editor)
 	{
 		curve_Ctrl_In.setWithoutEventNotifications(control);
@@ -7316,7 +7406,7 @@ ofColor ofxColorManager::getColor(int index)
 	if (index == -1) c = ofColor(0, 255);
 	else
 	{
-		if (index < palette.size()) 
+		if (index < palette.size())
 		{
 			c = palette[index];
 		}
@@ -7339,6 +7429,7 @@ ofColor ofxColorManager::getColor(int index)
 vector<ofColor> ofxColorManager::getPalette()
 {
 	ofLogNotice(__FUNCTION__);
+
 	for (int i = 0; i < palette.size(); i++)
 	{
 		ofLogNotice(__FUNCTION__) << ofToString(palette[i]);
@@ -7351,6 +7442,7 @@ vector<ofColor> ofxColorManager::getPalette()
 void ofxColorManager::setToggleVisible()
 {
 	SHOW_ALL_GUI = !SHOW_ALL_GUI;
+	ofLogNotice(__FUNCTION__) << "SHOW_ALL_GUI:" << SHOW_ALL_GUI;
 
 	if (SHOW_Curve)
 	{
@@ -7363,11 +7455,13 @@ void ofxColorManager::setToggleVisible()
 void ofxColorManager::setVisible(bool b)
 {
 	SHOW_ALL_GUI = b;
+	ofLogNotice(__FUNCTION__) << "SHOW_ALL_GUI:" << SHOW_ALL_GUI;
 }
 
 //--------------------------------------------------------------
 ofColor ofxColorManager::getColorAtPercent(float control)
 {
+	ofLogNotice(__FUNCTION__) << control;
 	float out = ofMap(curvesTool.getAtPercent(1.0 - control), 0, cAmt - 1, 1., 0.);
 	ofColor c = gradient.getColorAtPercent(out);
 	return c;
@@ -7376,12 +7470,14 @@ ofColor ofxColorManager::getColorAtPercent(float control)
 //--------------------------------------------------------------
 void ofxColorManager::setVisible_GUI_MINI(bool b)
 {
+	ofLogNotice(__FUNCTION__) << b;
 	SHOW_MINI_Preview = b;
 }
 
 //--------------------------------------------------------------
 void ofxColorManager::setBackground_ENABLE(bool b)
 {
+	ofLogNotice(__FUNCTION__) << b;
 	background_Draw_ENABLE = b;
 }
 
@@ -7407,6 +7503,7 @@ void ofxColorManager::draw_GradientPreview(glm::vec2 pos, bool horizontal = true
 //--------------------------------------------------------------
 void ofxColorManager::setVisible_debugText(bool b)
 {
+	ofLogNotice(__FUNCTION__) << b;
 	SHOW_debugText = b;
 }
 
@@ -7414,52 +7511,52 @@ void ofxColorManager::setVisible_debugText(bool b)
 
 #pragma mark -  COLOUR LOVERS
 
-//--------------------------------------------------------------
-void ofxColorManager::colourLovers_drawPreview()
-{
-	// preview receivers
-
-	if (SHOW_ColourLovers)
-	{
-		int x, y, w, h, pad, lineH;
-		x = 320;
-		y = ofGetHeight() - 200;
-		w = h = 40;
-		pad = 3;
-		lineH = 20;
-
-		ofPushStyle();
-		ofFill();
-
-		ofDrawBitmapStringHighlight("RECEIVERS IN ofApp", x, y, ofColor::black, ofColor::white);
-		y += 3 * pad + lineH;
-
-		ofDrawBitmapStringHighlight("myColor:", x, y, ofColor::black, ofColor::white);
-		y += 3 * pad;
-
-		ofSetColor(myColor);
-		ofDrawRectangle(ofRectangle(x, y, w, h));
-		y += (h + pad);
-
-		y += (lineH);
-		ofDrawBitmapStringHighlight("myPalette:", x, y, ofColor::black, ofColor::white);
-		y += 3 * pad;
-
-		for (int i = 0; i < myPalette.size(); i++)
-		{
-			ofSetColor(myPalette[i]);
-			ofDrawRectangle(ofRectangle(x + i * (w + pad), y, w, h));
-		}
-		y += (h + pad);
-
-		y += (lineH);
-		ofDrawBitmapStringHighlight("myPalette_Name:", x, y, ofColor::black, ofColor::white);
-		y += (lineH);
-		ofDrawBitmapStringHighlight(myPalette_Name, x, y, ofColor::black, ofColor::white);
-
-		ofPopStyle();
-	}
-}
+////--------------------------------------------------------------
+//void ofxColorManager::colourLovers_drawPreview()
+//{
+//	//// preview receivers
+//
+//	//if (SHOW_ColourLovers)
+//	//{
+//	//	int x, y, w, h, pad, lineH;
+//	//	x = 320;
+//	//	y = ofGetHeight() - 200;
+//	//	w = h = 40;
+//	//	pad = 3;
+//	//	lineH = 20;
+//
+//	//	ofPushStyle();
+//	//	ofFill();
+//
+//	//	ofDrawBitmapStringHighlight("RECEIVERS IN ofApp", x, y, ofColor::black, ofColor::white);
+//	//	y += 3 * pad + lineH;
+//
+//	//	ofDrawBitmapStringHighlight("myColor:", x, y, ofColor::black, ofColor::white);
+//	//	y += 3 * pad;
+//
+//	//	ofSetColor(myColor);
+//	//	ofDrawRectangle(ofRectangle(x, y, w, h));
+//	//	y += (h + pad);
+//
+//	//	y += (lineH);
+//	//	ofDrawBitmapStringHighlight("myPalette:", x, y, ofColor::black, ofColor::white);
+//	//	y += 3 * pad;
+//
+//	//	for (int i = 0; i < myPalette.size(); i++)
+//	//	{
+//	//		ofSetColor(myPalette[i]);
+//	//		ofDrawRectangle(ofRectangle(x + i * (w + pad), y, w, h));
+//	//	}
+//	//	y += (h + pad);
+//
+//	//	y += (lineH);
+//	//	ofDrawBitmapStringHighlight("myPalette_Name:", x, y, ofColor::black, ofColor::white);
+//	//	y += (lineH);
+//	//	ofDrawBitmapStringHighlight(myPalette_Name, x, y, ofColor::black, ofColor::white);
+//
+//	//	ofPopStyle();
+//	//}
+//}
 
 //--------------------------------------------------------------
 void ofxColorManager::setup_Range()

@@ -22,7 +22,7 @@ public:
     ofColor color;
 
 	ofxPanel gui;
-	ofParameter<bool> bScene{ "Show Scene", false };
+	ofParameter<bool> bDrawOfApp{ "Draw ofApp", false };
 
-	void drawTest();// test scene
+	void drawOfApp();// test scene
 };
