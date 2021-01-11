@@ -720,7 +720,7 @@ void ofxColourLoversHelper::setup()
 	colorBg.set(0.06f, 0.06f, 0.06f, 0.8f);
 	gui->setColorBack(ofColor(colorBg));
 
-	gui->setFont("assets/fonts/PragmataProR_0822.ttf");
+	gui->setFont("assets/fonts/mono.ttf");
 	gui->setFontSize(OFX_UI_FONT_LARGE, 9);
 	gui->setFontSize(OFX_UI_FONT_MEDIUM, 7);
 	gui->setFontSize(OFX_UI_FONT_SMALL, 6);
@@ -917,7 +917,7 @@ void ofxColourLoversHelper::build_Gui_Lab()
 
 	gui_Lab = new ofxUIScrollableCanvas(gridPosition.x, gridPosition.y, width, gridSize.y);
 
-	gui_Lab->setFont("assets/fonts/PragmataProR_0822.ttf");
+	gui_Lab->setFont("assets/fonts/mono.ttf");
 	gui_Lab->setFontSize(OFX_UI_FONT_LARGE, 9);
 	gui_Lab->setFontSize(OFX_UI_FONT_MEDIUM, 7);
 	gui_Lab->setFontSize(OFX_UI_FONT_SMALL, 6);
