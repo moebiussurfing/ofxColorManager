@@ -772,7 +772,7 @@ private:
 	void update_CurveTool();
 	void draw_CurveTools();
 
-	int cAmt = 256;
+	int MAX_LUT_SIZE = 256;
 	std::string curveTool_name = "curves.yml";
 	ofImage image_GradientCurve;
 	ofParameter<float> curve_Ctrl_In;

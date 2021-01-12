@@ -1157,7 +1157,7 @@ void ofxColorManager::refresh_Libs()
 //--------------------------------------------------------------
 void ofxColorManager::update_Curve()
 {
-	float out = ofMap(curvesTool.getAtPercent(1.0 - curve_Ctrl_In), 0, cAmt - 1, 1, 0);
+	float out = ofMap(curvesTool.getAtPercent(1.0 - curve_Ctrl_In), 0, MAX_LUT_SIZE - 1, 1, 0);
 	colCurveTest = gradient.getColorAtPercent(out);
 }
 
@@ -1607,8 +1607,8 @@ void ofxColorManager::refresh_Gui_Layout()
 	// a. hardcoded
 	curveTool_x = _xx;
 	curveTool_y = _yy;
-	curveTool_w = cAmt;
-	curveTool_h = cAmt;
+	curveTool_w = MAX_LUT_SIZE;
+	curveTool_h = MAX_LUT_SIZE;
 
 	//--
 
@@ -3498,12 +3498,6 @@ void ofxColorManager::gui_Gradient()
 
 			ImGui::Dummy(ImVec2(0, 2));
 
-			//if (ofxImGui::AddParameter(curve_Ctrl_In))
-			//{
-			//	curve_Gradient_PickIn = curve_Ctrl_In.get();//TODO:
-			//	//curve_Slider_Pick.setPercent(curve_Ctrl_In.get());
-			//}
-
 			if (ofxImGui::AddParameter(curve_Gradient_PickIn))
 			{
 				curve_Ctrl_In = curve_Gradient_PickIn;
@@ -4500,7 +4494,7 @@ void ofxColorManager::setup_CurveTool()
 	//gradient here too
 	image_GradientCurve.allocate(image_curvedGradient_w, image_curvedGradient_h, OF_IMAGE_COLOR);
 
-	curvesTool.setup(cAmt);
+	curvesTool.setup(MAX_LUT_SIZE);
 
 	pos_CurveEditor.set("POS CURVE", glm::vec2(500), glm::vec2(0), glm::vec2(1920, 180));
 
@@ -4534,13 +4528,10 @@ void ofxColorManager::setup_CurveTool()
 	curve_Slider_ExpTweak.setLabelString("Exp");
 }
 
-
 //--------------------------------------------------------------
 void ofxColorManager::update_CurveTool()
 {
 	//----
-
-	//TODO:
 
 	if (curve_Gradient_PickIn.get() != curve_Slider_Pick.getValue())
 	{
@@ -4548,11 +4539,10 @@ void ofxColorManager::update_CurveTool()
 	}
 
 	// update values
-	//curve_Ctrl_In = curve_Slider_Pick.getValue();
 	if (curve_Ctrl_In.get() != curve_Slider_Pick.getValue())
 	{
 		curve_Ctrl_In.setWithoutEventNotifications(curve_Slider_Pick.getValue());
-		curve_Index = (int)ofMap(curve_Ctrl_In.get(), 0, 1, 0, cAmt - 1);
+		curve_Index = (int)ofMap(curve_Ctrl_In.get(), 0, 1, 0, MAX_LUT_SIZE - 1);
 	}
 
 	if (curve_Slider_ExpTweak.getValue() != curve_Gradient_Exp.get())
@@ -4574,7 +4564,7 @@ void ofxColorManager::update_CurveTool()
 	//Windows
 	pointY = (curvesTool.getPoint(pointToModify)).x;
 
-	curvesTool.set(pointToModify, ofVec2f(pointY, ofMap(curve_Gradient_TEST_Prc, 0., 1., 0, cAmt)));
+	curvesTool.set(pointToModify, ofVec2f(pointY, ofMap(curve_Gradient_TEST_Prc, 0., 1., 0, MAX_LUT_SIZE)));
 
 	//----
 
@@ -4583,10 +4573,10 @@ void ofxColorManager::update_CurveTool()
 	// every y point has different color
 	for (int y = 0; y < image_curvedGradient_h; y++)
 	{
-		float input_LUT = ofMap(y, 0, image_curvedGradient_h, 0, cAmt - 1);
+		float input_LUT = ofMap(y, 0, image_curvedGradient_h, 0, MAX_LUT_SIZE - 1);
 		float output_LUT = curvesTool[input_LUT];
 		float output;
-		output = ofMap(output_LUT, 0, cAmt - 1, 1., 0.);
+		output = ofMap(output_LUT, 0, MAX_LUT_SIZE - 1, 1., 0.);
 		ofColor c = gradient.getColorAtPercent(output);
 
 		// all x point has the same color
@@ -4599,10 +4589,11 @@ void ofxColorManager::update_CurveTool()
 
 	//---
 
+	//TODO:
 	//// update TARGET color pointer (ofApp)
 	//if (color_TARGET != nullptr)
 	//{
-	//	float out = ofMap(curvesTool.getAtPercent(1.0 - curve_Ctrl_In), 0, cAmt - 1, 1., 0.);
+	//	float out = ofMap(curvesTool.getAtPercent(1.0 - curve_Ctrl_In), 0, MAX_LUT_SIZE - 1, 1., 0.);
 	//	ofColor c = gradient.getColorAtPercent(out);
 	//	color_TARGET->set(c);
 	//}
@@ -4637,7 +4628,7 @@ void ofxColorManager::draw_CurveTools()
 		// 1.2 horizontal line
 
 		ofSetColor(ofColor(ofColor::white, 225));
-		float y = curveTool_y + cAmt - curvesTool[curve_Index];
+		float y = curveTool_y + MAX_LUT_SIZE - curvesTool[curve_Index];
 		ofDrawLine(curveTool_x, y, curveTool_x + curveTool_w, y);
 
 		//// 1.3 current pos circle point
@@ -4648,8 +4639,8 @@ void ofxColorManager::draw_CurveTools()
 
 		// NOTE: 
 		//sometimes we need some tricky hacking to avoid rare fliping from gradients
-		curve_Ctrl_Out.setWithoutEventNotifications(ofMap(curvesTool.getAtPercent(curve_Ctrl_In), 0.f, cAmt - 1, 0.f, 1.f));
-		//curve_Ctrl_Out = ofMap(curvesTool.getAtPercent(curve_Ctrl_In), 0, cAmt - 1, 0., 1.);
+		curve_Ctrl_Out.setWithoutEventNotifications(ofMap(curvesTool.getAtPercent(curve_Ctrl_In), 0.f, MAX_LUT_SIZE - 1, 0.f, 1.f));
+		//curve_Ctrl_Out = ofMap(curvesTool.getAtPercent(curve_Ctrl_In), 0, MAX_LUT_SIZE - 1, 0., 1.);
 
 		//-
 
@@ -6030,7 +6021,90 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		}
 	}
 
+	//----
+
+	// curve
+
+	else if (name == bResetCurve.getName())
+	{
+		if (bResetCurve)
+		{
+			bResetCurve = false;
+
+			curvesTool.clear();
+			curvesTool.add(ofVec2f(0, 0));
+			curvesTool.add(ofVec2f(127, 127));
+			curvesTool.add(ofVec2f(255, 255));
+
+			curve_Gradient_TEST_Prc = 0.5;
+			TEST_Mode = false;
+
+			// pick in to out
+			curve_Gradient_PickIn = 0.5;
+			curve_Slider_Pick.setup(slider_Exp_x, slider_Exp_y, slider_Exp_w, slider_Exp_h, 0, 1, curve_Gradient_PickIn, true, true);
+			curve_Slider_Pick.setPercent(curve_Gradient_PickIn);
+
+			// exp
+			curve_Gradient_Exp = 0.5;
+			curve_Slider_ExpTweak.setup(slider_PickIn_x, slider_PickIn_y, slider_PickIn_w, slider_PickIn_h, 0, 1, curve_Gradient_Exp, true, true);
+			curve_Slider_ExpTweak.setPercent(curve_Gradient_Exp);
+		}
+	}
+
+	else if (name == gradient_HardMode.getName())
+	{
+		gradient.setHardMode(gradient_HardMode);
+	}
+
+	else if (name == AutoSet_Background_FromGradient.getName())
+	{
+		if (AutoSet_Background_FromGradient) AutoSet_BackGround_Color = true;
+	}
+
+	//----
+
+	// background
+
+	else if (name == color_backGround_SET.getName())
+	{
+		if (color_backGround_SET)
+		{
+			color_backGround_SET = false;
+			color_BackGround.set(ofColor(color_Picked.get()));
+		}
+	}
+
+	else if (name == color_BackGround_Darkness.getName())
+	{
+		//TODO: must improve
+		//refresh_TheoryEngine();
+
+		// auto create user palette from algo palette
+		if (bAuto_TheoryToPalette)
+		{
+			palette_clear();
+
+#ifdef USE_RECTANGLE_INTERFACES
+			palette_FromTheory(SELECTED_palette_LAST);//trig last choice
+#endif
+		}
+	}
+
 	//---
+
+	/*
+	//else if (name == "AutoSet")
+	//{
+
+	//}
+	//else if (name == "BG")
+	//{
+	//	//if (color_BackGround.get().getBrightness()!=backgroundDarkness_PRE)
+	//	//color_BackGround_Darkness = color_BackGround.get().getBrightness();
+	//	//
+	//	////if (backgroundDarkness_PRE!=color_BackGround_Darkness)
+	//	////color_BackGround_Darkness = (int)darkness;
+	//}
 
 	// algorithmic 
 	//    else if (name == "RANDOM PALETTE") {
@@ -6076,88 +6150,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 //			if (DEMO_Test) myDEMO.reStart();
 //		}
 //	}
-
-	//--
-
-	// curve
-
-	else if (name == bResetCurve.getName())
-	{
-		if (bResetCurve)
-		{
-			bResetCurve = false;
-
-			curvesTool.clear();
-			curvesTool.add(ofVec2f(0, 0));
-			curvesTool.add(ofVec2f(127, 127));
-			curvesTool.add(ofVec2f(255, 255));
-
-			curve_Gradient_TEST_Prc = 0.5;
-			TEST_Mode = false;
-
-			// pick in to out
-			curve_Gradient_PickIn = 0.5;
-			curve_Slider_Pick.setup(slider_Exp_x, slider_Exp_y, slider_Exp_w, slider_Exp_h, 0, 1, curve_Gradient_PickIn, true, true);
-			curve_Slider_Pick.setPercent(curve_Gradient_PickIn);
-
-			// exp
-			curve_Gradient_Exp = 0.5;
-			curve_Slider_ExpTweak.setup(slider_PickIn_x, slider_PickIn_y, slider_PickIn_w, slider_PickIn_h, 0, 1, curve_Gradient_Exp, true, true);
-			curve_Slider_ExpTweak.setPercent(curve_Gradient_Exp);
-		}
-	}
-
-	else if (name == gradient_HardMode.getName())
-	{
-		gradient.setHardMode(gradient_HardMode);
-	}
-
-	else if (name == AutoSet_Background_FromGradient.getName())
-	{
-		if (AutoSet_Background_FromGradient) AutoSet_BackGround_Color = true;
-	}
-
-	//-
-
-	// background
-
-	else if (name == color_backGround_SET.getName())
-	{
-		if (color_backGround_SET)
-		{
-			color_backGround_SET = false;
-			color_BackGround.set(ofColor(color_Picked.get()));
-		}
-	}
-
-	//else if (name == "AutoSet")
-	//{
-
-	//}
-	//else if (name == "BG")
-	//{
-	//	//if (color_BackGround.get().getBrightness()!=backgroundDarkness_PRE)
-	//	//color_BackGround_Darkness = color_BackGround.get().getBrightness();
-	//	//
-	//	////if (backgroundDarkness_PRE!=color_BackGround_Darkness)
-	//	////color_BackGround_Darkness = (int)darkness;
-	//}
-
-	else if (name == color_BackGround_Darkness.getName())
-	{
-		//TODO: must improve
-		//refresh_TheoryEngine();
-
-		// auto create user palette from algo palette
-		if (bAuto_TheoryToPalette)
-		{
-			palette_clear();
-
-#ifdef USE_RECTANGLE_INTERFACES
-			palette_FromTheory(SELECTED_palette_LAST);//trig last choice
-#endif
-		}
-	}
+*/
 }
 
 //load user palette from range
@@ -6255,26 +6248,29 @@ void ofxColorManager::Changed_ColorRange(ofAbstractParameter &e)
 void ofxColorManager::palette_FromGradient()
 {
 	ofLogNotice(__FUNCTION__);
-	palette_clear();
+	
+	//TODO:
+	//must have an aux palette because we are overwritting the main palette...
 
-	for (int i = 0; i < numColors_Engines.get(); i++)
+	vector<ofColor> p;
+	p.resize(numColors_Engines);
+
+	for (int i = 0; i < numColors_Engines; i++)
 	{
-		//float _curve_Ctrl_In = curve_Gradient_PickIn;
-		//float in = ofMap(i, 0, numColors_Engines - 1, 0, 1);
-		//float out = ofMap(curvesTool.getAtPercent(1.0 - _curve_Ctrl_In), 0, cAmt - 1, 1, 0);
-		//colCurveTest = gradient.getColorAtPercent(out);
-		//ofColor c = gradient.getColorAtPercent(1.0f / i);
-		//palette_addColor(c);
-
 		float val = float(i / (float)(numColors_Engines - 1));
-		ofLogNotice(__FUNCTION__) << val;
-
 		ofColor c = getColorAtPercent(val);
-		ofLogNotice(__FUNCTION__) << "[" << i << "] > " << ofToString(c);
+		ofLogNotice(__FUNCTION__) << "Color:" <<c;
+		p[i] = c;
 
-		palette_addColor(c);
+		ofLogNotice(__FUNCTION__) << "[" << i << "] > " << ofToString(c);
 	}
 
+	palette_clear();
+	for (int i = 0; i < numColors_Engines.get(); i++)
+	{
+		palette_addColor(p[i]);
+	}
+	
 	//--
 
 	// workflow
@@ -7718,7 +7714,7 @@ void ofxColorManager::setVisible(bool b)
 ofColor ofxColorManager::getColorAtPercent(float control)
 {
 	ofLogNotice(__FUNCTION__) << control;
-	float out = ofMap(curvesTool.getAtPercent(1.0 - control), 0, cAmt - 1, 1., 0.);
+	float out = ofMap(curvesTool.getAtPercent(1.0 - control), 0, MAX_LUT_SIZE - 1, 1., 0.);
 	ofColor c = gradient.getColorAtPercent(out);
 	return c;
 }
