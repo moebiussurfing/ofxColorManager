@@ -842,7 +842,6 @@ void ofxColorManager::startup()
 //--------------------------------------------------------------
 void ofxColorManager::update(ofEventArgs & args)
 {
-
 	//----
 
 	// DEMO
@@ -3501,10 +3500,17 @@ void ofxColorManager::gui_Gradient()
 
 			ImGui::Dummy(ImVec2(0, 2));
 
-			if (ofxImGui::AddParameter(curve_Ctrl_In))
+			//if (ofxImGui::AddParameter(curve_Ctrl_In))
+			//{
+			//	curve_Gradient_PickIn = curve_Ctrl_In.get();//TODO:
+			//	//curve_Slider_Pick.setPercent(curve_Ctrl_In.get());
+			//}
+
+			if (ofxImGui::AddParameter(curve_Gradient_PickIn))
 			{
-				//curve_Slider_Pick.setPercent(curve_Ctrl_In.get());
+				curve_Ctrl_In = curve_Gradient_PickIn;
 			}
+
 			ofxImGui::AddParameter(curve_Ctrl_Out);
 
 			ImGui::PopItemWidth();
@@ -4488,13 +4494,13 @@ void ofxColorManager::setup_CurveTool()
 	curve_Slider_Pick.setup(slider_PickIn_x, slider_PickIn_y, slider_PickIn_w, slider_PickIn_h, 0, 1, curve_Gradient_PickIn.get(), true, true);
 	curve_Slider_Pick.setPercent(curve_Gradient_PickIn);
 	curve_Slider_Pick.setVisible(SHOW_GradientCurve);
-	curve_Slider_Pick.setLabelString("Exp");
+	curve_Slider_Pick.setLabelString("Pick");
 
 	// slider live test color out for this input
 	curve_Slider_ExpTweak.setup(slider_Exp_x + (slider_Exp_w + pad), slider_Exp_y, 2 * slider_Exp_w, slider_Exp_h, 0, 1, curve_Gradient_Exp, true, true);
 	curve_Slider_ExpTweak.setPercent(curve_Gradient_Exp);
 	curve_Slider_ExpTweak.setVisible(SHOW_GradientCurve);
-	curve_Slider_ExpTweak.setLabelString("Pick");
+	curve_Slider_ExpTweak.setLabelString("Exp");
 }
 
 
@@ -4504,6 +4510,12 @@ void ofxColorManager::update_CurveTool()
 	//----
 
 	//TODO:
+
+	if (curve_Gradient_PickIn.get() != curve_Slider_Pick.getValue())
+	{
+		curve_Gradient_PickIn = curve_Slider_Pick.getValue();
+	}
+
 	// update values
 	//curve_Ctrl_In = curve_Slider_Pick.getValue();
 	if (curve_Ctrl_In.get() != curve_Slider_Pick.getValue())
@@ -5254,11 +5266,11 @@ void ofxColorManager::palette_removeColorLast()
 			ofLogVerbose(__FUNCTION__) << "removed children: " << b;
 		}
 		btns_palette.pop_back();
-	}
+		}
 
 	palette_rearrenge();
 #endif
-}
+		}
 
 //--------------------------------------------------------------
 void ofxColorManager::palette_clear()
@@ -5782,7 +5794,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	{
 		//curve_Slider_ExpTweak.setup(slider_PickIn_x, slider_PickIn_y, slider_PickIn_w, slider_PickIn_h, 0, 1, curve_Gradient_PickIn, true, true);
 		//curve_Slider_ExpTweak.setPercent(curve_Gradient_PickIn);
-		curve_Slider_Pick.setPercent(curve_Gradient_PickIn);
+		curve_Slider_Pick.setPercent(curve_Gradient_PickIn.get());
 	}
 
 	//curve exp
@@ -5922,7 +5934,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 				btns_palette[palette_colorSelected]->setSelected(true);//sets border only
 				ofLogNotice(__FUNCTION__) << "user palette selected last _c: " << palette_colorSelected;
 			}
-}
+		}
 #endif
 	}
 
@@ -5966,7 +5978,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			color_Picked = palette[palette_colorSelected];
 		}
 #endif
-	}
+		}
 
 	else if (name == bRemoveColor.getName())
 	{
@@ -6121,7 +6133,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 #endif
 		}
 	}
-}
+	}
 
 //load user palette from range
 //--------------------------------------------------------------
@@ -6812,7 +6824,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		else if (key == 'G')
 		{
 			SHOW_Gui_Internal = !SHOW_Gui_Internal;
-	}
+		}
 #endif
 
 		//else if (key == 'g') {
@@ -7076,8 +7088,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//
 		//    else if (key == OF_KEY_RETURN)
 		//        colorBrowser.switch_sorted_Type();
-}
-}
+			}
+		}
 
 //--------------------------------------------------------------
 void ofxColorManager::keyReleased(ofKeyEventArgs &eventArgs)
@@ -7564,7 +7576,7 @@ void ofxColorManager::refresh_Picker_Touched()
 		////color_TheoryBase.set(color_Picked.get());
 		//update_Theory();
 }
-}
+	}
 
 //----
 
