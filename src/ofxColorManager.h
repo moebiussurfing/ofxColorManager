@@ -562,6 +562,8 @@ private:
 	ofxColorPalette random;
 	//ofxColorPalette::ColorChannel mode;
 
+	ofParameter<float> analogSpread;
+
 	ofParameter<int> numColors_Alg;
 	//number of colors. must be even sometimes to get same size in all palettes
 
