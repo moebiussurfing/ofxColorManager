@@ -1917,6 +1917,7 @@ void ofxColorManager::gui_Theory()
 		//if (ofxImGui::AddParameter(numColors_Engines))
 		//{
 		//}
+
 		if (ofxSurfingHelpers::AddIntStepped(numColors_Engines))
 		{
 		}
@@ -1946,9 +1947,6 @@ void ofxColorManager::gui_Theory()
 			if (i == last_Index_Theory)
 			{
 				bDrawBorder = true;
-			}
-			if (bDrawBorder)
-			{
 				ImGui::PushStyleColor(ImGuiCol_Border, color_Pick);
 				ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, linew_Pick);
 			}
