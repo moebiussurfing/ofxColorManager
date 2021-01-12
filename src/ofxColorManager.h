@@ -31,6 +31,7 @@ TODO:
 #define BUTTON_COLOR_SIZE 40
 #define COLOR_STRIP_COLOR_HEIGHT 15
 #define PANEL_WIDGETS_WIDTH 200
+#define PANEL_WIDGETS_HEIGHT 500
 
 // extra
 //#define USE_UNDO_ENGINE
@@ -237,7 +238,7 @@ private:
 
 private:
 	ofxInteractiveRect rPreview = { "_Curve_Gui" };
-	ofParameter<bool> MODE_Editor;
+	ofParameter<bool> MODE_EditGradientLayout;
 	ofParameter<bool> SHOW_Editor;
 	ofColor colCurveTest;
 	ofParameter<glm::vec2> pos_CurveEditor;
@@ -789,7 +790,7 @@ private:
 	// test curve
 private:
 
-	ofParameter<bool> TEST_Mode{ "Enable Test", false };
+	ofParameter<bool> TEST_Mode{ "Enable", false };
 	float TEST_Speed = .75;
 	bool TEST_LFO_Mode = true;
 	int TEST_maxFrames = 300;//slowest period
@@ -815,8 +816,8 @@ private:
 	//int TEST_pauseLong = 2000;
 	//int TEST_pauseChrono = 0;
 
-	ofParameter<float> curve_Gradient_Exp{ "Gradient Exp", 0, 0, 1 };
-	ofParameter<float> curve_Gradient_PickIn{ "Gradient Pick", 0, 0, 1 };
+	ofParameter<float> curve_Gradient_Exp{ "Exp", 0, 0, 1 };
+	ofParameter<float> curve_Gradient_PickIn{ "Pick", 0, 0, 1 };
 
 	//--
 

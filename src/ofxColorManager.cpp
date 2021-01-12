@@ -362,7 +362,7 @@ void ofxColorManager::setup()
 	gradient.setDrawDirFlip(true);
 
 	//params_curve.setName("GRADIENT CURVE");
-	//params_curve.add(MODE_Editor);
+	//params_curve.add(MODE_EditGradientLayout);
 	//params_curve.add(gradient_HardMode);
 
 	ofAddListener(params_curve.parameterChangedE(), this, &ofxColorManager::Changed_Controls);
@@ -410,8 +410,8 @@ void ofxColorManager::setup()
 	SHOW_ColourLovers.set("LOVERS", true);
 	//SHOW_Gradient.set("GRADIENT", true);
 	SHOW_GradientCurve.set("GRADIENT", true);
-	MODE_Editor.set("Edit Layout", false);
-	MODE_Editor.setSerializable(false);
+	MODE_EditGradientLayout.set("Edit Layout", false);
+	MODE_EditGradientLayout.setSerializable(false);
 
 	SHOW_Presets.set("PRESETS", true);
 	SHOW_Kit.set("Show Kit", true);
@@ -608,7 +608,7 @@ void ofxColorManager::setup()
 	params_Gradient.add(curve_Gradient_Exp);
 	params_Gradient.add(curve_Gradient_PickIn);
 	params_Gradient.add(gradient_HardMode);//gradient
-	//////params_Gradient.add(MODE_Editor);
+	//////params_Gradient.add(MODE_EditGradientLayout);
 	//////params_Gradient.add(SHOW_Gradient);
 	//////params_Gradient.add(SHOW_CosineGradient);
 	//////params_Gradient.add(paletteLibPage_param);
@@ -680,7 +680,7 @@ void ofxColorManager::setup()
 	params_control.add(SHOW_Demo);
 	params_control.add(SHOW_BrowserColors);
 	params_control.add(SHOW_GradientCurve);
-	params_control.add(MODE_Editor);
+	params_control.add(MODE_EditGradientLayout);
 	params_control.add(SHOW_Presets);
 	params_control.add(SHOW_BackGround);
 	params_control.add(SHOW_Library);
@@ -1096,7 +1096,7 @@ void ofxColorManager::update(ofEventArgs & args)
 
 	//-
 
-	if (MODE_Editor)
+	if (MODE_EditGradientLayout)
 	{
 		refresh_Gui_Layout();
 	}
@@ -1577,7 +1577,7 @@ void ofxColorManager::refresh_Gui_Layout()
 
 	int _xx, _yy, _ww, _hh;
 
-	//if (MODE_Editor)
+	//if (MODE_EditGradientLayout)
 	if (1)
 	{
 		_xx = rPreview.getX() + _pad1;
@@ -1774,7 +1774,7 @@ void ofxColorManager::gui_Theory()
 	static bool auto_resize = true;
 	float ww, hh;
 	ww = PANEL_WIDGETS_WIDTH;
-	hh = 500;
+	hh = PANEL_WIDGETS_HEIGHT;
 	ImGui::SetWindowSize(ImVec2(ww, hh));
 	ImGuiWindowFlags flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : 0;
 
@@ -3128,7 +3128,7 @@ void ofxColorManager::gui_Range()
 	static bool auto_resize = true;
 	float ww, hh;
 	ww = PANEL_WIDGETS_WIDTH;
-	hh = 500;
+	hh = PANEL_WIDGETS_HEIGHT;
 	ImGui::SetWindowSize(ImVec2(ww, hh));
 	ImGuiWindowFlags flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : 0;
 
@@ -3386,32 +3386,34 @@ void ofxColorManager::gui_Gradient()
 	static bool auto_resize = true;
 	float ww, hh;
 	ww = PANEL_WIDGETS_WIDTH;
-	hh = 500;
+	hh = PANEL_WIDGETS_HEIGHT;
 	ImGui::SetWindowSize(ImVec2(ww, hh));
 	ImGuiWindowFlags flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : 0;
 
 	//--
 
-	float _spc;
-	float _w;
-	float _w50;
-	float _w20;
-	float _h;
-
-	_spc = ImGui::GetStyle().ItemInnerSpacing.x;
-	//_w = ImGui::GetWindowContentRegionWidth();
-
-	if (auto_resize) _w = ww;
-	else _w = ImGui::GetWindowContentRegionWidth() - 3 * _spc;
-	_w50 = _w * 0.5;
-	_w20 = _w * 0.2;
-
-	_h = 1. * BUTTON_BIG_HEIGHT;
-
-	//--
-
 	if (ofxImGui::BeginWindow("GRADIENT", mainSettings, flagsw))
 	{
+		//--
+
+		float _spc;
+		float _w;
+		float _w50;
+		float _w20;
+		float _h;
+
+		_spc = ImGui::GetStyle().ItemInnerSpacing.x;
+		//_w = ImGui::GetWindowContentRegionWidth();
+
+		if (auto_resize) _w = ww;
+		else _w = ImGui::GetWindowContentRegionWidth() - 3 * _spc;
+		_w50 = _w * 0.5;
+		_w20 = _w * 0.2;
+
+		_h = BUTTON_BIG_HEIGHT;
+
+		//-
+
 		ImGuiColorEditFlags _flagw;
 		_flagw = false;
 
@@ -3424,28 +3426,27 @@ void ofxColorManager::gui_Gradient()
 
 			// reset
 
-			ImGui::PushItemWidth(_w20);
-
-			//if (ImGui::Button(bResetCurve.getName().c_str()))
+			ImGui::PushItemWidth(_w);
 			if (ImGui::Button(bResetCurve.getName().c_str(), ImVec2(_w, _h)))
+				//if (ImGui::Button(bResetCurve.getName().c_str()))
+				//if (ImGui::Button(bResetCurve.getName().c_str(), ImVec2(_w, _h)))
 			{
 				bResetCurve = true;
 				//rPreview.setRect(600, 200, 755, 295);
 				//refresh_Gui_Layout();
 			}
-
+			ImGui::PopItemWidth();
 			ImGui::Dummy(ImVec2(0, 5));
 
+			ImGui::PushItemWidth(_w20);
 			ofxImGui::AddParameter(gradient_HardMode);
-			//ImGui::Checkbox("AutoSet Background", &AutoSet_Background_FromGradient);
 			ofxImGui::AddParameter(AutoSet_Background_FromGradient);
 			ofxImGui::AddParameter(bAutoPaletteFromGradient);
-
+			//ImGui::Checkbox("AutoSet Background", &AutoSet_Background_FromGradient);
 			//ofxSurfingHelpers::AddBigButton(bResetCurve);
 			//ofxImGui::AddParameter(bResetCurve);
 			//ofxImGui::AddParameter(curve_Gradient_TEST_Prc);
 			//ofxImGui::AddParameter(pos_CurveEditor);
-
 			ImGui::PopItemWidth();
 
 			//-
@@ -3461,10 +3462,10 @@ void ofxColorManager::gui_Gradient()
 		// curve Test
 
 		//if (ImGui::TreeNode("CURVE TEST"))
+		//if (ImGui::CollapsingHeader("CURVE TEST", _flagw))
 		if (ofxImGui::BeginTree("CURVE TEST", mainSettings))
-			//if (ImGui::CollapsingHeader("CURVE TEST", _flagw))
 		{
-			//ImGui::PushItemWidth(_w);
+			ImGui::PushItemWidth(_w50);
 
 			ofxImGui::AddParameter(TEST_Mode);
 			//ImGui::Checkbox("Enable", &TEST_Mode); 
@@ -3476,7 +3477,7 @@ void ofxColorManager::gui_Gradient()
 			}
 			ImGui::SliderFloat("Speed", &TEST_Speed, 0.0f, 1.0f);
 
-			//ImGui::PopItemWidth();
+			ImGui::PopItemWidth();
 
 			//-
 
@@ -3515,13 +3516,12 @@ void ofxColorManager::gui_Gradient()
 			//-
 
 			ImGui::Dummy(ImVec2(0, 10));
-
-			//ImGui::PushItemWidth(_w);
-			if (ofxSurfingHelpers::AddBigToggle(MODE_Editor, _w, 0.5 * _h))
+			ImGui::PushItemWidth(_w);
+			if (ofxSurfingHelpers::AddBigToggle(MODE_EditGradientLayout, _w, 0.5 * _h))
 			{
 			}
-			//ofxImGui::AddParameter(MODE_Editor);
-			//ImGui::PopItemWidth();
+			//ofxImGui::AddParameter(MODE_EditGradientLayout);
+			ImGui::PopItemWidth();
 
 			ImGui::Checkbox("Auto-resize", &auto_resize);
 		}
@@ -3535,32 +3535,34 @@ void ofxColorManager::gui_Background()
 	static bool auto_resize = true;
 	float ww, hh;
 	ww = PANEL_WIDGETS_WIDTH;
-	hh = 500;
+	hh = PANEL_WIDGETS_HEIGHT;
 	ImGui::SetWindowSize(ImVec2(ww, hh));
 	ImGuiWindowFlags flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : 0;
 
 	//--
 
-	float _spc;
-	float _w;
-	float _w50;
-	float _w20;
-	float _h;
-
-	_spc = ImGui::GetStyle().ItemInnerSpacing.x;
-	//_w = ImGui::GetWindowContentRegionWidth();
-
-	if (auto_resize) _w = ww;
-	else _w = ImGui::GetWindowContentRegionWidth() - 3 * _spc;
-	_w50 = _w * 0.5;
-	_w20 = _w * 0.2;
-
-	_h = 1. * BUTTON_BIG_HEIGHT;
-
-	//--
-
 	if (ofxImGui::BeginWindow("BACKGROUND", mainSettings, flagsw))
 	{
+		//--
+
+		float _spc;
+		float _w;
+		float _w50;
+		float _w20;
+		float _h;
+
+		_spc = ImGui::GetStyle().ItemInnerSpacing.x;
+		//_w = ImGui::GetWindowContentRegionWidth();
+
+		if (auto_resize) _w = ww;
+		else _w = ImGui::GetWindowContentRegionWidth() - 3 * _spc;
+		_w50 = _w * 0.5;
+		_w20 = _w * 0.2;
+
+		_h = BUTTON_BIG_HEIGHT;
+
+		//-
+
 		{
 			ofxImGui::AddParameter(background_Draw_ENABLE);
 
@@ -4513,7 +4515,7 @@ void ofxColorManager::setup_CurveTool()
 	params_curve.add(curve_Ctrl_Out);
 	params_curve.add(bResetCurve);
 	params_curve.add(SHOW_GradientCurve);
-	params_curve.add(MODE_Editor);
+	params_curve.add(MODE_EditGradientLayout);
 	params_curve.add(SHOW_Editor);
 	params_curve.add(pos_CurveEditor);
 
@@ -5836,11 +5838,11 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	}
 
 	//edit curve layout
-	else if (name == MODE_Editor.getName())
+	else if (name == MODE_EditGradientLayout.getName())
 	{
-		ofLogNotice(__FUNCTION__) << name << (MODE_Editor ? " TRUE" : " FALSE");
+		ofLogNotice(__FUNCTION__) << name << (MODE_EditGradientLayout ? " TRUE" : " FALSE");
 
-		if (MODE_Editor.get())
+		if (MODE_EditGradientLayout.get())
 		{
 			rPreview.enableEdit();
 		}
@@ -5959,7 +5961,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 				btns_palette[palette_colorSelected]->setSelected(true);//sets border only
 				ofLogNotice(__FUNCTION__) << "user palette selected last _c: " << palette_colorSelected;
 			}
-}
+		}
 #endif
 	}
 
@@ -6092,8 +6094,6 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 			curve_Gradient_TEST_Prc = 0.5;
 			TEST_Mode = false;
-
-			//TODO: error. both flipped!
 
 			// pick in to out
 			curve_Gradient_PickIn = 0.5;
@@ -6860,7 +6860,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		else if (key == 'G')
 		{
 			SHOW_Gui_Internal = !SHOW_Gui_Internal;
-	}
+		}
 #endif
 
 		//else if (key == 'g') {
@@ -6876,7 +6876,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//edit layout
 		else if (key == 'E' || key == 'e')
 		{
-			MODE_Editor = !MODE_Editor;
+			MODE_EditGradientLayout = !MODE_EditGradientLayout;
 		}
 
 		//    else if (key == 'l')
@@ -7124,7 +7124,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//
 		//    else if (key == OF_KEY_RETURN)
 		//        colorBrowser.switch_sorted_Type();
-}
+	}
 }
 
 //--------------------------------------------------------------
@@ -7572,7 +7572,7 @@ void ofxColorManager::refresh_Picker_Touched()
 			// 3. update gradient
 			if (palette_colorSelected < gradient.getNumColors())
 				gradient.replaceColorAtIndex(palette_colorSelected, color_Clicked2);
-	}
+		}
 #endif
 		//--
 
@@ -7611,7 +7611,7 @@ void ofxColorManager::refresh_Picker_Touched()
 		//// palettes
 		////color_TheoryBase.set(color_Picked.get());
 		//update_Theory();
-}
+	}
 }
 
 //----
@@ -7639,7 +7639,7 @@ void ofxColorManager::setControl(float control)
 {
 	ofLogNotice(__FUNCTION__) << control;
 
-	if (!MODE_Editor)
+	if (!MODE_EditGradientLayout)
 	{
 		curve_Ctrl_In.setWithoutEventNotifications(control);
 		//curve_Ctrl_In = control;
