@@ -65,7 +65,7 @@ bool PresetPalette::preset_load(std::string p)
 
 		//curvesTool.load(path_Presets + presetData.curveName + ".yml");
 		//
-		//if (color_BackGround_AutoSet)
+		//if (AutoSet_BackGround_Color)
 		//{
 		//    color_BackGround = presetData.background;
 		//}

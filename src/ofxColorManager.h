@@ -35,7 +35,7 @@ TODO:
 // extra
 //#define USE_UNDO_ENGINE
 #define USE_DEBUG_LAYOUT // includes mouse ruler
-#define USE_SUPER_LOG
+//#define USE_SUPER_LOG
 //#define INCL_LAYOUT
 //#define USE_OFX_GUI
 
@@ -310,7 +310,7 @@ private:
 
 	//-
 
-	ofParameter<int> numColors_TheoryEngines;
+	ofParameter<int> numColors_Engines;
 
 private:
 	// color theory
@@ -606,7 +606,7 @@ private:
 	void gui_Picker();
 	void gui_Library();
 	void gui_Background();
-	void gui_Curve();
+	void gui_Gradient();
 	void gui_Range();
 	void gui_Presets();
 	void gui_Panels();
@@ -621,7 +621,7 @@ private:
 private:
 	ofParameter<ofFloatColor> color_BackGround;//main bg color
 	ofParameter<bool> color_backGround_SET;
-	ofParameter<bool> color_BackGround_AutoSet;
+	ofParameter<bool> AutoSet_BackGround_Color;
 	ofParameter<bool> color_BackGround_Darker;
 	ofParameter<float> color_BackGround_Darkness;
 	//float backgroundDarkness_PRE;
@@ -700,6 +700,7 @@ private:
 	void palette_FromTheory(int p);
 	void palette_FromColourLovers();
 	void palette_FromQuantizer();
+	void palette_FromGradient();
 
 	//----
 
@@ -772,15 +773,16 @@ private:
 
 	int cAmt = 256;
 	std::string curveTool_name = "curves.yml";
-	ofImage curve_img_gradient;
+	ofImage image_GradientCurve;
 	ofParameter<float> curve_Ctrl_In;
 	ofParameter<float> curve_Ctrl_Out;
 	ofParameter<bool> bResetCurve;
+	ofParameter<bool> bAutoPaletteFromGradient;
 	ofParameter<float> curve_Gradient_TEST_Prc;
 	int curve_Index = 0;
 
-	ofxSimpleSlider curve_Slider_InExp;
-	ofxSimpleSlider curve_Slider_OutPick;
+	ofxSimpleSlider curve_Slider_Pick;
+	ofxSimpleSlider curve_Slider_ExpTweak;
 
 	//--
 
@@ -791,7 +793,8 @@ private:
 	float TEST_Speed = .75;
 	bool TEST_LFO_Mode = true;
 	int TEST_maxFrames = 300;//slowest period
-	bool TEST_toBackground = true;
+	//bool AutoSet_Background_FromGradient = true;
+	ofParameter<bool> AutoSet_Background_FromGradient{ "AutoSet Background", true };
 	float framePrc;
 
 	//--
@@ -812,8 +815,8 @@ private:
 	//int TEST_pauseLong = 2000;
 	//int TEST_pauseChrono = 0;
 
-	ofParameter<float> curve_Gradient_InExp{ "Gradient Exp", 0, 0, 1 };
-	ofParameter<float> curve_Gradient_OutPick{ "Gradient Pick", 0, 0, 1 };
+	ofParameter<float> curve_Gradient_Exp{ "Gradient Exp", 0, 0, 1 };
+	ofParameter<float> curve_Gradient_PickIn{ "Gradient Pick", 0, 0, 1 };
 
 	//--
 
@@ -883,14 +886,14 @@ private:
 	int grad_y;
 	int grad_w;
 	int grad_h;
-	int slider_In_x;
-	int slider_In_y;
-	int slider_In_w;
-	int slider_In_h;
-	int slider_Out_x;
-	int slider_Out_y;
-	int slider_Out_w;
-	int slider_Out_h;
+	int slider_Exp_x;
+	int slider_Exp_y;
+	int slider_Exp_w;
+	int slider_Exp_h;
+	int slider_PickIn_x;
+	int slider_PickIn_y;
+	int slider_PickIn_w;
+	int slider_PickIn_h;
 	int palettes_x;
 	int palettes_y;
 	int palette_x;
