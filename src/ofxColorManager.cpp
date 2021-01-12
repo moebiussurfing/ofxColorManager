@@ -3430,14 +3430,15 @@ void ofxColorManager::gui_Gradient()
 
 			// reset
 
-			//ImGui::PushItemWidth(_w);
-			if (ImGui::Button(bResetCurve.getName().c_str(), ImVec2(_w, _h)))
+			ImGui::PushItemWidth(_w50);
+
+			if (ImGui::Button(bResetCurve.getName().c_str());
+			//if (ImGui::Button(bResetCurve.getName().c_str(), ImVec2(_w, _h)))
 			{
 				bResetCurve = true;
 				//rPreview.setRect(600, 200, 755, 295);
 				//refresh_Gui_Layout();
 			}
-			//ImGui::PopItemWidth();
 
 			ImGui::Dummy(ImVec2(0, 5));
 
@@ -3450,6 +3451,8 @@ void ofxColorManager::gui_Gradient()
 			//ofxImGui::AddParameter(bResetCurve);
 			//ofxImGui::AddParameter(curve_Gradient_TEST_Prc);
 			//ofxImGui::AddParameter(pos_CurveEditor);
+
+			ImGui::PopItemWidth();
 
 			//-
 
@@ -5792,22 +5795,18 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	//curve pick
 	else if (name == curve_Gradient_PickIn.getName())
 	{
-		//curve_Slider_ExpTweak.setup(slider_PickIn_x, slider_PickIn_y, slider_PickIn_w, slider_PickIn_h, 0, 1, curve_Gradient_PickIn, true, true);
-		//curve_Slider_ExpTweak.setPercent(curve_Gradient_PickIn);
 		curve_Slider_Pick.setPercent(curve_Gradient_PickIn.get());
 	}
 
 	//curve exp
 	else if (name == curve_Gradient_Exp.getName())
 	{
-		//curve_Slider_Pick.setup(slider_Exp_x, slider_Exp_y, slider_Exp_w, slider_Exp_h, 0, 1, curve_Gradient_Exp, true, true);
-		//curve_Slider_Pick.setPercent(curve_Gradient_Exp);
 		curve_Slider_ExpTweak.setPercent(curve_Gradient_Exp);
 
-		//if (bAutoPaletteFromGradient)
-		//{
-		//	palette_FromGradient();
-		//}
+		if (bAutoPaletteFromGradient)
+		{
+			palette_FromGradient();
+		}
 	}
 
 	//edit layout
