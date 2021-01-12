@@ -659,6 +659,7 @@ void ofxColorManager::setup()
 
 	params_control.add(curve_Gradient_Exp);
 	params_control.add(curve_Gradient_PickIn);
+	params_control.add(gradient_HardMode);
 
 	//params_control.add(color_Picked);
 	//params_control.add(color_BackGround);
@@ -909,17 +910,6 @@ void ofxColorManager::update(ofEventArgs & args)
 		//--
 
 		update_Curve();
-
-		//--
-
-		////// pick in to out
-		////curve_Gradient_PickIn = curve_Slider_ExpTweak.getPercent();
-		//if (curve_Slider_ExpTweak.getPercent() != curve_Gradient_Exp)
-		//	curve_Slider_ExpTweak.setPercent(curve_Gradient_Exp);
-
-		//// exp
-		//curve_Gradient_Exp = curve_Slider_Pick.getValue();
-		////curve_Slider_Pick.setPercent(curve_Gradient_Exp);
 	}
 
 	//----
@@ -3398,30 +3388,34 @@ void ofxColorManager::gui_Gradient()
 	ww = PANEL_WIDGETS_WIDTH;
 	hh = 500;
 	ImGui::SetWindowSize(ImVec2(ww, hh));
-	ImGuiWindowFlags flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : 0;
+	ImGuiWindowFlags flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : 0;
 
 	//--
 
-	if (ofxImGui::BeginWindow("GRADIENT", mainSettings, flags))
+	float _spc;
+	float _w;
+	float _w50;
+	float _w20;
+	float _h;
+
+	_spc = ImGui::GetStyle().ItemInnerSpacing.x;
+	//_w = ImGui::GetWindowContentRegionWidth();
+
+	if (auto_resize) _w = ww;
+	else _w = ImGui::GetWindowContentRegionWidth() - 3 * _spc;
+	_w50 = _w * 0.5;
+	_w20 = _w * 0.2;
+
+	_h = 1. * BUTTON_BIG_HEIGHT;
+
+	//--
+
+	if (ofxImGui::BeginWindow("GRADIENT", mainSettings, flagsw))
 	{
-		float _spc;
-		float _w;
-		float _w50;
-		float _h;
-
-		_spc = ImGui::GetStyle().ItemInnerSpacing.x;
-		//_w = ImGui::GetWindowContentRegionWidth();
-
-		if (auto_resize) _w = ww;
-		else _w = ImGui::GetWindowContentRegionWidth() - 3 * _spc;
-
-		_w50 = _w * 0.5;
-		_h = 1. * BUTTON_BIG_HEIGHT;
-
 		ImGuiColorEditFlags _flagw;
 		_flagw = false;
 
-		//-
+		//--
 
 		//if (ImGui::TreeNode("EDIT"))
 		if (ofxImGui::BeginTree("EDIT", mainSettings))
@@ -3430,10 +3424,10 @@ void ofxColorManager::gui_Gradient()
 
 			// reset
 
-			ImGui::PushItemWidth(_w50);
+			ImGui::PushItemWidth(_w20);
 
-			if (ImGui::Button(bResetCurve.getName().c_str());
-			//if (ImGui::Button(bResetCurve.getName().c_str(), ImVec2(_w, _h)))
+			//if (ImGui::Button(bResetCurve.getName().c_str()))
+			if (ImGui::Button(bResetCurve.getName().c_str(), ImVec2(_w, _h)))
 			{
 				bResetCurve = true;
 				//rPreview.setRect(600, 200, 755, 295);
@@ -3497,7 +3491,7 @@ void ofxColorManager::gui_Gradient()
 		if (ImGui::CollapsingHeader("Advanced", _flagw))
 		{
 			// ctrl in/out
-			ImGui::PushItemWidth(_w * 0.8);
+			ImGui::PushItemWidth(_w50);
 
 			ofxImGui::AddParameter(curve_Gradient_Exp);
 
@@ -3538,7 +3532,34 @@ void ofxColorManager::gui_Gradient()
 //--------------------------------------------------------------
 void ofxColorManager::gui_Background()
 {
-	if (ofxImGui::BeginWindow("BACKGROUND", mainSettings, false))
+	static bool auto_resize = true;
+	float ww, hh;
+	ww = PANEL_WIDGETS_WIDTH;
+	hh = 500;
+	ImGui::SetWindowSize(ImVec2(ww, hh));
+	ImGuiWindowFlags flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : 0;
+
+	//--
+
+	float _spc;
+	float _w;
+	float _w50;
+	float _w20;
+	float _h;
+
+	_spc = ImGui::GetStyle().ItemInnerSpacing.x;
+	//_w = ImGui::GetWindowContentRegionWidth();
+
+	if (auto_resize) _w = ww;
+	else _w = ImGui::GetWindowContentRegionWidth() - 3 * _spc;
+	_w50 = _w * 0.5;
+	_w20 = _w * 0.2;
+
+	_h = 1. * BUTTON_BIG_HEIGHT;
+
+	//--
+
+	if (ofxImGui::BeginWindow("BACKGROUND", mainSettings, flagsw))
 	{
 		{
 			ofxImGui::AddParameter(background_Draw_ENABLE);
@@ -3548,7 +3569,7 @@ void ofxColorManager::gui_Background()
 			static ImVec4 color;
 			color = color_BackGround.get();
 
-			ImGui::Dummy(ImVec2(0, 10));
+			ImGui::Dummy(ImVec2(0, 5));
 
 			//-
 
@@ -3562,7 +3583,7 @@ void ofxColorManager::gui_Background()
 
 			ImGui::ColorButton("##ColorBgPicker", *(ImVec4 *)&color, _flags, ImVec2(_w, _h));
 
-			ImGui::Dummy(ImVec2(0, 10));
+			ImGui::Dummy(ImVec2(0, 5));
 
 			//-
 
@@ -3589,21 +3610,26 @@ void ofxColorManager::gui_Background()
 
 			ImGui::PopItemWidth();
 
-			ImGui::Dummy(ImVec2(0, 15));
+			ImGui::Dummy(ImVec2(0, 5));
 
 			//-
 
-			ImGui::PushItemWidth(_w * 0.3);
-
-			ofxImGui::AddParameter(color_backGround_SET);
-			ofxImGui::AddParameter(color_BackGround_Darker);
-			if (color_BackGround_Darker)
+			if (ImGui::CollapsingHeader("Advanced"))
 			{
-				ofxImGui::AddParameter(color_BackGround_Darkness);
-			}
-			ofxImGui::AddParameter(AutoSet_BackGround_Color);
+				ImGui::PushItemWidth(_w * 0.3);
 
-			ImGui::PopItemWidth();
+				ofxImGui::AddParameter(color_backGround_SET);
+				ofxImGui::AddParameter(color_BackGround_Darker);
+				if (color_BackGround_Darker)
+				{
+					ofxImGui::AddParameter(color_BackGround_Darkness);
+				}
+				ofxImGui::AddParameter(AutoSet_BackGround_Color);
+
+				ImGui::PopItemWidth();
+
+				ImGui::Checkbox("Auto-resize", &auto_resize);
+			}
 		}
 	}
 	ofxImGui::EndWindow(mainSettings);
@@ -5269,16 +5295,15 @@ void ofxColorManager::palette_removeColorLast()
 			ofLogVerbose(__FUNCTION__) << "removed children: " << b;
 		}
 		btns_palette.pop_back();
-		}
+	}
 
 	palette_rearrenge();
 #endif
-		}
+}
 
 //--------------------------------------------------------------
 void ofxColorManager::palette_clear()
 {
-	ofLogNotice(__FUNCTION__);
 	ofLogNotice(__FUNCTION__) << "----------------- CLEAR PALETTE -----------------";
 
 	// remove all colors from the user palette
@@ -5291,7 +5316,8 @@ void ofxColorManager::palette_clear()
 
 	//--
 
-	refresh_Palette_TARGET(palette);
+	//TODO:
+	//refresh_Palette_TARGET(palette);
 }
 
 #pragma mark - CALLBACKS
@@ -5809,7 +5835,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		}
 	}
 
-	//edit layout
+	//edit curve layout
 	else if (name == MODE_Editor.getName())
 	{
 		ofLogNotice(__FUNCTION__) << name << (MODE_Editor ? " TRUE" : " FALSE");
@@ -5933,7 +5959,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 				btns_palette[palette_colorSelected]->setSelected(true);//sets border only
 				ofLogNotice(__FUNCTION__) << "user palette selected last _c: " << palette_colorSelected;
 			}
-		}
+}
 #endif
 	}
 
@@ -5977,7 +6003,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			color_Picked = palette[palette_colorSelected];
 		}
 #endif
-		}
+	}
 
 	else if (name == bRemoveColor.getName())
 	{
@@ -6132,7 +6158,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 #endif
 		}
 	}
-	}
+}
 
 //load user palette from range
 //--------------------------------------------------------------
@@ -6231,11 +6257,22 @@ void ofxColorManager::palette_FromGradient()
 	ofLogNotice(__FUNCTION__);
 	palette_clear();
 
-	for (int i = 0; i < numColors_Engines; i++)
+	for (int i = 0; i < numColors_Engines.get(); i++)
 	{
-		ofColor c = gradient.getColorAtPercent(1.0f / i);
-		palette_addColor(c);
+		//float _curve_Ctrl_In = curve_Gradient_PickIn;
+		//float in = ofMap(i, 0, numColors_Engines - 1, 0, 1);
+		//float out = ofMap(curvesTool.getAtPercent(1.0 - _curve_Ctrl_In), 0, cAmt - 1, 1, 0);
+		//colCurveTest = gradient.getColorAtPercent(out);
+		//ofColor c = gradient.getColorAtPercent(1.0f / i);
+		//palette_addColor(c);
+
+		float val = float(i / (float)(numColors_Engines - 1));
+		ofLogNotice(__FUNCTION__) << val;
+
+		ofColor c = getColorAtPercent(val);
 		ofLogNotice(__FUNCTION__) << "[" << i << "] > " << ofToString(c);
+
+		palette_addColor(c);
 	}
 
 	//--
@@ -6823,7 +6860,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		else if (key == 'G')
 		{
 			SHOW_Gui_Internal = !SHOW_Gui_Internal;
-		}
+	}
 #endif
 
 		//else if (key == 'g') {
@@ -7087,8 +7124,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//
 		//    else if (key == OF_KEY_RETURN)
 		//        colorBrowser.switch_sorted_Type();
-			}
-		}
+}
+}
 
 //--------------------------------------------------------------
 void ofxColorManager::keyReleased(ofKeyEventArgs &eventArgs)
@@ -7575,7 +7612,7 @@ void ofxColorManager::refresh_Picker_Touched()
 		////color_TheoryBase.set(color_Picked.get());
 		//update_Theory();
 }
-	}
+}
 
 //----
 
