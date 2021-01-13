@@ -427,6 +427,7 @@ void ofxColorManager::setup()
 	SHOW_Panels.set("PANELS", true);
 	SHOW_Demo.set("DEMO", false);
 
+	//bAutoResizePalette.set("AutoResize", false);
 	bAutoExportPreset.set("Auto Export", false);
 	bExportPreset_DefaultPath.set("bin/data", true);
 	path_Folder_Color.set("ExportPath", "");
@@ -650,6 +651,7 @@ void ofxColorManager::setup()
 	params_Palette2.add(boxMaxRows);
 	params_Palette2.add(bPaletteEdit);
 	//params_Palette2.add(bAuto_TheoryToPalette);
+	//params_Palette2.add(bAutoResizePalette);
 	params_AppState.add(params_Palette2);
 
 	//---
@@ -2174,19 +2176,24 @@ void ofxColorManager::gui_Theory()
 //--------------------------------------------------------------
 void ofxColorManager::gui_Palette()
 {
-	static bool auto_resize = true;
+	static bool auto_resize = false;
+	//static bool auto_resize = true;
+	//bool auto_resize = bAutoResizePalette.get();
+
 	float ww, hh;
 	ww = PANEL_WIDGETS_WIDTH;
 	hh = PANEL_WIDGETS_HEIGHT;
 	ImGui::SetWindowSize(ImVec2(ww, hh));
 	ImGuiWindowFlags flagsw;
-	//flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : 0;
-	flagsw = false;
+	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : 0;
+	//flagsw = false;
 
 	//-
 
 	if (ofxImGui::BeginWindow("PALETE", mainSettings, flagsw))
 	{
+		//ImGui::Checkbox("autoResize", &auto_resize);
+
 		//--
 
 		ImGuiColorEditFlags _flags;
@@ -2213,7 +2220,7 @@ void ofxColorManager::gui_Palette()
 
 		//_w = ImGui::GetWindowContentRegionWidth();
 		if (auto_resize) _w = ww;
-		else _w = ImGui::GetWindowContentRegionWidth() - 2 * _spc;
+		else _w = ImGui::GetWindowContentRegionWidth() - 3 * _spc;
 		_w50 = _w * 0.5;
 		_w20 = _w * 0.2;
 
@@ -2221,7 +2228,7 @@ void ofxColorManager::gui_Palette()
 
 		//-
 
-		//responsive
+		// responsive
 		ImVec2 button_sz((float)sizePaletteBox.get(), (float)sizePaletteBox.get());
 
 		ImGuiStyle& style = ImGui::GetStyle();
@@ -2234,10 +2241,11 @@ void ofxColorManager::gui_Palette()
 
 		for (int n = 0; n < palette.size(); n++)
 		{
+			ImGui::PushID(n);
+
 			// responsive buttons size
 			if (bResponsive_Presets)
 			{
-				ImGui::PushID(n);
 				std::string name = ofToString(n);
 
 				const ImVec4 color2 = style.Colors[ImGuiCol_Button];//do not changes the color
@@ -2257,8 +2265,6 @@ void ofxColorManager::gui_Palette()
 			}
 
 			//--
-
-			ImGui::PushID(n);
 
 			if (!bResponsive_Presets)
 			{
@@ -2290,6 +2296,7 @@ void ofxColorManager::gui_Palette()
 
 			_flags =
 				ImGuiColorEditFlags_NoSmallPreview |
+				ImGuiColorEditFlags_NoDragDrop |
 				ImGuiColorEditFlags_NoTooltip |
 				ImGuiColorEditFlags_NoLabel |
 				ImGuiColorEditFlags_NoSidePreview |
@@ -2321,8 +2328,9 @@ void ofxColorManager::gui_Palette()
 				float last_button_x2 = ImGui::GetItemRectMax().x;
 				float next_button_x2 = last_button_x2 + style.ItemSpacing.x + button_sz.x; // Expected position if next button was on same line
 				if (n + 1 < buttons_count && next_button_x2 < _wx2) ImGui::SameLine();
-				ImGui::PopID();
 			}
+
+			ImGui::PopID();
 		}
 
 		ImGui::Dummy(ImVec2(0, 5));
@@ -3142,12 +3150,7 @@ void ofxColorManager::gui_Range()
 
 	if (ofxImGui::BeginWindow("RANGE", mainSettings, flags))
 	{
-		// layout
-		ImGui::Checkbox("Auto-resize", &auto_resize);
-		ImGui::InputFloat(scale_ColRange.getName().c_str(), (float *)&scale_ColRange.get(), 0.02f, 0.1f);
-		//ofxImGui::AddParameter(scale_ColRange);
-
-		ImGui::Dummy(ImVec2(0, 10));
+		//ImGui::Dummy(ImVec2(0, 10));
 
 		//--
 
@@ -3180,7 +3183,6 @@ void ofxColorManager::gui_Range()
 		//----
 
 		// 1. pickers
-
 		{
 			bool bChanged = false;//some picker changed
 
@@ -3189,75 +3191,81 @@ void ofxColorManager::gui_Range()
 			_c1 = color_1_Range.get();
 			_c2 = color_2_Range.get();
 
-			ImGui::Columns(2);
-
 			//ImGui::Spacing(50, 0);
+			{
+				ImGui::Columns(2);
+
+				ImGui::PushItemWidth(_w50);
+				ImGui::Text("Color1");
+				ofxImGui::AddParameter(autoPick_RangeColor1);
+				// mini box
+				if (ImGui::ColorButton("##C1", *(ImVec4 *)&_c1[0], _flags, ImVec2(_w50, _h)))
+				{
+					bChanged = true;
+					refresh_Range_AutoUpdate();
+				}
+				ImGui::PopItemWidth();
+
+				ImGui::NextColumn();
+
+				ImGui::PushItemWidth(_w50);
+				ImGui::Text("Color2");
+				ofxImGui::AddParameter(autoPick_RangeColor2);
+				// mini box
+				if (ImGui::ColorButton("##C2", *(ImVec4 *)&_c2[0], _flags, ImVec2(_w50, _h)))
+				{
+					bChanged = true;
+					refresh_Range_AutoUpdate();
+				}
+				ImGui::PopItemWidth();
+
+				ImGui::Columns(1);
+			}
 
 			//----
 
-			// picker 1
-
-			ImGui::PushItemWidth(_w50);
-
-			ImGui::Text("Color1");
-
-			// wheel
-			if (ImGui::ColorPicker3("1", &_c1[0], _flags))
+			if (ImGui::CollapsingHeader("PICKERS"))
 			{
-				if (autoPick_RangeColor1) color_Picked.set(_c1[0]);
-				bChanged = true;
-				refresh_Range_AutoUpdate();
+				// picker 1
+
+				ImGui::Columns(2);
+
+				// wheel
+				ImGui::PushItemWidth(MIN(_w50, PANEL_WIDGETS_WIDTH));
+				if (ImGui::ColorPicker3("1", &_c1[0], _flags))
+				{
+					if (autoPick_RangeColor1) color_Picked.set(_c1[0]);
+					bChanged = true;
+					refresh_Range_AutoUpdate();
+				}
+				ImGui::PopItemWidth();
+
+				//--
+
+				ImGui::NextColumn();
+
+				//----
+
+				// picker 2
+
+				// wheel
+				ImGui::PushItemWidth(MIN(_w50, PANEL_WIDGETS_WIDTH));
+				if (ImGui::ColorPicker3("2", &_c2[0], _flags))
+				{
+					if (autoPick_RangeColor2) color_Picked.set(_c2[0]);
+					bChanged = true;
+					refresh_Range_AutoUpdate();
+				}
+				ImGui::PopItemWidth();
+
+				//--
 			}
-
-			// mini box
-			if (ImGui::ColorButton("##C1", *(ImVec4 *)&_c1[0], _flags, ImVec2(_w50, _h)))
-			{
-				bChanged = true;
-				refresh_Range_AutoUpdate();
-			}
-
-			ImGui::PopItemWidth();
-
-			//--
-
-			ofxImGui::AddParameter(autoPick_RangeColor1);
-
-			ImGui::NextColumn();
-
-			//----
-
-			// picker 2
-
-			ImGui::PushItemWidth(_w50);
-
-			ImGui::Text("Color2");
-
-			// wheel
-			if (ImGui::ColorPicker3("2", &_c2[0], _flags))
-			{
-				if (autoPick_RangeColor2) color_Picked.set(_c2[0]);
-				bChanged = true;
-				refresh_Range_AutoUpdate();
-			}
-
-			// mini box
-			if (ImGui::ColorButton("##C2", *(ImVec4 *)&_c2[0], _flags, ImVec2(_w50, _h)))
-			{
-				bChanged = true;
-				refresh_Range_AutoUpdate();
-			}
-
-			ImGui::PopItemWidth();
-
-			//--
-
-			ofxImGui::AddParameter(autoPick_RangeColor2);
 
 			//----
 
 			ImGui::Columns(1);
 
-			ImGui::Dummy(ImVec2(0, 10));
+			//ImGui::Dummy(ImVec2(0, 10));
 
 			// set picked colors
 			if (bChanged)
@@ -3275,9 +3283,6 @@ void ofxColorManager::gui_Range()
 
 			// autogenerate
 
-			ofxImGui::AddParameter(bAuto_TheoryToPalette);
-			ofxImGui::AddParameter(autoGenerate_Range);
-
 			if (autoGenerate_Range && bChanged)
 			{
 				generate_Range(color_1_Range.get(), color_2_Range.get());
@@ -3293,16 +3298,31 @@ void ofxColorManager::gui_Range()
 
 			//-
 
-			ImGui::Dummy(ImVec2(0, 5));
+			//ImGui::Dummy(ImVec2(0, 5));
 
 			//-
 
-			if (ofxSurfingHelpers::AddIntStepped(numColors_Range))
+			if (ImGui::CollapsingHeader("Advanced"))
 			{
+				if (ofxSurfingHelpers::AddIntStepped(numColors_Range))
+				{
+				}
+				//ofxImGui::AddParameter(numColors_Range);
+				//if (ImGui::InputInt(numColors_Range.getName().c_str(), (int *)&numColors_Range.get(), 1, 2))
+				//{}
+				ofxImGui::AddParameter(bAuto_TheoryToPalette);
+				ofxImGui::AddParameter(autoGenerate_Range);
+
+				//ImGui::Dummy(ImVec2(0, 5));
+
+				if (ImGui::CollapsingHeader("Layout"))
+				{
+					// layout
+					ImGui::Checkbox("Auto Resize", &auto_resize);
+					ImGui::InputFloat(scale_ColRange.getName().c_str(), (float *)&scale_ColRange.get(), 0.02f, 0.1f);
+					//ofxImGui::AddParameter(scale_ColRange);
+				}
 			}
-			//ofxImGui::AddParameter(numColors_Range);
-			//if (ImGui::InputInt(numColors_Range.getName().c_str(), (int *)&numColors_Range.get(), 1, 2))
-			//{}
 
 			ImGui::Dummy(ImVec2(0, 5));
 		}
@@ -4055,7 +4075,7 @@ void ofxColorManager::gui_Presets()
 
 			//-
 
-			//ImGui::Dummy(ImVec2(0, 5));
+			ImGui::Dummy(ImVec2(0, 5));
 
 			ImGui::PushItemWidth(_w);
 			//ImGui::PushItemWidth(-1);
@@ -4170,6 +4190,7 @@ void ofxColorManager::gui_Presets()
 
 			for (int n = 0; n < palette.size(); n++)
 			{
+				/*
 				// color picker
 				//if (n == last_ColorPicked_Palette)
 				//{
@@ -4198,13 +4219,14 @@ void ofxColorManager::gui_Presets()
 				//	//	ImGui::PushStyleColor(ImGuiCol_Button, color2);
 				//	//}
 				//}
+				*/
 
 				//----
 
 				ImGui::PushID(n);
 				{
 					// a. fixed size
-					int _max = 6;
+					int _max = 6;//amount colors per row
 					int _r = (int)MIN(_max, palette.size());
 					//split in rows
 					if ((n % _r) != 0)
@@ -4212,6 +4234,8 @@ void ofxColorManager::gui_Presets()
 						if (n != 0)
 						{
 							ImGui::SameLine();
+							//ImGui::SameLine(_spc,0);
+							//ImGui::SameLine(0,0);
 						}
 					}
 
@@ -4401,12 +4425,12 @@ void ofxColorManager::gui_Presets()
 
 				ofxImGui::AddParameter(bResponsive_Presets);
 
-				//if (bResponsive_Presets)
-				//{
-				//	ImGui::InputInt(sizePaletteBox.getName().c_str(), (int*)&sizePaletteBox.get(), 5, 100);
-				//	//ofxImGui::AddParameter(sizePaletteBox);
-				//}
-				//if (!bResponsive_Presets)
+				if (bResponsive_Presets)
+				{
+					ImGui::InputInt(sizePaletteBox.getName().c_str(), (int*)&sizePaletteBox.get(), 5, 100);
+					//ofxImGui::AddParameter(sizePaletteBox);
+				}
+				if (!bResponsive_Presets)
 				{
 					boxMaxRows.disableEvents();
 					ImGui::InputInt(boxMaxRows.getName().c_str(), (int*)&boxMaxRows.get(), 1, 5);
@@ -4417,6 +4441,8 @@ void ofxColorManager::gui_Presets()
 					//ofxImGui::AddParameter(scale_ColPalette);
 					ImGui::InputFloat(scale_ColPalette.getName().c_str(), (float *)&scale_ColPalette.get(), 0.005f, 0.010);
 				}
+
+				//ofxImGui::AddParameter(bAutoResizePalette);//not works
 
 				//--
 
@@ -5202,14 +5228,14 @@ void ofxColorManager::draw_MiniPreview()
 		int _x = 30;
 		int _y = 30;
 		glm::vec2 _pos;
-
 		int _sz = 60;//size boxes
 		int _p = 3;//pad between colors
 		int _sz2 = _sz + _p;
 		int _pad = 35;
 		int _pad2 = 35;
 		int _hBg = 15;
-		float _round = 3;
+		float _round2 = 3;
+		float _round = 4;
 		ofRectangle _rBg;
 		ofColor colorBackground{ 0, 225 };//bg box
 		ofColor _cb = ofColor(ofColor::black, 64);//border color black
@@ -5264,10 +5290,12 @@ void ofxColorManager::draw_MiniPreview()
 			_r = ofRectangle(col * _sz2, 0, _sz, _sz);
 			ofFill();
 			ofSetColor(palette[col]);
-			ofDrawRectangle(_r);
+			ofDrawRectRounded(_r, _round2);
+			//ofDrawRectangle(_r);
 			ofNoFill();
 			ofSetColor(_cb);
-			ofDrawRectangle(_r);
+			ofDrawRectRounded(_r, _round2);
+			//ofDrawRectangle(_r);
 		}
 
 		ofTranslate(0, _sz + _p);
@@ -5276,10 +5304,12 @@ void ofxColorManager::draw_MiniPreview()
 		_rBg = ofRectangle(0, 0, palette.size() * _sz2 - _p, _hBg);
 		ofFill();
 		ofSetColor(color_BackGround.get());
-		ofDrawRectangle(_rBg);
+		ofDrawRectRounded(_rBg, _round2);
+		//ofDrawRectangle(_rBg);
 		ofNoFill();
 		ofSetColor(_cb);
-		ofDrawRectangle(_rBg);
+		ofDrawRectRounded(_rBg, _round2);
+		//ofDrawRectangle(_rBg);
 	}
 	ofPopStyle();
 	ofPopMatrix();
@@ -5357,8 +5387,8 @@ void ofxColorManager::palette_removeColor(int c)
 
 		// 5. make positions & resizes to fill bar
 		palette_rearrenge();
-		}
-		}
+	}
+}
 
 
 //--------------------------------------------------------------
@@ -5481,6 +5511,7 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 	{
 		numColors_Alg.setWithoutEventNotifications(numColors_Engines);
 		numColors_Range.setWithoutEventNotifications(numColors_Engines);
+		numColors_Engines.setWithoutEventNotifications(numColors_Engines);
 
 		palettes_resize();
 	}
@@ -6247,7 +6278,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	//		}
 	//	}
 	*/
-	}
+}
 
 //load user palette from range
 //--------------------------------------------------------------
@@ -6268,6 +6299,7 @@ void ofxColorManager::Changed_ColorRange(ofAbstractParameter &e)
 		{
 			numColors_Alg.setWithoutEventNotifications(numColors_Range);
 			numColors_Engines.setWithoutEventNotifications(numColors_Range);
+			numColors_Theory.setWithoutEventNotifications(numColors_Range);
 
 			generate_Range(color_1_Range.get(), color_2_Range.get());
 
@@ -6703,11 +6735,11 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//}
 #endif
 */
-//-----
+		//-----
 
 		// presets
 
-		if (SHOW_Presets)// && !SHOW_Theory && !SHOW_Range && !SHOW_ColourLovers && !SHOW_Quantizer)
+		if (SHOW_Presets && !SHOW_Theory && !SHOW_Range && !SHOW_ColourLovers && !SHOW_Quantizer)
 		{
 			if (key == OF_KEY_UP)
 			{
@@ -6760,6 +6792,36 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				}
 			}
 
+			else if (key == ' ')
+			{
+				if (preset_Index < files.size() - 1)
+				{
+					preset_Index++;
+				}
+				else
+				{
+					if (preset_Index == files.size() - 1) preset_Index = 0;//cycle
+				}
+
+				if (preset_Index < files.size())
+				{
+					PRESET_name = files_Names[preset_Index];
+					ofLogNotice(__FUNCTION__) << "PRESET_name: [" + ofToString(preset_Index) + "] " << PRESET_name;
+					preset_load(PRESET_name);
+				}
+
+				// new preset
+				if (MODE_NewPreset) bNewPreset = false;
+				// demo mode
+				if (DEMO_Test) myDEMO.reStart();
+				// load first color
+				if (palette.size() > 0)
+				{
+					color_Picked = ofFloatColor(palette[0]);
+					refresh_TheoryEngine();
+				}
+			}
+
 			// get some presets by index random 
 			else if (key == 'R' || key == 'r')
 			{
@@ -6783,62 +6845,15 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 					refresh_TheoryEngine();
 				}
 			}
-
-			//// LOAD
-			//else if (key == 'l')
-			//{
-			//	preset_load(PRESET_name);
-			//}
-			//// SAVE
-			//else if (key == 's')
-			//{
-			//	preset_save(PRESET_name);
-			//}
-		}
-
-		// always
-		// presets browse
-		// next without clamp
-		if (!SHOW_Theory && !SHOW_Range && !SHOW_ColourLovers && !SHOW_Quantizer)
-		{
-			if (key == ' ')
-			{
-				if (preset_Index < files.size() - 1)
-				{
-					preset_Index++;
-				}
-				else
-				{
-					if (preset_Index == files.size() - 1) preset_Index = 0;
-				}
-
-				if (preset_Index < files.size())
-				{
-					PRESET_name = files_Names[preset_Index];
-					ofLogNotice(__FUNCTION__) << "PRESET_name: [" + ofToString(preset_Index) + "] " << PRESET_name;
-					preset_load(PRESET_name);
-				}
-
-				// new preset
-				if (MODE_NewPreset) bNewPreset = false;
-				// demo mode
-				if (DEMO_Test) myDEMO.reStart();
-				// load first color
-				if (palette.size() > 0)
-				{
-					color_Picked = ofFloatColor(palette[0]);
-					refresh_TheoryEngine();
-				}
-			}
 		}
 
 		//----
 
 		// range
 
-		if (!SHOW_Presets && !SHOW_Theory && SHOW_Range && !SHOW_ColourLovers && !SHOW_Quantizer)
+		if (SHOW_Range && !SHOW_Theory && !SHOW_ColourLovers && !SHOW_Quantizer)
 		{
-			if (key == OF_KEY_UP)
+			if (key == OF_KEY_UP || key == ' ')
 			{
 				last_Index_Range--;
 				last_Index_Range = (int)ofClamp(last_Index_Range, 0, NUM_TYPES_RANGES - 1);
@@ -6864,7 +6879,21 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				}
 				rangTypes[last_Index_Range] = true;
 			}
+			if (key == ' ')
+			{
+				if (last_Index_Range == NUM_TYPES_RANGES - 1) last_Index_Range = 0;//cycle
+				else if (last_Index_Range < NUM_TYPES_RANGES - 1) last_Index_Range++;
 
+				for (int i = 0; i < NUM_TYPES_RANGES; i++)
+				{
+					rangTypes[i].disableEvents();
+					rangTypes[i] = false;
+					rangTypes[i].enableEvents();
+				}
+				rangTypes[last_Index_Range] = true;
+			}
+
+			//switch color c1/c2 selectors
 			if (key == OF_KEY_BACKSPACE)
 			{
 				if (!autoPick_RangeColor1 && !autoPick_RangeColor2) autoPick_RangeColor1 = true;
@@ -6882,7 +6911,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 		// theory
 
-		if (!SHOW_Presets && SHOW_Theory && !SHOW_Range && !SHOW_ColourLovers && !SHOW_Quantizer)
+		if (SHOW_Theory && !SHOW_Range && !SHOW_ColourLovers && !SHOW_Quantizer)
 		{
 			if (key == OF_KEY_UP)
 			{
@@ -6891,6 +6920,50 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 					last_Theory_PickPalette.get(),
 					last_Theory_PickPalette.getMin(),
 					last_Theory_PickPalette.getMax());
+
+				//poweroff
+				for (int i = 0; i < NUM_COLOR_THEORY_TYPES; i++)
+				{
+					theoryTypes[i].disableEvents();
+					theoryTypes[i] = false;
+					theoryTypes[i].disableEvents();
+				}
+				//enable
+				if (last_Theory_PickPalette >= 0 &&
+					last_Theory_PickPalette < NUM_COLOR_THEORY_TYPES)
+				{
+					theoryTypes[last_Theory_PickPalette] = true;
+				}
+			}
+			if (key == OF_KEY_DOWN)
+			{
+				last_Theory_PickPalette++;
+				last_Theory_PickPalette = ofClamp(
+					last_Theory_PickPalette.get(),
+					last_Theory_PickPalette.getMin(),
+					last_Theory_PickPalette.getMax());
+
+				//poweroff
+				for (int i = 0; i < NUM_COLOR_THEORY_TYPES; i++)
+				{
+					theoryTypes[i].disableEvents();
+					theoryTypes[i] = false;
+					theoryTypes[i].disableEvents();
+				}
+				//enable
+				if (last_Theory_PickPalette >= 0 &&
+					last_Theory_PickPalette < NUM_COLOR_THEORY_TYPES)
+				{
+					theoryTypes[last_Theory_PickPalette] = true;
+				}
+			}
+			if (key == ' ')
+			{
+				last_Theory_PickPalette++;
+				if (last_Theory_PickPalette == last_Theory_PickPalette.getMax())//cycle 
+				{
+					last_Theory_PickPalette = last_Theory_PickPalette.getMin();
+				}
 
 				//poweroff
 				for (int i = 0; i < NUM_COLOR_THEORY_TYPES; i++)
@@ -6969,11 +7042,11 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//	bPaletteEdit = !bPaletteEdit;
 		//}
 
-		//edit layout
-		else if (key == 'E' || key == 'e')
-		{
-			MODE_EditGradientLayout = !MODE_EditGradientLayout;
-		}
+		////edit layout
+		//else if (key == 'E' || key == 'e')
+		//{
+		//	MODE_EditGradientLayout = !MODE_EditGradientLayout;
+		//}
 
 		//    else if (key == 'l')
 		//    {
@@ -7220,8 +7293,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//
 		//    else if (key == OF_KEY_RETURN)
 		//        colorBrowser.switch_sorted_Type();
+			}
 		}
-	}
 
 //--------------------------------------------------------------
 void ofxColorManager::keyReleased(ofKeyEventArgs &eventArgs)

@@ -343,6 +343,7 @@ private:
 	ofParameter<int> boxMaxRows;
 	ofParameter<float> scale_ColPalette;
 	ofParameter<bool> bFlipUserPalette;
+	//ofParameter<bool> bAutoResizePalette;
 
 	ofParameter<float> scale_ColRange;
 

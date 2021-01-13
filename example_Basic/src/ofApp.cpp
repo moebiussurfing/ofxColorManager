@@ -5,7 +5,7 @@ void ofApp::setup()
 {
 	ofEnableAlphaBlending();
 	ofSetFrameRate(60);
-	//ofSetWindowPosition(1920 * 2, 0);
+	ofSetWindowPosition(1920, 18);
 
 	//--
 
@@ -17,12 +17,13 @@ void ofApp::setup()
 
 	//--
 
-	gui.setup("ofApp");
-	gui.add(bDrawOfApp);
 	ofParameterGroup pg{ "ofxColorManager" };
 	pg.add(colorManager.SHOW_Scene);
 	pg.add(colorManager.SHOW_ALL_GUI);
 	pg.add(colorManager.SHOW_MINI_Preview);
+
+	gui.setup("ofApp");
+	gui.add(bDrawOfApp);
 	gui.add(pg);
 	gui.setPosition(500, 20);
 }
@@ -75,18 +76,14 @@ void ofApp::drawOfApp()
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key)
 {
-	if (false) {}
-
-	else if (key == 'G')
+	if (key == 'G')
 	{
 		bGui = !bGui;
-		colorManager.setToggleVisible();
 	}
-
 
 	// we can get the palette 
 	// (we need to use pointers if we want auto refresh!)
-	else if (key == OF_KEY_TAB)
+	else if (key == '*')
 	{
 		palette = colorManager.getPalette();
 
