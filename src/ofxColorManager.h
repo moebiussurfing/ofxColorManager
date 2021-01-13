@@ -210,10 +210,13 @@ private:
 	std::string path_Layout;
 	std::string path_Curves_Lut;
 	std::string path_Curve_Preset;
+	std::string path_NameCurve_Preset;
 	std::string path_Colors;
 	std::string path_AppState;
 	std::string path_Presets;
 	std::string path_Palettes;
+	std::string path_NameLiveExport;
+	ofParameter <std::string> path_Folder_Color;
 
 	//-
 
@@ -239,7 +242,9 @@ private:
 	//--
 
 private:
-	ofxInteractiveRect rPreview = { "_Curve_Gui" };
+	ofxInteractiveRect rMiniPreview = { "_Mini_Previw" };
+
+	ofxInteractiveRect rGradientPreview = { "_Curve_Gui" };
 	ofParameter<bool> MODE_EditGradientLayout;
 	ofParameter<bool> SHOW_Editor;
 	ofColor colCurveTest;
@@ -276,7 +281,6 @@ private:
 	ofParameter<bool> autoPick_RangeColor1;
 	ofParameter<bool> autoPick_RangeColor2;
 	ofParameter<bool> bGetPaletteFromRange;
-	ofParameter<int> numColors_Range;
 	ofParameterGroup params_Ranges;
 #define NUM_TYPES_RANGES 12
 	ofParameter<bool> rangTypes[NUM_TYPES_RANGES];
@@ -295,7 +299,6 @@ public:
 	void saveColors();
 	ofParameter<bool> bAutoExportPreset;
 	ofParameter<bool> bExportPreset_DefaultPath;
-	ofParameter <std::string> path_Folder_Color;
 
 private:
 	//TODO
@@ -314,7 +317,13 @@ private:
 
 	//-
 
+	//number of colors. must be even sometimes to get same size in all palettes
+	ofParameter<int> numColors_Alg;
 	ofParameter<int> numColors_Engines;
+	ofParameter<int> numColors_Theory;
+	ofParameter<int> numColors_Range;
+
+	//-
 
 private:
 	// color theory
@@ -326,7 +335,6 @@ private:
 	ofParameter<ofColor> color_TheoryBase;
 	ofParameter<int> colorScheme;
 	ofParameter<std::string> colorSchemeName;
-	ofParameter<int> numColors_Theory;
 	ofParameter<bool> bAuto_TheoryFromPicker;
 
 	void Changed_ColorTheory(ofAbstractParameter &e);
@@ -432,8 +440,11 @@ private:
 	//-
 
 	// gui info display
-	int last_Index_Theory = -1;
-	int last_Index_Range = -1;
+	//int last_Index_Theory = -1;
+	//int last_Index_Range = -1;
+	ofParameter<int> last_Index_Theory{ "Last Theory Index", -1, 0, NUM_COLOR_THEORY_TYPES-1 };
+	ofParameter<int> last_Index_Range{ "Last Range Index", -1, 0, NUM_TYPES_RANGES-1 };
+
 	std::string theory_Name = "";
 	std::string range_Name = "";
 
@@ -567,9 +578,6 @@ private:
 	//ofxColorPalette::ColorChannel mode;
 
 	ofParameter<float> analogSpread;
-
-	ofParameter<int> numColors_Alg;
-	//number of colors. must be even sometimes to get same size in all palettes
 
 	ofParameter<int> BRIGHTNESS;
 	ofParameter<int> SATURATION;

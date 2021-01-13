@@ -108,9 +108,9 @@ void PresetPalette::preset_save(std::string p, bool absolutePath)
 	//presetData.background = (*background_BACK);
 	
 	presetData.background = color_BACK;
-	presetData.name = (*name_BACK);
-	presetData.curveName = (*curveName_BACK);
 	presetData.palette = (*palette_BACK);
+	//presetData.name = (*name_BACK);//TODO: ?
+	//presetData.curveName = (*curveName_BACK);
 
 	ofLogNotice(__FUNCTION__) << "name       : " << presetData.name;
 	ofLogNotice(__FUNCTION__) << "curveName  : " << presetData.curveName;

@@ -29,8 +29,10 @@ ofxColorManager::ofxColorManager()
 	path_Folder_Curves = path_Global + "curves/";
 	ofxSurfingHelpers::CheckFolder(path_Folder_Curves);
 
-	path_Curves_Lut = path_Folder_Curves + "myCurve.yml";
-	path_Curve_Preset = path_Folder_Curves + "myCurve.xml";
+	path_NameCurve_Preset = "myGradient";
+	PRESET_curveName = path_NameCurve_Preset;
+	path_Curves_Lut = path_Folder_Curves + path_NameCurve_Preset + ".yml";
+	path_Curve_Preset = path_Folder_Curves + path_NameCurve_Preset + ".xml";
 
 	path_Folder_Color = path_Global + "colors/";
 	path_Colors = path_Folder_Color.get() + "liveColors.json";
@@ -44,8 +46,9 @@ ofxColorManager::ofxColorManager()
 	infoHelp += "H                   HELP\n";
 	infoHelp += "K                   KEYS\n";
 	infoHelp += "G                   GUI\n";
-	infoHelp += "SPACE               NEXT\n";
 	infoHelp += "TAB                 MODES\n";
+	infoHelp += "SPACE               NEXT\n";
+	infoHelp += "Down|Up             NEXT/PREVIOUS\n";
 	infoHelp += "+|-                 AMOUNT COLORS\n";
 	infoHelp += "\n";
 	infoHelp += "PANELS\n";
@@ -66,6 +69,8 @@ ofxColorManager::ofxColorManager()
 	infoHelp += "TEST\n";
 	infoHelp += "D                   DEMO SCENE\n";
 	infoHelp += "T                   GRADIENT TEST\n";
+	infoHelp += "m                   MINI PREVIEW\n";
+	infoHelp += "M                   DEBUG\n";
 }
 
 //--------------------------------------------------------------
@@ -556,6 +561,8 @@ void ofxColorManager::setup()
 	params_AppState.add(preset_Index);
 	params_AppState.add(AppMode);
 	params_AppState.add(SHOW_Scene);
+	params_AppState.add(last_Index_Theory);
+	params_AppState.add(last_Index_Range);
 
 	// export colors
 	params_ExportColors.setName("ExportColors");
@@ -663,6 +670,8 @@ void ofxColorManager::setup()
 	params_control.add(bNewPreset);
 	params_control.add(numColors_Engines);
 	params_control.add(AppMode);
+	params_control.add(last_Index_Theory);
+	params_control.add(last_Index_Range);
 
 	params_control.add(curve_Gradient_Exp);
 	params_control.add(curve_Gradient_PickIn);
@@ -736,11 +745,11 @@ void ofxColorManager::startup()
 	// edit layout
 
 	// a. initialize
-	rPreview.setRect(600, 200, 755, 295);
+	rGradientPreview.setRect(600, 200, 755, 295);
 
 	// b. load settings
-	//rPreview.loadSettings();
-	rPreview.loadSettings("_Curve_Gui", path_Layout, false);
+	//rGradientPreview.loadSettings();
+	rGradientPreview.loadSettings("_Curve_Gui", path_Layout, false);
 
 	refresh_Gui_Layout();
 
@@ -1211,8 +1220,8 @@ void ofxColorManager::draw_Curve()
 		ofPushStyle();
 		ofFill();
 		ofSetColor(ofColor(0, 220));
-		rPreview.draw();
-		ofDrawRectRounded(rPreview, 5);
+		rGradientPreview.draw();
+		ofDrawRectRounded(rGradientPreview, 5);
 		ofPopStyle();
 
 		//-
@@ -1357,7 +1366,7 @@ void ofxColorManager::draw_Info()
 
 	//theory name
 	//if (t2 != "" || txt_lineActive[1])
-	if (txt_lineActive[1])
+	if (txt_lineActive[2])
 	{
 		x = ofGetWidth() * 0.5 - _w2 * 0.5;
 		if (txt_lineActive[i]) ofSetColor(c0);
@@ -1540,8 +1549,8 @@ void ofxColorManager::exit()
 	// curve
 
 	// layout
-	//rPreview.saveSettings();
-	rPreview.saveSettings("_Curve_Gui", path_Layout, false);
+	//rGradientPreview.saveSettings();
+	rGradientPreview.saveSettings("_Curve_Gui", path_Layout, false);
 
 	// preset
 
@@ -1612,10 +1621,10 @@ void ofxColorManager::refresh_Gui_Layout()
 	//if (MODE_EditGradientLayout)
 	if (1)
 	{
-		_xx = rPreview.getX() + _pad1;
-		_yy = rPreview.getY() + _pad1;
-		_ww = rPreview.getWidth() + (2 * _pad1);
-		_hh = rPreview.getHeight() + (2 * _pad1);
+		_xx = rGradientPreview.getX() + _pad1;
+		_yy = rGradientPreview.getY() + _pad1;
+		_ww = rGradientPreview.getWidth() + (2 * _pad1);
+		_hh = rGradientPreview.getHeight() + (2 * _pad1);
 	}
 	else
 	{
@@ -1935,23 +1944,13 @@ void ofxColorManager::gui_Theory()
 
 		//ImGui::SameLine();
 
-		if (ImGui::CollapsingHeader("Advanced"))
+		if (ofxSurfingHelpers::AddIntStepped(numColors_Engines))
 		{
-			ofxImGui::AddParameter(bAuto_TheoryFromPicker);
-			ofxImGui::AddParameter(bAuto_TheoryToPalette);
 		}
-
 		// amount colors
 		//if (ofxImGui::AddParameter(numColors_Engines))
 		//{
 		//}
-
-		if (ofxSurfingHelpers::AddIntStepped(numColors_Engines))
-		{
-		}
-
-		ofxImGui::AddParameter(analogSpread);
-
 		//if (ImGui::InputInt(numColors_Theory.getName().c_str(), (int*)&numColors_Theory.get(), 1, 5))
 		//if (ofxImGui::AddParameter(numColors_Theory))
 		//{
@@ -1959,6 +1958,13 @@ void ofxColorManager::gui_Theory()
 		//if (ofxImGui::AddParameter(numColors_Alg))
 		//{
 		//}
+
+		if (ImGui::CollapsingHeader("Advanced"))
+		{
+			ofxImGui::AddParameter(bAuto_TheoryFromPicker);
+			ofxImGui::AddParameter(bAuto_TheoryToPalette);
+			ofxImGui::AddParameter(analogSpread);
+		}
 
 		//--
 
@@ -3302,14 +3308,15 @@ void ofxColorManager::gui_Range()
 
 			//-
 
+			if (ofxSurfingHelpers::AddIntStepped(numColors_Range))
+			{
+			}
+			//ofxImGui::AddParameter(numColors_Range);
+			//if (ImGui::InputInt(numColors_Range.getName().c_str(), (int *)&numColors_Range.get(), 1, 2))
+			//{}
+
 			if (ImGui::CollapsingHeader("Advanced"))
 			{
-				if (ofxSurfingHelpers::AddIntStepped(numColors_Range))
-				{
-				}
-				//ofxImGui::AddParameter(numColors_Range);
-				//if (ImGui::InputInt(numColors_Range.getName().c_str(), (int *)&numColors_Range.get(), 1, 2))
-				//{}
 				ofxImGui::AddParameter(bAuto_TheoryToPalette);
 				ofxImGui::AddParameter(autoGenerate_Range);
 
@@ -3378,16 +3385,17 @@ void ofxColorManager::gui_Range()
 
 					int cc = t * numColors_Range.get() + c;
 					ImGui::PushID(cc);
-
-					if (ImGui::ColorButton(
-						"##PaletteRange",
-						palette_Range[cc],
-						_flags,
-						ImVec2(_sz, _sz)))
+					if (cc < palette_Range.size())
 					{
-						ofLogNotice(__FUNCTION__) << "Range Box: " << t << "-" << c;
+						if (ImGui::ColorButton(
+							"##PaletteRange",
+							palette_Range[cc],
+							_flags,
+							ImVec2(_sz, _sz)))
+						{
+							ofLogNotice(__FUNCTION__) << "Range Box: " << t << "-" << c;
+						}
 					}
-
 					ImGui::PopID();
 				}
 			}
@@ -3459,7 +3467,7 @@ void ofxColorManager::gui_Gradient()
 				//if (ImGui::Button(bResetCurve.getName().c_str(), ImVec2(_w, _h)))
 			{
 				bResetCurve = true;
-				//rPreview.setRect(600, 200, 755, 295);
+				//rGradientPreview.setRect(600, 200, 755, 295);
 				//refresh_Gui_Layout();
 			}
 			ImGui::PopItemWidth();
@@ -3639,7 +3647,7 @@ void ofxColorManager::gui_Background()
 
 			if (ImGui::CollapsingHeader("Advanced"))
 			{
-				ImGui::PushItemWidth(_w * 0.3);
+				ImGui::PushItemWidth(_w50);
 
 				ofxImGui::AddParameter(color_backGround_SET);
 				ofxImGui::AddParameter(color_BackGround_Darker);
@@ -3648,6 +3656,7 @@ void ofxColorManager::gui_Background()
 					ofxImGui::AddParameter(color_BackGround_Darkness);
 				}
 				ofxImGui::AddParameter(AutoSet_BackGround_Color);
+				ofxImGui::AddParameter(curve_Gradient_PickIn);
 
 				ImGui::PopItemWidth();
 
@@ -4147,7 +4156,7 @@ void ofxColorManager::gui_Presets()
 
 			//-
 
-			ImGui::Dummy(ImVec2(0, 5));
+			//ImGui::Dummy(ImVec2(0, 5));
 			ImGui::Separator();
 		}
 
@@ -5233,6 +5242,7 @@ void ofxColorManager::draw_MiniPreview()
 		int _sz2 = _sz + _p;
 		int _pad = 35;
 		int _pad2 = 35;
+		int _padlabel = 10;
 		int _hBg = 15;
 		float _round2 = 3;
 		float _round = 4;
@@ -5278,7 +5288,7 @@ void ofxColorManager::draw_MiniPreview()
 
 		//draw text
 		ofSetColor(font0_Color);
-		font.drawString(s, 10, 0 + _pad * 0.5);
+		font.drawString(s, _padlabel, 0 + _pad * 0.5);
 
 		//-
 
@@ -5458,7 +5468,6 @@ void ofxColorManager::Changed_ColorPicked(ofFloatColor &c)
 		//if (SHOW_Theory) palette_FromTheory(SELECTED_palette_LAST);
 
 		if (SHOW_Theory) palette_FromTheory(last_Index_Theory);
-
 		if (SHOW_Range) palette_FromRange();
 	}
 }
@@ -5802,9 +5811,23 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	else if (name == bNewPreset.getName())
 	{
 		MODE_NewPreset = bNewPreset;
-
+		//wf
 		focus_1 = bNewPreset;
 	}
+
+	//----
+
+	// last index
+
+	else if (name == last_Index_Theory.getName())
+	{
+	}
+
+	else if (name == last_Index_Range.getName())
+	{
+	}
+
+	//----
 
 	// num colors
 
@@ -5812,6 +5835,15 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	{
 		numColors_Theory.setWithoutEventNotifications(numColors_Engines);
 		numColors_Alg.setWithoutEventNotifications(numColors_Engines);
+		//numColors_Range.setWithoutEventNotifications(numColors_Engines);
+
+		//generate_Range(color_1_Range.get(), color_2_Range.get());
+		////auto create palette
+		//refresh_Range_AutoUpdate();
+
+		//numColors_Alg = numColors_Engines;
+		//numColors_Theory = numColors_Engines;
+		numColors_Range = numColors_Engines;
 
 		palettes_resize();
 	}
@@ -5962,11 +5994,11 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 		if (MODE_EditGradientLayout.get())
 		{
-			rPreview.enableEdit();
+			rGradientPreview.enableEdit();
 		}
 		else
 		{
-			rPreview.disableEdit();
+			rGradientPreview.disableEdit();
 		}
 
 		refresh_Gui_Layout();
@@ -6353,7 +6385,6 @@ void ofxColorManager::Changed_ColorRange(ofAbstractParameter &e)
 					//{
 					//	ofColor c = palette_Range[j];
 					//	palette_addColor(c);
-
 					//	ofLogNotice(__FUNCTION__) << "[" << i << "][" << (j - st) << "] > " << ofToString(c);
 					//}
 
@@ -6476,42 +6507,46 @@ void ofxColorManager::palette_FromQuantizer()
 void ofxColorManager::palette_FromRange()
 {
 	ofLogNotice(__FUNCTION__);
-
-	// populate palette
-
-	int st = last_Index_Range * numColors_Range.get();
-	int ed = st + numColors_Range.get();
-
-	palette_clear();
-
-	for (int j = st; j < ed; j++)
+	if (palette_Range.size() > 0)
 	{
-		ofColor c = palette_Range[j];
-		palette_addColor(c);
+		// populate palette
 
-		ofLogNotice(__FUNCTION__) << "[" << last_Index_Range << "][" << (j - st) << "] > " << ofToString(c);
-	}
+		int st = last_Index_Range * numColors_Range.get();
+		int ed = st + numColors_Range.get();
 
-	//--
+		palette_clear();
 
-	// workflow
-
-	//set background color from first/last palette color
-	if (AutoSet_BackGround_Color)
-	{
-		if (palette.size() > 0)
+		for (int j = st; j < ed; j++)
 		{
-			ofColor c;
-			c = palette[0];//get first color from user palette
-
-			if (color_BackGround_Darker)
+			if (j < palette_Range.size())
 			{
-				float darkness = ofMap(color_BackGround_Darkness, 0.0, 1.0, 0.0, 2.0);
-				float b = c.getBrightness() * darkness;
-				b = ofClamp(b, 0.0, 1.0);
-				c.setBrightness(b);
+				ofColor c = palette_Range[j];
+				palette_addColor(c);
+
+				ofLogNotice(__FUNCTION__) << "[" << last_Index_Range << "][" << (j - st) << "] > " << ofToString(c);
 			}
-			color_BackGround.set(c);
+		}
+
+		//--
+
+		// workflow
+
+		//set background color from first/last palette color
+		if (AutoSet_BackGround_Color)
+		{
+			if (palette.size() > 0)
+			{
+				ofColor c = palette[0];//get first color from user palette
+
+				if (color_BackGround_Darker)
+				{
+					float darkness = ofMap(color_BackGround_Darkness, 0.0, 1.0, 0.0, 2.0);
+					float b = c.getBrightness() * darkness;
+					b = ofClamp(b, 0.0, 1.0);
+					c.setBrightness(b);
+				}
+				color_BackGround.set(c);
+			}
 		}
 	}
 }
@@ -6520,7 +6555,7 @@ void ofxColorManager::palette_FromRange()
 void ofxColorManager::refresh_Range_AutoUpdate()
 {
 	//auto create palette
-	if (autoGenerate_Range)
+	if (autoGenerate_Range && (last_Index_Range != -1))
 	{
 		int i = last_Index_Range;
 
@@ -6557,18 +6592,26 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			setToggleVisible();
 		}
 
+		else if (key == 'm')
+		{
+			SHOW_MINI_Preview = !SHOW_MINI_Preview;
+		}
+
 		// amount colors
-		else if (key == '-') {
+		else if (key == '-')
+		{
 			numColors_Engines--;
 		}
-		else if (key == '+') {
+		else if (key == '+')
+		{
 			numColors_Engines++;
 		}
 
 		//--
 
 		// help
-		else if (key == 'h' || key == 'H') {
+		else if (key == 'h' || key == 'H')
+		{
 			ENABLE_HelpInfo = !ENABLE_HelpInfo;
 		}
 
@@ -6735,9 +6778,9 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//}
 #endif
 */
-		//-----
+//-----
 
-		// presets
+// presets
 
 		if (SHOW_Presets && !SHOW_Theory && !SHOW_Range && !SHOW_ColourLovers && !SHOW_Quantizer)
 		{
@@ -6853,7 +6896,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 		if (SHOW_Range && !SHOW_Theory && !SHOW_ColourLovers && !SHOW_Quantizer)
 		{
-			if (key == OF_KEY_UP || key == ' ')
+			if (key == OF_KEY_UP)
 			{
 				last_Index_Range--;
 				last_Index_Range = (int)ofClamp(last_Index_Range, 0, NUM_TYPES_RANGES - 1);
@@ -7222,12 +7265,12 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			//-
 
 			// browse presets
-#ifdef USE_COLOR_LOVERS
-			if ((SHOW_ColourLovers && key == ' '))
-			{
-				colourLoversHelper.nextPalette();
-			}
-#endif
+//#ifdef USE_COLOR_LOVERS
+//			if ((SHOW_ColourLovers && key == ' '))
+//			{
+//				colourLoversHelper.nextPalette();
+//			}
+//#endif
 		}
 
 		//----
@@ -7293,8 +7336,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//
 		//    else if (key == OF_KEY_RETURN)
 		//        colorBrowser.switch_sorted_Type();
-			}
-		}
+	}
+}
 
 //--------------------------------------------------------------
 void ofxColorManager::keyReleased(ofKeyEventArgs &eventArgs)
@@ -7457,6 +7500,9 @@ void ofxColorManager::preset_refreshFiles()
 	ofDirectory dataDirectory(ofToDataPath(path_Presets, true));
 	ofxSurfingHelpers::CheckFolder(path_Presets);
 	ofLogNotice(__FUNCTION__) << path_Presets;
+	
+	// export for live reload preset from client app
+	path_NameLiveExport = "ofxColorManager";
 
 	//-
 
@@ -8030,18 +8076,21 @@ void ofxColorManager::saveColors()
 	ofxSurfingHelpers::CheckFolder(path_Folder_Color);
 	ofLogNotice(__FUNCTION__) << "path: " << path_Colors;
 
-	if (!bExportPreset_DefaultPath) path_Colors = path_Folder_Color.get() + "\\liveColors.json";
+	if (!bExportPreset_DefaultPath) path_Colors = path_Folder_Color.get() + "\\" + path_NameLiveExport;
 
 	// A. save palette colors only
 	//ofxSerializer
 	ofJson j = palette;
-	ofSavePrettyJson(path_Colors, j);
+	string _path = path_Colors + "_palette.json";
+	ofSavePrettyJson(_path, j);
 	ofLogNotice(__FUNCTION__) << "\n" << ofToString(j);
 
 	// B. save full preset
 	//TODO:
 	//should save colors + bakground too + gradient! = preset
-	palette_TEMP.preset_save(path_Colors, true);
+	palette_TEMP.name = PRESET_name;
+	palette_TEMP.curveName = PRESET_curveName;//path_NameCurve_Preset
+	palette_TEMP.preset_save(path_Colors + "_pack", true);
 	//preset_save(path_Folder_Color, true);
 }
 
