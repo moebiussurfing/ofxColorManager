@@ -42,6 +42,7 @@ ofxColorManager::ofxColorManager()
 
 	infoHelp = "HELP INFO\n\n";
 	infoHelp += "H                   HELP\n";
+	infoHelp += "K                   KEYS\n";
 	infoHelp += "G                   GUI\n";
 	infoHelp += "SPACE               NEXT\n";
 	infoHelp += "TAB                 MODES\n";
@@ -439,7 +440,7 @@ void ofxColorManager::setup()
 	//palette
 
 	boxSizeUser.set("Box Size", 40, 10, 200);
-	boxRowsUser.set("Max Rows", 10, 1, 20);
+	boxMaxRows.set("Max Rows", 10, 1, 20);
 	scale_ColPalette.set("Scale Pt", 1.f, 0.25f, 1.25f);
 	//bEditUserPalette.set("EDIT", false);
 	//bUserPaletteVertical.set("VERTICAL", false);
@@ -447,7 +448,7 @@ void ofxColorManager::setup()
 
 	params_Palette.setName("USER PALETTE");
 	params_Palette.add(bFlipUserPalette);
-	params_Palette.add(boxRowsUser);
+	params_Palette.add(boxMaxRows);
 	params_Palette.add(scale_ColPalette);
 	//params_Palette.add(bEditUserPalette);
 	//params_Palette.add(bUserPaletteVertical);
@@ -646,7 +647,7 @@ void ofxColorManager::setup()
 	params_Palette2.add(sizePaletteBox);
 	params_Palette2.add(scale_ColPalette);
 	params_Palette2.add(bResponsive_Presets);
-	params_Palette2.add(boxRowsUser);
+	params_Palette2.add(boxMaxRows);
 	params_Palette2.add(bPaletteEdit);
 	//params_Palette2.add(bAuto_TheoryToPalette);
 	params_AppState.add(params_Palette2);
@@ -847,6 +848,31 @@ void ofxColorManager::startup()
 //--------------------------------------------------------------
 void ofxColorManager::update(ofEventArgs & args)
 {
+	//programmed open dialog from ImGui:
+	if (bOpen)
+	{
+		//Open the Open File Dialog
+		ofFileDialogResult openFileResult = ofSystemLoadDialog("Select the export path", true);
+
+		//Check if the user opened a file
+		if (openFileResult.bSuccess)
+		{
+			//processOpenFileSelection(openFileResult);
+
+			path_Folder_Color = openFileResult.getPath();
+			path_Colors = path_Folder_Color.get() + "\\liveColors.json";
+			bExportPreset_DefaultPath = false;//flag
+			ofLogNotice(__FUNCTION__) << "User selected a path: " << path_Folder_Color;
+		}
+		else
+		{
+			ofLogNotice(__FUNCTION__) << "User hit cancel";
+			path_Folder_Color = "";
+			bExportPreset_DefaultPath = true;//set back default OF_APP/bin/data
+		}
+		bOpen = false;
+	}
+
 	//----
 
 	// DEMO
@@ -2195,16 +2221,6 @@ void ofxColorManager::gui_Palette()
 
 		//-
 
-		enum Mode
-		{
-			Mode_Copy,
-			Mode_Move,
-			Mode_Swap
-		};
-		static int mode = 2;
-
-		//-
-
 		//responsive
 		ImVec2 button_sz((float)sizePaletteBox.get(), (float)sizePaletteBox.get());
 
@@ -2213,6 +2229,8 @@ void ofxColorManager::gui_Palette()
 		float _wx2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
 
 		//-
+
+		// color buttons
 
 		for (int n = 0; n < palette.size(); n++)
 		{
@@ -2245,9 +2263,9 @@ void ofxColorManager::gui_Palette()
 			if (!bResponsive_Presets)
 			{
 				//split in rows
-				if (boxRowsUser != 0)
+				if (boxMaxRows != 0)
 				{
-					if ((n % boxRowsUser) != 0)
+					if ((n % boxMaxRows) != 0)
 					{
 						if (n != 0)
 						{
@@ -2259,7 +2277,7 @@ void ofxColorManager::gui_Palette()
 
 			//--
 
-			int _r = (int)MIN(boxRowsUser.get(), palette.size());
+			int _r = (int)MIN(boxMaxRows.get(), palette.size());
 
 			_spc = ImGui::GetStyle().ItemInnerSpacing.x;
 			_w = ImGui::GetWindowContentRegionWidth() - 3 * _spc;
@@ -2296,53 +2314,6 @@ void ofxColorManager::gui_Palette()
 
 			//--
 
-			// dragggable boxes
-
-			if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
-			{
-				ImGui::SetDragDropPayload("DND_DEMO_CELL", &n, sizeof(int));
-				if (mode == Mode_Copy) { ImGui::Text("Copy %s", ofToString(n).c_str()); }
-				if (mode == Mode_Move) { ImGui::Text("Move %s", ofToString(n).c_str()); }
-				if (mode == Mode_Swap) { ImGui::Text("Swap %s", ofToString(n).c_str()); }
-				ImGui::EndDragDropSource();
-			}
-
-			if (ImGui::BeginDragDropTarget())
-			{
-				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_DEMO_CELL"))
-				{
-					IM_ASSERT(payload->DataSize == sizeof(int));
-					int payload_n = *(const int*)payload->Data;
-
-					if (mode == Mode_Copy)
-					{
-						palette[n] = palette[payload_n];
-					}
-					if (mode == Mode_Move)
-					{
-						palette[n] = palette[payload_n];
-						palette[payload_n] = ofColor(0);
-					}
-					if (mode == Mode_Swap)
-					{
-						const ofColor tmp = palette[n];
-						palette[n] = palette[payload_n];
-						palette[payload_n] = tmp;
-					}
-
-					//--
-
-					// update all pallete (Curve)
-					ofLogNotice(__FUNCTION__) << "DONE Dragged _c";
-
-					build_GradientPalette();
-				}
-				ImGui::EndDragDropTarget();
-			}
-			ImGui::PopID();
-
-			//--
-
 			// responsive buttons size
 			if (bResponsive_Presets)
 			{
@@ -2355,50 +2326,6 @@ void ofxColorManager::gui_Palette()
 		}
 
 		ImGui::Dummy(ImVec2(0, 5));
-
-		//-
-
-		if (ImGui::CollapsingHeader("Advanced"))
-		{
-			if (ofxSurfingHelpers::AddSmallButton(bFlipUserPalette, 100, 0.5 * BUTTON_BIG_HEIGHT))
-			{
-				build_GradientPalette();
-			}
-
-			ImGui::Dummy(ImVec2(0, 5));
-
-			ofxImGui::AddParameter(bResponsive_Presets);
-			if (bResponsive_Presets)
-			{
-				ImGui::InputInt(sizePaletteBox.getName().c_str(), (int*)&sizePaletteBox.get(), 5, 100);
-				//ofxImGui::AddParameter(sizePaletteBox);
-			}
-			if (!bResponsive_Presets)
-			{
-				boxRowsUser.disableEvents();
-				ImGui::InputInt(boxRowsUser.getName().c_str(), (int*)&boxRowsUser.get(), 1, 5);
-				//ImGui::InputInt(boxRowsUser.getName().c_str(), (int *)&boxRowsUser.get());
-				boxRowsUser = ofClamp(boxRowsUser.get(), boxRowsUser.getMin(), boxRowsUser.getMax());
-				boxRowsUser.enableEvents();
-
-				//ofxImGui::AddParameter(scale_ColPalette);
-				ImGui::InputFloat(scale_ColPalette.getName().c_str(), (float *)&scale_ColPalette.get(), 0.005f, 0.010);
-			}
-
-			//-
-
-			ImGui::Dummy(ImVec2(0, 5));
-
-			if (ImGui::RadioButton("Copy", mode == Mode_Copy)) { mode = Mode_Copy; } ImGui::SameLine();
-			if (ImGui::RadioButton("Move", mode == Mode_Move)) { mode = Mode_Move; } ImGui::SameLine();
-			if (ImGui::RadioButton("Swap", mode == Mode_Swap)) { mode = Mode_Swap; }
-
-			ImGui::Dummy(ImVec2(0, 10));
-
-			//--
-
-			//ImGui::Checkbox("Auto-resize", &auto_resize);
-		}
 	}
 	ofxImGui::EndWindow(mainSettings);
 }
@@ -2721,6 +2648,57 @@ void ofxColorManager::gui_Library()
 }
 
 //--------------------------------------------------------------
+void ofxColorManager::gui_Export()
+{
+	static bool auto_resize = true;
+	float ww, hh;
+	ww = PANEL_WIDGETS_WIDTH;
+	hh = PANEL_WIDGETS_HEIGHT;
+	ImGui::SetWindowSize(ImVec2(ww, hh));
+	ImGuiWindowFlags flagsw;
+	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : 0;
+
+	//--
+
+	if (ofxImGui::BeginWindow("Live Export", mainSettings, flagsw))
+	{
+		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
+
+		//float _h = 0.5f * BUTTON_BIG_HEIGHT;
+		float _h = float(COLOR_STRIP_COLOR_HEIGHT);
+		float _w;
+
+		if (auto_resize) _w = ww;
+		else _w = ImGui::GetWindowContentRegionWidth() - 2 * _spc;
+		float _w50 = _w * 0.5f;
+		float _w100 = _w + 2.5f * _spc;
+
+		//--
+
+		//ImGui::Separator();
+		//ImGui::Dummy(ImVec2(0, 10));
+
+		//if (ImGui::CollapsingHeader("Live Export"))
+		{
+			if (ImGui::Button("Export"))
+			{
+				saveColors();
+			}
+			ofxImGui::AddParameter(bAutoExportPreset);
+			ofxImGui::AddParameter(bExportPreset_DefaultPath);
+			if (ImGui::Button("Set Path"))
+			{
+				bOpen = true;
+			}
+			ImGui::Text(path_Folder_Color.get().c_str());
+		}
+
+		ImGui::Checkbox("Auto-resize", &auto_resize);
+	}
+	ofxImGui::EndWindow(mainSettings);
+}
+
+//--------------------------------------------------------------
 void ofxColorManager::gui_Picker()
 {
 	static bool auto_resize = true;
@@ -2801,7 +2779,7 @@ void ofxColorManager::gui_Picker()
 				//-
 
 				ImGui::PushItemWidth(_w);
-				
+
 				if (ImGui::ColorPicker4("##PickerWheel", (float *)&cTmp, _flags))
 				{
 					ofLogNotice(__FUNCTION__) << "Wheel Picker : moved";
@@ -2861,7 +2839,7 @@ void ofxColorManager::gui_Picker()
 				if (ImGui::ColorPicker4("##PickerSquare", (float *)&cTmp, _flags))
 				{
 					ofLogNotice(__FUNCTION__) << "Square Picker : moved";
-					
+
 					ENABLE_Callbacks_cPickers = false;
 					color_Picked = cTmp;
 					ENABLE_Callbacks_cPickers = true;
@@ -2957,7 +2935,7 @@ void ofxColorManager::gui_Picker()
 
 			ofxImGui::EndTree(mainSettings);
 		}
-			
+
 		//--
 
 		if (ImGui::CollapsingHeader("Advanced"))
@@ -3132,32 +3110,11 @@ void ofxColorManager::gui_Panels()
 		ofxSurfingHelpers::AddBigToggle(SHOW_Presets);
 		ofxSurfingHelpers::AddBigToggle(SHOW_MINI_Preview);
 		ofxSurfingHelpers::AddBigToggle(SHOW_Demo);
+		ofxImGui::AddParameter(ENABLE_keys);
 
 #ifdef INCL_LAYOUT
 		ofxSurfingHelpers::AddBigToggle(SHOW_Gui_Internal);
 #endif
-
-		//ImGui::Separator();
-		ImGui::Dummy(ImVec2(0, 10));
-
-		if (ImGui::CollapsingHeader("Live Export"))
-		{
-			if (ImGui::Button("Export"))
-			{
-				saveColors();
-			}
-			ofxImGui::AddParameter(bAutoExportPreset);
-			ofxImGui::AddParameter(bExportPreset_DefaultPath);
-			if (ImGui::Button("Set Path"))
-			{
-				//TODO: prompt
-				bExportPreset_DefaultPath = false;
-				path_Folder_Color = "";
-				path_Colors = path_Folder_Color.get() + "liveColors.json";
-			}
-			ImGui::Text(path_Folder_Color.get().c_str());
-		}
-
 		//ImGui::Separator();
 		//ImGui::Dummy(ImVec2(0, 10));
 		//ofxImGui::AddParameter(SHOW_Gradient);
@@ -3687,10 +3644,11 @@ void ofxColorManager::gui_Presets()
 	static bool auto_resize = true;
 	float ww, hh;
 	ww = PANEL_WIDGETS_WIDTH;
-	hh = 700;
+	hh = PANEL_WIDGETS_HEIGHT;
 	ImGui::SetWindowSize(ImVec2(ww, hh));
-	//ImGuiWindowFlags flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : 0;
-	ImGuiWindowFlags flags = false;
+	ImGuiWindowFlags flags;
+	flags = false;
+	//flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : 0;
 	//TODO: not working..non stop grow
 
 	//--
@@ -3711,7 +3669,7 @@ void ofxColorManager::gui_Presets()
 
 		//--
 
-		//workflow
+		// workflow
 
 		//blink when a new preset is editing
 		float freq = 0.075;//speed freq
@@ -3904,7 +3862,7 @@ void ofxColorManager::gui_Presets()
 
 		ImGui::Dummy(ImVec2(0, 10));
 
-		//--
+		//----
 
 		// 2. presets
 
@@ -3988,8 +3946,7 @@ void ofxColorManager::gui_Presets()
 		//	saveColors();
 		//}
 
-		if (ImGui::Button("EXPORT", ImVec2(_w50, _h * 0.5)))
-			ImGui::OpenPopup("EXPORT ");
+		if (ImGui::Button("EXPORT", ImVec2(_w50, _h * 0.5))) ImGui::OpenPopup("EXPORT ");
 		if (ImGui::BeginPopupModal("EXPORT ", NULL, ImGuiWindowFlags_AlwaysAutoResize))
 		{
 			//ImGui::Text("Pick export path..\n\n");
@@ -4015,8 +3972,9 @@ void ofxColorManager::gui_Presets()
 
 					// TODO:
 					//path_Folder_Color = ;
+					bOpen = true;
 
-					//ImGui::CloseCurrentPopup();
+					ImGui::CloseCurrentPopup();
 				}
 
 				ImGui::SetItemDefaultFocus();
@@ -4069,6 +4027,8 @@ void ofxColorManager::gui_Presets()
 			preset_refreshFiles();
 		}
 
+		ImGui::Dummy(ImVec2(0, 5));
+
 		ofxImGui::AddParameter(bNewPreset);
 
 		//ImGui::SameLine();
@@ -4078,14 +4038,12 @@ void ofxColorManager::gui_Presets()
 		//    preset_refreshFiles();
 		//}
 
-		ImGui::Dummy(ImVec2(0, 10));
-
-		//--
+		//----
 
 		if (MODE_NewPreset && bNewPreset)
 		{
 			ImGui::Separator();
-			ImGui::Dummy(ImVec2(0, 10));
+			ImGui::Dummy(ImVec2(0, 5));
 
 			//-
 
@@ -4097,7 +4055,7 @@ void ofxColorManager::gui_Presets()
 
 			//-
 
-			ImGui::Dummy(ImVec2(0, 10));
+			//ImGui::Dummy(ImVec2(0, 5));
 
 			ImGui::PushItemWidth(_w);
 			//ImGui::PushItemWidth(-1);
@@ -4118,8 +4076,7 @@ void ofxColorManager::gui_Presets()
 			//TODO:
 			bool b = bTextInputActive;
 			bTextInputActive = ImGui::IsItemActive();
-			if (bTextInputActive != b)
-				ofLogNotice(__FUNCTION__) << "TextInput : " << (bTextInputActive ? "ACTIVE" : "DISABLED");
+			if (bTextInputActive != b) ofLogNotice(__FUNCTION__) << "TextInput : " << (bTextInputActive ? "ACTIVE" : "DISABLED");
 
 			//-
 
@@ -4143,7 +4100,7 @@ void ofxColorManager::gui_Presets()
 			ImGui::PushID(1);
 			ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.5, 0.0f, 0.5f, a));
 
-			ImGui::Dummy(ImVec2(0, 5));
+			//ImGui::Dummy(ImVec2(0, 5));
 
 			if (ImGui::Button("SAVE NEW", ImVec2(_w, _h)))
 			{
@@ -4170,7 +4127,7 @@ void ofxColorManager::gui_Presets()
 
 			//-
 
-			ImGui::Dummy(ImVec2(0, 10));
+			ImGui::Dummy(ImVec2(0, 5));
 			ImGui::Separator();
 		}
 
@@ -4187,10 +4144,11 @@ void ofxColorManager::gui_Presets()
 		ImGui::Dummy(ImVec2(0, 5));
 
 		ImGuiColorEditFlags _flagw;
-		_flagw = ImGuiTreeNodeFlags_DefaultOpen;
+		_flagw = ImGuiTreeNodeFlags_None;
+		//_flagw = ImGuiTreeNodeFlags_DefaultOpen;
 
 		//if (SHOW_PresetsPalette)
-		if (ImGui::CollapsingHeader("Palette Colors", _flagw))
+		if (ImGui::CollapsingHeader("Palette", _flagw))
 		{
 			//responsive
 			ImVec2 button_sz((float)sizePaletteBox.get(), (float)sizePaletteBox.get());
@@ -4198,221 +4156,285 @@ void ofxColorManager::gui_Presets()
 			int buttons_count = palette.size();
 			float _wx2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
 
-			//-
+			//--
+
+			enum Mode
+			{
+				Mode_Copy,
+				Mode_Move,
+				Mode_Swap
+			};
+			static int mode = 2;
+
+			//--
 
 			for (int n = 0; n < palette.size(); n++)
 			{
-				if (n == last_ColorPicked_Palette)
-				{
-					ImGui::SetScrollHereY(0.5f); // 0.0f:top, 0.5f:center, 1.0f:bottom
-				}
+				// color picker
+				//if (n == last_ColorPicked_Palette)
+				//{
+				//}
 
 				//-
 
-				// responsive buttons size
-				if (bResponsive_Presets)
-				{
-					ImGui::PushID(n);
-					std::string name = ofToString(n);
+				//// responsive buttons size
+				//if (bResponsive_Presets)
+				//{
+				//	ImGui::PushID(n);
+				//	std::string name = ofToString(n);
 
-					////customize colors
-					//if (n == indexBrowser)//when selected
-					//{
-					//	const ImVec4 color1 = ImVec4(0.1, 0.1, 0.1, 0.8);//changes button color to black
-					//	ImGui::PushStyleColor(ImGuiCol_Button, color1);
-					//}
-					//else //not selected
-					{
-						const ImVec4 color2 = style.Colors[ImGuiCol_Button];//do not changes the color
-						ImGui::PushStyleColor(ImGuiCol_Button, color2);
-					}
-				}
+				//	const ImVec4 color2 = style.Colors[ImGuiCol_Button];//do not changes the color
+				//	ImGui::PushStyleColor(ImGuiCol_Button, color2);
+
+				//	////customize colors
+				//	//if (n == indexBrowser)//when selected
+				//	//{
+				//	//	const ImVec4 color1 = ImVec4(0.1, 0.1, 0.1, 0.8);//changes button color to black
+				//	//	ImGui::PushStyleColor(ImGuiCol_Button, color1);
+				//	//}
+				//	//else //not selected
+				//	//{
+				//	//	const ImVec4 color2 = style.Colors[ImGuiCol_Button];//do not changes the color
+				//	//	ImGui::PushStyleColor(ImGuiCol_Button, color2);
+				//	//}
+				//}
 
 				//----
 
 				ImGui::PushID(n);
-
-				if (!bResponsive_Presets)
 				{
+					// a. fixed size
+					int _max = 6;
+					int _r = (int)MIN(_max, palette.size());
 					//split in rows
-					if (boxRowsUser != 0)
+					if ((n % _r) != 0)
 					{
-						if ((n % boxRowsUser) != 0)
+						if (n != 0)
 						{
-							if (n != 0)
-							{
-								ImGui::SameLine();
-							}
+							ImGui::SameLine();
 						}
 					}
+
+					// b. tweakable like palette panel
+					//int _r = (int)MIN(boxMaxRows.get(), palette.size());
+					//if (!bResponsive_Presets)
+					//{
+					//	//split in rows
+					//	if (boxMaxRows != 0)
+					//	{
+					//		if ((n % boxMaxRows) != 0)
+					//		{
+					//			if (n != 0)
+					//			{
+					//				ImGui::SameLine();
+					//			}
+					//		}
+					//	}
+					//}
+
+					//----
+
+					int wb;
+					wb = (_w / _r) - (1.5 * _spc);
+					wb = wb * scale_ColPalette.get();
+
+					//--
+
+					_flags =
+						ImGuiColorEditFlags_NoSmallPreview |
+						ImGuiColorEditFlags_NoTooltip |
+						ImGuiColorEditFlags_NoLabel |
+						ImGuiColorEditFlags_NoSidePreview |
+						ImGuiColorEditFlags_NoInputs |
+						ImGuiColorEditFlags_NoAlpha;
+
+					//--
+
+					// color box
+
+					ImVec2 bb;
+					//if (bResponsive_Presets) bb = button_sz;
+					//else bb = ImVec2(wb, wb);
+					bb = ImVec2(wb, wb);
+
+					if (ImGui::ColorButton("##paletteDragPrst",
+						palette[n],
+						_flags,
+						bb))
+					{
+						last_ColorPicked_Palette = n;
+					}
+
+					//--
+
+					// dragggable boxes
+
+					if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
+					{
+						ImGui::SetDragDropPayload("DND_DEMO_CELL", &n, sizeof(int));
+						if (mode == Mode_Copy) { ImGui::Text("Copy %s", ofToString(n).c_str()); }
+						if (mode == Mode_Move) { ImGui::Text("Move %s", ofToString(n).c_str()); }
+						if (mode == Mode_Swap) { ImGui::Text("Swap %s", ofToString(n).c_str()); }
+						ImGui::EndDragDropSource();
+					}
+
+					if (ImGui::BeginDragDropTarget())
+					{
+						if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_DEMO_CELL"))
+						{
+							IM_ASSERT(payload->DataSize == sizeof(int));
+							int payload_n = *(const int*)payload->Data;
+
+							if (mode == Mode_Copy)
+							{
+								palette[n] = palette[payload_n];
+							}
+							if (mode == Mode_Move)
+							{
+								palette[n] = palette[payload_n];
+								palette[payload_n] = ofColor(0);
+							}
+							if (mode == Mode_Swap)
+							{
+								const ofColor tmp = palette[n];
+								palette[n] = palette[payload_n];
+								palette[payload_n] = tmp;
+							}
+
+							//--
+
+							// update all pallete (Curve)
+							ofLogNotice(__FUNCTION__) << "DONE Dragged _c";
+
+							build_GradientPalette();
+						}
+						ImGui::EndDragDropTarget();
+					}
 				}
-
-				//----
-
-				int _r = (int)MIN(boxRowsUser.get(), palette.size());
-
-				int wb;
-				wb = (_w / _r) - (1.5 * _spc);
-				wb = wb * scale_ColPalette.get();
-
-				//--
-
-				_flags =
-					ImGuiColorEditFlags_NoSmallPreview |
-					ImGuiColorEditFlags_NoTooltip |
-					ImGuiColorEditFlags_NoLabel |
-					ImGuiColorEditFlags_NoSidePreview |
-					ImGuiColorEditFlags_NoInputs |
-					ImGuiColorEditFlags_NoAlpha;
-
-				//--
-
-				// color box
-				ImVec2 bb;
-				if (bResponsive_Presets) bb = button_sz;
-				else bb = ImVec2(wb, wb);
-				if (ImGui::ColorButton("##paletteDragPrst",
-					palette[n],
-					_flags,
-					bb))
-				{
-					last_ColorPicked_Palette = n;
-				}
-
-				//--
-
-				/*
-				// dragggable boxes
-				//if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
-				//{
-				//	ImGui::SetDragDropPayload("DND_DEMO_CELL", &n, sizeof(int));
-				//	if (mode == Mode_Copy) { ImGui::Text("Copy %s", ofToString(n).c_str()); }
-				//	if (mode == Mode_Move) { ImGui::Text("Move %s", ofToString(n).c_str()); }
-				//	if (mode == Mode_Swap) { ImGui::Text("Swap %s", ofToString(n).c_str()); }
-				//	ImGui::EndDragDropSource();
-				//}
-				//if (ImGui::BeginDragDropTarget())
-				//{
-				//	if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_DEMO_CELL"))
-				//	{
-				//		IM_ASSERT(payload->DataSize == sizeof(int));
-				//		int payload_n = *(const int*)payload->Data;
-				//		if (mode == Mode_Copy)
-				//		{
-				//			palette[n] = palette[payload_n];
-				//		}
-				//		if (mode == Mode_Move)
-				//		{
-				//			palette[n] = palette[payload_n];
-				//			palette[payload_n] = ofColor(0);
-				//		}
-				//		if (mode == Mode_Swap)
-				//		{
-				//			const ofColor tmp = palette[n];
-				//			palette[n] = palette[payload_n];
-				//			palette[payload_n] = tmp;
-				//		}
-				//		//--
-				//		// update all pallete (Curve)
-				//		ofLogNotice(__FUNCTION__) << "DONE Dragged color";
-				//		build_GradientPalette();
-				//	}
-				//	ImGui::EndDragDropTarget();
-				//}
-				*/
-
 				ImGui::PopID();
 
 				//--
 
-				// responsive buttons size
-				if (bResponsive_Presets)
+				//// responsive buttons size
+				//if (bResponsive_Presets)
+				//{
+				//	ImGui::PopStyleColor();
+				//	float last_button_x2 = ImGui::GetItemRectMax().x;
+				//	float next_button_x2 = last_button_x2 + style.ItemSpacing.x + button_sz.x; // Expected position if next button was on same line
+				//	if (n + 1 < buttons_count && next_button_x2 < _wx2) ImGui::SameLine();
+				//	ImGui::PopID();
+				//}
+			}
+
+			//----
+
+			/*
+			//        // 1. palettes
+			//
+			//        ImGui::Text("PALETTE");
+			//
+			//        if (ImGui::Button("SAVE PALETTE")) {
+			//            ofLogNotice(__FUNCTION__) << "SAVE PALETTE";
+			//            PRESET_name = textInput_temp;
+			//
+			//            palette_TEMP.setName(PRESET_name);
+			//            palette_TEMP.setBackgroundColor(color_BackGround.get());
+			//            palette_TEMP.setPalette(palette);
+			//
+			//            palette_TEMP.palette_save(PRESET_name);
+			//        }
+			//
+			//        ImGui::SameLine();
+			//        if (ImGui::Button("LOAD PALETTE"))
+			//        {
+			//            ofLogNotice(__FUNCTION__) << "LOAD PALETTE";
+			//            PRESET_name = textInput_temp;
+			//            ofLogNotice(__FUNCTION__) << "PRESET_name: " << PRESET_name;
+			//
+			//            palette_TEMP.palette_load(PRESET_name);
+			//
+			//            //-
+			//
+			//            color_BackGround = palette_TEMP.getBackground();//TODO: temp solution because required pointer..
+			//
+			////            //TODO
+			////            // apply loaded preset to local system
+			////            vector<ofColor> _p = palette_TEMP.getPalette();
+			////            palette_clear();
+			////            for (int i = 0; i < _p.size(); i++) {
+			////                palette_addColor(_p[i]);
+			////            }
+			////
+			////            color_BackGround = ofColor(palette_TEMP.getBackground());//get directly without pointing
+			//
+			//            //-
+			//
+			//            if (DEMO_Test) myDEMO.clear();
+			//        }
+			*/
+
+			//--
+
+			if (ImGui::CollapsingHeader("Advanced"))
+			{
+				ImGui::Dummy(ImVec2(0, 5));
+
+				if (ImGui::RadioButton("Copy", mode == Mode_Copy)) { mode = Mode_Copy; } ImGui::SameLine();
+				if (ImGui::RadioButton("Move", mode == Mode_Move)) { mode = Mode_Move; } ImGui::SameLine();
+				if (ImGui::RadioButton("Swap", mode == Mode_Swap)) { mode = Mode_Swap; }
+
+				ImGui::Dummy(ImVec2(0, 5));
+
+				//-
+
+				ImGui::Separator();
+				ImGui::Dummy(ImVec2(0, 5));
+				ImGui::Text("PALETTE PANEL");
+				ImGui::Dummy(ImVec2(0, 5));
+
+				if (ofxSurfingHelpers::AddSmallButton(bFlipUserPalette, 100, 0.5 * BUTTON_BIG_HEIGHT))
 				{
-					ImGui::PopStyleColor();
-					float last_button_x2 = ImGui::GetItemRectMax().x;
-					float next_button_x2 = last_button_x2 + style.ItemSpacing.x + button_sz.x; // Expected position if next button was on same line
-					if (n + 1 < buttons_count && next_button_x2 < _wx2) ImGui::SameLine();
-					ImGui::PopID();
+					build_GradientPalette();
 				}
+
+				ImGui::Dummy(ImVec2(0, 5));
+
+				ofxImGui::AddParameter(bResponsive_Presets);
+
+				//if (bResponsive_Presets)
+				//{
+				//	ImGui::InputInt(sizePaletteBox.getName().c_str(), (int*)&sizePaletteBox.get(), 5, 100);
+				//	//ofxImGui::AddParameter(sizePaletteBox);
+				//}
+				//if (!bResponsive_Presets)
+				{
+					boxMaxRows.disableEvents();
+					ImGui::InputInt(boxMaxRows.getName().c_str(), (int*)&boxMaxRows.get(), 1, 5);
+					//ImGui::InputInt(boxMaxRows.getName().c_str(), (int *)&boxMaxRows.get());
+					boxMaxRows = ofClamp(boxMaxRows.get(), boxMaxRows.getMin(), boxMaxRows.getMax());
+					boxMaxRows.enableEvents();
+
+					//ofxImGui::AddParameter(scale_ColPalette);
+					ImGui::InputFloat(scale_ColPalette.getName().c_str(), (float *)&scale_ColPalette.get(), 0.005f, 0.010);
+				}
+
+				//--
+
+				//ImGui::Checkbox("Auto-resize", &auto_resize);
 			}
 		}
 
-		ImGui::Dummy(ImVec2(0, 10));
-
 		//--
-
-		////TODO:
-		////if (ImGui::BeginMenuBar())
-		//{
-		//	ImGui::PushItemWidth(50);
-		//	if (ImGui::BeginMenu("File"))
-		//	{
-		//		if (ImGui::MenuItem("Open..", "Ctrl+O")) { /* Do stuff */ }
-		//		if (ImGui::MenuItem("Save", "Ctrl+S")) { /* Do stuff */ }
-		//		if (ImGui::MenuItem("Close", "Ctrl+W")) {}
-		//		ImGui::EndMenu();
-		//	}
-		//	ImGui::EndMenuBar();
-		//	ImGui::PopItemWidth();
-		//}
-
-		//--
-
-		/*
-		//        // 1. palettes
-		//
-		//        ImGui::Text("PALETTE");
-		//
-		//        if (ImGui::Button("SAVE PALETTE")) {
-		//            ofLogNotice(__FUNCTION__) << "SAVE PALETTE";
-		//            PRESET_name = textInput_temp;
-		//
-		//            palette_TEMP.setName(PRESET_name);
-		//            palette_TEMP.setBackgroundColor(color_BackGround.get());
-		//            palette_TEMP.setPalette(palette);
-		//
-		//            palette_TEMP.palette_save(PRESET_name);
-		//        }
-		//
-		//        ImGui::SameLine();
-		//        if (ImGui::Button("LOAD PALETTE"))
-		//        {
-		//            ofLogNotice(__FUNCTION__) << "LOAD PALETTE";
-		//            PRESET_name = textInput_temp;
-		//            ofLogNotice(__FUNCTION__) << "PRESET_name: " << PRESET_name;
-		//
-		//            palette_TEMP.palette_load(PRESET_name);
-		//
-		//            //-
-		//
-		//            color_BackGround = palette_TEMP.getBackground();//TODO: temp solution because required pointer..
-		//
-		////            //TODO
-		////            // apply loaded preset to local system
-		////            vector<ofColor> _p = palette_TEMP.getPalette();
-		////            palette_clear();
-		////            for (int i = 0; i < _p.size(); i++) {
-		////                palette_addColor(_p[i]);
-		////            }
-		////
-		////            color_BackGround = ofColor(palette_TEMP.getBackground());//get directly without pointing
-		//
-		//            //-
-		//
-		//            if (DEMO_Test) myDEMO.clear();
-		//        }
-		*/
 	}
 	ofxImGui::EndWindow(mainSettings);
 
-
-	//----------
+	//----
 
 	//add kit palettes browser
 	if (SHOW_Kit)
 	{
 		ww = PANEL_WIDGETS_WIDTH;
-		hh = 700;
+		hh = PANEL_WIDGETS_HEIGHT;
 		ImGui::SetWindowSize(ImVec2(ww, hh));
 		//ImGuiWindowFlags flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : 0;
 
@@ -4437,6 +4459,23 @@ void ofxColorManager::gui_Presets()
 		}
 		ofxImGui::EndWindow(mainSettings);
 	}
+
+	//----
+
+	////TODO:
+	////if (ImGui::BeginMenuBar())
+	//{
+	//	ImGui::PushItemWidth(50);
+	//	if (ImGui::BeginMenu("File"))
+	//	{
+	//		if (ImGui::MenuItem("Open..", "Ctrl+O")) { /* Do stuff */ }
+	//		if (ImGui::MenuItem("Save", "Ctrl+S")) { /* Do stuff */ }
+	//		if (ImGui::MenuItem("Close", "Ctrl+W")) {}
+	//		ImGui::EndMenu();
+	//	}
+	//	ImGui::EndMenuBar();
+	//	ImGui::PopItemWidth();
+	//}
 }
 
 //--------------------------------------------------------------
@@ -4495,6 +4534,7 @@ bool ofxColorManager::draw_Gui()
 #endif
 		if (SHOW_Quantizer) colorQuantizer.gui_Quantizer();
 		if (SHOW_Panels) gui_Panels();
+		if (SHOW_Panels) gui_Export();
 		if (SHOW_Demo) gui_Demo();
 		//if (SHOW_CosineGradient) gui_imGui_CosineGradient();
 	}
@@ -5212,7 +5252,7 @@ void ofxColorManager::draw_MiniPreview()
 
 		//draw text
 		ofSetColor(font0_Color);
-		font.drawString(s, 0, 0 + _pad * 0.5);
+		font.drawString(s, 10, 0 + _pad * 0.5);
 
 		//-
 
@@ -5317,8 +5357,8 @@ void ofxColorManager::palette_removeColor(int c)
 
 		// 5. make positions & resizes to fill bar
 		palette_rearrenge();
-	}
-}
+		}
+		}
 
 
 //--------------------------------------------------------------
@@ -5339,11 +5379,11 @@ void ofxColorManager::palette_removeColorLast()
 			ofLogVerbose(__FUNCTION__) << "removed children: " << b;
 		}
 		btns_palette.pop_back();
-		}
+	}
 
 	palette_rearrenge();
 #endif
-	}
+}
 
 //--------------------------------------------------------------
 void ofxColorManager::palette_clear()
@@ -6052,7 +6092,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			color_Picked = palette[palette_colorSelected];
 		}
 #endif
-			}
+	}
 
 	else if (name == bRemoveColor.getName())
 	{
@@ -6207,7 +6247,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	//		}
 	//	}
 	*/
-			}
+	}
 
 //load user palette from range
 //--------------------------------------------------------------
@@ -6469,17 +6509,21 @@ void ofxColorManager::refresh_Range_AutoUpdate()
 //--------------------------------------------------------------
 void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 {
+	const int &key = eventArgs.key;
+	ofLogNotice(__FUNCTION__) << " : " << key;
+
+	if (key == 'K') ENABLE_keys = !ENABLE_keys;
+
 	if (ENABLE_keys)
 	{
-		const int &key = eventArgs.key;
-
-		//--
-
-		ofLogNotice(__FUNCTION__) << " : " << key;
-
 		//----
 
 		if (0) {}
+
+		else if (key == 'g')
+		{
+			setToggleVisible();
+		}
 
 		// amount colors
 		else if (key == '-') {
@@ -7176,8 +7220,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//
 		//    else if (key == OF_KEY_RETURN)
 		//        colorBrowser.switch_sorted_Type();
-				}
-			}
+		}
+	}
 
 //--------------------------------------------------------------
 void ofxColorManager::keyReleased(ofKeyEventArgs &eventArgs)
@@ -7913,6 +7957,8 @@ void ofxColorManager::saveColors()
 	ofxSurfingHelpers::CheckFolder(path_Folder_Color);
 	ofLogNotice(__FUNCTION__) << "path: " << path_Colors;
 
+	if (!bExportPreset_DefaultPath) path_Colors = path_Folder_Color.get() + "\\liveColors.json";
+
 	// A. save palette colors only
 	//ofxSerializer
 	ofJson j = palette;
@@ -7922,7 +7968,7 @@ void ofxColorManager::saveColors()
 	// B. save full preset
 	//TODO:
 	//should save colors + bakground too + gradient! = preset
-	palette_TEMP.preset_save(path_Folder_Color, true);
+	palette_TEMP.preset_save(path_Colors, true);
 	//preset_save(path_Folder_Color, true);
 }
 

@@ -22,6 +22,8 @@ public:
     ofColor color;
 
 	ofxPanel gui;
+	bool bGui = false;
+
 	ofParameter<bool> bDrawOfApp{ "Draw ofApp", false };
 
 	void drawOfApp();// test scene

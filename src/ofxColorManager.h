@@ -8,6 +8,8 @@ TODO:
 
 + simplify num colors calls..
 + fix auto build palette wf
++ picker updates HSB, theory, range... broken
++ 
 
 */
 
@@ -302,7 +304,8 @@ private:
 	//    ofLogNotice() << "global mouse position: " << arg.x << ", " << arg.y;
 	//}
 
-	bool ENABLE_keys = false;
+	ofParameter<bool> ENABLE_keys{ "KEYS", true };
+	//bool ENABLE_keys = false;
 
 	// colorQuantizer
 #ifdef USE_IMAGE_QUANTIZER
@@ -337,7 +340,7 @@ private:
 private:
 	//user palette
 	ofParameter<int> boxSizeUser;
-	ofParameter<int> boxRowsUser;
+	ofParameter<int> boxMaxRows;
 	ofParameter<float> scale_ColPalette;
 	ofParameter<bool> bFlipUserPalette;
 
@@ -611,9 +614,10 @@ private:
 	void gui_Background();
 	void gui_Gradient();
 	void gui_Range();
-	void gui_Presets();
 	void gui_Panels();
 	void gui_Demo();
+	void gui_Presets();
+	void gui_Export();
 
 	void refresh_Gui_Layout();
 
@@ -924,7 +928,12 @@ private:
 	void removeKeysListeners();
 	void addMouseListeners();
 	void removeMouseListeners();
+	
+	void processOpenFileSelection(ofFileDialogResult openFileResult) {};
+	string originalFileExtension;
+	bool bOpen = false;
 
+};
 	//--
 
 	////cosine gradient
@@ -981,4 +990,4 @@ private:
 //			ImGui::EndTooltip();
 //		}
 //	}
-};
+//};

@@ -32,7 +32,7 @@ void ofApp::draw()
 {
 	if (bDrawOfApp) drawOfApp();
 
-	gui.draw();
+	if (bGui) gui.draw();
 }
 
 //--------------------------------------------------------------
@@ -77,10 +77,12 @@ void ofApp::keyPressed(int key)
 {
 	if (false) {}
 
-	else if (key == 'g')
+	else if (key == 'G')
 	{
+		bGui = !bGui;
 		colorManager.setToggleVisible();
 	}
+
 
 	// we can get the palette 
 	// (we need to use pointers if we want auto refresh!)
