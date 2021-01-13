@@ -31,12 +31,14 @@ ofxColorManager::ofxColorManager()
 
 	path_NameCurve_Preset = "myGradient";
 	PRESET_curveName = path_NameCurve_Preset;
+
 	path_Curves_Lut = path_Folder_Curves + path_NameCurve_Preset + ".yml";
 	path_Curve_Preset = path_Folder_Curves + path_NameCurve_Preset + ".xml";
 
-	path_Folder_Color = path_Global + "colors/";
-	path_Colors = path_Folder_Color.get() + "liveColors.json";
-	ofxSurfingHelpers::CheckFolder(path_Global);
+	path_Folder_ExportColor = path_Global + "colors/";
+	path_Colors = path_Folder_ExportColor.get() + path_Name_ExportColor + ".json";
+
+	//ofxSurfingHelpers::CheckFolder(path_Global);
 
 	path_AppState = path_Global + "ofxColorManager_Settings.xml";
 
@@ -435,7 +437,7 @@ void ofxColorManager::setup()
 	//bAutoResizePalette.set("AutoResize", false);
 	bAutoExportPreset.set("Auto Export", false);
 	bExportPreset_DefaultPath.set("bin/data", true);
-	path_Folder_Color.set("ExportPath", "");
+	path_Folder_ExportColor.set("ExportPath", "");
 
 	//-
 
@@ -568,7 +570,7 @@ void ofxColorManager::setup()
 	params_ExportColors.setName("ExportColors");
 	params_ExportColors.add(bAutoExportPreset);
 	params_ExportColors.add(bExportPreset_DefaultPath);
-	params_ExportColors.add(path_Folder_Color);
+	params_ExportColors.add(path_Folder_ExportColor);
 	params_AppState.add(params_ExportColors);
 
 	// amount colors
@@ -870,15 +872,16 @@ void ofxColorManager::update(ofEventArgs & args)
 		{
 			//processOpenFileSelection(openFileResult);
 
-			path_Folder_Color = openFileResult.getPath();
-			path_Colors = path_Folder_Color.get() + "\\liveColors.json";
+			path_Folder_ExportColor = openFileResult.getPath();
+			//path_Colors = path_Folder_ExportColor.get() + "\\liveColors.json";
+			path_Colors = path_Folder_ExportColor.get() + path_Name_ExportColor + ".json";
 			bExportPreset_DefaultPath = false;//flag
-			ofLogNotice(__FUNCTION__) << "User selected a path: " << path_Folder_Color;
+			ofLogNotice(__FUNCTION__) << "User selected a path: " << path_Folder_ExportColor;
 		}
 		else
 		{
 			ofLogNotice(__FUNCTION__) << "User hit cancel";
-			path_Folder_Color = "";
+			path_Folder_ExportColor = "";
 			bExportPreset_DefaultPath = true;//set back default OF_APP/bin/data
 		}
 		bOpen = false;
@@ -2704,7 +2707,8 @@ void ofxColorManager::gui_Export()
 			{
 				bOpen = true;
 			}
-			ImGui::Text(path_Folder_Color.get().c_str());
+			ImGui::Text(path_Folder_ExportColor.get().c_str());
+			ImGui::Text(path_NameCurve_Preset.c_str());
 		}
 
 		ImGui::Checkbox("Auto-resize", &auto_resize);
@@ -3802,6 +3806,7 @@ void ofxColorManager::gui_Presets()
 						preset_Index = counter;
 					}
 				}
+				counter = ofClamp(counter, 0, preset_Index.getMax());
 
 				if (preset_Index < files.size() && preset_Index>0)
 				{
@@ -3837,6 +3842,7 @@ void ofxColorManager::gui_Presets()
 					counter = 0;
 					preset_Index = counter;
 				}
+				counter = ofClamp(counter, 0, preset_Index.getMax());
 
 				if (preset_Index < files.size() && preset_Index>0)
 				{
@@ -3989,7 +3995,7 @@ void ofxColorManager::gui_Presets()
 			if (!dont_ask_me_next_time) {
 				if (ImGui::Button("OK", ImVec2(120, 0))) {
 					ofLogNotice(__FUNCTION__) << "EXPORT";
-					//path_Folder_Color = ;
+					//path_Folder_ExportColor = ;
 					saveColors();
 
 					ImGui::CloseCurrentPopup();
@@ -4000,7 +4006,7 @@ void ofxColorManager::gui_Presets()
 					ImGui::Text("Pick export path..\n\n");
 
 					// TODO:
-					//path_Folder_Color = ;
+					//path_Folder_ExportColor = ;
 					bOpen = true;
 
 					ImGui::CloseCurrentPopup();
@@ -6111,7 +6117,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 				btns_palette[palette_colorSelected]->setSelected(true);//sets border only
 				ofLogNotice(__FUNCTION__) << "user palette selected last _c: " << palette_colorSelected;
 			}
-		}
+}
 #endif
 	}
 
@@ -7072,7 +7078,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		else if (key == 'G')
 		{
 			SHOW_Gui_Internal = !SHOW_Gui_Internal;
-		}
+	}
 #endif
 
 		//else if (key == 'g') {
@@ -7336,7 +7342,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//
 		//    else if (key == OF_KEY_RETURN)
 		//        colorBrowser.switch_sorted_Type();
-	}
+}
 }
 
 //--------------------------------------------------------------
@@ -7500,9 +7506,9 @@ void ofxColorManager::preset_refreshFiles()
 	ofDirectory dataDirectory(ofToDataPath(path_Presets, true));
 	ofxSurfingHelpers::CheckFolder(path_Presets);
 	ofLogNotice(__FUNCTION__) << path_Presets;
-	
+
 	// export for live reload preset from client app
-	path_NameLiveExport = "ofxColorManager";
+	path_Name_ExportColor = "ofxColorManager";
 
 	//-
 
@@ -7521,6 +7527,7 @@ void ofxColorManager::preset_refreshFiles()
 	}
 
 	preset_Index.setMax(files.size() - 1);
+	if (preset_Index > files.size()) preset_Index = -1;
 
 	//-
 
@@ -7787,7 +7794,7 @@ void ofxColorManager::refresh_Picker_Touched()
 			// 3. update gradient
 			if (palette_colorSelected < gradient.getNumColors())
 				gradient.replaceColorAtIndex(palette_colorSelected, color_Clicked2);
-		}
+	}
 #endif
 		//--
 
@@ -7826,7 +7833,7 @@ void ofxColorManager::refresh_Picker_Touched()
 		//// palettes
 		////color_TheoryBase.set(color_Picked.get());
 		//update_Theory();
-	}
+}
 }
 
 //----
@@ -8073,10 +8080,10 @@ void ofxColorManager::saveColors()
 	//make export dialog to set path for export outside /data
 	//path_Colors = "/Users/manu/Documents/openFrameworks/addons/ofxFontAnimator/4_ofxFontAnimatorNoise/bin/data/colors/liveColors.json";
 
-	ofxSurfingHelpers::CheckFolder(path_Folder_Color);
+	ofxSurfingHelpers::CheckFolder(path_Folder_ExportColor);
 	ofLogNotice(__FUNCTION__) << "path: " << path_Colors;
 
-	if (!bExportPreset_DefaultPath) path_Colors = path_Folder_Color.get() + "\\" + path_NameLiveExport;
+	if (!bExportPreset_DefaultPath) path_Colors = path_Folder_ExportColor.get() + "\\" + path_Name_ExportColor;
 
 	// A. save palette colors only
 	//ofxSerializer
@@ -8089,9 +8096,12 @@ void ofxColorManager::saveColors()
 	//TODO:
 	//should save colors + bakground too + gradient! = preset
 	palette_TEMP.name = PRESET_name;
-	palette_TEMP.curveName = PRESET_curveName;//path_NameCurve_Preset
+	PRESET_curveName = path_NameCurve_Preset;
+	palette_TEMP.nameCurve = PRESET_curveName;//path_NameCurve_Preset
+
 	palette_TEMP.preset_save(path_Colors + "_pack", true);
-	//preset_save(path_Folder_Color, true);
+
+	//preset_save(path_Folder_ExportColor, true);
 }
 
 //--------------------------------------------------------------

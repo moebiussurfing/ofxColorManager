@@ -215,8 +215,8 @@ private:
 	std::string path_AppState;
 	std::string path_Presets;
 	std::string path_Palettes;
-	std::string path_NameLiveExport;
-	ofParameter <std::string> path_Folder_Color;
+	std::string path_Name_ExportColor;
+	ofParameter <std::string> path_Folder_ExportColor;
 
 	//-
 
@@ -435,7 +435,7 @@ private:
 	//BUG: should create a default preset because if myPreset is not detected it crashes
 	//default preset
 	std::string PRESET_name = "_emptyPreset";
-	std::string PRESET_curveName = "curve01";
+	std::string PRESET_curveName = "_";
 
 	//-
 

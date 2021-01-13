@@ -27,13 +27,15 @@ struct PaletteData
 
 struct PresetData
 {
-	std::string name;
+	std::string namePreset;
 	vector<ofColor> palette;
-	std::string curveName;
+	std::string nameCurve;
 	ofColor background;
 
-	OFX_CEREAL_DEFINE(CEREAL_NVP(name), CEREAL_NVP(curveName), CEREAL_NVP(palette), CEREAL_NVP(background))
+	OFX_CEREAL_DEFINE(CEREAL_NVP(namePreset), CEREAL_NVP(nameCurve), CEREAL_NVP(palette), CEREAL_NVP(background))
 };
+
+//TODO: if the json file is modified by hand will be crash on parsing..
 
 //----
 
@@ -68,7 +70,7 @@ public:
 	// local data
 	std::string name;
 	vector<ofColor> palette;
-	std::string curveName;
+	std::string nameCurve;
 	ofColor background;
 
 	//--

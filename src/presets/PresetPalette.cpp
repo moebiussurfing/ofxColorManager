@@ -59,11 +59,11 @@ bool PresetPalette::preset_load(std::string p)
 		//ofLogNotice(__FUNCTION__) << "presetData: " << endl << presetData;
 
 		ofLogNotice(__FUNCTION__) << "-------- presetData --------";
-		ofLogNotice(__FUNCTION__) << "name       : " << presetData.name;
-		ofLogNotice(__FUNCTION__) << "curveName  : " << presetData.curveName;
+		ofLogNotice(__FUNCTION__) << "namePreset : " << presetData.namePreset;
+		ofLogNotice(__FUNCTION__) << "nameCurve  : " << presetData.nameCurve;
 		ofLogNotice(__FUNCTION__) << "background : " << presetData.background;
 
-		//curvesTool.load(path_Presets + presetData.curveName + ".yml");
+		//curvesTool.load(path_Presets + presetData.nameCurve + ".yml");
 		//
 		//if (AutoSet_BackGround_Color)
 		//{
@@ -84,8 +84,8 @@ bool PresetPalette::preset_load(std::string p)
 		//ofLogNotice("PresetPalette::preset_load") << "palette.size()     :" << palette.size()<<endl;
 		//ofLogNotice("PresetPalette::preset_load") << "btns_palette.size():" << btns_palette.size()<<endl;
 
-		(*name_BACK) = presetData.name;
-		(*curveName_BACK) = presetData.curveName;
+		(*name_BACK) = presetData.namePreset;
+		(*curveName_BACK) = presetData.nameCurve;
 		(*palette_BACK) = presetData.palette;
 	}
 	else
@@ -109,15 +109,17 @@ void PresetPalette::preset_save(std::string p, bool absolutePath)
 	
 	presetData.background = color_BACK;
 	presetData.palette = (*palette_BACK);
-	//presetData.name = (*name_BACK);//TODO: ?
-	//presetData.curveName = (*curveName_BACK);
 
-	ofLogNotice(__FUNCTION__) << "name       : " << presetData.name;
-	ofLogNotice(__FUNCTION__) << "curveName  : " << presetData.curveName;
+	presetData.namePreset = (*name_BACK);//TODO: ? disabled pointers
+	presetData.nameCurve = (*curveName_BACK);
+	//presetData.nameCurve = nameCurve;//TODO:
+
+	ofLogNotice(__FUNCTION__) << "namePreset : " << presetData.namePreset;
+	ofLogNotice(__FUNCTION__) << "nameCurve  : " << presetData.nameCurve;
 	ofLogNotice(__FUNCTION__) << "palette    : " << ofToString(presetData.palette);
 	ofLogNotice(__FUNCTION__) << "background : " << presetData.background;
 
-	//curvesTool.save(path_Presets+presetData.curveName+".yml");
+	//curvesTool.save(path_Presets+presetData.nameCurve+".yml");
 
 	ofFile file(path, ofFile::WriteOnly);
 	jsonout jo(file);
@@ -140,7 +142,7 @@ PaletteData PresetPalette::preset_LoadPalette(std::string name)//TODO: not elega
 		jsonin ji(file);
 		ji >> pd;
 
-		ofLogNotice(__FUNCTION__) << "name       : " << pd.name;
+		ofLogNotice(__FUNCTION__) << "namePreset : " << pd.name;
 		ofLogNotice(__FUNCTION__) << "palette    : " << ofToString(pd.palette);
 		ofLogNotice(__FUNCTION__) << "background : " << pd.background;
 	}
