@@ -46,6 +46,8 @@ TODO:
 
 //------
 
+#include "client/palettePreviewMini.h"
+using namespace ofxColorClient;
 
 #include "ofxColorGradient.h"
 #include "ofxColorPalette.h"
@@ -125,6 +127,9 @@ using namespace ofxSurfingHelpers;
 class ofxColorManager : public ofBaseApp
 {
 	//--
+
+public:
+	PalettePreviewMini miniPreview;
 
 public:
 	ofxColorManager();
@@ -525,7 +530,7 @@ public:
 	void setVisible_debugText(bool b);
 
 public:
-	void draw_MiniPreview();
+	//void draw_MiniPreview();
 	void draw_GradientPreview(glm::vec2 pos, bool horizontal);
 
 private:
