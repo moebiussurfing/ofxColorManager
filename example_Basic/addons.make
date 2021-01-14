@@ -1,8 +1,9 @@
-ofxGui
-ofxOpenCv
-ofxXmlSettings
+ofxColorClient
 ofxColorManager
-ofxMouseRuler
+ofxGui
 ofxPoco
-ofxSuperLog
+ofxIO
+ofxMouseRuler
+ofxOpenCv
 ofxSurfingHelpers
+ofxXmlSettings

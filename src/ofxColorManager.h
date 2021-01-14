@@ -47,7 +47,7 @@ TODO:
 //------
 
 #include "client/palettePreviewMini.h"
-using namespace ofxColorClient;
+//using namespace ofxColorClient;
 
 #include "ofxColorGradient.h"
 #include "ofxColorPalette.h"

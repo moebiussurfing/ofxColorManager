@@ -4208,7 +4208,7 @@ void ofxColorManager::gui_Presets()
 
 			//-
 
-			//ImGui::Dummy(ImVec2(0, 5));
+			ImGui::Dummy(ImVec2(0, 5));
 			ImGui::Separator();
 		}
 
