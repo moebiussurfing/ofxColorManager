@@ -2728,10 +2728,15 @@ void ofxColorManager::gui_Export()
 					bOpen = true;
 				}
 
+				ImGui::Dummy(ImVec2(0, 2));
+				ImGui::Text("Path:");
 				if (!bExportPreset_DefaultPath) {
-					ImGui::Dummy(ImVec2(0, 2));
-					ImGui::Text("Export Path:");
 					ImGui::Text(path_Folder_ExportColor_Custom.get().c_str());
+				}
+				else {
+					std::string ss = "/data/" + path_Folder_ExportColor_Data.get();
+					ImGui::Text(ss.c_str());
+					//ImGui::Text(path_Folder_ExportColor_Data.get().c_str());
 				}
 
 				ImGui::Dummy(ImVec2(0, 2));
