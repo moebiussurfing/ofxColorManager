@@ -5,7 +5,7 @@ void ofApp::setup()
 {
 	ofEnableAlphaBlending();
 	ofSetFrameRate(60);
-	ofSetWindowPosition(1920, 18);
+	ofSetWindowPosition(-1920, 18);
 
 	//--
 

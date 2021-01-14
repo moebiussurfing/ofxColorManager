@@ -179,6 +179,7 @@ private:
 	ofParameter<bool> SHOW_GradientCurve;
 	ofParameter<bool> SHOW_debugText;
 	ofParameter<bool> SHOW_Panels;
+	ofParameter<bool> SHOW_Export;
 	ofParameter<bool> SHOW_Presets;
 	ofParameter<bool> SHOW_Kit;
 	ofParameter<bool> AutoScroll;
@@ -216,7 +217,8 @@ private:
 	std::string path_Presets;
 	std::string path_Palettes;
 	std::string path_Name_ExportColor;
-	ofParameter <std::string> path_Folder_ExportColor;
+	ofParameter <std::string> path_Folder_ExportColor_Custom;
+	ofParameter <std::string> path_Folder_ExportColor_Data;
 
 	//-
 
@@ -426,7 +428,7 @@ private:
 
 	// presets
 
-	PresetPalette palette_TEMP;
+	PresetPalette PRESET_Temp;
 
 	//TODO:
 	//PresetManager myPresetManager;
@@ -839,8 +841,8 @@ private:
 	// preset manager
 private:
 
-	void preset_save(std::string p);
-	void preset_load(std::string p);
+	void preset_Save(std::string p);
+	void preset_Load(std::string p);
 
 	//TODO: this is to save an standalone palette
 	//void palette_save(std::string p);
@@ -859,7 +861,7 @@ private:
 
 	// preset files
 
-	void preset_refreshFiles();
+	void preset_RefreshFiles();
 	std::vector<std::string> files_Names;
 	std::vector<ofFile> files;
 	std::string textInput_temp = "type name";

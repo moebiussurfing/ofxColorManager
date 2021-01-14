@@ -18,6 +18,8 @@
 // (Gui 2 outdated but should work)
 //#define USE_OFX_UI
 //
+#define PANEL_WIDGETS_WIDTH 200
+#define PANEL_WIDGETS_HEIGHT 500
 #define BUTTON_BIG_HEIGHT 50
 #define BUTTON_SLIM_HEIGHT 14
 //
@@ -63,12 +65,13 @@ private:
 	ofxImGui::Gui gui_ImGui;
 #endif
 	void drawImGui();
+	ofxImGui::Settings mainSettings;
 #endif
 
 	std::string textInput_temp1 = "";
 	std::string textInput_temp1_PRE = "-1";
 	
-	ofParameter<bool> SHOW_BrowserPalettes{"Show Browser", true};
+	ofParameter<bool> SHOW_BrowserPalettes{"Show Palettes", true};
 	ofParameter<bool> AutoScroll{ "AutoScroll", true };
 
 	//--

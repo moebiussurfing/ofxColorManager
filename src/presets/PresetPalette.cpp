@@ -42,7 +42,7 @@ ofColor PresetPalette::getBackground()
 }
 
 //--------------------------------------------------------------
-bool PresetPalette::preset_load(std::string p)
+bool PresetPalette::preset_Load(std::string p)
 {
 	ofLogNotice(__FUNCTION__) << p;
 	std::string path = path_Presets + p + ".json";
@@ -80,9 +80,9 @@ bool PresetPalette::preset_load(std::string p)
 			palette.push_back(c);
 		}
 
-		//ofLogNotice("PresetPalette::preset_load") << "DONE! preset_load  :" << p;
-		//ofLogNotice("PresetPalette::preset_load") << "palette.size()     :" << palette.size()<<endl;
-		//ofLogNotice("PresetPalette::preset_load") << "btns_palette.size():" << btns_palette.size()<<endl;
+		//ofLogNotice("PresetPalette::preset_Load") << "DONE! preset_Load  :" << p;
+		//ofLogNotice("PresetPalette::preset_Load") << "palette.size()     :" << palette.size()<<endl;
+		//ofLogNotice("PresetPalette::preset_Load") << "btns_palette.size():" << btns_palette.size()<<endl;
 
 		(*name_BACK) = presetData.namePreset;
 		(*curveName_BACK) = presetData.nameCurve;
@@ -97,7 +97,7 @@ bool PresetPalette::preset_load(std::string p)
 }
 
 //--------------------------------------------------------------
-void PresetPalette::preset_save(std::string p, bool absolutePath)
+void PresetPalette::preset_Save(std::string p, bool absolutePath)
 {
 	ofLogNotice(__FUNCTION__) << p;
 	
@@ -112,7 +112,7 @@ void PresetPalette::preset_save(std::string p, bool absolutePath)
 
 	//presetData.namePreset = (*name_BACK);//TODO: ? disabled pointers
 	//presetData.nameCurve = (*curveName_BACK);
-	////presetData.nameCurve = nameCurve;//TODO:
+	//presetData.nameCurve = nameCurve;//TODO:
 
 	ofLogNotice(__FUNCTION__) << "namePreset : " << presetData.namePreset;
 	ofLogNotice(__FUNCTION__) << "nameCurve  : " << presetData.nameCurve;
@@ -125,11 +125,11 @@ void PresetPalette::preset_save(std::string p, bool absolutePath)
 	jsonout jo(file);
 	jo << presetData;
 
-	ofLogNotice(__FUNCTION__) << "DONE! preset_save: " << p;
+	ofLogNotice(__FUNCTION__) << "DONE! preset_Save: " << p;
 }
 
 //--------------------------------------------------------------
-PresetData PresetPalette::preset_LoadPalette(std::string name)//TODO: not elegant.. bc uses the target object..
+PresetData PresetPalette::getPreset(std::string name)//TODO: not elegant.. bc uses the target object..
 {
 	ofLogNotice(__FUNCTION__) << name;
 

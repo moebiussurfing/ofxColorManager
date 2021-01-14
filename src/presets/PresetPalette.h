@@ -16,6 +16,7 @@
 
 using namespace ofxCereal;
 
+// only the colors but with background and name
 struct PaletteData
 {
 	std::string name;
@@ -25,6 +26,15 @@ struct PaletteData
 	OFX_CEREAL_DEFINE(CEREAL_NVP(name), CEREAL_NVP(palette), CEREAL_NVP(background))
 };
 
+//// only the colors
+//struct PaletteData
+//{
+//	vector<ofColor> palette;
+//
+//	OFX_CEREAL_DEFINE(CEREAL_NVP(palette))
+//};
+
+// bundle: the colors but with background and name and gradient preset
 struct PresetData
 {
 	std::string namePreset;
@@ -103,10 +113,10 @@ public:
 	// preset (colors, gradient, curve)
 	PresetData presetData;//bundle preset: palette+curve+gradient+background
 
-	void preset_save(std::string p, bool absolutePath = false);
-	bool preset_load(std::string p);
+	void preset_Save(std::string p, bool absolutePath = false);
+	bool preset_Load(std::string p);
 
-	PresetData preset_LoadPalette(std::string name);//TODO: not elegant..
+	PresetData getPreset(std::string name);//TODO: not elegant..
 
 	//--
 
