@@ -29,8 +29,8 @@ struct PresetData
 {
 	std::string namePreset;
 	vector<ofColor> palette;
-	std::string nameCurve;
 	ofColor background;
+	std::string nameCurve;
 
 	OFX_CEREAL_DEFINE(CEREAL_NVP(namePreset), CEREAL_NVP(nameCurve), CEREAL_NVP(palette), CEREAL_NVP(background))
 };
@@ -106,7 +106,7 @@ public:
 	void preset_save(std::string p, bool absolutePath = false);
 	bool preset_load(std::string p);
 
-	PaletteData preset_LoadPalette(std::string name);//TODO: not elegant..
+	PresetData preset_LoadPalette(std::string name);//TODO: not elegant..
 
 	//--
 

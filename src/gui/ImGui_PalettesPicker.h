@@ -21,7 +21,7 @@ TODO:
 namespace ImGui_PalettesPicker
 {
 	//--------------------------------------------------------------
-	inline int gui_GridPalettes(vector<PaletteData> &kit, int indexExt = -1, bool autoscroll = true)
+	inline int gui_GridPalettes(vector<PresetData> &kit, int indexExt = -1, bool autoscroll = true)
 	{
 		static bool MODE_Slim = false;
 		int indexPick = -1;
@@ -87,7 +87,7 @@ namespace ImGui_PalettesPicker
 
 				ImGui::Dummy(ImVec2(0, _spc2));
 
-				ImGui::Text(kit[p].name.c_str());
+				ImGui::Text(kit[p].namePreset.c_str());
 
 				//if (p == indexExt)
 				//{
@@ -144,7 +144,7 @@ namespace ImGui_PalettesPicker
 					// same size for each color
 					int _wwB = (_w / _sizeP) - _spc;
 
-					std::string name = (kit[p].name + "_" + ofToString(p) + "_" + ofToString(c));
+					std::string name = (kit[p].namePreset + "_" + ofToString(p) + "_" + ofToString(c));
 
 					//----
 

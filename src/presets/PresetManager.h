@@ -2,7 +2,6 @@
 //// Created by moebiussurfing on 8/9/19.
 ////
 
-
 /*
 
 this class will be a kind of manager to work as lite-version 
@@ -11,7 +10,6 @@ to be used in situation where we don't need to edit presets, pickers...etc
 just to use our presets, but with gradients, curves and all.
 
 */
-
 
 //#pragma once
 //#include "ofMain.h"
@@ -34,9 +32,6 @@ just to use our presets, but with gradients, curves and all.
 //    void setup();
 //    void update();
 //    void draw();
-//
-//    //--
-//
 //
 //    //--
 //

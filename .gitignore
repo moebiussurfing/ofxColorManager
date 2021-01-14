@@ -564,3 +564,4 @@ example_Basic/bin/data/liveColors.json
 *.json
 *.json
 *.xml
+example_Basic/bin/imgui.ini

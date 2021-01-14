@@ -14,33 +14,38 @@ ofxColorManager::ofxColorManager()
 	ofAddListener(ofEvents().draw, this, &ofxColorManager::draw, OF_EVENT_ORDER_BEFORE_APP);
 #endif
 
+	//--
+
 	//default
 	fps = 60.0f;
 	dt = 1.f / fps;
 
 	//--
 
+	// file paths
+
 	path_Global = "ofxColorManager/";
 	ofxSurfingHelpers::CheckFolder(path_Global);
+	path_AppState = path_Global + "ofxColorManager_Settings.xml";
 
 	path_Layout = path_Global + "layout/";
 	ofxSurfingHelpers::CheckFolder(path_Layout);
 
-	path_Folder_Curves = path_Global + "curves/";
-	ofxSurfingHelpers::CheckFolder(path_Folder_Curves);
+	path_Folder_Gradient = path_Global + "curves/";
+	ofxSurfingHelpers::CheckFolder(path_Folder_Gradient);
 
-	path_NameCurve_Preset = "myGradient";
-	PRESET_curveName = path_NameCurve_Preset;
+	path_Name_Gradient = "myGradient";
 
-	path_Curves_Lut = path_Folder_Curves + path_NameCurve_Preset + ".yml";
-	path_Curve_Preset = path_Folder_Curves + path_NameCurve_Preset + ".xml";
+	PRESET_Name = "PRESET_Name";
+	PRESET_Name_Gradient = path_Name_Gradient;
 
-	path_Folder_ExportColor = path_Global + "colors/";
-	path_Colors = path_Folder_ExportColor.get() + path_Name_ExportColor + ".json";
-
-	//ofxSurfingHelpers::CheckFolder(path_Global);
-
-	path_AppState = path_Global + "ofxColorManager_Settings.xml";
+	path_Gradient_LUT = path_Folder_Gradient + path_Name_Gradient + ".yml";
+	path_Gradient_Preset = path_Folder_Gradient + path_Name_Gradient + ".xml";
+	
+	path_Folder_ExportColor = path_Global + "export/";
+	ofxSurfingHelpers::CheckFolder(path_Folder_ExportColor);
+	path_Name_ExportColor = "ofxColorManager";
+	path_FileExport = path_Folder_ExportColor.get() + path_Name_ExportColor;
 
 	//--
 
@@ -762,10 +767,10 @@ void ofxColorManager::startup()
 	//bResetCurve = true;
 
 	// lut
-	curvesTool.load(path_Curves_Lut); //needed because it fills polyline
+	curvesTool.load(path_Gradient_LUT); //needed because it fills polyline
 
 	// preset
-	ofxSurfingHelpers::loadGroup(params_Gradient, path_Curve_Preset);
+	ofxSurfingHelpers::loadGroup(params_Gradient, path_Gradient_Preset);
 
 	curve_Slider_ExpTweak.setup(slider_PickIn_x, slider_PickIn_y, slider_PickIn_w, slider_PickIn_h, 0, 1, curve_Gradient_Exp, true, true);
 	curve_Slider_ExpTweak.setPercent(curve_Gradient_Exp);
@@ -778,7 +783,7 @@ void ofxColorManager::startup()
 	// preset manager
 
 	preset_refreshFiles();
-	//preset_load(PRESET_name);
+	//preset_load(PRESET_Name);
 
 	//----
 
@@ -848,8 +853,8 @@ void ofxColorManager::startup()
 	//load last session preset index
 	if (preset_Index < files.size())
 	{
-		PRESET_name = files_Names[preset_Index];
-		preset_load(PRESET_name);
+		PRESET_Name = files_Names[preset_Index];
+		preset_load(PRESET_Name);
 	}
 
 	//--
@@ -873,8 +878,8 @@ void ofxColorManager::update(ofEventArgs & args)
 			//processOpenFileSelection(openFileResult);
 
 			path_Folder_ExportColor = openFileResult.getPath();
-			//path_Colors = path_Folder_ExportColor.get() + "\\liveColors.json";
-			path_Colors = path_Folder_ExportColor.get() + path_Name_ExportColor + ".json";
+			//path_FileExport = path_Folder_ExportColor.get() + "\\liveColors.json";
+			path_FileExport = path_Folder_ExportColor.get() + path_Name_ExportColor + ".json";
 			bExportPreset_DefaultPath = false;//flag
 			ofLogNotice(__FUNCTION__) << "User selected a path: " << path_Folder_ExportColor;
 		}
@@ -1014,7 +1019,7 @@ void ofxColorManager::update(ofEventArgs & args)
 		//{
 		//	ofLogNotice(__FUNCTION__) << "bAutoExportPreset: " << bAutoExportPreset;
 		//	//ofLogNotice(__FUNCTION__) << "EXPORT";
-		//	saveColors();
+		//	exportPalette();
 		//}
 	}
 
@@ -1300,7 +1305,7 @@ void ofxColorManager::draw_Info()
 	int y;
 	int h;
 
-	std::string t0 = PRESET_name;
+	std::string t0 = PRESET_Name;
 	std::string t1 = myPalette_Name;
 	std::string t2 = theory_Name;
 	std::string t3 = range_Name;
@@ -1558,14 +1563,14 @@ void ofxColorManager::exit()
 	// preset
 
 	// gradient curve
-	curvesTool.save(path_Curves_Lut);//needed because it fills polyline
+	curvesTool.save(path_Gradient_LUT);//needed because it fills polyline
 
 	// refresh before save
 	curve_Gradient_Exp = curve_Slider_ExpTweak.getValue();
 	curve_Gradient_PickIn = curve_Slider_Pick.getValue();
 
 	// curve preset
-	ofxSurfingHelpers::saveGroup(params_Gradient, path_Curve_Preset);
+	ofxSurfingHelpers::saveGroup(params_Gradient, path_Gradient_Preset);
 
 	//----
 
@@ -2699,7 +2704,7 @@ void ofxColorManager::gui_Export()
 		{
 			if (ImGui::Button("Export"))
 			{
-				saveColors();
+				exportPalette();
 			}
 			ofxImGui::AddParameter(bAutoExportPreset);
 			ofxImGui::AddParameter(bExportPreset_DefaultPath);
@@ -2708,7 +2713,7 @@ void ofxColorManager::gui_Export()
 				bOpen = true;
 			}
 			ImGui::Text(path_Folder_ExportColor.get().c_str());
-			ImGui::Text(path_NameCurve_Preset.c_str());
+			ImGui::Text(path_Name_Gradient.c_str());
 		}
 
 		ImGui::Checkbox("Auto-resize", &auto_resize);
@@ -3715,7 +3720,7 @@ void ofxColorManager::gui_Presets()
 		//ImGui::Text("Name");
 		ImGui::Dummy(ImVec2(0, 5));
 
-		ImGui::Text(PRESET_name.c_str());
+		ImGui::Text(PRESET_Name.c_str());
 
 		//----
 
@@ -3738,9 +3743,9 @@ void ofxColorManager::gui_Presets()
 		//		preset_Index = counter;
 		//		if (preset_Index < files.size())
 		//		{
-		//			PRESET_name = files_Names[preset_Index];
-		//			ofLogNotice(__FUNCTION__) << "PRESET: [" + ofToString(preset_Index) + "] " << PRESET_name;
-		//			preset_load(PRESET_name);
+		//			PRESET_Name = files_Names[preset_Index];
+		//			ofLogNotice(__FUNCTION__) << "PRESET: [" + ofToString(preset_Index) + "] " << PRESET_Name;
+		//			preset_load(PRESET_Name);
 		//		}
 		//		if (bNewPreset) bNewPreset = false;
 		//	}
@@ -3757,9 +3762,9 @@ void ofxColorManager::gui_Presets()
 		//		preset_Index = counter;
 		//		if (preset_Index < files.size())
 		//		{
-		//			PRESET_name = files_Names[preset_Index];
-		//			ofLogNotice(__FUNCTION__) << "PRESET: [" + ofToString(preset_Index) + "] " << PRESET_name;
-		//			preset_load(PRESET_name);
+		//			PRESET_Name = files_Names[preset_Index];
+		//			ofLogNotice(__FUNCTION__) << "PRESET: [" + ofToString(preset_Index) + "] " << PRESET_Name;
+		//			preset_load(PRESET_Name);
 		//		}
 		//	}
 		//	if (bNewPreset) bNewPreset = false;
@@ -3810,10 +3815,10 @@ void ofxColorManager::gui_Presets()
 
 				if (preset_Index < files.size() && preset_Index>0)
 				{
-					PRESET_name = files_Names[preset_Index];
-					ofLogNotice(__FUNCTION__) << "PRESET: [" + ofToString(preset_Index) + "] " << PRESET_name;
+					PRESET_Name = files_Names[preset_Index];
+					ofLogNotice(__FUNCTION__) << "PRESET: [" + ofToString(preset_Index) + "] " << PRESET_Name;
 
-					preset_load(PRESET_name);
+					preset_load(PRESET_Name);
 
 					//-
 
@@ -3846,10 +3851,10 @@ void ofxColorManager::gui_Presets()
 
 				if (preset_Index < files.size() && preset_Index>0)
 				{
-					PRESET_name = files_Names[preset_Index];
-					ofLogNotice(__FUNCTION__) << "PRESET: [" + ofToString(preset_Index) + "] " << PRESET_name;
+					PRESET_Name = files_Names[preset_Index];
+					ofLogNotice(__FUNCTION__) << "PRESET: [" + ofToString(preset_Index) + "] " << PRESET_Name;
 
-					preset_load(PRESET_name);
+					preset_load(PRESET_Name);
 
 					//-
 
@@ -3883,10 +3888,10 @@ void ofxColorManager::gui_Presets()
 				if (currentFileIndex < files_Names.size())
 				{
 					preset_Index = currentFileIndex;
-					PRESET_name = files_Names[preset_Index];
-					ofLogNotice(__FUNCTION__) << "PRESET_name: " << PRESET_name;
+					PRESET_Name = files_Names[preset_Index];
+					ofLogNotice(__FUNCTION__) << "PRESET_Name: " << PRESET_Name;
 
-					preset_load(PRESET_name);
+					preset_load(PRESET_Name);
 				}
 
 				if (bNewPreset) bNewPreset = false;
@@ -3911,11 +3916,11 @@ void ofxColorManager::gui_Presets()
 			//textInput_temp = ofToString(tab2);
 			//ofLogNotice(__FUNCTION__) << "textInput_temp:" << textInput_temp;
 
-			PRESET_name = textInput_temp;
+			PRESET_Name = textInput_temp;
 
-			ofLogNotice(__FUNCTION__) << "PRdrawESET_name: " << PRESET_name;
+			ofLogNotice(__FUNCTION__) << "PRdrawESET_name: " << PRESET_Name;
 
-			preset_save(PRESET_name);
+			preset_save(PRESET_Name);
 			preset_refreshFiles();
 		}
 
@@ -3924,8 +3929,8 @@ void ofxColorManager::gui_Presets()
 		if (ImGui::Button("LOAD", ImVec2(_w50, _h * 0.5)))//not required..
 		{
 			ofLogNotice(__FUNCTION__) << "LOAD";
-			ofLogNotice(__FUNCTION__) << "PRESET_name: " << PRESET_name;
-			preset_load(PRESET_name);
+			ofLogNotice(__FUNCTION__) << "PRESET_Name: " << PRESET_Name;
+			preset_load(PRESET_Name);
 		}
 
 		//ImGui::SameLine();
@@ -3978,7 +3983,7 @@ void ofxColorManager::gui_Presets()
 		//if (ImGui::Button("EXPORT", ImVec2(_w50, _h * 0.5)))
 		//{
 		//	ofLogNotice(__FUNCTION__) << "EXPORT";
-		//	saveColors();
+		//	exportPalette();
 		//}
 
 		if (ImGui::Button("EXPORT", ImVec2(_w50, _h * 0.5))) ImGui::OpenPopup("EXPORT ");
@@ -3996,7 +4001,7 @@ void ofxColorManager::gui_Presets()
 				if (ImGui::Button("OK", ImVec2(120, 0))) {
 					ofLogNotice(__FUNCTION__) << "EXPORT";
 					//path_Folder_ExportColor = ;
-					saveColors();
+					exportPalette();
 
 					ImGui::CloseCurrentPopup();
 				}
@@ -4017,7 +4022,7 @@ void ofxColorManager::gui_Presets()
 				if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
 			}
 			else {
-				saveColors();
+				exportPalette();
 			}
 
 			ImGui::EndPopup();
@@ -4027,15 +4032,15 @@ void ofxColorManager::gui_Presets()
 		{
 			ofLogNotice(__FUNCTION__) << "UPDATE";
 
-			//PRESET_name = textInput_temp;
+			//PRESET_Name = textInput_temp;
 
-			ofLogNotice(__FUNCTION__) << "PRESET_name: " << PRESET_name;
+			ofLogNotice(__FUNCTION__) << "PRESET_Name: " << PRESET_Name;
 
 			//delete old file
 			//files[preset_Index].remove();
 
 			//save new one
-			preset_save(PRESET_name);
+			preset_save(PRESET_Name);
 			preset_refreshFiles();
 		}
 
@@ -4374,23 +4379,23 @@ void ofxColorManager::gui_Presets()
 			//
 			//        if (ImGui::Button("SAVE PALETTE")) {
 			//            ofLogNotice(__FUNCTION__) << "SAVE PALETTE";
-			//            PRESET_name = textInput_temp;
+			//            PRESET_Name = textInput_temp;
 			//
-			//            palette_TEMP.setName(PRESET_name);
+			//            palette_TEMP.setName(PRESET_Name);
 			//            palette_TEMP.setBackgroundColor(color_BackGround.get());
 			//            palette_TEMP.setPalette(palette);
 			//
-			//            palette_TEMP.palette_save(PRESET_name);
+			//            palette_TEMP.palette_save(PRESET_Name);
 			//        }
 			//
 			//        ImGui::SameLine();
 			//        if (ImGui::Button("LOAD PALETTE"))
 			//        {
 			//            ofLogNotice(__FUNCTION__) << "LOAD PALETTE";
-			//            PRESET_name = textInput_temp;
-			//            ofLogNotice(__FUNCTION__) << "PRESET_name: " << PRESET_name;
+			//            PRESET_Name = textInput_temp;
+			//            ofLogNotice(__FUNCTION__) << "PRESET_Name: " << PRESET_Name;
 			//
-			//            palette_TEMP.palette_load(PRESET_name);
+			//            palette_TEMP.palette_load(PRESET_Name);
 			//
 			//            //-
 			//
@@ -5282,7 +5287,7 @@ void ofxColorManager::draw_MiniPreview()
 		// preset name
 
 		//label + name
-		std::string s = PRESET_name;
+		std::string s = PRESET_Name;
 		ofColor font0_Color{ 255, 255 };
 		float _ww2 = font.getStringBoundingBox(s, 0, 0).getWidth();
 
@@ -6798,9 +6803,9 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				}
 				if (preset_Index < files.size())
 				{
-					PRESET_name = files_Names[preset_Index];
-					ofLogNotice(__FUNCTION__) << "PRESET_name: [" + ofToString(preset_Index) + "] " << PRESET_name;
-					preset_load(PRESET_name);
+					PRESET_Name = files_Names[preset_Index];
+					ofLogNotice(__FUNCTION__) << "PRESET_Name: [" + ofToString(preset_Index) + "] " << PRESET_Name;
+					preset_load(PRESET_Name);
 				}
 
 				// new preset
@@ -6824,9 +6829,9 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				}
 				if (preset_Index < files.size())
 				{
-					PRESET_name = files_Names[preset_Index];
-					ofLogNotice(__FUNCTION__) << "PRESET_name: [" + ofToString(preset_Index) + "] " << PRESET_name;
-					preset_load(PRESET_name);
+					PRESET_Name = files_Names[preset_Index];
+					ofLogNotice(__FUNCTION__) << "PRESET_Name: [" + ofToString(preset_Index) + "] " << PRESET_Name;
+					preset_load(PRESET_Name);
 				}
 
 				// new preset
@@ -6854,9 +6859,9 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 				if (preset_Index < files.size())
 				{
-					PRESET_name = files_Names[preset_Index];
-					ofLogNotice(__FUNCTION__) << "PRESET_name: [" + ofToString(preset_Index) + "] " << PRESET_name;
-					preset_load(PRESET_name);
+					PRESET_Name = files_Names[preset_Index];
+					ofLogNotice(__FUNCTION__) << "PRESET_Name: [" + ofToString(preset_Index) + "] " << PRESET_Name;
+					preset_load(PRESET_Name);
 				}
 
 				// new preset
@@ -6878,9 +6883,9 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 				if (preset_Index < files.size())
 				{
-					PRESET_name = files_Names[preset_Index];
-					ofLogNotice(__FUNCTION__) << "PRESET_name: [" + ofToString(preset_Index) + "] " << PRESET_name;
-					preset_load(PRESET_name);
+					PRESET_Name = files_Names[preset_Index];
+					ofLogNotice(__FUNCTION__) << "PRESET_Name: [" + ofToString(preset_Index) + "] " << PRESET_Name;
+					preset_load(PRESET_Name);
 				}
 
 				// new preset
@@ -7265,7 +7270,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 #ifdef USE_COLOR_LOVERS
 				colourLoversHelper.randomPalette();
 #endif
-				textInput_temp = PRESET_name;
+				textInput_temp = PRESET_Name;
 			}
 
 			//-
@@ -7480,10 +7485,10 @@ void ofxColorManager::refresh_RearrengeFiles(std::string name)
 		//preset_load(textInput_New);;
 
 		preset_Index = ii;
-		PRESET_name = files_Names[preset_Index];
-		ofLogNotice(__FUNCTION__) << PRESET_name;
+		PRESET_Name = files_Names[preset_Index];
+		ofLogNotice(__FUNCTION__) << PRESET_Name;
 
-		preset_load(PRESET_name);
+		preset_load(PRESET_Name);
 	}
 }
 //--------------------------------------------------------------
@@ -7508,7 +7513,7 @@ void ofxColorManager::preset_refreshFiles()
 	ofLogNotice(__FUNCTION__) << path_Presets;
 
 	// export for live reload preset from client app
-	path_Name_ExportColor = "ofxColorManager";
+	//path_Name_ExportColor = "ofxColorManager";
 
 	//-
 
@@ -7546,10 +7551,10 @@ void ofxColorManager::preset_refreshFiles()
 
 		//else if (preset_Index > files_Names.size() - 1)
 
-		PRESET_name = files_Names[preset_Index];
-		ofLogNotice(__FUNCTION__) << PRESET_name;
+		PRESET_Name = files_Names[preset_Index];
+		ofLogNotice(__FUNCTION__) << PRESET_Name;
 
-		preset_load(PRESET_name);
+		preset_load(PRESET_Name);
 	}
 	else
 	{
@@ -7562,8 +7567,8 @@ void ofxColorManager::preset_refreshFiles()
 	//if (files_Names.size() > 0)
 	//{
 	//    preset_Index = 0;
-	//    PRESET_name = files_Names[preset_Index];
-	//    preset_load(PRESET_name);
+	//    PRESET_Name = files_Names[preset_Index];
+	//    preset_load(PRESET_Name);
 	//}
 	//else
 	//{
@@ -7596,7 +7601,7 @@ void ofxColorManager::preset_load(std::string p)
 
 		// setup linking pointers to get back on load
 		palette_TEMP.setName(p);
-		palette_TEMP.setCurveName(PRESET_curveName);
+		palette_TEMP.setCurveName(PRESET_Name_Gradient);
 		palette_TEMP.setPalette(palette);
 
 		txt_lineActive[0] = true;//preset name
@@ -7643,7 +7648,7 @@ void ofxColorManager::preset_load(std::string p)
 
 		////TODO
 		//// curve & gradient
-		//PRESET_curveName = curveName_BACK;
+		//PRESET_Name_Gradient = curveName_BACK;
 		//std::string *name_BACK;
 		//vector<ofColor> *palette_BACK;
 		//std::string *curveName_BACK;
@@ -7660,7 +7665,7 @@ void ofxColorManager::preset_load(std::string p)
 		if (bAutoExportPreset)
 		{
 			ofLogNotice(__FUNCTION__) << "EXPORT";
-			saveColors();
+			exportPalette();
 		}
 	}
 }
@@ -7674,11 +7679,11 @@ void ofxColorManager::preset_save(std::string p)
 	//this is using pointers.. ?
 
 	palette_TEMP.setName(p);
-	palette_TEMP.setCurveName(PRESET_curveName);
+	palette_TEMP.setCurveName(PRESET_Name_Gradient);
 	palette_TEMP.setBackgroundColor(color_BackGround.get());
 	palette_TEMP.setPalette(palette);
 
-	//palette_TEMP.preset_save(PRESET_name);
+	//palette_TEMP.preset_save(PRESET_Name);
 	palette_TEMP.preset_save(p);
 }
 
@@ -7872,7 +7877,7 @@ void ofxColorManager::setControl(float control)
 
 //--------------------------------------------------------------
 std::string ofxColorManager::getPaletteName() {
-	return PRESET_name;
+	return PRESET_Name;
 }
 
 //--------------------------------------------------------------
@@ -8074,34 +8079,33 @@ void ofxColorManager::setup_Range()
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::saveColors()
+void ofxColorManager::exportPalette()
 {
 	//TODO:
 	//make export dialog to set path for export outside /data
-	//path_Colors = "/Users/manu/Documents/openFrameworks/addons/ofxFontAnimator/4_ofxFontAnimatorNoise/bin/data/colors/liveColors.json";
 
 	ofxSurfingHelpers::CheckFolder(path_Folder_ExportColor);
-	ofLogNotice(__FUNCTION__) << "path: " << path_Colors;
+	ofLogNotice(__FUNCTION__) << "Export path: " << path_FileExport;
 
-	if (!bExportPreset_DefaultPath) path_Colors = path_Folder_ExportColor.get() + "\\" + path_Name_ExportColor;
+	if (!bExportPreset_DefaultPath) // default OF data path
+		path_FileExport = path_Folder_ExportColor.get() + path_Name_ExportColor;
 
 	// A. save palette colors only
 	//ofxSerializer
 	ofJson j = palette;
-	string _path = path_Colors + "_palette.json";
+	string _path = path_FileExport + "_Palette.json";
 	ofSavePrettyJson(_path, j);
 	ofLogNotice(__FUNCTION__) << "\n" << ofToString(j);
 
 	// B. save full preset
 	//TODO:
 	//should save colors + bakground too + gradient! = preset
-	palette_TEMP.name = PRESET_name;
-	PRESET_curveName = path_NameCurve_Preset;
-	palette_TEMP.nameCurve = PRESET_curveName;//path_NameCurve_Preset
+	PRESET_Name_Gradient = path_Name_Gradient;
+	palette_TEMP.name = PRESET_Name;
+	palette_TEMP.nameCurve = PRESET_Name_Gradient;//path_Name_Gradient
+	palette_TEMP.preset_save(path_FileExport + "_Bundled", true);
 
-	palette_TEMP.preset_save(path_Colors + "_pack", true);
-
-	//preset_save(path_Folder_ExportColor, true);
+	//preset_save(path_Folder_ExportColor);
 }
 
 //--------------------------------------------------------------

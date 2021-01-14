@@ -206,12 +206,12 @@ private:
 private:
 	std::string path_Global;
 	std::string path_Kits;
-	std::string path_Folder_Curves;
+	std::string path_Folder_Gradient;
 	std::string path_Layout;
-	std::string path_Curves_Lut;
-	std::string path_Curve_Preset;
-	std::string path_NameCurve_Preset;
-	std::string path_Colors;
+	std::string path_Gradient_LUT;
+	std::string path_Gradient_Preset;
+	std::string path_Name_Gradient;
+	std::string path_FileExport;
 	std::string path_AppState;
 	std::string path_Presets;
 	std::string path_Palettes;
@@ -296,7 +296,7 @@ public:
 
 	//live reload colors file
 	ofParameterGroup params_ExportColors;
-	void saveColors();
+	void exportPalette();
 	ofParameter<bool> bAutoExportPreset;
 	ofParameter<bool> bExportPreset_DefaultPath;
 
@@ -434,8 +434,8 @@ private:
 	//TODO
 	//BUG: should create a default preset because if myPreset is not detected it crashes
 	//default preset
-	std::string PRESET_name = "_emptyPreset";
-	std::string PRESET_curveName = "_";
+	std::string PRESET_Name = "_emptyPreset";
+	std::string PRESET_Name_Gradient = "_";
 
 	//-
 
@@ -867,7 +867,8 @@ private:
 	//int preset_Index = 0;
 
 	vector<vector<ofColor>> palettesKit;
-	vector<PaletteData> kit;
+	vector<PresetData> kit;
+	//vector<PaletteData> kit;
 
 	//--
 

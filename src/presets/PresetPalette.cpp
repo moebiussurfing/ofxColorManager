@@ -100,8 +100,8 @@ bool PresetPalette::preset_load(std::string p)
 void PresetPalette::preset_save(std::string p, bool absolutePath)
 {
 	ofLogNotice(__FUNCTION__) << p;
-	std::string path;
 	
+	std::string path;
 	if(!absolutePath) path = path_Presets + p + ".json";
 	else path = p + ".json";
 
@@ -110,9 +110,9 @@ void PresetPalette::preset_save(std::string p, bool absolutePath)
 	presetData.background = color_BACK;
 	presetData.palette = (*palette_BACK);
 
-	presetData.namePreset = (*name_BACK);//TODO: ? disabled pointers
-	presetData.nameCurve = (*curveName_BACK);
-	//presetData.nameCurve = nameCurve;//TODO:
+	//presetData.namePreset = (*name_BACK);//TODO: ? disabled pointers
+	//presetData.nameCurve = (*curveName_BACK);
+	////presetData.nameCurve = nameCurve;//TODO:
 
 	ofLogNotice(__FUNCTION__) << "namePreset : " << presetData.namePreset;
 	ofLogNotice(__FUNCTION__) << "nameCurve  : " << presetData.nameCurve;
@@ -129,22 +129,23 @@ void PresetPalette::preset_save(std::string p, bool absolutePath)
 }
 
 //--------------------------------------------------------------
-PaletteData PresetPalette::preset_LoadPalette(std::string name)//TODO: not elegant.. bc uses the target object..
+PresetData PresetPalette::preset_LoadPalette(std::string name)//TODO: not elegant.. bc uses the target object..
 {
 	ofLogNotice(__FUNCTION__) << name;
 
 	std::string path = path_Presets + name + ".json";
 	ofFile file(path);
-	PaletteData pd;
+	PresetData pd;
 
 	if (file.exists())
 	{
 		jsonin ji(file);
 		ji >> pd;
 
-		ofLogNotice(__FUNCTION__) << "namePreset : " << pd.name;
+		ofLogNotice(__FUNCTION__) << "namePreset : " << pd.namePreset;
 		ofLogNotice(__FUNCTION__) << "palette    : " << ofToString(pd.palette);
 		ofLogNotice(__FUNCTION__) << "background : " << pd.background;
+		ofLogNotice(__FUNCTION__) << "nameCurve : " << pd.nameCurve;
 	}
 	else
 	{
@@ -200,4 +201,3 @@ void PresetPalette::palette_save(std::string p)
 	jsonout jo(file);
 	jo << paletteData;
 }
-
