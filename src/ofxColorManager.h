@@ -281,7 +281,7 @@ public:
 	void generate_Range(ofColor col1, ofColor col2);
 	bool bRange_Intitiated = false;
 	void refresh_Range_AutoUpdate();
-	void palette_FromRange();
+	void palette_FromRange(int index);
 
 private:
 	ofParameter<ofColor> color_1_Range;
@@ -349,7 +349,7 @@ private:
 	ofParameter<bool> bAuto_TheoryFromPicker;
 
 	void Changed_ColorTheory(ofAbstractParameter &e);
-	void refresh_Interface();
+	void refresh_Theory3();
 
 	void Changed_ParamsPalette(ofAbstractParameter &e);
 	ofParameterGroup params_Palette;
@@ -553,7 +553,7 @@ private:
 	// user palette & control
 
 private:
-	ofParameter<bool> bPaletteEdit;
+	//ofParameter<bool> bPaletteEdit;
 	ofParameter<bool> bRandomColor;
 	ofParameter<bool> bAddColor;
 	ofParameter<bool> bRemoveColor;
@@ -774,9 +774,9 @@ private:
 	//int NUM_TOTAL_PALETTES = 16;//TODO
 	int NUM_TOTAL_PALETTES = NUM_PALETTES + NUM_CT_PALETTES;//TODO //without random
 
-	int SELECTED_palette = -1;
-	int SELECTED_palette_PRE = -1;//to check if changed on update() loop
-	int SELECTED_palette_LAST = 3;//default last palette type triggered. compBrg by default
+	//int SELECTED_palette = -1;
+	//int SELECTED_palette_PRE = -1;//to check if changed on update() loop
+	//int SELECTED_palette_LAST = 3;//default last palette type triggered. compBrg by default
 
 	//----
 
