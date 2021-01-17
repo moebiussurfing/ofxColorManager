@@ -7,6 +7,82 @@ void ofxColorManager::dragEvent(ofDragInfo info) {
 }
 
 //--------------------------------------------------------------
+void ofxColorManager::reBuild()
+{
+	ofLogWarning(__FUNCTION__);
+
+	// TODO: WORKFLOW: if mode is palette&color should load first palette color
+	// and forget the clicked color
+
+	//-
+
+	//DEMO 2
+	myDEMO2.setPaletteColors(palette);
+
+	//-
+
+	//TODO:
+
+	std::string _name;
+
+	if (SHOW_ColourLovers)
+	{
+		_name = myPalette_Name;
+		palette_FromColourLovers();
+	}
+	else if (SHOW_Quantizer)
+	{
+		_name = myPalette_Name;
+		palette_FromQuantizer();
+	}
+	else if (SHOW_Theory)
+	{
+		_name = theory_Name;
+		refresh_TheoryEngine();
+		palette_FromTheory(last_Index_Theory);
+	}
+	else if (SHOW_Range)
+	{
+		_name = range_Name;
+		palette_FromRange(last_Index_Range);
+	}
+
+	//-
+
+	//// WORKFLOW: when loading a color lover palette we disable auto create from algo palettes
+	//if (bAuto_Build_Palette)
+	//{
+	//	bAuto_Build_Palette = false;
+	//}
+
+	//-
+
+	// presets
+
+	if (SHOW_Presets)
+	{
+		if (!bNewPreset) bNewPreset = true;
+		textInput_New = _name;
+	}
+
+	//-
+
+	// DEMO
+
+	if (DEMO1_Test) myDEMO1.reStart();
+
+	//-
+
+	// workflow
+
+	if (bAutoExportPreset)
+	{
+		ofLogNotice(__FUNCTION__) << "Auto EXPORT";
+		exportPalette();
+	}
+}
+
+//--------------------------------------------------------------
 ofxColorManager::ofxColorManager()
 {
 	ofAddListener(ofEvents().update, this, &ofxColorManager::update);
@@ -127,6 +203,7 @@ void ofxColorManager::setup()
 	txt_lineActive[1] = false;
 	txt_lineActive[2] = false;
 	txt_lineActive[3] = false;
+	last_Index_Type = -1;
 
 	//-
 
@@ -218,6 +295,7 @@ void ofxColorManager::setup()
 		txt_lineActive[1] = true;//lover name
 		txt_lineActive[2] = false;//theory name
 		txt_lineActive[3] = false;//range name
+		last_Index_Type = 1;
 
 		ofLogNotice("colourLoversHelper > Name Palette: ") << n;
 
@@ -277,13 +355,15 @@ void ofxColorManager::setup()
 	setBackground_ENABLE(true);
 
 	color_BackGround.set("BG", ofColor(8));
-	color_backGround_SET.set("Refresh", false);
+	color_backGround_SET.set("Set", false);
 	color_BackGround_Darkness.set("Darkerkness", 0.5, 0., 1.);
 	color_BackGround_Darker.set("Darker", false);
+	color_BackGround_Lock.set("Lock Bg", false);
 	AutoSet_BackGround_Color.set("AutoSet", true);
 
 	params_data.setName("GENERAL");
 	params_data.add(color_BackGround);
+	params_data.add(color_BackGround_Lock);
 	params_data.add(color_backGround_SET);
 	params_data.add(color_BackGround_Darker);
 	params_data.add(AutoSet_BackGround_Color);
@@ -325,7 +405,7 @@ void ofxColorManager::setup()
 	SATURATION.set("SATURATION", 200, 0, 255);
 	BRIGHTNESS.set("BRIGHTNESS", 200, 0, 255);
 
-	bAuto_TheoryToPalette.set("Auto Build Palette", true);
+	bAuto_Build_Palette.set("Auto Build Palette", true);
 
 	numColors_Alg.set("Amnt Colors Alg", 6, 2, MAX_PALETTE_COLORS);
 	numColors_Alg.setSerializable(false);
@@ -338,7 +418,7 @@ void ofxColorManager::setup()
 	params_Theory.add(SATURATION);
 	params_Theory.add(BRIGHTNESS);
 	params_Theory.add(numColors_Alg);
-	params_Theory.add(bAuto_TheoryToPalette);
+	params_Theory.add(bAuto_Build_Palette);
 	params_Theory.add(analogSpread);
 	//params_Theory.add(MODE_TweakSatBrg);
 	//params_Theory.add(bLock_palette);
@@ -351,7 +431,7 @@ void ofxColorManager::setup()
 	SHOW_AlgoPalettes.setSerializable(false);
 	SATURATION.setSerializable(false);
 	BRIGHTNESS.setSerializable(false);
-	color_BackGround.setSerializable(false);
+	//color_BackGround.setSerializable(false);
 	color_Picked.setSerializable(false);
 	color_HUE.setSerializable(false);
 	color_SAT.setSerializable(false);
@@ -441,8 +521,8 @@ void ofxColorManager::setup()
 	SHOW_Range.set("RANGE", true);
 	SHOW_Panels.set("PANELS", true);
 	SHOW_Export.set("EXPORT", true);
-	SHOW_Demo1.set("DEMO1", false);
-	SHOW_Demo2.set("DEMO2", false);
+	SHOW_Demos.set("DEMO", false);
+	//SHOW_Demo2.set("DEMO2", false);
 
 	//bAutoResizePalette.set("AutoResize", false);
 	bAutoExportPreset.set("Auto Export", false);
@@ -603,8 +683,8 @@ void ofxColorManager::setup()
 	params_Panels.add(SHOW_Theory);
 	params_Panels.add(SHOW_Panels);
 	params_Panels.add(SHOW_Export);
-	params_Panels.add(SHOW_Demo1);
-	params_Panels.add(SHOW_Demo2);
+	params_Panels.add(SHOW_Demos);
+	//params_Panels.add(SHOW_Demo2);
 	params_Panels.add(SHOW_Quantizer);
 	params_Panels.add(SHOW_ColourLovers);
 	params_Panels.add(SHOW_AlgoPalettes);
@@ -622,6 +702,7 @@ void ofxColorManager::setup()
 	params_Background.add(color_BackGround_Darker);
 	params_Background.add(AutoSet_BackGround_Color);
 	params_Background.add(color_BackGround_Darkness);
+	params_Background.add(color_BackGround_Lock);
 	params_AppState.add(params_Background);
 
 	params_Demo.add(TEST_Mode);
@@ -675,7 +756,7 @@ void ofxColorManager::setup()
 	params_Palette2.add(bResponsive_Presets);
 	params_Palette2.add(boxMaxRows);
 	//params_Palette2.add(bPaletteEdit);
-	//params_Palette2.add(bAuto_TheoryToPalette);
+	//params_Palette2.add(bAuto_Build_Palette);
 	//params_Palette2.add(bAutoResizePalette);
 	params_AppState.add(params_Palette2);
 
@@ -708,12 +789,13 @@ void ofxColorManager::setup()
 	params_control.add(AutoSet_BackGround_Color);
 	params_control.add(color_BackGround_Darker);
 	params_control.add(color_BackGround_Darkness);
+	params_control.add(color_BackGround_Lock);
 	params_control.add(AutoSet_Background_FromGradient);
 	// panels
 	params_control.add(SHOW_Panels);
 	params_control.add(SHOW_Export);
-	params_control.add(SHOW_Demo1);
-	params_control.add(SHOW_Demo2);
+	params_control.add(SHOW_Demos);
+	//params_control.add(SHOW_Demo2);
 	params_control.add(SHOW_BrowserColors);
 	params_control.add(SHOW_GradientCurve);
 	params_control.add(MODE_EditGradientLayout);
@@ -826,8 +908,8 @@ void ofxColorManager::startup()
 	panels.addToggle(&SHOW_ALL_GUI);
 	panels.addToggle(&SHOW_MINI_Preview);
 
-	panels.addToggle(&SHOW_Demo1);
-	panels.addToggle(&SHOW_Demo2);
+	panels.addToggle(&SHOW_Demos);
+	//panels.addToggle(&SHOW_Demo2);
 	panels.addToggle(&DEMO1_Test);
 	panels.addToggle(&DEMO2_Test);
 
@@ -969,59 +1051,8 @@ void ofxColorManager::update(ofEventArgs & args)
 
 		ofLogNotice(__FUNCTION__) << "  >  bUpdated_Palette_BACK : " << bUpdated_Palette_BACK;
 
-		// TODO: WORKFLOW: if mode is palette&color should load first palette color
-		// and forget the clicked color
+		reBuild();
 
-		//-
-
-		//DEMO 2
-		myDEMO2.setPaletteColors(palette);
-
-		//-
-
-		//TODO:
-		
-		if (SHOW_ColourLovers) palette_FromColourLovers();
-		else if (SHOW_Quantizer) palette_FromQuantizer();
-		else if (SHOW_Theory)
-		{
-			refresh_TheoryEngine();
-			palette_FromTheory(last_Index_Theory);
-		}
-		else if (SHOW_Range) palette_FromRange(last_Index_Range);
-
-		//-
-
-		//// WORKFLOW: when loading a color lover palette we disable auto create from algo palettes
-		//if (bAuto_TheoryToPalette)
-		//{
-		//	bAuto_TheoryToPalette = false;
-		//}
-
-		//-
-
-		// presets
-
-		if (SHOW_Presets) {
-			if (!bNewPreset) bNewPreset = true;
-			textInput_New = myPalette_Name;
-		}
-
-		//-
-
-		// DEMO
-
-		if (DEMO1_Test) myDEMO1.reStart();
-
-		//-
-
-		// workflow
-
-		if (bAutoExportPreset)
-		{
-			ofLogNotice(__FUNCTION__) << "Auto EXPORT";
-			exportPalette();
-		}
 	}
 
 	//----
@@ -1033,77 +1064,13 @@ void ofxColorManager::update(ofEventArgs & args)
 		bUpdated_Color_BACK = false;
 		ofLogWarning(__FUNCTION__) << "  >  bUpdated_Color_BACK : " << bUpdated_Color_BACK;
 
-		// workflow: 
-
-		////TODO: disable to avoid overwrite the selected color into the palette just created
-		//if (colourLoversHelper.MODE_PickPalette_BACK && colourLoversHelper.MODE_PickColor_BACK)
-		//{
-		//	// WORKFLOW: auto disable edit mode
-		//	if (bPaletteEdit)
-		//	{
-		//		bPaletteEdit = false;
-		//	}
-		//}
-
 		// 2. get color from colour lovers
 		color_Clicked2 = ofColor(myColor);
 
-		//// 3. auto create user palette from algo palette from colour lover picked color
-		//if (!colourLoversHelper.MODE_PickPalette_BACK && colourLoversHelper.MODE_PickColor_BACK)
-		//{
-		//	if (bAuto_TheoryToPalette)
-		//	{
-		//		palette_clear();
-
-		//		//palette_FromTheory(SELECTED_palette_LAST);//trig last choice
-		//	}
-		//}
-
-		// presets
-		if (!bNewPreset) bNewPreset = true;
-
-		// DEMO
-		if (DEMO1_Test) myDEMO1.reStart();
+		reBuild();
 	}
 
 	//--
-	//
-	//	// 3. changed algorihtmic palettes
-	//
-	//	// handle last selected algorithmic palette
-	//
-	//	if (SELECTED_palette != SELECTED_palette_PRE)
-	//	{
-	//		ofLogNotice(__FUNCTION__) << "  >  SELECTED_palette ! : " << SELECTED_palette;
-	//
-	//		// WORKFLOW: when a label palette is clicked, will always trig
-	//		// and load the palette into the user palette
-	//		// TODO: BUG should add this to avoid auto load to user palette
-	////#ifdef USE_RECTANGLE_INTERFACES
-	////		palette_FromTheory(SELECTED_palette);
-	////#endif
-	//
-	//		SELECTED_palette_LAST = SELECTED_palette;//memorize what was the last trigged palette
-	//		SELECTED_palette_PRE = SELECTED_palette = -1;//disable to stop check..
-	//		//bug if not if pressed same button
-	//
-	//		//-
-	//
-	//		// presets 
-	//
-	//		if (!bNewPreset) bNewPreset = true;
-	//
-	////#ifdef USE_RECTANGLE_INTERFACES
-	////		textInput_New = btns_plt_Selector[SELECTED_palette_LAST]->getName();
-	////#endif
-	//
-	//		//-
-	//
-	//		// DEMO
-	//		if (DEMO1_Test) myDEMO1.reStart();
-	//	}
-
-	//-
 
 	//TODO:
 	//not used and hidden
@@ -1135,19 +1102,6 @@ void ofxColorManager::update(ofEventArgs & args)
 	{
 		refresh_Gui_Layout();
 	}
-
-	//--
-
-	//if (SHOW_Range)
-	//{
-	//	//workflow
-	//	//get main color from range picker
-	//	if (autoPick_RangeColor1) color_Picked.set(color_1_Range.get());
-	//	else if (autoPick_RangeColor2) color_Picked.set(color_2_Range.get());
-	//	if (!autoPick_RangeColor1 && !autoPick_RangeColor2) autoPick_RangeColor1 = true;
-	//	else if (autoPick_RangeColor1 && !autoPick_RangeColor2) autoPick_RangeColor2 = true;
-	//	else if (!autoPick_RangeColor1 && autoPick_RangeColor2) autoPick_RangeColor1 = true;
-	//}
 
 	//--
 
@@ -1200,7 +1154,7 @@ void ofxColorManager::draw_Curve()
 {
 	gui_Gradient();
 
-	//-
+	//----
 
 	ofColor c;
 
@@ -1416,7 +1370,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 			//}
 			//else
 			{
-				if (AutoSet_BackGround_Color.get())// && SHOW_GradientCurve.get()) 
+				if (AutoSet_BackGround_Color.get() && !color_BackGround_Lock)// && SHOW_GradientCurve.get()) 
 				{
 					ofClear(colCurveTest);
 
@@ -1428,7 +1382,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 					ofClear(ofColor(color_BackGround.get()));
 				}
 			}
-	}
+		}
 
 		//--
 
@@ -1470,7 +1424,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 
 			draw_Info();
 		}
-}
+	}
 
 	//--
 
@@ -1966,7 +1920,7 @@ void ofxColorManager::gui_Theory()
 		if (ImGui::CollapsingHeader("Advanced"))
 		{
 			ofxImGui::AddParameter(bAuto_TheoryFromPicker);
-			ofxImGui::AddParameter(bAuto_TheoryToPalette);
+			ofxImGui::AddParameter(bAuto_Build_Palette);
 			ofxImGui::AddParameter(analogSpread);
 			// layout
 			ImGui::Dummy(ImVec2(0, 5));
@@ -3215,8 +3169,8 @@ void ofxColorManager::gui_Panels()
 		//ofxSurfingHelpers::AddBigToggle(SHOW_ALL_GUI);
 		ofxSurfingHelpers::AddBigToggle(SHOW_Presets);
 		ofxSurfingHelpers::AddBigToggle(SHOW_MINI_Preview);
-		ofxSurfingHelpers::AddBigToggle(SHOW_Demo1);
-		ofxSurfingHelpers::AddBigToggle(SHOW_Demo2);
+		ofxSurfingHelpers::AddBigToggle(SHOW_Demos);
+		//ofxSurfingHelpers::AddBigToggle(SHOW_Demo2);
 		ofxSurfingHelpers::AddBigToggle(SHOW_Export);
 		ofxImGui::AddParameter(ENABLE_keys);
 
@@ -3234,7 +3188,7 @@ void ofxColorManager::gui_Panels()
 		//ImGui::Checkbox("Resize", &bResize);
 	}
 	ofxImGui::EndWindow(mainSettings);
-	}
+}
 
 //--------------------------------------------------------------
 void ofxColorManager::gui_Range()
@@ -3297,7 +3251,8 @@ void ofxColorManager::gui_Range()
 
 				ImGui::PushItemWidth(_w50);
 				ImGui::Text("Color1");
-				ofxImGui::AddParameter(autoPick_RangeColor1);
+				ofxSurfingHelpers::AddBigToggle(autoPick_RangeColor1, _w50, BUTTON_BIG_HEIGHT);
+				//ofxImGui::AddParameter(autoPick_RangeColor1);
 				// mini box
 				if (ImGui::ColorButton("##C1", *(ImVec4 *)&_c1[0], _flags, ImVec2(_w50, _h)))
 				{
@@ -3310,7 +3265,8 @@ void ofxColorManager::gui_Range()
 
 				ImGui::PushItemWidth(_w50);
 				ImGui::Text("Color2");
-				ofxImGui::AddParameter(autoPick_RangeColor2);
+				ofxSurfingHelpers::AddBigToggle(autoPick_RangeColor2, _w50, BUTTON_BIG_HEIGHT);
+				//ofxImGui::AddParameter(autoPick_RangeColor2);
 				// mini box
 				if (ImGui::ColorButton("##C2", *(ImVec4 *)&_c2[0], _flags, ImVec2(_w50, _h)))
 				{
@@ -3411,7 +3367,7 @@ void ofxColorManager::gui_Range()
 
 			if (ImGui::CollapsingHeader("Advanced"))
 			{
-				ofxImGui::AddParameter(bAuto_TheoryToPalette);
+				ofxImGui::AddParameter(bAuto_Build_Palette);
 				ofxImGui::AddParameter(autoGenerate_Range);
 
 				//ImGui::Dummy(ImVec2(0, 5));
@@ -3744,6 +3700,7 @@ void ofxColorManager::gui_Background()
 				ImGui::PushItemWidth(_w50);
 
 				ofxImGui::AddParameter(color_backGround_SET);
+				ofxImGui::AddParameter(color_BackGround_Lock);
 				ofxImGui::AddParameter(color_BackGround_Darker);
 				if (color_BackGround_Darker)
 				{
@@ -4188,7 +4145,7 @@ void ofxColorManager::gui_Presets()
 				//--
 
 				// DEMO
-				if (SHOW_Demo1) myDEMO1.reStart();
+				if (SHOW_Demos) myDEMO1.reStart();
 			}
 
 			ImGui::PopStyleColor(1);
@@ -4259,7 +4216,7 @@ void ofxColorManager::gui_Presets()
 							ImGui::SameLine();
 						}
 					}
-					
+
 					//----
 
 					int wb;
@@ -4520,12 +4477,14 @@ void ofxColorManager::gui_Demo()
 	{
 		ofxImGui::AddParameter(DEMO1_Test);
 		ofxImGui::AddParameter(DEMO2_Test);
-		ofxImGui::AddParameter(DEMO_Auto);
-		ofxImGui::AddParameter(DEMO_Timer);
-		ofxImGui::AddParameter(DEMO_Alpha);
-		if (ofxImGui::AddParameter(DEMO_Cam))
-		{
-			myDEMO1.setEnableMouseCamera(DEMO_Cam);
+		if (DEMO1_Test) {
+			ofxImGui::AddParameter(DEMO_Auto);
+			ofxImGui::AddParameter(DEMO_Timer);
+			ofxImGui::AddParameter(DEMO_Alpha);
+			if (ofxImGui::AddParameter(DEMO_Cam))
+			{
+				myDEMO1.setEnableMouseCamera(DEMO_Cam);
+			}
 		}
 	}
 	ofxImGui::EndWindow(mainSettings);
@@ -4571,7 +4530,7 @@ bool ofxColorManager::draw_Gui()
 		if (SHOW_Quantizer) colorQuantizer.gui_Quantizer();
 		if (SHOW_Panels) gui_Panels();
 		if (SHOW_Export) gui_Export();
-		if (SHOW_Demo1) gui_Demo();
+		if (SHOW_Demos) gui_Demo();
 		//if (SHOW_CosineGradient) gui_imGui_CosineGradient();
 	}
 
@@ -4993,7 +4952,7 @@ void ofxColorManager::palette_FromTheory(int p)
 	// workflow
 
 	//set background color from first/last palette color
-	if (AutoSet_BackGround_Color)
+	if (AutoSet_BackGround_Color && !color_BackGround_Lock)
 	{
 		if (palette.size() > 0)
 		{
@@ -5084,7 +5043,7 @@ void ofxColorManager::palettes_resize()
 
 	// workflow
 	//TODO:
-	if (bAuto_TheoryToPalette)
+	if (bAuto_Build_Palette)
 	{
 		if (SHOW_Theory) palette_FromTheory(last_Index_Theory);
 		else if (SHOW_Range) palette_FromRange(last_Index_Range);
@@ -5208,7 +5167,7 @@ void ofxColorManager::palette_FromColourLovers() // ?
 
 	// workflow: 
 	//set background color from first/last palette color
-	if (AutoSet_BackGround_Color)
+	if (AutoSet_BackGround_Color && !color_BackGround_Lock)
 	{
 		if (palette.size() > 0)
 		{
@@ -5485,7 +5444,7 @@ void ofxColorManager::palette_clear()
 
 	//TODO:
 	//refresh_Palette_TARGET(palette);
-		}
+}
 
 #pragma mark - CALLBACKS
 
@@ -5502,11 +5461,9 @@ void ofxColorManager::Changed_ColorPicked(ofFloatColor &c)
 
 	//--
 
-	//TODO:
-	if (bAuto_TheoryToPalette)
-	{
-		bUpdated_Palette_BACK = true;
-	}
+	//workflow
+
+	refresh_Picker_Touched();
 }
 
 //--------------------------------------------------------------
@@ -5601,6 +5558,7 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 				txt_lineActive[1] = false;//lover name
 				txt_lineActive[2] = true;//theory name
 				txt_lineActive[3] = false;//range name
+				last_Index_Type = 2;
 
 				//---
 
@@ -5643,6 +5601,7 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 			txt_lineActive[1] = false;//lover name
 			txt_lineActive[2] = true;//theory name
 			txt_lineActive[3] = false;//range name
+			last_Index_Type = 2;
 
 			// DEMO
 			if (DEMO1_Test) myDEMO1.reStart();
@@ -6155,7 +6114,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 				btns_palette[palette_colorSelected]->setSelected(true);//sets border only
 				ofLogNotice(__FUNCTION__) << "user palette selected last _c: " << palette_colorSelected;
 			}
-		}
+}
 #endif
 	}
 
@@ -6283,7 +6242,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	//		//refresh_TheoryEngine();
 	//
 	//		// auto create user palette from algo palette
-	//		if (bAuto_TheoryToPalette)
+	//		if (bAuto_Build_Palette)
 	//		{
 	//			palette_clear();
 	//
@@ -6316,21 +6275,21 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		//
 		//            random.generateRandom(numColors_Alg);
 		//            refresh_TheoryEngine();
-		//            if (bAuto_TheoryToPalette) {
+		//            if (bAuto_Build_Palette) {
 		//                //set random palette to user palette
 		//                palette_FromTheory(7);
 		//            }
 		//        }
 		//    }
 
-		//else if (name == bAuto_TheoryToPalette.getName())
+		//else if (name == bAuto_Build_Palette.getName())
 		//{
-		//	//if (bAuto_TheoryToPalette) bLock_palette = false;
+		//	//if (bAuto_Build_Palette) bLock_palette = false;
 		//}
 
 		//else if (name == bLock_palette.getName())
 		//{
-		//	if (bLock_palette) bAuto_TheoryToPalette = false;
+		//	if (bLock_palette) bAuto_Build_Palette = false;
 		//}
 
 		//--
@@ -6342,7 +6301,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	//		//-
 	//
 	//		// auto create user palette from theory palette
-	//		if (bAuto_TheoryToPalette)
+	//		if (bAuto_Build_Palette)
 	//		{
 	//			palette_clear();
 	//
@@ -6415,6 +6374,7 @@ void ofxColorManager::Changed_ColorRange(ofAbstractParameter &e)
 					txt_lineActive[1] = false;//lover name
 					txt_lineActive[2] = false;//theory name
 					txt_lineActive[3] = true;//range name
+					last_Index_Type = 3;
 
 					//-
 
@@ -6484,7 +6444,7 @@ void ofxColorManager::palette_FromGradient()
 	// workflow
 
 	//set background color from first/last palette color
-	if (AutoSet_BackGround_Color)
+	if (AutoSet_BackGround_Color && !color_BackGround_Lock)
 	{
 		if (palette.size() > 0)
 		{
@@ -6528,7 +6488,7 @@ void ofxColorManager::palette_FromQuantizer()
 	// workflow
 
 	//set background color from first/last palette color
-	if (AutoSet_BackGround_Color)
+	if (AutoSet_BackGround_Color && !color_BackGround_Lock)
 	{
 		if (palette.size() > 0)
 		{
@@ -6583,7 +6543,7 @@ void ofxColorManager::palette_FromRange(int index)
 		// workflow
 
 		//set background color from first/last palette color
-		if (AutoSet_BackGround_Color)
+		if (AutoSet_BackGround_Color && !color_BackGround_Lock)
 		{
 			if (palette.size() > 0)
 			{
@@ -6616,6 +6576,7 @@ void ofxColorManager::refresh_Range_AutoUpdate()
 		txt_lineActive[1] = false;//lover name
 		txt_lineActive[2] = false;//theory name
 		txt_lineActive[3] = true;//range name
+		last_Index_Type = 3;
 
 		textInput_New = range_Name;
 		bNewPreset = true;
@@ -7066,7 +7027,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		else if (key == 'G')
 		{
 			SHOW_Gui_Internal = !SHOW_Gui_Internal;
-		}
+	}
 #endif
 
 		//else if (key == 'g') {
@@ -7118,16 +7079,16 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 //		{
 //			//TODO
 //			// WORKFLOW: when loading a colour lover palette we disable auto create from algo palettes
-//			//if (!bAuto_TheoryToPalette)
+//			//if (!bAuto_Build_Palette)
 //			//{
-//			//bAuto_TheoryToPalette = true;
+//			//bAuto_Build_Palette = true;
 //			//}
 //
 //			//TODO: bug because some trigs are flags. we need direct functions
 //			//bRandomColor = true;
 //			color_Picked = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
 //
-//			if (bAuto_TheoryToPalette)
+//			if (bAuto_Build_Palette)
 //			{
 //				refresh_TheoryEngine();
 //
@@ -7163,9 +7124,9 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 //		{
 //			//-
 //
-//			if (!bAuto_TheoryToPalette)
+//			if (!bAuto_Build_Palette)
 //			{
-//				bAuto_TheoryToPalette = true;
+//				bAuto_Build_Palette = true;
 //			}
 //
 //			//-
@@ -7174,7 +7135,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 //
 //			//random.generateRandom(numColors_Alg);
 //			//refresh_TheoryEngine();
-//			//if (bAuto_TheoryToPalette)
+//			//if (bAuto_Build_Palette)
 //			//{
 //			//    //set random palette to user palette
 //			//    palette_FromTheory(7);
@@ -7330,7 +7291,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//
 		//    else if (key == OF_KEY_RETURN)
 		//        colorBrowser.switch_sorted_Type();
-	}
+}
 }
 
 //--------------------------------------------------------------
@@ -7591,6 +7552,7 @@ void ofxColorManager::preset_Load(std::string p)
 		txt_lineActive[1] = false;//lover name
 		txt_lineActive[2] = false;//theory name
 		txt_lineActive[3] = false;//range name
+		last_Index_Type = 0;
 
 		// 1. load palette preset (target will be the above pointers) //TODO: should (late?) improve this..
 		bool b = PRESET_Temp.preset_Load(p);
@@ -7611,7 +7573,7 @@ void ofxColorManager::preset_Load(std::string p)
 
 		//TODO:
 
-		// apply loaded preset to local system
+		// palette colors
 
 		palette_clear();
 
@@ -7623,8 +7585,12 @@ void ofxColorManager::preset_Load(std::string p)
 			palette_addColor(p[i]);
 		}
 
-		color_BackGround = ofColor(PRESET_Temp.getBackground());//get directly without pointing
-		////PRESET_Temp.setBackgroundColor(color_BackGround);//error ofParameter
+		//bg
+		if (!color_BackGround_Lock)
+		{
+			color_BackGround = ofColor(PRESET_Temp.getBackground());//get directly without pointing
+			////PRESET_Temp.setBackgroundColor(color_BackGround);//error ofParameter
+		}
 
 		//--
 
@@ -7702,129 +7668,80 @@ void ofxColorManager::refresh_Picked_toHSB()
 //--------------------------------------------------------------
 void ofxColorManager::refresh_Picker_Touched()
 {
+	ofLogNotice(__FUNCTION__) << "> color_Picked : " << ofToString(color_Picked);
+
+	ENABLE_Callbacks_cPickers = false; //disable callbacks
 	{
-		// workflow
+		// 1. theory color base
 
-		ofLogNotice(__FUNCTION__) << "> color_Picked : " << ofToString(color_Picked);
-
-		ENABLE_Callbacks_cPickers = false; //disable callbacks
+		if (bAuto_TheoryFromPicker)
 		{
-			//-
-
-			// 1. theory color base
-
-			if (bAuto_TheoryFromPicker)
-			{
-				color_TheoryBase = color_Picked.get();
-			}
-
-			//-
-
-			// 2. range color1
-
-			if (autoPick_RangeColor1)
-			{
-				color_1_Range = color_Picked.get();
-				if (autoGenerate_Range) generate_Range(color_1_Range.get(), color_2_Range.get());
-			}
-
-			//-
-
-			// 3. range color2
-
-			if (autoPick_RangeColor2)
-			{
-				color_2_Range = color_Picked.get();
-				if (autoGenerate_Range) generate_Range(color_1_Range.get(), color_2_Range.get());
-			}
-
-			//--
-
-			////TEST
-			//refresh_Picked_toHSB();//redundant...
-
-
-			//TODO:
-			// 4. mirror clicked/picked colors
-
-			color_Clicked2.set(color_Picked.get());
-
-			//-
+			color_TheoryBase = color_Picked.get();
 		}
-		ENABLE_Callbacks_cPickers = true;
 
 		//-
 
+		// 2. range color1
 
-		// 5. palettes
-		//color_TheoryBase.set(color_Picked.get());
+		if (autoPick_RangeColor1)
+		{
+			color_1_Range = color_Picked.get();
+			if (autoGenerate_Range) generate_Range(color_1_Range.get(), color_2_Range.get());
+		}
+
+		//-
+
+		// 3. range color2
+
+		if (autoPick_RangeColor2)
+		{
+			color_2_Range = color_Picked.get();
+			if (autoGenerate_Range) generate_Range(color_1_Range.get(), color_2_Range.get());
+		}
+
+		//--
+
+		refresh_Picked_toHSB();//redundant...
+
+		//--
 
 		//TODO:
-		update_Theory();
+		// mirror clicked/picked colors
 
-		//--
+		color_Clicked2.set(color_Picked.get());
+	}
+	ENABLE_Callbacks_cPickers = true;
 
-		// 6. autosave edited color
+	//--
 
-#ifdef USE_RECTANGLE_INTERFACES
-		if (bPaletteEdit &&
-			palette_colorSelected != -1 &&
-			btns_palette.size() > palette_colorSelected)
-		{
-			// update user palette color with recently picked color
+	// autosave edited color
 
-			// 1. interface buttons
-			btns_palette[palette_colorSelected]->setColor(color_Clicked2);
+//#ifdef USE_RECTANGLE_INTERFACES
+//	if (bPaletteEdit &&
+//		palette_colorSelected != -1 &&
+//		btns_palette.size() > palette_colorSelected)
+//	{
+//		// update user palette color with recently picked color
+//
+//		// 1. interface buttons
+//		btns_palette[palette_colorSelected]->setColor(color_Clicked2);
+//
+//		// 2. palette vector
+//		palette[palette_colorSelected].set(color_Clicked2);
+//
+//		// 3. update gradient
+//		if (palette_colorSelected < gradient.getNumColors())
+//			gradient.replaceColorAtIndex(palette_colorSelected, color_Clicked2);
+//	}
+//#endif
 
-			// 2. palette vector
-			palette[palette_colorSelected].set(color_Clicked2);
+	//--
 
-			// 3. update gradient
-			if (palette_colorSelected < gradient.getNumColors())
-				gradient.replaceColorAtIndex(palette_colorSelected, color_Clicked2);
-		}
-#endif
-		//--
+	//workflow
 
-		// 7. 
-		//workflow:
-		//if enabled, when color picked changes, auto trig and put generated palette to user palette
-
-		if (bAuto_TheoryToPalette)
-		{
-			bUpdated_Palette_BACK = true;
-
-			//---
-
-			//refresh_TheoryEngine();
-
-			////			//TODO: not doing well!
-			////#ifdef USE_RECTANGLE_INTERFACES
-			////			palette_FromTheory(SELECTED_palette_LAST);//trig last choiced algorithmic palette
-			////#endif
-		}
-
-		//--
-
-		// TODO: called twice above..
-
-		// 8. recreate algorithmic palettes if locking is disable
-
-		////if (bLock_palette)
-		//{
-		//}
-		//else
-		//{
-		//	refresh_TheoryEngine();
-
-		//}
-
-		//--
-
-		////TODO
-		//// palettes
-		////color_TheoryBase.set(color_Picked.get());
-		//update_Theory();
+	if (bAuto_Build_Palette)
+	{
+		reBuild();
 	}
 }
 

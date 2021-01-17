@@ -9,7 +9,7 @@ TODO:
 + simplify num colors calls..
 + fix auto build palette wf
 + picker updates HSB, theory, range... broken
-+ 
++
 
 */
 
@@ -191,8 +191,8 @@ private:
 	ofParameter<bool> SHOW_Presets;
 	ofParameter<bool> SHOW_Kit;
 	ofParameter<bool> AutoScroll;
-	ofParameter<bool> SHOW_Demo1;
-	ofParameter<bool> SHOW_Demo2;
+	ofParameter<bool> SHOW_Demos;
+	//ofParameter<bool> SHOW_Demo2;
 	ofParameter<bool> SHOW_BackGround;
 	ofParameter<bool> SHOW_Picker;
 	ofParameter<bool> SHOW_Library;
@@ -453,13 +453,21 @@ private:
 	// gui info display
 	//int last_Index_Theory = -1;
 	//int last_Index_Range = -1;
-	ofParameter<int> last_Index_Theory{ "Last Theory Index", -1, 0, NUM_COLOR_THEORY_TYPES-1 };
-	ofParameter<int> last_Index_Range{ "Last Range Index", -1, 0, NUM_TYPES_RANGES-1 };
+	ofParameter<int> last_Index_Theory{ "Last Theory Index", -1, 0, NUM_COLOR_THEORY_TYPES - 1 };
+	ofParameter<int> last_Index_Range{ "Last Range Index", -1, 0, NUM_TYPES_RANGES - 1 };
 
 	std::string theory_Name = "";
 	std::string range_Name = "";
 
-	//-
+	//--
+
+	ofParameter<int> last_Index_Type{ "Last Type Index", -1, 0, 3 };;
+	//0 preset name
+	//1 lover name
+	//2 theory name
+	//3 range name
+		
+	//--
 
 	ofParameter<int> last_Theory_PickPalette;
 
@@ -513,6 +521,8 @@ public:
 	void setPalette_TARGET(vector<ofColor> &p);
 	vector<ofColor> *palette_TARGET;//backwards pointer to ofApp palette
 	void refresh_Palette_TARGET(vector<ofColor> &p);
+
+	void reBuild();
 
 	//-----------------------------------------------------------
 
@@ -594,7 +604,7 @@ private:
 	ofParameter<int> SATURATION;
 
 	ofParameter<bool> bRandomPalette;
-	ofParameter<bool> bAuto_TheoryToPalette;//trig last used algo palette on click or change color
+	ofParameter<bool> bAuto_Build_Palette;//trig last used algo palette on click or change color
 	//ofParameter<bool> bLock_palette;
 
 	//TODO
@@ -650,6 +660,7 @@ private:
 	ofParameter<bool> color_backGround_SET;
 	ofParameter<bool> AutoSet_BackGround_Color;
 	ofParameter<bool> color_BackGround_Darker;
+	ofParameter<bool> color_BackGround_Lock;
 	ofParameter<float> color_BackGround_Darkness;
 	//float backgroundDarkness_PRE;
 
@@ -787,7 +798,7 @@ private:
 	ofParameter<bool> gradient_HardMode;//stepped
 	void draw_Gradient();
 	void update_Gradient();
-	
+
 	//--
 
 	// curves
@@ -951,52 +962,52 @@ private:
 	void removeKeysListeners();
 	void addMouseListeners();
 	void removeMouseListeners();
-	
+
 	void processOpenFileSelection(ofFileDialogResult openFileResult) {};
 	string originalFileExtension;
 	bool bOpen = false;
 
 };
-	//--
+//--
 
-	////cosine gradient
-	//
-	//ofxCosineGradient mCosineGradient;
-	//ofxImGui::Gui mGui;
-	//ofParameterGroup cosineGradient_params;
-	//ofParameter<glm::vec3> mBias;
-	//ofParameter<glm::vec3> mAmplitude;
-	//ofParameter<glm::vec3> mFrequency;
-	//ofParameter<glm::vec3> mPhase;
-	//
-	//glm::vec3 mB;
-	//glm::vec3 mA;
-	//glm::vec3 mF;
-	//glm::vec3 mP;
-	//
-	//void cosineGradient_update()
-	//{
-	//    mB = mBias.get();
-	//    mA = mAmplitude.get();
-	//    mF = mFrequency.get();
-	//    mP = mPhase.get();
-	//
-	//    mCosineGradient.setBias(mB);
-	//    mCosineGradient.setAmplitude(mA);
-	//    mCosineGradient.setFrequency(mF);
-	//    mCosineGradient.setPhase(mP);
-	//    mCosineGradient.update();
-	//
-	//    ////cout << "cosineGradient_update" << endl;
-	//    //mCosineGradient.setBias(mBias.get());
-	//    //mCosineGradient.setAmplitude(mAmplitude.get());
-	//    //mCosineGradient.setFrequency(mFrequency.get());
-	//    //mCosineGradient.setPhase(mPhase.get());
-	//    //mCosineGradient.update();
-	//}
-	//void gui_imGui_CosineGradient();
+////cosine gradient
+//
+//ofxCosineGradient mCosineGradient;
+//ofxImGui::Gui mGui;
+//ofParameterGroup cosineGradient_params;
+//ofParameter<glm::vec3> mBias;
+//ofParameter<glm::vec3> mAmplitude;
+//ofParameter<glm::vec3> mFrequency;
+//ofParameter<glm::vec3> mPhase;
+//
+//glm::vec3 mB;
+//glm::vec3 mA;
+//glm::vec3 mF;
+//glm::vec3 mP;
+//
+//void cosineGradient_update()
+//{
+//    mB = mBias.get();
+//    mA = mAmplitude.get();
+//    mF = mFrequency.get();
+//    mP = mPhase.get();
+//
+//    mCosineGradient.setBias(mB);
+//    mCosineGradient.setAmplitude(mA);
+//    mCosineGradient.setFrequency(mF);
+//    mCosineGradient.setPhase(mP);
+//    mCosineGradient.update();
+//
+//    ////cout << "cosineGradient_update" << endl;
+//    //mCosineGradient.setBias(mBias.get());
+//    //mCosineGradient.setAmplitude(mAmplitude.get());
+//    //mCosineGradient.setFrequency(mFrequency.get());
+//    //mCosineGradient.setPhase(mPhase.get());
+//    //mCosineGradient.update();
+//}
+//void gui_imGui_CosineGradient();
 
-	//--
+//--
 
 //private:
 //	// Helper to display a little (?) mark which shows a tooltip when hovered.
