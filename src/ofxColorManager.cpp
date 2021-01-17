@@ -11,53 +11,49 @@ void ofxColorManager::reBuild()
 {
 	ofLogWarning(__FUNCTION__);
 
-	// TODO: WORKFLOW: if mode is palette&color should load first palette color
-	// and forget the clicked color
-
-	//-
-
-	//DEMO 2
-	myDEMO2.setPaletteColors(palette);
-
-	//-
-
-	//TODO:
-
 	std::string _name;
-
-	if (SHOW_ColourLovers)
-	{
-		_name = myPalette_Name;
-		palette_FromColourLovers();
-	}
-	else if (SHOW_Quantizer)
-	{
-		_name = myPalette_Name;
-		palette_FromQuantizer();
-	}
-	else if (SHOW_Theory)
-	{
-		_name = theory_Name;
-		refresh_TheoryEngine();
-		palette_FromTheory(last_Index_Theory);
-	}
-	else if (SHOW_Range)
-	{
-		_name = range_Name;
-		palette_FromRange(last_Index_Range);
-	}
-
-	//-
-
-	//// WORKFLOW: when loading a color lover palette we disable auto create from algo palettes
-	//if (bAuto_Build_Palette)
-	//{
-	//	bAuto_Build_Palette = false;
-	//}
 
 	//-
 
 	// presets
+
+	//if (SHOW_Presets)
+	//{
+	//}
+	//else
+	{
+		//txt_lineActive[0] = false;//preset name
+		//txt_lineActive[1] = false;//lover name
+		//txt_lineActive[2] = false;//theory name
+		//txt_lineActive[3] = false;//range name
+		//last_Index_Type = -1;
+
+		//-
+
+		if (SHOW_ColourLovers)
+		{
+			_name = myPalette_Name;
+			palette_FromColourLovers();
+			//txt_lineActive[0] = true;//preset name
+
+		}
+		else if (SHOW_Quantizer)
+		{
+			_name = myPalette_Name;
+			palette_FromQuantizer();
+		}
+		else if (SHOW_Theory)
+		{
+			_name = theory_Name;
+			refresh_TheoryEngine();
+			palette_FromTheory(last_Index_Theory);
+		}
+		else if (SHOW_Range)
+		{
+			_name = range_Name;
+			palette_FromRange(last_Index_Range);
+		}
+	}
 
 	if (SHOW_Presets)
 	{
@@ -65,9 +61,20 @@ void ofxColorManager::reBuild()
 		textInput_New = _name;
 	}
 
+	//// WORKFLOW: when loading a color lover palette we disable auto create from algo palettes
+	//if (bAuto_Build_Palette)
+	//{
+	//	bAuto_Build_Palette = false;
+	//}
+
+	//----
+
+	// DEMO 2
+	myDEMO2.setPaletteColors(palette);
+
 	//-
 
-	// DEMO
+	// DEMO 1
 
 	if (DEMO1_Test) myDEMO1.reStart();
 
@@ -140,8 +147,8 @@ ofxColorManager::ofxColorManager()
 	infoHelp += "PANELS\n";
 	infoHelp += "F1                  PALETTE\n";
 	infoHelp += "F2                  PICKER\n";
-	infoHelp += "F3                  LIBRARY\n";
-	infoHelp += "F4                  BACKGROUND\n";
+	infoHelp += "F3                  BACKGROUND\n";
+	infoHelp += "F4                  LIBRARY\n";
 	infoHelp += "\n";
 	infoHelp += "MODES\n";
 	infoHelp += "F5                  THEORY\n";
@@ -1358,7 +1365,6 @@ void ofxColorManager::draw()
 void ofxColorManager::draw(ofEventArgs & args)
 #endif
 {
-
 	if (SHOW_Scene)
 	{
 		// background
@@ -1404,12 +1410,12 @@ void ofxColorManager::draw(ofEventArgs & args)
 
 		//--
 
-		// DEMO1
-		if (DEMO1_Test) myDEMO1.draw(DEMO_Alpha);
-
 		// DEMO2
 		float _w = myDEMO2.getWidth();
 		if (DEMO2_Test) myDEMO2.draw(glm::vec2(ofGetWidth() * 0.5 - _w * 0.5, 0));
+
+		// DEMO1
+		if (DEMO1_Test) myDEMO1.draw(DEMO_Alpha);
 
 		//--
 
@@ -3344,10 +3350,13 @@ void ofxColorManager::gui_Range()
 				generate_Range(color_1_Range.get(), color_2_Range.get());
 			}
 
-			//if (ofxSurfingHelpers::AddBigButton("GENERATE"))
-			if (ImGui::Button("GENERATE", ImVec2(_w, 0.5 * BUTTON_BIG_HEIGHT)))
+			if (!autoGenerate_Range)
 			{
-				generate_Range(color_1_Range.get(), color_2_Range.get());
+				//if (ofxSurfingHelpers::AddBigButton("GENERATE"))
+				if (ImGui::Button("GENERATE", ImVec2(_w, 0.5 * BUTTON_BIG_HEIGHT)))
+				{
+					generate_Range(color_1_Range.get(), color_2_Range.get());
+				}
 			}
 
 			//ofxSurfingHelpers::AddSmallButton(bGetPaletteFromRange, 150, 30);
@@ -5492,6 +5501,9 @@ void ofxColorManager::Changed_ParamsPalette(ofAbstractParameter &e)
 		bFlipUserPalette = false;
 
 		std::reverse(palette.begin(), palette.end());
+
+		// DEMO 2
+		myDEMO2.setPaletteColors(palette);
 	}
 }
 
@@ -6114,7 +6126,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 				btns_palette[palette_colorSelected]->setSelected(true);//sets border only
 				ofLogNotice(__FUNCTION__) << "user palette selected last _c: " << palette_colorSelected;
 			}
-}
+		}
 #endif
 	}
 
@@ -6173,7 +6185,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			palette_removeColor(palette_colorSelected);
 
 		}
-	}
+		}
 	else if (name == bClearPalette.getName())
 	{
 		if (bClearPalette)
@@ -6313,7 +6325,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	//		}
 	//	}
 	*/
-}
+		}
 
 //load user palette from range
 //--------------------------------------------------------------
@@ -6647,14 +6659,14 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			SHOW_Picker = !SHOW_Picker;
 			//if (SHOW_Picker) SHOW_BackGround = false;
 		}
-		else if (key == OF_KEY_F3)//library
-		{
-			SHOW_Library = !SHOW_Library;
-		}
-		else if (key == OF_KEY_F4)//bg
+		else if (key == OF_KEY_F3)//bg
 		{
 			SHOW_BackGround = !SHOW_BackGround;
 			//if (SHOW_BackGround) SHOW_Picker = false;
+		}
+		else if (key == OF_KEY_F4)//library
+		{
+			SHOW_Library = !SHOW_Library;
 		}
 
 		else if (key == OF_KEY_F5)//theory
@@ -7027,7 +7039,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		else if (key == 'G')
 		{
 			SHOW_Gui_Internal = !SHOW_Gui_Internal;
-	}
+		}
 #endif
 
 		//else if (key == 'g') {
@@ -7291,7 +7303,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//
 		//    else if (key == OF_KEY_RETURN)
 		//        colorBrowser.switch_sorted_Type();
-}
+	}
 }
 
 //--------------------------------------------------------------
@@ -7538,84 +7550,85 @@ void ofxColorManager::preset_RefreshFiles()
 //--------------------------------------------------------------
 void ofxColorManager::preset_Load(std::string p)
 {
-	//TODO:
-	//if (0)
+	ofLogNotice(__FUNCTION__) << p;
+
+	//--
+
+	// setup linking pointers to get back on load
+	PRESET_Temp.setName(p);
+	PRESET_Temp.setCurveName(PRESET_Name_Gradient);
+	PRESET_Temp.setPalette(palette);
+
+	//--
+
+	txt_lineActive[0] = true;//preset name
+	txt_lineActive[1] = false;//lover name
+	txt_lineActive[2] = false;//theory name
+	txt_lineActive[3] = false;//range name
+	last_Index_Type = 0;
+
+	//--
+
+	// 1. load palette preset (target will be the above pointers) //TODO: should (late?) improve this..
+	bool b = PRESET_Temp.preset_Load(p);
+	if (!b)
 	{
-		ofLogNotice(__FUNCTION__) << p;
+		ofLogError(__FUNCTION__) << "Preset file " << p << " not found! ";
+		return;
+	}
 
-		// setup linking pointers to get back on load
-		PRESET_Temp.setName(p);
-		PRESET_Temp.setCurveName(PRESET_Name_Gradient);
-		PRESET_Temp.setPalette(palette);
+	//--
 
-		txt_lineActive[0] = true;//preset name
-		txt_lineActive[1] = false;//lover name
-		txt_lineActive[2] = false;//theory name
-		txt_lineActive[3] = false;//range name
-		last_Index_Type = 0;
+	//TODO:
 
-		// 1. load palette preset (target will be the above pointers) //TODO: should (late?) improve this..
-		bool b = PRESET_Temp.preset_Load(p);
+	// curve gradient preset
 
-		if (!b)
-		{
-			ofLogError(__FUNCTION__) << "Preset file " << p << " not found! ";
-			return;
-		}
+	//--
 
-		//--
+	//TODO:
 
-		//TODO:
+	// palette colors
 
-		// 2. curve gradient preset
+	palette_clear();
+	vector<ofColor> _p = PRESET_Temp.getPalette();
+	for (int i = 0; i < _p.size(); i++)
+	{
+		ofLogNotice(__FUNCTION__) << "Col: " << ofToString(i) << " " << ofToString(_p[i]);
+		palette_addColor(_p[i]);
+	}
 
-		//--
+	//--
 
-		//TODO:
+	// preset background
+	if (!color_BackGround_Lock)
+	{
+		color_BackGround = ofColor(PRESET_Temp.getBackground());//get directly without pointing
+		////PRESET_Temp.setBackgroundColor(color_BackGround);//error ofParameter
+	}
 
-		// palette colors
+	//--
 
-		palette_clear();
+	//reBuild();
 
-		vector<ofColor> p = PRESET_Temp.getPalette();
+	//----
 
-		for (int i = 0; i < p.size(); i++)
-		{
-			ofLogNotice(__FUNCTION__) << "Col: " << ofToString(i) << " " << ofToString(p[i]);
-			palette_addColor(p[i]);
-		}
+	// DEMO 2
+	myDEMO2.setPaletteColors(palette);
 
-		//bg
-		if (!color_BackGround_Lock)
-		{
-			color_BackGround = ofColor(PRESET_Temp.getBackground());//get directly without pointing
-			////PRESET_Temp.setBackgroundColor(color_BackGround);//error ofParameter
-		}
+	//-
 
-		//--
+	// DEMO 1
 
+	if (DEMO1_Test) myDEMO1.reStart();
 
-		////TODO
-		//// curve & gradient
-		//PRESET_Name_Gradient = curveName_BACK;
-		//std::string *name_BACK;
-		//vector<ofColor> *palette_BACK;
-		//std::string *curveName_BACK;
+	//-
 
-		//--
+	// workflow
 
-		////workflow
-		//if (DEMO1_Test) myDEMO1.clear();
-
-		//--
-
-		//workflow
-
-		if (bAutoExportPreset)
-		{
-			ofLogNotice(__FUNCTION__) << "EXPORT";
-			exportPalette();
-		}
+	if (bAutoExportPreset)
+	{
+		ofLogNotice(__FUNCTION__) << "Auto EXPORT";
+		exportPalette();
 	}
 }
 

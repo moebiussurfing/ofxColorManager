@@ -9,7 +9,9 @@ TODO:
 + simplify num colors calls..
 + fix auto build palette wf
 + picker updates HSB, theory, range... broken
-+
++ sort svg layers in illustrator
++ improve svg paths borders on buildings zone
++ svg demo resizer shape
 
 */
 

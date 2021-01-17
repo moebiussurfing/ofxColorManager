@@ -29,22 +29,50 @@ void DEMO_svg::setup() {
 //--------------------------------------------------------------
 void DEMO_svg::setPaletteColors(vector<ofColor> &palette) {
 
-	//int _max = MIN(maxNumColors, palette.size());
+	int _max = MAX(paletteSvg.size(), palette.size());
 
-	for (int i = 0; i < palette.size(); i++)
+	//TODO:
+
+	if (paletteSvg.size() < palette.size())
 	{
-		int p;
-		if (paletteSvg.size() > palette.size())
+		for (int i = 0; i < _max; i++)
 		{
-			p = i % palette.size();
-		}
-		else if (paletteSvg.size() <= palette.size())
-		{
-			p = i;
-		}
+			int i2 = i % paletteSvg.size();
+			paletteSvg[i] = palette[i2];
 
-		paletteSvg[p] = palette[i];
+		}
 	}
+	else if (palette.size() < paletteSvg.size())
+	{
+		for (int i = 0; i < _max; i++)
+		{
+			int i2 = i % palette.size();
+			paletteSvg[i] = palette[i2];
+		}
+	}
+
+	//-
+
+	//int isvg;
+	//if (paletteSvg.size() > palette.size())
+	//{
+	//	isvg = iplt % palette.size();
+	//}
+	//else if (paletteSvg.size() <= palette.size())
+	//{
+	//	isvg = iplt;
+	//}
+
+	//paletteSvg[isvg] = palette[iplt];
+	////TODO: fix ranges...
+	//if (paletteSvg.size() < palette.size())
+	//{
+	//	for (int isvg = palette.size(); isvg < palette.size(); isvg++)
+	//	{
+	//		int iplt = isvg % palette.size();
+	//		paletteSvg[isvg] = palette[iplt];
+	//	}
+	//}
 
 	////swap all original file colors
 	//paletteSvg[0] = ofColor::red;
@@ -94,7 +122,7 @@ void DEMO_svg::update() {
 
 //--------------------------------------------------------------
 //void DEMO_svg::draw(glm::vec2 _pos, glm::vec2 _shape = glm::vec2(838, 1080)) {
-void DEMO_svg::draw(glm::vec2 _pos){
+void DEMO_svg::draw(glm::vec2 _pos) {
 	//ofClear(255);
 	//update();
 
@@ -102,11 +130,11 @@ void DEMO_svg::draw(glm::vec2 _pos){
 
 	ofPushMatrix();
 	ofPushStyle();
-	
+
 	//ofSetColor(255, 255);
 	ofTranslate(pos.x, pos.y);
 	psBlend.draw(img.getTextureReference(), blendMode);
-	
+
 	ofPopStyle();
 	ofPopMatrix();
 }
