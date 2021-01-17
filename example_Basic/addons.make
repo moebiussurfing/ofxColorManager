@@ -1,6 +1,7 @@
 ofxColorClient
 ofxColorManager
 ofxGui
+ofxImGui
 ofxPoco
 ofxIO
 ofxMouseRuler

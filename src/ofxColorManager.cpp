@@ -9,7 +9,6 @@ void ofxColorManager::dragEvent(ofDragInfo info) {
 //--------------------------------------------------------------
 ofxColorManager::ofxColorManager()
 {
-
 	ofAddListener(ofEvents().update, this, &ofxColorManager::update);
 #ifdef AUTO_DRAW_CALLBACK
 	ofAddListener(ofEvents().draw, this, &ofxColorManager::draw, OF_EVENT_ORDER_BEFORE_APP);
@@ -533,14 +532,17 @@ void ofxColorManager::setup()
 
 	// create
 	gui.setup();
-
 	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	ImGui::GetIO().MouseDrawCursor = false;
+
+	//daan fork
+	//gui.setup(nullptr, true, ImGuiConfigFlags_DockingEnable, true, true);
+	//gui.setup(nullptr, true, false, true, true);
 
 	// theme customize
 #ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
 	ofxSurfingHelpers::ImGui_ThemeMoebiusSurfing();
-	ofxSurfingHelpers::ImGui_ThemeModernDark();
+	//ofxSurfingHelpers::ImGui_ThemeModernDark();
 #endif
 
 	mainSettings = ofxImGui::Settings();

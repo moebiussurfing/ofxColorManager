@@ -729,10 +729,12 @@ void ofxColourLoversHelper::setup()
 	ofxSurfingHelpers::ImGui_FontCustom();
 
 	gui_ImGui.setup();
-
 	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	ImGui::GetIO().MouseDrawCursor = false;
 	ImGui::GetIO().ConfigWindowsResizeFromEdges = true;
+	
+	////daan
+	//gui_ImGui.setup(nullptr, ImGuiConfigFlags_DockingEnable, true, true);
 
 	ofxSurfingHelpers::ImGui_ThemeMoebiusSurfing();
 #endif
