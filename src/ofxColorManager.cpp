@@ -1926,7 +1926,7 @@ void ofxColorManager::gui_Theory()
 
 		// 1. basic
 
-		for (int i = 0; i < NUM_COLOR_THEORY_TYPES; i++)
+		for (int i = 0; i < NUM_COLOR_THEORY_TYPES_G1; i++)
 		{
 			// border to selected
 			bool bDrawBorder = false;
@@ -1980,9 +1980,6 @@ void ofxColorManager::gui_Theory()
 					ImVec2(_cSize, _cSize)))
 				{
 					last_Theory_PickPalette = n;
-
-					//color = ImVec4(palette[n].x, palette[n].y, palette[n].z, palette.w); // Preserve alpha!
-					//color_Picked = color;
 				}
 
 				//-
@@ -1995,7 +1992,7 @@ void ofxColorManager::gui_Theory()
 
 		// 2. extra
 
-		for (int i = 0; i < 7; i++)
+		for (int i = 0; i < NUM_COLOR_THEORY_TYPES_G2; i++)
 		{
 			size_t _total;
 			switch (i)
@@ -2027,7 +2024,7 @@ void ofxColorManager::gui_Theory()
 
 			// border to selected
 			bool bDrawBorder = false;
-			if (i + NUM_COLOR_THEORY_TYPES == last_Index_Theory)
+			if (i + NUM_COLOR_THEORY_TYPES_G1 == last_Index_Theory)
 			{
 				bDrawBorder = true;
 			}
@@ -2114,9 +2111,6 @@ void ofxColorManager::gui_Theory()
 
 					//TODO:
 					color_Picked.set(c);
-
-					//refresh_Picker_Touched();
-					//refresh_Picked_toHSB();//redundant.. ?
 				}
 
 				ImGui::PopID();
@@ -5061,7 +5055,7 @@ void ofxColorManager::refresh_Theory3() //populates palettes
 {
 	ofLogNotice(__FUNCTION__);
 
-	for (int i = 0; i < NUM_COLOR_THEORY_TYPES; i++)
+	for (int i = 0; i < NUM_COLOR_THEORY_TYPES_G1; i++)
 	{
 		shared_ptr<ColorWheelScheme> _scheme;
 		_scheme = ColorWheelSchemes::colorSchemes[i];
@@ -5089,10 +5083,10 @@ void ofxColorManager::setup_Theory()
 	params_ColorTheory.add(colorScheme.set("Color Scheme", 6, 0, ColorWheelSchemes::colorSchemes.size() - 1));
 	params_ColorTheory.add(colorSchemeName);
 	params_ColorTheory.add(numColors_Theory.set("Amnt Colors Thy ", 8, 2, MAX_PALETTE_COLORS));
-	params_ColorTheory.add(last_Theory_PickPalette.set("Last Theory Picked", 0, 0, NUM_COLOR_THEORY_TYPES - 1));
+	params_ColorTheory.add(last_Theory_PickPalette.set("Last Theory Picked", 0, 0, NUM_COLOR_THEORY_TYPES_G1 - 1));
 
 	//toggles
-	for (int i = 0; i < NUM_COLOR_THEORY_TYPES; i++)
+	for (int i = 0; i < NUM_COLOR_THEORY_TYPES_G1; i++)
 	{
 		theoryTypes[i].set(ColorWheelSchemes::colorSchemeNames[i], false);
 		params_ColorTheory.add(theoryTypes[i]);
@@ -5542,7 +5536,7 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 	// toggles
 	else
 	{
-		for (int i = 0; i < NUM_COLOR_THEORY_TYPES; i++)
+		for (int i = 0; i < NUM_COLOR_THEORY_TYPES_G1; i++)
 		{
 			if (name == theoryTypes[i].getName() && theoryTypes[i].get())
 			{
@@ -5585,7 +5579,7 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 			//-
 
 			theory_Name = algoTypes[i].getName();
-			last_Index_Theory = i + NUM_COLOR_THEORY_TYPES;
+			last_Index_Theory = i + NUM_COLOR_THEORY_TYPES_G1;
 
 			//-
 
@@ -5654,7 +5648,6 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 					palette_addColor(_cols[j]);
 				}
 				break;
-
 			}
 		}
 	}
@@ -6916,7 +6909,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 					last_Theory_PickPalette.getMax());
 
 				//poweroff
-				for (int i = 0; i < NUM_COLOR_THEORY_TYPES; i++)
+				for (int i = 0; i < NUM_COLOR_THEORY_TYPES_G1; i++)
 				{
 					theoryTypes[i].disableEvents();
 					theoryTypes[i] = false;
@@ -6924,7 +6917,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				}
 				//enable
 				if (last_Theory_PickPalette >= 0 &&
-					last_Theory_PickPalette < NUM_COLOR_THEORY_TYPES)
+					last_Theory_PickPalette < NUM_COLOR_THEORY_TYPES_G1)
 				{
 					theoryTypes[last_Theory_PickPalette] = true;
 				}
@@ -6938,7 +6931,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 					last_Theory_PickPalette.getMax());
 
 				//poweroff
-				for (int i = 0; i < NUM_COLOR_THEORY_TYPES; i++)
+				for (int i = 0; i < NUM_COLOR_THEORY_TYPES_G1; i++)
 				{
 					theoryTypes[i].disableEvents();
 					theoryTypes[i] = false;
@@ -6946,7 +6939,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				}
 				//enable
 				if (last_Theory_PickPalette >= 0 &&
-					last_Theory_PickPalette < NUM_COLOR_THEORY_TYPES)
+					last_Theory_PickPalette < NUM_COLOR_THEORY_TYPES_G1)
 				{
 					theoryTypes[last_Theory_PickPalette] = true;
 				}
@@ -6960,7 +6953,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				}
 
 				//poweroff
-				for (int i = 0; i < NUM_COLOR_THEORY_TYPES; i++)
+				for (int i = 0; i < NUM_COLOR_THEORY_TYPES_G1; i++)
 				{
 					theoryTypes[i].disableEvents();
 					theoryTypes[i] = false;
@@ -6968,7 +6961,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				}
 				//enable
 				if (last_Theory_PickPalette >= 0 &&
-					last_Theory_PickPalette < NUM_COLOR_THEORY_TYPES)
+					last_Theory_PickPalette < NUM_COLOR_THEORY_TYPES_G1)
 				{
 					theoryTypes[last_Theory_PickPalette] = true;
 				}
@@ -7643,7 +7636,10 @@ void ofxColorManager::refresh_FromPicked()
 	color_TheoryBase = color_Picked.get();
 	//color_TheoryBase.set(color_Picked);
 
+	// ?
 	refresh_TheoryEngine();
+
+	//TODO:
 
 	//refresh
 	ENABLE_Callbacks_cPickers = false;

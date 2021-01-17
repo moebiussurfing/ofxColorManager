@@ -15,7 +15,7 @@ TODO:
 	+ sort svg layers in illustrator: use an analogue palette
 	+ improve svg paths borders on buildings zone
 	+ svg demo resizer shape
-
+	+ scalable draggable rect
 */
 
 
@@ -344,10 +344,10 @@ private:
 
 private:
 	// color theory
-#define NUM_COLOR_THEORY_TYPES 8
-	ofParameter<bool> theoryTypes[NUM_COLOR_THEORY_TYPES];
+#define NUM_COLOR_THEORY_TYPES_G1 8
+	ofParameter<bool> theoryTypes[NUM_COLOR_THEORY_TYPES_G1];
 	shared_ptr<ColorWheelScheme> scheme;
-	vector<ofColor> colorsTheory[NUM_COLOR_THEORY_TYPES];
+	vector<ofColor> colorsTheory[NUM_COLOR_THEORY_TYPES_G1];
 	ofParameterGroup params_ColorTheory;
 	ofParameter<ofColor> color_TheoryBase;
 	ofParameter<int> colorScheme;
@@ -459,7 +459,7 @@ private:
 	// gui info display
 	//int last_Index_Theory = -1;
 	//int last_Index_Range = -1;
-	ofParameter<int> last_Index_Theory{ "Last Theory Index", -1, 0, NUM_COLOR_THEORY_TYPES - 1 };
+	ofParameter<int> last_Index_Theory{ "Last Theory Index", -1, 0, NUM_COLOR_THEORY_TYPES_G1 - 1 };
 	ofParameter<int> last_Index_Range{ "Last Range Index", -1, 0, NUM_TYPES_RANGES - 1 };
 
 	std::string theory_Name = "";
