@@ -112,7 +112,7 @@ using namespace ImGui_PalettesPicker;
 #include "presets/PresetManager.h"
 #include "presets/PresetPalette.h"
 
-#include "demo/DEMO_palette.h"
+#include "demo/DEMO_Scene.h"
 #include "demo/DEMO_svg.h"
 
 #include "ofxSurfingHelpers.h"
@@ -431,7 +431,7 @@ private:
 
 	// DEMO
 
-	DEMO_palette myDEMO1;
+	DEMO_Scene myDEMO1;
 
 	//--
 

@@ -9,18 +9,18 @@
 
 #include "ofxCameraSaveLoad.h"
 
-class DEMO_palette {
+class DEMO_Scene {
 
 private:
 	std::string _name = "DEMO_Cam";
 
 public:
-	~DEMO_palette() 
+	~DEMO_Scene() 
 	{
 		ofLogNotice(__FUNCTION__);
 		ofxSaveCamera(cam, path + _name);
 	}
-	DEMO_palette()
+	DEMO_Scene()
 	{
 		ofLogNotice(__FUNCTION__);
 	}

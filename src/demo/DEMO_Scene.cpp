@@ -2,14 +2,14 @@
 // Created by moebiussurfing on 8/6/19.
 //
 
-#include "DEMO_palette.h"
+#include "DEMO_Scene.h"
 
 //TODO
 // should check if pointer and palettes size is not null
 
 
 //--------------------------------------------------------------
-void DEMO_palette::setup() {
+void DEMO_Scene::setup() {
 	ofLogNotice(__FUNCTION__);
 
 	// DEMO 1
@@ -28,7 +28,7 @@ void DEMO_palette::setup() {
 }
 
 //--------------------------------------------------------------
-void DEMO_palette::update() {
+void DEMO_Scene::update() {
 
 	// DEMO 1 - CIRCLES
 
@@ -112,7 +112,7 @@ void DEMO_palette::update() {
 }
 
 //--------------------------------------------------------------
-void DEMO_palette::draw(float alpha)
+void DEMO_Scene::draw(float alpha)
 {
 	{
 		// DEMO 1 - CIRCLES

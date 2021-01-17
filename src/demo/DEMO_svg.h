@@ -20,9 +20,11 @@ public:
 
 	void setup();
 	void update();
+
 	void draw();
 	void draw(glm::vec2 _pos);
 	//void draw(glm::vec2 _pos, glm::vec2 _shape);
+
 	void keyPressed(int key);
 
 	float getWidth() {
