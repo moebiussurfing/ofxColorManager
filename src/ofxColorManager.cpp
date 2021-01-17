@@ -22,20 +22,10 @@ void ofxColorManager::reBuild()
 	//}
 	//else
 	{
-		//txt_lineActive[0] = false;//preset name
-		//txt_lineActive[1] = false;//lover name
-		//txt_lineActive[2] = false;//theory name
-		//txt_lineActive[3] = false;//range name
-		//last_Index_Type = -1;
-
-		//-
-
 		if (SHOW_ColourLovers)
 		{
 			_name = myPalette_Name;
 			palette_FromColourLovers();
-			//txt_lineActive[0] = true;//preset name
-
 		}
 		else if (SHOW_Quantizer)
 		{
@@ -61,18 +51,13 @@ void ofxColorManager::reBuild()
 		textInput_New = _name;
 	}
 
-	//// WORKFLOW: when loading a color lover palette we disable auto create from algo palettes
-	//if (bAuto_Build_Palette)
-	//{
-	//	bAuto_Build_Palette = false;
-	//}
-
 	//----
 
 	// DEMO 2
+
 	myDEMO2.setPaletteColors(palette);
 
-	//-
+	//--
 
 	// DEMO 1
 
@@ -566,7 +551,7 @@ void ofxColorManager::setup()
 	//extra algo
 	std::string name;
 	params_algoTypes.setName("AlgoTypes");
-	for (int i = 0; i < 7; i++)
+	for (int i = 0; i < NUM_COLOR_THEORY_TYPES_G2; i++)
 	{
 		switch (i)
 		{
@@ -1422,12 +1407,12 @@ void ofxColorManager::draw(ofEventArgs & args)
 		if (SHOW_ImGui)
 		{
 			// quantizer
-
 #ifdef USE_IMAGE_QUANTIZER
 			if (SHOW_Quantizer) colorQuantizer.draw();
 #endif
 			//--
 
+			// info
 			draw_Info();
 		}
 	}
@@ -1974,6 +1959,8 @@ void ofxColorManager::gui_Theory()
 			ImGui::SameLine();
 
 			//--
+
+			// label type buttons 
 
 			const size_t _total = colorsTheory[i].size();
 
@@ -4482,7 +4469,17 @@ void ofxColorManager::gui_Presets()
 //--------------------------------------------------------------
 void ofxColorManager::gui_Demo()
 {
-	if (ofxImGui::BeginWindow("DEMO", mainSettings, false))
+	static bool auto_resize = true;
+	float ww, hh;
+	ww = PANEL_WIDGETS_WIDTH;
+	hh = PANEL_WIDGETS_HEIGHT;
+	ImGui::SetWindowSize(ImVec2(ww, hh));
+	ImGuiWindowFlags flagsw;
+	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : 0;
+
+	//-
+
+	if (ofxImGui::BeginWindow("DEMO", mainSettings, flagsw))
 	{
 		ofxImGui::AddParameter(DEMO1_Test);
 		ofxImGui::AddParameter(DEMO2_Test);
@@ -5549,7 +5546,7 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 		{
 			if (name == theoryTypes[i].getName() && theoryTypes[i].get())
 			{
-				theoryTypes[i] = false;//off button
+				theoryTypes[i] = false;//backoff button
 
 				palette_clear();
 				ofColor c;
@@ -5565,25 +5562,6 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 				theory_Name = theoryTypes[i].getName();
 
 				last_Index_Theory = i;
-
-				txt_lineActive[0] = false;//preset name
-				txt_lineActive[1] = false;//lover name
-				txt_lineActive[2] = true;//theory name
-				txt_lineActive[3] = false;//range name
-				last_Index_Type = 2;
-
-				//---
-
-				//TODO:
-				bUpdated_Palette_BACK = true;
-
-				//--
-
-				//// DEMO
-				//if (DEMO1_Test) myDEMO1.reStart();
-
-				//textInput_New = theory_Name;
-				//bNewPreset = true;
 			}
 		}
 	}
@@ -5595,7 +5573,7 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 
 	// algo/theory types
 
-	for (int i = 0; i < 7; i++)
+	for (int i = 0; i < NUM_COLOR_THEORY_TYPES_G2; i++)
 	{
 		if (name == algoTypes[i].getName() && algoTypes[i].get())
 		{
@@ -5608,18 +5586,6 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 
 			theory_Name = algoTypes[i].getName();
 			last_Index_Theory = i + NUM_COLOR_THEORY_TYPES;
-
-			txt_lineActive[0] = false;//preset name
-			txt_lineActive[1] = false;//lover name
-			txt_lineActive[2] = true;//theory name
-			txt_lineActive[3] = false;//range name
-			last_Index_Type = 2;
-
-			// DEMO
-			if (DEMO1_Test) myDEMO1.reStart();
-
-			textInput_New = theory_Name;
-			bNewPreset = true;
 
 			//-
 
@@ -5836,6 +5802,24 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 	else if (name == last_Index_Theory.getName())
 	{
+		// TODO:
+		reBuild();
+
+		txt_lineActive[0] = false;//preset name
+		txt_lineActive[1] = false;//lover name
+		txt_lineActive[2] = true;//theory name
+		txt_lineActive[3] = false;//range name
+		last_Index_Type = 2;
+
+		// DEMO
+		if (DEMO1_Test) myDEMO1.reStart();
+		
+		// presets 
+
+		if (SHOW_Presets) {
+			textInput_New = theory_Name;
+			bNewPreset = true;
+		}
 	}
 
 	else if (name == last_Index_Range.getName())
@@ -6185,7 +6169,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			palette_removeColor(palette_colorSelected);
 
 		}
-		}
+	}
 	else if (name == bClearPalette.getName())
 	{
 		if (bClearPalette)
@@ -6193,7 +6177,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			bClearPalette = false;
 			palette_clear();
 		}
-	}
+}
 
 	//----
 

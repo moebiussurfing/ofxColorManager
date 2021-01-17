@@ -6,12 +6,15 @@
 
 TODO:
 
++ fix theory
++ if hsb rounders that breaks rgb/hue
++ picker updates HSB, theory, range... broken
 + simplify num colors calls..
 + fix auto build palette wf
-+ picker updates HSB, theory, range... broken
-+ sort svg layers in illustrator
-+ improve svg paths borders on buildings zone
-+ svg demo resizer shape
++ demo 2
+	+ sort svg layers in illustrator: use an analogue palette
+	+ improve svg paths borders on buildings zone
+	+ svg demo resizer shape
 
 */
 
@@ -300,7 +303,8 @@ private:
 	void Changed_ColorRange(ofAbstractParameter &e);
 
 	//extra
-	ofParameter<bool> algoTypes[7];
+#define NUM_COLOR_THEORY_TYPES_G2 7
+	ofParameter<bool> algoTypes[NUM_COLOR_THEORY_TYPES_G2];
 	ofParameterGroup params_algoTypes;
 
 	//-
