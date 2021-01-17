@@ -113,6 +113,7 @@ using namespace ImGui_PalettesPicker;
 #include "presets/PresetPalette.h"
 
 #include "demo/DEMO_palette.h"
+#include "demo/DEMO_svg.h"
 
 #include "ofxSurfingHelpers.h"
 #include "ofxSurfing_ImGui.h"
@@ -130,6 +131,8 @@ class ofxColorManager : public ofBaseApp
 
 public:
 	PalettePreviewMini miniPreview;
+
+	DEMO_svg myDEMO2;
 
 public:
 	ofxColorManager();
@@ -188,7 +191,8 @@ private:
 	ofParameter<bool> SHOW_Presets;
 	ofParameter<bool> SHOW_Kit;
 	ofParameter<bool> AutoScroll;
-	ofParameter<bool> SHOW_Demo;
+	ofParameter<bool> SHOW_Demo1;
+	ofParameter<bool> SHOW_Demo2;
 	ofParameter<bool> SHOW_BackGround;
 	ofParameter<bool> SHOW_Picker;
 	ofParameter<bool> SHOW_Library;
@@ -427,7 +431,7 @@ private:
 
 	// DEMO
 
-	DEMO_palette myDEMO;
+	DEMO_palette myDEMO1;
 
 	//--
 
@@ -782,7 +786,8 @@ private:
 	ofxColorGradient<ofColor> gradient;//unmodified gradient with curveTool
 	ofParameter<bool> gradient_HardMode;//stepped
 	void draw_Gradient();
-
+	void update_Gradient();
+	
 	//--
 
 	// curves
@@ -825,7 +830,8 @@ private:
 	// demo
 private:
 
-	ofParameter<bool> DEMO_Test{ "ENABLE DEMO", false };
+	ofParameter<bool> DEMO1_Test{ "ENABLE DEMO1", false };
+	ofParameter<bool> DEMO2_Test{ "ENABLE DEMO2", false };
 	ofParameter<bool> DEMO_Auto{ "AUTO", false };
 	ofParameter<bool> DEMO_Cam{ "CAM", false };
 	ofParameter<float> DEMO_Timer{ "SPEED", 0.5, 0, 1 };

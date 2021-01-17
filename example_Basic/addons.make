@@ -6,5 +6,8 @@ ofxPoco
 ofxIO
 ofxMouseRuler
 ofxOpenCv
+ofxPSBlend
 ofxSurfingHelpers
+ofxSvg
+ofxSvgLoader
 ofxXmlSettings

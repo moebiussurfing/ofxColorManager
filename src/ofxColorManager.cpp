@@ -182,9 +182,9 @@ void ofxColorManager::setup()
 
 	// DEMO
 
-	myDEMO.setup();
-	myDEMO.setPalette(palette);
-	//myDEMO.setEnableMouseCamera(true);
+	myDEMO1.setup();
+	myDEMO1.setPalette(palette);
+	//myDEMO1.setEnableMouseCamera(true);
 
 	//----
 
@@ -441,7 +441,8 @@ void ofxColorManager::setup()
 	SHOW_Range.set("RANGE", true);
 	SHOW_Panels.set("PANELS", true);
 	SHOW_Export.set("EXPORT", true);
-	SHOW_Demo.set("DEMO", false);
+	SHOW_Demo1.set("DEMO1", false);
+	SHOW_Demo2.set("DEMO2", false);
 
 	//bAutoResizePalette.set("AutoResize", false);
 	bAutoExportPreset.set("Auto Export", false);
@@ -602,7 +603,8 @@ void ofxColorManager::setup()
 	params_Panels.add(SHOW_Theory);
 	params_Panels.add(SHOW_Panels);
 	params_Panels.add(SHOW_Export);
-	params_Panels.add(SHOW_Demo);
+	params_Panels.add(SHOW_Demo1);
+	params_Panels.add(SHOW_Demo2);
 	params_Panels.add(SHOW_Quantizer);
 	params_Panels.add(SHOW_ColourLovers);
 	params_Panels.add(SHOW_AlgoPalettes);
@@ -623,7 +625,8 @@ void ofxColorManager::setup()
 	params_AppState.add(params_Background);
 
 	params_Demo.add(TEST_Mode);
-	params_Demo.add(DEMO_Test);
+	params_Demo.add(DEMO1_Test);
+	params_Demo.add(DEMO2_Test);
 	params_Demo.add(DEMO_Auto);
 	params_Demo.add(DEMO_Timer);
 	params_Demo.add(DEMO_Alpha);
@@ -709,7 +712,8 @@ void ofxColorManager::setup()
 	// panels
 	params_control.add(SHOW_Panels);
 	params_control.add(SHOW_Export);
-	params_control.add(SHOW_Demo);
+	params_control.add(SHOW_Demo1);
+	params_control.add(SHOW_Demo2);
 	params_control.add(SHOW_BrowserColors);
 	params_control.add(SHOW_GradientCurve);
 	params_control.add(MODE_EditGradientLayout);
@@ -822,8 +826,10 @@ void ofxColorManager::startup()
 	panels.addToggle(&SHOW_ALL_GUI);
 	panels.addToggle(&SHOW_MINI_Preview);
 
-	panels.addToggle(&SHOW_Demo);
-	panels.addToggle(&DEMO_Test);
+	panels.addToggle(&SHOW_Demo1);
+	panels.addToggle(&SHOW_Demo2);
+	panels.addToggle(&DEMO1_Test);
+	panels.addToggle(&DEMO2_Test);
 
 	//panels.addToggle(&SHOW_AlgoPalettes);
 	//panels.addToggle(&SHOW_BrowserColors);
@@ -875,6 +881,8 @@ void ofxColorManager::startup()
 //--------------------------------------------------------------
 void ofxColorManager::update(ofEventArgs & args)
 {
+	//----
+
 	//programmed open dialog from ImGui:
 	if (bOpen)
 	{
@@ -901,138 +909,106 @@ void ofxColorManager::update(ofEventArgs & args)
 			path_Folder_ExportColor_Custom = "";
 			bExportPreset_DefaultPath = true;//set back default OF_APP/bin/data
 		}
+
 		bOpen = false;
 	}
 
 	//----
 
-	// DEMO
+	// DEMO1
 	{
-		if (DEMO_Test) myDEMO.update();
+		if (DEMO1_Test) myDEMO1.update();
 
-		if (DEMO_Test && DEMO_Auto)
+		if (DEMO1_Test && DEMO_Auto)
 			if ((ofGetElapsedTimeMillis() - Demo_Timer) > MAX(Demo_Timer_Max * (1 - DEMO_Timer), 10))
 			{
 				Demo_Timer = ofGetElapsedTimeMillis();
 
-				myDEMO.start();
+				myDEMO1.start();
 			}
+	}
+
+	//----
+
+	// DEMO2
+	{
+		if (DEMO2_Test) myDEMO2.update();
 	}
 
 	//----
 
 	// gradient
-	// test curve
-	{
-		int frameBuffer = (int)ofMap(TEST_Speed, 0., 1., TEST_maxFrames, 30);
-		int frameCurrent = ofGetFrameNum() % frameBuffer;//0 to maxFrames
-
-		if (TEST_Mode)
-		{
-			if (!bTEST_pause)
-			{
-				framePrc = ofMap(frameCurrent, 0, frameBuffer, 0., 1.);
-				float control;
-				if (!TEST_LFO_Mode) control = ofClamp(framePrc, 0., 1.);
-				else
-				{
-					float mySin = std::sin(PI * framePrc);
-					control = ofClamp(mySin, 0., 1.);
-				}
-				if (AutoSet_Background_FromGradient) color_BackGround.set(getColorAtPercent(control));
-
-				setControl(control);
-			}
-
-			if (frameCurrent == frameBuffer - 1)
-			{
-				bTEST_pause = !bTEST_pause;
-
-				//round end position to clamp
-				float control;
-				if (!TEST_LFO_Mode)
-				{
-					control = 1.;
-					framePrc = 1.;
-				}
-				else
-				{
-					control = 0.;
-					framePrc = 1.;
-				}
-				if (AutoSet_Background_FromGradient) color_BackGround.set(getColorAtPercent(control));
-
-				setControl(control);
-			}
-		}
-
-		update_CurveTool();
-
-		//--
-
-		update_Curve();
-	}
+	update_Gradient();
 
 	//----
 
 	// colour lovers
-
-	colourLoversHelper.update();
-
-	//----
-
-	// 1. colour lover palette has been clicked/changed selected
-
-	if (bUpdated_Palette_BACK)
 	{
-		bUpdated_Palette_BACK = false;
+		colourLoversHelper.update();
 
-		ofLogNotice(__FUNCTION__) << "  >  bUpdated_Palette_BACK : " << bUpdated_Palette_BACK;
+		//----
 
-		// TODO: WORKFLOW: if mode is palette&color should load first palette color
-		// and forget the clicked color
+		// 1. colour lover palette has been clicked/changed selected
 
-		//-
+		if (bUpdated_Palette_BACK)
+		{
+			bUpdated_Palette_BACK = false;
 
-		if (SHOW_ColourLovers) palette_FromColourLovers();
+			ofLogNotice(__FUNCTION__) << "  >  bUpdated_Palette_BACK : " << bUpdated_Palette_BACK;
 
-		if (SHOW_Quantizer) palette_FromQuantizer();
+			// TODO: WORKFLOW: if mode is palette&color should load first palette color
+			// and forget the clicked color
 
-		//if (SHOW_Theory) palette_FromTheory(SELECTED_palette_LAST);
-		////if (SHOW_Theory) palette_FromTheory(last_Index_Theory);
+			//-
 
-		//if (SHOW_Range) palette_FromRange();
+			//DEMO2
+			myDEMO2.setPaletteColors(palette);
 
-		//-
+			//-
+			
+			//TODO:
+			// checking only lovers?
 
-		//// WORKFLOW: when loading a color lover palette we disable auto create from algo palettes
-		//if (bAuto_TheoryToPalette)
-		//{
-		//	bAuto_TheoryToPalette = false;
-		//}
+			if (SHOW_ColourLovers) palette_FromColourLovers();
 
-		//-
+			if (SHOW_Quantizer) palette_FromQuantizer();
 
-		// presets
+			//if (SHOW_Theory) palette_FromTheory(SELECTED_palette_LAST);
+			////if (SHOW_Theory) palette_FromTheory(last_Index_Theory);
 
-		if (!bNewPreset) bNewPreset = true;
-		textInput_New = myPalette_Name;
+			//if (SHOW_Range) palette_FromRange();
 
-		//-
+			//-
 
-		// DEMO
+			//// WORKFLOW: when loading a color lover palette we disable auto create from algo palettes
+			//if (bAuto_TheoryToPalette)
+			//{
+			//	bAuto_TheoryToPalette = false;
+			//}
 
-		if (DEMO_Test) myDEMO.reStart();
+			//-
 
-		//-
+			// presets
 
-		////workflow
-		//if (bAutoExportPreset)
-		//{
-		//	ofLogNotice(__FUNCTION__) << "bAutoExportPreset: " << bAutoExportPreset;
-		//	//ofLogNotice(__FUNCTION__) << "EXPORT";
-		//	exportPalette();
-		//}
+			if (!bNewPreset) bNewPreset = true;
+			textInput_New = myPalette_Name;
+
+			//-
+
+			// DEMO
+
+			if (DEMO1_Test) myDEMO1.reStart();
+
+			//-
+
+			////workflow
+			//if (bAutoExportPreset)
+			//{
+			//	ofLogNotice(__FUNCTION__) << "bAutoExportPreset: " << bAutoExportPreset;
+			//	//ofLogNotice(__FUNCTION__) << "EXPORT";
+			//	exportPalette();
+			//}
+		}
 	}
 
 	//----
@@ -1074,7 +1050,7 @@ void ofxColorManager::update(ofEventArgs & args)
 		if (!bNewPreset) bNewPreset = true;
 
 		// DEMO
-		if (DEMO_Test) myDEMO.reStart();
+		if (DEMO1_Test) myDEMO1.reStart();
 	}
 
 	//--
@@ -1111,7 +1087,7 @@ void ofxColorManager::update(ofEventArgs & args)
 //		//-
 //
 //		// DEMO
-//		if (DEMO_Test) myDEMO.reStart();
+//		if (DEMO1_Test) myDEMO1.reStart();
 //	}
 
 	//-
@@ -1270,7 +1246,7 @@ void ofxColorManager::draw_Curve()
 		//-
 
 		//// 3. top progress bar prc
-		//if (DEMO_Test)
+		//if (DEMO1_Test)
 		//{
 		//	int _lw = 4;
 		//	ofRectangle rProgress(0, 0, framePrc * ofGetWidth(), _lw);
@@ -1471,8 +1447,12 @@ void ofxColorManager::draw(ofEventArgs & args)
 
 		//--
 
-		// DEMO
-		if (DEMO_Test) myDEMO.draw(DEMO_Alpha);
+		// DEMO1
+		if (DEMO1_Test) myDEMO1.draw(DEMO_Alpha);
+
+		// DEMO2
+		float _w = myDEMO2.getWidth();
+		if (DEMO2_Test) myDEMO2.draw(glm::vec2(ofGetWidth() * 0.5 - _w * 0.5, 0));
 
 		//--
 
@@ -1493,7 +1473,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 
 	// mini
 
-	if (SHOW_MINI_Preview) 
+	if (SHOW_MINI_Preview)
 	{
 		miniPreview.draw_MiniPreview(PRESET_Name, palette, color_BackGround.get());
 		//ofxColorClient::draw_MiniPreview(font, PRESET_Name, palette, color_BackGround.get());
@@ -1534,7 +1514,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 					ENABLE_keys = true;
 				}
 
-				//myDEMO.setEnableMouseCamera();
+				//myDEMO1.setEnableMouseCamera();
 			}
 		}
 	}
@@ -3156,8 +3136,8 @@ void ofxColorManager::gui_Panels()
 
 		ofxSurfingHelpers::AddBigToggle(SHOW_UserPalette);
 		ofxSurfingHelpers::AddBigToggle(SHOW_Picker);
-		ofxSurfingHelpers::AddBigToggle(SHOW_Library);
 		ofxSurfingHelpers::AddBigToggle(SHOW_BackGround);
+		ofxSurfingHelpers::AddBigToggle(SHOW_Library);
 		ofxSurfingHelpers::AddBigToggle(SHOW_GradientCurve);
 
 		ImGui::NextColumn();
@@ -3174,7 +3154,8 @@ void ofxColorManager::gui_Panels()
 		//ofxSurfingHelpers::AddBigToggle(SHOW_ALL_GUI);
 		ofxSurfingHelpers::AddBigToggle(SHOW_Presets);
 		ofxSurfingHelpers::AddBigToggle(SHOW_MINI_Preview);
-		ofxSurfingHelpers::AddBigToggle(SHOW_Demo);
+		ofxSurfingHelpers::AddBigToggle(SHOW_Demo1);
+		ofxSurfingHelpers::AddBigToggle(SHOW_Demo2);
 		ofxSurfingHelpers::AddBigToggle(SHOW_Export);
 		ofxImGui::AddParameter(ENABLE_keys);
 
@@ -3868,7 +3849,7 @@ void ofxColorManager::gui_Presets()
 					if (bNewPreset) bNewPreset = false;
 
 					//workflow
-					if (DEMO_Test) myDEMO.reStart();
+					if (DEMO1_Test) myDEMO1.reStart();
 				}
 			}
 		}
@@ -3904,7 +3885,7 @@ void ofxColorManager::gui_Presets()
 					if (bNewPreset) bNewPreset = false;
 
 					//workflow
-					if (DEMO_Test) myDEMO.reStart();
+					if (DEMO1_Test) myDEMO1.reStart();
 				}
 			}
 		}
@@ -4202,7 +4183,7 @@ void ofxColorManager::gui_Presets()
 				//--
 
 				// DEMO
-				if (SHOW_Demo) myDEMO.reStart();
+				if (SHOW_Demo1) myDEMO1.reStart();
 			}
 
 			ImGui::PopStyleColor(1);
@@ -4456,7 +4437,7 @@ void ofxColorManager::gui_Presets()
 			//
 			//            //-
 			//
-			//            if (DEMO_Test) myDEMO.clear();
+			//            if (DEMO1_Test) myDEMO1.clear();
 			//        }
 			*/
 
@@ -4543,7 +4524,7 @@ void ofxColorManager::gui_Presets()
 				//-
 
 				// DEMO
-				if (DEMO_Test) myDEMO.reStart();
+				if (DEMO1_Test) myDEMO1.reStart();
 			}
 		}
 		ofxImGui::EndWindow(mainSettings);
@@ -4572,13 +4553,14 @@ void ofxColorManager::gui_Demo()
 {
 	if (ofxImGui::BeginWindow("DEMO", mainSettings, false))
 	{
-		ofxImGui::AddParameter(DEMO_Test);
+		ofxImGui::AddParameter(DEMO1_Test);
+		ofxImGui::AddParameter(DEMO2_Test);
 		ofxImGui::AddParameter(DEMO_Auto);
 		ofxImGui::AddParameter(DEMO_Timer);
 		ofxImGui::AddParameter(DEMO_Alpha);
 		if (ofxImGui::AddParameter(DEMO_Cam))
 		{
-			myDEMO.setEnableMouseCamera(DEMO_Cam);
+			myDEMO1.setEnableMouseCamera(DEMO_Cam);
 		}
 	}
 	ofxImGui::EndWindow(mainSettings);
@@ -4624,7 +4606,7 @@ bool ofxColorManager::draw_Gui()
 		if (SHOW_Quantizer) colorQuantizer.gui_Quantizer();
 		if (SHOW_Panels) gui_Panels();
 		if (SHOW_Export) gui_Export();
-		if (SHOW_Demo) gui_Demo();
+		if (SHOW_Demo1) gui_Demo();
 		//if (SHOW_CosineGradient) gui_imGui_CosineGradient();
 	}
 
@@ -4776,6 +4758,61 @@ void ofxColorManager::update_CurveTool()
 	//	ofColor c = gradient.getColorAtPercent(out);
 	//	color_TARGET->set(c);
 	//}
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::update_Gradient()
+{
+	// test curve
+	{
+		int frameBuffer = (int)ofMap(TEST_Speed, 0., 1., TEST_maxFrames, 30);
+		int frameCurrent = ofGetFrameNum() % frameBuffer;//0 to maxFrames
+
+		if (TEST_Mode)
+		{
+			if (!bTEST_pause)
+			{
+				framePrc = ofMap(frameCurrent, 0, frameBuffer, 0., 1.);
+				float control;
+				if (!TEST_LFO_Mode) control = ofClamp(framePrc, 0., 1.);
+				else
+				{
+					float mySin = std::sin(PI * framePrc);
+					control = ofClamp(mySin, 0., 1.);
+				}
+				if (AutoSet_Background_FromGradient) color_BackGround.set(getColorAtPercent(control));
+
+				setControl(control);
+			}
+
+			if (frameCurrent == frameBuffer - 1)
+			{
+				bTEST_pause = !bTEST_pause;
+
+				//round end position to clamp
+				float control;
+				if (!TEST_LFO_Mode)
+				{
+					control = 1.;
+					framePrc = 1.;
+				}
+				else
+				{
+					control = 0.;
+					framePrc = 1.;
+				}
+				if (AutoSet_Background_FromGradient) color_BackGround.set(getColorAtPercent(control));
+
+				setControl(control);
+			}
+		}
+
+		update_CurveTool();
+
+		//--
+
+		update_Curve();
+	}
 }
 
 //--------------------------------------------------------------
@@ -5490,7 +5527,7 @@ void ofxColorManager::palette_clear()
 
 	//-
 
-	if (DEMO_Test) myDEMO.clear();
+	if (DEMO1_Test) myDEMO1.clear();
 
 	//--
 
@@ -5620,7 +5657,7 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 				txt_lineActive[3] = false;//range name
 
 				// DEMO
-				if (DEMO_Test) myDEMO.reStart();
+				if (DEMO1_Test) myDEMO1.reStart();
 
 				textInput_New = theory_Name;
 				bNewPreset = true;
@@ -5655,7 +5692,7 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 			txt_lineActive[3] = false;//range name
 
 			// DEMO
-			if (DEMO_Test) myDEMO.reStart();
+			if (DEMO1_Test) myDEMO1.reStart();
 
 			textInput_New = theory_Name;
 			bNewPreset = true;
@@ -6360,7 +6397,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	//			palette_FromTheory(SELECTED_palette_LAST);//trig last choice
 	//#endif
 	//			// DEMO
-	//			if (DEMO_Test) myDEMO.reStart();
+	//			if (DEMO1_Test) myDEMO1.reStart();
 	//		}
 	//	}
 	*/
@@ -6447,7 +6484,7 @@ void ofxColorManager::Changed_ColorRange(ofAbstractParameter &e)
 					//workflow
 
 					// DEMO
-					if (DEMO_Test) myDEMO.reStart();
+					if (DEMO1_Test) myDEMO1.reStart();
 
 					textInput_New = range_Name;
 					bNewPreset = true;
@@ -6795,7 +6832,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//			SELECTED_palette = 0;
 		//		}
 
-		//		if (DEMO_Test) myDEMO.reStart();
+		//		if (DEMO1_Test) myDEMO1.reStart();
 		//	}
 		//	else if (key == OF_KEY_DOWN)
 		//	{
@@ -6806,7 +6843,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//			SELECTED_palette = NUM_TOTAL_PALETTES - 1;
 		//		}
 
-		//		if (DEMO_Test) myDEMO.reStart();
+		//		if (DEMO1_Test) myDEMO1.reStart();
 		//	}
 
 		//	//-
@@ -6818,7 +6855,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//			numColors_Alg.getMin(),
 		//			numColors_Alg.getMax());
 
-		//		if (DEMO_Test) myDEMO.reStart();
+		//		if (DEMO1_Test) myDEMO1.reStart();
 		//	}
 		//	else if (key == OF_KEY_RIGHT && !SHOW_Presets)
 		//	{
@@ -6827,7 +6864,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//			numColors_Alg.getMin(),
 		//			numColors_Alg.getMax());
 
-		//		if (DEMO_Test) myDEMO.reStart();
+		//		if (DEMO1_Test) myDEMO1.reStart();
 		//	}
 		//}
 #endif
@@ -6855,7 +6892,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				if (MODE_NewPreset) bNewPreset = false;
 
 				// demo mode
-				if (DEMO_Test) myDEMO.reStart();
+				if (DEMO1_Test) myDEMO1.reStart();
 				//load first color from preset to algorothmic palettes
 				if (palette.size() > 0)
 				{
@@ -6880,7 +6917,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				// new preset
 				if (MODE_NewPreset) bNewPreset = false;
 				// demo mode
-				if (DEMO_Test) myDEMO.reStart();
+				if (DEMO1_Test) myDEMO1.reStart();
 				// load first color
 				if (palette.size() > 0)
 				{
@@ -6910,7 +6947,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				// new preset
 				if (MODE_NewPreset) bNewPreset = false;
 				// demo mode
-				if (DEMO_Test) myDEMO.reStart();
+				if (DEMO1_Test) myDEMO1.reStart();
 				// load first color
 				if (palette.size() > 0)
 				{
@@ -6934,7 +6971,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				// new preset
 				if (MODE_NewPreset) bNewPreset = false;
 				//demo mode
-				if (DEMO_Test) myDEMO.reStart();
+				if (DEMO1_Test) myDEMO1.reStart();
 				//load first color
 				if (palette.size() > 0)
 				{
@@ -7155,7 +7192,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		{
 			mouseRuler.toggleVisibility();
 
-			//myDEMO.toggleMouseCamera();
+			//myDEMO1.toggleMouseCamera();
 		}
 #endif
 
@@ -7212,7 +7249,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 //#endif
 //			//-
 //
-//			if (DEMO_Test) myDEMO.reStart();
+//			if (DEMO1_Test) myDEMO1.reStart();
 //		}
 
 		//----
@@ -7281,7 +7318,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 //
 //			//----
 //
-//			if (DEMO_Test) myDEMO.reStart();
+//			if (DEMO1_Test) myDEMO1.reStart();
 //		}
 
 		//--
@@ -7297,8 +7334,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		// DEMO
 		else if (key == 'D')
 		{
-			DEMO_Test = !DEMO_Test;
-			if (DEMO_Test) myDEMO.reStart();
+			DEMO1_Test = !DEMO1_Test;
+			if (DEMO1_Test) myDEMO1.reStart();
 		}
 
 		//--
@@ -7447,11 +7484,11 @@ void ofxColorManager::mousePressed(ofMouseEventArgs &eventArgs)
 
 	// DEMO
 
-	if (DEMO_Test && !mouseOverGui)
+	if (DEMO1_Test && !mouseOverGui)
 	{
 		//second mouse button cleans DEMO
-		if (button == 2) myDEMO.clear();
-		else myDEMO.start();//trig DEMO start
+		if (button == 2) myDEMO1.clear();
+		else myDEMO1.start();//trig DEMO start
 	}
 }
 
@@ -7699,7 +7736,7 @@ void ofxColorManager::preset_Load(std::string p)
 		//--
 
 		////workflow
-		//if (DEMO_Test) myDEMO.clear();
+		//if (DEMO1_Test) myDEMO1.clear();
 
 		//--
 
