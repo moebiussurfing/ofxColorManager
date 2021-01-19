@@ -964,6 +964,7 @@ void ofxColorManager::update(ofEventArgs & args)
 			myDEMO1.update();
 
 			if (DEMO_Auto) {}
+
 			if ((ofGetElapsedTimeMillis() - Demo_Timer) > MAX(Demo_Timer_Max * (1 - DEMO_Timer), 10))
 			{
 				Demo_Timer = ofGetElapsedTimeMillis();
@@ -5508,13 +5509,6 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		{
 			// autoload color picker to selected index color on palette
 			color_Picked = palette[last_Index_ColorPalette.get()];
-
-			//// update user palette color with recently picked color
-			//palette[last_Index_ColorPalette].set(color_Clicked2);
-
-			//// update gradient
-			//if (last_Index_ColorPalette < gradient.getNumColors())
-			//	gradient.replaceColorAtIndex(last_Index_ColorPalette, color_Clicked2);
 		}
 	}
 
@@ -6274,8 +6268,9 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 		else if (key == OF_KEY_F1)//palette
 		{
-			//SHOW_UserPaletteEditor = !SHOW_UserPaletteEditor;
-			SHOW_UserPaletteFloating = !SHOW_UserPaletteFloating;
+			SHOW_UserPaletteEditor = !SHOW_UserPaletteEditor;
+			SHOW_UserPaletteFloating = SHOW_UserPaletteEditor;
+			//SHOW_UserPaletteFloating = !SHOW_UserPaletteFloating;
 		}
 		else if (key == OF_KEY_F2)//picker
 		{
@@ -6781,9 +6776,11 @@ void ofxColorManager::mousePressed(ofMouseEventArgs &eventArgs)
 
 	if (DEMO1_Test && !mouseOverGui)
 	{
-		//second mouse button cleans DEMO
-		if (button == 2) myDEMO1.clear();
-		else myDEMO1.start();//trig DEMO start
+		if (!DEMO_Auto) {//disable mouse on auto mode
+			//second mouse button cleans DEMO
+			if (button == 2) myDEMO1.clear();
+			else myDEMO1.start();//trig DEMO start
+		}
 	}
 }
 
@@ -6996,6 +6993,8 @@ void ofxColorManager::preset_Load(std::string p)
 		return;
 	}
 
+	// preset loaded succesfully !
+
 	//--
 
 	//TODO:
@@ -7022,7 +7021,6 @@ void ofxColorManager::preset_Load(std::string p)
 	if (!color_BackGround_Lock)
 	{
 		color_BackGround = ofColor(PRESET_Temp.getBackground());//get directly without pointing
-		////PRESET_Temp.setBackgroundColor(color_BackGround);//error ofParameter
 	}
 
 	//--
@@ -7031,24 +7029,29 @@ void ofxColorManager::preset_Load(std::string p)
 
 	//----
 
+	// workflow
+	last_Index_ColorPalette = 0;
+	if (palette.size() > 0) color_Picked = palette[last_Index_ColorPalette];
+
 	// DEMO 2
 	myDEMO2.setPaletteColors(palette);
 
 	//-
 
 	// DEMO 1
-
 	if (DEMO1_Test) myDEMO1.reStart();
 
 	//-
-
-	// workflow
 
 	if (bAutoExportPreset)
 	{
 		ofLogNotice(__FUNCTION__) << "Auto EXPORT";
 		exportPalette();
 	}
+
+	//-
+
+	refresh_Background();
 }
 
 //--------------------------------------------------------------

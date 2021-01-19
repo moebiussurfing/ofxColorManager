@@ -836,12 +836,12 @@ private:
 	// demo
 private:
 
-	ofParameter<bool> DEMO1_Test{ "ENABLE DEMO1", false };
-	ofParameter<bool> DEMO2_Test{ "ENABLE DEMO2", false };
-	ofParameter<bool> DEMO_Auto{ "AUTO", false };
-	ofParameter<bool> DEMO_Cam{ "CAM", false };
-	ofParameter<float> DEMO_Timer{ "SPEED", 0.5, 0, 1 };
-	ofParameter<float> DEMO_Alpha{ "ALPHA", 0.8, 0, 1 };
+	ofParameter<bool> DEMO1_Test{ "Enable DEMO1", false };
+	ofParameter<bool> DEMO2_Test{ "Enable DEMO2", false };
+	ofParameter<bool> DEMO_Auto{ "Auto Trig", false };
+	ofParameter<bool> DEMO_Cam{ "Edit Camera", false };
+	ofParameter<float> DEMO_Timer{ "Frequency", 0.5, 0, 1 };
+	ofParameter<float> DEMO_Alpha{ "Alpha", 0.8, 0, 1 };
 	int Demo_Timer = 0;
 	int Demo_Timer_Max = 15000;
 
