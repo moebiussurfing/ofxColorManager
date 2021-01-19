@@ -592,6 +592,7 @@ private:
 
 	ofParameter<float> analogSpread;
 
+	//TODO:
 	ofParameter<int> BRIGHTNESS;
 	ofParameter<int> SATURATION;
 
@@ -599,13 +600,13 @@ private:
 	ofParameter<bool> bAuto_Build_Palette;//trig last used algo palette on click or change color
 	//ofParameter<bool> bLock_palette;
 
-	//TODO
-private:
-	void palettes_setPosition(glm::vec2 pos)
-	{
-		palettes_x = pos.x;
-		palettes_y = pos.y;
-	}
+//	//TODO
+//private:
+//	void palettes_setPosition(glm::vec2 pos)
+//	{
+//		palettes_x = pos.x;
+//		palettes_y = pos.y;
+//	}
 
 private:
 	void refresh_Theory_G2();
@@ -833,7 +834,7 @@ private:
 
 	//--
 
-	// demo
+	// demos
 private:
 
 	ofParameter<bool> DEMO1_Test{ "Enable DEMO1", false };
@@ -874,7 +875,7 @@ private:
 	char tab[128];
 	void refresh_RearrengeFiles(std::string name);
 
-	//-
+	//--
 
 	// preset files
 
@@ -930,15 +931,15 @@ private:
 	int slider_PickIn_y;
 	int slider_PickIn_w;
 	int slider_PickIn_h;
-	int palettes_x;
-	int palettes_y;
-	int palette_x;
-	int palette_y;
+	//int palettes_x;
+	//int palettes_y;
+	//int palette_x;
+	//int palette_y;
 	int currColor_x;
 	int currColor_y;
-	int colorPick_x, colorPick_y, colorPick_w, colorPick_h;
-	int color_x, color_y, color_w, color_h;
-	glm::vec2 colorBrowserPos;
+	//int colorPick_x, colorPick_y, colorPick_w, colorPick_h;
+	//int color_x, color_y, color_w, color_h;
+	//glm::vec2 colorBrowserPos;
 
 	//--
 

@@ -1328,10 +1328,10 @@ void ofxColorManager::draw(ofEventArgs & args)
 		}
 
 		//--
-		
+
 		//debug
 		ofDrawBitmapStringHighlight("last_Index_Theory: " + ofToString(last_Index_Theory), 20, 20);
-		
+
 		//--
 
 		//// cosine gradient
@@ -1693,7 +1693,7 @@ void ofxColorManager::gui_Theory()
 
 				color_TheoryBase.set(tmpRef);
 
-				if (bAuto_Theory_FromPicker) color_Picked = color_TheoryBase.get();
+				if (bAuto_Theory_FromPicker) color_Picked.set(color_TheoryBase.get());
 
 				bUpdate = true;
 
@@ -1843,11 +1843,11 @@ void ofxColorManager::gui_Theory()
 
 		//----
 
-		// 2. g2
+		// 2. G2
 
 		for (int i = 0; i < NUM_COLOR_THEORY_TYPES_G2; i++)
 		{
-			int _total;
+			int _total = 0;
 			switch (i)
 			{
 			case 0:
@@ -3080,29 +3080,7 @@ void ofxColorManager::gui_Picker()
 		if (bChg_Pick)
 		{
 			color_Picked = cTmp;
-			//refresh_Pick_ToHSB();//redundant...
 		}
-
-		//--
-
-		////color_Picked
-		//if (bChg_Pick && bChg_HSB) //all
-		//{
-		//	refresh_FromPicked();
-		//}
-		//else
-		//{
-		//	if (bChg_Pick)
-		//	{
-		//		ENABLE_Callbacks_cPickers = false;
-		//		refresh_Pick_ToHSB();
-		//		ENABLE_Callbacks_cPickers = true;
-		//	}
-		//	if (bChg_Pick || bChg_HSB)
-		//	{
-		//		refresh_Pick_ToEngines();
-		//	}
-		//}
 
 		//----
 
@@ -4230,129 +4208,126 @@ void ofxColorManager::palette_FromTheory(int p)
 	ofLogNotice(__FUNCTION__) << p;
 
 	palette_Clear();
-	ofColor color;
 
-	// 1. FROM OFX-COLOR-PALETTE
+	ofColor _c;
+
+	//-
+
+	// 1. G1
 
 	switch (p)
 	{
 	case 0:
-		for (int i = 0; i < triad.size(); i++)
+		for (int i = 0; i < colors_Analogous.size(); i++)
 		{
-			color = triad[i];
-			palette_AddColor(color);
+			_c = colors_Analogous[i];
+			palette_AddColor(_c);
 		}
 		break;
 	case 1:
-		for (int i = 0; i < complementTriad.size(); i++)
+		for (int i = 0; i < colors_Complementary.size(); i++)
 		{
-			color = complementTriad[i];
-			palette_AddColor(color);
+			_c = colors_Complementary[i];
+			palette_AddColor(_c);
 		}
 		break;
 	case 2:
-		for (int i = 0; i < complement.size(); i++)
+		for (int i = 0; i < colors_SplitComplementary.size(); i++)
 		{
-			color = complement[i];
-			palette_AddColor(color);
+			_c = colors_SplitComplementary[i];
+			palette_AddColor(_c);
 		}
 		break;
 	case 3:
-		for (int i = 0; i < complementBrightness.size(); i++)
+		for (int i = 0; i < colors_Compound.size(); i++)
 		{
-			color = complementBrightness[i];
-			palette_AddColor(color);
+			_c = colors_Compound[i];
+			palette_AddColor(_c);
 		}
 		break;
 	case 4:
-		for (int i = 0; i < monochrome.size(); i++)
+		for (int i = 0; i < colors_FlippedCompound.size(); i++)
 		{
-			color = monochrome[i];
-			palette_AddColor(color);
+			_c = colors_FlippedCompound[i];
+			palette_AddColor(_c);
 		}
 		break;
 	case 5:
-		for (int i = 0; i < monochromeBrightness.size(); i++)
+		for (int i = 0; i < colors_Monochrome.size(); i++)
 		{
-			color = monochromeBrightness[i];
-			palette_AddColor(color);
+			_c = colors_Monochrome[i];
+			palette_AddColor(_c);
+		}
+		break;
+	case 7:
+		for (int i = 0; i < colors_Triad.size(); i++)
+		{
+			_c = colors_Triad[i];
+			palette_AddColor(_c);
 		}
 		break;
 	case 6:
-		for (int i = 0; i < analogue.size(); i++)
+		for (int i = 0; i < colors_Tetrad.size(); i++)
 		{
-			color = analogue[i];
-			palette_AddColor(color);
+			_c = colors_Tetrad[i];
+			palette_AddColor(_c);
 		}
 		break;
-		//        case 7:
-		//            for (int i = 0; i < btns_plt_Random.size(); i++) {
-		//                color = btns_plt_Random[i]->getColor();
-		//                palette_AddColor(color);
-		//            }
-		//            break;
 	}
 
 	//-
 
-	// 2. FROM OFX-COLOUR-THEORY
+	// 2. G2
 
 	switch (p)
 	{
-	case 7:
-		for (int i = 0; i < colors_Analogous.size(); i++)
-		{
-			color = colors_Analogous[i];
-			palette_AddColor(color);
-		}
-		break;
 	case 8:
-		for (int i = 0; i < colors_Complementary.size(); i++)
+		for (int i = 0; i < complement.size(); i++)
 		{
-			color = colors_Complementary[i];
-			palette_AddColor(color);
+			_c = complement[i];
+			palette_AddColor(_c);
 		}
 		break;
 	case 9:
-		for (int i = 0; i < colors_SplitComplementary.size(); i++)
+		for (int i = 0; i < complementBrightness.size(); i++)
 		{
-			color = colors_SplitComplementary[i];
-			palette_AddColor(color);
+			_c = complementBrightness[i];
+			palette_AddColor(_c);
 		}
 		break;
 	case 10:
-		for (int i = 0; i < colors_Compound.size(); i++)
+		for (int i = 0; i < monochrome.size(); i++)
 		{
-			color = colors_Compound[i];
-			palette_AddColor(color);
+			_c = monochrome[i];
+			palette_AddColor(_c);
 		}
 		break;
 	case 11:
-		for (int i = 0; i < colors_FlippedCompound.size(); i++)
+		for (int i = 0; i < monochromeBrightness.size(); i++)
 		{
-			color = colors_FlippedCompound[i];
-			palette_AddColor(color);
+			_c = monochromeBrightness[i];
+			palette_AddColor(_c);
 		}
 		break;
 	case 12:
-		for (int i = 0; i < colors_Monochrome.size(); i++)
+		for (int i = 0; i < analogue.size(); i++)
 		{
-			color = colors_Monochrome[i];
-			palette_AddColor(color);
+			_c = analogue[i];
+			palette_AddColor(_c);
 		}
 		break;
 	case 13:
-		for (int i = 0; i < colors_Triad.size(); i++)
+		for (int i = 0; i < triad.size(); i++)
 		{
-			color = colors_Triad[i];
-			palette_AddColor(color);
+			_c = triad[i];
+			palette_AddColor(_c);
 		}
 		break;
 	case 14:
-		for (int i = 0; i < colors_Tetrad.size(); i++)
+		for (int i = 0; i < complementTriad.size(); i++)
 		{
-			color = colors_Tetrad[i];
-			palette_AddColor(color);
+			_c = complementTriad[i];
+			palette_AddColor(_c);
 		}
 		break;
 	}
@@ -4370,9 +4345,20 @@ void ofxColorManager::palette_FromTheory(int p)
 //--------------------------------------------------------------
 void ofxColorManager::refresh_Theory_G2()
 {
-	// 1. FROM OFX-COLOR-PALETTE
+	ofLogNotice(__FUNCTION__);
 
-	// update palettes
+	// G1
+
+	//// 2.1 clear
+	//complement.initGen();
+	//complementBrightness.initGen();
+	//triad.initGen();
+	//complementTriad.initGen();
+	//monochrome.initGen();
+	//monochromeBrightness.initGen();
+	//analogue.initGen();
+
+	// 1. set base color
 	complement.setBaseColor(color_TheoryBase);
 	complementBrightness.setBaseColor(color_TheoryBase);
 	triad.setBaseColor(color_TheoryBase);
@@ -4382,6 +4368,7 @@ void ofxColorManager::refresh_Theory_G2()
 	analogue.setBaseColor(color_TheoryBase);
 	//random.setBaseColor(base);
 
+	// 2.2 generate
 	complement.generateComplementary(ofxColorPalette::SATURATION, numColors_Theory_G2);
 	complementBrightness.generateComplementary(ofxColorPalette::BRIGHTNESS, numColors_Theory_G2);
 	triad.generateTriad();
@@ -4394,7 +4381,7 @@ void ofxColorManager::refresh_Theory_G2()
 
 	//---
 
-	// 2. FROM OFX-COLOUR-THEORY
+	// G2
 
 	refresh_Theory_G2_2();//TODO: reduce calls...
 }
@@ -4427,10 +4414,11 @@ void ofxColorManager::refresh_Theory_G1() //populates palettes
 
 	for (int i = 0; i < NUM_COLOR_THEORY_TYPES_G1; i++)
 	{
+		ofLogNotice(__FUNCTION__) << i;
 		shared_ptr<ColorWheelScheme> _scheme;
 		_scheme = ColorWheelSchemes::colorSchemes[i];
-		ofLogNotice(__FUNCTION__) << i;
 		_scheme->setPrimaryColor(color_TheoryBase.get());
+
 		colors_Theory_G1[i] = _scheme->interpolate(numColors_Theory_G1.get());
 	}
 }
@@ -4506,9 +4494,9 @@ void ofxColorManager::refresh_Theory_G2_2()
 	scheme_Triad->setPrimaryColor(color_TheoryBase);
 	colors_Triad = scheme_Triad->interpolate(numColors_Theory_G2);
 
-	//    NOTE: RANDOM = 0, ANALOGOUS = 1, COMPLEMENTARY = 2,
-	//    SPLIT_COMPLEMENTARY = 3, COMPOUND = 4, FLIPPED_COMPOUND = 5,
-	//    MONOCHROME = 6, TRIAD = 7, TETRAD = 8
+	// NOTE: RANDOM = 0, ANALOGOUS = 1, COMPLEMENTARY = 2,
+	// SPLIT_COMPLEMENTARY = 3, COMPOUND = 4, FLIPPED_COMPOUND = 5,
+	// MONOCHROME = 6, TRIAD = 7, TETRAD = 8
 }
 
 //----
@@ -4520,10 +4508,10 @@ void ofxColorManager::palette_FromColourLovers() // ?
 
 	// 1. erase user palette and fill a new one with just update/received colour lovers
 	palette_Clear();
-	ofColor c;
+
 	for (int i = 0; i < myPalette.size(); i++)
 	{
-		c = myPalette[i];
+		ofColor c = myPalette[i];
 		ofLogNotice(__FUNCTION__) << "_c [" << i << "] " << ofToString(c);
 		palette_AddColor(c);
 	}
@@ -4568,6 +4556,11 @@ void ofxColorManager::palette_FromColourLovers() // ?
 //	//	//}
 //	//}
 //}
+
+
+//----
+
+// palette manager
 
 //--------------------------------------------------------------
 void ofxColorManager::palette_AddColor(ofColor c)
@@ -4683,7 +4676,9 @@ void ofxColorManager::palette_Clear()
 	last_Index_ColorPalette.setMax(palette.size() - 1);
 }
 
-#pragma mark - CALLBACKS
+//----
+
+// callbacks
 
 //--------------------------------------------------------------
 void ofxColorManager::Changed_ColorPicked(ofFloatColor &c)
@@ -4765,18 +4760,22 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 		palettes_Resize();
 	}
 
-	else if (name == colorScheme.getName() || name == color_TheoryBase.getName())
+	else if (name == color_TheoryBase.getName())
 	{
 		refresh_Theory_G1();
 	}
+	//else if (name == colorScheme.getName())
+	//{
+	//	refresh_Theory_G1();
+	//}
 
-	else if (name == last_Theory_PickPalette.getName())
-	{
-	}
+	//else if (name == last_Theory_PickPalette.getName())
+	//{
+	//}
 
 	//----
 
-	// type toggles labels
+	// theory types G1
 
 	else
 	{
@@ -4790,9 +4789,11 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 
 				for (int n = 0; n < numColors_Theory_G1; n++)
 				{
-					ofColor c = colors_Theory_G1[i][n];
-					ofLogNotice(__FUNCTION__) << "  " << n << " : " << ofToString(c);
-					palette_AddColor(c);
+					palette_AddColor(colors_Theory_G1[i][n]);
+
+					//ofColor c = colors_Theory_G1[i][n];
+					//ofLogNotice(__FUNCTION__) << "  " << n << " : " << ofToString(c);
+					//palette_AddColor(c);
 				}
 
 				//-
@@ -4808,10 +4809,7 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 
 	//----
 
-	//TODO: !
-	//move to theory callback!
-
-	// algo/theory types
+	// theory types G2
 
 	for (int i = 0; i < NUM_COLOR_THEORY_TYPES_G2; i++)
 	{
@@ -5304,10 +5302,6 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	}
 	else if (name == SHOW_Quantizer.getName())
 	{
-		// workflow:
-		//if (bEditPalette && SHOW_Quantizer) bEditPalette = false;
-
-		// workflow: 
 #ifdef USE_IMAGE_QUANTIZER
 		colorQuantizer.setActive(SHOW_Quantizer);
 #endif
@@ -5511,9 +5505,9 @@ void ofxColorManager::Changed_ColorRange(ofAbstractParameter &e)
 
 		else if (name == numColors_Range.getName())
 		{
-			numColors_Theory_G2.setWithoutEventNotifications(numColors_Range);
 			numColors_Engines.setWithoutEventNotifications(numColors_Range);
 			numColors_Theory_G1.setWithoutEventNotifications(numColors_Range);
+			numColors_Theory_G2.setWithoutEventNotifications(numColors_Range);
 
 			generate_Range(color_1_Range.get(), color_2_Range.get());
 
@@ -5763,6 +5757,11 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//----
 
 		if (0) {}
+
+		else if (key == OF_KEY_RETURN)
+		{
+			bRandomColor = true;
+		}
 
 		else if (key == 'g')
 		{
