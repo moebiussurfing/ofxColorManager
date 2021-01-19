@@ -50,6 +50,8 @@ TODO:
 
 //------
 
+#include <random>
+
 #include "client/palettePreviewMini.h"
 //using namespace ofxColorClient;
 
@@ -197,7 +199,7 @@ private:
 	ofParameter<bool> SHOW_Picker;
 	ofParameter<bool> SHOW_Library;
 	ofParameter<bool> SHOW_Range;
-	ofParameter<bool> SHOW_UserPalette;
+	ofParameter<bool> SHOW_UserPaletteFloating;
 	ofParameter<bool> SHOW_UserPaletteEditor;
 	ofParameter<bool> SHOW_Theory;
 	ofParameter<bool> SHOW_Quantizer;
