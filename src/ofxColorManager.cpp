@@ -5106,6 +5106,8 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 	else if (name == analogSpread.getName())
 	{
+		//TODO:
+		refresh_Theory_G1();
 		refresh_Theory_G2();
 	}
 
@@ -5177,10 +5179,14 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			SHOW_Quantizer = false;
 
 			if (bEditPalette) bEditPalette = false;
+
+			//TODO:
+			refresh_Theory_G1();
+			refresh_Theory_G2();
 		}
 	}
 
-	//RANGE
+	//range
 	else if (name == SHOW_Range.getName())
 	{
 		if (SHOW_Range)
@@ -6109,11 +6115,23 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 					theory_Types_G1[i] = false;
 					theory_Types_G1[i].disableEvents();
 				}
+				for (int i = 0; i < NUM_COLOR_THEORY_TYPES_G2; i++)
+				{
+					theory_Types_G2[i].disableEvents();
+					theory_Types_G2[i] = false;
+					theory_Types_G2[i].disableEvents();
+				}
+
 				//enable
 				if (last_Theory_PickPalette >= 0 &&
 					last_Theory_PickPalette < NUM_COLOR_THEORY_TYPES_G1)
 				{
 					theory_Types_G1[last_Theory_PickPalette] = true;
+				}
+				if (last_Theory_PickPalette >= NUM_COLOR_THEORY_TYPES_G1 &&
+					last_Theory_PickPalette < NUM_COLOR_THEORY_TYPES_G1 + NUM_COLOR_THEORY_TYPES_G2)
+				{
+					theory_Types_G2[last_Theory_PickPalette] = true;
 				}
 			}
 			if (key == OF_KEY_DOWN)
@@ -6131,11 +6149,23 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 					theory_Types_G1[i] = false;
 					theory_Types_G1[i].disableEvents();
 				}
+				for (int i = 0; i < NUM_COLOR_THEORY_TYPES_G2; i++)
+				{
+					theory_Types_G2[i].disableEvents();
+					theory_Types_G2[i] = false;
+					theory_Types_G2[i].disableEvents();
+				}
+
 				//enable
 				if (last_Theory_PickPalette >= 0 &&
 					last_Theory_PickPalette < NUM_COLOR_THEORY_TYPES_G1)
 				{
 					theory_Types_G1[last_Theory_PickPalette] = true;
+				}
+				if (last_Theory_PickPalette >= NUM_COLOR_THEORY_TYPES_G1 &&
+					last_Theory_PickPalette < NUM_COLOR_THEORY_TYPES_G1 + NUM_COLOR_THEORY_TYPES_G2)
+				{
+					theory_Types_G2[last_Theory_PickPalette] = true;
 				}
 			}
 			if (key == ' ')
@@ -6153,11 +6183,23 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 					theory_Types_G1[i] = false;
 					theory_Types_G1[i].disableEvents();
 				}
+				for (int i = 0; i < NUM_COLOR_THEORY_TYPES_G2; i++)
+				{
+					theory_Types_G2[i].disableEvents();
+					theory_Types_G2[i] = false;
+					theory_Types_G2[i].disableEvents();
+				}
+
 				//enable
 				if (last_Theory_PickPalette >= 0 &&
 					last_Theory_PickPalette < NUM_COLOR_THEORY_TYPES_G1)
 				{
 					theory_Types_G1[last_Theory_PickPalette] = true;
+				}
+				if (last_Theory_PickPalette >= NUM_COLOR_THEORY_TYPES_G1 &&
+					last_Theory_PickPalette < NUM_COLOR_THEORY_TYPES_G1 + NUM_COLOR_THEORY_TYPES_G2)
+				{
+					theory_Types_G2[last_Theory_PickPalette] = true;
 				}
 			}
 		}
