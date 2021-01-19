@@ -2029,10 +2029,11 @@ void ofxColorManager::gui_PaletteEditor()
 			enum Mode
 			{
 				Mode_Copy,
-				Mode_Move,
+				//Mode_Move,
 				Mode_Swap
 			};
-			static int mode = 2;
+			static int mode = 1;
+			//static int mode = 2;
 
 			//--
 
@@ -2117,7 +2118,7 @@ void ofxColorManager::gui_PaletteEditor()
 					{
 						ImGui::SetDragDropPayload("DND_DEMO_CELL", &n, sizeof(int));
 						if (mode == Mode_Copy) { ImGui::Text("Copy %s", ofToString(n).c_str()); }
-						if (mode == Mode_Move) { ImGui::Text("Move %s", ofToString(n).c_str()); }
+						//if (mode == Mode_Move) { ImGui::Text("Move %s", ofToString(n).c_str()); }
 						if (mode == Mode_Swap) { ImGui::Text("Swap %s", ofToString(n).c_str()); }
 						ImGui::EndDragDropSource();
 					}
@@ -2133,27 +2134,30 @@ void ofxColorManager::gui_PaletteEditor()
 							{
 								palette[n] = palette[payload_n];
 								myDEMO2.setPaletteColors(palette);
+								last_Index_ColorPalette = n;
 							}
-							if (mode == Mode_Move)
-							{
-								palette[n] = palette[payload_n];
-								palette[payload_n] = ofColor(0);
-								myDEMO2.setPaletteColors(palette);
-							}
+							//if (mode == Mode_Move)
+							//{
+							//	palette[n] = palette[payload_n];
+							//	palette[payload_n] = ofColor(0);
+							//	myDEMO2.setPaletteColors(palette);
+							//	last_Index_ColorPalette = n;
+							//}
 							if (mode == Mode_Swap)
 							{
 								const ofColor tmp = palette[n];
 								palette[n] = palette[payload_n];
 								palette[payload_n] = tmp;
 								myDEMO2.setPaletteColors(palette);
+								last_Index_ColorPalette = n;
 							}
 
 							//--
 
 							// update all pallete (Curve)
-							ofLogNotice(__FUNCTION__) << "DONE Dragged _c";
+							ofLogNotice(__FUNCTION__) << "DONE Dragged";
 
-							build_GradientPalette();
+							build_Gradient();
 						}
 						ImGui::EndDragDropTarget();
 					}
@@ -2171,7 +2175,7 @@ void ofxColorManager::gui_PaletteEditor()
 
 			if (bEditPalette) 
 			{
-				if (ImGui::CollapsingHeader("Edit"))
+				if (ImGui::CollapsingHeader("EDIT"))
 				{
 					ofxSurfingHelpers::AddBigButton(bAddColor, _w50, _h * 0.5); ImGui::SameLine();
 					ofxSurfingHelpers::AddBigButton(bRemoveColor, _w50, _h * 0.5);
@@ -2183,18 +2187,12 @@ void ofxColorManager::gui_PaletteEditor()
 						ImGui::SameLine();
 						ofxSurfingHelpers::AddBigButton(bRandomColor, _w50, _h * 0.5);
 					}
-
-					//if (bEditPalette) {
-					//	ofxImGui::AddParameter(last_Index_ColorPalette);
-					//}
 				}
 
 				//--
 
-				if (ImGui::CollapsingHeader("Arrange"))
+				if (ImGui::CollapsingHeader("ARRANGE"))
 				{
-					//ImGui::Dummy(ImVec2(0, 5));
-
 					//flip
 					if (ofxSurfingHelpers::AddSmallButton(bFlipUserPalette, _w50 * 0.5, 0.5 * BUTTON_BIG_HEIGHT))
 					{
@@ -2202,23 +2200,22 @@ void ofxColorManager::gui_PaletteEditor()
 					ImGui::SameLine();
 
 					if (ImGui::RadioButton("Copy", mode == Mode_Copy)) { mode = Mode_Copy; } ImGui::SameLine();
-					if (ImGui::RadioButton("Move", mode == Mode_Move)) { mode = Mode_Move; } ImGui::SameLine();
+					//if (ImGui::RadioButton("Move", mode == Mode_Move)) { mode = Mode_Move; } ImGui::SameLine();
 					if (ImGui::RadioButton("Swap", mode == Mode_Swap)) { mode = Mode_Swap; }
-
-					//ImGui::Dummy(ImVec2(0, 5));
 				}
 			}
 
 			//--
 
-			//ImGui::Separator();
-			//ImGui::Dummy(ImVec2(0, 5));
-			//ImGui::Text("PALETTE PANEL");
-			//ImGui::Dummy(ImVec2(0, 5));
+			ImGui::Separator();
+			ImGui::Dummy(ImVec2(0, 5));
+
+			ImGui::Text("Floating Palette");
 
 			ofxSurfingHelpers::AddBigToggle(SHOW_UserPalette, _w, _h * 0.5);
 
-			if (SHOW_UserPalette) {
+			if (SHOW_UserPalette) 
+			{
 				if (ImGui::CollapsingHeader("Layout Float Panel"))
 				{
 					ofxImGui::AddParameter(bResponsive_Presets);
@@ -2463,7 +2460,7 @@ void ofxColorManager::gui_PaletteFloating()
 					// update all pallete (Curve)
 					ofLogNotice(__FUNCTION__) << "DONE Dragged _c";
 
-					build_GradientPalette();
+					build_Gradient();
 				}
 				ImGui::EndDragDropTarget();
 			}
@@ -3452,12 +3449,11 @@ void ofxColorManager::gui_Range()
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::build_GradientPalette()
+void ofxColorManager::build_Gradient()
 {
 	gradient.reset();
 	for (int i = 0; i < palette.size(); i++) {
 		gradient.addColor(palette[i]);
-
 	}
 }
 
@@ -5265,7 +5261,7 @@ void ofxColorManager::Changed_ParamsPalette(ofAbstractParameter &e)
 		// DEMO 2
 		myDEMO2.setPaletteColors(palette);
 
-		build_GradientPalette();
+		build_Gradient();
 	}
 }
 

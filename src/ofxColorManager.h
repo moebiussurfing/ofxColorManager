@@ -707,7 +707,7 @@ private:
 	void Changed_ColorPicked(ofFloatColor &color);
 	void Changed_ColorClicked(ofFloatColor &color);
 
-	void build_GradientPalette();
+	void build_Gradient();
 
 	void refresh_Pick_ToEngines();
 
