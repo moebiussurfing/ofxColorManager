@@ -28,26 +28,28 @@ void DEMO_Svg::setup() {
 
 //--------------------------------------------------------------
 void DEMO_Svg::setPaletteColors(vector<ofColor> &palette) {
-
-	int _max = MAX(paletteSvg.size(), palette.size());
-
-	//TODO:
-
-	if (paletteSvg.size() < palette.size())
+	if (palette.size() > 0)
 	{
-		for (int i = 0; i < _max; i++)
-		{
-			int i2 = i % paletteSvg.size();
-			paletteSvg[i] = palette[i2];
+		int _max = MAX(paletteSvg.size(), palette.size());
 
+		//TODO:
+
+		if (paletteSvg.size() < palette.size())
+		{
+			for (int i = 0; i < _max; i++)
+			{
+				int i2 = i % paletteSvg.size();
+				paletteSvg[i] = palette[i2];
+
+			}
 		}
-	}
-	else if (palette.size() < paletteSvg.size())
-	{
-		for (int i = 0; i < _max; i++)
+		else if (palette.size() < paletteSvg.size())
 		{
-			int i2 = i % palette.size();
-			paletteSvg[i] = palette[i2];
+			for (int i = 0; i < _max; i++)
+			{
+				int i2 = i % palette.size();
+				paletteSvg[i] = palette[i2];
+			}
 		}
 	}
 
