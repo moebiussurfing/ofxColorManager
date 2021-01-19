@@ -38,7 +38,7 @@ void ofxColorManager::reBuild_Palette()
 		else if (SHOW_Theory)
 		{
 			_name = theory_Name;
-			refresh_TheoryEngine();
+			refresh_Theory_G2();
 			palette_FromTheory(last_Index_Theory);
 		}
 		else if (SHOW_Range)
@@ -455,7 +455,7 @@ void ofxColorManager::setup()
 
 	//-
 
-	refresh_TheoryEngine();
+	refresh_Theory_G2();
 
 	//-
 
@@ -912,7 +912,7 @@ void ofxColorManager::startup()
 	theory_Types_G1[last_Index_Theory] = true;//on button
 
 	last_Index_Range = 0;
-	rangTypes[last_Index_Range] = true;//on button
+	range_Types[last_Index_Range] = true;//on button
 
 	//--
 
@@ -1318,6 +1318,7 @@ void ofxColorManager::draw()
 void ofxColorManager::draw(ofEventArgs & args)
 #endif
 {
+
 	if (SHOW_Scene)
 	{
 		// background
@@ -1326,6 +1327,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 			ofClear(ofColor(color_BackGround.get()));
 		}
 
+	ofDrawBitmapStringHighlight("last_Index_Theory:" + last_Index_Theory, 20, 20);
 		//--
 
 		//// cosine gradient
@@ -1810,7 +1812,7 @@ void ofxColorManager::gui_Theory()
 
 			// label type buttons 
 
-			const size_t _total = colorsTheory[i].size();
+			const size_t _total = colors_Theory_G1[i].size();
 
 			for (int n = 0; n < _total; n++)
 			{
@@ -1821,7 +1823,7 @@ void ofxColorManager::gui_Theory()
 				ImGui::SameLine();
 
 				if (ImGui::ColorButton("##ColorButtonTheory",
-					colorsTheory[i][n],
+					colors_Theory_G1[i][n],
 					ImGuiColorEditFlags_NoAlpha |
 					ImGuiColorEditFlags_NoPicker |
 					ImGuiColorEditFlags_NoTooltip,
@@ -1955,7 +1957,7 @@ void ofxColorManager::gui_Theory()
 					ImGuiColorEditFlags_NoTooltip,
 					ImVec2(_cSize, _cSize)))
 				{
-					last_Theory_PickPalette = n + colorsTheory[i].size();
+					last_Theory_PickPalette = n + colors_Theory_G1[i].size();
 
 					//TODO:
 					color_Picked.set(c);
@@ -3422,9 +3424,9 @@ void ofxColorManager::gui_Range()
 				// label name 
 				//whick range lab type
 
-				if (ofxSurfingHelpers::AddSmallButton(rangTypes[t], _szLabel, _sz))
+				if (ofxSurfingHelpers::AddSmallButton(range_Types[t], _szLabel, _sz))
 				{
-					//ofLogNotice(__FUNCTION__) << rangTypes[t].getName() << " #" << t;// ? allways triggering..
+					//ofLogNotice(__FUNCTION__) << range_Types[t].getName() << " #" << t;// ? allways triggering..
 				}
 
 				//-
@@ -3461,159 +3463,6 @@ void ofxColorManager::gui_Range()
 					ImGui::PopID();
 				}
 			}
-		}
-	}
-	ofxImGui::EndWindow(mainSettings);
-}
-
-//--------------------------------------------------------------
-void ofxColorManager::build_Gradient()
-{
-	gradient.reset();
-	for (int i = 0; i < palette.size(); i++) {
-		gradient.addColor(palette[i]);
-	}
-}
-
-//--------------------------------------------------------------
-void ofxColorManager::gui_Gradient()
-{
-	static bool auto_resize = true;
-	float ww, hh;
-	ww = PANEL_WIDGETS_WIDTH;
-	hh = PANEL_WIDGETS_HEIGHT;
-	ImGui::SetWindowSize(ImVec2(ww, hh));
-	ImGuiWindowFlags flagsw;
-	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : 0;
-
-	//--
-
-	if (ofxImGui::BeginWindow("GRADIENT", mainSettings, flagsw))
-	{
-		//--
-
-		float _spc;
-		float _w;
-		float _w50;
-		float _w20;
-		float _h;
-
-		_spc = ImGui::GetStyle().ItemInnerSpacing.x;
-
-		//_w = ImGui::GetWindowContentRegionWidth();
-		if (auto_resize) _w = ww;
-		else _w = ImGui::GetWindowContentRegionWidth() - 3 * _spc;
-		_w50 = _w * 0.5;
-		_w20 = _w * 0.2;
-
-		_h = BUTTON_BIG_HEIGHT;
-
-		//-
-
-		ImGuiColorEditFlags _flagw;
-		_flagw = false;
-
-		//--
-
-		//if (ImGui::TreeNode("EDIT"))
-		if (ofxImGui::BeginTree("EDIT", mainSettings))
-		{
-			ImGui::Dummy(ImVec2(0, 5));
-
-			// reset
-
-			ImGui::PushItemWidth(_w);
-			if (ImGui::Button(bResetCurve.getName().c_str(), ImVec2(_w, _h)))
-				//if (ImGui::Button(bResetCurve.getName().c_str()))
-				//if (ImGui::Button(bResetCurve.getName().c_str(), ImVec2(_w, _h)))
-			{
-				bResetCurve = true;
-				//rGradientPreview.setRect(600, 200, 755, 295);
-				//refresh_Gui_Layout();
-			}
-			ImGui::PopItemWidth();
-			ImGui::Dummy(ImVec2(0, 5));
-
-			ImGui::PushItemWidth(_w20);
-			ofxImGui::AddParameter(gradient_HardMode);
-			ofxImGui::AddParameter(AutoSet_Background_FromGradient);
-			ofxImGui::AddParameter(bAutoPaletteFromGradient);
-			//ImGui::Checkbox("AutoSet Background", &AutoSet_Background_FromGradient);
-			//ofxSurfingHelpers::AddBigButton(bResetCurve);
-			//ofxImGui::AddParameter(bResetCurve);
-			//ofxImGui::AddParameter(curve_Gradient_TEST_Prc);
-			//ofxImGui::AddParameter(pos_CurveEditor);
-			ImGui::PopItemWidth();
-
-			//-
-
-			//ImGui::TreePop();
-			ofxImGui::EndTree(mainSettings);
-		}
-
-		ImGui::Dummy(ImVec2(0, 5));
-
-		//--
-
-		// curve Test
-
-		//if (ImGui::TreeNode("CURVE TEST"))
-		//if (ImGui::CollapsingHeader("CURVE TEST", _flagw))
-		if (ofxImGui::BeginTree("CURVE TEST", mainSettings))
-		{
-			ImGui::PushItemWidth(_w50);
-
-			ofxImGui::AddParameter(TEST_Mode);
-			//ImGui::Checkbox("Enable", &TEST_Mode); 
-
-			if (TEST_Mode)
-			{
-				ImGui::SameLine();
-				ImGui::Checkbox("LFO", &TEST_LFO_Mode);
-			}
-			ImGui::SliderFloat("Speed", &TEST_Speed, 0.0f, 1.0f);
-
-			ImGui::PopItemWidth();
-
-			//-
-
-			//ImGui::TreePop();
-			//ofxImGui::EndTree(mainSettings);
-		}
-
-		ImGui::Dummy(ImVec2(0, 5));
-
-		//--
-
-		if (ImGui::CollapsingHeader("Advanced", _flagw))
-		{
-			// ctrl in/out
-			ImGui::PushItemWidth(_w50);
-
-			ofxImGui::AddParameter(curve_Gradient_Exp);
-
-			ImGui::Dummy(ImVec2(0, 2));
-
-			if (ofxImGui::AddParameter(curve_Gradient_PickIn))
-			{
-				curve_Ctrl_In = curve_Gradient_PickIn;
-			}
-
-			ofxImGui::AddParameter(curve_Ctrl_Out);
-
-			ImGui::PopItemWidth();
-
-			//-
-
-			ImGui::Dummy(ImVec2(0, 10));
-			ImGui::PushItemWidth(_w);
-			if (ofxSurfingHelpers::AddBigToggle(MODE_EditGradientLayout, _w, 0.5 * _h))
-			{
-			}
-			//ofxImGui::AddParameter(MODE_EditGradientLayout);
-			ImGui::PopItemWidth();
-
-			ImGui::Checkbox("Auto-resize", &auto_resize);
 		}
 	}
 	ofxImGui::EndWindow(mainSettings);
@@ -4519,7 +4368,7 @@ void ofxColorManager::palette_FromTheory(int p)
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::refresh_TheoryEngine()
+void ofxColorManager::refresh_Theory_G2()
 {
 	// 1. FROM OFX-COLOR-PALETTE
 
@@ -4547,7 +4396,7 @@ void ofxColorManager::refresh_TheoryEngine()
 
 	// 2. FROM OFX-COLOUR-THEORY
 
-	update_Theory_G2();//TODO: reduce calls...
+	refresh_Theory_G2_2();//TODO: reduce calls...
 }
 
 //--------------------------------------------------------------
@@ -4558,7 +4407,7 @@ void ofxColorManager::palettes_Resize()
 	numColors_Theory_G2 = numColors_Engines;
 
 	refresh_Theory_G1();
-	refresh_TheoryEngine();
+	refresh_Theory_G2();
 
 	//--
 
@@ -4582,13 +4431,15 @@ void ofxColorManager::refresh_Theory_G1() //populates palettes
 		_scheme = ColorWheelSchemes::colorSchemes[i];
 		ofLogNotice(__FUNCTION__) << i;
 		_scheme->setPrimaryColor(color_TheoryBase.get());
-		colorsTheory[i] = _scheme->interpolate(numColors_Theory_G1.get());
+		colors_Theory_G1[i] = _scheme->interpolate(numColors_Theory_G1.get());
 	}
 }
 
 //--------------------------------------------------------------
 void ofxColorManager::setup_Theory_G1()
 {
+	ofLogNotice(__FUNCTION__);
+
 	numColors_Engines.set("Amnt Colors", 8, 2, MAX_PALETTE_COLORS);
 	numColors_Engines.setSerializable(true);
 
@@ -4619,8 +4470,10 @@ void ofxColorManager::setup_Theory_G1()
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::update_Theory_G2()
+void ofxColorManager::refresh_Theory_G2_2()
 {
+	ofLogNotice(__FUNCTION__);
+
 	scheme_Analogous = ColorWheelSchemes::colorSchemes[0];
 	scheme_Analogous->setPrimaryColor(color_TheoryBase);
 	colors_Analogous = scheme_Analogous->interpolate(numColors_Theory_G2);
@@ -4694,27 +4547,27 @@ void ofxColorManager::palette_FromColourLovers() // ?
 	//refresh_Palette_TARGET(palette);
 }
 
-//--------------------------------------------------------------
-void ofxColorManager::refresh_Palette_TARGET(vector<ofColor> &p)
-{
-	////TODO:
-	////modify a suscribed palette
-
-	//// update TARGET color pointer (ofApp)
-	//if (palette_TARGET != nullptr)
-	//{
-	//	//palette_TARGET = (vector<ofColor>)(p);//TODO. faster mode ?
-
-	//	palette_TARGET->clear();
-	//	palette_TARGET->resize(p.size());
-
-	//	////TODO:
-	//	//for (int c = 0; c < p.size(); c++)
-	//	//{
-	//	//	(palette_TARGET)[c]->set(p[c]);//?
-	//	//}
-	//}
-}
+////--------------------------------------------------------------
+//void ofxColorManager::refresh_Palette_TARGET(vector<ofColor> &p)
+//{
+//	////TODO:
+//	////modify a suscribed palette
+//
+//	//// update TARGET color pointer (ofApp)
+//	//if (palette_TARGET != nullptr)
+//	//{
+//	//	//palette_TARGET = (vector<ofColor>)(p);//TODO. faster mode ?
+//
+//	//	palette_TARGET->clear();
+//	//	palette_TARGET->resize(p.size());
+//
+//	//	////TODO:
+//	//	//for (int c = 0; c < p.size(); c++)
+//	//	//{
+//	//	//	(palette_TARGET)[c]->set(p[c]);//?
+//	//	//}
+//	//}
+//}
 
 //--------------------------------------------------------------
 void ofxColorManager::palette_AddColor(ofColor c)
@@ -4908,7 +4761,6 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 	{
 		numColors_Theory_G2.setWithoutEventNotifications(numColors_Engines);
 		numColors_Range.setWithoutEventNotifications(numColors_Engines);
-		numColors_Engines.setWithoutEventNotifications(numColors_Engines);
 
 		palettes_Resize();
 	}
@@ -4935,10 +4787,10 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 				theory_Types_G1[i] = false;//backoff button
 
 				palette_Clear();
-				ofColor c;
+
 				for (int n = 0; n < numColors_Theory_G1; n++)
 				{
-					c = colorsTheory[i][n];
+					ofColor c = colors_Theory_G1[i][n];
 					ofLogNotice(__FUNCTION__) << "  " << n << " : " << ofToString(c);
 					palette_AddColor(c);
 				}
@@ -4948,6 +4800,8 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 				theory_Name = theory_Types_G1[i].getName();
 
 				last_Index_Theory = i;
+
+				return;
 			}
 		}
 	}
@@ -4963,14 +4817,17 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 	{
 		if (name == theory_Types_G2[i].getName() && theory_Types_G2[i].get())
 		{
-			theory_Types_G2[i] = false;//off button
+			theory_Types_G2[i] = false;//backoff button
 
 			vector<ofColor> __p;
+			__p.clear();
+
 			palette_Clear();
 
 			//-
 
 			theory_Name = theory_Types_G2[i].getName();
+
 			last_Index_Theory = i + NUM_COLOR_THEORY_TYPES_G1;
 
 			//-
@@ -4979,7 +4836,6 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 			{
 
 			case 0:
-				__p.clear();
 				__p.resize(complement.size());
 				for (int j = 0; j < complement.size(); j++) {
 					__p[j] = complement[j];
@@ -4988,7 +4844,6 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 				break;
 
 			case 1:
-				__p.clear();
 				__p.resize(complementBrightness.size());
 				for (int j = 0; j < complementBrightness.size(); j++) {
 					__p[j] = complementBrightness[j];
@@ -4997,7 +4852,6 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 				break;
 
 			case 2:
-				__p.clear();
 				__p.resize(monochrome.size());
 				for (int j = 0; j < monochrome.size(); j++) {
 					__p[j] = monochrome[j];
@@ -5015,7 +4869,6 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 				break;
 
 			case 4:
-				__p.clear();
 				__p.resize(analogue.size());
 				for (int j = 0; j < analogue.size(); j++) {
 					__p[j] = analogue[j];
@@ -5024,7 +4877,6 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 				break;
 
 			case 5:
-				__p.clear();
 				__p.resize(triad.size());
 				for (int j = 0; j < triad.size(); j++) {
 					__p[j] = triad[j];
@@ -5033,7 +4885,6 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 				break;
 
 			case 6:
-				__p.clear();
 				__p.resize(complementTriad.size());
 				for (int j = 0; j < complementTriad.size(); j++) {
 					__p[j] = complementTriad[j];
@@ -5041,6 +4892,8 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 				}
 				break;
 			}
+
+			return;
 		}
 	}
 }
@@ -5254,7 +5107,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 	else if (name == analogSpread.getName())
 	{
-		refresh_TheoryEngine();
+		refresh_Theory_G2();
 	}
 
 	//----
@@ -5693,15 +5546,15 @@ void ofxColorManager::Changed_ColorRange(ofAbstractParameter &e)
 
 			for (int i = 0; i < NUM_TYPES_RANGES; i++)
 			{
-				if (name == rangTypes[i].getName() && rangTypes[i].get())
+				if (name == range_Types[i].getName() && range_Types[i].get())
 				{
-					rangTypes[i] = false;//off button
+					range_Types[i] = false;//off button
 
 					//-
 
 					//index selected
 					last_Index_Range = i;
-					range_Name = rangTypes[i].getName();
+					range_Name = range_Types[i].getName();
 					txt_lineActive[0] = false;//preset name
 					txt_lineActive[1] = false;//lover name
 					txt_lineActive[2] = false;//theory name
@@ -5879,8 +5732,8 @@ void ofxColorManager::refresh_Range_AutoUpdate()
 	{
 		int i = last_Index_Range;
 
-		rangTypes[i] = true;
-		range_Name = rangTypes[i].getName();
+		range_Types[i] = true;
+		range_Name = range_Types[i].getName();
 		txt_lineActive[0] = false;//preset name
 		txt_lineActive[1] = false;//lover name
 		txt_lineActive[2] = false;//theory name
@@ -6099,7 +5952,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				if (palette.size() > 0)
 				{
 					color_Picked = ofFloatColor(palette[0]);
-					refresh_TheoryEngine();
+					refresh_Theory_G2();
 				}
 			}
 
@@ -6124,7 +5977,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				if (palette.size() > 0)
 				{
 					color_Picked = ofFloatColor(palette[0]);
-					refresh_TheoryEngine();
+					refresh_Theory_G2();
 				}
 			}
 
@@ -6154,7 +6007,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				if (palette.size() > 0)
 				{
 					color_Picked = ofFloatColor(palette[0]);
-					refresh_TheoryEngine();
+					refresh_Theory_G2();
 				}
 			}
 
@@ -6178,7 +6031,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				if (palette.size() > 0)
 				{
 					color_Picked = ofFloatColor(palette[0]);
-					refresh_TheoryEngine();
+					refresh_Theory_G2();
 				}
 			}
 		}
@@ -6196,11 +6049,11 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 				for (int i = 0; i < NUM_TYPES_RANGES; i++)
 				{
-					rangTypes[i].disableEvents();
-					rangTypes[i] = false;
-					rangTypes[i].enableEvents();
+					range_Types[i].disableEvents();
+					range_Types[i] = false;
+					range_Types[i].enableEvents();
 				}
-				rangTypes[last_Index_Range] = true;
+				range_Types[last_Index_Range] = true;
 			}
 			if (key == OF_KEY_DOWN)
 			{
@@ -6209,11 +6062,11 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 				for (int i = 0; i < NUM_TYPES_RANGES; i++)
 				{
-					rangTypes[i].disableEvents();
-					rangTypes[i] = false;
-					rangTypes[i].enableEvents();
+					range_Types[i].disableEvents();
+					range_Types[i] = false;
+					range_Types[i].enableEvents();
 				}
-				rangTypes[last_Index_Range] = true;
+				range_Types[last_Index_Range] = true;
 			}
 			if (key == ' ')
 			{
@@ -6222,11 +6075,11 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 				for (int i = 0; i < NUM_TYPES_RANGES; i++)
 				{
-					rangTypes[i].disableEvents();
-					rangTypes[i] = false;
-					rangTypes[i].enableEvents();
+					range_Types[i].disableEvents();
+					range_Types[i] = false;
+					range_Types[i].enableEvents();
 				}
-				rangTypes[last_Index_Range] = true;
+				range_Types[last_Index_Range] = true;
 			}
 
 			//switch color c1/c2 selectors
@@ -6762,7 +6615,7 @@ void ofxColorManager::refresh_FromPicked()
 	//color_TheoryBase.set(color_Picked);
 
 	// ?
-	refresh_TheoryEngine();
+	refresh_Theory_G2();
 
 	//TODO:
 
@@ -7075,8 +6928,8 @@ void ofxColorManager::setup_Range()
 	params_Ranges.setName("Params Ranges");
 	for (int i = 0; i < int(NUM_TYPES_RANGES); i++) //12
 	{
-		rangTypes[i].set(ofToString(rangeTypes_names[i]), false);
-		params_Ranges.add(rangTypes[i]);
+		range_Types[i].set(ofToString(rangeTypes_names[i]), false);
+		params_Ranges.add(range_Types[i]);
 	}
 	params_Ranges.add(numColors_Range);
 	params_Ranges.add(bAuto_RangeColor1_FromPicker);
@@ -7091,6 +6944,43 @@ void ofxColorManager::setup_Range()
 
 	bRange_Intitiated = true;
 }
+
+//--------------------------------------------------------------
+void ofxColorManager::generate_Range(ofColor col1, ofColor col2) {
+	ofLogNotice(__FUNCTION__);
+
+	int _max = 400;
+	int _step;
+	int _div;
+
+	//_div = 10;
+	_div = int((numColors_Range.get() - 1));
+	_step = _max / _div;
+
+	//ofLogNotice(__FUNCTION__) << "_div: " << _div;
+	//ofLogNotice(__FUNCTION__) << "_step: " << _step;
+
+	//-
+
+	palette_Range.clear();
+
+	for (int i = 0; i < int(NUM_TYPES_RANGES); ++i)
+	{
+		glm::vec3 left = { 270, 120 + i * _step, 0.0 };
+		glm::vec3 right = { 670, 120 + i * _step, 0.0 };
+
+		for (auto j = 0; j <= _max; j += _step)
+		{
+			glm::vec3 pos = { j + 270, 120 + i * _step, 0.0 };
+
+			ofColor color = ofxColorMorph::colorMorph(pos, left, col1, right, col2, static_cast<type>(i));
+
+			palette_Range.push_back(color);
+		}
+	}
+}
+
+//----
 
 //--------------------------------------------------------------
 void ofxColorManager::exportPalette()
@@ -7133,43 +7023,9 @@ void ofxColorManager::exportPalette()
 	//preset_Save(path_Folder_ExportColor_Custom);
 }
 
-//--------------------------------------------------------------
-void ofxColorManager::generate_Range(ofColor col1, ofColor col2) {
-	ofLogNotice(__FUNCTION__);
+//----
 
-	int _max = 400;
-	int _step;
-	int _div;
-
-	//_div = 10;
-	_div = int((numColors_Range.get() - 1));
-	_step = _max / _div;
-
-	//ofLogNotice(__FUNCTION__) << "_div: " << _div;
-	//ofLogNotice(__FUNCTION__) << "_step: " << _step;
-
-	//-
-
-	palette_Range.clear();
-
-	for (int i = 0; i < int(NUM_TYPES_RANGES); ++i)
-	{
-		glm::vec3 left = { 270, 120 + i * _step, 0.0 };
-		glm::vec3 right = { 670, 120 + i * _step, 0.0 };
-
-		for (auto j = 0; j <= _max; j += _step)
-		{
-			glm::vec3 pos = { j + 270, 120 + i * _step, 0.0 };
-
-			ofColor color = ofxColorMorph::colorMorph(pos, left, col1, right, col2, static_cast<type>(i));
-
-			palette_Range.push_back(color);
-		}
-	}
-}
-
-
-#pragma mark - CURVE TOOL
+// CURVE TOOL
 
 //--------------------------------------------------------------
 void ofxColorManager::setup_CurveTool()
@@ -7409,4 +7265,157 @@ void ofxColorManager::draw_CurveTools()
 		ofPopMatrix();
 		ofPopStyle();
 	}
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::build_Gradient()
+{
+	gradient.reset();
+	for (int i = 0; i < palette.size(); i++) {
+		gradient.addColor(palette[i]);
+	}
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::gui_Gradient()
+{
+	static bool auto_resize = true;
+	float ww, hh;
+	ww = PANEL_WIDGETS_WIDTH;
+	hh = PANEL_WIDGETS_HEIGHT;
+	ImGui::SetWindowSize(ImVec2(ww, hh));
+	ImGuiWindowFlags flagsw;
+	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : 0;
+
+	//--
+
+	if (ofxImGui::BeginWindow("GRADIENT", mainSettings, flagsw))
+	{
+		//--
+
+		float _spc;
+		float _w;
+		float _w50;
+		float _w20;
+		float _h;
+
+		_spc = ImGui::GetStyle().ItemInnerSpacing.x;
+
+		//_w = ImGui::GetWindowContentRegionWidth();
+		if (auto_resize) _w = ww;
+		else _w = ImGui::GetWindowContentRegionWidth() - 3 * _spc;
+		_w50 = _w * 0.5;
+		_w20 = _w * 0.2;
+
+		_h = BUTTON_BIG_HEIGHT;
+
+		//-
+
+		ImGuiColorEditFlags _flagw;
+		_flagw = false;
+
+		//--
+
+		//if (ImGui::TreeNode("EDIT"))
+		if (ofxImGui::BeginTree("EDIT", mainSettings))
+		{
+			ImGui::Dummy(ImVec2(0, 5));
+
+			// reset
+
+			ImGui::PushItemWidth(_w);
+			if (ImGui::Button(bResetCurve.getName().c_str(), ImVec2(_w, _h)))
+				//if (ImGui::Button(bResetCurve.getName().c_str()))
+				//if (ImGui::Button(bResetCurve.getName().c_str(), ImVec2(_w, _h)))
+			{
+				bResetCurve = true;
+				//rGradientPreview.setRect(600, 200, 755, 295);
+				//refresh_Gui_Layout();
+			}
+			ImGui::PopItemWidth();
+			ImGui::Dummy(ImVec2(0, 5));
+
+			ImGui::PushItemWidth(_w20);
+			ofxImGui::AddParameter(gradient_HardMode);
+			ofxImGui::AddParameter(AutoSet_Background_FromGradient);
+			ofxImGui::AddParameter(bAutoPaletteFromGradient);
+			//ImGui::Checkbox("AutoSet Background", &AutoSet_Background_FromGradient);
+			//ofxSurfingHelpers::AddBigButton(bResetCurve);
+			//ofxImGui::AddParameter(bResetCurve);
+			//ofxImGui::AddParameter(curve_Gradient_TEST_Prc);
+			//ofxImGui::AddParameter(pos_CurveEditor);
+			ImGui::PopItemWidth();
+
+			//-
+
+			//ImGui::TreePop();
+			ofxImGui::EndTree(mainSettings);
+		}
+
+		ImGui::Dummy(ImVec2(0, 5));
+
+		//--
+
+		// curve Test
+
+		//if (ImGui::TreeNode("CURVE TEST"))
+		//if (ImGui::CollapsingHeader("CURVE TEST", _flagw))
+		if (ofxImGui::BeginTree("CURVE TEST", mainSettings))
+		{
+			ImGui::PushItemWidth(_w50);
+
+			ofxImGui::AddParameter(TEST_Mode);
+			//ImGui::Checkbox("Enable", &TEST_Mode); 
+
+			if (TEST_Mode)
+			{
+				ImGui::SameLine();
+				ImGui::Checkbox("LFO", &TEST_LFO_Mode);
+			}
+			ImGui::SliderFloat("Speed", &TEST_Speed, 0.0f, 1.0f);
+
+			ImGui::PopItemWidth();
+
+			//-
+
+			//ImGui::TreePop();
+			//ofxImGui::EndTree(mainSettings);
+		}
+
+		ImGui::Dummy(ImVec2(0, 5));
+
+		//--
+
+		if (ImGui::CollapsingHeader("Advanced", _flagw))
+		{
+			// ctrl in/out
+			ImGui::PushItemWidth(_w50);
+
+			ofxImGui::AddParameter(curve_Gradient_Exp);
+
+			ImGui::Dummy(ImVec2(0, 2));
+
+			if (ofxImGui::AddParameter(curve_Gradient_PickIn))
+			{
+				curve_Ctrl_In = curve_Gradient_PickIn;
+			}
+
+			ofxImGui::AddParameter(curve_Ctrl_Out);
+
+			ImGui::PopItemWidth();
+
+			//-
+
+			ImGui::Dummy(ImVec2(0, 10));
+			ImGui::PushItemWidth(_w);
+			if (ofxSurfingHelpers::AddBigToggle(MODE_EditGradientLayout, _w, 0.5 * _h))
+			{
+			}
+			//ofxImGui::AddParameter(MODE_EditGradientLayout);
+			ImGui::PopItemWidth();
+
+			ImGui::Checkbox("Auto-resize", &auto_resize);
+		}
+	}
+	ofxImGui::EndWindow(mainSettings);
 }
