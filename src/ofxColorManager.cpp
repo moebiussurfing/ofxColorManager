@@ -2906,7 +2906,6 @@ void ofxColorManager::gui_Picker()
 		// get color from outside color picked
 
 		ImVec4 cTmp = color_Picked.get();
-		//static ImVec4 cTmp = color_Picked.get();
 
 		bool bChg_Pick = false;//to concentrate callbacks once
 		bool bChg_HSB = false;//to concentrate callbacks once
@@ -2918,14 +2917,6 @@ void ofxColorManager::gui_Picker()
 		ImGuiColorEditFlags _flags = ImGuiColorEditFlags_NoOptions | ImGuiColorEditFlags_NoTooltip;
 
 		ImGui::ColorButton("##PickerBox", *(ImVec4 *)&cTmp, _flags, ImVec2(_w, _h));
-		//if (0)
-		//{
-		//	ImGui::ColorButton("##PickerBox", *(ImVec4 *)&colCurveTest, _flags, ImVec2(_w, _h));
-		//}
-		//else
-		//{
-		//	ImGui::ColorButton("##PickerBox", *(ImVec4 *)&cTmp, _flags, ImVec2(_w, _h));
-		//}
 
 		//-
 
@@ -2937,6 +2928,7 @@ void ofxColorManager::gui_Picker()
 
 			_flagw = ImGuiTreeNodeFlags_None;
 			//_flagw = ImGuiTreeNodeFlags_DefaultOpen;
+
 			if (ImGui::CollapsingHeader("WHEEL", _flagw))
 			{
 				// 1. color picker
@@ -2961,35 +2953,8 @@ void ofxColorManager::gui_Picker()
 				{
 					ofLogNotice(__FUNCTION__) << "Wheel Picker : moved";
 
-					ENABLE_Callbacks_cPickers = false;
-					color_Picked = cTmp;
-					ENABLE_Callbacks_cPickers = true;
-
 					bChg_Pick = true;
 				}
-
-				////TODO:
-				//if (0)
-				//{
-				//	if (ImGui::ColorPicker4("MyColor##Wheel", (float *)&colCurveTest, _flags))
-				//	{
-				//		ofLogNotice(__FUNCTION__) << "Wheel Picker : moved";
-				//		ENABLE_Callbacks_cPickers = false;
-				//		color_Picked = colCurveTest;
-				//		ENABLE_Callbacks_cPickers = true;
-				//	}
-				//}
-				//else
-				//{
-				//	if (ImGui::ColorPicker4("##PickerWheel", (float *)&cTmp, _flags))
-				//	{
-				//		ofLogNotice(__FUNCTION__) << "Wheel Picker : moved";
-				//		ENABLE_Callbacks_cPickers = false;
-				//		color_Picked = cTmp;
-				//		ENABLE_Callbacks_cPickers = true;
-				//		bChg_Pick = true;
-				//	}
-				//}
 
 				ImGui::PopItemWidth();
 			}
@@ -3017,25 +2982,7 @@ void ofxColorManager::gui_Picker()
 				{
 					ofLogNotice(__FUNCTION__) << "Square Picker : moved";
 
-					ENABLE_Callbacks_cPickers = false;
-					color_Picked = cTmp;
-					ENABLE_Callbacks_cPickers = true;
-
 					bChg_Pick = true;
-
-					//if (0)
-					//{
-					//	ENABLE_Callbacks_cPickers = false;
-					//	color_Picked = colCurveTest;
-					//	ENABLE_Callbacks_cPickers = true;
-					//}
-					//else
-					//{
-					//	ENABLE_Callbacks_cPickers = false;
-					//	color_Picked = cTmp;
-					//	ENABLE_Callbacks_cPickers = true;
-					//	bChg_Pick = true;
-					//}
 				}
 
 				ImGui::PopItemWidth();
@@ -3053,60 +3000,65 @@ void ofxColorManager::gui_Picker()
 		//if (ImGui::CollapsingHeader("HSB"))
 		if (ofxImGui::BeginTree("HSB", mainSettings))
 		{
-			ImGui::PushItemWidth(_w * 0.80);
-			//ImGui::PushItemWidth(_w50);
-			//ImGui::PushItemWidth(_w);
+			ImGui::PushItemWidth(_w * 0.9);
 
-			// TODO: ?
-			//should apply hsb here, not into callback, 
-			//because it will trig
-			//the color picked updating callback!!!
-
-			ENABLE_Callbacks_cPickers = false; //disable callbacks
+			if (ofxImGui::AddParameter(color_HUE))
 			{
-				if (ofxImGui::AddParameter(color_HUE))
-				{
-					ofLogNotice(__FUNCTION__) << "H : moved";
-
-					ofColor c;
-					c.set(color_Picked.get());
-					c.setHue(color_HUE);
-					color_Picked.set(c);
-
-					bChg_HSB = true;//to concentrate callbacks once
-
-					//refresh_Picker_Touched();
-				}
-				if (ofxImGui::AddParameter(color_SAT))
-				{
-					ofLogNotice(__FUNCTION__) << "S : moved";
-
-					ofColor c;
-					c.set(color_Picked.get());
-					c.setSaturation(color_SAT);
-					color_Picked.set(c);
-
-					bChg_HSB = true;//to concentrate callbacks once
-
-					//refresh_Picker_Touched();
-				}
-				if (ofxImGui::AddParameter(color_BRG))
-				{
-					ofLogNotice(__FUNCTION__) << "B : moved";
-
-					ofColor c;
-					c.set(color_Picked.get());
-					c.setBrightness(color_BRG);
-					color_Picked.set(c);
-
-					bChg_HSB = true;//to concentrate callbacks once
-
-					//refresh_Picker_Touched();
-				}
 			}
-			ENABLE_Callbacks_cPickers = true;
+			if (ofxImGui::AddParameter(color_SAT))
+			{
+			}
+			if (ofxImGui::AddParameter(color_BRG))
+			{
+			}
 
-			//-
+			/*
+			//ENABLE_Callbacks_cPickers = false; //disable callbacks
+			//{
+			//	if (ofxImGui::AddParameter(color_HUE))
+			//	{
+			//		ofLogNotice(__FUNCTION__) << "H : moved";
+
+			//		ofColor c;
+			//		c.set(color_Picked.get());
+			//		c.setHue(color_HUE);
+			//		color_Picked.set(c);
+
+			//		bChg_HSB = true;//to concentrate callbacks once
+
+			//		////refresh_Picker_Touched();
+			//	}
+			//	if (ofxImGui::AddParameter(color_SAT))
+			//	{
+			//		ofLogNotice(__FUNCTION__) << "S : moved";
+
+			//		ofColor c;
+			//		c.set(color_Picked.get());
+			//		c.setSaturation(color_SAT);
+			//		color_Picked.set(c);
+
+			//		bChg_HSB = true;//to concentrate callbacks once
+
+			//		////refresh_Picker_Touched();
+			//	}
+			//	if (ofxImGui::AddParameter(color_BRG))
+			//	{
+			//		ofLogNotice(__FUNCTION__) << "B : moved";
+
+			//		ofColor c;
+			//		c.set(color_Picked.get());
+			//		c.setBrightness(color_BRG);
+			//		color_Picked.set(c);
+
+			//		bChg_HSB = true;//to concentrate callbacks once
+
+			//		////refresh_Picker_Touched();
+			//	}
+			//}
+			//ENABLE_Callbacks_cPickers = true;
+			*/
+
+			//--
 
 			ImGui::PopItemWidth();
 
@@ -3119,14 +3071,6 @@ void ofxColorManager::gui_Picker()
 		{
 			if (bColor_HUE || bColor_SAT || bColor_BRG)
 				ofxSurfingHelpers::AddBigButton(bRandomColor, _w, 2 * _h);
-			//ofxImGui::AddParameter(bRandomColor);
-
-			//enablers
-			//ofxSurfingHelpers::AddBigToggle(bColor_HUE);
-			//ofxSurfingHelpers::AddBigToggle(bColor_SAT);
-			//ofxSurfingHelpers::AddBigToggle(bColor_BRG);
-
-			//ImGui::Dummy(ImVec2(0, 5));
 
 			if (bColor_HUE) color_HUE_0 = color_HUE;
 			if (bColor_SAT) color_SAT_0 = color_SAT;
@@ -3135,32 +3079,6 @@ void ofxColorManager::gui_Picker()
 			{ if (ofxImGui::AddParameter(bColor_HUE)) {}ImGui::SameLine(); }
 			{ if (ofxImGui::AddParameter(bColor_SAT)) {}ImGui::SameLine(); }
 			{ if (ofxImGui::AddParameter(bColor_BRG)) {} }
-
-			//ImGui::Dummy(ImVec2(0, 5));
-
-			//if (ofxImGui::AddParameter(color_HUE_0))
-			//{
-			//	ofLogNotice(__FUNCTION__) << "HUE 0 : moved";
-			//	if (bColor_HUE) {
-			//		color_HUE = color_HUE_0;
-			//	}
-			//}
-			//if (ofxImGui::AddParameter(color_SAT_0))
-			//{
-			//	ofLogNotice(__FUNCTION__) << "SAT 0 : moved";
-			//	if (bColor_SAT) {
-			//		color_SAT = color_SAT_0;
-			//	}
-			//}
-			//if (ofxImGui::AddParameter(color_BRG_0))
-			//{
-			//	ofLogNotice(__FUNCTION__) << "BRG 0 : moved";
-			//	if (bColor_BRG) {
-			//		color_BRG = color_BRG_0;
-			//	}
-			//}
-
-			//ImGui::Dummy(ImVec2(0, 5));
 
 			if (bColor_HUE)
 				if (ofxImGui::AddParameter(color_HUE_Power))
@@ -3184,24 +3102,35 @@ void ofxColorManager::gui_Picker()
 		//----
 
 		//to concentrate callbacks once
-		//color_Picked
-		if (bChg_Pick && bChg_HSB) //all
+
+		if (bChg_Pick)
 		{
-			refresh_FromPicked();
+			color_Picked = cTmp;
+			//refresh_Picked_toHSB();//redundant...
 		}
-		else
-		{
-			if (bChg_Pick)
-			{
-				ENABLE_Callbacks_cPickers = false;
-				refresh_Picked_toHSB();
-				ENABLE_Callbacks_cPickers = true;
-			}
-			if (bChg_Pick || bChg_HSB)
-			{
-				refresh_Picker_Touched();
-			}
-		}
+
+		//--
+
+		////color_Picked
+		//if (bChg_Pick && bChg_HSB) //all
+		//{
+		//	refresh_FromPicked();
+		//}
+		//else
+		//{
+		//	if (bChg_Pick)
+		//	{
+		//		ENABLE_Callbacks_cPickers = false;
+		//		refresh_Picked_toHSB();
+		//		ENABLE_Callbacks_cPickers = true;
+		//	}
+		//	if (bChg_Pick || bChg_HSB)
+		//	{
+		//		refresh_Picker_Touched();
+		//	}
+		//}
+
+		//----
 
 		//if (ImGui::CollapsingHeader("Advanced"))
 		//{
@@ -5327,7 +5256,7 @@ void ofxColorManager::palette_clear()
 //--------------------------------------------------------------
 void ofxColorManager::Changed_ColorPicked(ofFloatColor &c)
 {
-	ofLogNotice(__FUNCTION__) << ofToString(c);// color_Picked
+	ofLogNotice(__FUNCTION__) << " >>>>  color_Picked  >>>>  " << ofToString(c);// color_Picked
 
 	// update TARGET color pointer (ofApp)
 	if (color_TARGET != nullptr)
@@ -5335,11 +5264,15 @@ void ofxColorManager::Changed_ColorPicked(ofFloatColor &c)
 		color_TARGET->set(c);
 	}
 
+	ENABLE_Callbacks_cPickers = false;
+	refresh_Picked_toHSB();
+	ENABLE_Callbacks_cPickers = true;
+
 	//--
 
 	//workflow
 
-	refresh_Picker_Touched();
+	//refresh_Picker_Touched();
 }
 
 //--------------------------------------------------------------
@@ -5766,29 +5699,32 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	{
 		if (name == color_HUE.getName()) // "H"
 		{
-			ofLogNotice(__FUNCTION__) << name << " : " << e;
+			ofLogNotice(__FUNCTION__) << " >>>>  " << name << " : " << e;
 
-			ofColor c;
+			ofFloatColor c;
 			c.set(color_Picked.get());
-			c.setHue(color_HUE);
+			//c.setHue(color_HUE / 255.f);
+			c.setHue((color_HUE + 0.5f) / 255.f);
 			color_Picked.set(c);
 		}
 		else if (name == color_SAT.getName()) // "S"
 		{
-			ofLogNotice(__FUNCTION__) << name << " : " << e;
+			ofLogNotice(__FUNCTION__) << " >>>>  " << name << " : " << e;
 
-			ofColor c;
+			ofFloatColor c;
 			c.set(color_Picked.get());
-			c.setSaturation(color_SAT);
+			//c.setSaturation(color_SAT / 255.f);
+			c.setSaturation((color_SAT + 0.5f) / 255.f);
 			color_Picked.set(c);
 		}
 		else if (name == color_BRG.getName()) // "B"
 		{
-			ofLogNotice(__FUNCTION__) << name << " : " << e;
+			ofLogNotice(__FUNCTION__) << " >>>>  " << name << " : " << e;
 
-			ofColor c;
+			ofFloatColor c;
 			c.set(color_Picked.get());
-			c.setBrightness(color_BRG);
+			//c.setBrightness(color_BRG / 255.f);
+			c.setBrightness((color_BRG + 0.5f) / 255.f);
 			color_Picked.set(c);
 		}
 	}
@@ -6620,6 +6556,9 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				//if (!bEditPalette) bEditPalette = true;
 				if (last_Index_ColorPalette < last_Index_ColorPalette.getMax()) last_Index_ColorPalette++;
 			}
+			//else if (key == ' ')
+			//{
+			//}
 		}
 
 		//-----
@@ -7312,11 +7251,11 @@ void ofxColorManager::refresh_FromPicked()
 
 	//TODO:
 
-	//refresh
-	ENABLE_Callbacks_cPickers = false;
-	refresh_Picked_toHSB();
-	ENABLE_Callbacks_cPickers = true;
-	refresh_Picker_Touched();
+	////refresh
+	//ENABLE_Callbacks_cPickers = false;
+	//refresh_Picked_toHSB();
+	//ENABLE_Callbacks_cPickers = true;
+	//refresh_Picker_Touched();
 }
 
 //--------------------------------------------------------------
@@ -7324,6 +7263,7 @@ void ofxColorManager::refresh_Picked_toHSB()
 {
 	ofLogNotice(__FUNCTION__);
 
+	//TODO:
 	color_HUE = int(255.f * color_Picked.get().getHue() + 0.5f);
 	color_SAT = int(255.f * color_Picked.get().getSaturation() + 0.5f);
 	color_BRG = int(255.f * color_Picked.get().getBrightness() + 0.5f);
@@ -7365,7 +7305,7 @@ void ofxColorManager::refresh_Picker_Touched()
 
 		//--
 
-		refresh_Picked_toHSB();//redundant...
+		//refresh_Picked_toHSB();//redundant...
 
 		//--
 
