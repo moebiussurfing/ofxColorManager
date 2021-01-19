@@ -609,7 +609,7 @@ private:
 
 private:
 	void refresh_TheoryEngine();
-	void palettes_resize();
+	void palettes_Resize();
 
 	//--
 
@@ -722,12 +722,12 @@ private:
 private:
 	vector<ofColor> palette;// main user palette
 
-	void palette_addColor(ofColor c);
-	void palette_removeColorLast();
-	void palette_removeColor(int c);
-	void palette_clear();
+	void palette_AddColor(ofColor c);
+	void palette_RemoveColorLast();
+	void palette_RemoveColor(int c);
+	void palette_Clear();
 	void palette_addColor_toInterface(ofColor c);
-	void palette_rearrenge();//resize boxes when adding removing colors to user palette
+	//void palette_rearrenge();//resize boxes when adding removing colors to user palette
 	void palette_touchedColor(std::string name);
 
 	void palette_FromTheory(int p);
