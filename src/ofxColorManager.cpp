@@ -2050,7 +2050,7 @@ void ofxColorManager::gui_PaletteEditor()
 
 					int wb;
 					wb = (_w / _r) - (1.5 * _spc);
-					//wb = wb * scale_ColPalette.get();
+					//if (!bResponsive_Presets) wb = wb * scale_ColPalette.get();
 
 					//--
 
@@ -2326,18 +2326,6 @@ void ofxColorManager::gui_PaletteFloating()
 
 				const ImVec4 color2 = style.Colors[ImGuiCol_Button];//do not changes the color
 				ImGui::PushStyleColor(ImGuiCol_Button, color2);
-
-				////customize colors
-				//if (n == indexBrowser)//when selected
-				//{
-				//	const ImVec4 color1 = ImVec4(0.1, 0.1, 0.1, 0.8);//changes button color to black
-				//	ImGui::PushStyleColor(ImGuiCol_Button, color1);
-				//}
-				//else //not selected
-				//{
-				//	const ImVec4 color2 = style.Colors[ImGuiCol_Button];//do not changes the color
-				//	ImGui::PushStyleColor(ImGuiCol_Button, color2);
-				//}
 			}
 
 			//--
@@ -2366,7 +2354,7 @@ void ofxColorManager::gui_PaletteFloating()
 
 			int wb;
 			wb = (_w / _r) - (1.5 * _spc);
-			wb = wb * scale_ColPalette.get();
+			if (!bResponsive_Presets) wb = wb * scale_ColPalette.get();
 
 			//--
 
@@ -5995,16 +5983,6 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 	// edit
 
-	else if (name == bAddColor.getName())
-	{
-		if (bAddColor)
-		{
-			bAddColor = false;
-
-			palette_addColor(ofColor(color_Picked.get()));
-		}
-	}
-
 	else if (name == bEditPalette.getName())
 	{
 		if (bEditPalette)
@@ -6014,6 +5992,20 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			if (SHOW_Theory) SHOW_Theory = false;
 
 			last_Index_ColorPalette = ofClamp(last_Index_ColorPalette, 0, last_Index_ColorPalette.getMax());
+		}
+	}
+
+	else if (name == bAddColor.getName())
+	{
+		if (bAddColor)
+		{
+			bAddColor = false;
+
+			palette_addColor(ofColor(color_Picked.get()));
+
+			//wf
+			reBuild();
+			last_Index_ColorPalette = last_Index_ColorPalette.getMax();
 		}
 	}
 
@@ -6028,6 +6020,9 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 			// 2. remove selected
 			palette_removeColor(last_Index_ColorPalette);
+
+			//wf
+			reBuild();
 		}
 	}
 
@@ -6038,6 +6033,10 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			bClearPalette = false;
 
 			palette_clear();
+
+			//wf
+			reBuild();
+			last_Index_ColorPalette = last_Index_ColorPalette.getMax();
 		}
 	}
 
