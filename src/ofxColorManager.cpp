@@ -353,8 +353,9 @@ void ofxColorManager::setup()
 	color_BackGround.set("BG", ofColor(8));
 	color_backGround_SET.set("Set From Picker", false);
 	AutoSet_BackGround_Color.set("AutoSet From Palette", true);
-	color_BackGround_Darkness.set("Amnt Darker", 0.5, 0., 1.);
-	color_BackGround_Darker.set("Darker Mode", false);
+	color_BackGround_AmtDarker.set("Amnt Darker", 0.5, 0., 1.);
+	color_BackGround_Darker.set("Mode Darker", false);
+	color_BackGround_Gradient.set("Mode Gradient", false);
 	color_BackGround_Lock.set("Lock Background", false);
 
 	params_data.setName("GENERAL");
@@ -362,6 +363,7 @@ void ofxColorManager::setup()
 	params_data.add(color_BackGround_Lock);
 	params_data.add(color_backGround_SET);
 	params_data.add(color_BackGround_Darker);
+	params_data.add(color_BackGround_Gradient);
 	params_data.add(AutoSet_BackGround_Color);
 
 	//-----
@@ -695,8 +697,9 @@ void ofxColorManager::setup()
 
 	params_Background.add(color_BackGround);
 	params_Background.add(color_BackGround_Darker);
+	params_Background.add(color_BackGround_Gradient);
 	params_Background.add(AutoSet_BackGround_Color);
-	params_Background.add(color_BackGround_Darkness);
+	params_Background.add(color_BackGround_AmtDarker);
 	params_Background.add(color_BackGround_Lock);
 	params_AppState.add(params_Background);
 
@@ -784,8 +787,9 @@ void ofxColorManager::setup()
 	params_control.add(color_backGround_SET);
 	params_control.add(AutoSet_BackGround_Color);
 	params_control.add(color_BackGround_Darker);
-	params_control.add(color_BackGround_Darkness);
+	params_control.add(color_BackGround_AmtDarker);
 	params_control.add(color_BackGround_Lock);
+	params_control.add(color_BackGround_Gradient);
 	params_control.add(AutoSet_Background_FromGradient);
 	// panels
 	params_control.add(SHOW_Panels);
@@ -1309,24 +1313,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 		// background
 		if (background_Draw_ENABLE)
 		{
-			//if (DEMO2_Test) 
-			//{
-			//	ofClear(8);
-			//}
-			//else
-			{
-				if (AutoSet_BackGround_Color.get() && !color_BackGround_Lock && !color_BackGround_Darker)// && SHOW_GradientCurve.get()) 
-				{
-					ofClear(colCurveTest);
-
-					//workflow
-					color_BackGround.set(colCurveTest);
-				}
-				else
-				{
-					ofClear(ofColor(color_BackGround.get()));
-				}
-			}
+			ofClear(ofColor(color_BackGround.get()));
 		}
 
 		//--
@@ -2196,7 +2183,6 @@ void ofxColorManager::gui_PaletteEditor()
 					//	//std::shuffle(std::begin(palette), std::end(palette), rng);
 					//	srand(unsigned(time(NULL)));
 					//	std::shuffle(palette.begin(), palette.end(), std::random_device());
-
 					//	myDEMO2.setPaletteColors(palette);
 					//	last_Index_ColorPalette = 0;
 					//	build_Gradient();
@@ -2213,7 +2199,7 @@ void ofxColorManager::gui_PaletteEditor()
 			//ImGui::Separator();
 			ImGui::Dummy(ImVec2(0, 10));
 
-			ImGui::Text("Floating Palette:");
+			ImGui::Text("Floating Panel:");
 			ImGui::Dummy(ImVec2(0, 5));
 
 			ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteFloating, _w, _h * 0.5);
@@ -3698,15 +3684,29 @@ void ofxColorManager::gui_Background()
 				ImGui::PushItemWidth(_w50);
 
 				ofxImGui::AddParameter(color_BackGround_Lock);
-				if (!color_BackGround_Lock) {
+
+				if (!color_BackGround_Lock)
+				{
 					ofxImGui::AddParameter(AutoSet_BackGround_Color);
-					if (AutoSet_BackGround_Color) {
-						ofxImGui::AddParameter(color_BackGround_Darker);
+
+					//TODO:
+					if (AutoSet_BackGround_Color)
+					{
+						ofxSurfingHelpers::AddBigToggle(color_BackGround_Darker);
+						ofxSurfingHelpers::AddBigToggle(color_BackGround_Gradient);
+						//ofxImGui::AddParameter(color_BackGround_Darker);
+						//ofxImGui::AddParameter(color_BackGround_Gradient);
+
 						if (color_BackGround_Darker)
 						{
-							ofxImGui::AddParameter(color_BackGround_Darkness);
+							ofxImGui::AddParameter(color_BackGround_AmtDarker);
 						}
-					if (!color_BackGround_Darker) ofxImGui::AddParameter(curve_Gradient_PickIn);
+						//if (!color_BackGround_Darker) 
+						if (color_BackGround_Gradient)
+						{
+							//ImGui::Text("From Gradient:");
+							ofxImGui::AddParameter(curve_Gradient_PickIn);
+						}
 					}
 				}
 				ofxImGui::AddParameter(color_backGround_SET);
@@ -4726,47 +4726,7 @@ void ofxColorManager::palette_FromTheory(int p)
 	//--
 
 	// workflow
-
-	//set background color from first/last palette color
-	if (AutoSet_BackGround_Color && !color_BackGround_Lock)
-	{
-		if (palette.size() > 0)
-		{
-			ofColor c;
-			c = palette[0];//get first color from user palette
-
-			if (color_BackGround_Darker)
-			{
-				float darkness = ofMap(color_BackGround_Darkness, 1.0, 0.0, 0.0, 2.0);
-				float b = c.getBrightness() * darkness;
-				b = ofClamp(b, 0.0, 1.0);
-				c.setBrightness(b);
-			}
-			color_BackGround.set(c);
-
-			//-
-
-			//TODO: must improve
-			// modulate darker
-			//if (color_BackGround_Darker)
-			//{
-			//    float darkness;
-			//    //darkness = ofMap(color_BackGround_Darkness, 0.0, 1.0, 0.0, 1.5);
-			//    float b;
-			//    if (color_BackGround_Darkness < 0.5)
-			//    {
-			//        b = c.getBrightness() / color_BackGround_Darkness * 10;
-			//    }
-			//    else if (color_BackGround_Darkness >= 0.5)
-			//    {
-			//        b = c.getBrightness() * color_BackGround_Darkness * 20;
-			//    }
-			//
-			//    b = ofClamp(b, 0.0, 255.0);
-			//    c.setBrightness(b);
-			//}
-		}
-	}
+	refresh_Background();
 
 	//--
 
@@ -4942,42 +4902,7 @@ void ofxColorManager::palette_FromColourLovers() // ?
 	//-
 
 	// workflow: 
-	//set background color from first/last palette color
-	if (AutoSet_BackGround_Color && !color_BackGround_Lock)
-	{
-		if (palette.size() > 0)
-		{
-			ofColor c = palette[0];//get first color from user palette
-
-			//TODO: must improve
-			// modulate darker
-			//if (color_BackGround_Darker)
-			//{
-			//    float darkness;
-			//    //darkness = ofMap(color_BackGround_Darkness, 0.0, 1.0, 0.0, 1.5);
-			//    float b;
-			//    if (color_BackGround_Darkness < 0.5)
-			//    {
-			//        b = c.getBrightness() / color_BackGround_Darkness * 10;
-			//    }
-			//    else if (color_BackGround_Darkness >= 0.5)
-			//    {
-			//        b = c.getBrightness() * color_BackGround_Darkness * 20;
-			//    }
-			//
-			//    b = ofClamp(b, 0.0, 255.0);
-			//    c.setBrightness(b);
-			//}
-			if (color_BackGround_Darker)
-			{
-				float darkness = ofMap(color_BackGround_Darkness, 1.0, 0.0, 0.0, 2.0);
-				float b = c.getBrightness() * darkness;
-				//b = ofClamp(b, 0.0, 1.0);
-				c.setBrightness(b);
-			}
-			color_BackGround.set(c);
-		}
-	}
+	refresh_Background();
 
 	//--
 
@@ -5776,6 +5701,8 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	else if (name == curve_Gradient_PickIn.getName())
 	{
 		curve_Slider_Pick.setPercent(curve_Gradient_PickIn.get());
+		//wf
+		refresh_Background();
 	}
 
 	//curve exp
@@ -5848,12 +5775,9 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		//if (bEditPalette && SHOW_Quantizer) bEditPalette = false;
 
 		// workflow: 
-
-		{
 #ifdef USE_IMAGE_QUANTIZER
 			colorQuantizer.setActive(SHOW_Quantizer);
 #endif
-		}
 	}
 
 	//--
@@ -5999,6 +5923,16 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 	// background
 
+	//else if (name == color_BackGround_Darker.getName() && color_BackGround_Darker)
+	//{
+	//	color_BackGround_Gradient = false;
+	//}
+
+	else if (name == color_BackGround_Gradient.getName() && color_BackGround_Gradient)
+	{
+		color_BackGround_Darker = false;
+	}
+
 	else if (name == color_backGround_SET.getName())
 	{
 		if (color_backGround_SET)
@@ -6008,83 +5942,29 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		}
 	}
 
-	//	else if (name == color_BackGround_Darkness.getName())
-	//	{
-	//		//TODO: must improve
-	//		//refresh_TheoryEngine();
-	//
-	//		// auto create user palette from algo palette
-	//		if (bAuto_Build_Palette)
-	//		{
-	//			palette_clear();
-	//
-	//#ifdef USE_RECTANGLE_INTERFACES
-	//			palette_FromTheory(SELECTED_palette_LAST);//trig last choice
-	//#endif
-	//		}
-	//	}
+	else if (name == color_BackGround_Darker.getName() || name == color_BackGround_AmtDarker.getName())
+	{
+		// workflow
+		if (name == color_BackGround_Darker.getName() && color_BackGround_Darker)
+		{
+			color_BackGround_Gradient = false;
+		}
 
-		//---
+		//set background color from first/last palette color
+		refresh_Background();
+	}
 
-		/*
-		//else if (name == "AutoSet")
-		//{
+	//---
 
-		//}
-		//else if (name == "BG")
-		//{
-		//	//if (color_BackGround.get().getBrightness()!=backgroundDarkness_PRE)
-		//	//color_BackGround_Darkness = color_BackGround.get().getBrightness();
-		//	//
-		//	////if (backgroundDarkness_PRE!=color_BackGround_Darkness)
-		//	////color_BackGround_Darkness = (int)darkness;
-		//}
+	//else if (name == bAuto_Build_Palette.getName())
+	//{
+	//	//if (bAuto_Build_Palette) bLock_palette = false;
+	//}
 
-		// algorithmic
-		//    else if (name == "RANDOM PALETTE") {
-		//        if (bRandomPalette) {
-		//            bRandomPalette = false;
-		//
-		//            random.generateRandom(numColors_Alg);
-		//            refresh_TheoryEngine();
-		//            if (bAuto_Build_Palette) {
-		//                //set random palette to user palette
-		//                palette_FromTheory(7);
-		//            }
-		//        }
-		//    }
-
-		//else if (name == bAuto_Build_Palette.getName())
-		//{
-		//	//if (bAuto_Build_Palette) bLock_palette = false;
-		//}
-
-		//else if (name == bLock_palette.getName())
-		//{
-		//	if (bLock_palette) bAuto_Build_Palette = false;
-		//}
-
-		//--
-
-	//	else if (name == BRIGHTNESS.getName() || name == SATURATION.getName())
-	//	{
-	//		refresh_TheoryEngine();
-	//
-	//		//-
-	//
-	//		// auto create user palette from theory palette
-	//		if (bAuto_Build_Palette)
-	//		{
-	//			palette_clear();
-	//
-	//#ifdef USE_RECTANGLE_INTERFACES
-	//			palette_FromTheory(SELECTED_palette_LAST);//trig last choice
-	//#endif
-	//			// DEMO
-	//			if (DEMO1_Test) myDEMO1.reStart();
-	//		}
-	//	}
-	*/
+	//else if (name == bLock_palette.getName())
+	//{
+	//	if (bLock_palette) bAuto_Build_Palette = false;
+	//}
 }
 
 //load user palette from range
@@ -6214,29 +6094,41 @@ void ofxColorManager::palette_FromGradient()
 	//--
 
 	// workflow
+	refresh_Background();
 
-	//set background color from first/last palette color
+	//--
+
+	//refresh_Palette_TARGET(palette);
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::refresh_Background()
+{
+	// workflow
 	if (AutoSet_BackGround_Color && !color_BackGround_Lock)
 	{
 		if (palette.size() > 0)
 		{
-			ofColor c = palette[0];//get first color from user palette
+			ofFloatColor c;
 
 			if (color_BackGround_Darker)
 			{
-				float darkness = ofMap(color_BackGround_Darkness, 1.0, 0.0, 0.0, 2.0);
+				c = palette[0];//get first color from user palette
+				float darkness = ofMap(color_BackGround_AmtDarker.get(), 1.0, 0.0, 0.0, 2.0);
 				float b = c.getBrightness() * darkness;
 				b = ofClamp(b, 0.0, 1.0);
+
 				c.setBrightness(b);
+			}
+
+			else if (color_BackGround_Gradient)
+			{
+				c = colCurveTest;
 			}
 
 			color_BackGround.set(c);
 		}
 	}
-
-	//--
-
-	//refresh_Palette_TARGET(palette);
 }
 
 //--------------------------------------------------------------
@@ -6257,29 +6149,7 @@ void ofxColorManager::palette_FromQuantizer()
 
 	//--
 
-	// workflow
-
-	//set background color from first/last palette color
-	if (AutoSet_BackGround_Color && !color_BackGround_Lock)
-	{
-		if (palette.size() > 0)
-		{
-			ofColor c;
-			c = palette[0];//get first color from user palette
-
-			if (color_BackGround_Darker)
-			{
-				float darkness = ofMap(color_BackGround_Darkness, 1.0, 0.0, 0.0, 2.0);
-				float b = c.getBrightness() * darkness;
-				b = ofClamp(b, 0.0, 1.0);
-				c.setBrightness(b);
-			}
-
-			color_BackGround.set(c);
-		}
-	}
-
-	//--
+	refresh_Background();
 
 	//refresh_Palette_TARGET(palette);
 }
@@ -6313,24 +6183,7 @@ void ofxColorManager::palette_FromRange(int index)
 		//--
 
 		// workflow
-
-		//set background color from first/last palette color
-		if (AutoSet_BackGround_Color && !color_BackGround_Lock)
-		{
-			if (palette.size() > 0)
-			{
-				ofColor c = palette[0];//get first color from user palette
-
-				if (color_BackGround_Darker)
-				{
-					float darkness = ofMap(color_BackGround_Darkness, 1.0, 0.0, 0.0, 2.0);
-					float b = c.getBrightness() * darkness;
-					b = ofClamp(b, 0.0, 1.0);
-					c.setBrightness(b);
-				}
-				color_BackGround.set(c);
-			}
-		}
+		refresh_Background();
 	}
 }
 

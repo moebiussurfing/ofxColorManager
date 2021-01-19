@@ -649,12 +649,14 @@ private:
 	// colors
 
 private:
+	void refresh_Background();
 	ofParameter<ofFloatColor> color_BackGround;//main bg color
 	ofParameter<bool> color_backGround_SET;
 	ofParameter<bool> AutoSet_BackGround_Color;
 	ofParameter<bool> color_BackGround_Darker;
+	ofParameter<bool> color_BackGround_Gradient;
 	ofParameter<bool> color_BackGround_Lock;
-	ofParameter<float> color_BackGround_Darkness;
+	ofParameter<float> color_BackGround_AmtDarker;
 	//float backgroundDarkness_PRE;
 
 	ofParameter<bool> background_Draw_ENABLE{ "Draw", false };
