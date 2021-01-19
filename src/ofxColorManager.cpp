@@ -2113,6 +2113,8 @@ void ofxColorManager::gui_PaletteEditor()
 								palette[n] = palette[payload_n];
 								myDEMO2.setPaletteColors(palette);
 								last_Index_ColorPalette = n;
+
+								refresh_Background();
 							}
 							if (mode == Mode_Swap)
 							{
@@ -2121,6 +2123,8 @@ void ofxColorManager::gui_PaletteEditor()
 								palette[payload_n] = tmp;
 								myDEMO2.setPaletteColors(palette);
 								last_Index_ColorPalette = n;
+
+								refresh_Background();
 							}
 							//if (mode == Mode_Move)
 							//{
@@ -2303,10 +2307,10 @@ void ofxColorManager::gui_PaletteFloating()
 		enum Mode
 		{
 			Mode_Copy,
-			Mode_Move,
+			//Mode_Move,
 			Mode_Swap
 		};
-		static int mode = 2;
+		static int mode = 1;
 
 		//-
 
@@ -2412,7 +2416,7 @@ void ofxColorManager::gui_PaletteFloating()
 			{
 				ImGui::SetDragDropPayload("DND_DEMO_CELL", &n, sizeof(int));
 				if (mode == Mode_Copy) { ImGui::Text("Copy %s", ofToString(n).c_str()); }
-				if (mode == Mode_Move) { ImGui::Text("Move %s", ofToString(n).c_str()); }
+				//if (mode == Mode_Move) { ImGui::Text("Move %s", ofToString(n).c_str()); }
 				if (mode == Mode_Swap) { ImGui::Text("Swap %s", ofToString(n).c_str()); }
 				ImGui::EndDragDropSource();
 			}
@@ -2428,19 +2432,23 @@ void ofxColorManager::gui_PaletteFloating()
 					{
 						palette[n] = palette[payload_n];
 						myDEMO2.setPaletteColors(palette);
+
+						refresh_Background();
 					}
-					if (mode == Mode_Move)
-					{
-						palette[n] = palette[payload_n];
-						palette[payload_n] = ofColor(0);
-						myDEMO2.setPaletteColors(palette);
-					}
+					//if (mode == Mode_Move)
+					//{
+					//	palette[n] = palette[payload_n];
+					//	palette[payload_n] = ofColor(0);
+					//	myDEMO2.setPaletteColors(palette);
+					//}
 					if (mode == Mode_Swap)
 					{
 						const ofColor tmp = palette[n];
 						palette[n] = palette[payload_n];
 						palette[payload_n] = tmp;
 						myDEMO2.setPaletteColors(palette);
+
+						refresh_Background();
 					}
 
 					//--
@@ -4253,7 +4261,8 @@ void ofxColorManager::gui_Demo()
 	{
 		ofxImGui::AddParameter(DEMO1_Test);
 		ofxImGui::AddParameter(DEMO2_Test);
-		if (DEMO1_Test) {
+		if (DEMO1_Test)
+		{
 			ofxImGui::AddParameter(DEMO_Auto);
 			ofxImGui::AddParameter(DEMO_Timer);
 			ofxImGui::AddParameter(DEMO_Alpha);
@@ -5197,6 +5206,8 @@ void ofxColorManager::Changed_ParamsPalette(ofAbstractParameter &e)
 		myDEMO2.setPaletteColors(palette);
 
 		build_Gradient();
+
+		refresh_Background();
 	}
 }
 
