@@ -2,6 +2,7 @@
 
 //--------------------------------------------------------------
 void DEMO_Svg::setup() {
+	ofLogNotice(__FUNCTION__);
 
 	path = "";
 	img.load(path + "moebius-lines.jpg");
@@ -27,64 +28,33 @@ void DEMO_Svg::setup() {
 }
 
 //--------------------------------------------------------------
-void DEMO_Svg::setPaletteColors(vector<ofColor> &palette) {
-	if (palette.size() > 0)
+void DEMO_Svg::setPaletteColors(vector<ofColor> &_palette) {
+	ofLogNotice(__FUNCTION__);
+
+	if (_palette.size() > 0)
 	{
-		int _max = MAX(paletteSvg.size(), palette.size());
+		int _max = MAX(paletteSvg.size(), _palette.size());
 
 		//TODO:
 
-		if (paletteSvg.size() < palette.size())
+		if (paletteSvg.size() < _palette.size())
 		{
 			for (int i = 0; i < _max; i++)
 			{
 				int i2 = i % paletteSvg.size();
-				paletteSvg[i] = palette[i2];
+				paletteSvg[i] = _palette[i2];
 
 			}
 		}
-		else if (palette.size() < paletteSvg.size())
+		else if (_palette.size() < paletteSvg.size())
 		{
 			for (int i = 0; i < _max; i++)
 			{
-				int i2 = i % palette.size();
-				paletteSvg[i] = palette[i2];
+				int i2 = i % _palette.size();
+				paletteSvg[i] = _palette[i2];
 			}
 		}
 	}
-
-	//-
-
-	//int isvg;
-	//if (paletteSvg.size() > palette.size())
-	//{
-	//	isvg = iplt % palette.size();
-	//}
-	//else if (paletteSvg.size() <= palette.size())
-	//{
-	//	isvg = iplt;
-	//}
-
-	//paletteSvg[isvg] = palette[iplt];
-	////TODO: fix ranges...
-	//if (paletteSvg.size() < palette.size())
-	//{
-	//	for (int isvg = palette.size(); isvg < palette.size(); isvg++)
-	//	{
-	//		int iplt = isvg % palette.size();
-	//		paletteSvg[isvg] = palette[iplt];
-	//	}
-	//}
-
-	////swap all original file colors
-	//paletteSvg[0] = ofColor::red;
-	//paletteSvg[1] = ofColor::yellow;
-	//paletteSvg[2] = ofColor::orange;
-	//paletteSvg[3] = ofColor::blueSteel;
-	//paletteSvg[4] = ofColor::darkSlateGrey;
-	//paletteSvg[5] = ofColor::darkOliveGreen;
-	//paletteSvg[6] = ofColor::paleVioletRed;
-	//paletteSvg[7] = ofColor::deepSkyBlue;
 }
 
 //--------------------------------------------------------------
@@ -156,6 +126,8 @@ void DEMO_Svg::draw() {
 
 //--------------------------------------------------------------
 void DEMO_Svg::keyPressed(int key) {
+	ofLogNotice(__FUNCTION__) << key;
+
 	if (key == OF_KEY_UP)
 	{
 		if (blendMode >= 24)

@@ -77,7 +77,7 @@ void ofxColorManager::reBuild_Palette()
 	// DEMO 1
 	if (DEMO1_Test && !DEMO_Auto) myDEMO1.reStart();
 
-	//export
+	// export
 	if (bAutoExportPreset)
 	{
 		ofLogNotice(__FUNCTION__) << "Auto EXPORT";
