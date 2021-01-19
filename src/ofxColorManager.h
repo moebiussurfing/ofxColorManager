@@ -290,8 +290,8 @@ private:
 	std::vector<ofColor> palette_Range;
 	std::vector<std::string> rangeTypes_names;
 	ofParameter<bool> autoGenerate_Range;
-	ofParameter<bool> autoPick_RangeColor1;
-	ofParameter<bool> autoPick_RangeColor2;
+	ofParameter<bool> bAuto_RangeColor1_FromPicker;
+	ofParameter<bool> bAuto_RangeColor2_FromPicker;
 	ofParameter<bool> bGetPaletteFromRange;
 	ofParameterGroup params_Ranges;
 #define NUM_TYPES_RANGES 12
@@ -348,7 +348,7 @@ private:
 	ofParameter<ofColor> color_TheoryBase;
 	ofParameter<int> colorScheme;
 	ofParameter<std::string> colorSchemeName;
-	ofParameter<bool> bAuto_TheoryFromPicker;
+	ofParameter<bool> bAuto_Theory_FromPicker;
 
 	void Changed_ColorTheory(ofAbstractParameter &e);
 	void refresh_Theory3();
@@ -512,7 +512,7 @@ public:
 	vector<ofColor> *palette_TARGET;//backwards pointer to ofApp palette
 	void refresh_Palette_TARGET(vector<ofColor> &p);
 
-	void reBuild();
+	void reBuild_Palette();
 
 	//-----------------------------------------------------------
 
@@ -527,7 +527,7 @@ public:
 	ofColor getColorAtPercent(float control);//from gradient
 
 public:
-	void setControl(float control);
+	void setControl_Gradient(float control);
 	void setVisible(bool b);
 	void setToggleVisible();
 	void setVisible_GUI_MINI(bool b);
@@ -661,7 +661,7 @@ private:
 
 	bool ENABLE_Callbacks_cPickers = true;
 
-	void refresh_Picked_toHSB();
+	void refresh_Pick_ToHSB();
 	void refresh_FromPicked();
 
 	// main color
@@ -690,7 +690,7 @@ private:
 	ofParameter<bool> bColor_SAT;
 	ofParameter<bool> bColor_BRG;
 
-
+	//TODO: required?
 	// color clicked comes from algo palette colors
 	//TODO: pointer color to get click from button class
 	ofFloatColor color_Clicked2;
@@ -709,7 +709,7 @@ private:
 
 	void build_GradientPalette();
 
-	void refresh_Picker_Touched();
+	void refresh_Pick_ToEngines();
 
 	//--
 

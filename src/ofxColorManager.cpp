@@ -7,7 +7,7 @@ void ofxColorManager::dragEvent(ofDragInfo info) {
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::reBuild()
+void ofxColorManager::reBuild_Palette()
 {
 	ofLogWarning(__FUNCTION__);
 
@@ -55,25 +55,25 @@ void ofxColorManager::reBuild()
 
 	//----
 
+	// workflow
+
 	// DEMO 2
-
 	myDEMO2.setPaletteColors(palette);
-
-	//--
-
-	// DEMO 1
-
-	if (DEMO1_Test) myDEMO1.reStart();
 
 	//-
 
-	// workflow
+	// DEMO 1
+	if (DEMO1_Test) myDEMO1.reStart();
+
+	//-
 
 	if (bAutoExportPreset)
 	{
 		ofLogNotice(__FUNCTION__) << "Auto EXPORT";
 		exportPalette();
 	}
+
+	//-
 
 	last_Index_ColorPalette.setMax(palette.size() - 1);
 }
@@ -876,7 +876,6 @@ void ofxColorManager::startup()
 	// preset manager
 
 	preset_RefreshFiles();
-	//preset_Load(PRESET_Name);
 
 	//--
 
@@ -896,6 +895,8 @@ void ofxColorManager::startup()
 	rangTypes[last_Index_Range] = true;//on button
 
 	//--
+	
+	// preset manager
 
 	//load last session preset index
 	if (preset_Index < files.size())
@@ -907,7 +908,10 @@ void ofxColorManager::startup()
 	//--
 
 	//refresh theory and ranges
-	refresh_Picker_Touched();
+	refresh_Pick_ToEngines();
+
+	// refresh hsb
+	refresh_Pick_ToHSB();
 }
 
 //--------------------------------------------------------------
@@ -1001,7 +1005,7 @@ void ofxColorManager::update(ofEventArgs & args)
 
 		ofLogNotice(__FUNCTION__) << "  >  bUpdated_Palette_BACK : " << bUpdated_Palette_BACK;
 
-		reBuild();
+		reBuild_Palette();
 
 	}
 
@@ -1017,7 +1021,7 @@ void ofxColorManager::update(ofEventArgs & args)
 		// 2. get color from colour lovers
 		color_Clicked2 = ofColor(myColor);
 
-		reBuild();
+		reBuild_Palette();
 	}
 
 	//--
@@ -1764,7 +1768,7 @@ void ofxColorManager::gui_Theory()
 
 		if (ImGui::CollapsingHeader("Advanced"))
 		{
-			ofxImGui::AddParameter(bAuto_TheoryFromPicker);
+			ofxImGui::AddParameter(bAuto_Theory_FromPicker);
 			ofxImGui::AddParameter(bAuto_Build_Palette);
 			ofxImGui::AddParameter(analogSpread);
 			// layout
@@ -2165,41 +2169,44 @@ void ofxColorManager::gui_PaletteEditor()
 
 			ofxSurfingHelpers::AddBigToggle(bEditPalette, _w, _h * 0.5);
 
-			if (ImGui::CollapsingHeader("Edit"))
+			if (bEditPalette) 
 			{
-				ofxSurfingHelpers::AddBigButton(bAddColor, _w50, _h * 0.5); ImGui::SameLine();
-				ofxSurfingHelpers::AddBigButton(bRemoveColor, _w50, _h * 0.5);
-
-				//ofxSurfingHelpers::AddBigToggle(bEditPalette, _w50, _h * 0.5); 
-				ofxSurfingHelpers::AddBigToggle(bClearPalette, _w50, _h * 0.5);
-
-				if (bColor_HUE || bColor_SAT || bColor_BRG) {
-					ImGui::SameLine();
-					ofxSurfingHelpers::AddBigButton(bRandomColor, _w50, _h * 0.5);
-				}
-
-				//if (bEditPalette) {
-				//	ofxImGui::AddParameter(last_Index_ColorPalette);
-				//}
-			}
-
-			//--
-
-			if (ImGui::CollapsingHeader("Arrange"))
-			{
-				//ImGui::Dummy(ImVec2(0, 5));
-
-				//flip
-				if (ofxSurfingHelpers::AddSmallButton(bFlipUserPalette, _w50 * 0.5, 0.5 * BUTTON_BIG_HEIGHT))
+				if (ImGui::CollapsingHeader("Edit"))
 				{
+					ofxSurfingHelpers::AddBigButton(bAddColor, _w50, _h * 0.5); ImGui::SameLine();
+					ofxSurfingHelpers::AddBigButton(bRemoveColor, _w50, _h * 0.5);
+
+					//ofxSurfingHelpers::AddBigToggle(bEditPalette, _w50, _h * 0.5); 
+					ofxSurfingHelpers::AddBigToggle(bClearPalette, _w50, _h * 0.5);
+
+					if (bColor_HUE || bColor_SAT || bColor_BRG) {
+						ImGui::SameLine();
+						ofxSurfingHelpers::AddBigButton(bRandomColor, _w50, _h * 0.5);
+					}
+
+					//if (bEditPalette) {
+					//	ofxImGui::AddParameter(last_Index_ColorPalette);
+					//}
 				}
-				ImGui::SameLine();
 
-				if (ImGui::RadioButton("Copy", mode == Mode_Copy)) { mode = Mode_Copy; } ImGui::SameLine();
-				if (ImGui::RadioButton("Move", mode == Mode_Move)) { mode = Mode_Move; } ImGui::SameLine();
-				if (ImGui::RadioButton("Swap", mode == Mode_Swap)) { mode = Mode_Swap; }
+				//--
 
-				//ImGui::Dummy(ImVec2(0, 5));
+				if (ImGui::CollapsingHeader("Arrange"))
+				{
+					//ImGui::Dummy(ImVec2(0, 5));
+
+					//flip
+					if (ofxSurfingHelpers::AddSmallButton(bFlipUserPalette, _w50 * 0.5, 0.5 * BUTTON_BIG_HEIGHT))
+					{
+					}
+					ImGui::SameLine();
+
+					if (ImGui::RadioButton("Copy", mode == Mode_Copy)) { mode = Mode_Copy; } ImGui::SameLine();
+					if (ImGui::RadioButton("Move", mode == Mode_Move)) { mode = Mode_Move; } ImGui::SameLine();
+					if (ImGui::RadioButton("Swap", mode == Mode_Swap)) { mode = Mode_Swap; }
+
+					//ImGui::Dummy(ImVec2(0, 5));
+				}
 			}
 
 			//--
@@ -3012,52 +3019,6 @@ void ofxColorManager::gui_Picker()
 			{
 			}
 
-			/*
-			//ENABLE_Callbacks_cPickers = false; //disable callbacks
-			//{
-			//	if (ofxImGui::AddParameter(color_HUE))
-			//	{
-			//		ofLogNotice(__FUNCTION__) << "H : moved";
-
-			//		ofColor c;
-			//		c.set(color_Picked.get());
-			//		c.setHue(color_HUE);
-			//		color_Picked.set(c);
-
-			//		bChg_HSB = true;//to concentrate callbacks once
-
-			//		////refresh_Picker_Touched();
-			//	}
-			//	if (ofxImGui::AddParameter(color_SAT))
-			//	{
-			//		ofLogNotice(__FUNCTION__) << "S : moved";
-
-			//		ofColor c;
-			//		c.set(color_Picked.get());
-			//		c.setSaturation(color_SAT);
-			//		color_Picked.set(c);
-
-			//		bChg_HSB = true;//to concentrate callbacks once
-
-			//		////refresh_Picker_Touched();
-			//	}
-			//	if (ofxImGui::AddParameter(color_BRG))
-			//	{
-			//		ofLogNotice(__FUNCTION__) << "B : moved";
-
-			//		ofColor c;
-			//		c.set(color_Picked.get());
-			//		c.setBrightness(color_BRG);
-			//		color_Picked.set(c);
-
-			//		bChg_HSB = true;//to concentrate callbacks once
-
-			//		////refresh_Picker_Touched();
-			//	}
-			//}
-			//ENABLE_Callbacks_cPickers = true;
-			*/
-
 			//--
 
 			ImGui::PopItemWidth();
@@ -3106,7 +3067,7 @@ void ofxColorManager::gui_Picker()
 		if (bChg_Pick)
 		{
 			color_Picked = cTmp;
-			//refresh_Picked_toHSB();//redundant...
+			//refresh_Pick_ToHSB();//redundant...
 		}
 
 		//--
@@ -3121,12 +3082,12 @@ void ofxColorManager::gui_Picker()
 		//	if (bChg_Pick)
 		//	{
 		//		ENABLE_Callbacks_cPickers = false;
-		//		refresh_Picked_toHSB();
+		//		refresh_Pick_ToHSB();
 		//		ENABLE_Callbacks_cPickers = true;
 		//	}
 		//	if (bChg_Pick || bChg_HSB)
 		//	{
-		//		refresh_Picker_Touched();
+		//		refresh_Pick_ToEngines();
 		//	}
 		//}
 
@@ -3284,8 +3245,8 @@ void ofxColorManager::gui_Range()
 
 				ImGui::PushItemWidth(_w50);
 				ImGui::Text("Color1");
-				ofxSurfingHelpers::AddBigToggle(autoPick_RangeColor1, _w50, BUTTON_BIG_HEIGHT);
-				//ofxImGui::AddParameter(autoPick_RangeColor1);
+				ofxSurfingHelpers::AddBigToggle(bAuto_RangeColor1_FromPicker, _w50, BUTTON_BIG_HEIGHT);
+				//ofxImGui::AddParameter(bAuto_RangeColor1_FromPicker);
 				// mini box
 				if (ImGui::ColorButton("##C1", *(ImVec4 *)&_c1[0], _flags, ImVec2(_w50, _h)))
 				{
@@ -3298,8 +3259,8 @@ void ofxColorManager::gui_Range()
 
 				ImGui::PushItemWidth(_w50);
 				ImGui::Text("Color2");
-				ofxSurfingHelpers::AddBigToggle(autoPick_RangeColor2, _w50, BUTTON_BIG_HEIGHT);
-				//ofxImGui::AddParameter(autoPick_RangeColor2);
+				ofxSurfingHelpers::AddBigToggle(bAuto_RangeColor2_FromPicker, _w50, BUTTON_BIG_HEIGHT);
+				//ofxImGui::AddParameter(bAuto_RangeColor2_FromPicker);
 				// mini box
 				if (ImGui::ColorButton("##C2", *(ImVec4 *)&_c2[0], _flags, ImVec2(_w50, _h)))
 				{
@@ -3323,7 +3284,7 @@ void ofxColorManager::gui_Range()
 				ImGui::PushItemWidth(MIN(_w50, PANEL_WIDGETS_WIDTH));
 				if (ImGui::ColorPicker3("1", &_c1[0], _flags))
 				{
-					if (autoPick_RangeColor1) color_Picked.set(_c1[0]);
+					if (bAuto_RangeColor1_FromPicker) color_Picked.set(_c1[0]);
 					bChanged = true;
 					refresh_Range_AutoUpdate();
 				}
@@ -3341,7 +3302,7 @@ void ofxColorManager::gui_Range()
 				ImGui::PushItemWidth(MIN(_w50, PANEL_WIDGETS_WIDTH));
 				if (ImGui::ColorPicker3("2", &_c2[0], _flags))
 				{
-					if (autoPick_RangeColor2) color_Picked.set(_c2[0]);
+					if (bAuto_RangeColor2_FromPicker) color_Picked.set(_c2[0]);
 					bChanged = true;
 					refresh_Range_AutoUpdate();
 				}
@@ -3364,8 +3325,8 @@ void ofxColorManager::gui_Range()
 
 				//workflow
 				//get main color from range picker
-				if (autoPick_RangeColor1) color_Picked.set(color_1_Range.get());
-				else if (autoPick_RangeColor2) color_Picked.set(color_2_Range.get());
+				if (bAuto_RangeColor1_FromPicker) color_Picked.set(color_1_Range.get());
+				else if (bAuto_RangeColor2_FromPicker) color_Picked.set(color_2_Range.get());
 			}
 
 			//----
@@ -4515,7 +4476,7 @@ void ofxColorManager::update_Gradient()
 				}
 				if (AutoSet_Background_FromGradient) color_BackGround.set(getColorAtPercent(control));
 
-				setControl(control);
+				setControl_Gradient(control);
 			}
 
 			if (frameCurrent == frameBuffer - 1)
@@ -4536,7 +4497,7 @@ void ofxColorManager::update_Gradient()
 				}
 				if (AutoSet_Background_FromGradient) color_BackGround.set(getColorAtPercent(control));
 
-				setControl(control);
+				setControl_Gradient(control);
 			}
 		}
 
@@ -4888,7 +4849,7 @@ void ofxColorManager::setup_Theory()
 	params_ColorTheory.clear();
 	params_ColorTheory.setName("Color Theory");
 	params_ColorTheory.add(color_TheoryBase.set("Base", ofColor::magenta, ofColor(0), ofColor(255)));
-	params_ColorTheory.add(bAuto_TheoryFromPicker.set("Auto Get Picker", true));
+	params_ColorTheory.add(bAuto_Theory_FromPicker.set("Auto Get Picker", true));
 	params_ColorTheory.add(colorScheme.set("Color Scheme", 6, 0, ColorWheelSchemes::colorSchemes.size() - 1));
 	params_ColorTheory.add(colorSchemeName);
 	params_ColorTheory.add(numColors_Theory.set("Amnt Colors Thy ", 8, 2, MAX_PALETTE_COLORS));
@@ -5265,14 +5226,13 @@ void ofxColorManager::Changed_ColorPicked(ofFloatColor &c)
 	}
 
 	ENABLE_Callbacks_cPickers = false;
-	refresh_Picked_toHSB();
+	refresh_Pick_ToHSB();
 	ENABLE_Callbacks_cPickers = true;
 
 	//--
 
 	//workflow
-
-	//refresh_Picker_Touched();
+	refresh_Pick_ToEngines();
 }
 
 //--------------------------------------------------------------
@@ -5635,7 +5595,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	else if (name == last_Index_Theory.getName())
 	{
 		// TODO:
-		reBuild();
+		reBuild_Palette();
 
 		txt_lineActive[0] = false;//preset name
 		txt_lineActive[1] = false;//lover name
@@ -5703,8 +5663,8 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 			ofFloatColor c;
 			c.set(color_Picked.get());
-			//c.setHue(color_HUE / 255.f);
 			c.setHue((color_HUE + 0.5f) / 255.f);
+			//c.setHue(color_HUE / 255.f);
 			color_Picked.set(c);
 		}
 		else if (name == color_SAT.getName()) // "S"
@@ -5713,8 +5673,8 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 			ofFloatColor c;
 			c.set(color_Picked.get());
-			//c.setSaturation(color_SAT / 255.f);
 			c.setSaturation((color_SAT + 0.5f) / 255.f);
+			//c.setSaturation(color_SAT / 255.f);
 			color_Picked.set(c);
 		}
 		else if (name == color_BRG.getName()) // "B"
@@ -5723,8 +5683,8 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 			ofFloatColor c;
 			c.set(color_Picked.get());
-			//c.setBrightness(color_BRG / 255.f);
 			c.setBrightness((color_BRG + 0.5f) / 255.f);
+			//c.setBrightness(color_BRG / 255.f);
 			color_Picked.set(c);
 		}
 	}
@@ -5948,7 +5908,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			palette_addColor(ofColor(color_Picked.get()));
 
 			//wf
-			reBuild();
+			reBuild_Palette();
 			last_Index_ColorPalette = last_Index_ColorPalette.getMax();
 		}
 	}
@@ -5966,7 +5926,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			palette_removeColor(last_Index_ColorPalette);
 
 			//wf
-			reBuild();
+			reBuild_Palette();
 			last_Index_ColorPalette = last_Index_ColorPalette.getMax();
 		}
 	}
@@ -5980,7 +5940,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			palette_clear();
 
 			//wf
-			reBuild();
+			reBuild_Palette();
 			last_Index_ColorPalette = last_Index_ColorPalette.getMax();
 			palette_addColor(color_Picked.get());
 		}
@@ -6147,13 +6107,13 @@ void ofxColorManager::Changed_ColorRange(ofAbstractParameter &e)
 
 		//-
 
-		else if (name == autoPick_RangeColor1.getName())
+		else if (name == bAuto_RangeColor1_FromPicker.getName())
 		{
-			if (autoPick_RangeColor1) autoPick_RangeColor2 = false;
+			if (bAuto_RangeColor1_FromPicker) bAuto_RangeColor2_FromPicker = false;
 		}
-		else if (name == autoPick_RangeColor2.getName())
+		else if (name == bAuto_RangeColor2_FromPicker.getName())
 		{
-			if (autoPick_RangeColor2) autoPick_RangeColor1 = false;
+			if (bAuto_RangeColor2_FromPicker) bAuto_RangeColor1_FromPicker = false;
 		}
 
 		//-
@@ -6721,14 +6681,14 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			//switch color c1/c2 selectors
 			if (key == OF_KEY_BACKSPACE)
 			{
-				if (!autoPick_RangeColor1 && !autoPick_RangeColor2) autoPick_RangeColor1 = true;
-				else if (autoPick_RangeColor1 && !autoPick_RangeColor2) autoPick_RangeColor2 = true;
-				else if (!autoPick_RangeColor1 && autoPick_RangeColor2) autoPick_RangeColor1 = true;
+				if (!bAuto_RangeColor1_FromPicker && !bAuto_RangeColor2_FromPicker) bAuto_RangeColor1_FromPicker = true;
+				else if (bAuto_RangeColor1_FromPicker && !bAuto_RangeColor2_FromPicker) bAuto_RangeColor2_FromPicker = true;
+				else if (!bAuto_RangeColor1_FromPicker && bAuto_RangeColor2_FromPicker) bAuto_RangeColor1_FromPicker = true;
 
 				//workflow
 				//get main color from range picker
-				if (autoPick_RangeColor1) color_Picked.set(color_1_Range.get());
-				else if (autoPick_RangeColor2) color_Picked.set(color_2_Range.get());
+				if (bAuto_RangeColor1_FromPicker) color_Picked.set(color_1_Range.get());
+				else if (bAuto_RangeColor2_FromPicker) color_Picked.set(color_2_Range.get());
 			}
 		}
 
@@ -7195,7 +7155,7 @@ void ofxColorManager::preset_Load(std::string p)
 
 	//--
 
-	//reBuild();
+	//reBuild_Palette();
 
 	//----
 
@@ -7253,13 +7213,13 @@ void ofxColorManager::refresh_FromPicked()
 
 	////refresh
 	//ENABLE_Callbacks_cPickers = false;
-	//refresh_Picked_toHSB();
+	//refresh_Pick_ToHSB();
 	//ENABLE_Callbacks_cPickers = true;
-	//refresh_Picker_Touched();
+	//refresh_Pick_ToEngines();
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::refresh_Picked_toHSB()
+void ofxColorManager::refresh_Pick_ToHSB()
 {
 	ofLogNotice(__FUNCTION__);
 
@@ -7270,15 +7230,17 @@ void ofxColorManager::refresh_Picked_toHSB()
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::refresh_Picker_Touched()
+void ofxColorManager::refresh_Pick_ToEngines()
 {
-	ofLogNotice(__FUNCTION__) << "> color_Picked : " << ofToString(color_Picked);
+	ofLogNotice(__FUNCTION__) << " >>>> Spread color_Picked : " << ofToString(color_Picked);
 
 	ENABLE_Callbacks_cPickers = false; //disable callbacks
 	{
+		//-
+
 		// 1. theory color base
 
-		if (bAuto_TheoryFromPicker)
+		if (bAuto_Theory_FromPicker)
 		{
 			color_TheoryBase = color_Picked.get();
 		}
@@ -7287,7 +7249,7 @@ void ofxColorManager::refresh_Picker_Touched()
 
 		// 2. range color1
 
-		if (autoPick_RangeColor1)
+		if (bAuto_RangeColor1_FromPicker)
 		{
 			color_1_Range = color_Picked.get();
 			if (autoGenerate_Range) generate_Range(color_1_Range.get(), color_2_Range.get());
@@ -7297,7 +7259,7 @@ void ofxColorManager::refresh_Picker_Touched()
 
 		// 3. range color2
 
-		if (autoPick_RangeColor2)
+		if (bAuto_RangeColor2_FromPicker)
 		{
 			color_2_Range = color_Picked.get();
 			if (autoGenerate_Range) generate_Range(color_1_Range.get(), color_2_Range.get());
@@ -7305,13 +7267,8 @@ void ofxColorManager::refresh_Picker_Touched()
 
 		//--
 
-		//refresh_Picked_toHSB();//redundant...
-
-		//--
-
 		//TODO:
 		// mirror clicked/picked colors
-
 		color_Clicked2.set(color_Picked.get());
 	}
 	ENABLE_Callbacks_cPickers = true;
@@ -7322,14 +7279,15 @@ void ofxColorManager::refresh_Picker_Touched()
 
 	if (bEditPalette &&
 		last_Index_ColorPalette >= 0 &&
-		last_Index_ColorPalette <= palette.size() - 1)
+		last_Index_ColorPalette <= palette.size() - 1 &&
+		palette.size() > 0)
 	{
 		// update user palette color with recently picked color
-		palette[last_Index_ColorPalette].set(color_Clicked2);
+		palette[last_Index_ColorPalette].set(color_Picked.get());
 
 		// update gradient
 		if (last_Index_ColorPalette < gradient.getNumColors())
-			gradient.replaceColorAtIndex(last_Index_ColorPalette, color_Clicked2);
+			gradient.replaceColorAtIndex(last_Index_ColorPalette, color_Picked.get());
 	}
 
 	//--
@@ -7338,7 +7296,7 @@ void ofxColorManager::refresh_Picker_Touched()
 
 	if (bAuto_Build_Palette)
 	{
-		reBuild();
+		reBuild_Palette();
 	}
 }
 
@@ -7363,7 +7321,7 @@ void ofxColorManager::setPalette_TARGET(vector<ofColor> &p)
 //--
 
 //--------------------------------------------------------------
-void ofxColorManager::setControl(float control)
+void ofxColorManager::setControl_Gradient(float control)
 {
 	ofLogNotice(__FUNCTION__) << control;
 
@@ -7552,8 +7510,8 @@ void ofxColorManager::setup_Range()
 	rangeTypes_names = { "RGB", "HSL", "HSV ", "HSB", "LUV ", "LAB", "HLAB", "LCH", "CMY", "CMYK", "YXY", "XYZ" };
 
 	autoGenerate_Range.set("Auto Generate", true);
-	autoPick_RangeColor1.set("Auto Pick C1", true);
-	autoPick_RangeColor2.set("Auto Pick C2", false);
+	bAuto_RangeColor1_FromPicker.set("Auto Pick C1", true);
+	bAuto_RangeColor2_FromPicker.set("Auto Pick C2", false);
 	bGetPaletteFromRange.set("To User Palette", false);
 
 	numColors_Range.set("Amnt Colors Rng", MAX_PALETTE_COLORS, 3, MAX_PALETTE_COLORS);
@@ -7566,8 +7524,8 @@ void ofxColorManager::setup_Range()
 		params_Ranges.add(rangTypes[i]);
 	}
 	params_Ranges.add(numColors_Range);
-	params_Ranges.add(autoPick_RangeColor1);
-	params_Ranges.add(autoPick_RangeColor2);
+	params_Ranges.add(bAuto_RangeColor1_FromPicker);
+	params_Ranges.add(bAuto_RangeColor2_FromPicker);
 	params_Ranges.add(bGetPaletteFromRange);
 
 	ofAddListener(params_Ranges.parameterChangedE(), this, &ofxColorManager::Changed_ColorRange);
