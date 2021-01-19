@@ -1785,7 +1785,7 @@ void ofxColorManager::gui_Theory()
 			//std::string _label = ColorWheelSchemes::colorSchemeNames[i];
 			if (ofxSurfingHelpers::AddSmallButton(theory_Types_G1[i], 150, _cSize))
 			{
-				//last_Theory_PickPalette = i;
+				last_Theory_PickPalette = i;
 			}
 
 			//-
@@ -1804,7 +1804,6 @@ void ofxColorManager::gui_Theory()
 
 			// 1. label type buttons 
 
-			//const size_t _total = colors_Theory_G1[i].size();
 			int _total = colors_Theory_G1[i].size();
 
 			for (int n = 0; n < _total; n++)
@@ -1825,7 +1824,6 @@ void ofxColorManager::gui_Theory()
 					//TODO:
 					//color
 					//color_Picked.set(c);
-					//last_Theory_PickPalette = n;
 				}
 
 				//-
@@ -1870,8 +1868,7 @@ void ofxColorManager::gui_Theory()
 
 			// border to selected
 			bool bDrawBorder = false;
-			//if (i == last_Index_Theory)
-			if ((i + NUM_COLOR_THEORY_TYPES_G1) == last_Index_Theory)
+			if ((NUM_COLOR_THEORY_TYPES_G1 + i) == last_Index_Theory)
 			{
 				bDrawBorder = true;
 				ImGui::PushStyleColor(ImGuiCol_Border, color_Pick);
@@ -1884,7 +1881,7 @@ void ofxColorManager::gui_Theory()
 
 			if (ofxSurfingHelpers::AddSmallButton(theory_Types_G2[i], 150, _cSize))
 			{
-				//last_Theory_PickPalette = NUM_COLOR_THEORY_TYPES_G1 + i;
+				last_Theory_PickPalette = NUM_COLOR_THEORY_TYPES_G1 + i;
 			}
 
 			//-
@@ -1947,9 +1944,6 @@ void ofxColorManager::gui_Theory()
 					ImGuiColorEditFlags_NoTooltip,
 					ImVec2(_cSize, _cSize)))
 				{
-					//last_Theory_PickPalette = n;
-					//last_Theory_PickPalette = n + colors_Theory_G1[i].size();
-
 					//TODO:
 					//color
 					//color_Picked.set(c);
@@ -4766,9 +4760,8 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 	{
 		ofLogWarning(__FUNCTION__) << "  >>> last_Theory_PickPalette : " << last_Theory_PickPalette;
 
-		int pre = last_Theory_PickPalette.get();
 		last_Theory_PickPalette = ofClamp(
-			pre,
+			last_Theory_PickPalette.get(),
 			last_Theory_PickPalette.getMin(),
 			last_Theory_PickPalette.getMax());
 
@@ -4793,11 +4786,9 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 		{
 			theory_Types_G2[last_Theory_PickPalette - NUM_COLOR_THEORY_TYPES_G1] = true;
 		}
-
 		
 		//TODO:
 		reBuild_Palette();
-
 	}
 
 	//----
