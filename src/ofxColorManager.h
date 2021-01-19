@@ -203,6 +203,7 @@ private:
 	ofParameter<bool> SHOW_Library;
 	ofParameter<bool> SHOW_Range;
 	ofParameter<bool> SHOW_UserPalette;
+	ofParameter<bool> SHOW_UserPaletteEditor;
 	ofParameter<bool> SHOW_Theory;
 	ofParameter<bool> SHOW_Quantizer;
 	//ofParameter<bool> SHOW_CosineGradient;
@@ -569,12 +570,12 @@ private:
 	// user palette & control
 
 private:
-	//ofParameter<bool> bPaletteEdit;
+	ofParameter<bool> bPaletteEdit;
 	ofParameter<bool> bRandomColor;
 	ofParameter<bool> bAddColor;
 	ofParameter<bool> bRemoveColor;
 	ofParameter<bool> bClearPalette;
-	int palette_colorSelected = -1;
+	ofParameter<int> palette_colorSelected{ "Selected", -1, 0, 0 };
 
 	//--
 
@@ -644,6 +645,7 @@ private:
 
 	bool draw_Gui();
 	void gui_Palette();
+	void gui_PaletteEditor();
 	void gui_Theory();
 	void gui_Picker();
 	void gui_Library();
