@@ -2163,16 +2163,20 @@ void ofxColorManager::gui_PaletteEditor()
 
 			// edit
 
+			ofxSurfingHelpers::AddBigToggle(bEditPalette, _w, _h * 0.5);
+
 			if (ImGui::CollapsingHeader("Edit"))
 			{
-				ofxSurfingHelpers::AddBigToggle(bEditPalette, _w50, _h * 0.5); ImGui::SameLine();
-				ofxSurfingHelpers::AddBigToggle(bClearPalette, _w50, _h * 0.5);
-
 				ofxSurfingHelpers::AddBigButton(bAddColor, _w50, _h * 0.5); ImGui::SameLine();
 				ofxSurfingHelpers::AddBigButton(bRemoveColor, _w50, _h * 0.5);
 
-				if (bColor_HUE || bColor_SAT || bColor_BRG)
+				//ofxSurfingHelpers::AddBigToggle(bEditPalette, _w50, _h * 0.5); 
+				ofxSurfingHelpers::AddBigToggle(bClearPalette, _w50, _h * 0.5);
+
+				if (bColor_HUE || bColor_SAT || bColor_BRG) {
+					ImGui::SameLine();
 					ofxSurfingHelpers::AddBigButton(bRandomColor, _w50, _h * 0.5);
+				}
 
 				//if (bEditPalette) {
 				//	ofxImGui::AddParameter(last_Index_ColorPalette);
