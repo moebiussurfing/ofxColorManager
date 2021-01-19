@@ -1324,10 +1324,14 @@ void ofxColorManager::draw(ofEventArgs & args)
 		// background
 		if (background_Draw_ENABLE)
 		{
-			ofClear(ofColor(color_BackGround.get()));
+			ofClear(color_BackGround.get());
 		}
 
-	ofDrawBitmapStringHighlight("last_Index_Theory:" + last_Index_Theory, 20, 20);
+		//--
+		
+		//debug
+		ofDrawBitmapStringHighlight("last_Index_Theory: " + ofToString(last_Index_Theory), 20, 20);
+		
 		//--
 
 		//// cosine gradient
@@ -1663,6 +1667,7 @@ void ofxColorManager::gui_Theory()
 			ofFloatColor(1.f, 1.f, 1.f, 1.f)
 		);
 		auto tmpRef = c.get();
+		bool bUpdate = false;
 
 		//----
 
@@ -1674,8 +1679,6 @@ void ofxColorManager::gui_Theory()
 		//-
 
 		// two pickers
-
-		bool bUpdate = false;
 
 		if (ImGui::CollapsingHeader("BASE COLOR"))
 		{
@@ -1810,7 +1813,7 @@ void ofxColorManager::gui_Theory()
 
 			//--
 
-			// label type buttons 
+			// 1. label type buttons 
 
 			const size_t _total = colors_Theory_G1[i].size();
 
@@ -1840,11 +1843,11 @@ void ofxColorManager::gui_Theory()
 
 		//----
 
-		// 2. extra
+		// 2. g2
 
 		for (int i = 0; i < NUM_COLOR_THEORY_TYPES_G2; i++)
 		{
-			size_t _total;
+			int _total;
 			switch (i)
 			{
 			case 0:
@@ -1874,12 +1877,9 @@ void ofxColorManager::gui_Theory()
 
 			// border to selected
 			bool bDrawBorder = false;
-			if (i + NUM_COLOR_THEORY_TYPES_G1 == last_Index_Theory)
+			if ((i + NUM_COLOR_THEORY_TYPES_G1) == last_Index_Theory)
 			{
 				bDrawBorder = true;
-			}
-			if (bDrawBorder)
-			{
 				ImGui::PushStyleColor(ImGuiCol_Border, color_Pick);
 				ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, linew_Pick);
 			}
@@ -1960,7 +1960,7 @@ void ofxColorManager::gui_Theory()
 					last_Theory_PickPalette = n + colors_Theory_G1[i].size();
 
 					//TODO:
-					color_Picked.set(c);
+					//color_Picked.set(c);
 				}
 
 				ImGui::PopID();
