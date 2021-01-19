@@ -302,7 +302,7 @@ private:
 
 	//extra
 #define NUM_COLOR_THEORY_TYPES_G2 7
-	ofParameter<bool> algoTypes[NUM_COLOR_THEORY_TYPES_G2];
+	ofParameter<bool> theory_Types_G2[NUM_COLOR_THEORY_TYPES_G2];
 	ofParameterGroup params_algoTypes;
 
 	//-
@@ -333,9 +333,9 @@ private:
 	//-
 
 	//number of colors. must be even sometimes to get same size in all palettes
-	ofParameter<int> numColors_Alg;
 	ofParameter<int> numColors_Engines;
-	ofParameter<int> numColors_Theory;
+	ofParameter<int> numColors_Theory_G1;
+	ofParameter<int> numColors_Theory_G2;
 	ofParameter<int> numColors_Range;
 
 	//-
@@ -343,7 +343,7 @@ private:
 private:
 	// color theory
 #define NUM_COLOR_THEORY_TYPES_G1 8
-	ofParameter<bool> theoryTypes[NUM_COLOR_THEORY_TYPES_G1];
+	ofParameter<bool> theory_Types_G1[NUM_COLOR_THEORY_TYPES_G1];
 	shared_ptr<ColorWheelScheme> scheme;
 	vector<ofColor> colorsTheory[NUM_COLOR_THEORY_TYPES_G1];
 	ofParameterGroup params_ColorTheory;
@@ -353,7 +353,7 @@ private:
 	ofParameter<bool> bAuto_Theory_FromPicker;
 
 	void Changed_ColorTheory(ofAbstractParameter &e);
-	void refresh_Theory3();
+	void refresh_Theory_G1();
 
 	void Changed_ParamsPalette(ofAbstractParameter &e);
 	ofParameterGroup params_Palette;
@@ -374,8 +374,8 @@ private:
 
 private:
 	// ColorWheelSchemes
-	void setup_Theory();
-	void update_Theory();
+	void setup_Theory_G1();
+	void update_Theory_G2();
 
 	//-
 
