@@ -79,7 +79,7 @@ private:
 #ifdef USE_OFX_UI
 	ofxUICanvas *gui;
 	ofxUIScrollableCanvas *gui_Lab;
-	ofxUICanvas *gui_PaletteFloating;
+	ofxUICanvas *gui_Palette;
 	void Changed_Gui(ofxUIEventArgs &e);
 	void Changed_Gui_Lab(ofxUIEventArgs &e);
 	void Changed_ColourPalette(ofxUIEventArgs &e);

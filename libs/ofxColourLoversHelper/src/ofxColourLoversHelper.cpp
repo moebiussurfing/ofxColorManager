@@ -862,7 +862,7 @@ void ofxColourLoversHelper::setup()
 	updateFlag = false;
 
 #ifdef USE_OFX_UI
-	gui_PaletteFloating = 0;
+	gui_Palette = 0;
 	gui_Lab = 0;
 #endif
 
