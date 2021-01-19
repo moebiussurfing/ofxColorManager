@@ -467,7 +467,7 @@ void ofxColorManager::setup()
 
 	//-
 
-	bRandomColor.set("RANDOM COLOR", false);
+	bRandomColor.set("RANDOM", false);
 	bAddColor.set("ADD", false);
 	bEditPalette.set("EDIT", false);
 	bRemoveColor.set("REMOVE", false);
@@ -2000,7 +2000,7 @@ void ofxColorManager::gui_PaletteEditor()
 	if (ofxImGui::BeginWindow("PALETTE EDITOR", mainSettings, flagsw))
 	{
 		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
-		float _w = ImGui::GetWindowContentRegionWidth() - 2 * _spc;
+		float _w = ImGui::GetWindowContentRegionWidth() - 3 * _spc;
 		//float _w = PANEL_WIDGETS_WIDTH - 2 * _spc;
 		float _w50 = _w * 0.5;
 		float _h = BUTTON_BIG_HEIGHT;
@@ -2015,7 +2015,7 @@ void ofxColorManager::gui_PaletteEditor()
 			//responsive
 			ImVec2 button_sz((float)sizePaletteBox.get(), (float)sizePaletteBox.get());
 			ImGuiStyle& style = ImGui::GetStyle();
-			int buttons_count = palette.size();
+			int _amtBtn = palette.size();
 			float _wx2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
 
 			//--
@@ -2050,7 +2050,7 @@ void ofxColorManager::gui_PaletteEditor()
 
 					int wb;
 					wb = (_w / _r) - (1.5 * _spc);
-					wb = wb * scale_ColPalette.get();
+					//wb = wb * scale_ColPalette.get();
 
 					//--
 
@@ -2168,8 +2168,9 @@ void ofxColorManager::gui_PaletteEditor()
 
 				ofxSurfingHelpers::AddBigToggle(bEditPalette, _w50, _h * 0.5); ImGui::SameLine();
 				ofxSurfingHelpers::AddBigToggle(bClearPalette, _w50, _h * 0.5);
-				
-				ofxSurfingHelpers::AddBigButton(bRandomColor, _w, _h * 0.5);
+
+				if (bColor_HUE && bColor_SAT && bColor_BRG)
+					ofxSurfingHelpers::AddBigButton(bRandomColor, _w50, _h * 0.5);
 
 				//if (bEditPalette) {
 				//	ofxImGui::AddParameter(last_Index_ColorPalette);
@@ -2180,14 +2181,14 @@ void ofxColorManager::gui_PaletteEditor()
 
 			if (ImGui::CollapsingHeader("Arrange"))
 			{
-				ImGui::Dummy(ImVec2(0, 5));
+				//ImGui::Dummy(ImVec2(0, 5));
 
 				if (ImGui::RadioButton("Copy", mode == Mode_Copy)) { mode = Mode_Copy; } ImGui::SameLine();
 				if (ImGui::RadioButton("Move", mode == Mode_Move)) { mode = Mode_Move; } ImGui::SameLine();
 				if (ImGui::RadioButton("Swap", mode == Mode_Swap)) { mode = Mode_Swap; }
 
 				//ImGui::Dummy(ImVec2(0, 5));
-				ImGui::SameLine();
+				//ImGui::SameLine();
 
 				//flip
 				if (ofxSurfingHelpers::AddSmallButton(bFlipUserPalette, _w50 * 0.5, 0.5 * BUTTON_BIG_HEIGHT))
@@ -2206,7 +2207,7 @@ void ofxColorManager::gui_PaletteEditor()
 			ofxSurfingHelpers::AddBigToggle(SHOW_UserPalette, _w, _h * 0.5);
 
 			if (SHOW_UserPalette) {
-				if (ImGui::CollapsingHeader("Layout"))
+				if (ImGui::CollapsingHeader("Layout Float Panel"))
 				{
 					ofxImGui::AddParameter(bResponsive_Presets);
 
@@ -2240,7 +2241,7 @@ void ofxColorManager::gui_PaletteEditor()
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::gui_Palette()
+void ofxColorManager::gui_PaletteFloating()
 {
 	static bool auto_resize = false;
 	//static bool auto_resize = true;
@@ -2298,7 +2299,7 @@ void ofxColorManager::gui_Palette()
 		ImVec2 button_sz((float)sizePaletteBox.get(), (float)sizePaletteBox.get());
 
 		ImGuiStyle& style = ImGui::GetStyle();
-		int buttons_count = palette.size();
+		int _amtBtn = palette.size();
 		float _wx2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
 		//--
 
@@ -2475,7 +2476,7 @@ void ofxColorManager::gui_Palette()
 				ImGui::PopStyleColor();
 				float last_button_x2 = ImGui::GetItemRectMax().x;
 				float next_button_x2 = last_button_x2 + style.ItemSpacing.x + button_sz.x; // Expected position if next button was on same line
-				if (n + 1 < buttons_count && next_button_x2 < _wx2) ImGui::SameLine();
+				if (n + 1 < _amtBtn && next_button_x2 < _wx2) ImGui::SameLine();
 			}
 
 			ImGui::PopID();
@@ -3121,87 +3122,93 @@ void ofxColorManager::gui_Picker()
 
 		//--
 
-			if (ImGui::CollapsingHeader("Randomizer"))
-			{
+		if (ImGui::CollapsingHeader("Randomizer"))
+		{
+			if (bColor_HUE && bColor_SAT && bColor_BRG)
 				ofxSurfingHelpers::AddBigButton(bRandomColor, _w, 2 * _h);
-				//ofxImGui::AddParameter(bRandomColor);
+			//ofxImGui::AddParameter(bRandomColor);
 
-				//enablers
-				//ofxSurfingHelpers::AddBigToggle(bColor_HUE);
-				//ofxSurfingHelpers::AddBigToggle(bColor_SAT);
-				//ofxSurfingHelpers::AddBigToggle(bColor_BRG);
+			//enablers
+			//ofxSurfingHelpers::AddBigToggle(bColor_HUE);
+			//ofxSurfingHelpers::AddBigToggle(bColor_SAT);
+			//ofxSurfingHelpers::AddBigToggle(bColor_BRG);
 
-				ImGui::Dummy(ImVec2(0, 5));
+			//ImGui::Dummy(ImVec2(0, 5));
 
-				if (bColor_HUE) color_HUE_0 = color_HUE;
-				if (bColor_SAT) color_SAT_0 = color_SAT;
-				if (bColor_BRG) color_BRG_0 = color_BRG;
+			if (bColor_HUE) color_HUE_0 = color_HUE;
+			if (bColor_SAT) color_SAT_0 = color_SAT;
+			if (bColor_BRG) color_BRG_0 = color_BRG;
 
-				if (ofxImGui::AddParameter(bColor_HUE)) {}ImGui::SameLine();
-				if (ofxImGui::AddParameter(bColor_SAT)) {}ImGui::SameLine();
-				if (ofxImGui::AddParameter(bColor_BRG)) {}
+			{ if (ofxImGui::AddParameter(bColor_HUE)) {}ImGui::SameLine(); }
+			{ if (ofxImGui::AddParameter(bColor_SAT)) {}ImGui::SameLine(); }
+			{ if (ofxImGui::AddParameter(bColor_BRG)) {} }
 
-				ImGui::Dummy(ImVec2(0, 5));
+			//ImGui::Dummy(ImVec2(0, 5));
 
-				//if (ofxImGui::AddParameter(color_HUE_0))
-				//{
-				//	ofLogNotice(__FUNCTION__) << "HUE 0 : moved";
-				//	if (bColor_HUE) {
-				//		color_HUE = color_HUE_0;
-				//	}
-				//}
-				//if (ofxImGui::AddParameter(color_SAT_0))
-				//{
-				//	ofLogNotice(__FUNCTION__) << "SAT 0 : moved";
-				//	if (bColor_SAT) {
-				//		color_SAT = color_SAT_0;
-				//	}
-				//}
-				//if (ofxImGui::AddParameter(color_BRG_0))
-				//{
-				//	ofLogNotice(__FUNCTION__) << "BRG 0 : moved";
-				//	if (bColor_BRG) {
-				//		color_BRG = color_BRG_0;
-				//	}
-				//}
+			//if (ofxImGui::AddParameter(color_HUE_0))
+			//{
+			//	ofLogNotice(__FUNCTION__) << "HUE 0 : moved";
+			//	if (bColor_HUE) {
+			//		color_HUE = color_HUE_0;
+			//	}
+			//}
+			//if (ofxImGui::AddParameter(color_SAT_0))
+			//{
+			//	ofLogNotice(__FUNCTION__) << "SAT 0 : moved";
+			//	if (bColor_SAT) {
+			//		color_SAT = color_SAT_0;
+			//	}
+			//}
+			//if (ofxImGui::AddParameter(color_BRG_0))
+			//{
+			//	ofLogNotice(__FUNCTION__) << "BRG 0 : moved";
+			//	if (bColor_BRG) {
+			//		color_BRG = color_BRG_0;
+			//	}
+			//}
 
-				ImGui::Dummy(ImVec2(0, 5));
+			//ImGui::Dummy(ImVec2(0, 5));
 
+			if (bColor_HUE)
 				if (ofxImGui::AddParameter(color_HUE_Power))
 				{
 					ofLogNotice(__FUNCTION__) << "HUE P : moved";
 				}
+
+			if (bColor_SAT)
 				if (ofxImGui::AddParameter(color_SAT_Power))
 				{
 					ofLogNotice(__FUNCTION__) << "SAT P : moved";
 				}
+
+			if (bColor_BRG)
 				if (ofxImGui::AddParameter(color_BRG_Power))
 				{
 					ofLogNotice(__FUNCTION__) << "BRG P : moved";
 				}
-			}
+		}
 
-			//----
+		//----
 
-			//to concentrate calbacks once
-			//color_Picked
-			if (bChg_Pick && bChg_HSB) //all
+		//to concentrate calbacks once
+		//color_Picked
+		if (bChg_Pick && bChg_HSB) //all
+		{
+			refresh_FromPicked();
+		}
+		else
+		{
+			if (bChg_Pick)
 			{
-				refresh_FromPicked();
+				ENABLE_Callbacks_cPickers = false;
+				refresh_Picked_toHSB();
+				ENABLE_Callbacks_cPickers = true;
 			}
-			else
+			if (bChg_Pick || bChg_HSB)
 			{
-				if (bChg_Pick)
-				{
-					ENABLE_Callbacks_cPickers = false;
-					refresh_Picked_toHSB();
-					ENABLE_Callbacks_cPickers = true;
-				}
-				if (bChg_Pick || bChg_HSB)
-				{
-					refresh_Picker_Touched();
-				}
+				refresh_Picker_Touched();
 			}
+		}
 
 		if (ImGui::CollapsingHeader("Advanced"))
 		{
@@ -4395,7 +4402,7 @@ bool ofxColorManager::draw_Gui()
 
 	if (SHOW_ALL_GUI)
 	{
-		if (SHOW_UserPalette) gui_Palette();
+		if (SHOW_UserPalette) gui_PaletteFloating();
 		if (SHOW_UserPaletteEditor) gui_PaletteEditor();
 		if (SHOW_Presets) gui_Presets();
 		if (SHOW_Picker) gui_Picker();
@@ -5673,7 +5680,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 	else if (name == last_Index_ColorPalette.getName())
 	{
-		last_Index_ColorPalette = (int) ofClamp(
+		last_Index_ColorPalette = (int)ofClamp(
 			last_Index_ColorPalette,
 			last_Index_ColorPalette.getMin(),
 			last_Index_ColorPalette.getMax());
