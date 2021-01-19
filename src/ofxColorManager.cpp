@@ -571,7 +571,8 @@ void ofxColorManager::setup()
 
 	//extra algo
 	std::string name;
-	params_ColorTheory_G2.setName("AlgoTypes");
+	params_ColorTheory_G2.clear();
+	params_ColorTheory_G2.setName("Color Theory G2");
 	for (int i = 0; i < NUM_COLOR_THEORY_TYPES_G2; i++)
 	{
 		switch (i)
@@ -1633,8 +1634,6 @@ void ofxColorManager::gui_Theory()
 		// box size
 		static int _cSize = 37;
 
-		ImGuiColorEditFlags _flags;
-
 		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
 		float _w = ImGui::GetWindowContentRegionWidth() - _spc;
 		int _h = int(COLOR_STRIP_COLOR_HEIGHT);
@@ -1642,9 +1641,7 @@ void ofxColorManager::gui_Theory()
 
 		//-
 
-		//_flags = ImGuiColorEditFlags_NoOptions | ImGuiColorEditFlags_NoTooltip;
-
-		//-
+		ImGuiColorEditFlags _flags;
 
 		_flags =
 			ImGuiColorEditFlags_NoSmallPreview |
@@ -1747,20 +1744,10 @@ void ofxColorManager::gui_Theory()
 
 		//ImGui::SameLine();
 
+		// amount colors
 		if (ofxSurfingHelpers::AddIntStepped(numColors_Engines))
 		{
 		}
-		// amount colors
-		//if (ofxImGui::AddParameter(numColors_Engines))
-		//{
-		//}
-		//if (ImGui::InputInt(numColors_Theory_G1.getName().c_str(), (int*)&numColors_Theory_G1.get(), 1, 5))
-		//if (ofxImGui::AddParameter(numColors_Theory_G1))
-		//{
-		//}
-		//if (ofxImGui::AddParameter(numColors_Theory_G2))
-		//{
-		//}
 
 		if (ImGui::CollapsingHeader("Advanced"))
 		{
@@ -1776,9 +1763,9 @@ void ofxColorManager::gui_Theory()
 
 		ImGui::Dummy(ImVec2(0, 5));
 
-		//--
+		//----
 
-		// 1. basic
+		// 1. G1
 
 		for (int i = 0; i < NUM_COLOR_THEORY_TYPES_G1; i++)
 		{
@@ -1793,11 +1780,12 @@ void ofxColorManager::gui_Theory()
 
 			//-
 
-			// 1.1 label button
+			// label button G1
 
 			//std::string _label = ColorWheelSchemes::colorSchemeNames[i];
 			if (ofxSurfingHelpers::AddSmallButton(theory_Types_G1[i], 150, _cSize))
 			{
+				//last_Theory_PickPalette = i;
 			}
 
 			//-
@@ -1816,7 +1804,8 @@ void ofxColorManager::gui_Theory()
 
 			// 1. label type buttons 
 
-			const size_t _total = colors_Theory_G1[i].size();
+			//const size_t _total = colors_Theory_G1[i].size();
+			int _total = colors_Theory_G1[i].size();
 
 			for (int n = 0; n < _total; n++)
 			{
@@ -1826,14 +1815,17 @@ void ofxColorManager::gui_Theory()
 
 				ImGui::SameLine();
 
-				if (ImGui::ColorButton("##ColorButtonTheory",
+				if (ImGui::ColorButton("##ColorButtonTheory_G1",
 					colors_Theory_G1[i][n],
 					ImGuiColorEditFlags_NoAlpha |
 					ImGuiColorEditFlags_NoPicker |
 					ImGuiColorEditFlags_NoTooltip,
 					ImVec2(_cSize, _cSize)))
 				{
-					last_Theory_PickPalette = n;
+					//TODO:
+					//color
+					//color_Picked.set(c);
+					//last_Theory_PickPalette = n;
 				}
 
 				//-
@@ -1878,6 +1870,7 @@ void ofxColorManager::gui_Theory()
 
 			// border to selected
 			bool bDrawBorder = false;
+			//if (i == last_Index_Theory)
 			if ((i + NUM_COLOR_THEORY_TYPES_G1) == last_Index_Theory)
 			{
 				bDrawBorder = true;
@@ -1887,8 +1880,11 @@ void ofxColorManager::gui_Theory()
 
 			//-
 
+			// label button G2
+
 			if (ofxSurfingHelpers::AddSmallButton(theory_Types_G2[i], 150, _cSize))
 			{
+				//last_Theory_PickPalette = NUM_COLOR_THEORY_TYPES_G1 + i;
 			}
 
 			//-
@@ -1912,45 +1908,38 @@ void ofxColorManager::gui_Theory()
 				switch (i)
 				{
 				case 0:
-					if (n < complement.size())
-						c = complement[n];
+					if (n < complement.size()) c = complement[n];
 					_name = "Complement";
 					break;
 				case 1:
-					if (n < complementBrightness.size())
-						c = complementBrightness[n];
+					if (n < complementBrightness.size()) c = complementBrightness[n];
 					_name = "Complement Brigthness";
 					break;
 				case 2:
-					if (n < monochrome.size())
-						c = monochrome[n];
+					if (n < monochrome.size()) c = monochrome[n];
 					_name = "Monochrome";
 					break;
 				case 3:
-					if (n < monochromeBrightness.size())
-						c = monochromeBrightness[n];
+					if (n < monochromeBrightness.size()) c = monochromeBrightness[n];
 					_name = "Monochrome Brightness";
 					break;
 				case 4:
-					if (n < analogue.size())
-						c = analogue[n];
+					if (n < analogue.size()) c = analogue[n];
 					_name = "Analogue";
 					break;
 				case 5:
-					if (n < triad.size())
-						c = triad[n];
+					if (n < triad.size()) c = triad[n];
 					_name = "Triad";
 					break;
 				case 6:
-					if (n < complementTriad.size())
-						c = complementTriad[n];
+					if (n < complementTriad.size()) c = complementTriad[n];
 					_name = "Complement Triad";
 					break;
 				}
 
 				ImGui::SameLine();
 
-				if (ImGui::ColorButton("##BoxPaletteAlgorithm",
+				if (ImGui::ColorButton("##ColorButtonTheory_G2",
 
 					c,
 					ImGuiColorEditFlags_NoAlpha |
@@ -1958,9 +1947,11 @@ void ofxColorManager::gui_Theory()
 					ImGuiColorEditFlags_NoTooltip,
 					ImVec2(_cSize, _cSize)))
 				{
-					last_Theory_PickPalette = n + colors_Theory_G1[i].size();
+					//last_Theory_PickPalette = n;
+					//last_Theory_PickPalette = n + colors_Theory_G1[i].size();
 
 					//TODO:
+					//color
 					//color_Picked.set(c);
 				}
 
@@ -4415,7 +4406,7 @@ void ofxColorManager::refresh_Theory_G1() //populates palettes
 
 	for (int i = 0; i < NUM_COLOR_THEORY_TYPES_G1; i++)
 	{
-		ofLogNotice(__FUNCTION__) << i;
+		//ofLogNotice(__FUNCTION__) << i;
 		shared_ptr<ColorWheelScheme> _scheme;
 		_scheme = ColorWheelSchemes::colorSchemes[i];
 		_scheme->setPrimaryColor(color_TheoryBase.get());
@@ -4438,7 +4429,7 @@ void ofxColorManager::setup_Theory_G1()
 	//numColors_Theory_G1.makeReferenceTo(numColors_Theory_G2);
 
 	params_ColorTheory_G1.clear();
-	params_ColorTheory_G1.setName("Color Theory");
+	params_ColorTheory_G1.setName("Color Theory G1");
 	params_ColorTheory_G1.add(color_TheoryBase.set("Base", ofColor::magenta, ofColor(0), ofColor(255)));
 	params_ColorTheory_G1.add(bAuto_Theory_FromPicker.set("Auto Get Picker", true));
 	params_ColorTheory_G1.add(colorScheme.set("Color Scheme", 6, 0, ColorWheelSchemes::colorSchemes.size() - 1));
@@ -4773,8 +4764,11 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 
 	else if (name == last_Theory_PickPalette.getName())
 	{
+		ofLogWarning(__FUNCTION__) << "  >>> last_Theory_PickPalette : " << last_Theory_PickPalette;
+
+		int pre = last_Theory_PickPalette.get();
 		last_Theory_PickPalette = ofClamp(
-			last_Theory_PickPalette.get(),
+			pre,
 			last_Theory_PickPalette.getMin(),
 			last_Theory_PickPalette.getMax());
 
@@ -4799,6 +4793,11 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 		{
 			theory_Types_G2[last_Theory_PickPalette - NUM_COLOR_THEORY_TYPES_G1] = true;
 		}
+
+		
+		//TODO:
+		reBuild_Palette();
+
 	}
 
 	//----
@@ -4828,7 +4827,8 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 
 				theory_Name = theory_Types_G1[i].getName();
 
-				last_Index_Theory = i;
+				//last_Index_Theory = i;
+				last_Index_Theory.setWithoutEventNotifications(i);
 
 				return;
 			}
@@ -4849,12 +4849,6 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 			__p.clear();
 
 			palette_Clear();
-
-			//-
-
-			theory_Name = theory_Types_G2[i].getName();
-
-			last_Index_Theory = i + NUM_COLOR_THEORY_TYPES_G1;
 
 			//-
 
@@ -4918,6 +4912,13 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 				}
 				break;
 			}
+
+			//-
+
+			theory_Name = theory_Types_G2[i].getName();
+
+			//last_Index_Theory = i + NUM_COLOR_THEORY_TYPES_G1;
+			last_Index_Theory.setWithoutEventNotifications(i + NUM_COLOR_THEORY_TYPES_G1);
 
 			return;
 		}
@@ -6129,11 +6130,11 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		{
 			if (key == OF_KEY_UP)
 			{
-				last_Theory_PickPalette--;
+				last_Theory_PickPalette = last_Theory_PickPalette.get() - 1;
 			}
 			if (key == OF_KEY_DOWN)
 			{
-				last_Theory_PickPalette++;
+				last_Theory_PickPalette = last_Theory_PickPalette.get() + 1;
 			}
 			if (key == ' ')//cycle
 			{
@@ -6142,7 +6143,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 					last_Theory_PickPalette = last_Theory_PickPalette.getMin();
 				}
 				else {
-					last_Theory_PickPalette++;
+					last_Theory_PickPalette = last_Theory_PickPalette.get() + 1;
 				}
 			}
 		}
