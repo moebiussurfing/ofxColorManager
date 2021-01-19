@@ -38,6 +38,7 @@ void ofxColorManager::reBuild_Palette()
 		else if (SHOW_Theory)
 		{
 			_name = theory_Name;
+			refresh_Theory_G1();//?
 			refresh_Theory_G2();
 			palette_FromTheory(last_Index_Theory);
 		}
@@ -5333,13 +5334,6 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 				_brg = ofRandom(color_BRG_0 - 128.f * color_BRG_Power, color_BRG_0 + 128.f * color_BRG_Power);
 				color_BRG = _brg;
 			}
-
-			//ofColor c;
-			//c.setSaturation(_sat);
-			//c.setBrightness(_brg);
-			//c.setHue(_hue);
-			//color_Picked = c;
-			//color_Picked = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
 		}
 	}
 
@@ -5488,7 +5482,6 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	//}
 }
 
-//load user palette from range
 //--------------------------------------------------------------
 void ofxColorManager::Changed_ColorRange(ofAbstractParameter &e)
 {
