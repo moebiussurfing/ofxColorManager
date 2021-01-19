@@ -1,7 +1,7 @@
-#include "DEMO_svg.h"
+#include "DEMO_Svg.h"
 
 //--------------------------------------------------------------
-void DEMO_svg::setup() {
+void DEMO_Svg::setup() {
 
 	path = "";
 	img.load(path + "moebius-lines.jpg");
@@ -27,7 +27,7 @@ void DEMO_svg::setup() {
 }
 
 //--------------------------------------------------------------
-void DEMO_svg::setPaletteColors(vector<ofColor> &palette) {
+void DEMO_Svg::setPaletteColors(vector<ofColor> &palette) {
 
 	int _max = MAX(paletteSvg.size(), palette.size());
 
@@ -86,7 +86,7 @@ void DEMO_svg::setPaletteColors(vector<ofColor> &palette) {
 }
 
 //--------------------------------------------------------------
-void DEMO_svg::update() {
+void DEMO_Svg::update() {
 	//float val = (1 + sin(2 * 3.1416 * ofGetElapsedTimef())) * 0.5;
 	//ofLogNotice(__FUNCTION__) << val;
 
@@ -121,8 +121,8 @@ void DEMO_svg::update() {
 }
 
 //--------------------------------------------------------------
-//void DEMO_svg::draw(glm::vec2 _pos, glm::vec2 _shape = glm::vec2(838, 1080)) {
-void DEMO_svg::draw(glm::vec2 _pos) {
+//void DEMO_Svg::draw(glm::vec2 _pos, glm::vec2 _shape = glm::vec2(838, 1080)) {
+void DEMO_Svg::draw(glm::vec2 _pos) {
 	//ofClear(255);
 	//update();
 
@@ -140,7 +140,7 @@ void DEMO_svg::draw(glm::vec2 _pos) {
 }
 
 //--------------------------------------------------------------
-void DEMO_svg::draw() {
+void DEMO_Svg::draw() {
 	//ofClear(255);
 	//update();
 
@@ -153,7 +153,7 @@ void DEMO_svg::draw() {
 }
 
 //--------------------------------------------------------------
-void DEMO_svg::keyPressed(int key) {
+void DEMO_Svg::keyPressed(int key) {
 	if (key == OF_KEY_UP)
 	{
 		if (blendMode >= 24)

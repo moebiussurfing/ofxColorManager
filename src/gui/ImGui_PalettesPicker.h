@@ -102,7 +102,7 @@ namespace ImGui_PalettesPicker
 				if (p == indexExt)//highlight selected
 				{
 					bDrawBorder = true;
-					_hhB = 3 * BUTTON_SLIM_HEIGHT;
+					_hhB = 2 * BUTTON_SLIM_HEIGHT;
 
 					if (autoscroll)
 						ImGui::SetScrollHereY(0.5f); // 0.0f:top, 0.5f:center, 1.0f:bottom

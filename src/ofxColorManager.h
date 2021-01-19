@@ -113,7 +113,7 @@ using namespace ImGui_PalettesPicker;
 #include "presets/PresetPalette.h"
 
 #include "demo/DEMO_Scene.h"
-#include "demo/DEMO_svg.h"
+#include "demo/DEMO_Svg.h"
 
 #include "ofxSurfingHelpers.h"
 #include "ofxSurfing_ImGui.h"
@@ -132,7 +132,7 @@ class ofxColorManager : public ofBaseApp
 public:
 	PalettePreviewMini miniPreview;
 
-	DEMO_svg myDEMO2;
+	DEMO_Svg myDEMO2;
 
 public:
 	ofxColorManager();
@@ -558,7 +558,7 @@ private:
 	ofParameter<bool> bAddColor;
 	ofParameter<bool> bRemoveColor;
 	ofParameter<bool> bClearPalette;
-	ofParameter<int> palette_colorSelected{ "Selected", -1, 0, 0 };
+	ofParameter<int> last_Index_ColorPalette{ "Selected", -1, 0, 0 };
 
 	//--
 

@@ -8,15 +8,15 @@
 #include "ofxSvgLoader.h"
 #include "ofxPSBlend.h"
 
-class DEMO_svg
+class DEMO_Svg
 {
 
 public:
-	DEMO_svg()
+	DEMO_Svg()
 	{
 		setup();
 	};
-	~DEMO_svg() {};
+	~DEMO_Svg() {};
 
 	void setup();
 	void update();
