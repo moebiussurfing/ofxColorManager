@@ -44,7 +44,6 @@ TODO:
 //#define USE_UNDO_ENGINE
 #define USE_DEBUG_LAYOUT // includes mouse ruler
 //#define USE_SUPER_LOG
-//#define INCL_LAYOUT
 //#define USE_OFX_GUI
 
 #define AUTO_DRAW_CALLBACK
@@ -98,10 +97,6 @@ using namespace ofxColorTheory;
 
 #ifdef USE_SUPER_LOG
 #include "ofxSuperLog.h"
-#endif
-
-#ifdef INCL_LAYOUT
-#include "ofxGuiPanelsLayout.h"
 #endif
 
 #ifdef USE_OFX_GUI
@@ -417,18 +412,6 @@ private:
 	vector<ofColor> colors_Triad;
 
 	//--
-
-	// ofxGuiPanelsLayout
-
-#ifdef INCL_LAYOUT
-private:
-	ofxGuiPanelsLayout panels;
-#endif
-
-public:
-#ifdef INCL_LAYOUT
-	ofParameter<bool> SHOW_Gui_Internal{ "GUI", false };
-#endif
 
 private:
 	ofParameter<bool> SHOW_ImGui{ "ImGui", true };

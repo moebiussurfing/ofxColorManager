@@ -684,9 +684,6 @@ void ofxColorManager::setup()
 	params_Panels.add(SHOW_AlgoPalettes);
 	params_Panels.add(SHOW_GradientCurve);
 	params_Panels.add(SHOW_BrowserColors);
-#ifdef INCL_LAYOUT
-	params_Panels.add(SHOW_Gui_Internal);
-#endif
 	params_Panels.add(SHOW_MINI_Preview);
 	params_Panels.add(SHOW_Kit);
 	params_Panels.add(AutoScroll);
@@ -875,54 +872,6 @@ void ofxColorManager::startup()
 	preset_RefreshFiles();
 	//preset_Load(PRESET_Name);
 
-	//----
-
-	// ofxGuiPanelsLayout
-
-	//-
-
-	// add panels to manager
-#ifdef INCL_LAYOUT
-	panels.addToggle(&SHOW_ImGui);
-	panels.addToggle(&SHOW_Panels);
-
-	panels.addToggle(&SHOW_UserPalette);
-	panels.addToggle(&SHOW_Picker);
-	panels.addToggle(&SHOW_Library);
-	panels.addToggle(&SHOW_BackGround);
-
-	panels.addToggle(&SHOW_Theory);
-	panels.addToggle(&SHOW_Range);
-	panels.addToggle(&SHOW_ColourLovers);
-	panels.addToggle(&SHOW_Quantizer);
-
-	panels.addToggle(&SHOW_GradientCurve);
-	panels.addToggle(&SHOW_Presets);
-	//panels.addToggle(&SHOW_PresetsPalette);
-
-	panels.addToggle(&SHOW_ALL_GUI);
-	panels.addToggle(&SHOW_MINI_Preview);
-
-	panels.addToggle(&SHOW_Demos);
-	//panels.addToggle(&SHOW_Demo2);
-	panels.addToggle(&DEMO1_Test);
-	panels.addToggle(&DEMO2_Test);
-
-	//panels.addToggle(&SHOW_AlgoPalettes);
-	//panels.addToggle(&SHOW_BrowserColors);
-	//panels.addToggle(&SHOW_Gradient);
-	//panels.addToggle(&SHOW_debugText);
-	//panels.addToggle(&SHOW_CosineGradient);
-
-	//call after add the panels
-	panels.setup();
-
-	//----
-
-	//workflow
-	panels.group_Selected = 0;
-#endif
-
 	//--
 
 	// color ranges
@@ -1108,14 +1057,6 @@ void ofxColorManager::update(ofEventArgs & args)
 	// preset manager
 
 	//myPresetManager.update();
-
-	//----
-
-	// ofxGuiPanelsLayout
-
-#ifdef INCL_LAYOUT
-	panels.update();
-#endif
 }
 
 //--------------------------------------------------------------
@@ -1433,14 +1374,6 @@ void ofxColorManager::draw(ofEventArgs & args)
 
 	//--
 
-	// ofxGuiPanelsLayout
-
-#ifdef INCL_LAYOUT
-	if (SHOW_Gui_Internal) panels.draw();
-#endif
-
-	//--
-
 	// gui
 
 	if (SHOW_ImGui)
@@ -1551,13 +1484,6 @@ void ofxColorManager::exit()
 
 	removeKeysListeners();
 	removeMouseListeners();
-
-	//--
-
-	// ofxGuiPanelsLayout
-#ifdef INCL_LAYOUT
-	panels.exit();
-#endif
 }
 
 //--------------------------------------------------------------
@@ -2288,28 +2214,30 @@ void ofxColorManager::gui_PaletteEditor()
 
 			ofxSurfingHelpers::AddBigToggle(SHOW_UserPalette, _w, _h * 0.5);
 
-			if (ImGui::CollapsingHeader("Layout"))
-			{
-				ofxImGui::AddParameter(bResponsive_Presets);
-
-				if (bResponsive_Presets)
+			if (SHOW_UserPalette) {
+				if (ImGui::CollapsingHeader("Layout"))
 				{
-					ImGui::InputInt(sizePaletteBox.getName().c_str(), (int*)&sizePaletteBox.get(), 5, 100);
-					//ofxImGui::AddParameter(sizePaletteBox);
-				}
-				if (!bResponsive_Presets)
-				{
-					boxMaxRows.disableEvents();
-					ImGui::InputInt(boxMaxRows.getName().c_str(), (int*)&boxMaxRows.get(), 1, 5);
-					//ImGui::InputInt(boxMaxRows.getName().c_str(), (int *)&boxMaxRows.get());
-					boxMaxRows = ofClamp(boxMaxRows.get(), boxMaxRows.getMin(), boxMaxRows.getMax());
-					boxMaxRows.enableEvents();
+					ofxImGui::AddParameter(bResponsive_Presets);
 
-					//ofxImGui::AddParameter(scale_ColPalette);
-					ImGui::InputFloat(scale_ColPalette.getName().c_str(), (float *)&scale_ColPalette.get(), 0.005f, 0.010);
-				}
+					if (bResponsive_Presets)
+					{
+						ImGui::InputInt(sizePaletteBox.getName().c_str(), (int*)&sizePaletteBox.get(), 5, 100);
+						//ofxImGui::AddParameter(sizePaletteBox);
+					}
+					if (!bResponsive_Presets)
+					{
+						boxMaxRows.disableEvents();
+						ImGui::InputInt(boxMaxRows.getName().c_str(), (int*)&boxMaxRows.get(), 1, 5);
+						//ImGui::InputInt(boxMaxRows.getName().c_str(), (int *)&boxMaxRows.get());
+						boxMaxRows = ofClamp(boxMaxRows.get(), boxMaxRows.getMin(), boxMaxRows.getMax());
+						boxMaxRows.enableEvents();
 
-				//ofxImGui::AddParameter(bAutoResizePalette);//not works
+						//ofxImGui::AddParameter(scale_ColPalette);
+						ImGui::InputFloat(scale_ColPalette.getName().c_str(), (float *)&scale_ColPalette.get(), 0.005f, 0.010);
+					}
+
+					//ofxImGui::AddParameter(bAutoResizePalette);//not works
+				}
 			}
 
 			//--
@@ -3339,10 +3267,6 @@ void ofxColorManager::gui_Panels()
 		//ofxSurfingHelpers::AddBigToggle(SHOW_Demo2);
 		ofxSurfingHelpers::AddBigToggle(SHOW_Export);
 		ofxImGui::AddParameter(ENABLE_keys);
-
-#ifdef INCL_LAYOUT
-		ofxSurfingHelpers::AddBigToggle(SHOW_Gui_Internal);
-#endif
 		//ImGui::Separator();
 		//ImGui::Dummy(ImVec2(0, 10));
 		//ofxImGui::AddParameter(SHOW_Gradient);
@@ -5331,7 +5255,7 @@ void ofxColorManager::palette_removeColor(int c)
 		//--
 
 		// workflow: 
-		if (bEditPalette)
+		//if (bEditPalette)
 		{
 			palette_colorSelected.setMax(palette.size() - 1);
 		}
@@ -5359,7 +5283,7 @@ void ofxColorManager::palette_removeColorLast()
 	//--
 
 	// workflow: 
-	if (bEditPalette)
+	//if (bEditPalette)
 	{
 		palette_colorSelected.setMax(palette.size() - 1);
 	}
@@ -6036,12 +5960,17 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 	else if (name == bEditPalette.getName())
 	{
-		if (bEditPalette) {
+		if (bEditPalette) 
+		{
+			//workflow
+			if (SHOW_Range) SHOW_Range = false;
+			if (SHOW_Theory) SHOW_Theory = false;
+
 			if (palette_colorSelected > palette.size() - 1)
 				palette_colorSelected = palette.size() - 1;
 
 			// autoload color picker to selected index color on palette
-			color_Picked = palette[palette_colorSelected];
+			color_Picked = palette[palette_colorSelected.get()];
 		}
 	}
 
@@ -6867,55 +6796,6 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 		//----
 
-		// layout
-
-#ifdef INCL_LAYOUT
-		//if (key == 'a')
-		//{
-		//	panels.SHOW_advanced = !panels.SHOW_advanced;
-		//}
-		//    else if (key == OF_KEY_LEFT)
-		//    {
-		//        panels.group_Selected--;
-		//    }
-		//
-		//    else if (key == OF_KEY_RIGHT)
-		//    {
-		//        panels.group_Selected++;
-		//    }
-		//else if (key == '0')
-		//{
-		//	panels.group_Selected = 0;
-		//}
-		//else if (key == '1')
-		//{
-		//	panels.group_Selected = 1;
-		//}
-		//else if (key == '2')
-		//{
-		//	panels.group_Selected = 2;
-		//}
-		//else if (key == '3')
-		//    else if (key == 's')
-		//    {
-		//        panels.savePanels();
-		//        panels.saveGroups();
-		//    }
-		//
-		//    else if (key == 'l')
-		//    {
-		//        panels.loadGroups();
-		//    }
-#endif
-		//----
-
-#ifdef INCL_LAYOUT
-		else if (key == 'G')
-		{
-			SHOW_Gui_Internal = !SHOW_Gui_Internal;
-		}
-#endif
-
 		//else if (key == 'g') {
 		//    SHOW_ALL_GUI = !SHOW_ALL_GUI;
 		//    setVisible(SHOW_ALL_GUI);
@@ -6931,11 +6811,6 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//{
 		//	MODE_EditGradientLayout = !MODE_EditGradientLayout;
 		//}
-
-		//    else if (key == 'l')
-		//    {
-		//        bLock_palette = !bLock_palette;
-		//    }
 
 #ifdef USE_DEBUG_LAYOUT
 		else if (key == 'M')
@@ -6953,125 +6828,6 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//}
 
 		//----
-
-		//TODO:
-		//randoms
-
-//		// random user palette
-//
-//		// 1. randomize one color and build palette if enabled
-//
-//		else if (key == 'o')
-//		{
-//			//TODO
-//			// WORKFLOW: when loading a colour lover palette we disable auto create from algo palettes
-//			//if (!bAuto_Build_Palette)
-//			//{
-//			//bAuto_Build_Palette = true;
-//			//}
-//
-//			//TODO: bug because some trigs are flags. we need direct functions
-//			//bRandomColor = true;
-//			color_Picked = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
-//
-//			if (bAuto_Build_Palette)
-//			{
-//				refresh_TheoryEngine();
-//
-//#ifdef USE_RECTANGLE_INTERFACES
-//				palette_FromTheory(SELECTED_palette_LAST);//trig last choice
-//#endif
-//			}
-//
-//			//-
-//
-//			// undo
-//			color_Undo = color_Picked.get();
-//			color_Undo.store();
-//
-//			//-
-//
-//			// preset manager
-//			if (!MODE_NewPreset) bNewPreset = true;
-//
-//#ifdef USE_RECTANGLE_INTERFACES
-//			textInput_New = "random_" + btns_plt_Selector[SELECTED_palette_LAST]->getName();
-//#endif
-//			//-
-//
-//			if (DEMO1_Test) myDEMO1.reStart();
-//		}
-
-		//----
-
-//		// 2. randomize one color and created user palette
-//
-//		else if (key == 'p')
-//		{
-//			//-
-//
-//			if (!bAuto_Build_Palette)
-//			{
-//				bAuto_Build_Palette = true;
-//			}
-//
-//			//-
-//
-//			//// A. create random palette
-//
-//			//random.generateRandom(numColors_Alg);
-//			//refresh_TheoryEngine();
-//			//if (bAuto_Build_Palette)
-//			//{
-//			//    //set random palette to user palette
-//			//    palette_FromTheory(7);
-//			//}
-//
-//			//-
-//
-//			// B. get a random palette from PANTONE
-//
-//			//int _r = (int) ofRandom(NUM_COLORS_PANTONE);
-//			int r = (int)ofRandom(lib_Page_Index * lib_Page_NumColors, lib_Page_Index * lib_Page_NumColors + lib_Page_NumColors);
-//			r = ofClamp(r, 0, NUM_COLORS_PANTONE);
-//
-//			//color pos & name
-//			last_ColorPicked_Lib = r;
-//			last_Lib_NameColor = palette_Lib_Names[r];
-//			//last_Lib_NameColor = colorBrowser.colors_PantoneNames[r];
-//			color_Picked = ofColor(palette_Lib_Cols[r]);
-//			refresh_TheoryEngine();
-//
-//#ifdef USE_RECTANGLE_INTERFACES
-//			palette_FromTheory(SELECTED_palette_LAST);
-//#endif
-//			//----
-//
-//			// undo
-//
-//			//----
-//
-//			color_Undo = color_Picked.get();
-//			color_Undo.store();
-//
-//			//----
-//
-//			// presets
-//
-//			if (!MODE_NewPreset) bNewPreset = true;
-//
-//			textInput_New = colorBrowser.colors_PantoneNames[last_ColorPicked_Lib] + "_";
-//
-//#ifdef USE_RECTANGLE_INTERFACES
-//			textInput_New += btns_plt_Selector[SELECTED_palette_LAST]->getName();
-//#endif
-//
-//			//----
-//
-//			if (DEMO1_Test) myDEMO1.reStart();
-//		}
-
-		//--
 
 		// TEST
 		if (key == 'T')
@@ -7102,16 +6858,6 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 #endif
 				textInput_temp = PRESET_Name;
 			}
-
-			//-
-
-			// browse presets
-//#ifdef USE_COLOR_LOVERS
-//			if ((SHOW_ColourLovers && key == ' '))
-//			{
-//				colourLoversHelper.nextPalette();
-//			}
-//#endif
 		}
 
 		//----
@@ -7132,51 +6878,6 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		////        color_Undo.clearRedo();
 
 		//----
-
-		//    if (key == 's')
-		//    {
-		//        palette_save("myPalette");
-		//    }
-		//    if (key == 'l')
-		//    {
-		//        palette_load("myPalette");
-		//    }
-
-		//----
-
-		//// user palette
-
-		//else if (key == 'c')
-		//{
-		//	palette_clear();
-		//}
-
-		//else if (key == 'x')
-		//{
-		//	// 1. remove last
-		//	//palette_removeColorLast();
-
-		//	// 2. remove selected
-		//	palette_removeColor(palette_colorSelected);
-		//}
-
-		//else if (key == 'a')
-		//{
-		//    color_Picked = ofFloatColor(ofRandom(0., 1.), ofRandom(0., 1.), ofRandom(0., 1.));
-		//    palette_addColor(ofColor(color_Picked.get()));
-		//}
-
-		//----
-
-		// color browser
-
-		////    colorBrowser.keyPressed( eventArgs );
-		//
-		//    else if (key == ' ')
-		//        colorBrowser.switch_palette_Type();
-		//
-		//    else if (key == OF_KEY_RETURN)
-		//        colorBrowser.switch_sorted_Type();
 	}
 }
 
