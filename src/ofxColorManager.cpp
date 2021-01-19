@@ -3713,8 +3713,8 @@ void ofxColorManager::gui_Background()
 
 				ImGui::PopItemWidth();
 
-				ImGui::Dummy(ImVec2(0, 5));
-				ImGui::Checkbox("Auto-resize", &auto_resize);
+				//ImGui::Dummy(ImVec2(0, 5));
+				//ImGui::Checkbox("Auto-resize", &auto_resize);
 			}
 		}
 	}
@@ -5776,7 +5776,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 		// workflow: 
 #ifdef USE_IMAGE_QUANTIZER
-			colorQuantizer.setActive(SHOW_Quantizer);
+		colorQuantizer.setActive(SHOW_Quantizer);
 #endif
 	}
 
@@ -5928,9 +5928,23 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	//	color_BackGround_Gradient = false;
 	//}
 
-	else if (name == color_BackGround_Gradient.getName() && color_BackGround_Gradient)
+	else if (name == color_BackGround_Gradient.getName())
 	{
-		color_BackGround_Darker = false;
+		if (color_BackGround_Gradient) color_BackGround_Darker = false;
+		if (!color_BackGround_Darker && !color_BackGround_Gradient) color_BackGround_Darker = true;//one must enabled
+	}
+
+	else if (name == color_BackGround_Darker.getName() || name == color_BackGround_AmtDarker.getName())
+	{
+		// workflow
+		if (name == color_BackGround_Darker.getName())
+		{
+			if (color_BackGround_Darker) color_BackGround_Gradient = false;
+			if (!color_BackGround_Darker && !color_BackGround_Gradient) color_BackGround_Darker = true;//one must enabled
+		}
+
+		//set background color from first/last palette color
+		refresh_Background();
 	}
 
 	else if (name == color_backGround_SET.getName())
@@ -5942,25 +5956,13 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		}
 	}
 
-	else if (name == color_BackGround_Darker.getName() || name == color_BackGround_AmtDarker.getName())
-	{
-		// workflow
-		if (name == color_BackGround_Darker.getName() && color_BackGround_Darker)
-		{
-			color_BackGround_Gradient = false;
-		}
-
-		//set background color from first/last palette color
-		refresh_Background();
-	}
-
 	//---
 
+	//wf
 	//else if (name == bAuto_Build_Palette.getName())
 	//{
 	//	//if (bAuto_Build_Palette) bLock_palette = false;
 	//}
-
 	//else if (name == bLock_palette.getName())
 	//{
 	//	if (bLock_palette) bAuto_Build_Palette = false;
@@ -6123,6 +6125,10 @@ void ofxColorManager::refresh_Background()
 
 			else if (color_BackGround_Gradient)
 			{
+				//TODO:
+				update_CurveTool();
+				update_Curve();
+
 				c = colCurveTest;
 			}
 
