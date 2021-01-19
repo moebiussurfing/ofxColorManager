@@ -467,7 +467,7 @@ void ofxColorManager::setup()
 
 	bRandomColor.set("RANDOM COLOR", false);
 	bAddColor.set("ADD COLOR", false);
-	bPaletteEdit.set("EDIT COLOR", false);
+	bEditPalette.set("EDIT COLOR", false);
 	bRemoveColor.set("REMOVE COLOR", false);
 	bClearPalette.set("CLEAR PALETTE", false);
 
@@ -481,7 +481,7 @@ void ofxColorManager::setup()
 	SHOW_ALL_GUI.setName("GUI MAIN");
 	SHOW_MINI_Preview.setName("MINI PREVIEW");
 	SHOW_UserPalette.setName("PALETTE");
-	SHOW_UserPaletteEditor.setName("PALETTE EDITOR");
+	SHOW_UserPaletteEditor.setName("SHOW EDITOR");
 	SHOW_Theory.setName("THEORY");
 	SHOW_debugText.setName("SHOW debug");
 	SHOW_Quantizer.setName("PICTURE");
@@ -505,7 +505,7 @@ void ofxColorManager::setup()
 	MODE_EditGradientLayout.setSerializable(false);
 
 	SHOW_Presets.set("PRESETS", true);
-	SHOW_Kit.set("Show Kit", true);
+	SHOW_Kit.set("SHOW KIT", true);
 	AutoScroll.set("AutoScroll", true);
 	//SHOW_PresetsPalette.set("Show Palette", false);
 	SHOW_BackGround.set("BACKGROUND", true);
@@ -749,7 +749,7 @@ void ofxColorManager::setup()
 	params_Palette2.add(scale_ColPalette);
 	params_Palette2.add(bResponsive_Presets);
 	params_Palette2.add(boxMaxRows);
-	//params_Palette2.add(bPaletteEdit);
+	//params_Palette2.add(bEditPalette);
 	//params_Palette2.add(bAuto_Build_Palette);
 	//params_Palette2.add(bAutoResizePalette);
 	params_AppState.add(params_Palette2);
@@ -774,7 +774,7 @@ void ofxColorManager::setup()
 	//params_control.add(color_BackGround);
 	// edit palette
 	params_control.add(bRandomColor);
-	params_control.add(bPaletteEdit);
+	params_control.add(bEditPalette);
 	params_control.add(bAddColor);
 	params_control.add(bRemoveColor);
 	params_control.add(bClearPalette);
@@ -2148,12 +2148,34 @@ void ofxColorManager::gui_PaletteEditor()
 					//else bb = ImVec2(wb, wb);
 					bb = ImVec2(wb, wb);
 
+					//-
+
+					// border to selected
+					bool bDrawBorder = false;
+					if (n == palette_colorSelected && bEditPalette)
+					{
+						bDrawBorder = true;
+						ImGui::PushStyleColor(ImGuiCol_Border, color_Pick);
+						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, linew_Pick);
+					}
+
+					//-
+
 					if (ImGui::ColorButton("##paletteDragPrst",
 						palette[n],
 						_flags,
 						bb))
 					{
-						last_ColorPicked_Palette = n;
+						//last_ColorPicked_Palette = n;
+						palette_colorSelected = n;
+					}
+
+					//-
+
+					if (bDrawBorder && bEditPalette)
+					{
+						ImGui::PopStyleColor();
+						ImGui::PopStyleVar(1);
 					}
 
 					//----
@@ -2230,10 +2252,10 @@ void ofxColorManager::gui_PaletteEditor()
 			{
 				ofxSurfingHelpers::AddBigButton(bAddColor, _w50, _h * 0.5); ImGui::SameLine();
 				ofxSurfingHelpers::AddBigButton(bRemoveColor, _w50, _h * 0.5);
-				ofxSurfingHelpers::AddBigToggle(bPaletteEdit, _w50, _h * 0.5); ImGui::SameLine();
+				ofxSurfingHelpers::AddBigToggle(bEditPalette, _w50, _h * 0.5); ImGui::SameLine();
 				ofxSurfingHelpers::AddBigToggle(bClearPalette, _w50, _h * 0.5);
 				//ofxImGui::AddParameter(bClearPalette);
-				if (bPaletteEdit) {
+				if (bEditPalette) {
 					ofxImGui::AddParameter(palette_colorSelected);
 				}
 			}
@@ -2260,11 +2282,11 @@ void ofxColorManager::gui_PaletteEditor()
 
 			//ImGui::Separator();
 			//ImGui::Dummy(ImVec2(0, 5));
-
 			//ImGui::Text("PALETTE PANEL");
 			//ImGui::Dummy(ImVec2(0, 5));
-
 			//ImGui::Dummy(ImVec2(0, 5));
+
+			ofxSurfingHelpers::AddBigToggle(SHOW_UserPalette, _w, _h * 0.5);
 
 			if (ImGui::CollapsingHeader("Layout"))
 			{
@@ -2293,7 +2315,6 @@ void ofxColorManager::gui_PaletteEditor()
 			//--
 
 			//ImGui::Checkbox("Auto-resize", &auto_resize);
-		//}
 		}
 	}
 	ofxImGui::EndWindow(mainSettings);
@@ -2451,7 +2472,8 @@ void ofxColorManager::gui_Palette()
 				_flags,
 				bb))
 			{
-				last_ColorPicked_Palette = n;
+				//last_ColorPicked_Palette = n;
+				palette_colorSelected = n;
 			}
 
 			//----
@@ -4311,17 +4333,19 @@ void ofxColorManager::gui_Presets()
 
 		ImGui::Dummy(ImVec2(0, 5));
 
-		ofxImGui::AddParameter(SHOW_Kit);
-		ofxImGui::AddParameter(AutoScroll);
+		//ImGuiColorEditFlags _flagw;
+		//_flagw = ImGuiTreeNodeFlags_None;
+		//_flagw = ImGuiTreeNodeFlags_DefaultOpen;
+
+		ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteEditor, _w, _h * 0.5);
+
+		ofxSurfingHelpers::AddBigToggle(SHOW_Kit, _w, _h * 0.5);
+		//ofxImGui::AddParameter(SHOW_Kit);
+		if (SHOW_Kit)
+			ofxImGui::AddParameter(AutoScroll);
 		//ofxImGui::AddParameter(SHOW_PresetsPalette);
 
 		ImGui::Dummy(ImVec2(0, 5));
-
-		ImGuiColorEditFlags _flagw;
-		_flagw = ImGuiTreeNodeFlags_None;
-		//_flagw = ImGuiTreeNodeFlags_DefaultOpen;
-
-		ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteEditor, _w, _h);
 
 		//--
 	}
@@ -4339,7 +4363,7 @@ void ofxColorManager::gui_Presets()
 
 		//--
 
-		if (ofxImGui::BeginWindow("Kit", mainSettings, flags))
+		if (ofxImGui::BeginWindow("KIT", mainSettings, flags))
 		{
 			// populate widgets
 			int indexPreset = gui_GridPalettes(kit, preset_Index, AutoScroll.get());
@@ -5258,15 +5282,15 @@ void ofxColorManager::palette_addColor(ofColor c)
 
 	// workflow: 
 	//select last one, just the one created now
-	if (bPaletteEdit)
+	if (bEditPalette)
 	{
 		palette_colorSelected.setMax(palette.size() - 1);
-		palette_colorSelected = palette.size() - 1;
+		//palette_colorSelected = palette.size() - 1;
 	}
 
 	//--
 
-	refresh_Palette_TARGET(palette);
+	//refresh_Palette_TARGET(palette);
 }
 
 //--------------------------------------------------------------
@@ -5307,7 +5331,7 @@ void ofxColorManager::palette_removeColor(int c)
 		//--
 
 		// workflow: 
-		if (bPaletteEdit)
+		if (bEditPalette)
 		{
 			palette_colorSelected.setMax(palette.size() - 1);
 		}
@@ -5335,7 +5359,7 @@ void ofxColorManager::palette_removeColorLast()
 	//--
 
 	// workflow: 
-	if (bPaletteEdit)
+	if (bEditPalette)
 	{
 		palette_colorSelected.setMax(palette.size() - 1);
 	}
@@ -5951,7 +5975,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	else if (name == SHOW_Quantizer.getName())
 	{
 		// workflow:
-		//if (bPaletteEdit && SHOW_Quantizer) bPaletteEdit = false;
+		//if (bEditPalette && SHOW_Quantizer) bEditPalette = false;
 
 		// workflow: 
 
@@ -6010,9 +6034,9 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		}
 	}
 
-	else if (name == bPaletteEdit.getName())
+	else if (name == bEditPalette.getName())
 	{
-		if (bPaletteEdit) {
+		if (bEditPalette) {
 			if (palette_colorSelected > palette.size() - 1)
 				palette_colorSelected = palette.size() - 1;
 
@@ -6889,7 +6913,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		else if (key == 'G')
 		{
 			SHOW_Gui_Internal = !SHOW_Gui_Internal;
-	}
+		}
 #endif
 
 		//else if (key == 'g') {
@@ -6899,7 +6923,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 		//else if (key == 'P')
 		//{
-		//	bPaletteEdit = !bPaletteEdit;
+		//	bEditPalette = !bEditPalette;
 		//}
 
 		////edit layout
@@ -7153,7 +7177,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//
 		//    else if (key == OF_KEY_RETURN)
 		//        colorBrowser.switch_sorted_Type();
-}
+	}
 }
 
 //--------------------------------------------------------------
@@ -7582,24 +7606,17 @@ void ofxColorManager::refresh_Picker_Touched()
 
 	// autosave edited color
 
-//#ifdef USE_RECTANGLE_INTERFACES
-//	if (bPaletteEdit &&
-//		palette_colorSelected != -1 &&
-//		btns_palette.size() > palette_colorSelected)
-//	{
-//		// update user palette color with recently picked color
-//
-//		// 1. interface buttons
-//		btns_palette[palette_colorSelected]->setColor(color_Clicked2);
-//
-//		// 2. palette vector
-//		palette[palette_colorSelected].set(color_Clicked2);
-//
-//		// 3. update gradient
-//		if (palette_colorSelected < gradient.getNumColors())
-//			gradient.replaceColorAtIndex(palette_colorSelected, color_Clicked2);
-//	}
-//#endif
+	if (bEditPalette &&
+		palette_colorSelected != -1 &&
+		palette_colorSelected < palette.size()-1)
+	{
+		// update user palette color with recently picked color
+		palette[palette_colorSelected].set(color_Clicked2);
+
+		// update gradient
+		if (palette_colorSelected < gradient.getNumColors())
+			gradient.replaceColorAtIndex(palette_colorSelected, color_Clicked2);
+	}
 
 	//--
 

@@ -481,7 +481,7 @@ private:
 	std::string last_Lib_NameColor = "";
 	int last_ColorPicked_Lib;
 
-	int last_ColorPicked_Palette;
+	//int last_ColorPicked_Palette;
 
 	ImVec4 color_Pick{ 1,1,1,0.5 };
 	float linew_Pick = 2.0;
@@ -570,7 +570,7 @@ private:
 	// user palette & control
 
 private:
-	ofParameter<bool> bPaletteEdit;
+	ofParameter<bool> bEditPalette;
 	ofParameter<bool> bRandomColor;
 	ofParameter<bool> bAddColor;
 	ofParameter<bool> bRemoveColor;
