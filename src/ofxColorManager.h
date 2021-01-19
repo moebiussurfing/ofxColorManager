@@ -303,7 +303,7 @@ private:
 	//extra
 #define NUM_COLOR_THEORY_TYPES_G2 7
 	ofParameter<bool> theory_Types_G2[NUM_COLOR_THEORY_TYPES_G2];
-	ofParameterGroup params_algoTypes;
+	ofParameterGroup params_ColorTheory_G2;
 
 	//-
 
@@ -346,7 +346,7 @@ private:
 	ofParameter<bool> theory_Types_G1[NUM_COLOR_THEORY_TYPES_G1];
 	shared_ptr<ColorWheelScheme> scheme;
 	vector<ofColor> colors_Theory_G1[NUM_COLOR_THEORY_TYPES_G1];
-	ofParameterGroup params_ColorTheory;
+	ofParameterGroup params_ColorTheory_G1;
 	ofParameter<ofColor> color_TheoryBase;
 	ofParameter<int> colorScheme;
 	ofParameter<std::string> colorSchemeName;

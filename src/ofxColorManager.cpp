@@ -571,7 +571,7 @@ void ofxColorManager::setup()
 
 	//extra algo
 	std::string name;
-	params_algoTypes.setName("AlgoTypes");
+	params_ColorTheory_G2.setName("AlgoTypes");
 	for (int i = 0; i < NUM_COLOR_THEORY_TYPES_G2; i++)
 	{
 		switch (i)
@@ -599,10 +599,10 @@ void ofxColorManager::setup()
 			break;
 		}
 		theory_Types_G2[i].set(name, false);
-		params_algoTypes.add(theory_Types_G2[i]);
+		params_ColorTheory_G2.add(theory_Types_G2[i]);
 	}
 
-	ofAddListener(params_algoTypes.parameterChangedE(), this, &ofxColorManager::Changed_ColorTheory);
+	ofAddListener(params_ColorTheory_G2.parameterChangedE(), this, &ofxColorManager::Changed_ColorTheory);
 
 	//-
 
@@ -1474,8 +1474,8 @@ void ofxColorManager::exit()
 
 	ofRemoveListener(params_Ranges.parameterChangedE(), this, &ofxColorManager::Changed_ColorRange);
 
-	ofRemoveListener(params_algoTypes.parameterChangedE(), this, &ofxColorManager::Changed_ColorTheory);
-	ofRemoveListener(params_ColorTheory.parameterChangedE(), this, &ofxColorManager::Changed_ColorTheory);
+	ofRemoveListener(params_ColorTheory_G1.parameterChangedE(), this, &ofxColorManager::Changed_ColorTheory);
+	ofRemoveListener(params_ColorTheory_G2.parameterChangedE(), this, &ofxColorManager::Changed_ColorTheory);
 
 	ofRemoveListener(params_Palette.parameterChangedE(), this, &ofxColorManager::Changed_ParamsPalette);
 
@@ -4437,23 +4437,24 @@ void ofxColorManager::setup_Theory_G1()
 	//numColors_Theory_G2.makeReferenceTo(numColors_Theory_G1);
 	//numColors_Theory_G1.makeReferenceTo(numColors_Theory_G2);
 
-	params_ColorTheory.clear();
-	params_ColorTheory.setName("Color Theory");
-	params_ColorTheory.add(color_TheoryBase.set("Base", ofColor::magenta, ofColor(0), ofColor(255)));
-	params_ColorTheory.add(bAuto_Theory_FromPicker.set("Auto Get Picker", true));
-	params_ColorTheory.add(colorScheme.set("Color Scheme", 6, 0, ColorWheelSchemes::colorSchemes.size() - 1));
-	params_ColorTheory.add(colorSchemeName);
-	params_ColorTheory.add(numColors_Theory_G1.set("Amnt Colors Thy ", 8, 2, MAX_PALETTE_COLORS));
-	params_ColorTheory.add(last_Theory_PickPalette.set("Last Theory Picked", 0, 0, NUM_COLOR_THEORY_TYPES_G1 - 1));
+	params_ColorTheory_G1.clear();
+	params_ColorTheory_G1.setName("Color Theory");
+	params_ColorTheory_G1.add(color_TheoryBase.set("Base", ofColor::magenta, ofColor(0), ofColor(255)));
+	params_ColorTheory_G1.add(bAuto_Theory_FromPicker.set("Auto Get Picker", true));
+	params_ColorTheory_G1.add(colorScheme.set("Color Scheme", 6, 0, ColorWheelSchemes::colorSchemes.size() - 1));
+	params_ColorTheory_G1.add(colorSchemeName);
+	params_ColorTheory_G1.add(numColors_Theory_G1.set("Amnt Colors Thy ", 8, 2, MAX_PALETTE_COLORS));
+	params_ColorTheory_G1.add(last_Theory_PickPalette.set("Last Theory Picked", 0, 0, NUM_COLOR_THEORY_TYPES_G1 + NUM_COLOR_THEORY_TYPES_G2 - 1));
+	//params_ColorTheory_G1.add(last_Theory_PickPalette.set("Last Theory Picked", 0, 0, NUM_COLOR_THEORY_TYPES_G1 - 1));
 
 	//toggles
 	for (int i = 0; i < NUM_COLOR_THEORY_TYPES_G1; i++)
 	{
 		theory_Types_G1[i].set(ColorWheelSchemes::colorSchemeNames[i], false);
-		params_ColorTheory.add(theory_Types_G1[i]);
+		params_ColorTheory_G1.add(theory_Types_G1[i]);
 	}
 
-	ofAddListener(params_ColorTheory.parameterChangedE(), this, &ofxColorManager::Changed_ColorTheory);
+	ofAddListener(params_ColorTheory_G1.parameterChangedE(), this, &ofxColorManager::Changed_ColorTheory);
 
 	refresh_Theory_G1();
 }
@@ -4770,9 +4771,35 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 	//	refresh_Theory_G1();
 	//}
 
-	//else if (name == last_Theory_PickPalette.getName())
-	//{
-	//}
+	else if (name == last_Theory_PickPalette.getName())
+	{
+		last_Theory_PickPalette = ofClamp(
+			last_Theory_PickPalette.get(),
+			last_Theory_PickPalette.getMin(),
+			last_Theory_PickPalette.getMax());
+
+		//poweroff all
+		for (int i = 0; i < NUM_COLOR_THEORY_TYPES_G1; i++)
+		{
+			theory_Types_G1[i] = false;
+		}
+		for (int i = 0; i < NUM_COLOR_THEORY_TYPES_G2; i++)
+		{
+			theory_Types_G2[i] = false;
+		}
+
+		//enable
+		if (last_Theory_PickPalette >= 0 &&
+			last_Theory_PickPalette < NUM_COLOR_THEORY_TYPES_G1)
+		{
+			theory_Types_G1[last_Theory_PickPalette] = true;
+		}
+		if (last_Theory_PickPalette >= NUM_COLOR_THEORY_TYPES_G1 &&
+			last_Theory_PickPalette < NUM_COLOR_THEORY_TYPES_G1 + NUM_COLOR_THEORY_TYPES_G2)
+		{
+			theory_Types_G2[last_Theory_PickPalette - NUM_COLOR_THEORY_TYPES_G1] = true;
+		}
+	}
 
 	//----
 
@@ -6103,103 +6130,19 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			if (key == OF_KEY_UP)
 			{
 				last_Theory_PickPalette--;
-				last_Theory_PickPalette = ofClamp(
-					last_Theory_PickPalette.get(),
-					last_Theory_PickPalette.getMin(),
-					last_Theory_PickPalette.getMax());
-
-				//poweroff
-				for (int i = 0; i < NUM_COLOR_THEORY_TYPES_G1; i++)
-				{
-					theory_Types_G1[i].disableEvents();
-					theory_Types_G1[i] = false;
-					theory_Types_G1[i].disableEvents();
-				}
-				for (int i = 0; i < NUM_COLOR_THEORY_TYPES_G2; i++)
-				{
-					theory_Types_G2[i].disableEvents();
-					theory_Types_G2[i] = false;
-					theory_Types_G2[i].disableEvents();
-				}
-
-				//enable
-				if (last_Theory_PickPalette >= 0 &&
-					last_Theory_PickPalette < NUM_COLOR_THEORY_TYPES_G1)
-				{
-					theory_Types_G1[last_Theory_PickPalette] = true;
-				}
-				if (last_Theory_PickPalette >= NUM_COLOR_THEORY_TYPES_G1 &&
-					last_Theory_PickPalette < NUM_COLOR_THEORY_TYPES_G1 + NUM_COLOR_THEORY_TYPES_G2)
-				{
-					theory_Types_G2[last_Theory_PickPalette] = true;
-				}
 			}
 			if (key == OF_KEY_DOWN)
 			{
 				last_Theory_PickPalette++;
-				last_Theory_PickPalette = ofClamp(
-					last_Theory_PickPalette.get(),
-					last_Theory_PickPalette.getMin(),
-					last_Theory_PickPalette.getMax());
-
-				//poweroff
-				for (int i = 0; i < NUM_COLOR_THEORY_TYPES_G1; i++)
-				{
-					theory_Types_G1[i].disableEvents();
-					theory_Types_G1[i] = false;
-					theory_Types_G1[i].disableEvents();
-				}
-				for (int i = 0; i < NUM_COLOR_THEORY_TYPES_G2; i++)
-				{
-					theory_Types_G2[i].disableEvents();
-					theory_Types_G2[i] = false;
-					theory_Types_G2[i].disableEvents();
-				}
-
-				//enable
-				if (last_Theory_PickPalette >= 0 &&
-					last_Theory_PickPalette < NUM_COLOR_THEORY_TYPES_G1)
-				{
-					theory_Types_G1[last_Theory_PickPalette] = true;
-				}
-				if (last_Theory_PickPalette >= NUM_COLOR_THEORY_TYPES_G1 &&
-					last_Theory_PickPalette < NUM_COLOR_THEORY_TYPES_G1 + NUM_COLOR_THEORY_TYPES_G2)
-				{
-					theory_Types_G2[last_Theory_PickPalette] = true;
-				}
 			}
-			if (key == ' ')
+			if (key == ' ')//cycle
 			{
-				last_Theory_PickPalette++;
 				if (last_Theory_PickPalette == last_Theory_PickPalette.getMax())//cycle 
 				{
 					last_Theory_PickPalette = last_Theory_PickPalette.getMin();
 				}
-
-				//poweroff
-				for (int i = 0; i < NUM_COLOR_THEORY_TYPES_G1; i++)
-				{
-					theory_Types_G1[i].disableEvents();
-					theory_Types_G1[i] = false;
-					theory_Types_G1[i].disableEvents();
-				}
-				for (int i = 0; i < NUM_COLOR_THEORY_TYPES_G2; i++)
-				{
-					theory_Types_G2[i].disableEvents();
-					theory_Types_G2[i] = false;
-					theory_Types_G2[i].disableEvents();
-				}
-
-				//enable
-				if (last_Theory_PickPalette >= 0 &&
-					last_Theory_PickPalette < NUM_COLOR_THEORY_TYPES_G1)
-				{
-					theory_Types_G1[last_Theory_PickPalette] = true;
-				}
-				if (last_Theory_PickPalette >= NUM_COLOR_THEORY_TYPES_G1 &&
-					last_Theory_PickPalette < NUM_COLOR_THEORY_TYPES_G1 + NUM_COLOR_THEORY_TYPES_G2)
-				{
-					theory_Types_G2[last_Theory_PickPalette] = true;
+				else {
+					last_Theory_PickPalette++;
 				}
 			}
 		}
