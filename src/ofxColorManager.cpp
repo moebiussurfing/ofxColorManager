@@ -38,7 +38,7 @@ void ofxColorManager::reBuild_Palette()
 		else if (SHOW_Theory)
 		{
 			_name = theory_Name;
-			refresh_Theory_G1();//?
+			//refresh_Theory_G1();//?
 			refresh_Theory_G2();
 			palette_FromTheory(last_Index_Theory);
 		}
@@ -1810,8 +1810,6 @@ void ofxColorManager::gui_Theory()
 			{
 				ImGui::PushID(n);
 
-				//-			
-
 				ImGui::SameLine();
 
 				if (ImGui::ColorButton("##ColorButtonTheory_G1",
@@ -1825,8 +1823,6 @@ void ofxColorManager::gui_Theory()
 					//color
 					//color_Picked.set(c);
 				}
-
-				//-
 
 				ImGui::PopID();
 			}
@@ -1899,9 +1895,10 @@ void ofxColorManager::gui_Theory()
 			for (int n = 0; n < _total; n++)
 			{
 				ImGui::PushID(n);
-				std::string _name;
 
+				std::string _name;
 				ofColor c;
+
 				switch (i)
 				{
 				case 0:
@@ -4758,7 +4755,7 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 
 	else if (name == last_Theory_PickPalette.getName())
 	{
-		ofLogWarning(__FUNCTION__) << "  >>> last_Theory_PickPalette : " << last_Theory_PickPalette;
+		ofLogWarning(__FUNCTION__) << "  >>>  last_Theory_PickPalette : " << last_Theory_PickPalette;
 
 		last_Theory_PickPalette = ofClamp(
 			last_Theory_PickPalette.get(),
@@ -4788,7 +4785,10 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 		}
 		
 		//TODO:
-		reBuild_Palette();
+		//reBuild_Palette();
+
+		//TODO: not updating..
+		myDEMO2.setPaletteColors(palette);
 	}
 
 	//----
@@ -6584,7 +6584,7 @@ void ofxColorManager::refresh_FromPicked()
 	//color_TheoryBase.set(color_Picked);
 
 	// ?
-	refresh_Theory_G2();
+	//refresh_Theory_G2();
 
 	//TODO:
 
