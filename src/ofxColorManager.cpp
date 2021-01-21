@@ -421,13 +421,13 @@ void ofxColorManager::setup()
 	color_BackGround_Gradient.set("Mode Gradient", false);
 	color_BackGround_Lock.set("Lock Background", false);
 
-	params_data.setName("GENERAL");
-	params_data.add(color_BackGround);
-	params_data.add(color_BackGround_Lock);
-	params_data.add(color_backGround_SET);
-	params_data.add(color_BackGround_Darker);
-	params_data.add(color_BackGround_Gradient);
-	params_data.add(AutoSet_BackGround_Color);
+	//params_data.setName("GENERAL");
+	//params_data.add(color_BackGround);
+	//params_data.add(color_BackGround_Lock);
+	//params_data.add(color_backGround_SET);
+	//params_data.add(color_BackGround_Darker);
+	//params_data.add(color_BackGround_Gradient);
+	//params_data.add(AutoSet_BackGround_Color);
 
 	//-----
 
@@ -844,7 +844,7 @@ void ofxColorManager::setup()
 	params_control.add(gradient_HardMode);
 
 	//params_control.add(color_Picked);
-	//params_control.add(color_BackGround);
+	params_control.add(color_BackGround);
 	// edit palette
 	params_control.add(bRandomColor);
 	params_control.add(bEditPalette);
@@ -4992,6 +4992,17 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 	//----
 
+	// bg 
+	else if (name == color_BackGround.getName())
+	{
+		if (colorBg_TARGET != nullptr)
+		{
+			colorBg_TARGET->set(color_BackGround.get());
+		}
+	}
+
+	//----
+
 	else if (name == bNewPreset.getName())
 	{
 		MODE_NewPreset = bNewPreset;
@@ -5438,10 +5449,6 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		{
 			color_backGround_SET = false;
 			color_BackGround.set(ofColor(color_Picked.get()));
-			if (colorBg_TARGET != nullptr)
-			{
-				colorBg_TARGET->set(color_BackGround.get());
-			}
 		}
 	}
 
@@ -5600,11 +5607,6 @@ void ofxColorManager::refresh_Background()
 			}
 
 			color_BackGround.set(c);
-
-			if (colorBg_TARGET != nullptr)
-			{
-				colorBg_TARGET->set(color_BackGround.get());
-			}
 		}
 	}
 }
@@ -6989,10 +6991,6 @@ void ofxColorManager::update_Gradient()
 				}
 				if (AutoSet_Background_FromGradient) {
 					color_BackGround.set(getColorAtPercent(control));
-					if (colorBg_TARGET != nullptr)
-					{
-						colorBg_TARGET->set(color_BackGround.get());
-					}
 				}
 				setControl_Gradient(control);
 			}
@@ -7015,10 +7013,6 @@ void ofxColorManager::update_Gradient()
 				}
 				if (AutoSet_Background_FromGradient) {
 					color_BackGround.set(getColorAtPercent(control));
-					if (colorBg_TARGET != nullptr)
-					{
-						colorBg_TARGET->set(color_BackGround.get());
-					}
 				}
 				setControl_Gradient(control);
 			}

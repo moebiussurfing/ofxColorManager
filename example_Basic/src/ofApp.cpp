@@ -29,9 +29,10 @@ void ofApp::setup()
 	pg.add(colorManager.SHOW_MINI_Preview);
 
 	gui.setup("ofApp");
-	gui.add(bDrawOfApp);
 	gui.add(pg);
-	gui.setPosition(250, 50);
+	gui.add(bDrawOfApp);
+	gui.setPosition(225, 100);
+	gui.getGroup(pg.getName()).minimize();
 }
 
 //--------------------------------------------------------------
@@ -53,22 +54,22 @@ void ofApp::drawOfApp()
 		int sz2 = sz - 4;// boxes size
 		float szhr = 0.25;
 
-		ofTranslate(gui.getShape().getBottomLeft().x + 5, gui.getShape().getBottomLeft().y + 50);
-		//ofTranslate(ofGetWidth() * 0.5 - sz * palette.size() * 0.5, 200);
-		//ofTranslate(ofGetWidth() * 0.5 - sz * palette.size() * 0.5, ofGetHeight() - 2 * sz - 30);
+		ofTranslate(gui.getShape().getBottomLeft().x + 5, gui.getShape().getBottomLeft().y + 25);
+
+		// labels
+		ofDrawBitmapStringHighlight("ofApp", 4, 0, ofColor::black, ofColor::white);
+		ofDrawBitmapStringHighlight(colorManager.getPaletteName(), 4, 15, ofColor::black, ofColor::white);
+
+		ofTranslate(0, 30);
 
 		ofFill();
 
-		// bg
+		// bg box
 		ofSetColor(0, 128);
 		int _p = 5;
 		int _pp = 2 * _p;
-		ofRectangle _rbg = ofRectangle(-_p, -_p, palette.size() *  sz + _pp, 2 * (sz * szhr) + _pp);
+		ofRectangle _rbg(-_p, -_p, palette.size() *  sz + _pp, 2 * (sz * szhr) + _pp + 2);
 		ofDrawRectangle(_rbg);
-
-		// labels
-		ofDrawBitmapStringHighlight("ofApp", 4, -7 - 20, ofColor::black, ofColor::white);
-		ofDrawBitmapStringHighlight(colorManager.getPaletteName(), 4, -10, ofColor::black, ofColor::white);
 
 		// the picker color
 		ofSetColor(colorPick);
@@ -76,9 +77,9 @@ void ofApp::drawOfApp()
 
 		// the bg color
 		ofSetColor(colorBg);
-		ofDrawRectangle(sz, 0, sz * (palette.size() - 1) - 4, sz2 * szhr);
-
-		ofTranslate(0, sz * szhr);
+		if (palette.size() > 0) ofDrawRectangle(sz, 0, sz * (palette.size() - 1) - 4, sz2 * szhr);
+		else ofDrawRectangle(sz, 0, sz, sz2 * szhr);
+		ofTranslate(0, sz * szhr + 2);
 
 		// the palette colors
 		for (auto p : palette)

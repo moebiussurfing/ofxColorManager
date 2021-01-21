@@ -581,7 +581,7 @@ private:
 	// parameters
 
 private:
-	ofParameterGroup params_data;
+	//ofParameterGroup params_data;
 	ofParameterGroup params_color;
 	ofParameterGroup params_Theory;
 	ofParameterGroup params_curve;
