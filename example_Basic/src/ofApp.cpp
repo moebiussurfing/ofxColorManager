@@ -68,7 +68,7 @@ void ofApp::draw_TESTofApp()
 		ofSetColor(0, 200);
 		int _p = 5;
 		int _pp = 2 * _p;
-		ofRectangle _rbg(-_p, -_p, palette.size() *  sz + _pp, 2 * (sz * szhr) + _pp + 2);
+		ofRectangle _rbg(-_p, -_p, palette.size() *  sz + _pp, 2 * (sz * szhr) + _pp);
 		ofDrawRectangle(_rbg);
 
 		// the picker color

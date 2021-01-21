@@ -11,7 +11,7 @@ void ofxColorManager::build_Palette_Engine()
 {
 	ofLogNotice(__FUNCTION__) << "----------------- BUILD PALETTE ENGINE -----------------";
 
-	std::string _name;
+	std::string _name = "";
 
 	//-
 
@@ -89,22 +89,22 @@ void ofxColorManager::build_Palette_Preset()
 
 	//-
 
-	if (SHOW_ColourLovers)
-	{
-		_name = myPalette_Name_BACK;
-	}
-	else if (SHOW_Quantizer)
-	{
-		_name = myPalette_Name_BACK;
-	}
-	else if (SHOW_Theory)
-	{
-		_name = theory_Name;
-	}
-	else if (SHOW_Range)
-	{
-		_name = range_Name;
-	}
+	//if (SHOW_ColourLovers)
+	//{
+	//	_name = myPalette_Name_BACK;
+	//}
+	//else if (SHOW_Quantizer)
+	//{
+	//	_name = myPalette_Name_BACK;
+	//}
+	//else if (SHOW_Theory)
+	//{
+	//	_name = theory_Name;
+	//}
+	//else if (SHOW_Range)
+	//{
+	//	_name = range_Name;
+	//}
 
 	//-
 
@@ -114,8 +114,8 @@ void ofxColorManager::build_Palette_Preset()
 	{
 		if (!bNewPreset) bNewPreset = true;
 
-		if (_name != "") textInput_New = _name;
-		else textInput_New = "name";
+		//if (_name != "") textInput_New = _name;
+		//else textInput_New = "name";
 	}
 
 	//----
@@ -5724,7 +5724,7 @@ void ofxColorManager::refresh_Range_AutoUpdate()
 		last_Index_Type = 3;
 
 		// presets 
-		if (SHOW_Presets) {
+		if (SHOW_Presets && SHOW_Range) {
 			textInput_New = range_Name;
 			bNewPreset = true;
 		}

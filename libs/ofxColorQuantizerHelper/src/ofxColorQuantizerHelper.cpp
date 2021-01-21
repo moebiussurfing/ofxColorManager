@@ -848,7 +848,8 @@ void ofxColorQuantizerHelper::Changed_parameters(ofAbstractParameter &e)
 			if (sizePalette > 0 && myColor_BACK != nullptr)
 			{
 				// set BACK color clicked
-				myColor_BACK->set(palette[0]);//auto get first color from palette beacuse there's no color click! just key pressed
+				myColor_BACK->set(colorMapSortable[0].color);//auto get first color from palette
+				//myColor_BACK->set(palette[0]);//auto get first color from palette beacuse there's no color click! just key pressed
 
 				// flag updater color ready
 				if (bUpdated_Color_BACK != nullptr)
@@ -1001,7 +1002,8 @@ void ofxColorQuantizerHelper::rebuildMap()
 	if (sizePalette > 0 && myColor_BACK != nullptr)
 	{
 		// set BACK color clicked
-		myColor_BACK->set(palette[0]);//auto get first color from palette
+		myColor_BACK->set(colorMapSortable[0].color);//auto get first color from palette
+		//myColor_BACK->set(palette[0]);//auto get first color from palette
 
 		// flag updater color ready
 		if (bUpdated_Color_BACK != nullptr)
