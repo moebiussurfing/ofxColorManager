@@ -28,6 +28,6 @@ public:
 
 	ofxPanel gui;
 	bool bGui = false;
-	ofParameter<bool> bDrawOfApp{ "Draw ofApp", false };
-	void drawOfApp();// test scene
+	ofParameter<bool> bDrawOfApp{ "Draw TEST-ofApp", false };
+	void draw_TESTofApp();// test scene
 };

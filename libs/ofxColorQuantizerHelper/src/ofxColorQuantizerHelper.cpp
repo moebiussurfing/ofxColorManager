@@ -814,6 +814,7 @@ void ofxColorQuantizerHelper::Changed_parameters(ofAbstractParameter &e)
 		// pointers back to 'communicate externally'
 
 		int sizePalette = palette.size();
+
 		if (sizePalette > 0 && myPalette_BACK != nullptr)
 		{
 			// set BACK name clicked
@@ -844,11 +845,12 @@ void ofxColorQuantizerHelper::Changed_parameters(ofAbstractParameter &e)
 			}
 
 			//color
-			if (myColor_BACK != nullptr && colorMapSortable.size() > 0)
+			if (sizePalette > 0 && myColor_BACK != nullptr)
 			{
-				myColor_BACK->set(colorMapSortable[0].color);//get the firstone
+				// set BACK color clicked
+				myColor_BACK->set(palette[0]);//auto get first color from palette beacuse there's no color click! just key pressed
 
-				// mark update flag
+				// flag updater color ready
 				if (bUpdated_Color_BACK != nullptr)
 				{
 					(*bUpdated_Color_BACK) = true;
@@ -998,9 +1000,10 @@ void ofxColorQuantizerHelper::rebuildMap()
 	//color
 	if (sizePalette > 0 && myColor_BACK != nullptr)
 	{
-		myColor_BACK->set(colorMapSortable[0].color);//get the firstone
+		// set BACK color clicked
+		myColor_BACK->set(palette[0]);//auto get first color from palette
 
-		// mark update flag
+		// flag updater color ready
 		if (bUpdated_Color_BACK != nullptr)
 		{
 			(*bUpdated_Color_BACK) = true;

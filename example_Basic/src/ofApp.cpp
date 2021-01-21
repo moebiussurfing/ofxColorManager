@@ -38,13 +38,13 @@ void ofApp::setup()
 //--------------------------------------------------------------
 void ofApp::draw()
 {
-	if (bDrawOfApp) drawOfApp();
+	if (bDrawOfApp) draw_TESTofApp();
 
 	if (bGui) gui.draw();
 }
 
 //--------------------------------------------------------------
-void ofApp::drawOfApp()
+void ofApp::draw_TESTofApp()
 {
 	// draw local (ofApp) test scene
 	ofPushStyle();
@@ -57,7 +57,7 @@ void ofApp::drawOfApp()
 		ofTranslate(gui.getShape().getBottomLeft().x + 5, gui.getShape().getBottomLeft().y + 25);
 
 		// labels
-		ofDrawBitmapStringHighlight("ofApp", 4, 0, ofColor::black, ofColor::white);
+		ofDrawBitmapStringHighlight("TESTofApp", 4, 0, ofColor::black, ofColor::white);
 		ofDrawBitmapStringHighlight(colorManager.getPaletteName(), 4, 15, ofColor::black, ofColor::white);
 
 		ofTranslate(0, 30);
@@ -65,7 +65,7 @@ void ofApp::drawOfApp()
 		ofFill();
 
 		// bg box
-		ofSetColor(0, 128);
+		ofSetColor(0, 200);
 		int _p = 5;
 		int _pp = 2 * _p;
 		ofRectangle _rbg(-_p, -_p, palette.size() *  sz + _pp, 2 * (sz * szhr) + _pp + 2);
