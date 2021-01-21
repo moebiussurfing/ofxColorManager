@@ -3844,15 +3844,14 @@ void ofxColorManager::gui_Presets()
 
 		if (ImGui::Button("LOAD", ImVec2(_w50, _h * 0.5)))//not required..
 		{
-			ofLogNotice(__FUNCTION__) << "LOAD";
-			ofLogNotice(__FUNCTION__) << "PRESET_Name: " << PRESET_Name;
+			ofLogNotice(__FUNCTION__) << "LOAD PRESET_Name: " << PRESET_Name;
+
 			preset_Load(PRESET_Name);
 		}
 
 		//ImGui::SameLine();
 
-		if (ImGui::Button("DELETE", ImVec2(_w50, _h * 0.5)))
-			ImGui::OpenPopup("DELETE?");
+		if (ImGui::Button("DELETE", ImVec2(_w50, _h * 0.5))) ImGui::OpenPopup("DELETE?");
 		if (ImGui::BeginPopupModal("DELETE?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
 		{
 			ImGui::Text("Current Preset will be deleted.\nThis operation cannot be undone!\n\n");
@@ -3911,7 +3910,8 @@ void ofxColorManager::gui_Presets()
 			ImGui::PopStyleVar();
 
 			if (!dont_ask_me_next_time) {
-				if (ImGui::Button("OK", ImVec2(120, 0))) {
+				if (ImGui::Button("OK", ImVec2(120, 0))) 
+				{
 					ofLogNotice(__FUNCTION__) << "EXPORT";
 					//path_Folder_ExportColor_Custom = ;
 					exportPalette();
@@ -3919,7 +3919,8 @@ void ofxColorManager::gui_Presets()
 					ImGui::CloseCurrentPopup();
 				}
 
-				if (ImGui::Button("SET PATH", ImVec2(120, 0))) {
+				if (ImGui::Button("SET PATH", ImVec2(120, 0))) 
+				{
 					ofLogNotice(__FUNCTION__) << "SET EXPORT PATH";
 					ImGui::Text("Pick export path..\n\n");
 
@@ -3989,104 +3990,116 @@ void ofxColorManager::gui_Presets()
 
 		ImGui::Separator();
 
-		//ofxImGui::AddParameter(MODE_NewPreset);
-		if (ofxSurfingHelpers::AddBigToggle(MODE_NewPreset, _w, _h)) {
-		}
+		ImGui::Dummy(ImVec2(0, 5));
 
-		if (MODE_NewPreset)
+		//ImGui::PushID(1);
+		//if (MODE_NewPreset.get())
+		//{
+		//	ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)ImColor::ImColor(1.0f, 1.0f, 1.0f, 1 - a));
+		//}
+
+		if (ofxSurfingHelpers::AddBigToggle(MODE_NewPreset, _w, _h))
 		{
-			ImGui::Dummy(ImVec2(0, 10));
+			textInput_New = name_TARGET[0];
+			//name_TARGET[0] = &textInput_New[0];//set
+		}
+		//ofxImGui::AddParameter(MODE_NewPreset);
+
+		//if (MODE_NewPreset.get())
+		//{
+		//	ImGui::PopStyleColor(1);
+		//}
+		//ImGui::PopID();
+
+		if (MODE_NewPreset.get())
+		{
+			//ImGui::PushID(1);
+			//ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)ImColor::ImColor(1.0f, 1.0f, 1.0f, 1 - a));
+			//ImGui::Text("NEW PRESET");
+			//ImGui::PopStyleColor(1);
+			//ImGui::PopID();
 
 			//-
 
-			ImGui::PushID(1);
-			ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)ImColor::ImColor(1.0f, 1.0f, 1.0f, 1 - a));
-			ImGui::Text("NEW PRESET");
-			ImGui::PopStyleColor(1);
-			ImGui::PopID();
-
-			//-
-
-			ImGui::Dummy(ImVec2(0, 5));
+			//ImGui::Dummy(ImVec2(0, 5));
 
 			ImGui::PushItemWidth(_w);
-			//ImGui::PushItemWidth(-1);
-
-			// loaded string into char array
-			char tab[32];
-			strncpy(tab, textInput_New.c_str(), sizeof(tab));
-			tab[sizeof(tab) - 1] = 0;
-
-			//-
-
-			if (ImGui::InputText("", tab, IM_ARRAYSIZE(tab)))
 			{
-				textInput_New = ofToString(tab);
+				// loaded string into char array
+				char tab[32];
+				strncpy(tab, textInput_New.c_str(), sizeof(tab));
+				tab[sizeof(tab) - 1] = 0;
 
-				name_TARGET[0] = &textInput_New[0];
+				//-
 
-				ofLogNotice(__FUNCTION__) << "textInput_New:" << textInput_New;
+				if (ImGui::InputText("", tab, IM_ARRAYSIZE(tab)))
+				{
+					textInput_New = ofToString(tab);
+
+					name_TARGET[0] = &textInput_New[0];
+
+					ofLogNotice(__FUNCTION__) << "textInput_New:" << textInput_New;
+				}
+
+				//-
+
+				//TODO:
+				//to disable all other key commands
+				bool b = bTextInputActive;
+				bTextInputActive = ImGui::IsItemActive();
+				if (bTextInputActive != b) ofLogNotice(__FUNCTION__) << "TextInput : " << (bTextInputActive ? "ACTIVE" : "DISABLED");
+
+				//-
+
+				////TODO: ??
+				//has_focus = 0;
+				//if (focus_1) ImGui::SetKeyboardFocusHere();
+				//ImGui::InputText("", tab, IM_ARRAYSIZE(tab));
+				//if (ImGui::IsItemActive())
+				//{
+				//	has_focus = 1;
+				//	textInput_New = ofToString(tab);
+				//	ofLogNotice(__FUNCTION__) << "textInput_New:" << textInput_New;
+				//}
+
+				//-
 			}
-
-			//TODO:
-			bool b = bTextInputActive;
-			bTextInputActive = ImGui::IsItemActive();
-			if (bTextInputActive != b) ofLogNotice(__FUNCTION__) << "TextInput : " << (bTextInputActive ? "ACTIVE" : "DISABLED");
-
-			//-
-
-			////TODO: ??
-			//has_focus = 0;
-			//if (focus_1) ImGui::SetKeyboardFocusHere();
-			//ImGui::InputText("", tab, IM_ARRAYSIZE(tab));
-			//if (ImGui::IsItemActive())
-			//{
-			//	has_focus = 1;
-			//	textInput_New = ofToString(tab);
-			//	ofLogNotice(__FUNCTION__) << "textInput_New:" << textInput_New;
-			//}
-
-			//-
-
 			ImGui::PopItemWidth();
 
 			//--
 
-			ImGui::PushID(1);
-			ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.5, 0.0f, 0.5f, a));
-
 			//ImGui::Dummy(ImVec2(0, 5));
 
-			if (ImGui::Button("SAVE NEW", ImVec2(_w, _h * 0.75)))
+			ImGui::PushID(1);
+			ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.5f, 0.0f, 0.5f, a));
+			if (ImGui::Button("SAVE NEW", ImVec2(_w, _h * 0.5)))
 			{
 				has_focus = 0;
 				MODE_NewPreset = false;
+				if (textInput_New != "") 
+				{
+					ofLogNotice(__FUNCTION__) << "textInput_New: " << textInput_New;
 
-				ofLogNotice(__FUNCTION__) << "textInput_New: " << textInput_New;
+					preset_Save(textInput_New);
+					preset_RefreshFiles();
 
-				preset_Save(textInput_New);
-				preset_RefreshFiles();
+					//--
 
-				//--
-
-				refresh_RearrengeFiles(textInput_New);
-
-				//--
-
-				// DEMO
-				if (SHOW_Demos && !DEMO_Auto) myDEMO1.reStart();
+					refresh_RearrengeFiles(textInput_New);
+				}
+				else ofLogError(__FUNCTION__) << "Empty name on textInput !";
 			}
-
 			ImGui::PopStyleColor(1);
 			ImGui::PopID();
 
 			//-
 
-			ImGui::Dummy(ImVec2(0, 5));
+			//ImGui::Dummy(ImVec2(0, 5));
 		}
 
+		ImGui::Dummy(ImVec2(0, 5));
 		ImGui::Separator();
-		
+
 		//----
 
 		// palette colors mini preview

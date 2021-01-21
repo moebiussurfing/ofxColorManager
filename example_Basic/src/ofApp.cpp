@@ -29,7 +29,7 @@ void ofApp::setup()
 	gui.setup("ofApp");
 	gui.add(colorManager.getParameters_Debug());
 	gui.add(bDraw_ofApp);
-	gui.setPosition(320, 170);
+	gui.setPosition(25, 180);
 	gui.getGroup(colorManager.getParameters_Debug().getName()).minimize();
 }
 
@@ -76,26 +76,28 @@ void ofApp::draw_TEST_ofApp()
 	ofPushStyle();
 	ofPushMatrix();
 	{
-		int sz = 100;// boxes width size
-		float szhr = 0.25;// vertical h/w ratio
-
+		int sz = 50;// boxes width size
+		float szhr = 0.5;// vertical h/w ratio
 		int sz2 = sz - 0;// boxes inner size with padding
-
-		ofTranslate(gui.getShape().getBottomLeft().x + 4, gui.getShape().getBottomLeft().y + 14);
-
-		// labels
-		ofDrawBitmapStringHighlight("TEST_ofApp", 0, 0, ofColor::black, ofColor::white);
-		ofDrawBitmapStringHighlight(name, 0, 15, ofColor::black, ofColor::white);
-		//ofDrawBitmapStringHighlight(colorManager.getPaletteName(), 0, 15, ofColor::black, ofColor::white);
-
-		ofTranslate(1, 22);
+		int _p = 5;
+		int _pp = 2 * _p;
 
 		ofFill();
+		
+		ofTranslate(gui.getShape().getBottomLeft().x + 4, gui.getShape().getBottomLeft().y + 14);
+
+		// bg label name
+		ofSetColor(0, 255);
+		ofRectangle _rlbg(-_p, -_p, (palette.size() *  sz) + _pp, (sz * szhr) + _pp);
+		ofDrawRectRounded(_rlbg, 3);
+
+		// label name
+		ofDrawBitmapStringHighlight(name, 0, 0, ofColor::black, ofColor::white);
+		
+		ofTranslate(1, 7);
 
 		// bg panel box
 		ofSetColor(0, 255);
-		int _p = 5;
-		int _pp = 2 * _p;
 		ofRectangle _rbg(-_p, -_p, (palette.size() *  sz) + _pp, 2 * (sz * szhr) + _pp);
 		ofDrawRectRounded(_rbg, 3);
 		//ofDrawRectangle(_rbg);

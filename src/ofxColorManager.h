@@ -862,7 +862,8 @@ private:
 private:
 	ofParameter<bool> MODE_NewPreset{ "NEW PRESET", false };
 
-	std::string textInput_New = "type name..";
+	std::string textInput_New = "name..";
+	//TODO:
 	bool focus_1;
 	int has_focus = 0;
 	char tab[128];
