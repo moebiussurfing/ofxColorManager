@@ -54,7 +54,7 @@ void ofApp::drawOfApp()
 
 		ofSetColor(0, 64);
 		int _p = 5;
-		ofRectangle _rbg = ofRectangle(-_p, -_p, palette.size() *  sz + 2 * _p, 2 * sz * 0.5 + 2 * _p);
+		ofRectangle _rbg = ofRectangle(-_p, -_p, palette.size() *  sz + 2 * _p, 2 * sz * szhr + 2 * _p);
 		ofDrawRectangle(_rbg);
 
 		// labels
@@ -63,7 +63,7 @@ void ofApp::drawOfApp()
 
 		// the picker color
 		ofSetColor(color);
-		ofDrawRectangle(0, 0, sz, sz);
+		ofDrawRectangle(0, 0, sz, sz * szhr);
 
 		ofTranslate(0, sz * szhr);
 
