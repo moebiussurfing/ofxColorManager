@@ -4728,12 +4728,6 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 		{
 			theory_Types_G2[last_Theory_PickPalette - NUM_COLOR_THEORY_TYPES_G1] = true;
 		}
-		
-		//TODO:
-		//build_Palette_Engine();
-
-		//TODO: not updating..
-		myDEMO2.setPaletteColors(palette);
 	}
 
 	//----
@@ -4765,6 +4759,11 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 
 				//last_Index_Theory = i;
 				last_Index_Theory.setWithoutEventNotifications(i);
+
+				//-
+
+				//bUpdated_Palette_BACK = true;
+				build_Palette_Engine();
 
 				return;
 			}
@@ -4855,6 +4854,11 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 
 			//last_Index_Theory = i + NUM_COLOR_THEORY_TYPES_G1;
 			last_Index_Theory.setWithoutEventNotifications(i + NUM_COLOR_THEORY_TYPES_G1);
+
+			//-
+
+			//bUpdated_Palette_BACK = true;
+			build_Palette_Engine();
 
 			return;
 		}
@@ -5499,7 +5503,7 @@ void ofxColorManager::Changed_ColorRange(ofAbstractParameter &e)
 
 		else
 		{
-			// ranges label pickers
+			// ranges label picked
 
 			for (int i = 0; i < NUM_TYPES_RANGES; i++)
 			{
@@ -5520,34 +5524,8 @@ void ofxColorManager::Changed_ColorRange(ofAbstractParameter &e)
 
 					//-
 
-					//TODO:
-					bUpdated_Palette_BACK = true;
-
-					////-
-
-					//// populate palette
-					//palette_FromRange(last_Index_Range);
-
-					////int st = last_Index_Range * numColors_Range.get();
-					////int ed = st + numColors_Range.get();
-
-					////palette_Clear();
-					////for (int j = st; j < ed; j++)
-					////{
-					////	ofColor c = palette_Range[j];
-					////	palette_AddColor(c);
-					////	ofLogNotice(__FUNCTION__) << "[" << i << "][" << (j - st) << "] > " << ofToString(c);
-					////}
-
-					////--
-
-					////workflow
-
-					//// DEMO
-					//if (DEMO1_Test) myDEMO1.reStart();
-
-					//textInput_New = range_Name;
-					//bNewPreset = true;
+					//bUpdated_Palette_BACK = true;
+					build_Palette_Engine();
 				}
 			}
 		}

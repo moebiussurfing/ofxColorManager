@@ -44,8 +44,9 @@ void ofApp::drawOfApp()
 	ofPushMatrix();
 	{
 		int sz = 70;// boxes size
+		float szhr = 0.25;
 
-		ofTranslate(gui.getShape().getBottomLeft().x, gui.getShape().getBottomLeft().y + 40);
+		ofTranslate(gui.getShape().getBottomLeft().x, gui.getShape().getBottomLeft().y + 50);
 		//ofTranslate(ofGetWidth() * 0.5 - sz * palette.size() * 0.5, 200);
 		//ofTranslate(ofGetWidth() * 0.5 - sz * palette.size() * 0.5, ofGetHeight() - 2 * sz - 30);
 
@@ -64,13 +65,13 @@ void ofApp::drawOfApp()
 		ofSetColor(color);
 		ofDrawRectangle(0, 0, sz, sz);
 
-		ofTranslate(0, sz * 0.5);
+		ofTranslate(0, sz * szhr);
 
 		// the palette colors
 		for (auto p : palette)
 		{
 			ofSetColor(p);
-			ofDrawRectangle(0, 0, sz, sz * 0.5);
+			ofDrawRectangle(0, 0, sz, sz * szhr);
 			ofTranslate(sz, 0);
 		}
 	}
