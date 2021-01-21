@@ -624,7 +624,9 @@ void ofxColorManager::setup()
 	bClearPalette.set("CLEAR", false);
 
 	SHOW_Scene.set("SCENE", true);
+
 	//SHOW_Scene.setSerializable(false);
+	bEditPalette.setSerializable(false);
 
 	//-
 
@@ -3467,18 +3469,14 @@ void ofxColorManager::gui_Background()
 		_w20 = _w * 0.2;
 		_h = BUTTON_BIG_HEIGHT;
 
+		bool bChanged = false;
+		static ImVec4 color;
+		color = color_BackGround.get();
+		
 		//-
 
 		{
-			ofxImGui::AddParameter(background_Draw_ENABLE);
-
-			//-
-
-			bool bChanged = false;
-			static ImVec4 color;
-			color = color_BackGround.get();
-
-			ImGui::Dummy(ImVec2(0, 5));
+			//ImGui::Dummy(ImVec2(0, 5));
 
 			//-
 
@@ -3490,7 +3488,8 @@ void ofxColorManager::gui_Background()
 			ImGuiColorEditFlags _flags;
 			_flags = ImGuiColorEditFlags_NoOptions | ImGuiColorEditFlags_NoTooltip;
 
-			if (ImGui::ColorButton("##ColorBgPicker", *(ImVec4 *)&color, _flags, ImVec2(_w, _h))) {
+			if (ImGui::ColorButton("##ColorBgPicker", *(ImVec4 *)&color, _flags, ImVec2(_w, _h))) 
+			{
 				bChanged = true;
 			}
 
@@ -3531,6 +3530,7 @@ void ofxColorManager::gui_Background()
 			{
 				ImGui::PushItemWidth(_w50);
 
+				ofxImGui::AddParameter(background_Draw_ENABLE);
 				ofxImGui::AddParameter(color_BackGround_Lock);
 
 				if (!color_BackGround_Lock)
@@ -4529,6 +4529,8 @@ void ofxColorManager::refresh_Palette_TARGET(vector<ofColor> &p)
 		//TODO. there's a faster way without size problems?
 		//palette_TARGET = (vector<ofColor>)(p);
 	}
+
+	//--
 }
 
 //----
