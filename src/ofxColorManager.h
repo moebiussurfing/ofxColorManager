@@ -7,9 +7,11 @@
 TODO:
 
 + demo 2: svg demo resizer shape using scalable draggable rect
-+ group and simplify xml: ofxColorManager_Settings.xml
-+ fix pick colors: lovers, 
-
++ fix theory: sometimes not upadting demo2 svg colors 
++ fix pick color: lovers, quantizer.. 
++ startup hangs here:
+[notice ] ofxColorManager::refresh_Theory_G1:
+[notice ] ofxColorManager::generate_Range:
 */
 
 
