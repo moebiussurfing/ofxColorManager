@@ -10,7 +10,7 @@ void ofxColorManager::dragEvent(ofDragInfo info) {
 void ofxColorManager::build_Palette_Flip()
 {
 	ofLogNotice(__FUNCTION__) << "----------------- BUILD PALETTE FLIP -----------------";
-	
+
 	std::reverse(palette.begin(), palette.end());
 
 	build_Gradient();
@@ -50,7 +50,7 @@ void ofxColorManager::build_Palette_Flip()
 
 	//if (SHOW_Presets)
 	//{
-	//	if (!bNewPreset) bNewPreset = true;
+	//	if (!MODE_NewPreset) MODE_NewPreset = true;
 
 	//	//if (_name != "") textInput_New = _name;
 	//	//else textInput_New = "name";
@@ -124,7 +124,7 @@ void ofxColorManager::build_Palette_Engine()
 
 	if (SHOW_Presets)
 	{
-		if (!bNewPreset) bNewPreset = true;
+		if (!MODE_NewPreset) MODE_NewPreset = true;
 
 		//if (_name != "") textInput_New = _name;
 		//else textInput_New = "name";
@@ -157,7 +157,15 @@ void ofxColorManager::build_Palette_Engine()
 
 	//--
 
+	// ofApp targets
+
 	refresh_Palette_TARGET(palette);
+
+	// name
+	if (name_TARGET != nullptr)
+	{
+		name_TARGET[0] = _name;
+	}
 }
 
 //--------------------------------------------------------------
@@ -190,13 +198,13 @@ void ofxColorManager::build_Palette_Preset()
 
 	// presets
 
-	if (SHOW_Presets)
-	{
-		if (!bNewPreset) bNewPreset = true;
+	//if (SHOW_Presets)
+	//{
+	//	if (!MODE_NewPreset) MODE_NewPreset = true;
 
-		//if (_name != "") textInput_New = _name;
-		//else textInput_New = "name";
-	}
+	//	//if (_name != "") textInput_New = _name;
+	//	//else textInput_New = "name";
+	//}
 
 	//----
 
@@ -224,12 +232,22 @@ void ofxColorManager::build_Palette_Preset()
 
 	//--
 
+	// ofApp targets
+
+	// picked color
 	if (colorBg_TARGET != nullptr)
 	{
 		colorBg_TARGET->set(color_BackGround.get());
 	}
 
+	// palette
 	refresh_Palette_TARGET(palette);
+
+	// name
+	if (name_TARGET != nullptr)
+	{
+		name_TARGET[0] = PRESET_Name;
+	}
 }
 
 //--------------------------------------------------------------
@@ -469,7 +487,7 @@ void ofxColorManager::setup()
 
 	// layout
 
-	refresh_Gui_Layout();
+	refresh_Gradient_GuiLayout();
 
 	//----
 
@@ -926,7 +944,7 @@ void ofxColorManager::setup()
 
 	params_control.setName("ofxColorManager");
 
-	params_control.add(bNewPreset);
+	params_control.add(MODE_NewPreset);
 	params_control.add(numColors_Engines);
 	params_control.add(AppMode);
 	params_control.add(last_Index_Theory);
@@ -1017,7 +1035,7 @@ void ofxColorManager::startup()
 	//rGradientPreview.loadSettings();
 	rGradientPreview.loadSettings("_Curve_Gui", path_Layout, false);
 
-	refresh_Gui_Layout();
+	refresh_Gradient_GuiLayout();
 
 	//-
 
@@ -1247,6 +1265,16 @@ void ofxColorManager::draw_Info()
 	ofPushMatrix();
 	ofPushStyle();
 
+	//blink when a new preset is editing
+	float freq = 0.075;//speed freq
+	float min = 0.25;
+	float max = 0.75;
+	float a;
+
+	if (bMODE_NewPreset && MODE_NewPreset)
+		a = ofMap(glm::sin(freq * ofGetFrameNum()), -1, 1, min, max);
+	else a = 1.0f;
+
 	//-
 
 	int pady = 50;
@@ -1256,111 +1284,160 @@ void ofxColorManager::draw_Info()
 	int y;
 	int h;
 
-	std::string t0 = PRESET_Name;
-	std::string t1 = myPalette_Name_BACK;
-	std::string t2 = theory_Name;
-	std::string t3 = range_Name;
+	std::string t0 = name_TARGET[0];
 
 	float _w0 = ofxSurfingHelpers::getWidthBBtextBoxed(fontBig, t0);
-	float _w1 = ofxSurfingHelpers::getWidthBBtextBoxed(fontBig, t1);
-	float _w2 = ofxSurfingHelpers::getWidthBBtextBoxed(fontMedium, t2);
-	float _w3 = ofxSurfingHelpers::getWidthBBtextBoxed(fontSmall, t3);
-
-	int i = 0;
 
 	y = pady + fontBig.getSize();
 
-	ofColor c0, c1, c0_Ghost, c1_Ghost;
-	int _alphaGhost = 32;
+	int _alpha = 200;
 
-	c0.set(0, 200);
-	c1.set(255, 200);
+	ofColor c0, c1;
+	c0.set(0, _alpha * a);
+	c1.set(255, _alpha * a);
 
-	c0_Ghost.set(0, _alphaGhost);
-	c1_Ghost.set(255, _alphaGhost);
-
-	//TODO: create double line shadow draw methoid into ofxSurfingHelpers
+	//ofColor c0_Ghost, c1_Ghost;
+	//int _alphaGhost = 32;
+	//c0_Ghost.set(0, _alphaGhost);
+	//c1_Ghost.set(255, _alphaGhost);
 
 	padh = 15;
 	h = padh;
 	y += h;
 
-	//preset name
-	//if (t0 != "" || txt_lineActive[0])//hide now used lines vs draw but transparent
-	if (txt_lineActive[0])//hide now used lines vs draw but transparent
-	{
-		x = ofGetWidth() * 0.5 - _w0 * 0.5;
-		if (txt_lineActive[i]) ofSetColor(c0);
-		else ofSetColor(c0_Ghost);
-		fontBig.drawString(t0, x + sp, y + sp);
+	x = ofGetWidth() * 0.5 - _w0 * 0.5;
+	ofSetColor(c0);
+	fontBig.drawString(t0, x + sp, y + sp);
 
-		if (txt_lineActive[i]) ofSetColor(c1);
-		else ofSetColor(c1_Ghost);
-		fontBig.drawString(t0, x, y);
-
-		padh = 25;
-		h = fontBig.getSize() + padh;
-		y += h;
-	}
-	i++;
-
-	//lover name
-	//if (t1 != "" || txt_lineActive[1])
-	if (txt_lineActive[1])
-	{
-		x = ofGetWidth() * 0.5 - _w1 * 0.5;
-		if (txt_lineActive[i]) ofSetColor(c0);
-		else ofSetColor(c0_Ghost);
-		fontBig.drawString(t1, x + sp, y + sp);
-
-		if (txt_lineActive[i]) ofSetColor(c1);
-		else ofSetColor(c1_Ghost);
-		fontBig.drawString(t1, x, y);
-
-		padh = -10;
-		h = fontBig.getSize() + padh;
-		y += h;
-	}
-	i++;
-
-	//theory name
-	//if (t2 != "" || txt_lineActive[1])
-	if (txt_lineActive[2])
-	{
-		x = ofGetWidth() * 0.5 - _w2 * 0.5;
-		if (txt_lineActive[i]) ofSetColor(c0);
-		else ofSetColor(c0_Ghost);
-		fontMedium.drawString(t2, x + sp, y + sp);
-
-		if (txt_lineActive[i]) ofSetColor(c1);
-		else ofSetColor(c1_Ghost);
-		fontMedium.drawString(t2, x, y);
-
-		padh = 20;
-		h = fontMedium.getSize() + padh;
-		y += h;
-	}
-	i++;
-
-	//range name
-	//if (t3 != "" || txt_lineActive[3])
-	if (txt_lineActive[3])
-	{
-		x = ofGetWidth() * 0.5 - _w3 * 0.5;
-		if (txt_lineActive[i]) ofSetColor(c0);
-		else ofSetColor(c0_Ghost);
-		fontSmall.drawString(t3, x + sp, y + sp);
-
-		if (txt_lineActive[i]) ofSetColor(c1);
-		else ofSetColor(c1_Ghost);
-		fontSmall.drawString(t3, x, y);
-	}
+	ofSetColor(c1);
+	fontBig.drawString(t0, x, y);
 
 	//-
 
 	ofPopStyle();
 	ofPopMatrix();
 }
+
+////--------------------------------------------------------------
+//void ofxColorManager::draw_Info()
+//{
+//	ofPushMatrix();
+//	ofPushStyle();
+//
+//	//-
+//
+//	int pady = 50;
+//	int padh;
+//	int sp = 3;
+//	int x;
+//	int y;
+//	int h;
+//
+//	std::string t0 = PRESET_Name;
+//	std::string t1 = myPalette_Name_BACK;
+//	std::string t2 = theory_Name;
+//	std::string t3 = range_Name;
+//
+//	float _w0 = ofxSurfingHelpers::getWidthBBtextBoxed(fontBig, t0);
+//	float _w1 = ofxSurfingHelpers::getWidthBBtextBoxed(fontBig, t1);
+//	float _w2 = ofxSurfingHelpers::getWidthBBtextBoxed(fontMedium, t2);
+//	float _w3 = ofxSurfingHelpers::getWidthBBtextBoxed(fontSmall, t3);
+//
+//	int i = 0;
+//
+//	y = pady + fontBig.getSize();
+//
+//	ofColor c0, c1, c0_Ghost, c1_Ghost;
+//	int _alphaGhost = 32;
+//
+//	c0.set(0, 200);
+//	c1.set(255, 200);
+//
+//	c0_Ghost.set(0, _alphaGhost);
+//	c1_Ghost.set(255, _alphaGhost);
+//
+//	//TODO: create double line shadow draw methoid into ofxSurfingHelpers
+//
+//	padh = 15;
+//	h = padh;
+//	y += h;
+//
+//	//preset name
+//	//if (t0 != "" || txt_lineActive[0])//hide now used lines vs draw but transparent
+//	if (txt_lineActive[0])//hide now used lines vs draw but transparent
+//	{
+//		x = ofGetWidth() * 0.5 - _w0 * 0.5;
+//		if (txt_lineActive[i]) ofSetColor(c0);
+//		else ofSetColor(c0_Ghost);
+//		fontBig.drawString(t0, x + sp, y + sp);
+//
+//		if (txt_lineActive[i]) ofSetColor(c1);
+//		else ofSetColor(c1_Ghost);
+//		fontBig.drawString(t0, x, y);
+//
+//		padh = 25;
+//		h = fontBig.getSize() + padh;
+//		y += h;
+//	}
+//	i++;
+//
+//	//lover name
+//	//if (t1 != "" || txt_lineActive[1])
+//	if (txt_lineActive[1])
+//	{
+//		x = ofGetWidth() * 0.5 - _w1 * 0.5;
+//		if (txt_lineActive[i]) ofSetColor(c0);
+//		else ofSetColor(c0_Ghost);
+//		fontBig.drawString(t1, x + sp, y + sp);
+//
+//		if (txt_lineActive[i]) ofSetColor(c1);
+//		else ofSetColor(c1_Ghost);
+//		fontBig.drawString(t1, x, y);
+//
+//		padh = -10;
+//		h = fontBig.getSize() + padh;
+//		y += h;
+//	}
+//	i++;
+//
+//	//theory name
+//	//if (t2 != "" || txt_lineActive[1])
+//	if (txt_lineActive[2])
+//	{
+//		x = ofGetWidth() * 0.5 - _w2 * 0.5;
+//		if (txt_lineActive[i]) ofSetColor(c0);
+//		else ofSetColor(c0_Ghost);
+//		fontMedium.drawString(t2, x + sp, y + sp);
+//
+//		if (txt_lineActive[i]) ofSetColor(c1);
+//		else ofSetColor(c1_Ghost);
+//		fontMedium.drawString(t2, x, y);
+//
+//		padh = 20;
+//		h = fontMedium.getSize() + padh;
+//		y += h;
+//	}
+//	i++;
+//
+//	//range name
+//	//if (t3 != "" || txt_lineActive[3])
+//	if (txt_lineActive[3])
+//	{
+//		x = ofGetWidth() * 0.5 - _w3 * 0.5;
+//		if (txt_lineActive[i]) ofSetColor(c0);
+//		else ofSetColor(c0_Ghost);
+//		fontSmall.drawString(t3, x + sp, y + sp);
+//
+//		if (txt_lineActive[i]) ofSetColor(c1);
+//		else ofSetColor(c1_Ghost);
+//		fontSmall.drawString(t3, x, y);
+//	}
+//
+//	//-
+//
+//	ofPopStyle();
+//	ofPopMatrix();
+//}
 
 //--------------------------------------------------------------
 #ifndef AUTO_DRAW_CALLBACK
@@ -1382,7 +1459,10 @@ void ofxColorManager::draw(ofEventArgs & args)
 		//--
 
 		//debug
-		ofDrawBitmapStringHighlight("last_Index_Theory: " + ofToString(last_Index_Theory), 20, 20);
+		if (0)
+		{
+			ofDrawBitmapStringHighlight("last_Index_Theory: " + ofToString(last_Index_Theory), 20, 20);
+		}
 
 		//--
 
@@ -1436,7 +1516,6 @@ void ofxColorManager::draw(ofEventArgs & args)
 		if (guiVisible)
 		{
 			mouseOverGui = draw_Gui();
-			//mouseOverGui = ofxImGui::IsMouseOverGui();
 
 			if (mouseOverGui != mouseOverGui_PRE)
 			{
@@ -1452,6 +1531,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 				{
 					ENABLE_keys = true;
 				}
+
 
 				//myDEMO1.setEnableMouseCamera();
 			}
@@ -1542,7 +1622,7 @@ void ofxColorManager::exit()
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::refresh_Gui_Layout()
+void ofxColorManager::refresh_Gradient_GuiLayout()
 {
 	curve_Slider_ExpTweak.setVisible(SHOW_GradientCurve);
 	curve_Slider_Pick.setVisible(SHOW_GradientCurve);
@@ -1635,13 +1715,6 @@ void ofxColorManager::refresh_Gui_Layout()
 
 	//----
 }
-//
-////--------------------------------------------------------------
-//void ofxColorManager::palette_rearrenge()
-//{
-//	//refresh_Palette_TARGET(palette);
-//}
-
 
 //----
 
@@ -1835,7 +1908,7 @@ void ofxColorManager::gui_Theory()
 			//std::string _label = ColorWheelSchemes::colorSchemeNames[i];
 			if (ofxSurfingHelpers::AddSmallButton(theory_Types_G1[i], 150, _cSize))
 			{
-				last_Theory_PickPalette = i;
+				last_Index_Theory_PickPalette = i;
 			}
 
 			//-
@@ -1927,7 +2000,7 @@ void ofxColorManager::gui_Theory()
 
 			if (ofxSurfingHelpers::AddSmallButton(theory_Types_G2[i], 150, _cSize))
 			{
-				last_Theory_PickPalette = NUM_COLOR_THEORY_TYPES_G1 + i;
+				last_Index_Theory_PickPalette = NUM_COLOR_THEORY_TYPES_G1 + i;
 			}
 
 			//-
@@ -2216,7 +2289,8 @@ void ofxColorManager::gui_PaletteEditor()
 					//ofxSurfingHelpers::AddBigToggle(bEditPalette, _w50, _h * 0.5); 
 					ofxSurfingHelpers::AddBigToggle(bClearPalette, _w50, _h * 0.5);
 
-					if (bColor_HUE || bColor_SAT || bColor_BRG) {
+					if (bColor_HUE || bColor_SAT || bColor_BRG)
+					{
 						ImGui::SameLine();
 						ofxSurfingHelpers::AddBigButton(bRandomColor, _w50, _h * 0.5);
 					}
@@ -3711,12 +3785,12 @@ void ofxColorManager::gui_Presets()
 
 					preset_Load(PRESET_Name);
 
-					//-
+					////-
 
-					if (bNewPreset) bNewPreset = false;
-
-					//workflow
-					if (DEMO1_Test && !DEMO_Auto) myDEMO1.reStart();
+					////workflow
+					//// new preset
+					//if (MODE_NewPreset) MODE_NewPreset = false;
+					//if (DEMO1_Test && !DEMO_Auto) myDEMO1.reStart();
 				}
 			}
 		}
@@ -3749,10 +3823,10 @@ void ofxColorManager::gui_Presets()
 
 					//-
 
-					if (bNewPreset) bNewPreset = false;
+					//if (MODE_NewPreset) MODE_NewPreset = false;
 
-					//workflow
-					if (DEMO1_Test && !DEMO_Auto) myDEMO1.reStart();
+					////workflow
+					//if (DEMO1_Test && !DEMO_Auto) myDEMO1.reStart();
 				}
 			}
 		}
@@ -3785,7 +3859,7 @@ void ofxColorManager::gui_Presets()
 					preset_Load(PRESET_Name);
 				}
 
-				if (bNewPreset) bNewPreset = false;
+				if (MODE_NewPreset) MODE_NewPreset = false;
 			}
 
 			ImGui::PopItemWidth();
@@ -3810,7 +3884,7 @@ void ofxColorManager::gui_Presets()
 
 			PRESET_Name = textInput_temp;
 
-			ofLogNotice(__FUNCTION__) << "PRdrawESET_name: " << PRESET_Name;
+			ofLogNotice(__FUNCTION__) << "PRESET_name: " << PRESET_Name;
 
 			preset_Save(PRESET_Name);
 			preset_RefreshFiles();
@@ -3959,7 +4033,7 @@ void ofxColorManager::gui_Presets()
 
 		ImGui::Dummy(ImVec2(0, 5));
 
-		ofxImGui::AddParameter(bNewPreset);
+		ofxImGui::AddParameter(MODE_NewPreset);
 
 		//ImGui::SameLine();
 		//if (ImGui::Button("REFRESH"))//current preset
@@ -3970,7 +4044,7 @@ void ofxColorManager::gui_Presets()
 
 		//----
 
-		if (MODE_NewPreset && bNewPreset)
+		if (bMODE_NewPreset && MODE_NewPreset)
 		{
 			ImGui::Separator();
 			ImGui::Dummy(ImVec2(0, 10));
@@ -4035,7 +4109,7 @@ void ofxColorManager::gui_Presets()
 			if (ImGui::Button("SAVE NEW", ImVec2(_w, _h * 0.75)))
 			{
 				has_focus = 0;
-				bNewPreset = false;
+				MODE_NewPreset = false;
 
 				ofLogNotice(__FUNCTION__) << "textInput_New: " << textInput_New;
 
@@ -4067,16 +4141,10 @@ void ofxColorManager::gui_Presets()
 
 		ImGui::Dummy(ImVec2(0, 5));
 
-		//ImGuiColorEditFlags _flagw;
-		//_flagw = ImGuiTreeNodeFlags_None;
-		//_flagw = ImGuiTreeNodeFlags_DefaultOpen;
-
 		ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteEditor, _w, _h * 0.5);
-
 		ofxSurfingHelpers::AddBigToggle(SHOW_Kit, _w, _h * 0.5);
+		if (SHOW_Kit) ofxImGui::AddParameter(AutoScroll);
 		//ofxImGui::AddParameter(SHOW_Kit);
-		if (SHOW_Kit)
-			ofxImGui::AddParameter(AutoScroll);
 		//ofxImGui::AddParameter(SHOW_PresetsPalette);
 
 		ImGui::Dummy(ImVec2(0, 5));
@@ -4204,7 +4272,7 @@ bool ofxColorManager::draw_Gui()
 #ifdef USE_COLOR_LOVERS
 		if (SHOW_ColourLovers) colourLoversHelper.draw();
 #endif
-		if (SHOW_Quantizer) colorQuantizer.gui_Quantizer();
+		if (SHOW_Quantizer) colorQuantizer.draw_Gui();
 		if (SHOW_Panels) gui_Panels();
 		if (SHOW_Export) gui_Export();
 		if (SHOW_Demos) gui_Demo();
@@ -4489,8 +4557,8 @@ void ofxColorManager::setup_Theory_G1()
 	params_ColorTheory_G1.add(colorScheme.set("Color Scheme", 6, 0, ColorWheelSchemes::colorSchemes.size() - 1));
 	params_ColorTheory_G1.add(colorSchemeName);
 	params_ColorTheory_G1.add(numColors_Theory_G1.set("Amnt Colors Thy ", 8, 2, MAX_PALETTE_COLORS));
-	params_ColorTheory_G1.add(last_Theory_PickPalette.set("Last Theory Picked", 0, 0, NUM_COLOR_THEORY_TYPES_G1 + NUM_COLOR_THEORY_TYPES_G2 - 1));
-	//params_ColorTheory_G1.add(last_Theory_PickPalette.set("Last Theory Picked", 0, 0, NUM_COLOR_THEORY_TYPES_G1 - 1));
+	params_ColorTheory_G1.add(last_Index_Theory_PickPalette.set("Last Theory Picked", 0, 0, NUM_COLOR_THEORY_TYPES_G1 + NUM_COLOR_THEORY_TYPES_G2 - 1));
+	//params_ColorTheory_G1.add(last_Index_Theory_PickPalette.set("Last Theory Picked", 0, 0, NUM_COLOR_THEORY_TYPES_G1 - 1));
 
 	//toggles
 	for (int i = 0; i < NUM_COLOR_THEORY_TYPES_G1; i++)
@@ -4709,7 +4777,7 @@ void ofxColorManager::palette_Clear()
 	//--
 
 	//TODO:
-	//refresh_Palette_TARGET(palette);
+	refresh_Palette_TARGET(palette);
 
 	last_Index_ColorPalette.setMax(palette.size() - 1);
 }
@@ -4814,14 +4882,14 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 	//	refresh_Theory_G1();
 	//}
 
-	else if (name == last_Theory_PickPalette.getName())
+	else if (name == last_Index_Theory_PickPalette.getName())
 	{
-		ofLogWarning(__FUNCTION__) << "  >>>  last_Theory_PickPalette : " << last_Theory_PickPalette;
+		ofLogWarning(__FUNCTION__) << "  >>>  last_Index_Theory_PickPalette : " << last_Index_Theory_PickPalette;
 
-		last_Theory_PickPalette = ofClamp(
-			last_Theory_PickPalette.get(),
-			last_Theory_PickPalette.getMin(),
-			last_Theory_PickPalette.getMax());
+		last_Index_Theory_PickPalette = ofClamp(
+			last_Index_Theory_PickPalette.get(),
+			last_Index_Theory_PickPalette.getMin(),
+			last_Index_Theory_PickPalette.getMax());
 
 		//poweroff all
 		for (int i = 0; i < NUM_COLOR_THEORY_TYPES_G1; i++)
@@ -4834,15 +4902,15 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 		}
 
 		//enable
-		if (last_Theory_PickPalette >= 0 &&
-			last_Theory_PickPalette < NUM_COLOR_THEORY_TYPES_G1)
+		if (last_Index_Theory_PickPalette >= 0 &&
+			last_Index_Theory_PickPalette < NUM_COLOR_THEORY_TYPES_G1)
 		{
-			theory_Types_G1[last_Theory_PickPalette] = true;
+			theory_Types_G1[last_Index_Theory_PickPalette] = true;
 		}
-		if (last_Theory_PickPalette >= NUM_COLOR_THEORY_TYPES_G1 &&
-			last_Theory_PickPalette < NUM_COLOR_THEORY_TYPES_G1 + NUM_COLOR_THEORY_TYPES_G2)
+		if (last_Index_Theory_PickPalette >= NUM_COLOR_THEORY_TYPES_G1 &&
+			last_Index_Theory_PickPalette < NUM_COLOR_THEORY_TYPES_G1 + NUM_COLOR_THEORY_TYPES_G2)
 		{
-			theory_Types_G2[last_Theory_PickPalette - NUM_COLOR_THEORY_TYPES_G1] = true;
+			theory_Types_G2[last_Index_Theory_PickPalette - NUM_COLOR_THEORY_TYPES_G1] = true;
 		}
 	}
 
@@ -5119,11 +5187,11 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 	//----
 
-	else if (name == bNewPreset.getName())
+	else if (name == MODE_NewPreset.getName())
 	{
-		MODE_NewPreset = bNewPreset;
+		bMODE_NewPreset = MODE_NewPreset;
 		//wf
-		focus_1 = bNewPreset;
+		focus_1 = MODE_NewPreset;
 	}
 
 	//----
@@ -5163,7 +5231,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 		if (SHOW_Presets) {
 			textInput_New = theory_Name;
-			bNewPreset = true;
+			MODE_NewPreset = true;
 		}
 	}
 
@@ -5371,7 +5439,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			rGradientPreview.disableEdit();
 		}
 
-		refresh_Gui_Layout();
+		refresh_Gradient_GuiLayout();
 	}
 
 	//----
@@ -5422,28 +5490,25 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 	// editor
 
-	else if (name == bRandomColor.getName())
+	else if (name == bRandomColor.getName() && bRandomColor.get())
 	{
-		if (bRandomColor)
-		{
-			bRandomColor = false;
+		bRandomColor = false;
 
-			float _hue;
-			float _sat;
-			float _brg;
+		float _hue;
+		float _sat;
+		float _brg;
 
-			if (bColor_HUE) {
-				_hue = ofRandom(color_HUE_0 - 128.f * color_HUE_Power, color_HUE_0 + 128.f * color_HUE_Power);
-				color_HUE = _hue;
-			}
-			if (bColor_SAT) {
-				_sat = ofRandom(color_SAT_0 - 128.f * color_SAT_Power, color_SAT_0 + 128.f * color_SAT_Power);
-				color_SAT = _sat;
-			}
-			if (bColor_BRG) {
-				_brg = ofRandom(color_BRG_0 - 128.f * color_BRG_Power, color_BRG_0 + 128.f * color_BRG_Power);
-				color_BRG = _brg;
-			}
+		if (bColor_HUE) {
+			_hue = ofRandom(color_HUE_0 - 128.f * color_HUE_Power, color_HUE_0 + 128.f * color_HUE_Power);
+			color_HUE = _hue;
+		}
+		if (bColor_SAT) {
+			_sat = ofRandom(color_SAT_0 - 128.f * color_SAT_Power, color_SAT_0 + 128.f * color_SAT_Power);
+			color_SAT = _sat;
+		}
+		if (bColor_BRG) {
+			_brg = ofRandom(color_BRG_0 - 128.f * color_BRG_Power, color_BRG_0 + 128.f * color_BRG_Power);
+			color_BRG = _brg;
 		}
 	}
 
@@ -5824,7 +5889,7 @@ void ofxColorManager::refresh_Range_AutoUpdate()
 		// presets 
 		if (SHOW_Presets && SHOW_Range) {
 			textInput_New = range_Name;
-			bNewPreset = true;
+			MODE_NewPreset = true;
 		}
 
 		//--
@@ -5863,19 +5928,32 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 		if (0) {}
 
-		else if (key == OF_KEY_RETURN)
-		{
-			bRandomColor = true;
-		}
+		//--
 
+		// help
+		else if (key == 'h' || key == 'H')
+		{
+			ENABLE_HelpInfo = !ENABLE_HelpInfo;
+		}
+		// gui
 		else if (key == 'g')
 		{
 			setToggleVisible();
 		}
-
+		// mini preview
 		else if (key == 'm')
 		{
 			SHOW_MINI_Preview = !SHOW_MINI_Preview;
+		}
+
+		//--
+
+		// user workflow
+
+		// randomize color
+		else if (key == OF_KEY_RETURN)
+		{
+			bRandomColor = true;
 		}
 
 		// amount colors
@@ -5888,124 +5966,9 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			numColors_Engines++;
 		}
 
-		//--
-
-		// help
-		else if (key == 'h' || key == 'H')
-		{
-			ENABLE_HelpInfo = !ENABLE_HelpInfo;
-		}
-
-		//--
-
-		// panels
-
-		// browse modes
+		// browse app modes
 		else if (key == OF_KEY_TAB) {
 			AppMode++;
-		}
-
-		//--
-
-		else if (key == OF_KEY_F1)//palette
-		{
-			SHOW_UserPaletteEditor = !SHOW_UserPaletteEditor;
-			SHOW_UserPaletteFloating = SHOW_UserPaletteEditor;
-			//SHOW_UserPaletteFloating = !SHOW_UserPaletteFloating;
-		}
-		else if (key == OF_KEY_F2)//picker
-		{
-			SHOW_Picker = !SHOW_Picker;
-			//if (SHOW_Picker) SHOW_BackGround = false;
-		}
-		else if (key == OF_KEY_F3)//bg
-		{
-			SHOW_BackGround = !SHOW_BackGround;
-			//if (SHOW_BackGround) SHOW_Picker = false;
-		}
-		else if (key == OF_KEY_F4)//library
-		{
-			SHOW_Library = !SHOW_Library;
-		}
-
-		else if (key == OF_KEY_F5)//theory
-		{
-			SHOW_Theory = !SHOW_Theory;
-		}
-		else if (key == OF_KEY_F6)//range
-		{
-			SHOW_Range = !SHOW_Range;
-		}
-		else if (key == OF_KEY_F7)//lovers
-		{
-			SHOW_ColourLovers = !SHOW_ColourLovers;
-		}
-		else if (key == OF_KEY_F8)//quantizer
-		{
-			SHOW_Quantizer = !SHOW_Quantizer;
-		}
-
-		else if (key == OF_KEY_F9)//presets
-		{
-			SHOW_Presets = !SHOW_Presets;
-
-			if (SHOW_Presets) {
-				SHOW_UserPaletteFloating = false;
-				SHOW_UserPaletteEditor = false;
-				SHOW_Picker = false;
-				SHOW_Library = false;
-				SHOW_BackGround = false;
-				SHOW_Theory = false;
-				SHOW_Range = false;
-				SHOW_ColourLovers = false;
-				SHOW_Quantizer = false;
-				SHOW_GradientCurve = false;
-			}
-		}
-
-		else if (key == OF_KEY_F10)//curve
-		{
-			SHOW_GradientCurve = !SHOW_GradientCurve;
-
-			if (SHOW_GradientCurve) {
-				SHOW_UserPaletteFloating = false;
-				SHOW_UserPaletteEditor = false;
-				SHOW_Picker = false;
-				SHOW_Library = false;
-				SHOW_BackGround = false;
-				SHOW_Theory = false;
-				SHOW_Range = false;
-				SHOW_ColourLovers = false;
-				SHOW_Quantizer = false;
-				//SHOW_Presets = false;
-			}
-		}
-		//else if (key == OF_KEY_F10)//all on
-		//{
-		//	SHOW_UserPaletteFloating = true;// F1
-		//	SHOW_Picker = true;// F2
-		//	SHOW_GradientCurve = true;// F3
-		//	SHOW_Library = true;// F4
-		//	SHOW_BackGround = true;
-		//	SHOW_Theory = true;// F5
-		//	SHOW_Range = true;// F6
-		//	SHOW_ColourLovers = true;// F7
-		//	SHOW_Quantizer = true;// F8
-		//	SHOW_Presets = true;
-		//}
-		else if (key == OF_KEY_F11)//all off
-		{
-			SHOW_UserPaletteFloating = false;
-			SHOW_UserPaletteEditor = false;
-			SHOW_Picker = false;
-			SHOW_GradientCurve = false;
-			SHOW_Library = false;
-			SHOW_BackGround = false;
-			SHOW_Theory = false;
-			SHOW_Range = false;
-			SHOW_ColourLovers = false;
-			SHOW_Quantizer = false;
-			SHOW_Presets = false;
 		}
 
 		//-----
@@ -6047,17 +6010,6 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 					ofLogNotice(__FUNCTION__) << "PRESET_Name: [" + ofToString(preset_Index) + "] " << PRESET_Name;
 					preset_Load(PRESET_Name);
 				}
-
-				// new preset
-				if (MODE_NewPreset) bNewPreset = false;
-				// demo mode
-				if (DEMO1_Test && !DEMO_Auto) myDEMO1.reStart();
-				//load first color from preset to algorothmic palettes
-				if (palette.size() > 0)
-				{
-					color_Picked = ofFloatColor(palette[0]);
-					refresh_Theory_G2();
-				}
 			}
 
 			else if (key == OF_KEY_DOWN)
@@ -6071,17 +6023,6 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 					PRESET_Name = files_Names[preset_Index];
 					ofLogNotice(__FUNCTION__) << "PRESET_Name: [" + ofToString(preset_Index) + "] " << PRESET_Name;
 					preset_Load(PRESET_Name);
-				}
-
-				// new preset
-				if (MODE_NewPreset) bNewPreset = false;
-				// demo mode
-				if (DEMO1_Test&& DEMO_Auto) myDEMO1.reStart();
-				// load first color
-				if (palette.size() > 0)
-				{
-					color_Picked = ofFloatColor(palette[0]);
-					refresh_Theory_G2();
 				}
 			}
 
@@ -6102,17 +6043,6 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 					ofLogNotice(__FUNCTION__) << "PRESET_Name: [" + ofToString(preset_Index) + "] " << PRESET_Name;
 					preset_Load(PRESET_Name);
 				}
-
-				// new preset
-				if (MODE_NewPreset) bNewPreset = false;
-				// demo mode
-				if (DEMO1_Test&& DEMO_Auto) myDEMO1.reStart();
-				// load first color
-				if (palette.size() > 0)
-				{
-					color_Picked = ofFloatColor(palette[0]);
-					refresh_Theory_G2();
-				}
 			}
 
 			// get some presets by index random 
@@ -6125,17 +6055,6 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 					PRESET_Name = files_Names[preset_Index];
 					ofLogNotice(__FUNCTION__) << "PRESET_Name: [" + ofToString(preset_Index) + "] " << PRESET_Name;
 					preset_Load(PRESET_Name);
-				}
-
-				// new preset
-				if (MODE_NewPreset) bNewPreset = false;
-				//demo mode
-				if (DEMO1_Test&& DEMO_Auto) myDEMO1.reStart();
-				//load first color
-				if (palette.size() > 0)
-				{
-					color_Picked = ofFloatColor(palette[0]);
-					refresh_Theory_G2();
 				}
 			}
 		}
@@ -6208,25 +6127,63 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		{
 			if (key == OF_KEY_UP)
 			{
-				last_Theory_PickPalette = last_Theory_PickPalette.get() - 1;
+				last_Index_Theory_PickPalette = last_Index_Theory_PickPalette.get() - 1;
 			}
 			if (key == OF_KEY_DOWN)
 			{
-				last_Theory_PickPalette = last_Theory_PickPalette.get() + 1;
+				last_Index_Theory_PickPalette = last_Index_Theory_PickPalette.get() + 1;
 			}
 			if (key == ' ')//cycle
 			{
-				if (last_Theory_PickPalette == last_Theory_PickPalette.getMax())//cycle 
+				if (last_Index_Theory_PickPalette == last_Index_Theory_PickPalette.getMax())//cycle 
 				{
-					last_Theory_PickPalette = last_Theory_PickPalette.getMin();
+					last_Index_Theory_PickPalette = last_Index_Theory_PickPalette.getMin();
 				}
 				else {
-					last_Theory_PickPalette = last_Theory_PickPalette.get() + 1;
+					last_Index_Theory_PickPalette = last_Index_Theory_PickPalette.get() + 1;
 				}
 			}
 		}
 
 		//----
+
+		// lovers
+
+		if (SHOW_ColourLovers && !SHOW_Presets)
+		{
+			// 3. randomly get a palette from colour lovers only
+			if (key == 'r' || key == 'R')
+			{
+#ifdef USE_COLOR_LOVERS
+				colourLoversHelper.randomPalette();
+#endif
+				textInput_temp = PRESET_Name;
+			}
+		}
+
+		//----
+
+		// extra
+
+#ifdef USE_DEBUG_LAYOUT
+		else if (key == 'M')
+		{
+			mouseRuler.toggleVisibility();
+			//myDEMO1.toggleMouseCamera();
+		}
+#endif
+		// TEST
+		if (key == 'T')
+		{
+			TEST_Mode = !TEST_Mode;
+		}
+
+		// DEMO
+		else if (key == 'D')
+		{
+			DEMO1_Test = !DEMO1_Test;
+			if (DEMO1_Test&& DEMO_Auto) myDEMO1.reStart();
+		}
 
 		//else if (key == 'g') {
 		//    SHOW_ALL_GUI = !SHOW_ALL_GUI;
@@ -6244,53 +6201,11 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//	MODE_EditGradientLayout = !MODE_EditGradientLayout;
 		//}
 
-#ifdef USE_DEBUG_LAYOUT
-		else if (key == 'M')
-		{
-			mouseRuler.toggleVisibility();
-
-			//myDEMO1.toggleMouseCamera();
-		}
-#endif
-
 		//else if (key == 'd')
 		//{
 		//    // DEBUG INTERFACE
 		//    bShowDebug = !bShowDebug;
 		//}
-
-		//----
-
-		// TEST
-		if (key == 'T')
-		{
-			TEST_Mode = !TEST_Mode;
-		}
-
-		//-
-
-		// DEMO
-		else if (key == 'D')
-		{
-			DEMO1_Test = !DEMO1_Test;
-			if (DEMO1_Test&& DEMO_Auto) myDEMO1.reStart();
-		}
-
-		//--
-
-		// colour-lovers
-
-		if (SHOW_ColourLovers && !SHOW_Presets)
-		{
-			// 3. randomly get a palette from colour lovers only
-			if (key == 'r' || key == 'R')
-			{
-#ifdef USE_COLOR_LOVERS
-				colourLoversHelper.randomPalette();
-#endif
-				textInput_temp = PRESET_Name;
-			}
-		}
 
 		//----
 
@@ -6310,6 +6225,105 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		////        color_Undo.clearRedo();
 
 		//----
+
+		// panels
+
+		//-
+
+		else if (key == OF_KEY_F9)//presets
+		{
+			SHOW_Presets = !SHOW_Presets;
+
+			if (SHOW_Presets) {
+				SHOW_UserPaletteFloating = false;
+				SHOW_UserPaletteEditor = false;
+				SHOW_Picker = false;
+				SHOW_Library = false;
+				SHOW_BackGround = false;
+				SHOW_Theory = false;
+				SHOW_Range = false;
+				SHOW_ColourLovers = false;
+				SHOW_Quantizer = false;
+				SHOW_GradientCurve = false;
+			}
+		}
+
+		else if (key == OF_KEY_F10)//curve
+		{
+			SHOW_GradientCurve = !SHOW_GradientCurve;
+
+			if (SHOW_GradientCurve) {
+				SHOW_UserPaletteFloating = false;
+				SHOW_UserPaletteEditor = false;
+				SHOW_Picker = false;
+				SHOW_Library = false;
+				SHOW_BackGround = false;
+				SHOW_Theory = false;
+				SHOW_Range = false;
+				SHOW_ColourLovers = false;
+				SHOW_Quantizer = false;
+				//SHOW_Presets = false;
+			}
+		}
+
+		//-
+
+		// basic panels 
+
+		else if (key == OF_KEY_F1)//palette
+		{
+			SHOW_UserPaletteEditor = !SHOW_UserPaletteEditor;
+			SHOW_UserPaletteFloating = SHOW_UserPaletteEditor;
+			//SHOW_UserPaletteFloating = !SHOW_UserPaletteFloating;
+		}
+		else if (key == OF_KEY_F2)//picker
+		{
+			SHOW_Picker = !SHOW_Picker;
+		}
+		else if (key == OF_KEY_F3)//bg
+		{
+			SHOW_BackGround = !SHOW_BackGround;
+		}
+		else if (key == OF_KEY_F4)//library
+		{
+			SHOW_Library = !SHOW_Library;
+		}
+
+		//-
+
+		// engines
+
+		else if (key == OF_KEY_F5)//theory
+		{
+			SHOW_Theory = !SHOW_Theory;
+		}
+		else if (key == OF_KEY_F6)//range
+		{
+			SHOW_Range = !SHOW_Range;
+		}
+		else if (key == OF_KEY_F7)//lovers
+		{
+			SHOW_ColourLovers = !SHOW_ColourLovers;
+		}
+		else if (key == OF_KEY_F8)//quantizer
+		{
+			SHOW_Quantizer = !SHOW_Quantizer;
+		}
+
+		else if (key == OF_KEY_F11)//all off
+		{
+			SHOW_UserPaletteFloating = false;
+			SHOW_UserPaletteEditor = false;
+			SHOW_Picker = false;
+			SHOW_GradientCurve = false;
+			SHOW_Library = false;
+			SHOW_BackGround = false;
+			SHOW_Theory = false;
+			SHOW_Range = false;
+			SHOW_ColourLovers = false;
+			SHOW_Quantizer = false;
+			SHOW_Presets = false;
+		}
 	}
 }
 
@@ -6324,16 +6338,7 @@ void ofxColorManager::keyReleased(ofKeyEventArgs &eventArgs)
 //--------------------------------------------------------------
 void ofxColorManager::windowResized(int w, int h)
 {
-	//	// lovers
-	//#ifdef USE_COLOR_LOVERS
-	//	glm::vec2 sizeGui(150, 375);
-	//	glm::vec2 sizeGrid(150, h);
-	//	glm::vec2 posGui(w - (sizeGui.x + sizeGrid.x + 4), 0);
-	//	glm::vec2 posGrid(posGui.x + sizeGui.x + 2, 0);
-	//	colourLoversHelper.setGrid(posGrid, sizeGrid);
-	//	colourLoversHelper.setPosition(posGui, sizeGui);
-	//	colourLoversHelper.windowResized(w, h);
-	//#endif
+
 }
 
 //--------------------------------------------------------------
@@ -6607,6 +6612,21 @@ void ofxColorManager::preset_Load(std::string p)
 
 	//--
 
+	//TODO:
+
+	//workflow
+	// new preset
+	if (bMODE_NewPreset) MODE_NewPreset = false;
+	// demo mode
+	if (DEMO1_Test&& DEMO_Auto) myDEMO1.reStart();
+	// load first color
+	if (palette.size() > 0)
+	{
+		color_Picked = ofFloatColor(palette[0]);
+	}
+
+	//--
+
 	build_Palette_Preset();
 }
 
@@ -6723,6 +6743,13 @@ void ofxColorManager::refresh_Pick_ToEngines()
 //----
 
 // API - pointer references to ofApp color and palette
+
+//--------------------------------------------------------------
+void ofxColorManager::setName_TARGET(std::string &s)
+{
+	ofLogNotice(__FUNCTION__) << s;
+	name_TARGET = &s;
+}
 
 //--------------------------------------------------------------
 void ofxColorManager::setColor_TARGET(ofColor &c)
@@ -7021,7 +7048,7 @@ void ofxColorManager::setup_GradientCurve()
 	params_curve.add(bResetCurve);
 	params_curve.add(SHOW_GradientCurve);
 	params_curve.add(MODE_EditGradientLayout);
-	params_curve.add(SHOW_Editor);
+	//params_curve.add(SHOW_Editor);
 	params_curve.add(pos_CurveEditor);
 
 	//-
@@ -7116,7 +7143,7 @@ void ofxColorManager::update_Gradient()
 
 	if (MODE_EditGradientLayout)
 	{
-		refresh_Gui_Layout();
+		refresh_Gradient_GuiLayout();
 	}
 
 	// test curve
@@ -7310,7 +7337,7 @@ void ofxColorManager::gui_Gradient()
 			{
 				bResetCurve = true;
 				//rGradientPreview.setRect(600, 200, 755, 295);
-				//refresh_Gui_Layout();
+				//refresh_Gradient_GuiLayout();
 			}
 			ImGui::PopItemWidth();
 			ImGui::Dummy(ImVec2(0, 5));

@@ -11,23 +11,25 @@ public:
     void setup();
 	void draw();
     void keyPressed(int key);
-    void windowResized(int w, int h);
-	void dragEvent(ofDragInfo dragInfo);
+	//void dragEvent(ofDragInfo dragInfo);
 
     ofxColorManager colorManager;
 	
 	//-
 
-    // local palette and color 
-	// as target registered pointers
+    // local colors
+	// auto-updated as targets
+	// registered to the addon colors
     vector<ofColor> palette;
     ofColor colorPick;
     ofColor colorBg;
+	std::string name;
 
 	//-
 
+	// test scene
 	ofxPanel gui;
 	bool bGui = false;
-	ofParameter<bool> bDrawOfApp{ "Draw TEST-ofApp", false };
-	void draw_TESTofApp();// test scene
+	ofParameter<bool> bDraw_ofApp{ "Debug", false };
+	void draw_TEST_ofApp();
 };

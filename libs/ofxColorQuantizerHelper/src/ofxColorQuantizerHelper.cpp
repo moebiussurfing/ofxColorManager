@@ -32,7 +32,7 @@ void ofxColorQuantizerHelper::quantizerRefreshImage()
 //TODO:
 //should move this into the quantizer addon!
 //--------------------------------------------------------------
-void ofxColorQuantizerHelper::gui_Quantizer()
+void ofxColorQuantizerHelper::draw_Gui()
 {
 	if (ofxImGui::BeginWindow("PICTURE", mainSettings, false))
 	{
@@ -50,23 +50,10 @@ void ofxColorQuantizerHelper::gui_Quantizer()
 
 		ImGuiColorEditFlags colorEdiFlags;
 
-		//colorEdiFlags =
-		//	ImGuiColorEditFlags_NoSmallPreview |
-		//	ImGuiColorEditFlags_NoTooltip |
-		//	ImGuiColorEditFlags_NoLabel |
-		//	ImGuiColorEditFlags_NoSidePreview |
-		//	ImGuiColorEditFlags_HSV |
-		//	ImGuiColorEditFlags_RGB |
-		//	ImGuiColorEditFlags_NoInputs |
-		//	ImGuiColorEditFlags_NoAlpha |
-		//	ImGuiColorEditFlags_PickerHueWheel;
-
 		colorEdiFlags =
 			ImGuiColorEditFlags_NoAlpha |
 			ImGuiColorEditFlags_NoPicker |
 			ImGuiColorEditFlags_NoTooltip;
-
-		//colorEdiFlags = false;
 
 		//-
 
@@ -81,18 +68,40 @@ void ofxColorQuantizerHelper::gui_Quantizer()
 			numColors = ofClamp(numColors, numColors.getMin(), numColors.getMax());
 		}
 
-		if (ImGui::InputInt(sortedType.getName().c_str(), (int *)&sortedType.get())) {
-			sortedType = ofClamp(sortedType, 1, 4);
-		}
 		ImGui::Dummy(ImVec2(0.0f, 5));
 		std::string s2 = sortedType_name.get();
 		ImGui::Text(s2.c_str());
+
+		if (ImGui::InputInt(sortedType.getName().c_str(), (int *)&sortedType.get())) {
+			sortedType = ofClamp(sortedType, 1, 4);
+		}
+
+		if (ImGui::Button("SORT", ImVec2(_w, _h * 0.5)))
+		{
+			sortedType++;
+			if (sortedType > 4) sortedType = 1;
+		}
+
+		ImGui::Dummy(ImVec2(0.0f, 5));
 
 		//ImGui::InputInt(currentImage.getName().c_str(), (int *)&currentImage.get());
 
 		//-
 
+		// label name
 		ImGui::Dummy(ImVec2(0.0f, 5));
+		ImGui::Text(currentImage_name.get().c_str());
+
+		// index / total
+		//ImGui::Dummy(ImVec2(0.0f, 5));
+		std::string s = ofToString(currentImage.get()) + "/" + ofToString(getAountFiles() - 1);
+		ImGui::Text(s.c_str());
+
+		//ImGui::Dummy(ImVec2(0.0f, 5));
+
+		//-
+
+		//ImGui::Dummy(ImVec2(0.0f, 5));
 
 		if (ImGui::Button("Previous", ImVec2(_w50, _h)))
 		{
@@ -105,13 +114,6 @@ void ofxColorQuantizerHelper::gui_Quantizer()
 		{
 			loadNext();
 		}
-
-		ImGui::Dummy(ImVec2(0.0f, 5));
-
-		std::string s = ofToString(currentImage.get()) + "/" + ofToString(getAountFiles() - 1);
-		ImGui::Text(s.c_str());
-
-		ImGui::Dummy(ImVec2(0.0f, 5));
 
 		//-
 
@@ -161,7 +163,11 @@ void ofxColorQuantizerHelper::gui_Quantizer()
 				ofLogNotice(__FUNCTION__) << "Image Pressed";
 			}
 		}
-		ImGui::Text(currentImage_name.get().c_str());
+
+		//// label name
+		//ImGui::Dummy(ImVec2(0.0f, 5));
+		//ImGui::Text(currentImage_name.get().c_str());
+
 		ImGui::Dummy(ImVec2(0.0f, 5));
 
 		//-
@@ -353,7 +359,7 @@ void ofxColorQuantizerHelper::filesRefresh()
 	textureSourceID.resize(dir.size());
 	for (int i = 0; i < dir.size(); i++) {
 		textureSourceID[i] = gui_ImGui.loadTexture(textureSource[i], dir.getPath(i));
-	}
+}
 #endif
 }
 

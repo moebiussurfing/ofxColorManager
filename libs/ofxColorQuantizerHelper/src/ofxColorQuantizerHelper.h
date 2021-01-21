@@ -35,7 +35,7 @@ class ofxColorQuantizerHelper
 	//-
 
 public:
-	void gui_Quantizer();
+	void draw_Gui();
 	ofTexture tex;
 	ofFbo fbo;
 	void quantizerRefreshImage();

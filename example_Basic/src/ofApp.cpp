@@ -3,7 +3,7 @@
 //--------------------------------------------------------------
 void ofApp::setup()
 {
-	bDrawOfApp = true;
+	bDraw_ofApp = true;
 	bGui = true;
 
 	//-
@@ -20,28 +20,23 @@ void ofApp::setup()
 	colorManager.setPalette_TARGET(palette); // 1. the palette
 	colorManager.setColorBg_TARGET(colorBg); // 2. the background color 
 	colorManager.setColor_TARGET(colorPick); // 3. the picked color 
+	colorManager.setName_TARGET(name); // 4. the name of preset or enigne
 
 	colorManager.setup();
 
 	//--
 
-	ofParameterGroup pg{ "ofxColorManager" };
-	pg.add(colorManager.SHOW_Scene);
-	pg.add(colorManager.SHOW_ALL_GUI);
-	pg.add(colorManager.SHOW_MINI_Preview);
-
 	gui.setup("ofApp");
-	gui.add(pg);
-	gui.add(bDrawOfApp);
-	gui.setPosition(225, 100);
-	gui.getGroup(pg.getName()).minimize();
+	gui.add(colorManager.getParameters_Debug());
+	gui.add(bDraw_ofApp);
+	gui.setPosition(320, 170);
+	gui.getGroup(colorManager.getParameters_Debug().getName()).minimize();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw()
 {
-	if (bDrawOfApp) draw_TESTofApp();
-
+	if (bDraw_ofApp) draw_TEST_ofApp();
 	if (bGui) gui.draw();
 }
 
@@ -60,43 +55,38 @@ void ofApp::keyPressed(int key)
 		palette = colorManager.getPalette();
 
 		// print colors
-		ofLogNotice(__FUNCTION__) << "Do Get palette: ";
+		ofLogNotice(__FUNCTION__) << "Palette: ";
 		int c = 0;
 		for (auto p : palette)
 		{
-			ofLogNotice(__FUNCTION__) << "color " << c << ": " << ofToString(p);
-			c++;
+			ofLogNotice(__FUNCTION__) << "color #" << c++ << ": " << ofToString(p);
 		}
 	}
 }
 
-//--------------------------------------------------------------
-void ofApp::windowResized(int w, int h)
-{
-	colorManager.windowResized(w, h);
-}
+////--------------------------------------------------------------
+//void ofApp::dragEvent(ofDragInfo info) {
+//	colorManager.dragEvent(info);
+//}
 
 //--------------------------------------------------------------
-void ofApp::dragEvent(ofDragInfo info) {
-	colorManager.dragEvent(info);
-}
-
-//--------------------------------------------------------------
-void ofApp::draw_TESTofApp()
+void ofApp::draw_TEST_ofApp()
 {
 	// draw local (ofApp) test scene
 	ofPushStyle();
 	ofPushMatrix();
 	{
-		int sz = 70;// boxes size
-		int sz2 = sz - 0;// boxes size spacing
-		float szhr = 0.25;
+		int sz = 100;// boxes width size
+		float szhr = 0.25;// vertical h/w ratio
 
-		ofTranslate(gui.getShape().getBottomLeft().x + 5, gui.getShape().getBottomLeft().y + 18);
+		int sz2 = sz - 0;// boxes inner size with padding
+
+		ofTranslate(gui.getShape().getBottomLeft().x + 4, gui.getShape().getBottomLeft().y + 14);
 
 		// labels
-		ofDrawBitmapStringHighlight("TESTofApp", 0, 0, ofColor::black, ofColor::white);
-		ofDrawBitmapStringHighlight(colorManager.getPaletteName(), 0, 15, ofColor::black, ofColor::white);
+		ofDrawBitmapStringHighlight("TEST_ofApp", 0, 0, ofColor::black, ofColor::white);
+		ofDrawBitmapStringHighlight(name, 0, 15, ofColor::black, ofColor::white);
+		//ofDrawBitmapStringHighlight(colorManager.getPaletteName(), 0, 15, ofColor::black, ofColor::white);
 
 		ofTranslate(1, 22);
 
