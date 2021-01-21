@@ -496,9 +496,9 @@ public:
 		dt = 1. / fps;
 	}
 
-	//--
+	//----
 
-	// pointers backs to call refresh and link addons (quantizer+lovers) with ofApp palette/color
+	// pointers backs to call refresh and link addons (quantizer+lovers) with addon palette/color
 private:
 	std::string myPalette_Name_BACK = "";
 	ofColor myColor_BACK;
@@ -512,7 +512,7 @@ private:
 
 public:
 	// initializer setup
-	// pointers back to auto update ofApp project
+	// pointers back to auto update ofApp project local variables
 
 	void setColor_TARGET(ofColor &c);
 	ofColor *color_TARGET;//backwards pointer to ofApp picker color
@@ -522,6 +522,7 @@ public:
 
 	void setPalette_TARGET(vector<ofColor> &p);
 	vector<ofColor> *palette_TARGET;//backwards pointer to ofApp palette
+
 	void refresh_Palette_TARGET(vector<ofColor> &p);
 
 	//--
@@ -529,6 +530,7 @@ public:
 private:
 	void build_Palette_Engine();
 	void build_Palette_Preset();
+	void build_Palette_Flip();
 
 	//-----------------------------------------------------------
 
