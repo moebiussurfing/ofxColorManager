@@ -8,6 +8,8 @@ TODO:
 
 + demo 2: svg demo resizer shape using scalable draggable rect
 + group and simplify xml: ofxColorManager_Settings.xml
++ fix pick colors: lovers, 
+
 */
 
 

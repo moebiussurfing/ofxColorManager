@@ -263,26 +263,29 @@ ofxColorManager::ofxColorManager()
 
 	infoHelp = "HELP INFO\n\n";
 	infoHelp += "H                   HELP\n";
-	infoHelp += "K                   KEYS\n";
+	//infoHelp += "K                   KEYS\n";
 	infoHelp += "G                   GUI\n";
-	infoHelp += "TAB                 MODES\n";
+	infoHelp += "\n";
+	infoHelp += "TAB                 APP MODES\n";
 	infoHelp += "SPACE               NEXT\n";
 	infoHelp += "Down|Up             NEXT/PREVIOUS\n";
 	infoHelp += "+|-                 AMOUNT COLORS\n";
 	infoHelp += "\n";
+	infoHelp += "\n";
+	infoHelp += "F9                  PRESETS\n";
+	infoHelp += "F10                 GRADIENT\n";
 	infoHelp += "PANELS\n";
 	infoHelp += "F1                  PALETTE\n";
 	infoHelp += "F2                  PICKER\n";
 	infoHelp += "F3                  BACKGROUND\n";
 	infoHelp += "F4                  LIBRARY\n";
 	infoHelp += "\n";
-	infoHelp += "MODES\n";
+	infoHelp += "ENGINES\n";
 	infoHelp += "F5                  THEORY\n";
 	infoHelp += "F6                  RANGE\n";
 	infoHelp += "F7                  LOVERS\n";
 	infoHelp += "F8                  PICTURE\n";
-	infoHelp += "F9                  PRESETS\n";
-	infoHelp += "F10                 GRADIENT\n";
+	infoHelp += "\n";
 	infoHelp += "F11                 HIDE ALL\n";
 	infoHelp += "\n";
 	infoHelp += "TEST\n";
@@ -295,6 +298,8 @@ ofxColorManager::ofxColorManager()
 //--------------------------------------------------------------
 void ofxColorManager::setup()
 {
+	ofLogNotice(__FUNCTION__) << "----------------- SETUP -----------------";
+
 	//ofSetLogLevel("ofxColorManager", OF_LOG_NOTICE);
 
 #ifdef USE_SUPER_LOG
@@ -983,6 +988,8 @@ void ofxColorManager::setup()
 //--------------------------------------------------------------
 void ofxColorManager::startup()
 {
+	ofLogNotice(__FUNCTION__) << "----------------- STARTUP -----------------";
+
 	//--
 
 	ENABLE_keys = true;
@@ -1167,9 +1174,8 @@ void ofxColorManager::update(ofEventArgs & args)
 
 		// 2. get color
 		if (SHOW_ColourLovers) color_Clicked2 = ofColor(myColor_BACK);
-		if (SHOW_Quantizer) color_Clicked.set(myColor_BACK);
-
-		build_Palette_Engine();
+		else if (SHOW_Quantizer) color_Clicked.set(myColor_BACK);
+		else build_Palette_Engine();
 	}
 
 	//----
@@ -7247,7 +7253,7 @@ void ofxColorManager::gui_Gradient()
 		if (ImGui::CollapsingHeader("Advanced", _flagw))
 		{
 			// ctrl in/out
-			ImGui::PushItemWidth(_w50);
+			//ImGui::PushItemWidth(_w50);
 
 			ofxImGui::AddParameter(curve_Gradient_Exp);
 
@@ -7260,7 +7266,7 @@ void ofxColorManager::gui_Gradient()
 
 			ofxImGui::AddParameter(curve_Ctrl_Out);
 
-			ImGui::PopItemWidth();
+			//ImGui::PopItemWidth();
 
 			//-
 

@@ -3,8 +3,8 @@
 //--------------------------------------------------------------
 void ofApp::setup()
 {
-	bDraw_ofApp = true;
-	bGui = true;
+	//bDraw_ofApp = true;
+	//bGui = true;
 
 	//-
 
