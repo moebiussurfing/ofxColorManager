@@ -861,7 +861,6 @@ private:
 	//new preset
 private:
 	ofParameter<bool> MODE_NewPreset{ "New Preset", false };
-	bool bMODE_NewPreset = false;
 
 	std::string textInput_New = "new preset";
 	bool focus_1;

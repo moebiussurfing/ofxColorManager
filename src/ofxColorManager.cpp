@@ -15,48 +15,6 @@ void ofxColorManager::build_Palette_Flip()
 
 	build_Gradient();
 
-	//--
-
-	std::string _name = "";
-
-	//-
-
-	//if (SHOW_ColourLovers)
-	//{
-	//	_name = myPalette_Name_BACK;
-	//	palette_FromColourLovers();
-	//}
-	//else if (SHOW_Quantizer)
-	//{
-	//	_name = myPalette_Name_BACK;
-	//	palette_FromQuantizer();
-	//}
-	//else if (SHOW_Theory)
-	//{
-	//	_name = theory_Name;
-	//	//refresh_Theory_G1();//?
-	//	refresh_Theory_G2();
-	//	palette_FromTheory(last_Index_Theory);
-	//}
-	//else if (SHOW_Range)
-	//{
-	//	_name = range_Name;
-	//	palette_FromRange(last_Index_Range);
-	//}
-
-	//-
-
-	//// presets
-
-	//if (SHOW_Presets)
-	//{
-	//	if (!MODE_NewPreset) MODE_NewPreset = true;
-
-	//	//if (_name != "") textInput_New = _name;
-	//	//else textInput_New = "name";
-	//	textInput_New = _name;
-	//}
-
 	//----
 
 	// workflow
@@ -89,164 +47,173 @@ void ofxColorManager::build_Palette_Flip()
 //--------------------------------------------------------------
 void ofxColorManager::build_Palette_Engine()
 {
-	ofLogNotice(__FUNCTION__) << "----------------- BUILD PALETTE ENGINE -----------------";
-
-	std::string _name = "";
-
-	//-
-
-	if (SHOW_ColourLovers)
+	//TODO: test
+	//if (!SHOW_Presets)
 	{
-		_name = myPalette_Name_BACK;
-		palette_FromColourLovers();
-	}
-	else if (SHOW_Quantizer)
-	{
-		_name = myPalette_Name_BACK;
-		palette_FromQuantizer();
-	}
-	else if (SHOW_Theory)
-	{
-		_name = theory_Name;
-		//refresh_Theory_G1();//?
-		refresh_Theory_G2();
-		palette_FromTheory(last_Index_Theory);
-	}
-	else if (SHOW_Range)
-	{
-		_name = range_Name;
-		palette_FromRange(last_Index_Range);
-	}
+		ofLogNotice(__FUNCTION__) << "----------------- BUILD PALETTE ENGINE -----------------";
 
-	//-
+		std::string _name = "";
 
-	// presets
+		//-
 
-	if (SHOW_Presets)
-	{
-		if (!MODE_NewPreset) MODE_NewPreset = true;
+		if (SHOW_ColourLovers)
+		{
+			_name = myPalette_Name_BACK;
+			palette_FromColourLovers();
+		}
+		else if (SHOW_Quantizer)
+		{
+			_name = myPalette_Name_BACK;
+			palette_FromQuantizer();
+		}
+		else if (SHOW_Theory)
+		{
+			_name = theory_Name;
+			//refresh_Theory_G1();//?
+			refresh_Theory_G2();
+			palette_FromTheory(last_Index_Theory);
+		}
+		else if (SHOW_Range)
+		{
+			_name = range_Name;
+			palette_FromRange(last_Index_Range);
+		}
 
-		//if (_name != "") textInput_New = _name;
-		//else textInput_New = "name";
-		textInput_New = _name;
-	}
+		//-
 
-	//----
+		// presets
 
-	// workflow
-	refresh_Background();
+		//if (SHOW_Presets)
+		//{
+		//	if (!MODE_NewPreset) MODE_NewPreset = true;
 
-	// DEMO 2
-	myDEMO2.setPaletteColors(palette);
+		//	//if (_name != "") textInput_New = _name;
+		//	//else textInput_New = "name";
+		//	textInput_New = _name;
+		//}
 
-	// DEMO 1
-	if (DEMO1_Test && !DEMO_Auto) myDEMO1.reStart();
+		//----
 
-	// export
-	if (bAutoExportPreset)
-	{
-		ofLogNotice(__FUNCTION__) << "Auto EXPORT";
-		exportPalette();
-	}
+		// workflow
+		refresh_Background();
 
-	//--
+		// DEMO 2
+		myDEMO2.setPaletteColors(palette);
 
-	last_Index_ColorPalette.setMax(palette.size() - 1);
-	//last_Index_ColorPalette = 0;
-	//if (palette.size() > 0) color_Picked = palette[last_Index_ColorPalette];
+		// DEMO 1
+		if (DEMO1_Test && !DEMO_Auto) myDEMO1.reStart();
 
-	//--
+		// export
+		if (bAutoExportPreset)
+		{
+			ofLogNotice(__FUNCTION__) << "Auto EXPORT";
+			exportPalette();
+		}
 
-	// ofApp targets
+		//--
 
-	refresh_Palette_TARGET(palette);
+		last_Index_ColorPalette.setMax(palette.size() - 1);
+		//last_Index_ColorPalette = 0;
+		//if (palette.size() > 0) color_Picked = palette[last_Index_ColorPalette];
 
-	// name
-	if (name_TARGET != nullptr)
-	{
-		name_TARGET[0] = _name;
+		//--
+
+		// ofApp targets
+
+		refresh_Palette_TARGET(palette);
+
+		// name
+		if (name_TARGET != nullptr)
+		{
+			name_TARGET[0] = _name;
+		}
 	}
 }
 
 //--------------------------------------------------------------
 void ofxColorManager::build_Palette_Preset()
 {
-	ofLogNotice(__FUNCTION__) << "----------------- BUILD PALETTE PRESET -----------------";
-
-	std::string _name;
-
-	//-
-
-	//if (SHOW_ColourLovers)
-	//{
-	//	_name = myPalette_Name_BACK;
-	//}
-	//else if (SHOW_Quantizer)
-	//{
-	//	_name = myPalette_Name_BACK;
-	//}
-	//else if (SHOW_Theory)
-	//{
-	//	_name = theory_Name;
-	//}
-	//else if (SHOW_Range)
-	//{
-	//	_name = range_Name;
-	//}
-
-	//-
-
-	// presets
-
-	//if (SHOW_Presets)
-	//{
-	//	if (!MODE_NewPreset) MODE_NewPreset = true;
-
-	//	//if (_name != "") textInput_New = _name;
-	//	//else textInput_New = "name";
-	//}
-
-	//----
-
-	// workflow
-	refresh_Background();
-
-	// DEMO 2
-	myDEMO2.setPaletteColors(palette);
-
-	// DEMO 1
-	if (DEMO1_Test && !DEMO_Auto) myDEMO1.reStart();
-
-	// export
-	if (bAutoExportPreset)
+	//TODO: test
+	//if (!SHOW_Presets)
 	{
-		ofLogNotice(__FUNCTION__) << "Auto EXPORT";
-		exportPalette();
-	}
+		ofLogNotice(__FUNCTION__) << "----------------- BUILD PALETTE PRESET -----------------";
 
-	//--
+		std::string _name;
 
-	last_Index_ColorPalette.setMax(palette.size() - 1);
-	last_Index_ColorPalette = 0;
-	if (palette.size() > 0) color_Picked = palette[last_Index_ColorPalette];
+		//-
 
-	//--
+		//if (SHOW_ColourLovers)
+		//{
+		//	_name = myPalette_Name_BACK;
+		//}
+		//else if (SHOW_Quantizer)
+		//{
+		//	_name = myPalette_Name_BACK;
+		//}
+		//else if (SHOW_Theory)
+		//{
+		//	_name = theory_Name;
+		//}
+		//else if (SHOW_Range)
+		//{
+		//	_name = range_Name;
+		//}
 
-	// ofApp targets
+		//-
 
-	// picked color
-	if (colorBg_TARGET != nullptr)
-	{
-		colorBg_TARGET->set(color_BackGround.get());
-	}
+		// presets
 
-	// palette
-	refresh_Palette_TARGET(palette);
+		//if (SHOW_Presets)
+		//{
+		//	if (!MODE_NewPreset) MODE_NewPreset = true;
 
-	// name
-	if (name_TARGET != nullptr)
-	{
-		name_TARGET[0] = PRESET_Name;
+		//	//if (_name != "") textInput_New = _name;
+		//	//else textInput_New = "name";
+		//}
+
+		//----
+
+		// workflow
+		refresh_Background();
+
+		// DEMO 2
+		myDEMO2.setPaletteColors(palette);
+
+		// DEMO 1
+		if (DEMO1_Test && !DEMO_Auto) myDEMO1.reStart();
+
+		// export
+		if (bAutoExportPreset)
+		{
+			ofLogNotice(__FUNCTION__) << "Auto EXPORT";
+			exportPalette();
+		}
+
+		//--
+
+		last_Index_ColorPalette.setMax(palette.size() - 1);
+		last_Index_ColorPalette = 0;
+		if (palette.size() > 0) color_Picked = palette[last_Index_ColorPalette];
+
+		//--
+
+		// ofApp targets
+
+		// picked color
+		if (colorBg_TARGET != nullptr)
+		{
+			colorBg_TARGET->set(color_BackGround.get());
+		}
+
+		// palette
+		refresh_Palette_TARGET(palette);
+
+		// name
+		if (name_TARGET != nullptr)
+		{
+			name_TARGET[0] = PRESET_Name;
+		}
+
 	}
 }
 
@@ -1266,13 +1233,12 @@ void ofxColorManager::draw_Info()
 	ofPushStyle();
 
 	//blink when a new preset is editing
-	float freq = 0.075;//speed freq
-	float min = 0.25;
-	float max = 0.75;
+	float freq = 0.2;//speed freq
+	float min = 0.5;
+	float max = 1.0;
 	float a;
 
-	if (bMODE_NewPreset && MODE_NewPreset)
-		a = ofMap(glm::sin(freq * ofGetFrameNum()), -1, 1, min, max);
+	if (MODE_NewPreset) a = ofMap(glm::sin(freq * ofGetFrameNum()), -1, 1, min, max);
 	else a = 1.0f;
 
 	//-
@@ -3784,13 +3750,6 @@ void ofxColorManager::gui_Presets()
 					ofLogNotice(__FUNCTION__) << "PRESET: [" + ofToString(preset_Index) + "] " << PRESET_Name;
 
 					preset_Load(PRESET_Name);
-
-					////-
-
-					////workflow
-					//// new preset
-					//if (MODE_NewPreset) MODE_NewPreset = false;
-					//if (DEMO1_Test && !DEMO_Auto) myDEMO1.reStart();
 				}
 			}
 		}
@@ -3820,13 +3779,6 @@ void ofxColorManager::gui_Presets()
 					ofLogNotice(__FUNCTION__) << "PRESET: [" + ofToString(preset_Index) + "] " << PRESET_Name;
 
 					preset_Load(PRESET_Name);
-
-					//-
-
-					//if (MODE_NewPreset) MODE_NewPreset = false;
-
-					////workflow
-					//if (DEMO1_Test && !DEMO_Auto) myDEMO1.reStart();
 				}
 			}
 		}
@@ -3991,7 +3943,7 @@ void ofxColorManager::gui_Presets()
 			ImGui::EndPopup();
 		}
 
-		if (ImGui::Button("UPDATE", ImVec2(_w50, _h * 0.4)))
+		if (ImGui::Button("UPDATE", ImVec2(_w50, _h * 0.5)))
 		{
 			ofLogNotice(__FUNCTION__) << "UPDATE";
 
@@ -4009,7 +3961,7 @@ void ofxColorManager::gui_Presets()
 
 		ImGui::SameLine();
 
-		if (ImGui::Button("COPY", ImVec2(_w50, _h * 0.4)))
+		if (ImGui::Button("COPY", ImVec2(_w50, _h * 0.5)))
 		{
 			ofLogNotice(__FUNCTION__) << "COPY";
 
@@ -4024,7 +3976,7 @@ void ofxColorManager::gui_Presets()
 			refresh_RearrengeFiles(textInput_New);
 		}
 
-		if (ImGui::Button("REFRESH KIT", ImVec2(_w50, _h * 0.4)))
+		if (ImGui::Button("REFRESH KIT", ImVec2(_w50, _h * 0.5)))
 		{
 			ofLogNotice(__FUNCTION__) << "REFRESH KIT";
 
@@ -4033,18 +3985,13 @@ void ofxColorManager::gui_Presets()
 
 		ImGui::Dummy(ImVec2(0, 5));
 
-		ofxImGui::AddParameter(MODE_NewPreset);
-
-		//ImGui::SameLine();
-		//if (ImGui::Button("REFRESH"))//current preset
-		//{
-		//    ofLogNotice(__FUNCTION__) << "REFRESH";
-		//    preset_RefreshFiles();
-		//}
+		//ofxImGui::AddParameter(MODE_NewPreset);
+		if (ofxSurfingHelpers::AddBigToggle(MODE_NewPreset, _w, 0.5 * _h)) {
+		}
 
 		//----
 
-		if (bMODE_NewPreset && MODE_NewPreset)
+		if (MODE_NewPreset)
 		{
 			ImGui::Separator();
 			ImGui::Dummy(ImVec2(0, 10));
@@ -5189,7 +5136,6 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 	else if (name == MODE_NewPreset.getName())
 	{
-		bMODE_NewPreset = MODE_NewPreset;
 		//wf
 		focus_1 = MODE_NewPreset;
 	}
@@ -5229,10 +5175,11 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		txt_lineActive[3] = false;//range name
 		last_Index_Type = 2;
 
-		if (SHOW_Presets) {
-			textInput_New = theory_Name;
-			MODE_NewPreset = true;
-		}
+		//if (SHOW_Presets) 
+		//{
+		//	textInput_New = theory_Name;
+		//	MODE_NewPreset = true;
+		//}
 	}
 
 	else if (name == last_Index_Range.getName())
@@ -5873,6 +5820,8 @@ void ofxColorManager::palette_FromRange(int index)
 //--------------------------------------------------------------
 void ofxColorManager::refresh_Range_AutoUpdate()
 {
+	ofLogNotice(__FUNCTION__);
+
 	//auto create palette
 	if (autoGenerate_Range && (last_Index_Range != -1))
 	{
@@ -5886,11 +5835,12 @@ void ofxColorManager::refresh_Range_AutoUpdate()
 		txt_lineActive[3] = true;//range name
 		last_Index_Type = 3;
 
-		// presets 
-		if (SHOW_Presets && SHOW_Range) {
-			textInput_New = range_Name;
-			MODE_NewPreset = true;
-		}
+		//// presets 
+		//if (SHOW_Presets && SHOW_Range) 
+		//{
+		//	textInput_New = range_Name;
+		//	MODE_NewPreset = true;
+		//}
 
 		//--
 
@@ -6616,9 +6566,9 @@ void ofxColorManager::preset_Load(std::string p)
 
 	//workflow
 	// new preset
-	if (bMODE_NewPreset) MODE_NewPreset = false;
+	if (MODE_NewPreset) MODE_NewPreset = false;
 	// demo mode
-	if (DEMO1_Test&& DEMO_Auto) myDEMO1.reStart();
+	if (DEMO1_Test && DEMO_Auto) myDEMO1.reStart();
 	// load first color
 	if (palette.size() > 0)
 	{
