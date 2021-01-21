@@ -7,7 +7,7 @@
 TODO:
 
 + demo 2: svg demo resizer shape using scalable draggable rect
-
++ group and simplify xml: ofxColorManager_Settings.xml
 */
 
 
@@ -562,6 +562,7 @@ private:
 
 private:
 	//ofParameterGroup params_data;
+	ofParameterGroup params_engines;
 	ofParameterGroup params_color;
 	ofParameterGroup params_Theory;
 	ofParameterGroup params_curve;

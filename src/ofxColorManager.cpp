@@ -794,14 +794,22 @@ void ofxColorManager::setup()
 	// startup settings
 
 	params_AppState.setName("ofxColorManager");
-	params_AppState.add(preset_Index);
-	params_AppState.add(AppMode);
-	params_AppState.add(SHOW_Scene);
-	params_AppState.add(last_Index_Theory);
-	params_AppState.add(last_Index_Range);
-	params_AppState.add(color_1_Range);
-	params_AppState.add(color_2_Range);
-	//params_AppState.add(color_Picked);
+
+	params_engines.setName("Engines");
+	params_engines.add(preset_Index);
+	params_engines.add(AppMode);
+	params_engines.add(SHOW_Scene);
+	params_engines.add(last_Index_Theory);
+	params_engines.add(last_Index_Range);
+	params_engines.add(color_1_Range);
+	params_engines.add(color_2_Range);
+	//params_engines.add(color_Picked);
+	// amount colors
+	params_engines.add(numColors_Engines);
+	//params_engines.add(numColors_Range);
+	//params_engines.add(numColors_Theory_G2);
+	params_engines.add(analogSpread);
+	params_AppState.add(params_engines);
 
 	// export colors
 	params_ExportColors.setName("ExportColors");
@@ -809,13 +817,6 @@ void ofxColorManager::setup()
 	params_ExportColors.add(bExportPreset_DefaultPath);
 	params_ExportColors.add(path_Folder_ExportColor_Custom);
 	params_AppState.add(params_ExportColors);
-
-	// amount colors
-	params_AppState.add(numColors_Engines);
-	//params_AppState.add(numColors_Range);
-	//params_AppState.add(numColors_Theory_G2);
-
-	params_AppState.add(analogSpread);
 
 	params_Panels.add(SHOW_ALL_GUI);
 	params_Panels.add(SHOW_Presets);
@@ -829,7 +830,6 @@ void ofxColorManager::setup()
 	params_Panels.add(SHOW_Panels);
 	params_Panels.add(SHOW_Export);
 	params_Panels.add(SHOW_Demos);
-	//params_Panels.add(SHOW_Demo2);
 	params_Panels.add(SHOW_Quantizer);
 	params_Panels.add(SHOW_ColourLovers);
 	params_Panels.add(SHOW_AlgoPalettes);
@@ -869,8 +869,8 @@ void ofxColorManager::setup()
 	//////params_Gradient.add(paletteLibPage_param);
 	//params_AppState.add(params_Gradient);
 
-	params_Picker.add(BRIGHTNESS);
-	params_Picker.add(SATURATION);
+	//params_Picker.add(BRIGHTNESS);
+	//params_Picker.add(SATURATION);
 	params_Picker.add(bColor_HUE);
 	params_Picker.add(bColor_SAT);
 	params_Picker.add(bColor_BRG);
@@ -905,7 +905,7 @@ void ofxColorManager::setup()
 
 	//---
 
-	// grouped on callback
+	// grouped for callback function
 
 	params_control.setName("ofxColorManager");
 
@@ -1061,6 +1061,14 @@ void ofxColorManager::startup()
 
 	// refresh hsb
 	refresh_Pick_ToHSB();
+
+	//--
+
+	// name
+	if (name_TARGET != nullptr)
+	{
+		name_TARGET[0] = PRESET_Name;
+	}
 }
 
 //--------------------------------------------------------------
@@ -1231,12 +1239,12 @@ void ofxColorManager::draw_Info()
 	ofPushStyle();
 
 	//blink when a new preset is editing
-	float freq = 0.2;//speed freq
-	float min = 0.5;
-	float max = 1.0;
+	float freq = 0.2f;//speed freq
+	float min = 0.5f;
+	float max = 1.0f;
 	float a;
 
-	if (MODE_NewPreset) a = ofMap(glm::sin(freq * ofGetFrameNum()), -1, 1, min, max);
+	if (MODE_NewPreset) a = ofMap(glm::sin(freq * ofGetFrameNum()), -1.f, 1.f, min, max);
 	else a = 1.0f;
 
 	//-
@@ -1259,11 +1267,6 @@ void ofxColorManager::draw_Info()
 	ofColor c0, c1;
 	c0.set(0, _alpha * a);
 	c1.set(255, _alpha * a);
-
-	//ofColor c0_Ghost, c1_Ghost;
-	//int _alphaGhost = 32;
-	//c0_Ghost.set(0, _alphaGhost);
-	//c1_Ghost.set(255, _alphaGhost);
 
 	padh = 15;
 	h = padh;
@@ -1585,104 +1588,7 @@ void ofxColorManager::exit()
 	removeMouseListeners();
 }
 
-//--------------------------------------------------------------
-void ofxColorManager::refresh_Gradient_GuiLayout()
-{
-	curve_Slider_ExpTweak.setVisible(SHOW_GradientCurve);
-	curve_Slider_Pick.setVisible(SHOW_GradientCurve);
-
-	//-
-
-	//between panels in curve sections
-	int _pad1 = 30;
-	int _pad2 = 3;
-
-	int _xx, _yy, _ww, _hh;
-
-	//if (MODE_EditGradientLayout)
-	if (1)
-	{
-		_xx = rGradientPreview.getX() + _pad1;
-		_yy = rGradientPreview.getY() + _pad1;
-		_ww = rGradientPreview.getWidth() + (2 * _pad1);
-		_hh = rGradientPreview.getHeight() + (2 * _pad1);
-	}
-	else
-	{
-
-	}
-
-	//--
-
-	//color boxes
-	box_size = 30;
-
-	//user palette colors
-	box_size_user = 50;
-
-	//_pad1 = 0;//between box colors in palettes
-
-	//--
-
-	// curve tool pos (anchor for others)
-
-	// a. hardcoded
-	curveTool_x = _xx;
-	curveTool_y = _yy;
-	curveTool_w = MAX_LUT_SIZE;
-	curveTool_h = MAX_LUT_SIZE;
-
-	//--
-
-	// curve mod slider
-	slider_PickIn_x = curveTool_x + curveTool_w + _pad2;
-	slider_PickIn_y = _yy;
-	slider_PickIn_w = box_size_user;
-	slider_PickIn_h = curveTool_h;
-
-	//--
-
-	// gradient-pre curve (bad sorted to the left but anchored to curve..)
-	grad_x = slider_PickIn_x + 0.5 * slider_PickIn_w + _pad2;
-	grad_y = _yy + curveTool_h;
-	grad_w = box_size_user;
-	grad_h = curveTool_h;
-
-	//--
-
-	// gradient-curved image LUT 
-	//[referenced to curve pos (vertical)]
-	image_curvedGradient_x = grad_x + 0.5 * grad_w;// +_pad2;
-	image_curvedGradient_y = _yy;
-	image_curvedGradient_w = curveTool_w;
-	image_curvedGradient_h = curveTool_h;
-
-	//--
-
-	// testing curve widgets
-	// curve out slider
-	slider_Exp_x = image_curvedGradient_x + image_curvedGradient_w + _pad2;
-	slider_Exp_y = _yy;
-	slider_Exp_w = box_size_user;
-	slider_Exp_h = curveTool_h;
-
-	//--
-
-	curve_Slider_Pick.setup(slider_PickIn_x, slider_PickIn_y, slider_PickIn_w, slider_PickIn_h, 0, 1, curve_Gradient_PickIn, true, true);
-	curve_Slider_ExpTweak.setup(slider_Exp_x, slider_Exp_y, slider_Exp_w, slider_Exp_h, 0, 1, curve_Gradient_Exp, true, true);
-
-	//--	
-
-	// current color box/bar (the one affected by slider position. just for testing gradient purpose)
-	currColor_x = slider_Exp_x + slider_Exp_w + _pad2;
-	currColor_y = _yy;
-
-	//----
-}
-
 //----
-
-#pragma mark - IM GUI
 
 ////--------------------------------------------------------------
 //void ofxColorManager::gui_imGui_CosineGradient()
@@ -1701,6 +1607,11 @@ void ofxColorManager::refresh_Gradient_GuiLayout()
 //    }
 //    ofxImGui::EndWindow(mainSettings);
 //}
+
+
+//----
+
+// engines
 
 //--------------------------------------------------------------
 void ofxColorManager::gui_Theory()
@@ -3667,9 +3578,9 @@ void ofxColorManager::gui_Presets()
 	hh = PANEL_WIDGETS_HEIGHT;
 	ImGui::SetWindowSize(ImVec2(ww, hh));
 	ImGuiWindowFlags flags;
-	flags = false;
+	flags = ImGuiWindowFlags_None;
 	//flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : 0;
-	//TODO: not working..non stop grow
+	//TODO: not working...non stop growing..
 
 	//--
 
@@ -3910,7 +3821,7 @@ void ofxColorManager::gui_Presets()
 			ImGui::PopStyleVar();
 
 			if (!dont_ask_me_next_time) {
-				if (ImGui::Button("OK", ImVec2(120, 0))) 
+				if (ImGui::Button("OK", ImVec2(120, 0)))
 				{
 					ofLogNotice(__FUNCTION__) << "EXPORT";
 					//path_Folder_ExportColor_Custom = ;
@@ -3919,7 +3830,7 @@ void ofxColorManager::gui_Presets()
 					ImGui::CloseCurrentPopup();
 				}
 
-				if (ImGui::Button("SET PATH", ImVec2(120, 0))) 
+				if (ImGui::Button("SET PATH", ImVec2(120, 0)))
 				{
 					ofLogNotice(__FUNCTION__) << "SET EXPORT PATH";
 					ImGui::Text("Pick export path..\n\n");
@@ -3992,35 +3903,15 @@ void ofxColorManager::gui_Presets()
 
 		ImGui::Dummy(ImVec2(0, 5));
 
-		//ImGui::PushID(1);
-		//if (MODE_NewPreset.get())
-		//{
-		//	ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)ImColor::ImColor(1.0f, 1.0f, 1.0f, 1 - a));
-		//}
-
 		if (ofxSurfingHelpers::AddBigToggle(MODE_NewPreset, _w, _h))
 		{
-			textInput_New = name_TARGET[0];
+			textInput_New = name_TARGET[0];//set
 			//name_TARGET[0] = &textInput_New[0];//set
 		}
 		//ofxImGui::AddParameter(MODE_NewPreset);
 
-		//if (MODE_NewPreset.get())
-		//{
-		//	ImGui::PopStyleColor(1);
-		//}
-		//ImGui::PopID();
-
 		if (MODE_NewPreset.get())
 		{
-			//ImGui::PushID(1);
-			//ImGui::PushStyleColor(ImGuiCol_Text, (ImVec4)ImColor::ImColor(1.0f, 1.0f, 1.0f, 1 - a));
-			//ImGui::Text("NEW PRESET");
-			//ImGui::PopStyleColor(1);
-			//ImGui::PopID();
-
-			//-
-
 			//ImGui::Dummy(ImVec2(0, 5));
 
 			ImGui::PushItemWidth(_w);
@@ -4076,7 +3967,7 @@ void ofxColorManager::gui_Presets()
 			{
 				has_focus = 0;
 				MODE_NewPreset = false;
-				if (textInput_New != "") 
+				if (textInput_New != "")
 				{
 					ofLogNotice(__FUNCTION__) << "textInput_New: " << textInput_New;
 
@@ -4091,10 +3982,6 @@ void ofxColorManager::gui_Presets()
 			}
 			ImGui::PopStyleColor(1);
 			ImGui::PopID();
-
-			//-
-
-			//ImGui::Dummy(ImVec2(0, 5));
 		}
 
 		ImGui::Dummy(ImVec2(0, 5));
@@ -7477,4 +7364,99 @@ void ofxColorManager::draw_GradientCurve2()
 
 	////cosine gradient
 	//if (SHOW_Gradient) draw_Gradient();
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::refresh_Gradient_GuiLayout()
+{
+	curve_Slider_ExpTweak.setVisible(SHOW_GradientCurve);
+	curve_Slider_Pick.setVisible(SHOW_GradientCurve);
+
+	//-
+
+	//between panels in curve sections
+	int _pad1 = 30;
+	int _pad2 = 3;
+
+	int _xx, _yy, _ww, _hh;
+
+	//if (MODE_EditGradientLayout)
+	if (1)
+	{
+		_xx = rGradientPreview.getX() + _pad1;
+		_yy = rGradientPreview.getY() + _pad1;
+		_ww = rGradientPreview.getWidth() + (2 * _pad1);
+		_hh = rGradientPreview.getHeight() + (2 * _pad1);
+	}
+	else
+	{
+
+	}
+
+	//--
+
+	//color boxes
+	box_size = 30;
+
+	//user palette colors
+	box_size_user = 50;
+
+	//_pad1 = 0;//between box colors in palettes
+
+	//--
+
+	// curve tool pos (anchor for others)
+
+	// a. hardcoded
+	curveTool_x = _xx;
+	curveTool_y = _yy;
+	curveTool_w = MAX_LUT_SIZE;
+	curveTool_h = MAX_LUT_SIZE;
+
+	//--
+
+	// curve mod slider
+	slider_PickIn_x = curveTool_x + curveTool_w + _pad2;
+	slider_PickIn_y = _yy;
+	slider_PickIn_w = box_size_user;
+	slider_PickIn_h = curveTool_h;
+
+	//--
+
+	// gradient-pre curve (bad sorted to the left but anchored to curve..)
+	grad_x = slider_PickIn_x + 0.5 * slider_PickIn_w + _pad2;
+	grad_y = _yy + curveTool_h;
+	grad_w = box_size_user;
+	grad_h = curveTool_h;
+
+	//--
+
+	// gradient-curved image LUT 
+	//[referenced to curve pos (vertical)]
+	image_curvedGradient_x = grad_x + 0.5 * grad_w;// +_pad2;
+	image_curvedGradient_y = _yy;
+	image_curvedGradient_w = curveTool_w;
+	image_curvedGradient_h = curveTool_h;
+
+	//--
+
+	// testing curve widgets
+	// curve out slider
+	slider_Exp_x = image_curvedGradient_x + image_curvedGradient_w + _pad2;
+	slider_Exp_y = _yy;
+	slider_Exp_w = box_size_user;
+	slider_Exp_h = curveTool_h;
+
+	//--
+
+	curve_Slider_Pick.setup(slider_PickIn_x, slider_PickIn_y, slider_PickIn_w, slider_PickIn_h, 0, 1, curve_Gradient_PickIn, true, true);
+	curve_Slider_ExpTweak.setup(slider_Exp_x, slider_Exp_y, slider_Exp_w, slider_Exp_h, 0, 1, curve_Gradient_Exp, true, true);
+
+	//--	
+
+	// current color box/bar (the one affected by slider position. just for testing gradient purpose)
+	currColor_x = slider_Exp_x + slider_Exp_w + _pad2;
+	currColor_y = _yy;
+
+	//----
 }

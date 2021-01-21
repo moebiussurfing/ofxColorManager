@@ -49,7 +49,7 @@ void ofApp::keyPressed(int key)
 	}
 
 	// we can get the palette at any precise time
-	// (we need to use pointers if we want autoupdate the palette)
+	// if we want to autoupdate the local colors, we need to use pointers.
 	else if (key == '*')
 	{
 		palette = colorManager.getPalette();
@@ -64,23 +64,18 @@ void ofApp::keyPressed(int key)
 	}
 }
 
-////--------------------------------------------------------------
-//void ofApp::dragEvent(ofDragInfo info) {
-//	colorManager.dragEvent(info);
-//}
-
 //--------------------------------------------------------------
 void ofApp::draw_TEST_ofApp()
 {
-	// draw local (ofApp) test scene
+	// draw local test scene
 	ofPushStyle();
 	ofPushMatrix();
 	{
-		int sz = 50;// boxes width size
-		float szhr = 0.5;// vertical h/w ratio
-		int sz2 = sz - 0;// boxes inner size with padding
-		int _p = 5;
-		int _pp = 2 * _p;
+		int sz = 50;//boxes width size
+		float szhr = 0.5;//h/w ratio
+		int sz2 = sz - 0;//boxes inner padded size
+		int _p = 5;//padding
+		int _pp = 2 * _p;//double padding
 
 		ofFill();
 		
@@ -88,8 +83,8 @@ void ofApp::draw_TEST_ofApp()
 
 		// bg label name
 		ofSetColor(0, 255);
-		ofRectangle _rlbg(-_p, -_p, (palette.size() *  sz) + _pp, (sz * szhr) + _pp);
-		ofDrawRectRounded(_rlbg, 3);
+		ofRectangle _rlbg(0, -14, (palette.size() *  sz) + _p + 1, 16);
+		ofDrawRectangle(_rlbg);
 
 		// label name
 		ofDrawBitmapStringHighlight(name, 0, 0, ofColor::black, ofColor::white);
@@ -99,8 +94,24 @@ void ofApp::draw_TEST_ofApp()
 		// bg panel box
 		ofSetColor(0, 255);
 		ofRectangle _rbg(-_p, -_p, (palette.size() *  sz) + _pp, 2 * (sz * szhr) + _pp);
-		ofDrawRectRounded(_rbg, 3);
-		//ofDrawRectangle(_rbg);
+		//ofDrawRectRounded(_rbg, 3);
+		ofDrawRectangle(_rbg);
+
+		//1st row
+
+		// the palette colors
+		ofPushMatrix();
+		for (auto p : palette)
+		{
+			ofSetColor(p);
+			ofDrawRectangle(0, 0, sz2, sz * szhr);
+			ofTranslate(sz, 0);
+		}
+		ofPopMatrix();
+
+		//2nd row
+		
+		ofTranslate(0, sz * szhr);
 
 		// the picker color
 		ofSetColor(colorPick);
@@ -110,16 +121,12 @@ void ofApp::draw_TEST_ofApp()
 		ofSetColor(colorBg);
 		if (palette.size() > 0) ofDrawRectangle(sz, 0, sz * (palette.size() - 1), sz2 * szhr);
 		else ofDrawRectangle(sz, 0, sz, sz2 * szhr);
-		ofTranslate(0, sz * szhr);
-
-		// the palette colors
-		for (auto p : palette)
-		{
-			ofSetColor(p);
-			ofDrawRectangle(0, 0, sz2, sz * szhr);
-			ofTranslate(sz, 0);
-		}
 	}
 	ofPopMatrix();
 	ofPopStyle();
 }
+
+////--------------------------------------------------------------
+//void ofApp::dragEvent(ofDragInfo info) {
+//	colorManager.dragEvent(info);
+//}
