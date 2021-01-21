@@ -43,29 +43,34 @@ void ofApp::drawOfApp()
 	ofPushStyle();
 	ofPushMatrix();
 	{
-		int sz = 70;
+		int sz = 70;// boxes size
 
-		ofTranslate(ofGetWidth() * 0.5 - sz * palette.size() * 0.5, 200);
+		ofTranslate(gui.getShape().getBottomLeft().x, gui.getShape().getBottomLeft().y + 40);
+		//ofTranslate(ofGetWidth() * 0.5 - sz * palette.size() * 0.5, 200);
 		//ofTranslate(ofGetWidth() * 0.5 - sz * palette.size() * 0.5, ofGetHeight() - 2 * sz - 30);
-		//ofTranslate(10, 10);
-
-		ofDrawBitmapStringHighlight("ofApp", 4, -7 - 14, ofColor::black, ofColor::white);
-		ofDrawBitmapStringHighlight(colorManager.getPaletteName(), 4, -6, ofColor::black, ofColor::white);
 
 		ofFill();
 
-		ofSetColor(color);// the picker color
+		ofSetColor(0, 64);
+		int _p = 5;
+		ofRectangle _rbg = ofRectangle(-_p, -_p, palette.size() *  sz + 2 * _p, 2 * sz * 0.5 + 2 * _p);
+		ofDrawRectangle(_rbg);
 
+		// labels
+		ofDrawBitmapStringHighlight("ofApp", 4, -7 - 14, ofColor::black, ofColor::white);
+		ofDrawBitmapStringHighlight(colorManager.getPaletteName(), 4, -6, ofColor::black, ofColor::white);
+
+		// the picker color
+		ofSetColor(color);
 		ofDrawRectangle(0, 0, sz, sz);
 
-		//ofTranslate(sz + 5, 0);
-		ofTranslate(0, sz);
+		ofTranslate(0, sz * 0.5);
 
+		// the palette colors
 		for (auto p : palette)
 		{
-			ofSetColor(p);// the palette colors
-
-			ofDrawRectangle(0, 0, sz, sz);
+			ofSetColor(p);
+			ofDrawRectangle(0, 0, sz, sz * 0.5);
 			ofTranslate(sz, 0);
 		}
 	}

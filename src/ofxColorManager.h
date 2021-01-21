@@ -160,8 +160,8 @@ public:
 	//--
 
 private:
-	void draw_Curve();
-	void update_Curve();
+	void draw_GradientCurve2();
+	void update_GradientCurve2();
 
 	void draw_Info();
 
@@ -458,7 +458,7 @@ private:
 	//1 lover name
 	//2 theory name
 	//3 range name
-		
+
 	//--
 
 	ofParameter<int> last_Theory_PickPalette;
@@ -505,16 +505,22 @@ public:
 
 	//-
 
-	// API initializer setup
+	// API 
+	// initializer setup
+	// pointers back to auto update ofApp project
 
 	void setColor_TARGET(ofColor &c);
 	ofColor *color_TARGET;//backwards pointer to ofApp color
 
 	void setPalette_TARGET(vector<ofColor> &p);
 	vector<ofColor> *palette_TARGET;//backwards pointer to ofApp palette
-	//void refresh_Palette_TARGET(vector<ofColor> &p);
+	void refresh_Palette_TARGET(vector<ofColor> &p);
 
-	void reBuild_Palette();
+	//-
+
+private:
+	void build_Palette_Engine();
+	void build_Palette_Preset();
 
 	//-----------------------------------------------------------
 
@@ -802,9 +808,9 @@ private:
 
 	ofxCurvesTool curvesTool;
 
-	void setup_CurveTool();
-	void update_CurveTool();
-	void draw_CurveTools();
+	void setup_GradientCurve();
+	void update_GradientCurve();
+	void draw_Gradient_Curve();
 
 	int MAX_LUT_SIZE = 256;
 	std::string curveTool_name = "curves.yml";
