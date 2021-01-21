@@ -47,7 +47,7 @@ void ofxColorQuantizerHelper::gui_Quantizer()
 		//-
 
 		ImGui::Dummy(ImVec2(0.0f, 10));
-		
+
 		ImGuiColorEditFlags colorEdiFlags;
 
 		//colorEdiFlags =
@@ -227,8 +227,8 @@ void ofxColorQuantizerHelper::gui_Quantizer()
 				float next_button_x2 = last_button_x2 + style.ItemSpacing.x + button_sz.x; // Expected position if next button was on same line
 				if (n + 1 < buttons_count && next_button_x2 < _wx2) ImGui::SameLine();
 				ImGui::PopID();
-	}
-}
+			}
+		}
 		ImGui::End();
 #endif
 	}
@@ -524,7 +524,7 @@ void ofxColorQuantizerHelper::draw()
 				// image
 				ofSetColor(255, 255);
 				image.draw(0, 0, imgW, imgH);
-				
+
 				ofSetColor(255, 100);
 				ofSetLineWidth(1.0);
 				ofNoFill();
@@ -550,13 +550,13 @@ void ofxColorQuantizerHelper::draw()
 				//bg box
 				ofSetColor(0, 50);
 				ofFill();
-				ofDrawRectangle(0, 0, _ww, - imgH);
+				ofDrawRectangle(0, 0, _ww, -imgH);
 
 				//bg box border
 				ofSetColor(255, 100);
 				ofSetLineWidth(1.0);
 				ofNoFill();
-				ofDrawRectangle(0, 0, _ww, - imgH);
+				ofDrawRectangle(0, 0, _ww, -imgH);
 
 				//% colors
 				ofFill();
@@ -564,7 +564,7 @@ void ofxColorQuantizerHelper::draw()
 				{
 					//box scaled
 					ofSetColor(sortedColors[i].color, 255);
-					ofDrawRectangle(i * _wb, 0, boxBgSize, ofMap(sortedColors[i].weight, 0, 1, 0, - imgH));
+					ofDrawRectangle(i * _wb, 0, boxBgSize, ofMap(sortedColors[i].weight, 0, 1, 0, -imgH));
 
 					//label
 					ofSetColor(255, 255);
@@ -775,7 +775,6 @@ void ofxColorQuantizerHelper::quantizeImage(std::string imgName, int _numColors)
 	}
 }
 
-
 //--------------------------------------------------------------
 void ofxColorQuantizerHelper::Changed_parameters(ofAbstractParameter &e)
 {
@@ -843,6 +842,18 @@ void ofxColorQuantizerHelper::Changed_parameters(ofAbstractParameter &e)
 			{
 				(*bUpdated_Palette_BACK) = true;
 			}
+
+			//color
+			if (myColor_BACK != nullptr && colorMapSortable.size() > 0)
+			{
+				myColor_BACK->set(colorMapSortable[0].color);//get the firstone
+
+				// mark update flag
+				if (bUpdated_Color_BACK != nullptr)
+				{
+					(*bUpdated_Color_BACK) = true;
+				}
+			}
 		}
 	}
 	else if (_name == "type url")
@@ -892,7 +903,6 @@ void ofxColorQuantizerHelper::Changed_parameters(ofAbstractParameter &e)
 	}
 }
 
-
 //--------------------------------------------------------------
 void ofxColorQuantizerHelper::rebuildMap()
 {
@@ -914,9 +924,9 @@ void ofxColorQuantizerHelper::rebuildMap()
 		colorMap[i] = palette[i];
 	}
 
+	//colorNameMap
 	for (unsigned int i = 0; i < palSize; i++)
-	{//colorNameMap
-
+	{
 		map<int, ofColor>::iterator mapEntry = colorMap.begin();
 		std::advance(mapEntry, i);
 
@@ -952,7 +962,9 @@ void ofxColorQuantizerHelper::rebuildMap()
 
 	// pointers back to 'communicate externally'
 
+	//palette
 	int sizePalette = palette.size();
+
 	if (sizePalette > 0 && myPalette_BACK != nullptr)
 	{
 		// set BACK name clicked
@@ -982,8 +994,19 @@ void ofxColorQuantizerHelper::rebuildMap()
 			(*bUpdated_Palette_BACK) = true;
 		}
 	}
-}
 
+	//color
+	if (sizePalette > 0 && myColor_BACK != nullptr)
+	{
+		myColor_BACK->set(colorMapSortable[0].color);//get the firstone
+
+		// mark update flag
+		if (bUpdated_Color_BACK != nullptr)
+		{
+			(*bUpdated_Color_BACK) = true;
+		}
+	}
+}
 
 //--------------------------------------------------------------
 void ofxColorQuantizerHelper::buildFromImageFile(std::string path, int num)
@@ -995,7 +1018,6 @@ void ofxColorQuantizerHelper::buildFromImageFile(std::string path, int num)
 	build();
 }
 
-
 //--------------------------------------------------------------
 void ofxColorQuantizerHelper::buildFromImageUrl(std::string url, int num)
 {
@@ -1003,7 +1025,6 @@ void ofxColorQuantizerHelper::buildFromImageUrl(std::string url, int num)
 	quantizeImage(url, num);
 	build();
 }
-
 
 //--------------------------------------------------------------
 void ofxColorQuantizerHelper::draw_Palette_Preview()
@@ -1164,7 +1185,6 @@ void ofxColorQuantizerHelper::removeDragListeners()
 	ofAddListener(ofEvents().fileDragEvent, this, &ofxColorQuantizerHelper::dragEvent);
 }
 
-
 //--------------------------------------------------------------
 void ofxColorQuantizerHelper::addKeysListeners()
 {
@@ -1298,7 +1318,6 @@ void ofxColorQuantizerHelper::dragEvent(ofDragInfo &eventArgs)
 	}
 }
 
-
 //--------------------------------------------------------------
 void ofxColorQuantizerHelper::draw_imageDragged()
 {
@@ -1316,7 +1335,6 @@ void ofxColorQuantizerHelper::draw_imageDragged()
 	ofDrawBitmapString("drag image files into this window", 10, 20);
 }
 
-
 //--------------------------------------------------------------
 void ofxColorQuantizerHelper::XML_load_AppSettings(ofParameterGroup &g, std::string path)
 {
@@ -1325,7 +1343,6 @@ void ofxColorQuantizerHelper::XML_load_AppSettings(ofParameterGroup &g, std::str
 	settings.load(path);
 	ofDeserialize(settings, g);
 }
-
 
 //--------------------------------------------------------------
 void ofxColorQuantizerHelper::XML_save_AppSettings(ofParameterGroup &g, std::string path)
@@ -1345,13 +1362,11 @@ void ofxColorQuantizerHelper::setColor_BACK(ofColor &c)
 	myColor_BACK = &c;
 }
 
-
 //--------------------------------------------------------------
 void ofxColorQuantizerHelper::setPalette_BACK(vector<ofColor> &p)
 {
 	myPalette_BACK = &p;
 }
-
 
 //--------------------------------------------------------------
 void ofxColorQuantizerHelper::setPalette_BACK_RefreshPalette(bool &b)
@@ -1359,13 +1374,11 @@ void ofxColorQuantizerHelper::setPalette_BACK_RefreshPalette(bool &b)
 	bUpdated_Palette_BACK = &b;
 }
 
-
 //--------------------------------------------------------------
 void ofxColorQuantizerHelper::setColor_BACK_Refresh(bool &b)
 {
 	bUpdated_Color_BACK = &b;
 }
-
 
 //--------------------------------------------------------------
 void ofxColorQuantizerHelper::setPalette_BACK_Name(std::string &n)

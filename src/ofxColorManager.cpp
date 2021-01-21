@@ -15,28 +15,28 @@ void ofxColorManager::build_Palette_Engine()
 
 	//-
 
-		if (SHOW_ColourLovers)
-		{
-			_name = myPalette_Name;
-			palette_FromColourLovers();
-		}
-		else if (SHOW_Quantizer)
-		{
-			_name = myPalette_Name;
-			palette_FromQuantizer();
-		}
-		else if (SHOW_Theory)
-		{
-			_name = theory_Name;
-			//refresh_Theory_G1();//?
-			refresh_Theory_G2();
-			palette_FromTheory(last_Index_Theory);
-		}
-		else if (SHOW_Range)
-		{
-			_name = range_Name;
-			palette_FromRange(last_Index_Range);
-		}
+	if (SHOW_ColourLovers)
+	{
+		_name = myPalette_Name_BACK;
+		palette_FromColourLovers();
+	}
+	else if (SHOW_Quantizer)
+	{
+		_name = myPalette_Name_BACK;
+		palette_FromQuantizer();
+	}
+	else if (SHOW_Theory)
+	{
+		_name = theory_Name;
+		//refresh_Theory_G1();//?
+		refresh_Theory_G2();
+		palette_FromTheory(last_Index_Theory);
+	}
+	else if (SHOW_Range)
+	{
+		_name = range_Name;
+		palette_FromRange(last_Index_Range);
+	}
 
 	//----
 
@@ -73,7 +73,6 @@ void ofxColorManager::build_Palette_Engine()
 
 	//--
 
-	//bUpdated_Palette_BACK = true;// to trig this
 	refresh_Palette_TARGET(palette);
 }
 
@@ -131,7 +130,11 @@ void ofxColorManager::build_Palette_Preset()
 
 	//--
 
-	//bUpdated_Palette_BACK = true;// to trig this
+	if (colorBg_TARGET != nullptr)
+	{
+		colorBg_TARGET->set(color_BackGround.get());
+	}
+
 	refresh_Palette_TARGET(palette);
 }
 
@@ -293,9 +296,12 @@ void ofxColorManager::setup()
 	colorQuantizer.setup();
 
 	// receivers pointers
-	colorQuantizer.setPalette_BACK(myPalette);
+	colorQuantizer.setColor_BACK(myColor_BACK);
+	colorQuantizer.setColor_BACK_Refresh(bUpdated_Color_BACK);
+
+	colorQuantizer.setPalette_BACK(myPalette_BACK);
 	colorQuantizer.setPalette_BACK_RefreshPalette(bUpdated_Palette_BACK);
-	colorQuantizer.setPalette_BACK_Name(myPalette_Name);
+	colorQuantizer.setPalette_BACK_Name(myPalette_Name_BACK);
 #endif
 
 	//----
@@ -335,11 +341,11 @@ void ofxColorManager::setup()
 	//----
 
 	// pointers back
-	//TODO:
-	colourLoversHelper.setColor_BACK(myColor);
+	colourLoversHelper.setColor_BACK(myColor_BACK);
 	colourLoversHelper.setColor_BACK_Refresh(bUpdated_Color_BACK);
-	colourLoversHelper.setPalette_BACK(myPalette);
-	colourLoversHelper.setPalette_BACK_Name(myPalette_Name);
+
+	colourLoversHelper.setPalette_BACK(myPalette_BACK);
+	colourLoversHelper.setPalette_BACK_Name(myPalette_Name_BACK);
 	colourLoversHelper.setPalette_BACK_Refresh(bUpdated_Palette_BACK);
 
 	//--------------------------------------------------------------
@@ -359,11 +365,11 @@ void ofxColorManager::setup()
 	//----
 
 	// some initiation values..
-	myColor = ofColor::white;
-	myPalette.resize(2);//pointer setter will clear/resize. nevermind the vector size here
-	myPalette[0] = ofColor::grey;
-	myPalette[1] = ofColor::black;
-	myPalette_Name = "";
+	myColor_BACK = ofColor::white;
+	myPalette_BACK.resize(2);//pointer setter will clear/resize. nevermind the vector size here
+	myPalette_BACK[0] = ofColor::grey;
+	myPalette_BACK[1] = ofColor::black;
+	myPalette_Name_BACK = "";
 
 	//----
 
@@ -1050,8 +1056,9 @@ void ofxColorManager::update(ofEventArgs & args)
 	//----
 
 	//TODO:
-	// some mode has clicked/changed some palette 
-
+	// this flags are only used 
+	// by quantizer and lover addons
+	// it mens that some addon has clicked/changed the main palette/color 
 	//bUpdated_Palette_BACK = true;// to trig this
 
 	if (bUpdated_Palette_BACK)
@@ -1073,7 +1080,7 @@ void ofxColorManager::update(ofEventArgs & args)
 		ofLogWarning(__FUNCTION__) << "  >  bUpdated_Color_BACK : " << bUpdated_Color_BACK;
 
 		// 2. get color from colour lovers
-		color_Clicked2 = ofColor(myColor);
+		color_Clicked2 = ofColor(myColor_BACK);
 
 		build_Palette_Engine();
 	}
@@ -1152,7 +1159,7 @@ void ofxColorManager::draw_Info()
 	int h;
 
 	std::string t0 = PRESET_Name;
-	std::string t1 = myPalette_Name;
+	std::string t1 = myPalette_Name_BACK;
 	std::string t2 = theory_Name;
 	std::string t3 = range_Name;
 
@@ -3453,6 +3460,8 @@ void ofxColorManager::gui_Background()
 				ImGuiColorEditFlags_PickerHueBar;
 
 			ImGui::ColorPicker4("Background Color", (float *)&color, _flags);
+
+			//TODO: ? should update only when changed
 			color_BackGround = color;
 
 			ImGui::PopItemWidth();
@@ -4438,9 +4447,9 @@ void ofxColorManager::palette_FromColourLovers() // ?
 	// 1. erase user palette and fill a new one with just update/received colour lovers
 	palette_Clear();
 
-	for (int i = 0; i < myPalette.size(); i++)
+	for (int i = 0; i < myPalette_BACK.size(); i++)
 	{
-		ofColor c = myPalette[i];
+		ofColor c = myPalette_BACK[i];
 		ofLogNotice(__FUNCTION__) << "_c [" << i << "] " << ofToString(c);
 		palette_AddColor(c);
 	}
@@ -4508,10 +4517,6 @@ void ofxColorManager::palette_AddColor(ofColor c)
 		last_Index_ColorPalette.setMax(palette.size() - 1);
 		//last_Index_ColorPalette = palette.size() - 1;
 	}
-
-	//--
-
-	//refresh_Palette_TARGET(palette);
 }
 
 //--------------------------------------------------------------
@@ -4544,9 +4549,6 @@ void ofxColorManager::palette_RemoveColor(int c)
 			gradient.addColor(palette[i]);
 		}
 
-		// 5. make positions & resizes to fill bar
-		//palette_rearrenge();
-
 		//--
 
 		// workflow: 
@@ -4572,8 +4574,6 @@ void ofxColorManager::palette_RemoveColorLast()
 		ofLogNotice(__FUNCTION__) << "add _c [" << i << "]";
 		gradient.addColor(palette[i]);
 	}
-
-	//palette_rearrenge();
 
 	//--
 
@@ -4762,7 +4762,6 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 
 				//-
 
-				//bUpdated_Palette_BACK = true;
 				build_Palette_Engine();
 
 				return;
@@ -4857,7 +4856,6 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 
 			//-
 
-			//bUpdated_Palette_BACK = true;
 			build_Palette_Engine();
 
 			return;
@@ -5440,6 +5438,10 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		{
 			color_backGround_SET = false;
 			color_BackGround.set(ofColor(color_Picked.get()));
+			if (colorBg_TARGET != nullptr)
+			{
+				colorBg_TARGET->set(color_BackGround.get());
+			}
 		}
 	}
 
@@ -5524,7 +5526,6 @@ void ofxColorManager::Changed_ColorRange(ofAbstractParameter &e)
 
 					//-
 
-					//bUpdated_Palette_BACK = true;
 					build_Palette_Engine();
 				}
 			}
@@ -5599,6 +5600,11 @@ void ofxColorManager::refresh_Background()
 			}
 
 			color_BackGround.set(c);
+
+			if (colorBg_TARGET != nullptr)
+			{
+				colorBg_TARGET->set(color_BackGround.get());
+			}
 		}
 	}
 }
@@ -6579,6 +6585,13 @@ void ofxColorManager::setColor_TARGET(ofColor &c)
 }
 
 //--------------------------------------------------------------
+void ofxColorManager::setColorBg_TARGET(ofColor &c)
+{
+	ofLogNotice(__FUNCTION__) << ofToString(c);
+	colorBg_TARGET = &c;
+}
+
+//--------------------------------------------------------------
 void ofxColorManager::setPalette_TARGET(vector<ofColor> &p)
 {
 	ofLogNotice(__FUNCTION__) << ofToString(p);
@@ -6974,8 +6987,13 @@ void ofxColorManager::update_Gradient()
 					float mySin = std::sin(PI * framePrc);
 					control = ofClamp(mySin, 0., 1.);
 				}
-				if (AutoSet_Background_FromGradient) color_BackGround.set(getColorAtPercent(control));
-
+				if (AutoSet_Background_FromGradient) {
+					color_BackGround.set(getColorAtPercent(control));
+					if (colorBg_TARGET != nullptr)
+					{
+						colorBg_TARGET->set(color_BackGround.get());
+					}
+				}
 				setControl_Gradient(control);
 			}
 
@@ -6995,8 +7013,13 @@ void ofxColorManager::update_Gradient()
 					control = 0.;
 					framePrc = 1.;
 				}
-				if (AutoSet_Background_FromGradient) color_BackGround.set(getColorAtPercent(control));
-
+				if (AutoSet_Background_FromGradient) {
+					color_BackGround.set(getColorAtPercent(control));
+					if (colorBg_TARGET != nullptr)
+					{
+						colorBg_TARGET->set(color_BackGround.get());
+					}
+				}
 				setControl_Gradient(control);
 			}
 		}

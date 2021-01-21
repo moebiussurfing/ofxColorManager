@@ -15,16 +15,19 @@ public:
 	void dragEvent(ofDragInfo dragInfo);
 
     ofxColorManager colorManager;
+	
+	//-
 
     // local palette and color 
 	// as target registered pointers
     vector<ofColor> palette;
-    ofColor color;
+    ofColor colorPick;
+    ofColor colorBg;
+
+	//-
 
 	ofxPanel gui;
 	bool bGui = false;
-
 	ofParameter<bool> bDrawOfApp{ "Draw ofApp", false };
-
 	void drawOfApp();// test scene
 };

@@ -481,13 +481,6 @@ private:
 	ofxColourLoversHelper colourLoversHelper;
 #endif
 
-	std::string myPalette_Name = "";
-	ofColor myColor;
-	vector<ofColor> myPalette;
-
-	bool bUpdated_Palette_BACK = false;
-	bool bUpdated_Color_BACK = false;
-
 	//--
 
 	// TODO: 
@@ -497,26 +490,41 @@ private:
 
 public:
 	//--------------------------------------------------------------
-	void setFps(float _fps)
+	void setFps(float _fps)//for the demo speed only
 	{
 		fps = _fps;
 		dt = 1. / fps;
 	}
 
-	//-
+	//--
+
+	// pointers backs to call refresh and link addons (quantizer+lovers) with ofApp palette/color
+private:
+	std::string myPalette_Name_BACK = "";
+	ofColor myColor_BACK;
+	vector<ofColor> myPalette_BACK;
+	bool bUpdated_Palette_BACK = false;
+	bool bUpdated_Color_BACK = false;
+
+	//----
 
 	// API 
+
+public:
 	// initializer setup
 	// pointers back to auto update ofApp project
 
 	void setColor_TARGET(ofColor &c);
-	ofColor *color_TARGET;//backwards pointer to ofApp color
+	ofColor *color_TARGET;//backwards pointer to ofApp picker color
+
+	void setColorBg_TARGET(ofColor &c);
+	ofColor *colorBg_TARGET;//backwards pointer to ofApp background color
 
 	void setPalette_TARGET(vector<ofColor> &p);
 	vector<ofColor> *palette_TARGET;//backwards pointer to ofApp palette
 	void refresh_Palette_TARGET(vector<ofColor> &p);
 
-	//-
+	//--
 
 private:
 	void build_Palette_Engine();

@@ -3,6 +3,11 @@
 //--------------------------------------------------------------
 void ofApp::setup()
 {
+	bDrawOfApp = true;
+	bGui = true;
+
+	//-
+
 	ofEnableAlphaBlending();
 	ofSetFrameRate(60);
 	ofSetWindowPosition(-1920, 18);
@@ -12,7 +17,8 @@ void ofApp::setup()
 	colorManager.setup();
 
 	// we subscribe using pointers references
-	colorManager.setColor_TARGET(color); // color to be autoupdated
+	colorManager.setColorBg_TARGET(colorBg); // color to be autoupdated
+	colorManager.setColor_TARGET(colorPick); // color to be autoupdated
 	colorManager.setPalette_TARGET(palette); // palette to be autoupdated
 
 	//--
@@ -25,7 +31,7 @@ void ofApp::setup()
 	gui.setup("ofApp");
 	gui.add(bDrawOfApp);
 	gui.add(pg);
-	gui.setPosition(500, 20);
+	gui.setPosition(250, 50);
 }
 
 //--------------------------------------------------------------
@@ -44,26 +50,33 @@ void ofApp::drawOfApp()
 	ofPushMatrix();
 	{
 		int sz = 70;// boxes size
+		int sz2 = sz - 4;// boxes size
 		float szhr = 0.25;
 
-		ofTranslate(gui.getShape().getBottomLeft().x, gui.getShape().getBottomLeft().y + 50);
+		ofTranslate(gui.getShape().getBottomLeft().x + 5, gui.getShape().getBottomLeft().y + 50);
 		//ofTranslate(ofGetWidth() * 0.5 - sz * palette.size() * 0.5, 200);
 		//ofTranslate(ofGetWidth() * 0.5 - sz * palette.size() * 0.5, ofGetHeight() - 2 * sz - 30);
 
 		ofFill();
 
-		ofSetColor(0, 64);
+		// bg
+		ofSetColor(0, 128);
 		int _p = 5;
-		ofRectangle _rbg = ofRectangle(-_p, -_p, palette.size() *  sz + 2 * _p, 2 * sz * szhr + 2 * _p);
+		int _pp = 2 * _p;
+		ofRectangle _rbg = ofRectangle(-_p, -_p, palette.size() *  sz + _pp, 2 * (sz * szhr) + _pp);
 		ofDrawRectangle(_rbg);
 
 		// labels
-		ofDrawBitmapStringHighlight("ofApp", 4, -7 - 14, ofColor::black, ofColor::white);
-		ofDrawBitmapStringHighlight(colorManager.getPaletteName(), 4, -6, ofColor::black, ofColor::white);
+		ofDrawBitmapStringHighlight("ofApp", 4, -7 - 20, ofColor::black, ofColor::white);
+		ofDrawBitmapStringHighlight(colorManager.getPaletteName(), 4, -10, ofColor::black, ofColor::white);
 
 		// the picker color
-		ofSetColor(color);
-		ofDrawRectangle(0, 0, sz, sz * szhr);
+		ofSetColor(colorPick);
+		ofDrawRectangle(0, 0, sz2, sz2 * szhr);
+
+		// the bg color
+		ofSetColor(colorBg);
+		ofDrawRectangle(sz, 0, sz * (palette.size() - 1) - 4, sz2 * szhr);
 
 		ofTranslate(0, sz * szhr);
 
@@ -71,7 +84,7 @@ void ofApp::drawOfApp()
 		for (auto p : palette)
 		{
 			ofSetColor(p);
-			ofDrawRectangle(0, 0, sz, sz * szhr);
+			ofDrawRectangle(0, 0, sz2, sz * szhr);
 			ofTranslate(sz, 0);
 		}
 	}
