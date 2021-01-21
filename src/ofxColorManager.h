@@ -860,9 +860,9 @@ private:
 
 	//new preset
 private:
-	ofParameter<bool> MODE_NewPreset{ "New Preset", false };
+	ofParameter<bool> MODE_NewPreset{ "NEW PRESET", false };
 
-	std::string textInput_New = "new preset";
+	std::string textInput_New = "type name..";
 	bool focus_1;
 	int has_focus = 0;
 	char tab[128];
