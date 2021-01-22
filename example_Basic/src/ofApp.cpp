@@ -64,6 +64,10 @@ void ofApp::keyPressed(int key)
 	}
 }
 
+//--
+
+// a testing scene to preview the colors
+
 //--------------------------------------------------------------
 void ofApp::draw_TEST_ofApp()
 {
@@ -97,7 +101,7 @@ void ofApp::draw_TEST_ofApp()
 		//ofDrawRectRounded(_rbg, 3);
 		ofDrawRectangle(_rbg);
 
-		//1st row
+		// 1st row
 
 		// the palette colors
 		ofPushMatrix();
@@ -109,7 +113,7 @@ void ofApp::draw_TEST_ofApp()
 		}
 		ofPopMatrix();
 
-		//2nd row
+		// 2nd row
 		
 		ofTranslate(0, sz * szhr);
 
