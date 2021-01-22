@@ -271,7 +271,7 @@ ofxColorManager::ofxColorManager()
 	infoHelp += "Down|Up             NEXT/PREVIOUS\n";
 	infoHelp += "+|-                 AMOUNT COLORS\n";
 	infoHelp += "\n";
-	infoHelp += "\n";
+	//infoHelp += "\n";
 	infoHelp += "F9                  PRESETS\n";
 	infoHelp += "F10                 GRADIENT\n";
 	infoHelp += "PANELS\n";
@@ -298,7 +298,7 @@ ofxColorManager::ofxColorManager()
 //--------------------------------------------------------------
 void ofxColorManager::setup()
 {
-	ofLogNotice(__FUNCTION__) << "----------------- SETUP -----------------";
+	ofLogNotice(__FUNCTION__) << endl << endl << "----------------- SETUP -----------------" << endl;
 
 	//ofSetLogLevel("ofxColorManager", OF_LOG_NOTICE);
 
@@ -990,7 +990,7 @@ void ofxColorManager::setup()
 //--------------------------------------------------------------
 void ofxColorManager::startup()
 {
-	ofLogNotice(__FUNCTION__) << "----------------- STARTUP -----------------";
+	ofLogNotice(__FUNCTION__) << endl << endl << "----------------- STARTUP -----------------" << endl;
 
 	//--
 
@@ -4386,12 +4386,12 @@ void ofxColorManager::refresh_Theory_G1() //populates palettes
 
 	for (int i = 0; i < NUM_COLOR_THEORY_TYPES_G1; i++)
 	{
-		//ofLogNotice(__FUNCTION__) << i;
 		shared_ptr<ColorWheelScheme> _scheme;
 		_scheme = ColorWheelSchemes::colorSchemes[i];
 		_scheme->setPrimaryColor(color_TheoryBase.get());
 
 		colors_Theory_G1[i] = _scheme->interpolate(numColors_Theory_G1.get());
+		ofLogNotice(__FUNCTION__) << i;// << " " << _scheme->;
 	}
 }
 
@@ -4925,30 +4925,34 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		switch (AppMode)
 		{
 
+		// presets
 		case 0:
 			SHOW_Presets = true;
 			if (SHOW_Presets)
 			{
 				//SHOW_UserPaletteFloating = false;
-				SHOW_Picker = false;
-				SHOW_Library = false;
-				SHOW_BackGround = false;
+				//SHOW_Picker = false;
+				//SHOW_Library = false;
+				//SHOW_BackGround = false;
+
 				SHOW_Theory = false;
 				SHOW_Range = false;
 				SHOW_ColourLovers = false;
 				SHOW_Quantizer = false;
-				SHOW_GradientCurve = false;
+				//SHOW_GradientCurve = false;
 			}
 			break;
 
+			// theory
 		case 1:
 			SHOW_Theory = true;
 			if (SHOW_Theory)
 			{
 				//SHOW_UserPaletteFloating = false;
-				SHOW_Picker = false;
-				SHOW_Library = false;
-				SHOW_BackGround = false;
+				//SHOW_Picker = false;
+				//SHOW_Library = false;
+				//SHOW_BackGround = false;
+
 				//SHOW_Theory = false;
 				SHOW_Range = false;
 				SHOW_ColourLovers = false;
@@ -4957,14 +4961,16 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			}
 			break;
 
+			// range
 		case 2:
 			SHOW_Range = true;
 			if (SHOW_Range)
 			{
 				//SHOW_UserPaletteFloating = false;
-				SHOW_Picker = false;
-				SHOW_Library = false;
-				SHOW_BackGround = false;
+				//SHOW_Picker = false;
+				//SHOW_Library = false;
+				//SHOW_BackGround = false;
+
 				SHOW_Theory = false;
 				//SHOW_Range = false;
 				SHOW_ColourLovers = false;
@@ -4973,14 +4979,16 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			}
 			break;
 
+			// lovers
 		case 3:
 			SHOW_ColourLovers = true;
 			if (SHOW_ColourLovers)
 			{
 				//SHOW_UserPaletteFloating = false;
-				SHOW_Picker = false;
-				SHOW_Library = false;
-				SHOW_BackGround = false;
+				//SHOW_Picker = false;
+				//SHOW_Library = false;
+				//SHOW_BackGround = false;
+
 				SHOW_Theory = false;
 				SHOW_Range = false;
 				//SHOW_ColourLovers = false;
@@ -4989,14 +4997,16 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			}
 			break;
 
+			// quantizer
 		case 4:
 			SHOW_Quantizer = true;
 			if (SHOW_Quantizer)
 			{
 				//SHOW_UserPaletteFloating = false;
-				SHOW_Picker = false;
-				SHOW_Library = false;
-				SHOW_BackGround = false;
+				//SHOW_Picker = false;
+				//SHOW_Library = false;
+				//SHOW_BackGround = false;
+
 				SHOW_Theory = false;
 				SHOW_Range = false;
 				SHOW_ColourLovers = false;
@@ -5005,14 +5015,16 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			}
 			break;
 
+			// gradient
 		case 5:
 			SHOW_GradientCurve = true;
 			if (SHOW_GradientCurve)
 			{
 				//SHOW_UserPaletteFloating = false;
-				SHOW_Picker = false;
-				SHOW_Library = false;
-				SHOW_BackGround = false;
+				//SHOW_Picker = false;
+				//SHOW_Library = false;
+				//SHOW_BackGround = false;
+
 				SHOW_Theory = false;
 				SHOW_Range = false;
 				SHOW_ColourLovers = false;
@@ -5776,7 +5788,14 @@ void ofxColorManager::refresh_Range_AutoUpdate()
 //--------------------------------------------------------------
 void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 {
-	const int &key = eventArgs.key;
+	const int key = eventArgs.key;
+
+	// modifiers
+	bool mod_COMMAND = eventArgs.hasModifier(OF_KEY_COMMAND);
+	bool mod_CONTROL = eventArgs.hasModifier(OF_KEY_CONTROL);
+	bool mod_ALT = eventArgs.hasModifier(OF_KEY_ALT);
+	bool mod_SHIFT = eventArgs.hasModifier(OF_KEY_SHIFT);
+
 	ofLogNotice(__FUNCTION__) << " : " << key;
 
 	if (key == 'K') ENABLE_keys = !ENABLE_keys;
@@ -5825,9 +5844,12 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			numColors_Engines++;
 		}
 
-		// browse app modes
-		else if (key == OF_KEY_TAB) {
+		// app modes
+		else if (key == OF_KEY_TAB && !OF_KEY_CONTROL) {
 			AppMode++;
+		}
+		else if (key == OF_KEY_TAB && OF_KEY_CONTROL) {
+			AppMode--;
 		}
 
 		//-----

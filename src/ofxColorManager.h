@@ -12,6 +12,9 @@ TODO:
 + startup hangs here:
 [notice ] ofxColorManager::refresh_Theory_G1:
 [notice ] ofxColorManager::generate_Range:
++ add callback disabler for engines when using presets?
++ improve svg illustrator..
+
 */
 
 
@@ -76,7 +79,7 @@ using namespace ofxColorTheory;
 #include "ofxColorQuantizerHelper.h"
 #endif
 
-//ofxCurvesTool
+//gradient
 #include "ofxCurvesTool.h"
 #include "ofxSimpleSlider.h"
 
@@ -103,7 +106,6 @@ using namespace ofxColorTheory;
 #endif
 
 #include "ofxImGui.h"
-//#include "imgui_demo.cpp"
 
 #include "ImGui_PalettesPicker.h"
 using namespace ImGui_PalettesPicker;
