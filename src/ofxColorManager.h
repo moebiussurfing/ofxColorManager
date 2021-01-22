@@ -134,6 +134,8 @@ public:
 	PalettePreviewMini miniPreview;
 
 	DEMO_Svg myDEMO2;
+	
+	shared_ptr<ColorWheelScheme> _scheme;
 
 public:
 	ofxColorManager();

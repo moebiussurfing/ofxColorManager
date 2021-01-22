@@ -3472,7 +3472,7 @@ void ofxColorManager::gui_Background()
 		bool bChanged = false;
 		static ImVec4 color;
 		color = color_BackGround.get();
-		
+
 		//-
 
 		{
@@ -3488,7 +3488,7 @@ void ofxColorManager::gui_Background()
 			ImGuiColorEditFlags _flags;
 			_flags = ImGuiColorEditFlags_NoOptions | ImGuiColorEditFlags_NoTooltip;
 
-			if (ImGui::ColorButton("##ColorBgPicker", *(ImVec4 *)&color, _flags, ImVec2(_w, _h))) 
+			if (ImGui::ColorButton("##ColorBgPicker", *(ImVec4 *)&color, _flags, ImVec2(_w, _h)))
 			{
 				bChanged = true;
 			}
@@ -4386,7 +4386,7 @@ void ofxColorManager::refresh_Theory_G1() //populates palettes
 
 	for (int i = 0; i < NUM_COLOR_THEORY_TYPES_G1; i++)
 	{
-		shared_ptr<ColorWheelScheme> _scheme;
+		//shared_ptr<ColorWheelScheme> _scheme;
 		_scheme = ColorWheelSchemes::colorSchemes[i];
 		_scheme->setPrimaryColor(color_TheoryBase.get());
 
@@ -4917,6 +4917,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 		//cycle
 		if (AppMode > AppMode.getMax()) AppMode = AppMode.getMin();
+		else if (AppMode < 0) AppMode = AppMode.getMax();
 
 		if (current_element != AppMode) current_element = AppMode.get();
 
@@ -4924,8 +4925,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 		switch (AppMode)
 		{
-
-		// presets
+			// presets
 		case 0:
 			SHOW_Presets = true;
 			if (SHOW_Presets)
@@ -5845,10 +5845,10 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		}
 
 		// app modes
-		else if (key == OF_KEY_TAB && !OF_KEY_CONTROL) {
+		else if (key == OF_KEY_TAB && !mod_CONTROL) {
 			AppMode++;
 		}
-		else if (key == OF_KEY_TAB && OF_KEY_CONTROL) {
+		else if (key == OF_KEY_TAB && mod_CONTROL) {
 			AppMode--;
 		}
 
@@ -5879,7 +5879,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 		if (SHOW_Presets && !SHOW_Theory && !SHOW_Range && !SHOW_ColourLovers && !SHOW_Quantizer)
 		{
-			if (key == OF_KEY_UP)
+			if (key == OF_KEY_UP || (key == ' ' && mod_CONTROL))
 			{
 				if (preset_Index > 0)
 				{
@@ -5893,7 +5893,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				}
 			}
 
-			else if (key == OF_KEY_DOWN)
+			else if (key == OF_KEY_DOWN || (key == ' ' && !mod_CONTROL))
 			{
 				if (preset_Index < files.size() - 1)
 				{
@@ -5907,24 +5907,24 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				}
 			}
 
-			else if (key == ' ')
-			{
-				if (preset_Index < files.size() - 1)
-				{
-					preset_Index++;
-				}
-				else
-				{
-					if (preset_Index == files.size() - 1) preset_Index = 0;//cycle
-				}
+			//else if (key == ' ' && !mod_CONTROL)
+			//{
+			//	if (preset_Index < files.size() - 1)
+			//	{
+			//		preset_Index++;
+			//	}
+			//	else
+			//	{
+			//		if (preset_Index == files.size() - 1) preset_Index = 0;//cycle
+			//	}
 
-				if (preset_Index < files.size())
-				{
-					PRESET_Name = files_Names[preset_Index];
-					ofLogNotice(__FUNCTION__) << "PRESET_Name: [" + ofToString(preset_Index) + "] " << PRESET_Name;
-					preset_Load(PRESET_Name);
-				}
-			}
+			//	if (preset_Index < files.size())
+			//	{
+			//		PRESET_Name = files_Names[preset_Index];
+			//		ofLogNotice(__FUNCTION__) << "PRESET_Name: [" + ofToString(preset_Index) + "] " << PRESET_Name;
+			//		preset_Load(PRESET_Name);
+			//	}
+			//}
 
 			// get some presets by index random 
 			else if (key == 'R' || key == 'r')
@@ -5946,7 +5946,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 		if (SHOW_Range && !SHOW_Theory && !SHOW_ColourLovers && !SHOW_Quantizer)
 		{
-			if (key == OF_KEY_UP)
+			if (key == OF_KEY_UP || (key == ' ' && mod_CONTROL))
 			{
 				last_Index_Range--;
 				last_Index_Range = (int)ofClamp(last_Index_Range, 0, NUM_TYPES_RANGES - 1);
@@ -5959,7 +5959,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				}
 				range_Types[last_Index_Range] = true;
 			}
-			if (key == OF_KEY_DOWN)
+			if (key == OF_KEY_DOWN || (key == ' ' && !mod_CONTROL))
 			{
 				last_Index_Range++;
 				last_Index_Range = (int)ofClamp(last_Index_Range, 0, NUM_TYPES_RANGES - 1);
@@ -5972,19 +5972,19 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				}
 				range_Types[last_Index_Range] = true;
 			}
-			if (key == ' ')
-			{
-				if (last_Index_Range == NUM_TYPES_RANGES - 1) last_Index_Range = 0;//cycle
-				else if (last_Index_Range < NUM_TYPES_RANGES - 1) last_Index_Range++;
+			//if (key == ' ')
+			//{
+			//	if (last_Index_Range == NUM_TYPES_RANGES - 1) last_Index_Range = 0;//cycle
+			//	else if (last_Index_Range < NUM_TYPES_RANGES - 1) last_Index_Range++;
 
-				for (int i = 0; i < NUM_TYPES_RANGES; i++)
-				{
-					range_Types[i].disableEvents();
-					range_Types[i] = false;
-					range_Types[i].enableEvents();
-				}
-				range_Types[last_Index_Range] = true;
-			}
+			//	for (int i = 0; i < NUM_TYPES_RANGES; i++)
+			//	{
+			//		range_Types[i].disableEvents();
+			//		range_Types[i] = false;
+			//		range_Types[i].enableEvents();
+			//	}
+			//	range_Types[last_Index_Range] = true;
+			//}
 
 			//switch color c1/c2 selectors
 			if (key == OF_KEY_BACKSPACE)
@@ -6006,16 +6006,14 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 		if (SHOW_Theory && !SHOW_Range && !SHOW_ColourLovers && !SHOW_Quantizer)
 		{
-			if (key == OF_KEY_UP)
+			if (key == OF_KEY_UP || (key == ' ' && mod_CONTROL))
 			{
 				last_Index_Theory_PickPalette = last_Index_Theory_PickPalette.get() - 1;
 			}
-			if (key == OF_KEY_DOWN)
+			if (key == OF_KEY_DOWN || (key == ' ' && !mod_CONTROL))
 			{
-				last_Index_Theory_PickPalette = last_Index_Theory_PickPalette.get() + 1;
-			}
-			if (key == ' ')//cycle
-			{
+				//last_Index_Theory_PickPalette = last_Index_Theory_PickPalette.get() + 1;
+
 				if (last_Index_Theory_PickPalette == last_Index_Theory_PickPalette.getMax())//cycle 
 				{
 					last_Index_Theory_PickPalette = last_Index_Theory_PickPalette.getMin();
@@ -6024,6 +6022,16 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 					last_Index_Theory_PickPalette = last_Index_Theory_PickPalette.get() + 1;
 				}
 			}
+			//if (key == ' ')//cycle
+			//{
+			//	if (last_Index_Theory_PickPalette == last_Index_Theory_PickPalette.getMax())//cycle 
+			//	{
+			//		last_Index_Theory_PickPalette = last_Index_Theory_PickPalette.getMin();
+			//	}
+			//	else {
+			//		last_Index_Theory_PickPalette = last_Index_Theory_PickPalette.get() + 1;
+			//	}
+			//}
 		}
 
 		//----
