@@ -7,8 +7,8 @@
 TODO:
 
 + demo 2: svg demo resizer shape using scalable draggable rect
-+ fix theory: sometimes not upadting demo2 svg colors 
-+ fix pick color: lovers, quantizer.. 
++ fix theory: sometimes not upadting demo2 svg colors
++ fix pick color: lovers, quantizer..
 + startup hangs here:
 [notice ] ofxColorManager::refresh_Theory_G1:
 [notice ] ofxColorManager::generate_Range:
@@ -50,19 +50,24 @@ TODO:
 
 //------
 
-#include <random>
+//#include <random>
+
+#include "presets/PresetManager.h"
+#include "presets/PresetPalette.h"
+
+#include "demo/DEMO_Scene.h"
+#include "demo/DEMO_Svg.h"
 
 #include "client/palettePreviewMini.h"
 //using namespace ofxColorClient;
 
-#include "ofxColorGradient.h"
+//-
+
 #include "ofxColorPalette.h"
 
 #ifdef USE_OFX_COLOR_BROWSER
 #include "ofxColorsBrowser.h"
 #endif
-
-#include "ofxInteractiveRect.h" // engine to move the gui. TODO: add resize by mouse too.
 
 #ifdef USE_COLOR_LOVERS
 #include "ofxColourLoversHelper.h"
@@ -79,15 +84,7 @@ using namespace ofxColorTheory;
 #include "ofxColorQuantizerHelper.h"
 #endif
 
-//gradient
-#include "ofxCurvesTool.h"
-#include "ofxSimpleSlider.h"
-
-#ifdef USE_RECTANGLE_INTERFACES
-#include "ofxInterface.h"
-#include "interface/ButtonPaletteSelector.h"
-#include "interface/ButtonExample.h"
-#endif
+//--
 
 #ifdef USE_UNDO_ENGINE
 #include "ofxUndoSimple.h"
@@ -101,28 +98,45 @@ using namespace ofxColorTheory;
 #include "ofxSuperLog.h"
 #endif
 
+#include "ofxSerializer.h"
+#include "ofxSurfingHelpers.h"
+#include "ofxSurfing_ImGui.h"
+using namespace ofxSurfingHelpers;
+
+//-
+
+// NOTE: all color theory stuff it's badly spreaded a bit..
+// bc I am using some different addons combined..
+// this should be improved, and it's a kind of drawback now.
+#define NUM_COLOR_THEORY_TYPES_G1 8
+#define NUM_COLOR_THEORY_TYPES_G2 7
+#define NUM_TYPES_RANGES 12
+
+//-
+
+// gui
+
 #ifdef USE_OFX_GUI
 #include "ofxGui.h"
 #endif
 
 #include "ofxImGui.h"
 
+//TODO:
+//for a custom user gui
+#ifdef USE_RECTANGLE_INTERFACES
+#include "ofxInterface.h"
+#include "interface/ButtonPaletteSelector.h"
+#include "interface/ButtonExample.h"
+#endif
+
 #include "ImGui_PalettesPicker.h"
 using namespace ImGui_PalettesPicker;
 
-#include "presets/PresetManager.h"
-#include "presets/PresetPalette.h"
+#include "ofxInteractiveRect.h" // engine to move the gui. TODO: add resize by mouse too.
 
-#include "demo/DEMO_Scene.h"
-#include "demo/DEMO_Svg.h"
-
-#include "ofxSurfingHelpers.h"
-#include "ofxSurfing_ImGui.h"
-using namespace ofxSurfingHelpers;
-
-#include "ofxSerializer.h"
-
-//#include "ofxCosineGradient.h"
+#include "GradientEngine.h"
+//#include "ofxColorGradient.h"
 
 //--
 
@@ -131,11 +145,19 @@ class ofxColorManager : public ofBaseApp
 	//--
 
 public:
+	GradientEngine gradientEngine;
+
+	//--
+
+private:
 	PalettePreviewMini miniPreview;
 
 	DEMO_Svg myDEMO2;
-	
+
+	//TODO:
 	shared_ptr<ColorWheelScheme> _scheme;
+
+	//--
 
 public:
 	ofxColorManager();
@@ -144,7 +166,8 @@ public:
 	void setup();
 	void startup();
 
-	//TODO: to allow auto update we must set the order priority layer/drawing
+	//TODO: 
+	//to allow auto update we must set the order priority layer/drawing
 #ifndef AUTO_DRAW_CALLBACK
 	void draw();
 #endif
@@ -162,6 +185,8 @@ public:
 	void windowResized(int w, int h);
 	void dragEvent(ofDragInfo dragInfo);
 
+	//-
+
 	//OF callbacks
 public:
 	void keyPressed(ofKeyEventArgs &eventArgs);
@@ -177,7 +202,11 @@ private:
 	void addMouseListeners();
 	void removeMouseListeners();
 
-	//--
+	//private:
+	//	void disableListeners();
+	//	void enableListeners();
+
+		//--
 
 	void draw_Info();
 
@@ -189,25 +218,27 @@ private:
 
 	//-
 
-	//number of colors. must be even sometimes to get same size in all palettes
+	// number of colors. 
+	// must be even sometimes to get same size in all palettes
 private:
 	ofParameter<int> numColors_Engines;
 	ofParameter<int> numColors_Range;
 	ofParameter<int> numColors_Theory_G1;
 	ofParameter<int> numColors_Theory_G2;
 
-private:
-	ofParameter<bool> ENABLE_keys{ "KEYS", true };
-
 	//--
 
 private:
 	ofParameter<bool> SHOW_ImGui{ "ImGui", true };
-	ofParameter<bool> ENABLE_HelpInfo;// { "HELP INFO", false };
+
+	ofParameter<bool> ENABLE_HelpInfo;
+	std::string infoHelp;//key commands
+
+private:
+	ofParameter<bool> ENABLE_keys{ "KEYS", true };
+	bool ENABLE_keys_PRE;
 
 	//-
-
-	std::string infoHelp;//key commands
 
 public:
 	// public basic params
@@ -220,14 +251,19 @@ public:
 		params_Debug.add(SHOW_Scene);
 		params_Debug.add(SHOW_ALL_GUI);
 		params_Debug.add(SHOW_MINI_Preview);
-		
+
 		return params_Debug;
 	}
 
 private:
+	
+	//ofParameter<bool> SHOW_AlgoPalettes;
+	//ofParameter<bool> SHOW_Gradient;
+	//ofParameter<bool> SHOW_Demo2;
+	//ofParameter<bool> SHOW_CosineGradient;
+	
 	ofParameter<bool> SHOW_ColourLovers;
 	ofParameter<bool> SHOW_ColourLovers_searcher;
-	ofParameter<bool> SHOW_AlgoPalettes;
 	ofParameter<bool> SHOW_BrowserColors;
 	ofParameter<bool> SHOW_GradientCurve;
 	ofParameter<bool> SHOW_debugText;
@@ -244,14 +280,11 @@ private:
 	ofParameter<bool> SHOW_UserPaletteEditor;
 	ofParameter<bool> SHOW_Theory;
 	ofParameter<bool> SHOW_Quantizer;
-	//ofParameter<bool> SHOW_Gradient;
-	//ofParameter<bool> SHOW_Demo2;
-	//ofParameter<bool> SHOW_CosineGradient;
 	ofParameter<bool> AutoScroll;
 
 	//-
 
-	//app modes
+	// app modes
 	ofParameter<int> AppMode;
 	ofParameter<std::string> AppMode_name;
 	enum Element { Element_0, Element_1, Element_2, Element_3, Element_4, Element_5, Element_COUNT };
@@ -264,25 +297,29 @@ private:
 
 	//--
 
-	//settings paths
+	// settings paths
 private:
 	std::string path_Global;
 	std::string path_Kits;
+	std::string path_FileExport;
+	std::string path_AppState;
+	std::string path_Presets;
+	std::string path_Palettes;
+	//export
+	std::string path_Name_ExportColor;
+	ofParameter <std::string> path_Folder_ExportColor_Custom;
+	ofParameter <std::string> path_Folder_ExportColor_Data;
+
+	//gradient
 	std::string path_Folder_Gradient;
 	std::string path_Layout;
 	std::string path_Gradient_LUT;
 	std::string path_Gradient_Preset;
 	std::string path_Name_Gradient;
-	std::string path_FileExport;
-	std::string path_AppState;
-	std::string path_Presets;
-	std::string path_Palettes;
-	std::string path_Name_ExportColor;
-	ofParameter <std::string> path_Folder_ExportColor_Custom;
-	ofParameter <std::string> path_Folder_ExportColor_Data;
 
 	//--
 
+	// colors library layout
 private:
 	ofParameter<bool> lib_Responsive_Mode;
 	ofParameter<bool> bPagerized;
@@ -297,20 +334,43 @@ private:
 
 	//--
 
-	bool ENABLE_keys_PRE;
+	// gui info display
+
+	std::string theory_Name = "";
+	std::string range_Name = "";
+
+	//--
+
+	// current selectors states on user session
+
+	ofParameter<int> last_Index_Theory_PickPalette;
+	ofParameter<int> last_Index_Theory{ "Last Theory Index", -1, 0, NUM_COLOR_THEORY_TYPES_G1 - 1 };//selected theory algorithm
+	ofParameter<int> last_Index_Range{ "Last Range Index", -1, 0, NUM_TYPES_RANGES - 1 };//selected range algorithm
+	ofParameter<int> last_Index_ColorPalette{ "Selected", -1, 0, 0 };//selected color on palette on editing
+	ofParameter<int> last_Index_Preset{ "Preset Index", 0, 0, 0 };//selected preset
+	int last_Lib_Index = -1;//last library picked color
+
+	//--
 
 private:
-	//font
+	// text labels
+	//to help workflow of what's the last engine used...Not using now.
 	std::string messageInfo;
 	ofTrueTypeFont fontSmall;
 	ofTrueTypeFont fontMedium;
 	ofTrueTypeFont fontBig;
 	ofTrueTypeFont font;
-	bool txt_lineActive[4];
+	bool txt_lineActive[4];//to help workflow of what's the last engine used...Not using now.
 
-	//-
+	ofParameter<int> last_Index_Type{ "Last Type Index", -1, 0, 3 };//to help workflow of what's the last engine used...Not using now.
+	//0 preset name
+	//1 lover name
+	//2 theory name
+	//3 range name
 
-	// range engine
+	//--
+
+	// range
 private:
 	void setup_Range();
 	void generate_Range(ofColor col1, ofColor col2);
@@ -322,25 +382,24 @@ private:
 	ofParameter<ofColor> color_1_Range;
 	ofParameter<ofColor> color_2_Range;
 	std::vector<ofColor> palette_Range;
-	std::vector<std::string> rangeTypes_names;
+	std::vector<std::string> names_Types_Range;
 	ofParameter<bool> autoGenerate_Range;
-	ofParameter<bool> bAuto_RangeColor1_FromPicker;
-	ofParameter<bool> bAuto_RangeColor2_FromPicker;
-	ofParameter<bool> bGetPaletteFromRange;
+	ofParameter<bool> bAuto_Color1_FromPicker_Range;
+	ofParameter<bool> bAuto_Color2_FromPicker_Range;
+	ofParameter<bool> bGetPalette_From_Range;
 	ofParameterGroup params_Ranges;
 
-#define NUM_TYPES_RANGES 12
-	ofParameter<bool> range_Types[NUM_TYPES_RANGES];
+	ofParameter<bool> types_Range[NUM_TYPES_RANGES];
 	void Changed_ColorRange(ofAbstractParameter &e);
 
 	//extra
-#define NUM_COLOR_THEORY_TYPES_G2 7
-	ofParameter<bool> theory_Types_G2[NUM_COLOR_THEORY_TYPES_G2];
+	ofParameter<bool> types_Theory_G2[NUM_COLOR_THEORY_TYPES_G2];
 	ofParameterGroup params_ColorTheory_G2;
 
 	//-
 
-	// export engine 
+	// export 
+	// engine 
 	// to live reload colors file into client addon/app
 private:
 	ofParameterGroup params_ExportColors;
@@ -348,16 +407,18 @@ private:
 	ofParameter<bool> bExportPreset_DefaultPath;
 	void exportPalette();
 
-	// colorQuantizer
+	//--
+
+	// quantizer
 #ifdef USE_IMAGE_QUANTIZER
+private:
 	ofxColorQuantizerHelper colorQuantizer;
 #endif
 
 	//-
 
-	// color theory
+	// theory
 private:
-#define NUM_COLOR_THEORY_TYPES_G1 8
 	ofParameter<bool> theory_Types_G1[NUM_COLOR_THEORY_TYPES_G1];
 	shared_ptr<ColorWheelScheme> scheme;
 	vector<ofColor> colors_Theory_G1[NUM_COLOR_THEORY_TYPES_G1];
@@ -388,7 +449,6 @@ private:
 	//-
 
 private:
-	// ColorWheelSchemes
 	void setup_Theory_G1();
 	void refresh_Theory_G2_2();
 
@@ -427,22 +487,6 @@ private:
 	// DEMO
 private:
 	DEMO_Scene myDEMO1;
-
-	//--
-
-	// gui info display
-
-	std::string theory_Name = "";
-	std::string range_Name = "";
-
-	ofParameter<int> last_Index_Theory{ "Last Theory Index", -1, 0, NUM_COLOR_THEORY_TYPES_G1 - 1 };
-	ofParameter<int> last_Index_Range{ "Last Range Index", -1, 0, NUM_TYPES_RANGES - 1 };
-	ofParameter<int> last_Index_Theory_PickPalette;
-	ofParameter<int> last_Index_Type{ "Last Type Index", -1, 0, 3 };;
-	//0 preset name
-	//1 lover name
-	//2 theory name
-	//3 range name
 
 	//--
 
@@ -486,7 +530,9 @@ public:
 
 	//----
 
-	// pointers backs to call refresh and link addons (quantizer+lovers) with addon palette/color
+	// pointers backs 
+	// to call refresh and link addons 
+	// (quantizer+lovers) with addon palette/color
 private:
 	std::string myPalette_Name_BACK = "";
 	ofColor myColor_BACK;
@@ -501,7 +547,7 @@ public:
 	// API 
 
 	// pointers back to autoupdate 
-	// ofApp project local variables
+	// ofApp project local variables, registered
 	// must be initialized before setup
 
 	void setName_TARGET(std::string &s);
@@ -516,6 +562,7 @@ public:
 	void setPalette_TARGET(vector<ofColor> &p);
 	vector<ofColor> *palette_TARGET;//backwards pointer to ofApp palette
 
+private:
 	void refresh_Palette_TARGET(vector<ofColor> &p);
 
 	//-----------------------------------------------------------
@@ -524,26 +571,25 @@ public:
 
 	// API 
 
+	//-
+
 	// getters
+
 	vector<ofColor> getPalette();
 	std::string getPaletteName();
 	ofColor getColor(int index = -1);
-	ofColor getColorAtPercent(float control);//get color from gradient at prc
+	//ofColor getColorAtPercent(float control);//get color from gradient at prc
 
 	//-
 
 	// setters
 
 public:
-	void setControl_Gradient(float control);
+	//void setControl_Gradient(float control);
 	void setVisible(bool b);
 	void setToggleVisible();
 	void setVisible_GUI_MINI(bool b);
 	void setVisible_debugText(bool b);
-
-private:
-	void disableListeners();
-	void enableListeners();
 
 	//-----------------------------------------------------------
 
@@ -554,7 +600,7 @@ private:
 
 	//--
 
-	// user palette & control
+	// manager
 
 private:
 	ofParameter<bool> bEditPalette;
@@ -562,7 +608,6 @@ private:
 	ofParameter<bool> bAddColor;
 	ofParameter<bool> bRemoveColor;
 	ofParameter<bool> bClearPalette;
-	ofParameter<int> last_Index_ColorPalette{ "Selected", -1, 0, 0 };
 
 	//--
 
@@ -573,8 +618,8 @@ private:
 	ofParameterGroup params_engines;
 	ofParameterGroup params_color;
 	ofParameterGroup params_Theory;
-	ofParameterGroup params_curve;
 	ofParameterGroup params_control;
+	//ofParameterGroup params_curve;
 
 	void Changed_Controls(ofAbstractParameter &e);
 
@@ -595,11 +640,11 @@ private:
 
 	ofParameter<float> analogSpread;
 
-	//TODO:
-	//global modificators
-	//not implemented yet..
-	ofParameter<int> BRIGHTNESS;
-	ofParameter<int> SATURATION;
+	////TODO:
+	////global modificators
+	////not implemented yet..
+	//ofParameter<int> BRIGHTNESS;
+	//ofParameter<int> SATURATION;
 
 	ofParameter<bool> bRandomPalette;
 	ofParameter<bool> bAuto_Build_Palette;//trig last used algo palette on click or change color
@@ -616,13 +661,13 @@ private:
 private:
 	ofxImGui::Gui gui;
 
-	bool guiVisible;
+	ofxImGui::Settings mainSettings = ofxImGui::Settings();
 
 	bool mouseOverGui;
 	bool mouseOverGui_PRE;
 	bool bCheckMouseOverTextInput = true;//flag to return mouse over any gui panel or over text input only!
 
-	ofxImGui::Settings mainSettings = ofxImGui::Settings();
+	bool guiVisible;
 
 	bool draw_Gui();
 
@@ -634,6 +679,8 @@ private:
 	void gui_Panels();
 	void gui_Demo();
 	void gui_Export();
+
+	void gui_Gradient();
 
 	//--
 
@@ -712,7 +759,7 @@ private:
 
 	//--
 
-	// colors palette
+	// manager
 
 private:
 	vector<ofColor> palette;// main user palette
@@ -750,7 +797,6 @@ private:
 	int lib_Page_NumColors;
 	int lib_TotalColors;
 	int lib_Page_Max;
-	int last_Lib_Index = -1;
 
 	//gui grid layout
 	//rows per page
@@ -772,7 +818,6 @@ private:
 	ofParameter<float> DEMO_Alpha{ "Alpha", 0.8, 0, 1 };
 	int Demo_Timer = 0;
 	int Demo_Timer_Max = 15000;
-	//TODO: make pauses between any test trig..
 	bool bTEST_pause = false;
 
 	//--
@@ -786,7 +831,7 @@ private:
 	ofParameterGroup params_Picker{ "PICKER" };
 	ofParameterGroup params_Library{ "LIBRARY" };
 	ofParameterGroup params_Palette2{ "PALETTE" };
-	ofParameterGroup params_Gradient{ "GRADIENT" };
+	//ofParameterGroup params_Gradient{ "GRADIENT" };
 
 	//--
 
@@ -829,14 +874,16 @@ private:
 	//----
 
 private:
-	// addon client
-	// preset + editor
 
 	// preset manager
+
+	// addon client
+	// preset + editor
 
 	//--
 
 	// presets
+
 private:
 	PresetPalette PRESET_Temp;
 
@@ -852,6 +899,7 @@ private:
 
 	//--
 
+	// guis
 	void gui_Presets();
 	void gui_PaletteFloating();
 	void gui_PaletteEditor();
@@ -866,6 +914,8 @@ private:
 	//TODO: this is to save an standalone palette
 	//void palette_save(std::string p);
 	//void palette_load(std::string p);
+
+	//-
 
 	//new preset
 private:
@@ -886,129 +936,11 @@ private:
 	std::vector<std::string> files_Names;
 	std::vector<ofFile> files;
 	std::string textInput_temp = "type name";
-	ofParameter<int> preset_Index{ "Preset Index", 0, 0, 0 };
-	//int preset_Index = 0;
 
 	vector<vector<ofColor>> palettesKit;
 	vector<PresetData> kit;
 	//vector<PaletteData> kit;
-
-	//----
-
-	// gradient
-
-	//--
-
-private:
-	void draw_GradientCurve2();
-	void update_GradientCurve2();
-
-	void draw_GradientPreview(glm::vec2 pos, bool horizontal);
-	void gui_Gradient();
-
-	void build_Gradient();
-
-	void refresh_Gradient_GuiLayout();
-
-	//----
-
-	// gradient
-
-	//--
-
-private:
-	ofxInteractiveRect rGradientPreview = { "_Curve_Gui" };
-	ofParameter<bool> MODE_EditGradientLayout;
-	//ofParameter<bool> SHOW_Editor;
-	ofColor colCurveTest;
-	ofParameter<glm::vec2> pos_CurveEditor;
-
-private:
-	ofxColorGradient<ofColor> gradient;//unmodified gradient with curveTool
-	ofParameter<bool> gradient_HardMode;//stepped
-	void draw_Gradient();
-	void update_Gradient();
-
-	//--
-
-	// curves
-
-private:
-
-	ofxCurvesTool curvesTool;
-
-	void setup_GradientCurve();
-	void update_GradientCurve();
-	void draw_Gradient_Curve();
-
-	int MAX_LUT_SIZE = 256;
-	std::string curveTool_name = "curves.yml";
-	ofImage image_GradientCurve;
-	ofParameter<float> curve_Ctrl_In;
-	ofParameter<float> curve_Ctrl_Out;
-	ofParameter<bool> bResetCurve;
-	ofParameter<bool> bAutoPaletteFromGradient;
-	ofParameter<float> curve_Gradient_TEST_Prc;
-	int curve_Index = 0;
-
-	ofxSimpleSlider curve_Slider_Pick;
-	ofxSimpleSlider curve_Slider_ExpTweak;
-
-	ofParameter<float> curve_Gradient_Exp{ "Exp", 0, 0, 1 };
-	ofParameter<float> curve_Gradient_PickIn{ "Pick", 0, 0, 1 };
-
-	//--
-
-	// test curve
-private:
-
-	ofParameter<bool> TEST_Mode{ "Enable", false };
-	float TEST_Speed = .75;
-	bool TEST_LFO_Mode = true;
-	int TEST_maxFrames = 300;//slowest period
-	//bool AutoSet_Background_FromGradient = true;
-	ofParameter<bool> AutoSet_Background_FromGradient{ "AutoSet Background", true };
-	float framePrc;
-
 };
-//--
-
-////cosine gradient
-//
-//ofxCosineGradient mCosineGradient;
-//ofxImGui::Gui mGui;
-//ofParameterGroup cosineGradient_params;
-//ofParameter<glm::vec3> mBias;
-//ofParameter<glm::vec3> mAmplitude;
-//ofParameter<glm::vec3> mFrequency;
-//ofParameter<glm::vec3> mPhase;
-//
-//glm::vec3 mB;
-//glm::vec3 mA;
-//glm::vec3 mF;
-//glm::vec3 mP;
-//
-//void cosineGradient_update()
-//{
-//    mB = mBias.get();
-//    mA = mAmplitude.get();
-//    mF = mFrequency.get();
-//    mP = mPhase.get();
-//
-//    mCosineGradient.setBias(mB);
-//    mCosineGradient.setAmplitude(mA);
-//    mCosineGradient.setFrequency(mF);
-//    mCosineGradient.setPhase(mP);
-//    mCosineGradient.update();
-//
-//    ////cout << "cosineGradient_update" << endl;
-//    //mCosineGradient.setBias(mBias.get());
-//    //mCosineGradient.setAmplitude(mAmplitude.get());
-//    //mCosineGradient.setFrequency(mFrequency.get());
-//    //mCosineGradient.setPhase(mPhase.get());
-//    //mCosineGradient.update();
-//}
-//void gui_imGui_CosineGradient();
 
 //--
 
