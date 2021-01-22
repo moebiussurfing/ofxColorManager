@@ -20,7 +20,7 @@ TODO:
 
 //----------
 
-//	OPTIONAL
+// OPTIONAL
 
 //#define USE_RECTANGLE_INTERFACES // TODO: a custom final user size ofxInterface
 
@@ -256,12 +256,12 @@ public:
 	}
 
 private:
-	
+
 	//ofParameter<bool> SHOW_AlgoPalettes;
 	//ofParameter<bool> SHOW_Gradient;
 	//ofParameter<bool> SHOW_Demo2;
 	//ofParameter<bool> SHOW_CosineGradient;
-	
+
 	ofParameter<bool> SHOW_ColourLovers;
 	ofParameter<bool> SHOW_ColourLovers_searcher;
 	ofParameter<bool> SHOW_BrowserColors;

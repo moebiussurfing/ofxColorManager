@@ -348,7 +348,7 @@ void ofxColorManager::setup()
 	font.load("assets/fonts/telegrama_render.otf", 11, true, true, true);
 	//font.load("assets/fonts/LCD_Solid.ttf", 11, true, true);
 	//font.load("assets/fonts/overpass-mono-bold.otf", 9, true, true);
-	
+
 	//----
 
 	// colorQuantizer
@@ -918,7 +918,7 @@ void ofxColorManager::setup()
 
 
 	ofAddListener(params_control.parameterChangedE(), this, &ofxColorManager::Changed_Controls);
-	
+
 	//------------------------------------------------
 
 	// startup
@@ -4100,7 +4100,7 @@ bool ofxColorManager::draw_Gui()
 		if (SHOW_Panels) gui_Panels();
 		if (SHOW_Export) gui_Export();
 		if (SHOW_Demos) gui_Demo();
-		
+
 		//if (SHOW_GradientCurve) gui_Gradient();
 		////if (SHOW_GradientCurve) gradientEngine.draw_GradientCurve2();
 		////if (SHOW_GradientCurve) gradientEngine.gui_Gradient();
@@ -4110,7 +4110,7 @@ bool ofxColorManager::draw_Gui()
 	//--
 
 	gui.end();
-	
+
 	//-
 
 	// 2 different modes:
@@ -4298,7 +4298,7 @@ void ofxColorManager::refresh_Theory_G2()
 
 	//TODO:
 	//add randoms...
-	
+
 	//---
 
 	// G2
