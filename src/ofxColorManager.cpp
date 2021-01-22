@@ -6834,17 +6834,20 @@ void ofxColorManager::setup_Range()
 //--------------------------------------------------------------
 void ofxColorManager::generate_Range(ofColor col1, ofColor col2) {
 	ofLogNotice(__FUNCTION__);
+	ofLogNotice(__FUNCTION__) << "col1:" << ofToString(col1) << " > col2:" << ofToString(col2);
 
 	int _max = 400;
 	int _step;
 	int _div;
 
+	ofLogNotice(__FUNCTION__) << numColors_Range.getName() << " : " << numColors_Range.get();
+
 	//_div = 10;
 	_div = int((numColors_Range.get() - 1));
 	_step = _max / _div;
 
-	//ofLogNotice(__FUNCTION__) << "_div: " << _div;
-	//ofLogNotice(__FUNCTION__) << "_step: " << _step;
+	ofLogNotice(__FUNCTION__) << "_div : " << _div;
+	ofLogNotice(__FUNCTION__) << "_step: " << _step;
 
 	//-
 
@@ -6861,9 +6864,13 @@ void ofxColorManager::generate_Range(ofColor col1, ofColor col2) {
 
 			ofColor color = ofxColorMorph::colorMorph(pos, left, col1, right, col2, static_cast<type>(i));
 
+			ofLogNotice(__FUNCTION__) << i << ":" << j << " \t> " << color;
+
 			palette_Range.push_back(color);
 		}
 	}
+
+	ofLogNotice(__FUNCTION__) << "palette_Range size: " << palette_Range.size();
 }
 
 //----
