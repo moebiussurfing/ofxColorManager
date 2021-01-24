@@ -613,7 +613,7 @@ private:
 	ofParameterGroup params_color;
 	ofParameterGroup params_Theory;
 	ofParameterGroup params_control;
-	//ofParameterGroup params_Gradient2;
+	//ofParameterGroup params_GradientC;
 
 	void Changed_Controls(ofAbstractParameter &e);
 
@@ -766,7 +766,7 @@ private:
 	void palette_FromTheory(int p);
 	void palette_FromColourLovers();
 	void palette_FromQuantizer();
-	void palette_FromGradient();
+	//void palette_FromGradient();
 
 	//----
 

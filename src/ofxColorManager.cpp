@@ -473,6 +473,8 @@ void ofxColorManager::setup()
 	color_BackGround_GradientMode.set("Mode Gradient", false);
 	color_BackGround_Lock.set("Lock Background", false);
 
+	color_BackGround_GradientMode.makeReferenceTo(gradientEngine.color_BackGround_GradientMode);
+
 	//params_data.setName("GENERAL");
 	//params_data.add(color_BackGround);
 	//params_data.add(color_BackGround_Lock);
@@ -565,7 +567,7 @@ void ofxColorManager::setup()
 	// gradient
 	gradientEngine.setup();
 	gradientEngine.setBackground_TARGET(color_BackGround);
-	gradientEngine.setPalette_TARGET(palette);
+	gradientEngine.setPalette_TARGET(palette);//subscribe local palette to allow modify from the class object
 
 	//-
 
@@ -1420,7 +1422,7 @@ void ofxColorManager::exit()
 	ofRemoveListener(params_control.parameterChangedE(), this, &ofxColorManager::Changed_Controls);
 	ofRemoveListener(params_color.parameterChangedE(), this, &ofxColorManager::Changed_Controls);
 	ofRemoveListener(params_Theory.parameterChangedE(), this, &ofxColorManager::Changed_Controls);
-	//ofRemoveListener(params_Gradient2.parameterChangedE(), this, &ofxColorManager::Changed_Controls);
+	//ofRemoveListener(params_GradientC.parameterChangedE(), this, &ofxColorManager::Changed_Controls);
 
 	ofRemoveListener(params_Ranges.parameterChangedE(), this, &ofxColorManager::Changed_Range);
 
@@ -3125,7 +3127,7 @@ void ofxColorManager::gui_Range()
 				color_1_Range.set(_c1);
 				color_2_Range.set(_c2);
 
-				//workflow
+				// workflow
 				//get main color from range picker
 				if (bAuto_Color1_FromPicker_Range) color_Picked.set(color_1_Range.get());
 				else if (bAuto_Color2_FromPicker_Range) color_Picked.set(color_2_Range.get());
@@ -3357,6 +3359,7 @@ void ofxColorManager::gui_Background()
 					{
 						ofxSurfingHelpers::AddBigToggle(color_BackGround_DarkerMode);
 						ofxSurfingHelpers::AddBigToggle(color_BackGround_GradientMode);
+						//ofxSurfingHelpers::AddBigToggle(gradientEngine.color_BackGround_GradientMode);
 
 						if (color_BackGround_DarkerMode)
 						{
@@ -3364,6 +3367,7 @@ void ofxColorManager::gui_Background()
 						}
 						//if (!color_BackGround_DarkerMode) 
 						if (color_BackGround_GradientMode)
+						//if (gradientEngine.color_BackGround_GradientMode)
 						{
 							//ImGui::Text("From Gradient:");
 							ofxImGui::AddParameter(gradientEngine.pickIn);
@@ -3922,7 +3926,7 @@ void ofxColorManager::gui_Gradient()
 			{
 				gradientEngine.bPalettize = true;
 			}
-			ofxImGui::AddParameter(gradientEngine.bAutoPaletteFromGradient);
+			//ofxImGui::AddParameter(gradientEngine.bAutoPaletteFromGradient);
 			ImGui::PopItemWidth();
 
 			//-
@@ -4401,7 +4405,7 @@ void ofxColorManager::palette_FromColourLovers() // ?
 
 	//-
 
-	// workflow: 
+	// workflow 
 	refresh_Background();
 
 	//--
@@ -4430,8 +4434,6 @@ void ofxColorManager::refresh_Palette_TARGET(vector<ofColor> &p)
 		//TODO. there's a faster way without size problems?
 		//palette_TARGET = (vector<ofColor>)(p);
 	}
-
-	//--
 }
 
 //----
@@ -4554,7 +4556,7 @@ void ofxColorManager::Changed_ColorPicked(ofFloatColor &c)
 
 	//--
 
-	//workflow
+	// workflow
 	refresh_Pick_ToEngines();
 }
 
@@ -5215,7 +5217,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	{
 		if (bEditPalette)
 		{
-			//workflow
+			// workflow
 			//avoid colide palette auto builder with the edited color
 			if (SHOW_Range) SHOW_Range = false;
 			if (SHOW_Theory) SHOW_Theory = false;
@@ -5430,42 +5432,42 @@ void ofxColorManager::Changed_Range(ofAbstractParameter &e)
 	}
 }
 
-//--------------------------------------------------------------
-void ofxColorManager::palette_FromGradient()
-{
-	ofLogNotice(__FUNCTION__);
-
-	//TODO:
-	//must have an aux palette because we are overwritting the main palette...
-
-	vector<ofColor> p;
-	p.resize(numColors_Engines);
-
-	for (int i = 0; i < numColors_Engines; i++)
-	{
-		float val = float(i / (float)(numColors_Engines - 1));
-		ofColor c = gradientEngine.getColorAtPercent(val);
-		ofLogNotice(__FUNCTION__) << "Color:" << c;
-		p[i] = c;
-
-		ofLogNotice(__FUNCTION__) << "[" << i << "] > " << ofToString(c);
-	}
-
-	palette_Clear();
-	for (int i = 0; i < numColors_Engines.get(); i++)
-	{
-		palette_AddColor(p[i]);
-	}
-
-	//--
-
-	// workflow
-	refresh_Background();
-
-	//--
-
-	//refresh_Palette_TARGET(palette);
-}
+////--------------------------------------------------------------
+//void ofxColorManager::palette_FromGradient()
+//{
+//	ofLogNotice(__FUNCTION__);
+//
+//	//TODO:
+//	//must have an aux palette because we are overwritting the main palette...
+//
+//	vector<ofColor> p;
+//	p.resize(numColors_Engines);
+//
+//	for (int i = 0; i < numColors_Engines; i++)
+//	{
+//		float val = float(i / (float)(numColors_Engines - 1));
+//		ofColor c = gradientEngine.getColorAtPercent(val);
+//		ofLogNotice(__FUNCTION__) << "Color:" << c;
+//		p[i] = c;
+//
+//		ofLogNotice(__FUNCTION__) << "[" << i << "] > " << ofToString(c);
+//	}
+//
+//	palette_Clear();
+//	for (int i = 0; i < numColors_Engines.get(); i++)
+//	{
+//		palette_AddColor(p[i]);
+//	}
+//
+//	//--
+//
+//	// workflow
+//	refresh_Background();
+//
+//	//--
+//
+//	//refresh_Palette_TARGET(palette);
+//}
 
 //--------------------------------------------------------------
 void ofxColorManager::refresh_Background()
@@ -5819,7 +5821,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				else if (bAuto_Color1_FromPicker_Range && !bAuto_Color2_FromPicker_Range) bAuto_Color2_FromPicker_Range = true;
 				else if (!bAuto_Color1_FromPicker_Range && bAuto_Color2_FromPicker_Range) bAuto_Color1_FromPicker_Range = true;
 
-				//workflow
+				// workflow
 				//get main color from range picker
 				if (bAuto_Color1_FromPicker_Range) color_Picked.set(color_1_Range.get());
 				else if (bAuto_Color2_FromPicker_Range) color_Picked.set(color_2_Range.get());
@@ -6145,7 +6147,7 @@ void ofxColorManager::refresh_RearrengeFiles(std::string name)
 {
 	//--
 
-	//workflow
+	// workflow
 
 	//go to ne index after adding a new preset
 	ofLogNotice(__FUNCTION__) << "Rearrenge index file";
@@ -6224,7 +6226,7 @@ void ofxColorManager::preset_RefreshFiles()
 
 	//-
 
-	//workflow
+	// workflow
 
 	//TODO:
 	//void to go to 1st...
@@ -6332,7 +6334,7 @@ void ofxColorManager::preset_Load(std::string p)
 
 	//TODO:
 
-	//workflow
+	// workflow
 	// new preset
 	if (MODE_NewPreset) MODE_NewPreset = false;
 	// demo mode
@@ -6452,7 +6454,7 @@ void ofxColorManager::refresh_Pick_ToEngines()
 
 	//--
 
-	//workflow
+	// workflow
 
 	if (bAuto_Build_Palette)
 	{
