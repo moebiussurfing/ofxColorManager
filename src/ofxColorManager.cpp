@@ -13,6 +13,7 @@ void ofxColorManager::build_Palette_Flip()
 
 	std::reverse(palette.begin(), palette.end());
 
+	gradientEngine.palette = palette;
 	gradientEngine.build_Gradient();
 
 	//----
@@ -1030,6 +1031,17 @@ void ofxColorManager::update(ofEventArgs & args)
 	// gradient
 	gradientEngine.update();
 
+	////----
+
+	//// gradient
+
+	//update_Gradient();
+
+	////----
+
+	//////cosine gradient
+	////cosineGradient_update();
+
 	//----
 
 	// export
@@ -1155,17 +1167,6 @@ void ofxColorManager::update(ofEventArgs & args)
 
 		color_Picked.set(color_BACK);
 	}
-
-	////----
-
-	//// gradient
-
-	//update_Gradient();
-
-	////----
-
-	//////cosine gradient
-	////cosineGradient_update();
 }
 
 //--------------------------------------------------------------
@@ -1390,14 +1391,6 @@ void ofxColorManager::draw(ofEventArgs & args)
 
 		//--
 
-		//// cosine gradient
-		//if (SHOW_CosineGradient)
-		//{
-		//    mCosineGradient.render(glm::vec2(0), ofGetWidth(), ofGetHeight());
-		//}
-
-		//--
-
 		// DEMO2
 		float _w = myDEMO2.getWidth();
 		if (DEMO2_Test) myDEMO2.draw(glm::vec2(ofGetWidth() * 0.5 - _w * 0.5, 0));
@@ -1430,6 +1423,10 @@ void ofxColorManager::draw(ofEventArgs & args)
 		//ofxColorClient::draw_MiniPreview(font, PRESET_Name, palette, color_BackGround.get());
 		//(SHOW_MINI_Preview) draw_MiniPreview();
 	}
+
+	if (SHOW_GradientCurve) gradientEngine.draw_GradientCurve2();
+	////if (SHOW_GradientCurve) gradientEngine.gui_Gradient();
+	//if (SHOW_CosineGradient) gui_imGui_CosineGradient();
 
 	//--
 
@@ -1486,26 +1483,6 @@ void ofxColorManager::exit()
 {
 	ofLogNotice(__FUNCTION__);
 
-	////----
-
-	//// curve
-
-	//// layout
-	////rGradientPreview.saveSettings();
-	//rGradientPreview.saveSettings("_Curve_Gui", path_Layout, false);
-
-	//// preset
-
-	//// gradient curve
-	//curvesTool.save(path_Gradient_LUT);//needed because it fills polyline
-
-	//// refresh before save
-	//curve_Gradient_Exp = curve_Slider_ExpTweak.getValue();
-	//curve_Gradient_PickIn = curve_Slider_Pick.getValue();
-
-	//// curve preset
-	//ofxSurfingHelpers::saveGroup(params_Gradient, path_Gradient_Preset);
-
 	//----
 
 	// app state
@@ -1538,27 +1515,6 @@ void ofxColorManager::exit()
 	removeKeysListeners();
 	removeMouseListeners();
 }
-
-//----
-
-////--------------------------------------------------------------
-//void ofxColorManager::gui_imGui_CosineGradient()
-//{
-//    if (ofxImGui::BeginWindow("COSINE GRADIENT", mainSettings, false))
-//    {
-//        if (ofxImGui::BeginTree(this->cosineGradient_params, mainSettings))
-//        {
-//            ofxImGui::AddParameter(this->mBias);
-//            ofxImGui::AddParameter(this->mAmplitude);
-//            ofxImGui::AddParameter(this->mFrequency);
-//            ofxImGui::AddParameter(this->mPhase);
-//
-//            ofxImGui::EndTree(mainSettings);
-//        }
-//    }
-//    ofxImGui::EndWindow(mainSettings);
-//}
-
 
 //----
 
@@ -2087,6 +2043,7 @@ void ofxColorManager::gui_PaletteEditor()
 							// update all pallete (Curve)
 							ofLogNotice(__FUNCTION__) << "DONE Dragged";
 
+							gradientEngine.palette = palette;
 							gradientEngine.build_Gradient();
 						}
 						ImGui::EndDragDropTarget();
@@ -2408,6 +2365,7 @@ void ofxColorManager::gui_PaletteFloating()
 					// update all pallete (Curve)
 					ofLogNotice(__FUNCTION__) << "DONE Dragged _c";
 
+					gradientEngine.palette = palette;
 					gradientEngine.build_Gradient();
 				}
 				ImGui::EndDragDropTarget();
@@ -4004,13 +3962,38 @@ void ofxColorManager::gui_Presets()
 	//}
 }
 //--------------------------------------------------------------
+//void ofxColorManager::gui_Gradient()
+//{
+//	static bool auto_resize = true;
+//	float ww, hh;
+//	ww = PANEL_WIDGETS_WIDTH;
+//	hh = PANEL_WIDGETS_HEIGHT;
+//	ImGui::SetWindowSize(ImVec2(ww, hh));
+//	ImGuiWindowFlags flagsw;
+//	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : 0;
+//
+//	//--
+//
+//	if (ofxImGui::BeginWindow("GRADIENT", mainSettings, flagsw))
+//	{
+//		gradientEngine.gui_Gradient();
+//	}
+//	ofxImGui::EndWindow(mainSettings);
+//
+//	//if (SHOW_GradientCurve) gradientEngine.draw_GradientCurve2();
+//	//if (SHOW_GradientCurve) gradientEngine.gui_Gradient();
+//}
+
+
+//--------------------------------------------------------------
 void ofxColorManager::gui_Gradient()
 {
 	static bool auto_resize = true;
 	float ww, hh;
 	ww = PANEL_WIDGETS_WIDTH;
 	hh = PANEL_WIDGETS_HEIGHT;
-	ImGui::SetWindowSize(ImVec2(ww, hh));
+	//ImGui::SetWindowSize(ImVec2(ww, hh));
+
 	ImGuiWindowFlags flagsw;
 	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : 0;
 
@@ -4018,14 +4001,134 @@ void ofxColorManager::gui_Gradient()
 
 	if (ofxImGui::BeginWindow("GRADIENT", mainSettings, flagsw))
 	{
-		gradientEngine.gui_Gradient();
+		//--
+
+		float _spc;
+		float _w;
+		float _w50;
+		float _w20;
+		float _h;
+
+		_spc = ImGui::GetStyle().ItemInnerSpacing.x;
+
+		//_w = ImGui::GetWindowContentRegionWidth();
+		if (auto_resize) _w = ww;
+		else _w = ImGui::GetWindowContentRegionWidth() - 3 * _spc;
+		_w50 = _w * 0.5;
+		_w20 = _w * 0.2;
+
+		_h = BUTTON_BIG_HEIGHT;
+
+		//-
+
+		ImGuiColorEditFlags _flagw;
+		_flagw = false;
+
+		//--
+
+		//if (ImGui::TreeNode("EDIT"))
+		if (ofxImGui::BeginTree("EDIT", mainSettings))
+		{
+			ImGui::Dummy(ImVec2(0, 5));
+
+			// reset
+
+			ImGui::PushItemWidth(_w);
+			if (ImGui::Button(gradientEngine.bResetCurve.getName().c_str(), ImVec2(_w, _h)))
+				//if (ImGui::Button(bResetCurve.getName().c_str()))
+				//if (ImGui::Button(bResetCurve.getName().c_str(), ImVec2(_w, _h)))
+			{
+				gradientEngine.bResetCurve = true;
+				//rGradientPreview.setRect(600, 200, 755, 295);
+				//refresh_Gradient_GuiLayout();
+			}
+			ImGui::PopItemWidth();
+			ImGui::Dummy(ImVec2(0, 5));
+
+			ImGui::PushItemWidth(_w20);
+			ofxImGui::AddParameter(gradientEngine.gradient_HardMode);
+			ofxImGui::AddParameter(gradientEngine.AutoSet_Background_FromGradient);
+			ofxImGui::AddParameter(gradientEngine.bAutoPaletteFromGradient);
+			//ImGui::Checkbox("AutoSet Background", &AutoSet_Background_FromGradient);
+			//ofxSurfingHelpers::AddBigButton(bResetCurve);
+			//ofxImGui::AddParameter(bResetCurve);
+			//ofxImGui::AddParameter(curve_Gradient_TEST_Prc);
+			//ofxImGui::AddParameter(pos_CurveEditor);
+			ImGui::PopItemWidth();
+
+			//-
+
+			//ImGui::TreePop();
+			ofxImGui::EndTree(mainSettings);
+		}
+
+		ImGui::Dummy(ImVec2(0, 5));
+
+		//--
+
+		// curve Test
+
+		//if (ImGui::TreeNode("CURVE TEST"))
+		//if (ImGui::CollapsingHeader("CURVE TEST", _flagw))
+		if (ofxImGui::BeginTree("CURVE TEST", mainSettings))
+		{
+			ImGui::PushItemWidth(_w50);
+
+			ofxImGui::AddParameter(gradientEngine.TEST_Mode);
+			//ImGui::Checkbox("Enable", &TEST_Mode); 
+
+			if (gradientEngine.TEST_Mode)
+			{
+				ImGui::SameLine();
+				ImGui::Checkbox("LFO", &gradientEngine.TEST_LFO_Mode);
+			}
+			ImGui::SliderFloat("Speed", &gradientEngine.TEST_Speed, 0.0f, 1.0f);
+
+			ImGui::PopItemWidth();
+
+			//-
+
+			//ImGui::TreePop();
+			//ofxImGui::EndTree(mainSettings);
+		}
+
+		ImGui::Dummy(ImVec2(0, 5));
+
+		//--
+
+		if (ImGui::CollapsingHeader("Advanced", _flagw))
+		{
+			// ctrl in/out
+			//ImGui::PushItemWidth(_w50);
+
+			ofxImGui::AddParameter(gradientEngine.curve_Gradient_Exp);
+
+			ImGui::Dummy(ImVec2(0, 2));
+
+			if (ofxImGui::AddParameter(gradientEngine.curve_Gradient_PickIn))
+			{
+				gradientEngine.curve_Ctrl_In = gradientEngine.curve_Gradient_PickIn;
+			}
+
+			ofxImGui::AddParameter(gradientEngine.curve_Ctrl_Out);
+
+			//ImGui::PopItemWidth();
+
+			//-
+
+			ImGui::Dummy(ImVec2(0, 10));
+			ImGui::PushItemWidth(_w);
+			if (ofxSurfingHelpers::AddBigToggle(gradientEngine.MODE_EditGradientLayout, _w, 0.5 * _h))
+			{
+			}
+			//ofxImGui::AddParameter(MODE_EditGradientLayout);
+			ImGui::PopItemWidth();
+
+			ImGui::Checkbox("Auto-resize", &auto_resize);
+		}
 	}
 	ofxImGui::EndWindow(mainSettings);
-
-	//if (SHOW_GradientCurve) gradientEngine.draw_GradientCurve2();
-	//if (SHOW_GradientCurve) gradientEngine.gui_Gradient();
 }
-
 
 //--------------------------------------------------------------
 void ofxColorManager::gui_Demo()
@@ -4101,10 +4204,8 @@ bool ofxColorManager::draw_Gui()
 		if (SHOW_Export) gui_Export();
 		if (SHOW_Demos) gui_Demo();
 
-		//if (SHOW_GradientCurve) gui_Gradient();
-		////if (SHOW_GradientCurve) gradientEngine.draw_GradientCurve2();
-		////if (SHOW_GradientCurve) gradientEngine.gui_Gradient();
-		//if (SHOW_CosineGradient) gui_imGui_CosineGradient();
+		//gradient
+		if (SHOW_GradientCurve) gui_Gradient();
 	}
 
 	//--
@@ -6754,7 +6855,7 @@ void ofxColorManager::setup_Range()
 	bAuto_Color2_FromPicker_Range.set("Auto Pick C2", false);
 	bGetPalette_From_Range.set("To User Palette", false);
 
-	numColors_Range.set("Amnt Colors Rng", MAX_PALETTE_COLORS, 3, MAX_PALETTE_COLORS);
+	numColors_Range.set("Amnt Colors Rng", (int)MAX_PALETTE_COLORS, 3, (int)MAX_PALETTE_COLORS);
 	numColors_Range.setSerializable(false);
 
 	params_Ranges.setName("Params Ranges");
@@ -6790,33 +6891,39 @@ void ofxColorManager::generate_Range(ofColor col1, ofColor col2) {
 
 	//_div = 10;
 	_div = int((numColors_Range.get() - 1));
-	_step = _max / _div;
-
-	ofLogNotice(__FUNCTION__) << "_div : " << _div;
-	ofLogNotice(__FUNCTION__) << "_step: " << _step;
-
-	//-
-
-	palette_Range.clear();
-
-	for (int i = 0; i < int(NUM_TYPES_RANGES); ++i)
+	if (_div > 0)
 	{
-		glm::vec3 left = { 270, 120 + i * _step, 0.0 };
-		glm::vec3 right = { 670, 120 + i * _step, 0.0 };
+		_step = _max / _div;
 
-		for (auto j = 0; j <= _max; j += _step)
+		ofLogNotice(__FUNCTION__) << "_div : " << _div;
+		ofLogNotice(__FUNCTION__) << "_step: " << _step;
+
+		//-
+
+		palette_Range.clear();
+
+		for (int i = 0; i < int(NUM_TYPES_RANGES); ++i)
 		{
-			glm::vec3 pos = { j + 270, 120 + i * _step, 0.0 };
+			glm::vec3 left = { 270, 120 + i * _step, 0.0 };
+			glm::vec3 right = { 670, 120 + i * _step, 0.0 };
 
-			ofColor color = ofxColorMorph::colorMorph(pos, left, col1, right, col2, static_cast<type>(i));
+			for (auto j = 0; j <= _max; j += _step)
+			{
+				glm::vec3 pos = { j + 270, 120 + i * _step, 0.0 };
 
-			ofLogNotice(__FUNCTION__) << i << ":" << j << " \t> " << color;
+				ofColor color = ofxColorMorph::colorMorph(pos, left, col1, right, col2, static_cast<type>(i));
 
-			palette_Range.push_back(color);
+				ofLogNotice(__FUNCTION__) << i << ":" << j << " \t> " << color;
+
+				palette_Range.push_back(color);
+			}
 		}
-	}
 
-	ofLogNotice(__FUNCTION__) << "palette_Range size: " << palette_Range.size();
+		ofLogNotice(__FUNCTION__) << "palette_Range size: " << palette_Range.size();
+	}
+	else {
+		ofLogWarning(__FUNCTION__) << "skip bc params not defined yet..";
+	}
 }
 
 //----
