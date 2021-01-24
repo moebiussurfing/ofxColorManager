@@ -429,7 +429,9 @@ void ofxColourLoversHelper::drawImGui()
 
 			ImGui::Dummy(ImVec2(0, 5));
 
-			ofxImGui::AddParameter(SHOW_BrowserPalettes);
+			//ofxImGui::AddParameter(SHOW_BrowserPalettes);
+			ofxSurfingHelpers::AddBigToggle(SHOW_BrowserPalettes, _w, _hb * 0.5);
+
 			ofxImGui::AddParameter(AutoScroll);
 			ofxImGui::EndTree(mainSettings);
 
