@@ -571,14 +571,8 @@ void ofxColorManager::setup()
 
 	//-
 
-	//TODO: delete
-	//SHOW_AlgoPalettes.set("SHOW PALETTES", true);
-
-	//TODO: should delete
 	SHOW_BrowserColors.set("SHOW BROWSER COLORS", false);
 	SHOW_BrowserColors.setSerializable(false);
-
-	//SHOW_CosineGradient.set("SHOW COSINE GRADIENT", true);
 
 	SHOW_ColourLovers_searcher.set("SHOW COLOUR LOVERS SEARCH", true);
 	SHOW_ColourLovers.set("LOVERS", true);
@@ -586,7 +580,6 @@ void ofxColorManager::setup()
 	SHOW_Presets.set("PRESETS", true);
 	SHOW_Kit.set("SHOW KIT", true);
 	AutoScroll.set("AutoScroll", true);
-	//SHOW_PresetsPalette.set("Show Palette", false);
 	SHOW_BackGround.set("BACKGROUND", true);
 	SHOW_Picker.set("PICKER", true);
 	SHOW_Library.set("LIBRARY", false);
@@ -594,9 +587,9 @@ void ofxColorManager::setup()
 	SHOW_Panels.set("PANELS", true);
 	SHOW_Export.set("EXPORT", true);
 	SHOW_Demos.set("DEMO", false);
-	//SHOW_Demo2.set("DEMO2", false);
 
 	//bAutoResizePalette.set("AutoResize", false);
+	bModeBundlePreset.set("Bundle Preset Mode", false);
 	bAutoExportPreset.set("Auto Export", false);
 	bExportPreset_DefaultPath.set("Default Path", true);
 	path_Folder_ExportColor_Custom.set("ExportPath", "");
@@ -746,6 +739,7 @@ void ofxColorManager::setup()
 
 	// export colors
 	params_Export.setName("ExportColors");
+	params_Export.add(bModeBundlePreset);
 	params_Export.add(bAutoExportPreset);
 	params_Export.add(bExportPreset_DefaultPath);
 	params_Export.add(path_Folder_ExportColor_Custom);
@@ -2613,7 +2607,7 @@ void ofxColorManager::gui_Export()
 	hh = PANEL_WIDGETS_HEIGHT;
 	ImGui::SetWindowSize(ImVec2(ww, hh));
 	ImGuiWindowFlags flagsw;
-	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : 0;
+	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
 
 	//--
 
@@ -2622,7 +2616,7 @@ void ofxColorManager::gui_Export()
 		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
 
 		//float _h = 0.5f * BUTTON_BIG_HEIGHT;
-		float _h = float(COLOR_STRIP_COLOR_HEIGHT);
+		//float _h = float(COLOR_STRIP_COLOR_HEIGHT);
 		float _w;
 
 		//if (auto_resize) _w = ww;
@@ -2639,12 +2633,13 @@ void ofxColorManager::gui_Export()
 		//if (ImGui::CollapsingHeader("Live Export"))
 		{
 			//ImGui::PushItemWidth(ImGui::GetWindowContentRegionWidth());
-			if (ImGui::Button("Export", ImVec2(_w, BUTTON_BIG_HEIGHT)))
+			if (ImGui::Button("EXPORT", ImVec2(_w, BUTTON_BIG_HEIGHT)))
 			{
 				exportPalette();
 			}
 			//ImGui::PopItemWidth();
 
+			ofxSurfingHelpers::AddBigToggle(bModeBundlePreset, _w, BUTTON_BIG_HEIGHT / 2);
 			ofxImGui::AddParameter(bAutoExportPreset);
 
 			if (ImGui::CollapsingHeader("Advanced"))
@@ -2672,7 +2667,8 @@ void ofxColorManager::gui_Export()
 
 				ImGui::Dummy(ImVec2(0, 2));
 				ImGui::Text("Gradient Name:");
-				ImGui::Text(path_Name_Gradient.c_str());
+				ImGui::Text(gradientEngine.path_Name_Gradient.c_str());
+				//ImGui::Text(path_Name_Gradient.c_str());
 
 				ImGui::Dummy(ImVec2(0, 5));
 				ImGui::Checkbox("Auto-resize", &auto_resize);
@@ -3447,7 +3443,7 @@ void ofxColorManager::gui_Presets()
 				}
 				counter = ofClamp(counter, 0, last_Index_Preset.getMax());
 
-				if (last_Index_Preset < files.size() && last_Index_Preset>0)
+				if (last_Index_Preset < files.size() && last_Index_Preset >= 0)
 				{
 					PRESET_Name = files_Names[last_Index_Preset];
 					ofLogNotice(__FUNCTION__) << "PRESET: [" + ofToString(last_Index_Preset) + "] " << PRESET_Name;
@@ -3476,7 +3472,7 @@ void ofxColorManager::gui_Presets()
 				}
 				counter = ofClamp(counter, 0, last_Index_Preset.getMax());
 
-				if (last_Index_Preset < files.size() && last_Index_Preset > 0)
+				if (last_Index_Preset < files.size() && last_Index_Preset >= 0)
 				{
 					PRESET_Name = files_Names[last_Index_Preset];
 					ofLogNotice(__FUNCTION__) << "PRESET: [" + ofToString(last_Index_Preset) + "] " << PRESET_Name;
@@ -5682,7 +5678,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				{
 					last_Index_Preset--;
 				}
-				if (last_Index_Preset < files.size())
+
+				if (last_Index_Preset < files.size() && files.size() > 0)
 				{
 					PRESET_Name = files_Names[last_Index_Preset];
 					ofLogNotice(__FUNCTION__) << "PRESET_Name: [" + ofToString(last_Index_Preset) + "] " << PRESET_Name;
@@ -5697,7 +5694,11 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				{
 					last_Index_Preset++;
 				}
-				if (last_Index_Preset < files.size())
+				else if (last_Index_Preset == files.size() - 1) {//cycle
+					last_Index_Preset = 0;
+				}
+
+				if (last_Index_Preset < files.size() && files.size() > 0)
 				{
 					PRESET_Name = files_Names[last_Index_Preset];
 					ofLogNotice(__FUNCTION__) << "PRESET_Name: [" + ofToString(last_Index_Preset) + "] " << PRESET_Name;
@@ -6262,6 +6263,7 @@ void ofxColorManager::preset_Load(std::string p)
 	
 	//--
 
+	//TODO:
 	// workflow
 	//avoid collide palette auto builder with auto generator engines
 	if (SHOW_Range) SHOW_Range = false;
@@ -6716,24 +6718,30 @@ void ofxColorManager::exportPalette()
 
 	//-
 
-	// A. save palette colors only (without background)
-	//ofxSerializer
-	ofJson j = palette;
-	string _path = path_FileExport + "_Palette.json";
-	ofLogNotice(__FUNCTION__) << "\n" << ofToString(j);
+	if (!bModeBundlePreset) 
+	{
+		// A. save palette colors only (without background neither gradient)
+		//using ofxSerializer
+		ofJson j = palette;
+		string _path = path_FileExport + "_Palette.json";
+		ofLogNotice(__FUNCTION__) << "\n" << ofToString(j);
 
-	ofSavePrettyJson(_path, j);
+		ofSavePrettyJson(_path, j);
+	}
 
 	//-
 
-	// B. save full preset
-	//TODO:
-	//should save colors + bakground too + gradient! = preset
-	PRESET_Name_Gradient = path_Name_Gradient;
-	PRESET_Temp.name = PRESET_Name;//? should use pointer
-	PRESET_Temp.nameCurve = PRESET_Name_Gradient;//? path_Name_Gradient
+	else if (bModeBundlePreset) 
+	{
+		// B. save full preset
+		//TODO:
+		//should save colors + bakground too + gradient! = preset
+		PRESET_Name_Gradient = gradientEngine.path_Name_Gradient;
+		PRESET_Temp.name = PRESET_Name;//? should use pointer
+		PRESET_Temp.nameCurve = PRESET_Name_Gradient;//? path_Name_Gradient
 
-	PRESET_Temp.preset_Save(path_FileExport + "_Bundled", true);
+		PRESET_Temp.preset_Save(path_FileExport + "_Bundled", true);
 
-	//preset_Save(path_Folder_ExportColor_Custom);
+		//preset_Save(path_Folder_ExportColor_Custom);
+	}
 }

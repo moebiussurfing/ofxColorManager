@@ -301,12 +301,12 @@ private:
 	ofParameter <std::string> path_Folder_ExportColor_Custom;
 	ofParameter <std::string> path_Folder_ExportColor_Data;
 
-	//gradient
-	std::string path_Folder_Gradient;
-	std::string path_Layout;
-	std::string path_Gradient_LUT;
-	std::string path_Gradient_Preset;
-	std::string path_Name_Gradient;
+	////gradient
+	//std::string path_Folder_Gradient;
+	//std::string path_Layout;
+	//std::string path_Gradient_LUT;
+	//std::string path_Gradient_Preset;
+	//std::string path_Name_Gradient;
 
 	//--
 
@@ -396,6 +396,7 @@ private:
 	ofParameterGroup params_Export;
 	ofParameter<bool> bAutoExportPreset;
 	ofParameter<bool> bExportPreset_DefaultPath;
+	ofParameter<bool> bModeBundlePreset;
 	void exportPalette();
 
 	//--
