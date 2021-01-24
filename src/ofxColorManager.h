@@ -7,12 +7,18 @@
 
 TODO:
 
++ use tooltip on export panel to make it narrow
++ use columns into export gui panel
++ fix colour lovers growing
+
 + demo 2: svg demo resizer shape using scalable draggable rect
 + fix theory: sometimes not upadting demo2 svg colors
 + fix pick color: lovers, quantizer..
+
 + startup hangs here:
 [notice ] ofxColorManager::refresh_Theory_G1:
 [notice ] ofxColorManager::generate_Range:
+
 + add callback disabler for engines when using presets?
 + improve svg illustrator..
 

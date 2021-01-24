@@ -860,7 +860,6 @@ void ofxColorManager::setup()
 	params_control.add(SHOW_UserPaletteFloating);
 	params_control.add(SHOW_UserPaletteEditor);
 	params_control.add(SHOW_ALL_GUI);
-	//params_control.add(gradientEngine.SHOW_Gradient);
 	params_control.add(SHOW_Gradient);
 
 	ofAddListener(params_control.parameterChangedE(), this, &ofxColorManager::Changed_Controls);
@@ -1325,7 +1324,6 @@ void ofxColorManager::draw(ofEventArgs & args)
 		//(SHOW_MINI_Preview) draw_MiniPreview();
 	}
 
-	//if (gradientEngine.SHOW_Gradient) gradientEngine.draw();
 	if (SHOW_Gradient) gradientEngine.draw();
 
 	//--
@@ -3326,15 +3324,12 @@ void ofxColorManager::gui_Background()
 					{
 						ofxSurfingHelpers::AddBigToggle(color_BackGround_DarkerMode);
 						ofxSurfingHelpers::AddBigToggle(color_BackGround_GradientMode);
-						//ofxSurfingHelpers::AddBigToggle(gradientEngine.color_BackGround_GradientMode);
 
 						if (color_BackGround_DarkerMode)
 						{
 							ofxImGui::AddParameter(color_BackGround_AmtDarker);
 						}
-						//if (!color_BackGround_DarkerMode) 
 						if (color_BackGround_GradientMode)
-							//if (gradientEngine.color_BackGround_GradientMode)
 						{
 							//ImGui::Text("From Gradient:");
 							ofxImGui::AddParameter(gradientEngine.pickIn);
@@ -3614,6 +3609,7 @@ void ofxColorManager::gui_Presets()
 				{
 					ofLogNotice(__FUNCTION__) << "EXPORT";
 					//path_Folder_ExportColor_Custom = ;
+
 					exportPalette();
 
 					ImGui::CloseCurrentPopup();
@@ -3873,8 +3869,6 @@ void ofxColorManager::gui_Gradient()
 		{
 			ImGui::Dummy(ImVec2(0, 5));
 
-			//ofxImGui::AddParameter(gradientEngine.SHOW_Gradient);
-			//ofxImGui::AddParameter(gradientEngine.SHOW_Curve);
 			ofxSurfingHelpers::AddBigToggle(gradientEngine.SHOW_Curve, _w, _h/2);
 
 			ImGui::PushItemWidth(_w);
@@ -3890,7 +3884,6 @@ void ofxColorManager::gui_Gradient()
 			ofxImGui::AddParameter(gradientEngine.gradient_HardMode);
 			ofxImGui::AddParameter(gradientEngine.AutoSet_Background_FromGradient);
 			ofxSurfingHelpers::AddBigToggle(gradientEngine.color_BackGround_GradientMode, _w, _h / 2);
-			//ofxImGui::AddParameter(gradientEngine.color_BackGround_GradientMode);
 			if (ImGui::Button(gradientEngine.bPalettize.getName().c_str(), ImVec2(_w, _h * 0.5)))
 			{
 				gradientEngine.bPalettize = true;
@@ -4029,9 +4022,7 @@ bool ofxColorManager::draw_Gui()
 		if (SHOW_Export) gui_Export();
 		if (SHOW_Demos) gui_Demo();
 
-		//gradient
 		if (SHOW_Gradient) gui_Gradient();
-		//if (gradientEngine.SHOW_Gradient) gui_Gradient();
 	}
 
 	//--
@@ -4831,7 +4822,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 				SHOW_Range = false;
 				SHOW_ColourLovers = false;
 				SHOW_Quantizer = false;
-				gradientEngine.SHOW_Gradient = false;
+				SHOW_Gradient = false;
 			}
 			break;
 
@@ -4849,7 +4840,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 				//SHOW_Range = false;
 				SHOW_ColourLovers = false;
 				SHOW_Quantizer = false;
-				gradientEngine.SHOW_Gradient = false;
+				SHOW_Gradient = false;
 			}
 			break;
 
@@ -4867,7 +4858,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 				SHOW_Range = false;
 				//SHOW_ColourLovers = false;
 				SHOW_Quantizer = false;
-				gradientEngine.SHOW_Gradient = false;
+				SHOW_Gradient = false;
 			}
 			break;
 
@@ -4885,14 +4876,14 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 				SHOW_Range = false;
 				SHOW_ColourLovers = false;
 				//SHOW_Quantizer = false;
-				gradientEngine.SHOW_Gradient = false;
+				SHOW_Gradient = false;
 			}
 			break;
 
 			// gradient
 		case 5:
-			gradientEngine.SHOW_Gradient = true;
-			if (gradientEngine.SHOW_Gradient)
+			//SHOW_Gradient = true;
+			if (SHOW_Gradient)
 			{
 				//SHOW_UserPaletteFloating = false;
 				//SHOW_Picker = false;
@@ -4903,7 +4894,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 				SHOW_Range = false;
 				SHOW_ColourLovers = false;
 				SHOW_Quantizer = false;
-				//gradientEngine.SHOW_Gradient =  false;
+				//SHOW_Gradient =  false;
 			}
 			break;
 		}
@@ -5397,43 +5388,6 @@ void ofxColorManager::Changed_Range(ofAbstractParameter &e)
 	}
 }
 
-////--------------------------------------------------------------
-//void ofxColorManager::palette_FromGradient()
-//{
-//	ofLogNotice(__FUNCTION__);
-//
-//	//TODO:
-//	//must have an aux palette because we are overwritting the main palette...
-//
-//	vector<ofColor> p;
-//	p.resize(numColors_Engines);
-//
-//	for (int i = 0; i < numColors_Engines; i++)
-//	{
-//		float val = float(i / (float)(numColors_Engines - 1));
-//		ofColor c = gradientEngine.getColorAtPercent(val);
-//		ofLogNotice(__FUNCTION__) << "Color:" << c;
-//		p[i] = c;
-//
-//		ofLogNotice(__FUNCTION__) << "[" << i << "] > " << ofToString(c);
-//	}
-//
-//	palette_Clear();
-//	for (int i = 0; i < numColors_Engines.get(); i++)
-//	{
-//		palette_AddColor(p[i]);
-//	}
-//
-//	//--
-//
-//	// workflow
-//	refresh_Background();
-//
-//	//--
-//
-//	//refresh_Palette_TARGET(palette);
-//}
-
 //--------------------------------------------------------------
 void ofxColorManager::refresh_Background()
 {
@@ -5866,7 +5820,6 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		if (key == 'T')
 		{
 			gradientEngine.setToggleTest();
-			//gradientEngine.TEST_Mode = !gradientEngine.TEST_Mode;
 		}
 
 		// DEMO
@@ -5935,15 +5888,16 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				SHOW_Range = false;
 				SHOW_ColourLovers = false;
 				SHOW_Quantizer = false;
-				gradientEngine.SHOW_Gradient = false;
+				SHOW_Gradient = false;
 			}
 		}
 
 		else if (key == OF_KEY_F10)//curve
 		{
-			gradientEngine.SHOW_Gradient = !gradientEngine.SHOW_Gradient;
+			SHOW_Gradient = !SHOW_Gradient;
+			//gradientEngine.SHOW_Gradient = !gradientEngine.SHOW_Gradient;
 
-			if (gradientEngine.SHOW_Gradient) {
+			if (SHOW_Gradient) {
 				SHOW_UserPaletteFloating = false;
 				SHOW_UserPaletteEditor = false;
 				SHOW_Picker = false;
@@ -6006,7 +5960,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			SHOW_UserPaletteFloating = false;
 			SHOW_UserPaletteEditor = false;
 			SHOW_Picker = false;
-			gradientEngine.SHOW_Gradient = false;
+			SHOW_Gradient = false;
 			SHOW_Library = false;
 			SHOW_BackGround = false;
 			SHOW_Theory = false;
@@ -6274,9 +6228,9 @@ void ofxColorManager::preset_Load(std::string p)
 	//--
 
 	// setup linking pointers to get back on load
-	PRESET_Temp.setName(p);
-	PRESET_Temp.setCurveName(PRESET_Name_Gradient);
-	PRESET_Temp.setPalette(palette);
+	PRESET_Temp.setName_TARGET(p);
+	PRESET_Temp.setNameCurve_TARGET(PRESET_Name_Gradient);
+	PRESET_Temp.setPalette_TARGET(palette);
 
 	//--
 
@@ -6343,10 +6297,10 @@ void ofxColorManager::preset_Save(std::string p)
 	//TODO:
 	//this is using pointers.. ?
 
-	PRESET_Temp.setName(p);
-	PRESET_Temp.setCurveName(PRESET_Name_Gradient);
-	PRESET_Temp.setBackgroundColor(color_BackGround.get());
-	PRESET_Temp.setPalette(palette);
+	PRESET_Temp.setName_TARGET(p);
+	PRESET_Temp.setNameCurve_TARGET(PRESET_Name_Gradient);
+	PRESET_Temp.setPalette_TARGET(palette);
+	PRESET_Temp.setBackgroundColor(color_BackGround.get());//no pointer now
 
 	//PRESET_Temp.preset_Save(PRESET_Name);
 	PRESET_Temp.preset_Save(p);
@@ -6546,7 +6500,7 @@ void ofxColorManager::setToggleVisible()
 	SHOW_ALL_GUI = !SHOW_ALL_GUI;
 	ofLogNotice(__FUNCTION__) << "SHOW_ALL_GUI:" << SHOW_ALL_GUI;
 
-	if (gradientEngine.SHOW_Gradient)
+	if (SHOW_Gradient)
 	{
 		gradientEngine.setVisible(SHOW_ALL_GUI);
 	}
