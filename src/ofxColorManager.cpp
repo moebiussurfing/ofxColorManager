@@ -3855,7 +3855,6 @@ void ofxColorManager::gui_Presets()
 	}
 }
 
-
 //--------------------------------------------------------------
 void ofxColorManager::gui_Gradient()
 {
@@ -5291,12 +5290,12 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 	//		// pick in to out
 	//		pickIn = 0.5;
-	//		curve_Slider_Pick.setup(slider_Exp_x, slider_Exp_y, slider_Exp_w, slider_Exp_h, 0, 1, pickIn, true, true);
+	//		curve_Slider_Pick.setup(pos_Pick_x, pos_Pick_y, pos_Pick_w, pos_Pick_h, 0, 1, pickIn, true, true);
 	//		curve_Slider_Pick.setPercent(pickIn);
 
 	//		// exp
 	//		tweakExp = 0.5;
-	//		curve_Slider_ExpTweak.setup(slider_PickIn_x, slider_PickIn_y, slider_PickIn_w, slider_PickIn_h, 0, 1, tweakExp, true, true);
+	//		curve_Slider_ExpTweak.setup(pos_Exp_x, pos_Exp_y, pos_Exp_w, pos_Exp_h, 0, 1, tweakExp, true, true);
 	//		curve_Slider_ExpTweak.setPercent(tweakExp);
 	//	}
 	//}

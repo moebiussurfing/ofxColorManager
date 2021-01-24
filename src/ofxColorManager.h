@@ -53,13 +53,13 @@ TODO:
 
 //#include <random>
 
-#include "presets/PresetManager.h"
+//#include "presets/PresetManager.h"
 #include "presets/PresetPalette.h"
 
 #include "demo/DEMO_Scene.h"
 #include "demo/DEMO_Svg.h"
 
-#include "client/palettePreviewMini.h"
+#include "client/PreviewPaletteMini.h"
 //using namespace ofxColorClient;
 
 //-
@@ -150,7 +150,7 @@ private:
 	//--
 
 private:
-	PalettePreviewMini miniPreview;
+	PreviewPaletteMini miniPreview;
 
 	DEMO_Svg myDEMO2;
 
