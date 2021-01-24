@@ -136,7 +136,6 @@ using namespace ImGui_PalettesPicker;
 #include "ofxInteractiveRect.h" // engine to move the gui. TODO: add resize by mouse too.
 
 #include "GradientEngine.h"
-//#include "ofxColorGradient.h"
 
 //--
 
@@ -144,7 +143,7 @@ class ofxColorManager : public ofBaseApp
 {
 	//--
 
-public:
+private:
 	GradientEngine gradientEngine;
 
 	//--
@@ -202,11 +201,7 @@ private:
 	void addMouseListeners();
 	void removeMouseListeners();
 
-	//private:
-	//	void disableListeners();
-	//	void enableListeners();
-
-		//--
+	//--
 
 	void draw_Info();
 
@@ -240,6 +235,10 @@ private:
 
 	//-
 
+	bool bTextInputActive = false;
+
+	//-
+
 public:
 	// public basic params
 	ofParameterGroup params_Debug{ "ofxColorManager" };
@@ -257,15 +256,9 @@ public:
 
 private:
 
-	//ofParameter<bool> SHOW_AlgoPalettes;
-	//ofParameter<bool> SHOW_Gradient;
-	//ofParameter<bool> SHOW_Demo2;
-	//ofParameter<bool> SHOW_CosineGradient;
-
 	ofParameter<bool> SHOW_ColourLovers;
 	ofParameter<bool> SHOW_ColourLovers_searcher;
 	ofParameter<bool> SHOW_BrowserColors;
-	ofParameter<bool> SHOW_GradientCurve;
 	ofParameter<bool> SHOW_debugText;
 	ofParameter<bool> SHOW_Panels;
 	ofParameter<bool> SHOW_Export;
@@ -290,10 +283,6 @@ private:
 	enum Element { Element_0, Element_1, Element_2, Element_3, Element_4, Element_5, Element_COUNT };
 	const char* element_names[Element_COUNT] = { "PRESETS", "THEORY", "RANGE", "LOVERS", "PICTURE", "GRADIENT" };
 	int current_element = Element_0;
-
-	//-
-
-	bool bTextInputActive = false;
 
 	//--
 
@@ -390,7 +379,7 @@ private:
 	ofParameterGroup params_Ranges;
 
 	ofParameter<bool> types_Range[NUM_TYPES_RANGES];
-	void Changed_ColorRange(ofAbstractParameter &e);
+	void Changed_Range(ofAbstractParameter &e);
 
 	//extra
 	ofParameter<bool> types_Theory_G2[NUM_COLOR_THEORY_TYPES_G2];
@@ -402,7 +391,7 @@ private:
 	// engine 
 	// to live reload colors file into client addon/app
 private:
-	ofParameterGroup params_ExportColors;
+	ofParameterGroup params_Export;
 	ofParameter<bool> bAutoExportPreset;
 	ofParameter<bool> bExportPreset_DefaultPath;
 	void exportPalette();
@@ -578,7 +567,12 @@ public:
 	vector<ofColor> getPalette();
 	std::string getPaletteName();
 	ofColor getColor(int index = -1);
-	//ofColor getColorAtPercent(float control);//get color from gradient at prc
+	
+	//get color from gradient at prc
+	ofColor getColorAtPercent(float control)
+	{
+		gradientEngine.getColorAtPercent(control);
+	}
 
 	//-
 
@@ -619,7 +613,7 @@ private:
 	ofParameterGroup params_color;
 	ofParameterGroup params_Theory;
 	ofParameterGroup params_control;
-	//ofParameterGroup params_curve;
+	//ofParameterGroup params_Gradient2;
 
 	void Changed_Controls(ofAbstractParameter &e);
 
@@ -691,8 +685,8 @@ private:
 	ofParameter<ofFloatColor> color_BackGround;//main bg color
 	ofParameter<bool> color_backGround_SET;
 	ofParameter<bool> AutoSet_BackGround_Color;
-	ofParameter<bool> color_BackGround_Darker;
-	ofParameter<bool> color_BackGround_Gradient;
+	ofParameter<bool> color_BackGround_DarkerMode;
+	ofParameter<bool> color_BackGround_GradientMode;
 	ofParameter<bool> color_BackGround_Lock;
 	ofParameter<float> color_BackGround_AmtDarker;
 	ofParameter<bool> background_Draw_ENABLE{ "Draw", false };
@@ -833,40 +827,9 @@ private:
 	ofParameterGroup params_Palette2{ "PALETTE" };
 	//ofParameterGroup params_Gradient{ "GRADIENT" };
 
-	//--
-
-private:
-	// layout
-	int box_size_user;//user palette colors
-	int box_size;//palettes colors
-	int pad; //global mini pad
-	int c_grad_x, c_grad_y, c_grad_w, c_grad_h;
-	int curveTool_x;
-	int curveTool_y;
-	int curveTool_w;
-	int curveTool_h;
-	int image_curvedGradient_x;
-	int image_curvedGradient_y;
-	int image_curvedGradient_w;
-	int image_curvedGradient_h;
-	int grad_x;
-	int grad_y;
-	int grad_w;
-	int grad_h;
-	int slider_Exp_x;
-	int slider_Exp_y;
-	int slider_Exp_w;
-	int slider_Exp_h;
-	int slider_PickIn_x;
-	int slider_PickIn_y;
-	int slider_PickIn_w;
-	int slider_PickIn_h;
-	int currColor_x;
-	int currColor_y;
-
 	//-
 
-	//export path picker
+	//export path system dialog
 	void processOpenFileSelection(ofFileDialogResult openFileResult) {};
 	std::string originalFileExtension;
 	bool bOpen = false;
