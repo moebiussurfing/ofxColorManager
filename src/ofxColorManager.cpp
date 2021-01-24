@@ -473,19 +473,12 @@ void ofxColorManager::setup()
 	color_BackGround_GradientMode.set("Mode Gradient", false);
 	color_BackGround_Lock.set("Lock Background", false);
 
-	color_BackGround_GradientMode.makeReferenceTo(gradientEngine.color_BackGround_GradientMode);
-
-	//params_data.setName("GENERAL");
-	//params_data.add(color_BackGround);
-	//params_data.add(color_BackGround_Lock);
-	//params_data.add(color_backGround_SET);
-	//params_data.add(color_BackGround_DarkerMode);
-	//params_data.add(color_BackGround_GradientMode);
-	//params_data.add(AutoSet_BackGround_Color);
+	//color_BackGround_GradientMode.makeReferenceTo(gradientEngine.color_BackGround_GradientMode);
+	gradientEngine.color_BackGround_GradientMode.makeReferenceTo(color_BackGround_GradientMode);
 
 	//-----
 
-	// color
+	// color picker
 
 	color_Picked.set("COLOR", ofFloatColor::red);
 
@@ -531,23 +524,26 @@ void ofxColorManager::setup()
 	//bRandomPalette.set("RANDOM PALETTE", false);
 
 	params_Theory.setName("ADVANCED");
-	//params_Theory.add(SATURATION);
-	//params_Theory.add(BRIGHTNESS);
 	params_Theory.add(numColors_Theory_G2);
 	params_Theory.add(bAuto_Build_Palette);
 	params_Theory.add(analogSpread);
 	//params_Theory.add(MODE_TweakSatBrg);
 	//params_Theory.add(bLock_palette);
 	//params_Theory.add(bRandomPalette);
+	//params_Theory.add(SATURATION);
+	//params_Theory.add(BRIGHTNESS);
 
 	//-
 
 	//exclude
+
 	//SATURATION.setSerializable(false);
 	//BRIGHTNESS.setSerializable(false);
+
 	//SHOW_AlgoPalettes.setSerializable(false);
 	//color_BackGround.setSerializable(false);
 	//color_Picked.setSerializable(false);
+
 	color_HUE.setSerializable(false);
 	color_SAT.setSerializable(false);
 	color_BRG.setSerializable(false);
@@ -607,6 +603,9 @@ void ofxColorManager::setup()
 
 	SHOW_ColourLovers_searcher.set("SHOW COLOUR LOVERS SEARCH", true);
 	SHOW_ColourLovers.set("LOVERS", true);
+
+	SHOW_Gradient.set("GRADIENT", true);
+	gradientEngine.bVisible.makeReferenceTo(SHOW_Gradient);
 
 	SHOW_Presets.set("PRESETS", true);
 	SHOW_Kit.set("SHOW KIT", true);
@@ -794,7 +793,9 @@ void ofxColorManager::setup()
 	params_Panels.add(SHOW_MINI_Preview);
 	params_Panels.add(SHOW_Kit);
 	params_Panels.add(AutoScroll);
-	params_Panels.add(gradientEngine.bVisible);
+	params_Panels.add(SHOW_Gradient);
+	params_Panels.add(gradientEngine.SHOW_Curve);
+	//params_Panels.add(gradientEngine.bVisible);
 	params_AppState.add(params_Panels);
 
 	params_Background.add(color_BackGround);
@@ -813,7 +814,7 @@ void ofxColorManager::setup()
 	params_Demo.add(DEMO_Alpha);
 	params_Demo.add(DEMO_Cam);
 	params_AppState.add(params_Demo);
-	
+
 	//params_Picker.add(BRIGHTNESS);
 	//params_Picker.add(SATURATION);
 
@@ -889,7 +890,8 @@ void ofxColorManager::setup()
 	params_control.add(SHOW_UserPaletteFloating);
 	params_control.add(SHOW_UserPaletteEditor);
 	params_control.add(SHOW_ALL_GUI);
-	params_control.add(gradientEngine.bVisible);
+	//params_control.add(gradientEngine.bVisible);
+	params_control.add(SHOW_Gradient);
 
 	ofAddListener(params_control.parameterChangedE(), this, &ofxColorManager::Changed_Controls);
 
@@ -1352,7 +1354,8 @@ void ofxColorManager::draw(ofEventArgs & args)
 		//(SHOW_MINI_Preview) draw_MiniPreview();
 	}
 
-	if (gradientEngine.bVisible) gradientEngine.draw();
+	//if (gradientEngine.bVisible) gradientEngine.draw();
+	if (SHOW_Gradient) gradientEngine.draw();
 
 	//--
 
@@ -2951,7 +2954,8 @@ void ofxColorManager::gui_Panels()
 		ofxSurfingHelpers::AddBigToggle(SHOW_Presets);
 		ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteFloating);
 		ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteEditor);
-		ofxSurfingHelpers::AddBigToggle(gradientEngine.bVisible);
+		//ofxSurfingHelpers::AddBigToggle(gradientEngine.bVisible);
+		ofxSurfingHelpers::AddBigToggle(SHOW_Gradient);
 		ofxImGui::AddParameter(ENABLE_keys);
 
 		ImGui::NextColumn();
@@ -2974,16 +2978,6 @@ void ofxColorManager::gui_Panels()
 		ofxSurfingHelpers::AddBigToggle(SHOW_MINI_Preview);
 		ofxSurfingHelpers::AddBigToggle(SHOW_Demos);
 		ofxSurfingHelpers::AddBigToggle(SHOW_Export);
-		//ofxSurfingHelpers::AddBigToggle(SHOW_ALL_GUI);
-		//ImGui::Separator();
-		//ImGui::Dummy(ImVec2(0, 10));
-		//ofxImGui::AddParameter(SHOW_Gradient);
-		//ofxImGui::AddParameter(SHOW_AlgoPalettes);
-		//ofxImGui::AddParameter(SHOW_BrowserColors);
-
-		//ImGui::Columns(1);
-
-		//ImGui::Checkbox("Resize", &bResize);
 	}
 	ofxImGui::EndWindow(mainSettings);
 }
@@ -3367,7 +3361,7 @@ void ofxColorManager::gui_Background()
 						}
 						//if (!color_BackGround_DarkerMode) 
 						if (color_BackGround_GradientMode)
-						//if (gradientEngine.color_BackGround_GradientMode)
+							//if (gradientEngine.color_BackGround_GradientMode)
 						{
 							//ImGui::Text("From Gradient:");
 							ofxImGui::AddParameter(gradientEngine.pickIn);
@@ -3909,6 +3903,8 @@ void ofxColorManager::gui_Gradient()
 			ImGui::Dummy(ImVec2(0, 5));
 
 			//ofxImGui::AddParameter(gradientEngine.bVisible);
+			//ofxImGui::AddParameter(gradientEngine.SHOW_Curve);
+			ofxSurfingHelpers::AddBigToggle(gradientEngine.SHOW_Curve, _w, _h);
 
 			ImGui::PushItemWidth(_w);
 			if (ImGui::Button(gradientEngine.bResetCurve.getName().c_str(), ImVec2(_w, _h)))
@@ -3918,10 +3914,12 @@ void ofxColorManager::gui_Gradient()
 			ImGui::PopItemWidth();
 
 			ImGui::Dummy(ImVec2(0, 5));
-			
+
 			ImGui::PushItemWidth(_w20);
 			ofxImGui::AddParameter(gradientEngine.gradient_HardMode);
 			ofxImGui::AddParameter(gradientEngine.AutoSet_Background_FromGradient);
+			ofxSurfingHelpers::AddBigToggle(gradientEngine.color_BackGround_GradientMode, _w, _h/2);
+			//ofxImGui::AddParameter(gradientEngine.color_BackGround_GradientMode);
 			if (ImGui::Button(gradientEngine.bPalettize.getName().c_str(), ImVec2(_w, _h * 0.5)))
 			{
 				gradientEngine.bPalettize = true;
@@ -3944,7 +3942,7 @@ void ofxColorManager::gui_Gradient()
 		//if (ImGui::TreeNode("CURVE TEST"))
 		//_flagw = ImGuiWindowFlags_;
 		if (ImGui::CollapsingHeader("Curve TEST"))
-		//if (ofxImGui::BeginTree("CURVE TEST", mainSettings))
+			//if (ofxImGui::BeginTree("CURVE TEST", mainSettings))
 		{
 			ImGui::PushItemWidth(_w50);
 
@@ -4061,7 +4059,8 @@ bool ofxColorManager::draw_Gui()
 		if (SHOW_Demos) gui_Demo();
 
 		//gradient
-		if (gradientEngine.bVisible) gui_Gradient();
+		if (SHOW_Gradient) gui_Gradient();
+		//if (gradientEngine.bVisible) gui_Gradient();
 	}
 
 	//--
@@ -5170,7 +5169,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		//}
 	}
 #endif
-	
+
 	else if (name == SHOW_BrowserColors.getName())
 	{
 		colorBrowser.setVisible(SHOW_BrowserColors);
@@ -6677,7 +6676,7 @@ void ofxColorManager::generate_Range(ofColor col1, ofColor col2) {
 			ofLogNotice(__FUNCTION__) << "_div : " << _div;
 			ofLogNotice(__FUNCTION__) << "_step: " << _step;
 
-			if (_step > 0) 
+			if (_step > 0)
 			{
 				palette_Range.clear();
 

@@ -1,5 +1,6 @@
 
 #pragma once
+
 #include "ofMain.h"
 
 /*
@@ -273,6 +274,7 @@ private:
 	ofParameter<bool> SHOW_UserPaletteEditor;
 	ofParameter<bool> SHOW_Theory;
 	ofParameter<bool> SHOW_Quantizer;
+	ofParameter<bool> SHOW_Gradient;
 	ofParameter<bool> AutoScroll;
 
 	//-
