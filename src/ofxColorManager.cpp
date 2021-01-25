@@ -592,7 +592,7 @@ void ofxColorManager::setup()
 	bModeBundlePreset.set("Mode Bundle", false);
 	bModePalettePreset.set("Mode Palette", false);
 	bAutoExportPreset.set("Auto Export", false);
-	bExportPreset_DefaultPath.set("/bin/data Path", true);
+	bExportPreset_DefaultPath.set("Path /bin/data", true);
 	path_Folder_ExportColor_Custom.set("ExportPath", "");
 
 	//-
@@ -741,6 +741,7 @@ void ofxColorManager::setup()
 	// export colors
 	params_Export.setName("ExportColors");
 	params_Export.add(bModeBundlePreset);
+	params_Export.add(bModePalettePreset);
 	params_Export.add(bAutoExportPreset);
 	params_Export.add(bExportPreset_DefaultPath);
 	params_Export.add(path_Folder_ExportColor_Custom);
