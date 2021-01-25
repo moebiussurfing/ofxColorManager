@@ -3941,7 +3941,7 @@ void ofxColorManager::gui_Gradient()
 			if (gradientEngine.TEST_Mode)
 			{
 				ImGui::SameLine();
-				ImGui::Checkbox("LFO", &gradientEngine.TEST_LFO_Mode);
+				ImGui::Checkbox("LFO", &gradientEngine.bTEST_LFO_Mode);
 			}
 			ImGui::SliderFloat("Speed", &gradientEngine.TEST_Speed, 0.0f, 1.0f);
 

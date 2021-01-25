@@ -7,7 +7,10 @@
 
 TODO:
 
-+ fix colour lovers growing
++ fix .json on preset loader
++ add palettize gradient receiver bool
+
++ fix colour lovers growing gui
 
 + demo 2: svg demo resizer shape using scalable draggable rect
 + fix theory: sometimes not upadting demo2 svg colors
