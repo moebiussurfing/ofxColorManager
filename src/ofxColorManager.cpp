@@ -535,7 +535,7 @@ void ofxColorManager::setup()
 	refresh_Theory_G2();
 
 	//-
-	
+
 	SHOW_Gradient.set("GRADIENT", true);
 	gradientEngine.SHOW_Gradient.makeReferenceTo(SHOW_Gradient);
 
@@ -589,9 +589,10 @@ void ofxColorManager::setup()
 	SHOW_Demos.set("DEMO", false);
 
 	//bAutoResizePalette.set("AutoResize", false);
-	bModeBundlePreset.set("Bundle Preset Mode", false);
+	bModeBundlePreset.set("Mode Bundle", false);
+	bModePalettePreset.set("Mode Palette", false);
 	bAutoExportPreset.set("Auto Export", false);
-	bExportPreset_DefaultPath.set("Default Path", true);
+	bExportPreset_DefaultPath.set("/bin/data Path", true);
 	path_Folder_ExportColor_Custom.set("ExportPath", "");
 
 	//-
@@ -861,6 +862,9 @@ void ofxColorManager::setup()
 	params_control.add(SHOW_UserPaletteEditor);
 	params_control.add(SHOW_ALL_GUI);
 	params_control.add(SHOW_Gradient);
+
+	params_control.add(bModeBundlePreset);
+	params_control.add(bModePalettePreset);
 
 	ofAddListener(params_control.parameterChangedE(), this, &ofxColorManager::Changed_Controls);
 
@@ -2638,33 +2642,53 @@ void ofxColorManager::gui_Export()
 			//ImGui::PopItemWidth();
 
 			ofxSurfingHelpers::AddBigToggle(bModeBundlePreset, _w, BUTTON_BIG_HEIGHT / 2);
+			ofxSurfingHelpers::AddBigToggle(bModePalettePreset, _w, BUTTON_BIG_HEIGHT / 2);
 			ofxImGui::AddParameter(bAutoExportPreset);
 
 			if (ImGui::CollapsingHeader("Advanced"))
 			{
 				ofxImGui::AddParameter(bExportPreset_DefaultPath);
-				if (ImGui::Button("Set Path", ImVec2(_w, 0.5*BUTTON_BIG_HEIGHT)))
-				{
-					bOpen = true;
-				}
+				if (!bExportPreset_DefaultPath)
+					if (ImGui::Button("Set Path", ImVec2(_w, 0.5*BUTTON_BIG_HEIGHT)))
+					{
+						bOpen = true;
+					}
 
 				ImGui::Dummy(ImVec2(0, 2));
-				ImGui::Text("Path:");
+				std::string ss;
+
 				if (!bExportPreset_DefaultPath) {
-					ImGui::Text(path_Folder_ExportColor_Custom.get().c_str());
+					ss = path_Folder_ExportColor_Custom.get();
 				}
 				else {
-					std::string ss = "/data/" + path_Folder_ExportColor_Data.get();
-					ImGui::Text(ss.c_str());
+					ss = "/data/" + path_Folder_ExportColor_Data.get();
 					//ImGui::Text(path_Folder_ExportColor_Data.get().c_str());
 				}
+				//ImGui::Text("Path:");
+				//ImGui::Text(ss.c_str());
 
+				//floating
+				ImGui::Text("Path:");
+				ImGui::SameLine();
+				ImGui::TextDisabled("(?)");
+				if (ImGui::IsItemHovered())
+				{
+					ImGui::BeginTooltip();
+					ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+					ImGui::TextUnformatted(ss.c_str());
+					ImGui::PopTextWrapPos();
+					ImGui::EndTooltip();
+				}
+
+
+				ImGui::Text("Names:");
 				ImGui::Dummy(ImVec2(0, 2));
-				ImGui::Text("Preset Name:");
+
+				ImGui::Text("Preset:");
 				ImGui::Text(PRESET_Temp.name.c_str());
 
 				ImGui::Dummy(ImVec2(0, 2));
-				ImGui::Text("Gradient Name:");
+				ImGui::Text("Gradient:");
 				ImGui::Text(gradientEngine.path_Name_Gradient.c_str());
 				//ImGui::Text(path_Name_Gradient.c_str());
 
@@ -3869,7 +3893,7 @@ void ofxColorManager::gui_Gradient()
 		{
 			ImGui::Dummy(ImVec2(0, 5));
 
-			ofxSurfingHelpers::AddBigToggle(gradientEngine.SHOW_Curve, _w, _h/2);
+			ofxSurfingHelpers::AddBigToggle(gradientEngine.SHOW_Curve, _w, _h / 2);
 
 			ImGui::PushItemWidth(_w);
 			if (ImGui::Button(gradientEngine.bResetCurve.getName().c_str(), ImVec2(_w, _h)))
@@ -4770,9 +4794,10 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 	//----
 
-	// app modes
+	if (false) {}
 
-	if (name == AppMode.getName())
+	// app modes
+	else if (name == AppMode.getName())
 	{
 		//clamp
 		//AppMode = ofClamp(
@@ -4917,6 +4942,18 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	{
 		// workflow
 		focus_1 = MODE_NewPreset;
+	}
+
+	//-
+
+	//export modes
+	else if (name == bModeBundlePreset.getName())
+	{
+		bModePalettePreset.setWithoutEventNotifications(!bModeBundlePreset);
+	}
+	else if (name == bModePalettePreset.getName())
+	{
+		bModeBundlePreset = !bModePalettePreset;
 	}
 
 	//----
@@ -6150,7 +6187,7 @@ void ofxColorManager::preset_RefreshFiles()
 	}
 
 	last_Index_Preset.setMax(files.size() - 1);
-	if (last_Index_Preset > files.size()-1) last_Index_Preset = -1;
+	if (last_Index_Preset > files.size() - 1) last_Index_Preset = -1;
 
 	//-
 
@@ -6214,7 +6251,7 @@ void ofxColorManager::preset_Load(std::string p)
 {
 	ofLogNotice(__FUNCTION__) << "----------------- PRESET LOAD -----------------" << p;
 	ofLogNotice(__FUNCTION__) << p;
-	
+
 	//--
 
 	//TODO:
@@ -6672,7 +6709,7 @@ void ofxColorManager::exportPalette()
 
 	//-
 
-	if (!bModeBundlePreset) 
+	if (!bModeBundlePreset)
 	{
 		// A. save palette colors only (without background neither gradient)
 		//using ofxSerializer
@@ -6685,7 +6722,7 @@ void ofxColorManager::exportPalette()
 
 	//-
 
-	else if (bModeBundlePreset) 
+	else if (bModeBundlePreset)
 	{
 		// B. save full preset
 		//TODO:

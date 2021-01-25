@@ -7,8 +7,6 @@
 
 TODO:
 
-+ use tooltip on export panel to make it narrow
-+ use columns into export gui panel
 + fix colour lovers growing
 
 + demo 2: svg demo resizer shape using scalable draggable rect
@@ -403,6 +401,7 @@ private:
 	ofParameter<bool> bAutoExportPreset;
 	ofParameter<bool> bExportPreset_DefaultPath;
 	ofParameter<bool> bModeBundlePreset;
+	ofParameter<bool> bModePalettePreset;
 	void exportPalette();
 
 	//--
