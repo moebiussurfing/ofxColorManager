@@ -1783,7 +1783,7 @@ void ofxColorManager::gui_PaletteEditor()
 	hh = PANEL_WIDGETS_HEIGHT;
 	ImGui::SetWindowSize(ImVec2(ww, hh));
 	ImGuiWindowFlags flagsw;
-	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : 0;
+	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
 	//flagsw = false;
 
 	//-
@@ -2950,7 +2950,6 @@ void ofxColorManager::gui_Panels()
 		ofxSurfingHelpers::AddBigToggle(SHOW_Presets);
 		ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteFloating);
 		ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteEditor);
-		//ofxSurfingHelpers::AddBigToggle(gradientEngine.SHOW_Gradient);
 		ofxSurfingHelpers::AddBigToggle(SHOW_Gradient);
 		ofxImGui::AddParameter(ENABLE_keys);
 
@@ -3802,9 +3801,14 @@ void ofxColorManager::gui_Presets()
 		// palette colors mini preview
 
 		ImGui::Dummy(ImVec2(0, 5));
-
+		
+		ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteFloating, _w, _h * 0.5);
 		ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteEditor, _w, _h * 0.5);
+		
+		ImGui::Dummy(ImVec2(0, 2));
+
 		ofxSurfingHelpers::AddBigToggle(SHOW_Kit, _w, _h * 0.5);
+
 		if (SHOW_Kit) ofxImGui::AddParameter(AutoScroll);
 		//ofxImGui::AddParameter(SHOW_Kit);
 		//ofxImGui::AddParameter(SHOW_PresetsPalette);

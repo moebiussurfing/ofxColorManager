@@ -125,7 +125,7 @@ private:
 
     // colour lovers browsing
 public:
-	void nextPalette();
+	void nextPalette(bool cycled = false);
     void prevPalette();
     void randomPalette();
 

@@ -718,7 +718,7 @@ void ofxColourLoversHelper::drawImGui()
 #ifndef USE_OFX_IM_GUI_EXTERNAL
 	gui_ImGui.end();
 #endif
-	}
+}
 #endif
 
 //--------------------------------------------------------------
@@ -734,7 +734,7 @@ void ofxColourLoversHelper::setup()
 	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	ImGui::GetIO().MouseDrawCursor = false;
 	ImGui::GetIO().ConfigWindowsResizeFromEdges = true;
-	
+
 	////daan
 	//gui_ImGui.setup(nullptr, ImGuiConfigFlags_DockingEnable, true, true);
 
@@ -1243,7 +1243,7 @@ void ofxColourLoversHelper::refreshPalette()
 #ifdef USE_OFX_UI
 		lastPaletteName_UI->setLabel(lastPaletteName);
 #endif
-}
+	}
 
 	//ColourLovePalette p = palettes[currPalette];
 	//lastPaletteName = p.title;
@@ -1355,7 +1355,7 @@ void ofxColourLoversHelper::randomPalette()
 }
 
 //--------------------------------------------------------------
-void ofxColourLoversHelper::nextPalette()
+void ofxColourLoversHelper::nextPalette(bool cycled)
 {
 	ofLogNotice(__FUNCTION__) << currPalette;
 
@@ -1365,15 +1365,20 @@ void ofxColourLoversHelper::nextPalette()
 		return;
 	}
 
-	if (currPalette >= palettes.size() - 1)
+	if (!cycled)//clamped to last
 	{
-		currPalette = 0;
+		if (currPalette >= palettes.size() - 1)
+		{
+			currPalette = 0;
+		}
+		else currPalette++;
 	}
-	else currPalette++;
-
-	//currPalette++;
-	//if (currPalette > palettes.size() - 1)
-	//	currPalette = 0;
+	else//cycled browse
+	{
+		currPalette++;
+		if (currPalette > palettes.size() - 1)
+			currPalette = 0;
+	}
 
 	ofLogNotice(__FUNCTION__) << currPalette;
 
@@ -1519,7 +1524,7 @@ void ofxColourLoversHelper::Changed_Gui_Lab(ofxUIEventArgs &e)
 	refreshPalette();
 
 	//-
-		}
+}
 #endif
 
 //--------------------------------------------------------------
@@ -1728,8 +1733,15 @@ void ofxColourLoversHelper::setPalette_BACK_Name(std::string &n)
 void ofxColourLoversHelper::keyPressed(ofKeyEventArgs &eventArgs)
 {
 	if (ENABLER_Keys) {
-		const int &key = eventArgs.key;
-		//ofLogNotice(__FUNCTION__) << "key: " << key;
+		const int key = eventArgs.key;
+
+		// modifiers
+		bool mod_COMMAND = eventArgs.hasModifier(OF_KEY_COMMAND);
+		bool mod_CONTROL = eventArgs.hasModifier(OF_KEY_CONTROL);
+		bool mod_ALT = eventArgs.hasModifier(OF_KEY_ALT);
+		bool mod_SHIFT = eventArgs.hasModifier(OF_KEY_SHIFT);
+
+		ofLogNotice(__FUNCTION__) << " : " << key;
 
 		//-
 
@@ -1737,15 +1749,13 @@ void ofxColourLoversHelper::keyPressed(ofKeyEventArgs &eventArgs)
 		{
 			setToggleVisible();
 		}
-		if (key == ' ')
+
+		//browse
+		if (key == OF_KEY_DOWN || key == ' ' && !mod_CONTROL)
 		{
 			nextPalette();
 		}
-		if (key == OF_KEY_DOWN)
-		{
-			nextPalette();
-		}
-		if (key == OF_KEY_UP)
+		if (key == OF_KEY_UP || key == ' ' && mod_CONTROL)
 		{
 			prevPalette();
 		}
@@ -1756,7 +1766,6 @@ void ofxColourLoversHelper::keyPressed(ofKeyEventArgs &eventArgs)
 		//    palettes[currPalette].save(str);
 		//    ofLogNotice(__FUNCTION__)<<"saved favorite: "<<str;
 		//}
-
 	}
 }
 
