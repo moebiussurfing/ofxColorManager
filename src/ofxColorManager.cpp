@@ -1822,6 +1822,7 @@ void ofxColorManager::gui_PaletteEditor()
 
 			//--
 
+			// all color boxes
 			for (int n = 0; n < palette.size(); n++)
 			{
 				ImGui::PushID(n);
@@ -1963,7 +1964,6 @@ void ofxColorManager::gui_PaletteEditor()
 				{
 					ofxSurfingHelpers::AddBigButton(bAddColor, _w50, _h * 0.5); ImGui::SameLine();
 					ofxSurfingHelpers::AddBigButton(bRemoveColor, _w50, _h * 0.5);
-
 					//ofxSurfingHelpers::AddBigToggle(bEditPalette, _w50, _h * 0.5); 
 					ofxSurfingHelpers::AddBigToggle(bClearPalette, _w50, _h * 0.5);
 
@@ -2006,16 +2006,17 @@ void ofxColorManager::gui_PaletteEditor()
 			//--
 
 			//ImGui::Separator();
-			ImGui::Dummy(ImVec2(0, 10));
+			//ImGui::Dummy(ImVec2(0, 10));
 
 			//ImGui::Text("Floating Panel:");
 			//ImGui::Dummy(ImVec2(0, 5));
 
+			// show floating palette
 			ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteFloating, _w, _h * 0.5);
 
 			if (SHOW_UserPaletteFloating)
 			{
-				if (ImGui::CollapsingHeader("Layout Float Panel"))
+				if (ImGui::CollapsingHeader("Layout"))
 				{
 					ofxImGui::AddParameter(bResponsive_Presets);
 
@@ -3412,12 +3413,19 @@ void ofxColorManager::gui_Presets()
 		// workflow
 
 		//blink when a new preset is editing
-		float freq = 0.075;//speed freq
-		float min = 0.25;
-		float max = 0.75;
+		float freq = 0.075f;//speed freq
+		float min = 0.20;
+		float max = 0.60;
 		float a = ofMap(glm::sin(freq * ofGetFrameNum()), -1, 1, min, max);
 
 		//-
+
+		// palette colors mini preview
+
+		ImGui::Dummy(ImVec2(0, 5));
+
+		ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteFloating, _w, _h * 0.5);
+		ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteEditor, _w, _h * 0.5);
 
 		//ImGui::Text("Name");
 		ImGui::Dummy(ImVec2(0, 5));
@@ -3712,10 +3720,13 @@ void ofxColorManager::gui_Presets()
 
 		ImGui::Dummy(ImVec2(0, 5));
 
+		//new preset toggle
 		if (ofxSurfingHelpers::AddBigToggle(MODE_NewPreset, _w, _h))
 		{
+			//TODO:
 			textInput_New = name_TARGET[0];//set
 			//name_TARGET[0] = &textInput_New[0];//set
+			if (textInput_New == "") textInput_New = "type";
 		}
 		//ofxImGui::AddParameter(MODE_NewPreset);
 
@@ -3772,7 +3783,7 @@ void ofxColorManager::gui_Presets()
 
 			ImGui::PushID(1);
 			ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.5f, 0.0f, 0.5f, a));
-			if (ImGui::Button("SAVE NEW", ImVec2(_w, _h * 0.5)))
+			if (ImGui::Button("SAVE NEW", ImVec2(_w, _h)))
 			{
 				has_focus = 0;
 				MODE_NewPreset = false;
@@ -3797,13 +3808,6 @@ void ofxColorManager::gui_Presets()
 		ImGui::Separator();
 
 		//----
-
-		// palette colors mini preview
-
-		ImGui::Dummy(ImVec2(0, 5));
-		
-		ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteFloating, _w, _h * 0.5);
-		ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteEditor, _w, _h * 0.5);
 		
 		ImGui::Dummy(ImVec2(0, 2));
 
@@ -6254,7 +6258,7 @@ void ofxColorManager::preset_RefreshFiles()
 //--------------------------------------------------------------
 void ofxColorManager::preset_Load(std::string p)
 {
-	ofLogNotice(__FUNCTION__) << "----------------- PRESET LOAD -----------------" << p;
+	ofLogNotice(__FUNCTION__) << "----------------- PRESET LOAD -----------------";
 	ofLogNotice(__FUNCTION__) << p;
 
 	//--
@@ -6283,6 +6287,8 @@ void ofxColorManager::preset_Load(std::string p)
 	last_Index_Type = 0;
 
 	//--
+	
+	p = p + ".json";
 
 	// 1. load palette preset (target will be the above pointers) //TODO: should (late?) improve this..
 	bool b = PRESET_Temp.preset_Load(p);
