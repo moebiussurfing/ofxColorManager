@@ -13,7 +13,7 @@ void ofxColorManager::build_Palette_Flip()
 
 	std::reverse(palette.begin(), palette.end());
 
-	gradientEngine.build();
+	gradientEngine.buildFrom_TARGET();
 
 	//----
 
@@ -766,7 +766,7 @@ void ofxColorManager::setup()
 	params_Panels.add(SHOW_Kit);
 	params_Panels.add(AutoScroll);
 	params_Panels.add(SHOW_Gradient);
-	params_Panels.add(gradientEngine.SHOW_Curve);
+	params_Panels.add(gradientEngine.SHOW_Editor);
 	//params_Panels.add(gradientEngine.SHOW_Gradient);
 	params_AppState.add(params_Panels);
 
@@ -1940,7 +1940,7 @@ void ofxColorManager::gui_PaletteEditor()
 							// update all pallete (Curve)
 							ofLogNotice(__FUNCTION__) << "DONE Dragged";
 
-							gradientEngine.build();
+							gradientEngine.buildFrom_TARGET();
 						}
 						ImGui::EndDragDropTarget();
 					}
@@ -2261,7 +2261,7 @@ void ofxColorManager::gui_PaletteFloating()
 					// update all pallete (Curve)
 					ofLogNotice(__FUNCTION__) << "DONE Dragged _c";
 
-					gradientEngine.build();
+					gradientEngine.buildFrom_TARGET();
 				}
 				ImGui::EndDragDropTarget();
 			}
@@ -3902,7 +3902,7 @@ void ofxColorManager::gui_Gradient()
 		{
 			ImGui::Dummy(ImVec2(0, 5));
 
-			ofxSurfingHelpers::AddBigToggle(gradientEngine.SHOW_Curve, _w, _h / 2);
+			ofxSurfingHelpers::AddBigToggle(gradientEngine.SHOW_Editor, _w, _h / 2);
 
 			ImGui::PushItemWidth(_w);
 			if (ImGui::Button(gradientEngine.bResetCurve.getName().c_str(), ImVec2(_w, _h)))
@@ -3915,7 +3915,7 @@ void ofxColorManager::gui_Gradient()
 
 			ImGui::PushItemWidth(_w20);
 			ofxImGui::AddParameter(gradientEngine.gradient_HardMode);
-			ofxImGui::AddParameter(gradientEngine.AutoSet_Background_FromGradient);
+			ofxImGui::AddParameter(gradientEngine.bAutoSet_Background);
 			ofxSurfingHelpers::AddBigToggle(gradientEngine.color_BackGround_GradientMode, _w, _h / 2);
 			if (ImGui::Button(gradientEngine.bPalettize.getName().c_str(), ImVec2(_w, _h * 0.5)))
 			{
@@ -3978,7 +3978,7 @@ void ofxColorManager::gui_Gradient()
 			{
 			}
 
-			ofxImGui::AddParameter(gradientEngine.curveOut);
+			//ofxImGui::AddParameter(gradientEngine.curveOut);
 
 			//ImGui::PopItemWidth();
 
@@ -6550,7 +6550,7 @@ void ofxColorManager::setToggleVisible()
 
 	if (SHOW_Gradient)
 	{
-		gradientEngine.setVisible(SHOW_ALL_GUI);
+		gradientEngine.setVisiblePreviewPalette(SHOW_ALL_GUI);
 	}
 }
 
