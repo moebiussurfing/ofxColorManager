@@ -7,6 +7,7 @@
 
 TODO:
 
++ fix next preset exports 3 times!! export button works: once
 + fix .json on preset loader
 + add palettize gradient receiver bool
 
@@ -334,8 +335,8 @@ private:
 
 	// gui info display
 
-	std::string theory_Name = "";
-	std::string range_Name = "";
+	std::string name_Theory = "";
+	std::string name_Range = "";
 
 	//--
 
@@ -684,7 +685,6 @@ private:
 	void gui_Panels();
 	void gui_Demo();
 	void gui_Export();
-
 	void gui_Gradient();
 
 	//--

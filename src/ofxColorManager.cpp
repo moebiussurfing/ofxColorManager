@@ -68,14 +68,14 @@ void ofxColorManager::build_Palette_Engine()
 		}
 		else if (SHOW_Theory)
 		{
-			_name = theory_Name;
+			_name = name_Theory;
 			//refresh_Theory_G1();//?
 			refresh_Theory_G2();
 			palette_FromTheory(last_Index_Theory);
 		}
 		else if (SHOW_Range)
 		{
-			_name = range_Name;
+			_name = name_Range;
 			palette_FromRange(last_Index_Range);
 		}
 
@@ -1165,8 +1165,8 @@ void ofxColorManager::draw_Info()
 //
 //	std::string t0 = PRESET_Name;
 //	std::string t1 = myPalette_Name_BACK;
-//	std::string t2 = theory_Name;
-//	std::string t3 = range_Name;
+//	std::string t2 = name_Theory;
+//	std::string t3 = name_Range;
 //
 //	float _w0 = ofxSurfingHelpers::getWidthBBtextBoxed(fontBig, t0);
 //	float _w1 = ofxSurfingHelpers::getWidthBBtextBoxed(fontBig, t1);
@@ -1431,7 +1431,7 @@ void ofxColorManager::gui_Theory()
 	ww = PANEL_WIDGETS_WIDTH;
 	hh = PANEL_WIDGETS_HEIGHT;
 	ImGui::SetWindowSize(ImVec2(ww, hh));
-	ImGuiWindowFlags flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : 0;
+	ImGuiWindowFlags flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
 
 	//--
 
@@ -1446,6 +1446,8 @@ void ofxColorManager::gui_Theory()
 		float _w = ImGui::GetWindowContentRegionWidth() - _spc;
 		int _h = int(COLOR_STRIP_COLOR_HEIGHT);
 		float _w50 = MAX(150, _w * 0.33);
+
+		const float butlabelw = 150;
 
 		//-
 
@@ -1573,6 +1575,12 @@ void ofxColorManager::gui_Theory()
 
 		//----
 
+		ImGuiColorEditFlags _flagsc;
+		_flagsc =
+			ImGuiColorEditFlags_NoAlpha |
+			ImGuiColorEditFlags_NoPicker |
+			ImGuiColorEditFlags_NoTooltip;
+
 		// 1. G1
 
 		for (int i = 0; i < NUM_COLOR_THEORY_TYPES_G1; i++)
@@ -1591,7 +1599,7 @@ void ofxColorManager::gui_Theory()
 			// label button G1
 
 			//std::string _label = ColorWheelSchemes::colorSchemeNames[i];
-			if (ofxSurfingHelpers::AddSmallButton(theory_Types_G1[i], 150, _cSize))
+			if (ofxSurfingHelpers::AddSmallButton(theory_Types_G1[i], butlabelw, _cSize))
 			{
 				last_Index_Theory_PickPalette = i;
 			}
@@ -1610,26 +1618,42 @@ void ofxColorManager::gui_Theory()
 
 			//--
 
-			// 1. label type buttons 
+			// colors G1 
 
 			int _total = colors_Theory_G1[i].size();
 
 			for (int n = 0; n < _total; n++)
 			{
+				ofColor _c = colors_Theory_G1[i][n];
 				ImGui::PushID(n);
-
 				ImGui::SameLine();
 
-				if (ImGui::ColorButton("##ColorButtonTheory_G1",
-					colors_Theory_G1[i][n],
-					ImGuiColorEditFlags_NoAlpha |
-					ImGuiColorEditFlags_NoPicker |
-					ImGuiColorEditFlags_NoTooltip,
-					ImVec2(_cSize, _cSize)))
+				//we relayout sizes 
+				//when not expected amount of colors, due to different theory types: 
+				//ie: even allways
+				float _szw, _szh;
+				_szh = _cSize;
+				float _ww = (numColors_Theory_G1 * _cSize) + ((numColors_Theory_G1 - 1) * _spc);
+				if (_total == numColors_Theory_G1)
 				{
-					//TODO:
-					//color
-					//color_Picked.set(c);
+					_szw = _cSize;
+				}
+				else if (_total > numColors_Theory_G1)
+				{
+					_szw = _ww / _total;
+				}
+				else if (_total < numColors_Theory_G1)
+				{
+					_szw = _ww / _total;
+				}
+
+				if (ImGui::ColorButton("##ColorButtonTheory_G1",
+					_c,
+					_flagsc,
+					ImVec2(_szw, _szh)))
+				{
+					//TODO: not using these pickers
+					//color_Picked.set(_c);
 				}
 
 				ImGui::PopID();
@@ -1683,7 +1707,7 @@ void ofxColorManager::gui_Theory()
 
 			// label button G2
 
-			if (ofxSurfingHelpers::AddSmallButton(types_Theory_G2[i], 150, _cSize))
+			if (ofxSurfingHelpers::AddSmallButton(types_Theory_G2[i], butlabelw, _cSize))
 			{
 				last_Index_Theory_PickPalette = NUM_COLOR_THEORY_TYPES_G1 + i;
 			}
@@ -1702,61 +1726,78 @@ void ofxColorManager::gui_Theory()
 
 			for (int n = 0; n < _total; n++)
 			{
+				ofColor _c;
 				ImGui::PushID(n);
+				ImGui::SameLine();
 
 				std::string _name;
-				ofColor c;
-
 				switch (i)
 				{
 				case 0:
-					if (n < complement.size()) c = complement[n];
+					if (n < complement.size()) _c = complement[n];
 					_name = "Complement";
 					break;
 				case 1:
-					if (n < complementBrightness.size()) c = complementBrightness[n];
+					if (n < complementBrightness.size()) _c = complementBrightness[n];
 					_name = "Complement Brigthness";
 					break;
 				case 2:
-					if (n < monochrome.size()) c = monochrome[n];
+					if (n < monochrome.size()) _c = monochrome[n];
 					_name = "Monochrome";
 					break;
 				case 3:
-					if (n < monochromeBrightness.size()) c = monochromeBrightness[n];
+					if (n < monochromeBrightness.size()) _c = monochromeBrightness[n];
 					_name = "Monochrome Brightness";
 					break;
 				case 4:
-					if (n < analogue.size()) c = analogue[n];
+					if (n < analogue.size()) _c = analogue[n];
 					_name = "Analogue";
 					break;
 				case 5:
-					if (n < triad.size()) c = triad[n];
+					if (n < triad.size()) _c = triad[n];
 					_name = "Triad";
 					break;
 				case 6:
-					if (n < complementTriad.size()) c = complementTriad[n];
+					if (n < complementTriad.size()) _c = complementTriad[n];
 					_name = "Complement Triad";
 					break;
 				}
 
-				ImGui::SameLine();
+				//we relayout sizes 
+				//when not expected amount of colors, due to different theory types: 
+				//ie: even allways
+				float _szw, _szh;
+				_szh = _cSize;
+				float _ww = (numColors_Theory_G2 * _cSize) + ((numColors_Theory_G2 - 1) * _spc);
+				if (_total == numColors_Theory_G2)
+				{
+					_szw = _cSize;
+				}
+				else if (_total > numColors_Theory_G2)
+				{
+					_szw = _ww / _total;
+				}
+				else if (_total < numColors_Theory_G2)
+				{
+					_szw = _ww / _total;
+				}
+
+				// colors G2 
 
 				if (ImGui::ColorButton("##ColorButtonTheory_G2",
-
-					c,
-					ImGuiColorEditFlags_NoAlpha |
-					ImGuiColorEditFlags_NoPicker |
-					ImGuiColorEditFlags_NoTooltip,
-					ImVec2(_cSize, _cSize)))
+					_c,
+					_flagsc,
+					ImVec2(_szw, _szh)))
 				{
-					//TODO:
-					//color
-					//color_Picked.set(c);
+					//TODO: not using these pickers
+					//color_Picked.set(_c);
 				}
 
 				ImGui::PopID();
 			}
 		}
+
+		//----
 
 		if (last_Index_Theory == 12) ofxImGui::AddParameter(analogSpread);
 
@@ -2058,7 +2099,7 @@ void ofxColorManager::gui_PaletteFloating()
 	hh = PANEL_WIDGETS_HEIGHT;
 	ImGui::SetWindowSize(ImVec2(ww, hh));
 	ImGuiWindowFlags flagsw;
-	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : 0;
+	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
 	//flagsw = false;
 
 	//-
@@ -2711,7 +2752,7 @@ void ofxColorManager::gui_Picker()
 	hh = PANEL_WIDGETS_HEIGHT;
 	ImGui::SetWindowSize(ImVec2(ww, hh));
 	ImGuiWindowFlags flagsw;
-	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : 0;
+	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
 
 	//--
 
@@ -2909,7 +2950,7 @@ void ofxColorManager::gui_Panels()
 	flags = ImGuiWindowFlags_None;
 
 	//static bool auto_resize = true;
-	//flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : 0;//TODO: not working for my toggles
+	//flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;//TODO: not working for my toggles
 
 	//static bool bResize = false;
 	//if (!bResize) {
@@ -2986,7 +3027,7 @@ void ofxColorManager::gui_Range()
 	ww = PANEL_WIDGETS_WIDTH;
 	hh = PANEL_WIDGETS_HEIGHT;
 	ImGui::SetWindowSize(ImVec2(ww, hh));
-	ImGuiWindowFlags flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : 0;
+	ImGuiWindowFlags flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
 
 	//--
 
@@ -3253,7 +3294,7 @@ void ofxColorManager::gui_Background()
 	ww = PANEL_WIDGETS_WIDTH;
 	hh = PANEL_WIDGETS_HEIGHT;
 	ImGui::SetWindowSize(ImVec2(ww, hh));
-	ImGuiWindowFlags flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : 0;
+	ImGuiWindowFlags flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
 
 	//--
 
@@ -3389,7 +3430,7 @@ void ofxColorManager::gui_Presets()
 	ImGui::SetWindowSize(ImVec2(ww, hh));
 	ImGuiWindowFlags flags;
 	flags = ImGuiWindowFlags_None;
-	//flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : 0;
+	//flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
 	//TODO: not working...non stop growing..
 
 	//--
@@ -3808,7 +3849,7 @@ void ofxColorManager::gui_Presets()
 		ImGui::Separator();
 
 		//----
-		
+
 		ImGui::Dummy(ImVec2(0, 2));
 
 		ofxSurfingHelpers::AddBigToggle(SHOW_Kit, _w, _h * 0.5);
@@ -3831,7 +3872,7 @@ void ofxColorManager::gui_Presets()
 		ww = PANEL_WIDGETS_WIDTH;
 		hh = PANEL_WIDGETS_HEIGHT;
 		ImGui::SetWindowSize(ImVec2(ww, hh));
-		//ImGuiWindowFlags flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : 0;
+		//ImGuiWindowFlags flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
 
 		//--
 
@@ -3866,7 +3907,7 @@ void ofxColorManager::gui_Gradient()
 	//ImGui::SetWindowSize(ImVec2(ww, hh));
 
 	ImGuiWindowFlags flagsw;
-	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : 0;
+	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
 
 	//--
 
@@ -3943,10 +3984,10 @@ void ofxColorManager::gui_Gradient()
 		{
 			ImGui::PushItemWidth(_w50);
 
-			ofxImGui::AddParameter(gradientEngine.TEST_Mode);
+			ofxImGui::AddParameter(gradientEngine.bTEST_Enable);
 			//ImGui::Checkbox("Enable", &TEST_Mode); 
 
-			if (gradientEngine.TEST_Mode)
+			if (gradientEngine.bTEST_Enable)
 			{
 				ImGui::SameLine();
 				ImGui::Checkbox("LFO", &gradientEngine.bTEST_LFO_Mode);
@@ -3970,9 +4011,9 @@ void ofxColorManager::gui_Gradient()
 			// ctrl in/out
 			//ImGui::PushItemWidth(_w50);
 
-			ofxImGui::AddParameter(gradientEngine.tweakExp);
+			ofxImGui::AddParameter(gradientEngine.expTweak);
 
-			ImGui::Dummy(ImVec2(0, 2));
+			//ImGui::Dummy(ImVec2(0, 2));
 
 			if (ofxImGui::AddParameter(gradientEngine.pickIn))
 			{
@@ -3984,7 +4025,7 @@ void ofxColorManager::gui_Gradient()
 
 			//-
 
-			ImGui::Dummy(ImVec2(0, 10));
+			ImGui::Dummy(ImVec2(0, 5));
 			ImGui::PushItemWidth(_w);
 			if (ofxSurfingHelpers::AddBigToggle(gradientEngine.bEditLayout, _w, 0.5 * _h))
 			{
@@ -4007,7 +4048,7 @@ void ofxColorManager::gui_Demo()
 	hh = PANEL_WIDGETS_HEIGHT;
 	ImGui::SetWindowSize(ImVec2(ww, hh));
 	ImGuiWindowFlags flagsw;
-	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : 0;
+	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
 
 	//-
 
@@ -4686,7 +4727,7 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 
 				//-
 
-				theory_Name = theory_Types_G1[i].getName();
+				name_Theory = theory_Types_G1[i].getName();
 
 				//last_Index_Theory = i;
 				last_Index_Theory.setWithoutEventNotifications(i);
@@ -4780,7 +4821,7 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 
 			//-
 
-			theory_Name = types_Theory_G2[i].getName();
+			name_Theory = types_Theory_G2[i].getName();
 
 			//last_Index_Theory = i + NUM_COLOR_THEORY_TYPES_G1;
 			last_Index_Theory.setWithoutEventNotifications(i + NUM_COLOR_THEORY_TYPES_G1);
@@ -5002,7 +5043,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 		//if (SHOW_Presets) 
 		//{
-		//	textInput_New = theory_Name;
+		//	textInput_New = name_Theory;
 		//	MODE_NewPreset = true;
 		//}
 	}
@@ -5418,7 +5459,7 @@ void ofxColorManager::Changed_Range(ofAbstractParameter &e)
 
 					//index selected
 					last_Index_Range = i;
-					range_Name = types_Range[i].getName();
+					name_Range = types_Range[i].getName();
 					txt_lineActive[0] = false;//preset name
 					txt_lineActive[1] = false;//lover name
 					txt_lineActive[2] = false;//theory name
@@ -5542,7 +5583,7 @@ void ofxColorManager::refresh_Range_AutoUpdate()
 		int i = last_Index_Range;
 
 		types_Range[i] = true;
-		range_Name = types_Range[i].getName();
+		name_Range = types_Range[i].getName();
 		txt_lineActive[0] = false;//preset name
 		txt_lineActive[1] = false;//lover name
 		txt_lineActive[2] = false;//theory name
@@ -5552,7 +5593,7 @@ void ofxColorManager::refresh_Range_AutoUpdate()
 		//// presets 
 		//if (SHOW_Presets && SHOW_Range) 
 		//{
-		//	textInput_New = range_Name;
+		//	textInput_New = name_Range;
 		//	MODE_NewPreset = true;
 		//}
 
@@ -6287,7 +6328,7 @@ void ofxColorManager::preset_Load(std::string p)
 	last_Index_Type = 0;
 
 	//--
-	
+
 	p = p + ".json";
 
 	// 1. load palette preset (target will be the above pointers) //TODO: should (late?) improve this..
