@@ -1633,18 +1633,18 @@ void ofxColorManager::gui_Theory()
 				//ie: even allways
 				float _szw, _szh;
 				_szh = _cSize;
-				float _ww = (numColors_Theory_G1 * _cSize) + ((numColors_Theory_G1 - 1) * _spc);
-				if (_total == numColors_Theory_G1)
+				float _ww = (numColors_Engines * _cSize) + (numColors_Engines * _spc) - _spc;//exact used zone
+				if (_total == numColors_Engines)
 				{
 					_szw = _cSize;
 				}
-				else if (_total > numColors_Theory_G1)
+				else if (_total > numColors_Engines)
 				{
-					_szw = _ww / _total;
+					_szw = _ww / _total - _spc;
 				}
-				else if (_total < numColors_Theory_G1)
+				else if (_total < numColors_Engines)
 				{
-					_szw = _ww / _total;
+					_szw = _ww / _total - _spc;
 				}
 
 				if (ImGui::ColorButton("##ColorButtonTheory_G1",
@@ -1768,18 +1768,18 @@ void ofxColorManager::gui_Theory()
 				//ie: even allways
 				float _szw, _szh;
 				_szh = _cSize;
-				float _ww = (numColors_Theory_G2 * _cSize) + ((numColors_Theory_G2 - 1) * _spc);
-				if (_total == numColors_Theory_G2)
+				float _ww = (numColors_Engines * _cSize) + (numColors_Engines * _spc) - _spc;//exact used zone
+				if (_total == numColors_Engines)
 				{
 					_szw = _cSize;
 				}
-				else if (_total > numColors_Theory_G2)
+				else if (_total > numColors_Engines)
 				{
-					_szw = _ww / _total;
+					_szw = _ww / _total - _spc;
 				}
-				else if (_total < numColors_Theory_G2)
+				else if (_total < numColors_Engines)
 				{
-					_szw = _ww / _total;
+					_szw = _ww / _total - _spc;
 				}
 
 				// colors G2 
