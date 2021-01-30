@@ -950,6 +950,33 @@ void ofxColorManager::update(ofEventArgs & args)
 
 	//--
 
+	// auto pilot browse presets
+
+	if (auto_pilot && (ofGetElapsedTimeMillis() - auto_pilot_timer > 1000))
+	{
+		auto_pilot_timer = ofGetElapsedTimeMillis();
+
+		{
+			if (last_Index_Preset < files.size() - 1)
+			{
+				last_Index_Preset++;
+			}
+			else if (last_Index_Preset == files.size() - 1) {//cycle
+				last_Index_Preset = 0;
+			}
+
+			if (last_Index_Preset < files.size() && files.size() > 0)
+			{
+				PRESET_Name = files_Names[last_Index_Preset];
+				ofLogNotice(__FUNCTION__) << "PRESET_Name: [" + ofToString(last_Index_Preset) + "] " << PRESET_Name;
+
+				preset_Load(PRESET_Name);
+			}
+		}
+	}
+
+	//--
+
 	// export
 	if (bExportFlag)
 	{
@@ -3456,6 +3483,10 @@ void ofxColorManager::gui_Background()
 //--------------------------------------------------------------
 void ofxColorManager::gui_Presets()
 {
+	////static int t_auto_pilot = ofGetEll;
+	//static bool auto_pilot = false;
+	//bool bPilotDo = false;
+
 	static bool auto_resize = true;
 	float ww, hh;
 	ww = PANEL_WIDGETS_WIDTH;
@@ -3495,6 +3526,11 @@ void ofxColorManager::gui_Presets()
 		//-
 
 		// palette colors mini preview
+
+		if (ofxImGui::AddParameter(auto_pilot))
+		{
+
+		}
 
 		ImGui::Dummy(ImVec2(0, 5));
 

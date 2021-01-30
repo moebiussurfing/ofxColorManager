@@ -7,10 +7,6 @@
 
 TODO:
 
-+ fix next preset exports 3 times!! export button works: once
-+ fix .json on preset loader
-+ add palettize gradient receiver bool
-
 + fix colour lovers growing gui
 
 + demo 2: svg demo resizer shape using scalable draggable rect
@@ -244,6 +240,9 @@ private:
 	//--
 
 private:
+	ofParameter<bool> auto_pilot{ "autoPilot", false};
+	int auto_pilot_timer;
+
 	ofParameter<bool> SHOW_ImGui{ "ImGui", true };
 
 	ofParameter<bool> ENABLE_HelpInfo;
