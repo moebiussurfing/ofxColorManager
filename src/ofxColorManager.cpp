@@ -548,7 +548,7 @@ void ofxColorManager::setup()
 
 	//-
 
-	bRandomColor.set("RANDOM", false);
+	bRandomColor.set("RANDOMcr", false);
 	bAddColor.set("ADD", false);
 	bEditPalette.set("EDIT", false);
 	bRemoveColor.set("REMOVE", false);
@@ -1885,7 +1885,6 @@ void ofxColorManager::gui_PaletteEditor()
 	ImGui::SetWindowSize(ImVec2(ww, hh));
 	ImGuiWindowFlags flagsw;
 	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
-	//flagsw = false;
 
 	//-
 
@@ -1915,11 +1914,9 @@ void ofxColorManager::gui_PaletteEditor()
 			enum Mode
 			{
 				Mode_Copy,
-				//Mode_Move,
 				Mode_Swap
 			};
 			static int mode = 1;
-			//static int mode = 2;
 
 			//--
 
@@ -2005,7 +2002,6 @@ void ofxColorManager::gui_PaletteEditor()
 					{
 						ImGui::SetDragDropPayload("DND_DEMO_CELL", &n, sizeof(int));
 						if (mode == Mode_Copy) { ImGui::Text("Copy %s", ofToString(n).c_str()); }
-						//if (mode == Mode_Move) { ImGui::Text("Move %s", ofToString(n).c_str()); }
 						if (mode == Mode_Swap) { ImGui::Text("Swap %s", ofToString(n).c_str()); }
 						ImGui::EndDragDropSource();
 					}
@@ -2086,20 +2082,19 @@ void ofxColorManager::gui_PaletteEditor()
 					}
 					ImGui::SameLine();
 
-					////TODO: not working
-					//if (ImGui::Button("RND-Arrange", ImVec2(_w50, 0.5 * BUTTON_BIG_HEIGHT)))
-					//{
-					//	//auto rng = std::default_random_engine{};
-					//	//std::shuffle(std::begin(palette), std::end(palette), rng);
-					//	srand(unsigned(time(NULL)));
-					//	std::shuffle(palette.begin(), palette.end(), std::random_device());
-					//	myDEMO2.setPaletteColors(palette);
-					//	last_Index_ColorPalette = 0;
-					//	build_Gradient();
-					//}
+					//TODO: not working
+					if (ImGui::Button("RANDOMpt", ImVec2(_w50 * 0.5, 0.5 * BUTTON_BIG_HEIGHT)))
+					{
+						//auto rng = std::default_random_engine{};
+						//std::shuffle(std::begin(palette), std::end(palette), rng);
+						srand(unsigned(time(NULL)));
+						std::shuffle(palette.begin(), palette.end(), std::random_device());
+						myDEMO2.setPaletteColors(palette);
+						gradientEngine.build_FromPaleletteRef(palette);
+						last_Index_ColorPalette = 0;
+					}
 
 					if (ImGui::RadioButton("Copy", mode == Mode_Copy)) { mode = Mode_Copy; } ImGui::SameLine();
-					//if (ImGui::RadioButton("Move", mode == Mode_Move)) { mode = Mode_Move; } ImGui::SameLine();
 					if (ImGui::RadioButton("Swap", mode == Mode_Swap)) { mode = Mode_Swap; }
 				}
 			}
@@ -2136,12 +2131,9 @@ void ofxColorManager::gui_PaletteEditor()
 					}
 
 					//ofxImGui::AddParameter(bAutoResizePalette);//not works
+					ImGui::Checkbox("Auto-resize", &auto_resize);
 				}
 			}
-
-			//--
-
-			//ImGui::Checkbox("Auto-resize", &auto_resize);
 		}
 	}
 	ofxImGui::EndWindow(mainSettings);
