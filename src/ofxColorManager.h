@@ -236,7 +236,7 @@ private:
 	ofParameter<bool> SHOW_ImGui{ "ImGui", true };
 
 	ofParameter<bool> ENABLE_HelpInfo;
-	std::string infoHelp;//key commands
+	std::string helpInfo;//key commands
 
 private:
 	ofParameter<bool> ENABLE_keys{ "KEYS", true };
@@ -290,8 +290,9 @@ private:
 	// app modes
 	ofParameter<int> AppMode;
 	ofParameter<std::string> AppMode_name;
-	enum Element { Element_0, Element_1, Element_2, Element_3, Element_4, Element_5, Element_COUNT };
-	const char* element_names[Element_COUNT] = { "PRESETS", "THEORY", "RANGE", "LOVERS", "PICTURE", "GRADIENT" };
+#define NUM_APP_MODES 5
+	enum Element { Element_0, Element_1, Element_2, Element_3, Element_4, Element_COUNT };
+	const char* element_names[Element_COUNT] = { "NONE", "THEORY", "RANGE", "LOVERS", "PICTURE"};
 	int current_element = Element_0;
 
 	//--

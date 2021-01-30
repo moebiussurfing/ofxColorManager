@@ -235,38 +235,39 @@ ofxColorManager::ofxColorManager()
 
 	//--
 
-	infoHelp = "HELP INFO\n\n";
-	infoHelp += "H                   HELP\n";
-	//infoHelp += "K                   KEYS\n";
-	infoHelp += "G                   GUI\n";
-	infoHelp += "\n";
-	infoHelp += "TAB                 APP MODES\n";
-	infoHelp += "SPACE               NEXT\n";
-	infoHelp += "Down|Up             NEXT/PREVIOUS\n";
-	infoHelp += "+|-                 AMOUNT COLORS\n";
-	infoHelp += "\n";
-	//infoHelp += "\n";
-	infoHelp += "F9                  PRESETS\n";
-	infoHelp += "F10                 GRADIENT\n";
-	infoHelp += "PANELS\n";
-	infoHelp += "F1                  PALETTE\n";
-	infoHelp += "F2                  PICKER\n";
-	infoHelp += "F3                  BACKGROUND\n";
-	infoHelp += "F4                  LIBRARY\n";
-	infoHelp += "\n";
-	infoHelp += "ENGINES\n";
-	infoHelp += "F5                  THEORY\n";
-	infoHelp += "F6                  RANGE\n";
-	infoHelp += "F7                  LOVERS\n";
-	infoHelp += "F8                  PICTURE\n";
-	infoHelp += "\n";
-	infoHelp += "F11                 HIDE ALL\n";
-	infoHelp += "\n";
-	infoHelp += "TEST\n";
-	infoHelp += "D                   DEMO SCENE\n";
-	infoHelp += "T                   GRADIENT TEST\n";
-	infoHelp += "m                   MINI PREVIEW\n";
-	infoHelp += "M                   DEBUG\n";
+	helpInfo = "HELP INFO\n\n";
+	helpInfo += "H                   HELP\n";
+	//helpInfo += "K                   KEYS\n";
+	helpInfo += "G                   GUI\n";
+	helpInfo += "\n";
+	helpInfo += "SPACE               NEXT\n";
+	helpInfo += "Down|Up             NEXT|PREVIOUS\n";
+	helpInfo += "-|+                 AMOUNT COLORS\n";
+	helpInfo += "\n";
+	//helpInfo += "\n";
+	helpInfo += "PANELS\n";
+	helpInfo += "F1                  PRESETS\n";
+	helpInfo += "F2                  PALETTE COLORS\n";
+	helpInfo += "F3                  PALETTE EDITOR\n";
+	helpInfo += "F4                  PICKER\n";
+	helpInfo += "F5                  BACKGROUND\n";
+	helpInfo += "F6                  LIBRARY\n";
+	helpInfo += "F7                  GRADIENT\n";
+	helpInfo += "\n";
+	helpInfo += "ENGINES\n";
+	helpInfo += "TAB                 APP MODES\n";
+	helpInfo += "                    THEORY\n";
+	helpInfo += "                    RANGE\n";
+	helpInfo += "                    LOVERS\n";
+	helpInfo += "                    PICTURE\n";
+	helpInfo += "\n";
+	helpInfo += "F11                 HIDE ALL\n";
+	helpInfo += "\n";
+	//helpInfo += "TEST\n";
+	//helpInfo += "D                   DEMO SCENE\n";
+	//helpInfo += "T                   GRADIENT TEST\n";
+	//helpInfo += "m                   MINI PREVIEW\n";
+	//helpInfo += "M                   DEBUG\n";
 }
 
 //--------------------------------------------------------------
@@ -712,7 +713,7 @@ void ofxColorManager::setup()
 
 	//------------------------------------------------------
 
-	AppMode.set("AppMode", 0, 0, 5);
+	AppMode.set("AppMode", 0, 0, NUM_APP_MODES - 1);
 	AppMode_name.set("", "");
 	AppMode.setSerializable(false);
 
@@ -1361,7 +1362,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 	// help info
 	if (ENABLE_HelpInfo)
 	{
-		std::string str = infoHelp;
+		std::string str = helpInfo;
 		ofPushMatrix();
 		{
 			//center box
@@ -1564,9 +1565,10 @@ void ofxColorManager::gui_Theory()
 			ofxImGui::AddParameter(bAuto_Theory_FromPicker);
 			ofxImGui::AddParameter(bAuto_Build_Palette);
 			//ofxImGui::AddParameter(analogSpread);
-			// layout
-			ImGui::Dummy(ImVec2(0, 5));
-			ImGui::Checkbox("Auto-resize", &auto_resize);
+
+			//// layout
+			//ImGui::Dummy(ImVec2(0, 5));
+			//ImGui::Checkbox("Auto-resize", &auto_resize);
 		}
 
 		//--
@@ -1634,7 +1636,7 @@ void ofxColorManager::gui_Theory()
 				float _szw, _szh;
 				_szh = _cSize;
 				float _ww = (numColors_Engines * _cSize) + (numColors_Engines * _spc) - _spc;//exact used zone
-				if (_total == numColors_Engines)
+				if (_total == numColors_Engines)//total is the effective amount
 				{
 					_szw = _cSize;
 				}
@@ -1769,7 +1771,7 @@ void ofxColorManager::gui_Theory()
 				float _szw, _szh;
 				_szh = _cSize;
 				float _ww = (numColors_Engines * _cSize) + (numColors_Engines * _spc) - _spc;//exact used zone
-				if (_total == numColors_Engines)
+				if (_total == numColors_Engines)//total is the effective amount
 				{
 					_szw = _cSize;
 				}
@@ -4865,39 +4867,57 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 		switch (AppMode)
 		{
-			// presets
+			//	// presets
+			//case 0:
+			//	SHOW_Presets = true;
+			//	if (SHOW_Presets)
+			//	{
+			//		//SHOW_UserPaletteFloating = false;
+			//		//SHOW_Picker = false;
+			//		//SHOW_Library = false;
+			//		//SHOW_BackGround = false;
+
+			//		SHOW_Theory = false;
+			//		SHOW_Range = false;
+			//		SHOW_ColourLovers = false;
+			//		SHOW_Quantizer = false;
+			//		//gradientEngine.SHOW_Gradient = false;
+			//	}
+			//	break;
+
+		// none
 		case 0:
-			SHOW_Presets = true;
-			if (SHOW_Presets)
-			{
-				//SHOW_UserPaletteFloating = false;
-				//SHOW_Picker = false;
-				//SHOW_Library = false;
-				//SHOW_BackGround = false;
+		{
+			SHOW_Theory = false;
+			SHOW_Range = false;
+			SHOW_ColourLovers = false;
+			SHOW_Quantizer = false;
 
-				SHOW_Theory = false;
-				SHOW_Range = false;
-				SHOW_ColourLovers = false;
-				SHOW_Quantizer = false;
-				//gradientEngine.SHOW_Gradient = false;
-			}
-			break;
+			//SHOW_UserPaletteFloating = false;
+			//SHOW_UserPaletteEditor = false;
+			//SHOW_Picker = false;
+			//SHOW_Gradient = false;
+			//SHOW_Library = false;
+			//SHOW_BackGround = false;
+			//SHOW_Presets = false;
+		}
+		break;
 
-			// theory
+		// theory
 		case 1:
 			SHOW_Theory = true;
 			if (SHOW_Theory)
 			{
-				//SHOW_UserPaletteFloating = false;
-				//SHOW_Picker = false;
-				//SHOW_Library = false;
-				//SHOW_BackGround = false;
-
 				//SHOW_Theory = false;
 				SHOW_Range = false;
 				SHOW_ColourLovers = false;
 				SHOW_Quantizer = false;
 				SHOW_Gradient = false;
+
+				//SHOW_UserPaletteFloating = false;
+				//SHOW_Picker = false;
+				//SHOW_Library = false;
+				//SHOW_BackGround = false;
 			}
 			break;
 
@@ -4906,16 +4926,16 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			SHOW_Range = true;
 			if (SHOW_Range)
 			{
-				//SHOW_UserPaletteFloating = false;
-				//SHOW_Picker = false;
-				//SHOW_Library = false;
-				//SHOW_BackGround = false;
-
 				SHOW_Theory = false;
 				//SHOW_Range = false;
 				SHOW_ColourLovers = false;
 				SHOW_Quantizer = false;
 				SHOW_Gradient = false;
+
+				//SHOW_UserPaletteFloating = false;
+				//SHOW_Picker = false;
+				//SHOW_Library = false;
+				//SHOW_BackGround = false;
 			}
 			break;
 
@@ -4924,16 +4944,16 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			SHOW_ColourLovers = true;
 			if (SHOW_ColourLovers)
 			{
-				//SHOW_UserPaletteFloating = false;
-				//SHOW_Picker = false;
-				//SHOW_Library = false;
-				//SHOW_BackGround = false;
-
 				SHOW_Theory = false;
 				SHOW_Range = false;
 				//SHOW_ColourLovers = false;
 				SHOW_Quantizer = false;
 				SHOW_Gradient = false;
+
+				//SHOW_UserPaletteFloating = false;
+				//SHOW_Picker = false;
+				//SHOW_Library = false;
+				//SHOW_BackGround = false;
 			}
 			break;
 
@@ -4942,36 +4962,36 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			SHOW_Quantizer = true;
 			if (SHOW_Quantizer)
 			{
-				//SHOW_UserPaletteFloating = false;
-				//SHOW_Picker = false;
-				//SHOW_Library = false;
-				//SHOW_BackGround = false;
-
 				SHOW_Theory = false;
 				SHOW_Range = false;
 				SHOW_ColourLovers = false;
 				//SHOW_Quantizer = false;
 				SHOW_Gradient = false;
-			}
-			break;
 
-			// gradient
-		case 5:
-			//SHOW_Gradient = true;
-			if (SHOW_Gradient)
-			{
 				//SHOW_UserPaletteFloating = false;
 				//SHOW_Picker = false;
 				//SHOW_Library = false;
 				//SHOW_BackGround = false;
-
-				SHOW_Theory = false;
-				SHOW_Range = false;
-				SHOW_ColourLovers = false;
-				SHOW_Quantizer = false;
-				//SHOW_Gradient =  false;
 			}
 			break;
+
+		//	// gradient
+		//case 5:
+		//	//SHOW_Gradient = true;
+		//	if (SHOW_Gradient)
+		//	{
+		//		//SHOW_UserPaletteFloating = false;
+		//		//SHOW_Picker = false;
+		//		//SHOW_Library = false;
+		//		//SHOW_BackGround = false;
+
+		//		SHOW_Theory = false;
+		//		SHOW_Range = false;
+		//		SHOW_ColourLovers = false;
+		//		SHOW_Quantizer = false;
+		//		//SHOW_Gradient =  false;
+		//	}
+		//	break;
 		}
 	}
 
@@ -5651,6 +5671,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		else if (key == 'g')
 		{
 			setToggleVisible();
+			// workflowh
+			if (!SHOW_ALL_GUI) ENABLE_HelpInfo = false;
 		}
 		// mini preview
 		else if (key == 'm')
@@ -5961,25 +5983,47 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 		//-
 
-		else if (key == OF_KEY_F9)//presets
+		else if (key == OF_KEY_F1)//presets
 		{
 			SHOW_Presets = !SHOW_Presets;
 
-			if (SHOW_Presets) {
-				SHOW_UserPaletteFloating = false;
-				SHOW_UserPaletteEditor = false;
-				SHOW_Picker = false;
-				SHOW_Library = false;
-				SHOW_BackGround = false;
-				SHOW_Theory = false;
-				SHOW_Range = false;
-				SHOW_ColourLovers = false;
-				SHOW_Quantizer = false;
-				SHOW_Gradient = false;
-			}
+			//if (SHOW_Presets) 
+			//{
+			//	SHOW_UserPaletteFloating = false;
+			//	SHOW_UserPaletteEditor = false;
+			//	SHOW_Picker = false;
+			//	SHOW_Library = false;
+			//	SHOW_BackGround = false;
+			//	SHOW_Theory = false;
+			//	SHOW_Range = false;
+			//	SHOW_ColourLovers = false;
+			//	SHOW_Quantizer = false;
+			//	SHOW_Gradient = false;
+			//}
+		}
+		else if (key == OF_KEY_F2)//floating palette
+		{
+			SHOW_UserPaletteFloating = !SHOW_UserPaletteFloating;
+		}
+		else if (key == OF_KEY_F3)//palette editor
+		{
+			SHOW_UserPaletteEditor = !SHOW_UserPaletteEditor;
 		}
 
-		else if (key == OF_KEY_F10)//curve
+		else if (key == OF_KEY_F4)//picker
+		{
+			SHOW_Picker = !SHOW_Picker;
+		}
+		else if (key == OF_KEY_F5)//bg
+		{
+			SHOW_BackGround = !SHOW_BackGround;
+		}
+		else if (key == OF_KEY_F6)//library
+		{
+			SHOW_Library = !SHOW_Library;
+		}
+
+		else if (key == OF_KEY_F7)//curve
 		{
 			SHOW_Gradient = !SHOW_Gradient;
 			//gradientEngine.SHOW_Gradient = !gradientEngine.SHOW_Gradient;
@@ -6000,47 +6044,24 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 		//-
 
-		// basic panels 
-
-		else if (key == OF_KEY_F1)//palette
-		{
-			SHOW_UserPaletteEditor = !SHOW_UserPaletteEditor;
-			SHOW_UserPaletteFloating = SHOW_UserPaletteEditor;
-			//SHOW_UserPaletteFloating = !SHOW_UserPaletteFloating;
-		}
-		else if (key == OF_KEY_F2)//picker
-		{
-			SHOW_Picker = !SHOW_Picker;
-		}
-		else if (key == OF_KEY_F3)//bg
-		{
-			SHOW_BackGround = !SHOW_BackGround;
-		}
-		else if (key == OF_KEY_F4)//library
-		{
-			SHOW_Library = !SHOW_Library;
-		}
-
-		//-
-
 		// engines
 
-		else if (key == OF_KEY_F5)//theory
-		{
-			SHOW_Theory = !SHOW_Theory;
-		}
-		else if (key == OF_KEY_F6)//range
-		{
-			SHOW_Range = !SHOW_Range;
-		}
-		else if (key == OF_KEY_F7)//lovers
-		{
-			SHOW_ColourLovers = !SHOW_ColourLovers;
-		}
-		else if (key == OF_KEY_F8)//quantizer
-		{
-			SHOW_Quantizer = !SHOW_Quantizer;
-		}
+		//else if (key == OF_KEY_F5)//theory
+		//{
+		//	SHOW_Theory = !SHOW_Theory;
+		//}
+		//else if (key == OF_KEY_F6)//range
+		//{
+		//	SHOW_Range = !SHOW_Range;
+		//}
+		//else if (key == OF_KEY_F7)//lovers
+		//{
+		//	SHOW_ColourLovers = !SHOW_ColourLovers;
+		//}
+		//else if (key == OF_KEY_F8)//quantizer
+		//{
+		//	SHOW_Quantizer = !SHOW_Quantizer;
+		//}
 
 		else if (key == OF_KEY_F11)//all off
 		{
