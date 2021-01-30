@@ -548,7 +548,7 @@ void ofxColorManager::setup()
 
 	//-
 
-	bRandomColor.set("RANDOMcr", false);
+	bRandomColor.set("RANDOMc", false);
 	bAddColor.set("ADD", false);
 	bEditPalette.set("EDIT", false);
 	bRemoveColor.set("REMOVE", false);
@@ -1875,9 +1875,7 @@ void ofxColorManager::gui_Theory()
 //--------------------------------------------------------------
 void ofxColorManager::gui_PaletteEditor()
 {
-	static bool auto_resize = false;
-	//static bool auto_resize = true;
-	//bool auto_resize = bAutoResizePalette.get();
+	static bool auto_resize = true;
 
 	float ww, hh;
 	ww = PANEL_WIDGETS_WIDTH;
@@ -1891,12 +1889,11 @@ void ofxColorManager::gui_PaletteEditor()
 	if (ofxImGui::BeginWindow("PALETTE EDITOR", mainSettings, flagsw))
 	{
 		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
-		float _w = ImGui::GetWindowContentRegionWidth() - 3 * _spc;
-		//float _w = PANEL_WIDGETS_WIDTH - 2 * _spc;
-		float _w50 = _w * 0.5;
+		float _w = ImGui::GetWindowContentRegionWidth() - 2 * _spc;
+		float _w50 = _w * 0.48;
 		float _h = BUTTON_BIG_HEIGHT;
 
-		ImGuiColorEditFlags _flags;
+		ImGuiColorEditFlags _flags = ImGuiColorEditFlags_None;
 
 		//--
 
@@ -1940,7 +1937,8 @@ void ofxColorManager::gui_PaletteEditor()
 					//----
 
 					int wb;
-					wb = (_w / _r) - (1.5 * _spc);
+					wb = (_w / _r) - (2.0f * _spc);
+					//wb = (_w / _r) - (1.5 * _spc);
 					//if (!bResponsive_Presets) wb = wb * scale_ColPalette.get();
 
 					//--
@@ -2047,21 +2045,21 @@ void ofxColorManager::gui_PaletteEditor()
 				ImGui::PopID();
 			}
 
+			ImGui::Dummy(ImVec2(0, 5));
+
 			//----
 
 			// edit
 
-			ImGui::Dummy(ImVec2(0, 5));
+			//ofxSurfingHelpers::AddBigToggle(bEditPalette, ww, _h * 0.5);
 			ofxSurfingHelpers::AddBigToggle(bEditPalette, _w, _h * 0.5);
 
 			if (bEditPalette)
 			{
 				ImGui::Dummy(ImVec2(0, 5));
-				//if (ImGui::CollapsingHeader("EDIT"))
 				{
 					ofxSurfingHelpers::AddBigButton(bAddColor, _w50, _h * 0.5); ImGui::SameLine();
 					ofxSurfingHelpers::AddBigButton(bRemoveColor, _w50, _h * 0.5);
-					//ofxSurfingHelpers::AddBigToggle(bEditPalette, _w50, _h * 0.5); 
 					ofxSurfingHelpers::AddBigToggle(bClearPalette, _w50, _h * 0.5);
 
 					if (bColor_HUE || bColor_SAT || bColor_BRG)
@@ -2074,16 +2072,15 @@ void ofxColorManager::gui_PaletteEditor()
 				//--
 
 				ImGui::Dummy(ImVec2(0, 5));
-				//if (ImGui::CollapsingHeader("ARRANGE"))
 				{
 					//flip
-					if (ofxSurfingHelpers::AddSmallButton(bFlipUserPalette, _w50 * 0.5, 0.5 * BUTTON_BIG_HEIGHT))
+					if (ofxSurfingHelpers::AddSmallButton(bFlipUserPalette, _w, 0.5 * BUTTON_BIG_HEIGHT))
 					{
 					}
-					ImGui::SameLine();
+					//ImGui::SameLine();
 
-					//TODO: not working
-					if (ImGui::Button("RANDOMpt", ImVec2(_w50 * 0.5, 0.5 * BUTTON_BIG_HEIGHT)))
+					//re arrenge
+					if (ImGui::Button("RANDOMp", ImVec2(_w, 0.5 * BUTTON_BIG_HEIGHT)))
 					{
 						//auto rng = std::default_random_engine{};
 						//std::shuffle(std::begin(palette), std::end(palette), rng);
@@ -2129,11 +2126,11 @@ void ofxColorManager::gui_PaletteEditor()
 
 						ImGui::InputFloat(scale_ColPalette.getName().c_str(), (float *)&scale_ColPalette.get(), 0.005f, 0.010);
 					}
-
-					//ofxImGui::AddParameter(bAutoResizePalette);//not works
-					ImGui::Checkbox("Auto-resize", &auto_resize);
 				}
 			}
+
+			//ofxImGui::AddParameter(bAutoResizePalette);//not works
+			ImGui::Checkbox("Auto-resize", &auto_resize);
 		}
 	}
 	ofxImGui::EndWindow(mainSettings);
@@ -2883,8 +2880,8 @@ void ofxColorManager::gui_Picker()
 
 			// 2. square
 
-			_flagw = ImGuiTreeNodeFlags_DefaultOpen;
-			//_flagw = ImGuiTreeNodeFlags_None;
+			//_flagw = ImGuiTreeNodeFlags_DefaultOpen;// open
+			_flagw = ImGuiTreeNodeFlags_None;// closed
 
 			if (ImGui::CollapsingHeader("SQUARE", _flagw))
 			{
@@ -5260,15 +5257,15 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 		if (bColor_HUE) {
 			_hue = ofRandom(color_HUE_0 - 128.f * color_HUE_Power, color_HUE_0 + 128.f * color_HUE_Power);
-			color_HUE = _hue;
+			color_HUE = ofClamp(_hue, 0, 255);
 		}
 		if (bColor_SAT) {
 			_sat = ofRandom(color_SAT_0 - 128.f * color_SAT_Power, color_SAT_0 + 128.f * color_SAT_Power);
-			color_SAT = _sat;
+			color_SAT = ofClamp(_sat, 0, 255); 
 		}
 		if (bColor_BRG) {
 			_brg = ofRandom(color_BRG_0 - 128.f * color_BRG_Power, color_BRG_0 + 128.f * color_BRG_Power);
-			color_BRG = _brg;
+			color_BRG = ofClamp(_brg, 0, 255);
 		}
 	}
 
