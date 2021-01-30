@@ -19,19 +19,10 @@ void ofxColorManager::build_Palette_Flip()
 
 	// workflow
 	refresh_Background();
-
 	// DEMO 2
 	myDEMO2.setPaletteColors(palette);
-
 	// DEMO 1
 	if (DEMO1_Test && !DEMO_Auto) myDEMO1.reStart();
-
-	// export
-	if (bAutoExportPreset)
-	{
-		ofLogNotice(__FUNCTION__) << "Auto EXPORT";
-		exportPalette();
-	}
 
 	//--
 
@@ -42,6 +33,15 @@ void ofxColorManager::build_Palette_Flip()
 	//--
 
 	refresh_Palette_TARGET(palette);
+
+	// export
+	if (bAutoExportPreset)
+	{
+		bExportFlag = true;
+
+		//ofLogNotice(__FUNCTION__) << "Auto EXPORT";
+		//exportPalette();
+	}
 }
 
 //--------------------------------------------------------------
@@ -95,19 +95,10 @@ void ofxColorManager::build_Palette_Engine()
 
 		// workflow
 		refresh_Background();
-
 		// DEMO 2
 		myDEMO2.setPaletteColors(palette);
-
 		// DEMO 1
 		if (DEMO1_Test && !DEMO_Auto) myDEMO1.reStart();
-
-		// export
-		if (bAutoExportPreset)
-		{
-			ofLogNotice(__FUNCTION__) << "Auto EXPORT";
-			exportPalette();
-		}
 
 		//--
 
@@ -119,12 +110,24 @@ void ofxColorManager::build_Palette_Engine()
 
 		// ofApp targets
 
+		// palette
 		refresh_Palette_TARGET(palette);
 
 		// name
 		if (name_TARGET != nullptr)
 		{
 			name_TARGET[0] = _name;
+		}
+
+		//--
+
+		// export
+		if (bAutoExportPreset)
+		{
+			bExportFlag = true;
+
+			//ofLogNotice(__FUNCTION__) << "Auto EXPORT";
+			//exportPalette();
 		}
 	}
 }
@@ -151,19 +154,17 @@ void ofxColorManager::build_Palette_Preset()
 
 	// workflow
 	refresh_Background();
-
 	// DEMO 2
 	myDEMO2.setPaletteColors(palette);
-
 	// DEMO 1
 	if (DEMO1_Test && !DEMO_Auto) myDEMO1.reStart();
 
-	// export
-	if (bAutoExportPreset)
-	{
-		ofLogNotice(__FUNCTION__) << "Auto EXPORT";
-		exportPalette();
-	}
+	//// export
+	//if (bAutoExportPreset)
+	//{
+	//	ofLogNotice(__FUNCTION__) << "Auto EXPORT";
+	//	//exportPalette();
+	//}
 
 	//--
 
@@ -240,8 +241,8 @@ ofxColorManager::ofxColorManager()
 	//helpInfo += "K                   KEYS\n";
 	helpInfo += "G                   GUI\n";
 	helpInfo += "\n";
-	helpInfo += "SPACE               NEXT\n";
-	helpInfo += "Down|Up             NEXT|PREVIOUS\n";
+	helpInfo += "SPACE               >>\n";
+	helpInfo += "Down|Up             BROWSE\n";
 	helpInfo += "-|+                 AMOUNT COLORS\n";
 	helpInfo += "\n";
 	//helpInfo += "\n";
@@ -317,10 +318,10 @@ void ofxColorManager::setup()
 	fontMedium.load(strFont, 28);
 	fontSmall.load(strFont, 22);
 
-	txt_lineActive[0] = false;
-	txt_lineActive[1] = false;
-	txt_lineActive[2] = false;
-	txt_lineActive[3] = false;
+	//txt_lineActive[0] = false;
+	//txt_lineActive[1] = false;
+	//txt_lineActive[2] = false;
+	//txt_lineActive[3] = false;
 	last_Index_Type = -1;
 
 	//-
@@ -385,10 +386,10 @@ void ofxColorManager::setup()
 
 	//--------------------------------------------------------------
 	listener_LoverName = colourLoversHelper.lastPaletteName.newListener([this](std::string &n) {
-		txt_lineActive[0] = false;//preset name
-		txt_lineActive[1] = true;//lover name
-		txt_lineActive[2] = false;//theory name
-		txt_lineActive[3] = false;//range name
+		//txt_lineActive[0] = false;//preset name
+		//txt_lineActive[1] = true;//lover name
+		//txt_lineActive[2] = false;//theory name
+		//txt_lineActive[3] = false;//range name
 		last_Index_Type = 1;
 
 		ofLogNotice("colourLoversHelper > Name Palette: ") << n;
@@ -945,6 +946,25 @@ void ofxColorManager::startup()
 //--------------------------------------------------------------
 void ofxColorManager::update(ofEventArgs & args)
 {
+	if (ofGetFrameNum() % int(60 * 1.0) == 0) ofLog();//timer spaced
+
+	//--
+
+	// export
+	if (bExportFlag)
+	{
+		bExportFlag = false;
+
+		// export
+		if (bAutoExportPreset)
+		{
+			ofLogNotice(__FUNCTION__) << "Auto EXPORT";
+			exportPalette();
+		}
+	}
+
+	//--
+
 	// gradient
 	gradientEngine.update();
 
@@ -1027,6 +1047,17 @@ void ofxColorManager::update(ofEventArgs & args)
 		ofLogNotice(__FUNCTION__) << "  >  bUpdated_Palette_BACK : " << bUpdated_Palette_BACK;
 
 		build_Palette_Engine();
+
+		//--
+
+		// export
+		if (bAutoExportPreset)
+		{
+			bExportFlag = true;
+
+			//ofLogNotice(__FUNCTION__) << "Auto EXPORT";
+			//exportPalette();
+		}
 	}
 
 	//----
@@ -3685,7 +3716,7 @@ void ofxColorManager::gui_Presets()
 					ofLogNotice(__FUNCTION__) << "EXPORT";
 					//path_Folder_ExportColor_Custom = ;
 
-					exportPalette();
+					//exportPalette();
 
 					ImGui::CloseCurrentPopup();
 				}
@@ -3706,9 +3737,10 @@ void ofxColorManager::gui_Presets()
 				ImGui::SameLine();
 				if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
 			}
-			else {
-				exportPalette();
-			}
+			//else
+			//{
+			//	//exportPalette();
+			//}
 
 			ImGui::EndPopup();
 		}
@@ -4251,6 +4283,15 @@ void ofxColorManager::palette_FromTheory(int p)
 	//--
 
 	//refresh_Palette_TARGET(palette);
+
+	//--
+
+	//// export
+	//if (bAutoExportPreset)
+	//{
+	//	ofLogNotice(__FUNCTION__) << "Auto EXPORT";
+	//	exportPalette();
+	//}
 }
 
 //--------------------------------------------------------------
@@ -4858,34 +4899,17 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		//	AppMode.getMax());
 
 		//cycle
-		if (AppMode > AppMode.getMax()) AppMode = AppMode.getMin();
-		else if (AppMode < 0) AppMode = AppMode.getMax();
-
-		if (current_element != AppMode) current_element = AppMode.get();
-
+		if (AppMode > AppMode.getMax())
+			AppMode.setWithoutEventNotifications(AppMode.getMin());
+		else if (AppMode < 0)
+			AppMode.setWithoutEventNotifications(AppMode.getMax());
+		if (current_element != AppMode)
+			current_element = AppMode.get();
 		AppMode_name = ofToString(element_names[AppMode.get()]);
 
-		switch (AppMode)
+		switch (AppMode.get())
 		{
-			//	// presets
-			//case 0:
-			//	SHOW_Presets = true;
-			//	if (SHOW_Presets)
-			//	{
-			//		//SHOW_UserPaletteFloating = false;
-			//		//SHOW_Picker = false;
-			//		//SHOW_Library = false;
-			//		//SHOW_BackGround = false;
-
-			//		SHOW_Theory = false;
-			//		SHOW_Range = false;
-			//		SHOW_ColourLovers = false;
-			//		SHOW_Quantizer = false;
-			//		//gradientEngine.SHOW_Gradient = false;
-			//	}
-			//	break;
-
-		// none
+			// none
 		case 0:
 		{
 			SHOW_Theory = false;
@@ -4905,93 +4929,43 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 		// theory
 		case 1:
+		{
 			SHOW_Theory = true;
-			if (SHOW_Theory)
-			{
-				//SHOW_Theory = false;
-				SHOW_Range = false;
-				SHOW_ColourLovers = false;
-				SHOW_Quantizer = false;
-				SHOW_Gradient = false;
+			SHOW_Range = false;
+			SHOW_ColourLovers = false;
+			SHOW_Quantizer = false;
+		}
+		break;
 
-				//SHOW_UserPaletteFloating = false;
-				//SHOW_Picker = false;
-				//SHOW_Library = false;
-				//SHOW_BackGround = false;
-			}
-			break;
-
-			// range
+		// range
 		case 2:
+		{
 			SHOW_Range = true;
-			if (SHOW_Range)
-			{
-				SHOW_Theory = false;
-				//SHOW_Range = false;
-				SHOW_ColourLovers = false;
-				SHOW_Quantizer = false;
-				SHOW_Gradient = false;
+			SHOW_Theory = false;
+			SHOW_ColourLovers = false;
+			SHOW_Quantizer = false;
+		}
+		break;
 
-				//SHOW_UserPaletteFloating = false;
-				//SHOW_Picker = false;
-				//SHOW_Library = false;
-				//SHOW_BackGround = false;
-			}
-			break;
-
-			// lovers
+		// lovers
 		case 3:
+		{
 			SHOW_ColourLovers = true;
-			if (SHOW_ColourLovers)
-			{
-				SHOW_Theory = false;
-				SHOW_Range = false;
-				//SHOW_ColourLovers = false;
-				SHOW_Quantizer = false;
-				SHOW_Gradient = false;
+			SHOW_Theory = false;
+			SHOW_Range = false;
+			SHOW_Quantizer = false;
+		}
+		break;
 
-				//SHOW_UserPaletteFloating = false;
-				//SHOW_Picker = false;
-				//SHOW_Library = false;
-				//SHOW_BackGround = false;
-			}
-			break;
-
-			// quantizer
+		// quantizer
 		case 4:
+		{
 			SHOW_Quantizer = true;
-			if (SHOW_Quantizer)
-			{
-				SHOW_Theory = false;
-				SHOW_Range = false;
-				SHOW_ColourLovers = false;
-				//SHOW_Quantizer = false;
-				SHOW_Gradient = false;
-
-				//SHOW_UserPaletteFloating = false;
-				//SHOW_Picker = false;
-				//SHOW_Library = false;
-				//SHOW_BackGround = false;
-			}
-			break;
-
-		//	// gradient
-		//case 5:
-		//	//SHOW_Gradient = true;
-		//	if (SHOW_Gradient)
-		//	{
-		//		//SHOW_UserPaletteFloating = false;
-		//		//SHOW_Picker = false;
-		//		//SHOW_Library = false;
-		//		//SHOW_BackGround = false;
-
-		//		SHOW_Theory = false;
-		//		SHOW_Range = false;
-		//		SHOW_ColourLovers = false;
-		//		SHOW_Quantizer = false;
-		//		//SHOW_Gradient =  false;
-		//	}
-		//	break;
+			SHOW_Theory = false;
+			SHOW_Range = false;
+			SHOW_ColourLovers = false;
+		}
+		break;
 		}
 	}
 
@@ -5055,10 +5029,17 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	{
 		build_Palette_Engine();
 
-		txt_lineActive[0] = false;//preset name
-		txt_lineActive[1] = false;//lover name
-		txt_lineActive[2] = true;//theory name
-		txt_lineActive[3] = false;//range name
+		//// export
+		//if (bAutoExportPreset)
+		//{
+		//	ofLogNotice(__FUNCTION__) << "Auto EXPORT";
+		//	exportPalette();
+		//}
+
+		//txt_lineActive[0] = false;//preset name
+		//txt_lineActive[1] = false;//lover name
+		//txt_lineActive[2] = true;//theory name
+		//txt_lineActive[3] = false;//range name
 		last_Index_Type = 2;
 
 		//if (SHOW_Presets) 
@@ -5070,6 +5051,12 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 	else if (name == last_Index_Range.getName())
 	{
+		//// export
+		//if (bAutoExportPreset)
+		//{
+		//	ofLogNotice(__FUNCTION__) << "Auto EXPORT";
+		//	exportPalette();
+		//}
 	}
 
 	//----
@@ -5080,17 +5067,19 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	{
 		numColors_Theory_G1.setWithoutEventNotifications(numColors_Engines);
 		numColors_Theory_G2.setWithoutEventNotifications(numColors_Engines);
-		//numColors_Range.setWithoutEventNotifications(numColors_Engines);
 
-		//generate_Range(color_1_Range.get(), color_2_Range.get());
-		////auto create palette
-		//refresh_Range_AutoUpdate();
-
-		//numColors_Theory_G2 = numColors_Engines;
-		//numColors_Theory_G1 = numColors_Engines;
 		numColors_Range = numColors_Engines;
 
 		palettes_Resize();
+
+		////--
+
+		//// export
+		//if (bAutoExportPreset)
+		//{
+		//	ofLogNotice(__FUNCTION__) << "Auto EXPORT";
+		//	exportPalette();
+		//}
 	}
 
 	else if (name == numColors_Theory_G2.getName())
@@ -5157,31 +5146,15 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 	// panels
 
-	//lovers
-	if (name == SHOW_ColourLovers.getName())
-	{
-		colourLoversHelper.setEnableKeys(SHOW_ColourLovers);
-
-		if (SHOW_ColourLovers)
-		{
-			SHOW_Theory = false;
-			SHOW_Range = false;
-			SHOW_Quantizer = false;
-
-			// workflow
-			if (bEditPalette) bEditPalette = false;
-		}
-	}
-
 	//theory
-	else if (name == SHOW_Theory.getName())
+	if (name == SHOW_Theory.getName())
 	{
-		if (SHOW_Theory)
+		if (SHOW_Theory.get())
 		{
-			//SHOW_Theory = false;
-			SHOW_Range = false;
-			SHOW_ColourLovers = false;
-			SHOW_Quantizer = false;
+			AppMode = 1;
+			//SHOW_Range = false;
+			//SHOW_ColourLovers = false;
+			//SHOW_Quantizer = false;
 
 			// workflow
 			if (bEditPalette) bEditPalette = false;
@@ -5195,11 +5168,33 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	//range
 	else if (name == SHOW_Range.getName())
 	{
-		if (SHOW_Range)
+		if (SHOW_Range.get())
 		{
-			SHOW_Theory = false;
-			SHOW_ColourLovers = false;
-			SHOW_Quantizer = false;
+			AppMode = 2;
+			//SHOW_Theory = false;
+			//SHOW_ColourLovers = false;
+			//SHOW_Quantizer = false;
+
+			// workflow
+			if (bEditPalette) bEditPalette = false;
+			//--
+
+			// workflow
+			refresh_Pick_ToEngines();
+		}
+	}
+
+	//lovers
+	else if (name == SHOW_ColourLovers.getName())
+	{
+		colourLoversHelper.setEnableKeys(SHOW_ColourLovers);
+
+		if (SHOW_ColourLovers)
+		{
+			AppMode = 3;
+			//SHOW_Theory = false;
+			//SHOW_Range = false;
+			//SHOW_Quantizer = false;
 
 			// workflow
 			if (bEditPalette) bEditPalette = false;
@@ -5211,9 +5206,10 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	{
 		if (SHOW_Quantizer)
 		{
-			SHOW_Theory = false;
-			SHOW_Range = false;
-			SHOW_ColourLovers = false;
+			AppMode = 4;
+			//SHOW_Theory = false;
+			//SHOW_Range = false;
+			//SHOW_ColourLovers = false;
 
 			// workflow
 			if (bEditPalette) bEditPalette = false;
@@ -5223,30 +5219,6 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	}
 
 	//----
-
-	// panels
-
-#ifdef USE_COLOR_LOVERS
-	else if (name == "LOVERS")
-	{
-		colourLoversHelper.setVisible(SHOW_ColourLovers);
-		colourLoversHelper.setEnableKeys(SHOW_ColourLovers);
-	}
-#endif
-
-	else if (name == SHOW_BrowserColors.getName())
-	{
-		colorBrowser.setVisible(SHOW_BrowserColors);
-	}
-
-#ifdef USE_IMAGE_QUANTIZER
-	else if (name == SHOW_Quantizer.getName())
-	{
-		colorQuantizer.setActive(SHOW_Quantizer);
-	}
-#endif
-
-	//--
 
 	// editor
 
@@ -5334,46 +5306,6 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			palette_AddColor(color_Picked.get());
 		}
 	}
-
-	////----
-
-	//// gradient curve
-
-	//else if (name == bResetCurve.getName())
-	//{
-	//	if (bResetCurve)
-	//	{
-	//		bResetCurve = false;
-
-	//		curvesTool.clear();
-	//		curvesTool.add(ofVec2f(0, 0));
-	//		curvesTool.add(ofVec2f(127, 127));
-	//		curvesTool.add(ofVec2f(255, 255));
-
-	//		curve_Gradient_TEST_Prc = 0.5;
-	//		TEST_Mode = false;
-
-	//		// pick in to out
-	//		pickIn = 0.5;
-	//		curve_Slider_Pick.setup(pos_Pick_x, pos_Pick_y, pos_Pick_w, pos_Pick_h, 0, 1, pickIn, true, true);
-	//		curve_Slider_Pick.setPercent(pickIn);
-
-	//		// exp
-	//		tweakExp = 0.5;
-	//		curve_Slider_ExpTweak.setup(pos_Exp_x, pos_Exp_y, pos_Exp_w, pos_Exp_h, 0, 1, tweakExp, true, true);
-	//		curve_Slider_ExpTweak.setPercent(tweakExp);
-	//	}
-	//}
-
-	//else if (name == gradient_HardMode.getName())
-	//{
-	//	gradient.setHardMode(gradient_HardMode);
-	//}
-
-	//else if (name == AutoSet_Background_FromGradient.getName())
-	//{
-	//	if (AutoSet_Background_FromGradient) AutoSet_BackGround_Color = true;
-	//}
 
 	//----
 
@@ -5480,10 +5412,10 @@ void ofxColorManager::Changed_Range(ofAbstractParameter &e)
 					//index selected
 					last_Index_Range = i;
 					name_Range = types_Range[i].getName();
-					txt_lineActive[0] = false;//preset name
-					txt_lineActive[1] = false;//lover name
-					txt_lineActive[2] = false;//theory name
-					txt_lineActive[3] = true;//range name
+					//txt_lineActive[0] = false;//preset name
+					//txt_lineActive[1] = false;//lover name
+					//txt_lineActive[2] = false;//theory name
+					//txt_lineActive[3] = true;//range name
 					last_Index_Type = 3;
 
 					//-
@@ -5589,6 +5521,17 @@ void ofxColorManager::palette_FromRange(int index)
 
 		// workflow
 		refresh_Background();
+
+		//--
+
+		// export
+		if (bAutoExportPreset)
+		{
+			bExportFlag = true;
+
+			//ofLogNotice(__FUNCTION__) << "Auto EXPORT";
+			//exportPalette();
+		}
 	}
 }
 
@@ -5604,10 +5547,10 @@ void ofxColorManager::refresh_Range_AutoUpdate()
 
 		types_Range[i] = true;
 		name_Range = types_Range[i].getName();
-		txt_lineActive[0] = false;//preset name
-		txt_lineActive[1] = false;//lover name
-		txt_lineActive[2] = false;//theory name
-		txt_lineActive[3] = true;//range name
+		//txt_lineActive[0] = false;//preset name
+		//txt_lineActive[1] = false;//lover name
+		//txt_lineActive[2] = false;//theory name
+		//txt_lineActive[3] = true;//range name
 		last_Index_Type = 3;
 
 		//// presets 
@@ -6342,10 +6285,10 @@ void ofxColorManager::preset_Load(std::string p)
 
 	//--
 
-	txt_lineActive[0] = true;//preset name
-	txt_lineActive[1] = false;//lover name
-	txt_lineActive[2] = false;//theory name
-	txt_lineActive[3] = false;//range name
+	//txt_lineActive[0] = true;//preset name
+	//txt_lineActive[1] = false;//lover name
+	//txt_lineActive[2] = false;//theory name
+	//txt_lineActive[3] = false;//range name
 	last_Index_Type = 0;
 
 	//--
@@ -6396,6 +6339,17 @@ void ofxColorManager::preset_Load(std::string p)
 	//--
 
 	build_Palette_Preset();
+
+	//--
+
+	// export
+	if (bAutoExportPreset)
+	{
+		bExportFlag = true;
+
+		//ofLogNotice(__FUNCTION__) << "Auto EXPORT";
+		//exportPalette();
+	}
 }
 
 //--------------------------------------------------------------

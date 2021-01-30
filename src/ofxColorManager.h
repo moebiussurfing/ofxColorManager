@@ -165,6 +165,17 @@ private:
 	//TODO:
 	shared_ptr<ColorWheelScheme> _scheme;
 
+	bool bExportFlag = false;//flag to avoid multiple overflow of calls.. we read on update()
+
+	//TODO:
+	enum typeEngine
+	{
+		TYPE_PRESET = 0,
+		TYPE_LOVER,
+		TYPE_THEORY,
+		TYPE_RANGE,
+	};
+
 	//--
 
 public:
@@ -360,7 +371,7 @@ private:
 	ofTrueTypeFont fontMedium;
 	ofTrueTypeFont fontBig;
 	ofTrueTypeFont font;
-	bool txt_lineActive[4];//to help workflow of what's the last engine used...Not using now.
+	//bool txt_lineActive[4];//to help workflow of what's the last engine used...Not using now.
 
 	ofParameter<int> last_Index_Type{ "Last Type Index", -1, 0, 3 };//to help workflow of what's the last engine used...Not using now.
 	//0 preset name
