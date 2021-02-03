@@ -147,16 +147,19 @@ void DEMO_Svg::draw()
 
 	if (rectDgSvg.isEditing())
 	{
-		ofFill();
-		int fr = ofGetFrameNum() % 60;
-		ofSetColor(fr < 30 ? ofColor(255, 16) : (ofColor(0, 16)));
-		ofDrawRectangle(rectDgSvg);
+		////highlight
+		//ofFill();
+		//int fr = ofGetFrameNum() % 60;
+		//ofSetColor(fr < 30 ? ofColor(255, 16) : (ofColor(0, 16)));
+		//ofDrawRectangle(rectDgSvg);
 
-		//float _ratio = rectDgSvg.getHeight() / rectDgSvg.getHeight();
-		//scale = rectDgSvg.getY() / rSvgBounds.getY();
+		//-
 
 		rectDgSvg.setWidth(rSvgBounds.getWidth() * scale);
 		rectDgSvg.setHeight(rSvgBounds.getHeight() * scale);
+
+		//float _ratio = rectDgSvg.getHeight() / rectDgSvg.getHeight();
+		//scale = rectDgSvg.getY() / rSvgBounds.getY();
 	}
 
 	ofPopStyle();

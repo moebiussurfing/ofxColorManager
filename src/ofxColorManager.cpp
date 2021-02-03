@@ -200,6 +200,12 @@ ofxColorManager::ofxColorManager()
 	ofAddListener(ofEvents().draw, this, &ofxColorManager::draw, OF_EVENT_ORDER_BEFORE_APP);
 #endif
 
+	//ofAddListener(ofEvents().update, this, &ofxColorManager::update);
+
+	//mouse callbacks
+	ofAddListener(ofEvents().mouseDragged, this, &ofxColorManager::mouseDragged);
+	ofAddListener(ofEvents().mouseScrolled, this, &ofxColorManager::mouseScrolled);
+
 	//--
 
 	//default
@@ -530,7 +536,7 @@ void ofxColorManager::setup()
 	color_BRG_0.setSerializable(false);
 
 	DEMO_Cam.setSerializable(false);
-	DEMO2_Edit.setSerializable(false);
+	//DEMO2_Edit.setSerializable(false);
 
 	ofAddListener(params_Theory.parameterChangedE(), this, &ofxColorManager::Changed_Controls);
 
@@ -1484,6 +1490,9 @@ void ofxColorManager::exit()
 
 	removeKeysListeners();
 	removeMouseListeners();
+
+	ofRemoveListener(ofEvents().mouseDragged, this, &ofxColorManager::mouseDragged);
+	ofRemoveListener(ofEvents().mouseScrolled, this, &ofxColorManager::mouseScrolled);
 }
 
 //----
@@ -6136,6 +6145,22 @@ void ofxColorManager::mouseReleased(ofMouseEventArgs &eventArgs)
 	const int &x = eventArgs.x;
 	const int &y = eventArgs.y;
 	const int &button = eventArgs.button;
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::mouseScrolled(ofMouseEventArgs &eventArgs)
+{
+	const int &x = eventArgs.x;
+	const int &y = eventArgs.y;
+	const float &scrollX = eventArgs.scrollX;
+	const float &scrollY = eventArgs.scrollY;
+	ofLogNotice(__FUNCTION__) << "scrollX: " << scrollX << "  scrollY: " << scrollY;
+
+	if (DEMO2_Edit) 
+	{
+		if (scrollY == 1) DEMO2_Scale += 0.1f;
+		else if (scrollY == -1) DEMO2_Scale -= 0.1f;
+	}
 }
 
 //--------------------------------------------------------------

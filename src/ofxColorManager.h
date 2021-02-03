@@ -210,6 +210,7 @@ public:
 	void mouseDragged(ofMouseEventArgs &eventArgs);
 	void mousePressed(ofMouseEventArgs &eventArgs);
 	void mouseReleased(ofMouseEventArgs &eventArgs);
+	void mouseScrolled(ofMouseEventArgs &eventArgs);
 
 private:
 	void addKeysListeners();
