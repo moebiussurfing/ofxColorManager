@@ -156,7 +156,7 @@ private:
 private:
 	PreviewPaletteMini miniPreview;
 
-	DEMO_Svg myDEMO2;
+	DEMO_Svg DEMO2_Svg;
 
 	//TODO:
 	shared_ptr<ColorWheelScheme> _scheme;
@@ -828,6 +828,8 @@ private:
 private:
 	ofParameter<bool> DEMO1_Test{ "Enable DEMO1", false };
 	ofParameter<bool> DEMO2_Test{ "Enable DEMO2", false };
+	ofParameter<bool> DEMO2_Edit{ "Edit DEMO2", false };
+	ofParameter<float> DEMO2_Scale{ "Scale", 0.2, 0, 1.0f };
 	ofParameter<bool> DEMO_Auto{ "Auto Trig", false };
 	ofParameter<bool> DEMO_Cam{ "Edit Camera", false };
 	ofParameter<float> DEMO_Timer{ "Frequency", 0.5, 0, 1 };
@@ -840,7 +842,7 @@ private:
 
 	// app settings xml
 private:
-	ofParameterGroup params_AppState;
+	ofParameterGroup params_AppState;//without callbacks, just to handle settings
 	ofParameterGroup params_Panels{ "PANELS" };
 	ofParameterGroup params_Background{ "BACKGROUND" };
 	ofParameterGroup params_Demo{ "DEMO" };

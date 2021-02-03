@@ -4,19 +4,26 @@
 void DEMO_Svg::setup() {
 	ofLogNotice(__FUNCTION__);
 
-	path = "";
+	path = "svg/";
 	img.load(path + "moebius-lines.jpg");
 	svg.load(path + "moebius-giraud.svg");
 
 	ofLogNotice(__FUNCTION__) << svg.toString();
 
-	ofRectangle r = svg.getBounds();
+	rSvgBounds = svg.getBounds();
 
-	shape = glm::vec2(r.getWidth(), r.getHeight());
+	//TODO:
+	//scale
+	//svg.getTransformFromSvgMatrix
+	//getTransformFromSvgMatrix(string matrix, ofVec2f& apos, float & scaleX, float & scaleY, float & arotation)
+	//vector< shared_ptr<ofxSvgImage> > trees = svg.getElementsForType< ofxSvgImage>("trees");
 
-	img.resize(r.getWidth(), r.getHeight());
+	shape = glm::vec2(rSvgBounds.getWidth(), rSvgBounds.getHeight());
+	//ratio = shape.x / shape.y;
 
-	psBlend.setup(r.getWidth(), r.getHeight());
+	img.resize(rSvgBounds.getWidth(), rSvgBounds.getHeight());
+
+	psBlend.setup(rSvgBounds.getWidth(), rSvgBounds.getHeight());
 	//psBlend.setup(img.getWidth(), img.getHeight());
 
 	blendMode = 1;//multiply
@@ -25,6 +32,21 @@ void DEMO_Svg::setup() {
 	paletteSvg.resize(maxNumColors);
 
 	//initializeColors();
+
+	// draggeble rect
+	rectDgSvg.setRect(rSvgBounds.getX(), rSvgBounds.getY(), rSvgBounds.getWidth(), rSvgBounds.getHeight());//default init
+	rectDgSvg.setLockResize(false);
+	//rectDgSvg.setLockResize(true);
+
+	// b. load settings
+	//rectDgSvg.loadSettings();
+	path_Layout = path;
+	rectDgSvg.loadSettings(path_Name, path_Layout, false);
+	rectDgSvg.disableEdit();
+	//rectDgSvg.enableEdit();
+
+	//_xx = rectDgSvg.getX() + _pad1;
+	//_yy = rectDgSvg.getY() + _pad1;
 }
 
 //--------------------------------------------------------------
@@ -93,39 +115,56 @@ void DEMO_Svg::update() {
 }
 
 //--------------------------------------------------------------
-//void DEMO_Svg::draw(glm::vec2 _pos, glm::vec2 _shape = glm::vec2(838, 1080)) {
-void DEMO_Svg::draw(glm::vec2 _pos) {
-	//ofClear(255);
-	//update();
-
+void DEMO_Svg::draw(glm::vec2 _pos) //force pos
+{
 	pos = _pos;
-
-	ofPushMatrix();
-	ofPushStyle();
-
-	//ofSetColor(255, 255);
-	ofTranslate(pos.x, pos.y);
-	psBlend.draw(img.getTextureReference(), blendMode);
-
-	ofPopStyle();
-	ofPopMatrix();
+	rectDgSvg.setPosition(pos.x, pos.y);
+	draw();
 }
 
 //--------------------------------------------------------------
-void DEMO_Svg::draw() {
-	//ofClear(255);
-	//update();
-
-	psBlend.draw(img.getTextureReference(), blendMode);
-
+void DEMO_Svg::draw()
+{
+	//blend types
 	//string str;
 	//str += "Press UP/DOWN key\n";
 	//str += "Blend Mode: [" + ofToString(blendMode) + "] " + psBlend.getBlendMode(blendMode);
 	//ofDrawBitmapStringHighlight(str, 20, 30);
+
+	ofPushStyle();
+
+	ofPushMatrix();
+	ofTranslate(rectDgSvg.getX(), rectDgSvg.getY());
+	
+	//ofPushMatrix();
+	//ofTranslate(rectDgSvg.getWidth() / 2.f, rectDgSvg.getHeight()/2.0f);
+	ofScale(scale);
+
+	psBlend.draw(img.getTextureReference(), blendMode);
+	
+	ofPopMatrix();
+	//ofPopMatrix();
+
+	if (rectDgSvg.isEditing())
+	{
+		ofFill();
+		int fr = ofGetFrameNum() % 60;
+		ofSetColor(fr < 30 ? ofColor(255, 16) : (ofColor(0, 16)));
+		ofDrawRectangle(rectDgSvg);
+
+		//float _ratio = rectDgSvg.getHeight() / rectDgSvg.getHeight();
+		//scale = rectDgSvg.getY() / rSvgBounds.getY();
+
+		rectDgSvg.setWidth(rSvgBounds.getWidth() * scale);
+		rectDgSvg.setHeight(rSvgBounds.getHeight() * scale);
+	}
+
+	ofPopStyle();
 }
 
 //--------------------------------------------------------------
-void DEMO_Svg::keyPressed(int key) {
+void DEMO_Svg::keyPressed(int key)
+{
 	ofLogNotice(__FUNCTION__) << key;
 
 	if (key == OF_KEY_UP)

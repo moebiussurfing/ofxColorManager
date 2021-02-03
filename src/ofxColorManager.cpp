@@ -20,7 +20,7 @@ void ofxColorManager::build_Palette_Flip()
 	// workflow
 	refresh_Background();
 	// DEMO 2
-	myDEMO2.setPaletteColors(palette);
+	DEMO2_Svg.setPaletteColors(palette);
 	// DEMO 1
 	if (DEMO1_Test && !DEMO_Auto) myDEMO1.reStart();
 
@@ -96,7 +96,7 @@ void ofxColorManager::build_Palette_Engine()
 		// workflow
 		refresh_Background();
 		// DEMO 2
-		myDEMO2.setPaletteColors(palette);
+		DEMO2_Svg.setPaletteColors(palette);
 		// DEMO 1
 		if (DEMO1_Test && !DEMO_Auto) myDEMO1.reStart();
 
@@ -155,7 +155,7 @@ void ofxColorManager::build_Palette_Preset()
 	// workflow
 	refresh_Background();
 	// DEMO 2
-	myDEMO2.setPaletteColors(palette);
+	DEMO2_Svg.setPaletteColors(palette);
 	// DEMO 1
 	if (DEMO1_Test && !DEMO_Auto) myDEMO1.reStart();
 
@@ -528,7 +528,9 @@ void ofxColorManager::setup()
 	color_HUE_0.setSerializable(false);
 	color_SAT_0.setSerializable(false);
 	color_BRG_0.setSerializable(false);
+
 	DEMO_Cam.setSerializable(false);
+	DEMO2_Edit.setSerializable(false);
 
 	ofAddListener(params_Theory.parameterChangedE(), this, &ofxColorManager::Changed_Controls);
 
@@ -548,7 +550,7 @@ void ofxColorManager::setup()
 
 	//-
 
-	bRandomColor.set("RANDOMc", false);
+	bRandomColor.set("RANDOM c", false);
 	bAddColor.set("ADD", false);
 	bEditPalette.set("EDIT", false);
 	bRemoveColor.set("REMOVE", false);
@@ -783,6 +785,8 @@ void ofxColorManager::setup()
 	//params_Demo.add(TEST_Mode);
 	params_Demo.add(DEMO1_Test);
 	params_Demo.add(DEMO2_Test);
+	params_Demo.add(DEMO2_Edit);
+	params_Demo.add(DEMO2_Scale);
 	params_Demo.add(DEMO_Auto);
 	params_Demo.add(DEMO_Timer);
 	params_Demo.add(DEMO_Alpha);
@@ -868,6 +872,9 @@ void ofxColorManager::setup()
 
 	params_control.add(bModeBundlePreset);
 	params_control.add(bModePalettePreset);
+
+	params_control.add(DEMO2_Edit);
+	params_control.add(DEMO2_Scale);
 
 	ofAddListener(params_control.parameterChangedE(), this, &ofxColorManager::Changed_Controls);
 
@@ -1049,7 +1056,7 @@ void ofxColorManager::update(ofEventArgs & args)
 		//----
 
 		// DEMO2
-		if (DEMO2_Test) myDEMO2.update();
+		if (DEMO2_Test) DEMO2_Svg.update();
 	}
 
 	//----
@@ -1356,8 +1363,9 @@ void ofxColorManager::draw(ofEventArgs & args)
 		//--
 
 		// DEMO2
-		float _w = myDEMO2.getWidth();
-		if (DEMO2_Test) myDEMO2.draw(glm::vec2(ofGetWidth() * 0.5 - _w * 0.5, 0));
+		float _w = DEMO2_Svg.getWidth();
+		if (DEMO2_Test) DEMO2_Svg.draw();
+		//if (DEMO2_Test) DEMO2_Svg.draw(glm::vec2(ofGetWidth() * 0.5 - _w * 0.5, 0));
 
 		// DEMO1
 		if (DEMO1_Test) myDEMO1.draw(DEMO_Alpha);
@@ -2014,7 +2022,7 @@ void ofxColorManager::gui_PaletteEditor()
 							if (mode == Mode_Copy)
 							{
 								palette[n] = palette[payload_n];
-								myDEMO2.setPaletteColors(palette);
+								DEMO2_Svg.setPaletteColors(palette);
 								last_Index_ColorPalette = n;
 
 								refresh_Background();
@@ -2024,7 +2032,7 @@ void ofxColorManager::gui_PaletteEditor()
 								const ofColor tmp = palette[n];
 								palette[n] = palette[payload_n];
 								palette[payload_n] = tmp;
-								myDEMO2.setPaletteColors(palette);
+								DEMO2_Svg.setPaletteColors(palette);
 								last_Index_ColorPalette = n;
 
 								refresh_Background();
@@ -2080,13 +2088,13 @@ void ofxColorManager::gui_PaletteEditor()
 					//ImGui::SameLine();
 
 					//re arrenge
-					if (ImGui::Button("RANDOMp", ImVec2(_w, 0.5 * BUTTON_BIG_HEIGHT)))
+					if (ImGui::Button("RANDOM p", ImVec2(_w, 0.5 * BUTTON_BIG_HEIGHT)))
 					{
 						//auto rng = std::default_random_engine{};
 						//std::shuffle(std::begin(palette), std::end(palette), rng);
 						srand(unsigned(time(NULL)));
 						std::shuffle(palette.begin(), palette.end(), std::random_device());
-						myDEMO2.setPaletteColors(palette);
+						DEMO2_Svg.setPaletteColors(palette);
 						gradientEngine.build_FromPaleletteRef(palette);
 						last_Index_ColorPalette = 0;
 					}
@@ -2115,7 +2123,7 @@ void ofxColorManager::gui_PaletteEditor()
 
 					if (bResponsive_Presets)
 					{
-						ImGui::InputInt(sizePaletteBox.getName().c_str(), (int*)&sizePaletteBox.get(), 2, 100);
+						ImGui::InputInt(sizePaletteBox.getName().c_str(), (int*)&sizePaletteBox.get(), 1, 100);
 					}
 					if (!bResponsive_Presets)
 					{
@@ -2326,7 +2334,7 @@ void ofxColorManager::gui_PaletteFloating()
 					if (mode == Mode_Copy)
 					{
 						palette[n] = palette[payload_n];
-						myDEMO2.setPaletteColors(palette);
+						DEMO2_Svg.setPaletteColors(palette);
 
 						refresh_Background();
 					}
@@ -2334,14 +2342,14 @@ void ofxColorManager::gui_PaletteFloating()
 					//{
 					//	palette[n] = palette[payload_n];
 					//	palette[payload_n] = ofColor(0);
-					//	myDEMO2.setPaletteColors(palette);
+					//	DEMO2_Svg.setPaletteColors(palette);
 					//}
 					if (mode == Mode_Swap)
 					{
 						const ofColor tmp = palette[n];
 						palette[n] = palette[payload_n];
 						palette[payload_n] = tmp;
-						myDEMO2.setPaletteColors(palette);
+						DEMO2_Svg.setPaletteColors(palette);
 
 						refresh_Background();
 					}
@@ -4111,10 +4119,19 @@ void ofxColorManager::gui_Demo()
 
 	//-
 
+	//static float scale = 1.0f;
+
 	if (ofxImGui::BeginWindow("DEMO", mainSettings, flagsw))
 	{
 		ofxImGui::AddParameter(DEMO1_Test);
 		ofxImGui::AddParameter(DEMO2_Test);
+		ofxImGui::AddParameter(DEMO2_Edit);
+		//if (ImGui::DragFloat("Scale", &scale, 0.2, 1.0))
+		if (ofxImGui::AddParameter(DEMO2_Scale))
+		{
+			//DEMO2_Svg.setScale(DEMO2_Scale);
+		}
+
 		if (DEMO1_Test)
 		{
 			ofxImGui::AddParameter(DEMO_Auto);
@@ -4914,6 +4931,16 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 	if (false) {}
 
+	// demo2 svg
+	else if (name == DEMO2_Edit.getName())
+	{
+		DEMO2_Svg.setEdit(DEMO2_Edit);
+	}
+	else if (name == DEMO2_Scale.getName())
+	{
+		DEMO2_Svg.setScale(DEMO2_Scale);
+	}
+
 	// app modes
 	else if (name == AppMode.getName())
 	{
@@ -5261,7 +5288,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		}
 		if (bColor_SAT) {
 			_sat = ofRandom(color_SAT_0 - 128.f * color_SAT_Power, color_SAT_0 + 128.f * color_SAT_Power);
-			color_SAT = ofClamp(_sat, 0, 255); 
+			color_SAT = ofClamp(_sat, 0, 255);
 		}
 		if (bColor_BRG) {
 			_brg = ofRandom(color_BRG_0 - 128.f * color_BRG_Power, color_BRG_0 + 128.f * color_BRG_Power);
