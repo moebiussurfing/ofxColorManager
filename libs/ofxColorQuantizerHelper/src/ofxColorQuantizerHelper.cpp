@@ -2,7 +2,7 @@
 
 #ifdef USE_IM_GUI__QUANTIZER
 //--------------------------------------------------------------
-void ofxColorQuantizerHelper::quantizerRefreshImage()
+void ofxColorQuantizerHelper::refresh_QuantizerImage()
 {
 	//load ofImage
 	ofLogNotice(__FUNCTION__) << " image path: " << getImagePath();
@@ -31,6 +31,72 @@ void ofxColorQuantizerHelper::quantizerRefreshImage()
 
 //TODO:
 //should move this into the quantizer addon!
+////--------------------------------------------------------------
+//void ofxColorQuantizerHelper::draw_Gui2()
+//{
+////ImGui::Begin("ofxGpuLutCube");
+//	{
+//		static float sizeThumb = 50;
+//
+//		ImVec2 button_sz(sizeThumb, sizeThumb);
+//		//ImVec2 button_sz((float)sizeThumb.get(), (float)sizeThumb.get());
+//
+//		ImGuiStyle& style = ImGui::GetStyle();
+//		int buttons_count = dir.size();
+//		float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
+//
+//		for (int n = 0; n < buttons_count; n++)
+//		{
+//			ImGui::PushID(n);
+//			string name = ofToString(n);
+//
+//			//customize colors
+//			if (n == currentImage)//when selected
+//			{
+//				const ImVec4 color1 = ImVec4(0.1, 0.1, 0.1, 0.8);//changes button color to black
+//				ImGui::PushStyleColor(ImGuiCol_Button, color1);
+//			}
+//			else { //not selected
+//				const ImVec4 color2 = style.Colors[ImGuiCol_Button];//do not changes the color
+//				ImGui::PushStyleColor(ImGuiCol_Button, color2);
+//			}
+//
+//			//-
+//
+//			//image button
+//			if (ImGui::ImageButton(GetImTextureID(textureSourceID[n]), button_sz))
+//			{
+//				ofLogNotice(__FUNCTION__) << "[ " + ofToString(n) + " ] THUMB : " + dir.getName(n);
+//
+//				//currentImage = n;
+//
+//				//nameMat = dirThumbs.getName(indexBrowser);
+//
+//				//string str = "[" + ofToString(indexBrowser) + "] " + getName();
+//				//nameMat = getName();
+//
+//				//dirLoadIndex = indexBrowser;
+//				//dirLoadIndex = (int)ofClamp(dirLoadIndex, 0, dir.size() - 1);
+//				//loadLUT(dir.getPath(dirLoadIndex));
+//
+//				////apply
+//				//applyLUT(sourceImg.getPixels());
+//			}
+//
+//			//-
+//
+//			//customize colors
+//			ImGui::PopStyleColor();
+//
+//			float last_button_x2 = ImGui::GetItemRectMax().x;
+//			float next_button_x2 = last_button_x2 + style.ItemSpacing.x + button_sz.x; // Expected position if next button was on same line
+//			if (n + 1 < buttons_count && next_button_x2 < window_visible_x2) ImGui::SameLine();
+//			ImGui::PopID();
+//		}
+//	}
+//	//ImGui::End();
+//}
+
 //--------------------------------------------------------------
 void ofxColorQuantizerHelper::draw_Gui()
 {
@@ -335,7 +401,7 @@ void ofxColorQuantizerHelper::loadNext()
 }
 
 //--------------------------------------------------------------
-void ofxColorQuantizerHelper::filesRefresh()
+void ofxColorQuantizerHelper::refresh_Files()
 {
 	// load dragged images folder
 	ofLogNotice(__FUNCTION__) << "list files " << pathFolerDrag;
@@ -389,6 +455,18 @@ void ofxColorQuantizerHelper::filesRefresh()
 		textureSourceID[i] = gui_ImGui.loadTexture(textureSource[i], dir.getPath(i));
 	}
 #endif
+
+	//--
+
+	////TODO:
+	////thumbs. required multiple ImGui contexts here
+	//textureSource.clear();
+	//textureSource.resize(dir.size());
+	//textureSourceID.clear();
+	//textureSourceID.resize(dir.size());
+	//for (int i = 0; i < dirThumbs.size(); i++) {
+	//	textureSourceID[i] = gui_ImGui.loadTexture(textureSource[i], dirThumbs.getPath(i));
+	//}
 }
 
 //--------------------------------------------------------------
@@ -456,7 +534,7 @@ void ofxColorQuantizerHelper::setup()
 
 	//-
 
-	filesRefresh();
+	refresh_Files();
 
 	//----
 
@@ -939,7 +1017,7 @@ void ofxColorQuantizerHelper::Changed_parameters(ofAbstractParameter &e)
 
 		bUpdate = true;
 
-		quantizerRefreshImage();
+		refresh_QuantizerImage();
 	}
 	else if (_name == numColors.getName())
 	{
@@ -1360,7 +1438,7 @@ void ofxColorQuantizerHelper::dragEvent(ofDragInfo &eventArgs)
 		//workflow
 
 		// refresh dir
-		filesRefresh();
+		refresh_Files();
 
 		//-
 

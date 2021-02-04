@@ -7,18 +7,15 @@
 
 TODO:
 
-+ fix colour lovers growing gui
-
-+ demo 2: svg demo resizer shape using scalable draggable rect
++ theory and range selectors do not update demo2 svg
 + fix theory: sometimes not upadting demo2 svg colors
++ should clean: disable al and enable the required only
+
++ palette editor broken
+
++ fix colour lovers growing gui
 + fix pick color: lovers, quantizer..
-
-+ startup hangs here:
-[notice ] ofxColorManager::refresh_Theory_G1:
-[notice ] ofxColorManager::generate_Range:
-
 + add callback disabler for engines when using presets?
-+ improve svg illustrator..
 
 */
 

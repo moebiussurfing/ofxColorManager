@@ -47,88 +47,112 @@ void ofxColorManager::build_Palette_Flip()
 //--------------------------------------------------------------
 void ofxColorManager::build_Palette_Engine()
 {
-	//TODO: test
-	//if (!SHOW_Presets)
+	ofLogNotice(__FUNCTION__) << "----------------- BUILD PALETTE ENGINE -----------------";
+
+	std::string _name = "";
+
+	//--
+
+	if (SHOW_ColourLovers)
 	{
-		ofLogNotice(__FUNCTION__) << "----------------- BUILD PALETTE ENGINE -----------------";
+		_name = myPalette_Name_BACK;
+		palette_FromColourLovers();
+	}
+	else if (SHOW_Quantizer)
+	{
+		_name = myPalette_Name_BACK;
+		palette_FromQuantizer();
+	}
+	else if (SHOW_Theory)
+	{
+		_name = name_Theory;
+		//refresh_Theory_G1();//?
+		refresh_Theory_G2();
+		palette_FromTheory(last_Index_Theory);
+	}
+	else if (SHOW_Range)
+	{
+		_name = name_Range;
+		palette_FromRange(last_Index_Range);
+	}
 
-		std::string _name = "";
+	//----
 
-		//-
+	// presets
 
-		if (SHOW_ColourLovers)
-		{
-			_name = myPalette_Name_BACK;
-			palette_FromColourLovers();
-		}
-		else if (SHOW_Quantizer)
-		{
-			_name = myPalette_Name_BACK;
-			palette_FromQuantizer();
-		}
-		else if (SHOW_Theory)
-		{
-			_name = name_Theory;
-			//refresh_Theory_G1();//?
-			refresh_Theory_G2();
-			palette_FromTheory(last_Index_Theory);
-		}
-		else if (SHOW_Range)
-		{
-			_name = name_Range;
-			palette_FromRange(last_Index_Range);
-		}
+	//if (SHOW_Presets)
+	//{
+	//	if (!MODE_NewPreset) MODE_NewPreset = true;
+	//	//if (_name != "") textInput_New = _name;
+	//	//else textInput_New = "name";
+	//	textInput_New = _name;
+	//}
 
-		//-
+	//--
 
-		// presets
+	//TODO:
+	// setup linking pointers to get back on load
+	PRESET_Temp.setName_TARGET(_name);
+	PRESET_Temp.setNameCurve_TARGET(PRESET_Name_Gradient);
+	PRESET_Temp.setPalette_TARGET(palette);
 
-		//if (SHOW_Presets)
-		//{
-		//	if (!MODE_NewPreset) MODE_NewPreset = true;
-		//	//if (_name != "") textInput_New = _name;
-		//	//else textInput_New = "name";
-		//	textInput_New = _name;
-		//}
+	//----
 
-		//----
+	/*
+	// workflow
+	refresh_Background();
 
-		// workflow
-		refresh_Background();
-		// DEMO 2
-		DEMO2_Svg.setPaletteColors(palette);
-		// DEMO 1
-		if (DEMO1_Test && !DEMO_Auto) myDEMO1.reStart();
+	// workflow
+	// new preset
+	if (MODE_NewPreset) MODE_NewPreset = false;
+	// demo mode
+	if (DEMO1_Test && DEMO_Auto) myDEMO1.reStart();
 
-		//--
+	// DEMO 2
+	DEMO2_Svg.setPaletteColors(palette);
+	// DEMO 1
+	if (DEMO1_Test && !DEMO_Auto) myDEMO1.reStart();
 
-		last_Index_ColorPalette.setMax(palette.size() - 1);
-		//last_Index_ColorPalette = 0;
-		//if (palette.size() > 0) color_Picked = palette[last_Index_ColorPalette];
+	//--
 
-		//--
+	last_Index_ColorPalette.setMax(palette.size() - 1);
+	//last_Index_ColorPalette = 0;
+	//if (palette.size() > 0) color_Picked = palette[last_Index_ColorPalette];
 
-		// ofApp targets
+	//--
 
-		// palette
-		refresh_Palette_TARGET(palette);
+	// ofApp targets
 
-		// name
-		if (name_TARGET != nullptr)
-		{
-			name_TARGET[0] = _name;
-		}
+	// palette
+	refresh_Palette_TARGET(palette);
 
-		//--
+	// name
+	if (name_TARGET != nullptr)
+	{
+		name_TARGET[0] = _name;
+	}
 
-		// export
-		if (bAutoExportPreset)
-		{
-			bExportFlag = true;
+	//--
 
-			//ofLogNotice(__FUNCTION__) << "Auto EXPORT";
-			//exportPalette();
-		}
+	// export
+	if (bAutoExportPreset)
+	{
+		bExportFlag = true;
+		//ofLogNotice(__FUNCTION__) << "Auto EXPORT";
+		//exportPalette();
+	}
+	*/
+
+
+	//TODO:
+	build_Palette_Preset();
+
+	// export
+	if (bAutoExportPreset)
+	{
+		bExportFlag = true;
+		//ofLogNotice(__FUNCTION__) << "Auto EXPORT";
+		//exportPalette();
 	}
 }
 
@@ -1183,7 +1207,8 @@ void ofxColorManager::draw_Info()
 	//-
 
 	int pady = 20;
-	int padh;
+	int padh = 0;
+
 	int sp = 3;
 	int x;
 	int y;
@@ -1201,9 +1226,11 @@ void ofxColorManager::draw_Info()
 	c0.set(0, _alpha * a);
 	c1.set(255, _alpha * a);
 
-	padh = 15;
+
 	h = padh;
 	y += h;
+
+	// label tittle
 
 	x = ofGetWidth() * 0.5 - _w0 * 0.5;
 	ofSetColor(c0);
@@ -2459,16 +2486,18 @@ void ofxColorManager::gui_Library()
 		s = colorBrowser.getNameLib();
 		ImGui::Text(s.c_str());
 
+		ImGui::SameLine();
+
+		// 3. index/total
+		s = "  " + ofToString(last_Lib_Index) + "/" + ofToString(lib_TotalColors - 1);
+		ImGui::Text(s.c_str());
+
 		//ImGui::Dummy(ImVec2(0, 5));
 
 		// 2. color name
 		ImGui::Text(last_Lib_NameColor.c_str());
 
 		//ImGui::Dummy(ImVec2(0, 5));
-
-		// 3. index/total
-		s = ofToString(last_Lib_Index) + "/" + ofToString(lib_TotalColors - 1);
-		ImGui::Text(s.c_str());
 
 		//--
 
@@ -3065,7 +3094,6 @@ void ofxColorManager::gui_Panels()
 		ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteFloating);
 		ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteEditor);
 		ofxSurfingHelpers::AddBigToggle(SHOW_Gradient);
-		ofxImGui::AddParameter(ENABLE_keys);
 
 		ImGui::NextColumn();
 
@@ -3087,6 +3115,7 @@ void ofxColorManager::gui_Panels()
 		ofxSurfingHelpers::AddBigToggle(SHOW_MINI_Preview);
 		ofxSurfingHelpers::AddBigToggle(SHOW_Demos);
 		ofxSurfingHelpers::AddBigToggle(SHOW_Export);
+		ofxImGui::AddParameter(ENABLE_keys);
 	}
 	ofxImGui::EndWindow(mainSettings);
 }
@@ -3151,7 +3180,7 @@ void ofxColorManager::gui_Range()
 				ImGui::Columns(2);
 
 				ImGui::PushItemWidth(_w50);
-				ImGui::Text("Color1");
+				ImGui::Text("Color 1");
 				ofxSurfingHelpers::AddBigToggle(bAuto_Color1_FromPicker_Range, _w50, BUTTON_BIG_HEIGHT);
 				//ofxImGui::AddParameter(bAuto_Color1_FromPicker_Range);
 				// mini box
@@ -3165,7 +3194,7 @@ void ofxColorManager::gui_Range()
 				ImGui::NextColumn();
 
 				ImGui::PushItemWidth(_w50);
-				ImGui::Text("Color2");
+				ImGui::Text("Color 2");
 				ofxSurfingHelpers::AddBigToggle(bAuto_Color2_FromPicker_Range, _w50, BUTTON_BIG_HEIGHT);
 				//ofxImGui::AddParameter(bAuto_Color2_FromPicker_Range);
 				// mini box
@@ -6424,8 +6453,9 @@ void ofxColorManager::preset_Load(std::string p)
 	// workflow
 	// new preset
 	if (MODE_NewPreset) MODE_NewPreset = false;
-	// demo mode
-	if (DEMO1_Test && DEMO_Auto) myDEMO1.reStart();
+	//// demo mode
+	//if (DEMO1_Test && DEMO_Auto) myDEMO1.reStart();
+
 	// load first color
 	if (palette.size() > 0)
 	{
@@ -6436,13 +6466,10 @@ void ofxColorManager::preset_Load(std::string p)
 
 	build_Palette_Preset();
 
-	//--
-
 	// export
 	if (bAutoExportPreset)
 	{
 		bExportFlag = true;
-
 		//ofLogNotice(__FUNCTION__) << "Auto EXPORT";
 		//exportPalette();
 	}
