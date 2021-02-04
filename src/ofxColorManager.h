@@ -367,10 +367,10 @@ private:
 	// text labels
 	//to help workflow of what's the last engine used...Not using now.
 	std::string messageInfo;
+	ofTrueTypeFont font;
 	ofTrueTypeFont fontSmall;
 	ofTrueTypeFont fontMedium;
 	ofTrueTypeFont fontBig;
-	ofTrueTypeFont font;
 	//bool txt_lineActive[4];//to help workflow of what's the last engine used...Not using now.
 
 	ofParameter<int> last_Index_Type{ "Last Type Index", -1, 0, 3 };//to help workflow of what's the last engine used...Not using now.
@@ -717,6 +717,7 @@ private:
 	void setBackground_ENABLE(bool b);
 
 	bool ENABLE_Callbacks_cPickers = true;
+	bool ENABLE_Callbacks_Engines = true;
 
 	void refresh_Pick_ToHSB();
 	void refresh_FromPicked();

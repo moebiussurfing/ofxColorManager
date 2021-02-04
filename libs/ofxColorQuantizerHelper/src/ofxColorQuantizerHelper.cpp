@@ -39,14 +39,15 @@ void ofxColorQuantizerHelper::draw_Gui()
 		//-
 
 		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
-		int _w = ImGui::GetWindowContentRegionWidth() - _spc;
+		int _w = ImGui::GetWindowContentRegionWidth() - 2 * _spc;
+		//float _w50 = _w * 0.5;
 		float _w50 = (_w * 0.5) - (_spc * 0.5);
-		float _w100 = _w - _spc;
+		float _w100 = _w - 2 * _spc;
 		float _h = BUTTON_BIG_HEIGHT;
 
 		//-
 
-		ImGui::Dummy(ImVec2(0.0f, 10));
+		ImGui::Dummy(ImVec2(0, 10));
 
 		ImGuiColorEditFlags colorEdiFlags;
 
@@ -62,13 +63,13 @@ void ofxColorQuantizerHelper::draw_Gui()
 		//ofxImGui::AddGroup(colorQuantizer.getParameters(), mainSettings);
 
 		ofxSurfingHelpers::AddBigButton(bReBuild, _w, _h);
-		ImGui::Dummy(ImVec2(0.0f, 5));
+		ImGui::Dummy(ImVec2(0, 5));
 
 		if (ImGui::InputInt(numColors.getName().c_str(), (int *)&numColors.get())) {
 			numColors = ofClamp(numColors, numColors.getMin(), numColors.getMax());
 		}
 
-		ImGui::Dummy(ImVec2(0.0f, 5));
+		ImGui::Dummy(ImVec2(0, 5));
 		std::string s2 = sortedType_name.get();
 		ImGui::Text(s2.c_str());
 
@@ -76,32 +77,67 @@ void ofxColorQuantizerHelper::draw_Gui()
 			sortedType = ofClamp(sortedType, 1, 4);
 		}
 
-		if (ImGui::Button("SORT", ImVec2(_w, _h * 0.5)))
+		if (ImGui::Button("SORT", ImVec2(_w, _h)))
 		{
 			sortedType++;
 			if (sortedType > 4) sortedType = 1;
 		}
 
-		ImGui::Dummy(ImVec2(0.0f, 5));
-
+		//ImGui::Dummy(ImVec2(0, 5));
 		//ImGui::InputInt(currentImage.getName().c_str(), (int *)&currentImage.get());
 
 		//-
 
-		// label name
-		ImGui::Dummy(ImVec2(0.0f, 5));
-		ImGui::Text(currentImage_name.get().c_str());
+		//// label name
+		//ImGui::Dummy(ImVec2(0.0f, 5));
+		//ImGui::Text(currentImage_name.get().c_str());
+
+		ImGui::Dummy(ImVec2(0, 5));
+
+		//----
+
+		// scrollable list
+
+		if (!imageNames.empty())
+		{
+			int _i = currentImage;
+
+			ImGui::PushItemWidth(_w);
+
+			if (ofxImGui::VectorCombo(" ", &_i, imageNames))
+			{
+				ofLogNotice(__FUNCTION__) << "_i: " << ofToString(_i);
+
+				if (_i < imageNames.size())
+				{
+					currentImage = _i;
+					imageName = dir.getName(currentImage);
+					ofLogNotice(__FUNCTION__) << "Combo select: " << _i;
+
+					if (dir.size() > 0 && currentImage < dir.size())
+					{
+						imageName = dir.getName(currentImage);
+						imageName_path = dir.getPath(currentImage);
+
+						buildFromImageFile(imageName_path, numColors);
+					}
+				}
+			}
+
+			ImGui::PopItemWidth();
+		}
+		//ImGui::Dummy(ImVec2(0, 10));
 
 		// index / total
-		//ImGui::Dummy(ImVec2(0.0f, 5));
+		//ImGui::Dummy(ImVec2(0, 5));
 		std::string s = ofToString(currentImage.get()) + "/" + ofToString(getAountFiles() - 1);
 		ImGui::Text(s.c_str());
 
-		//ImGui::Dummy(ImVec2(0.0f, 5));
+		ImGui::Dummy(ImVec2(0, 5));
 
-		//-
+		//----
 
-		//ImGui::Dummy(ImVec2(0.0f, 5));
+		//ImGui::Dummy(ImVec2(0, 5));
 
 		if (ImGui::Button("Previous", ImVec2(_w50, _h)))
 		{
@@ -120,11 +156,15 @@ void ofxColorQuantizerHelper::draw_Gui()
 		//const auto p = getPalette();
 		const auto p = getPalette(true);
 
-		int wb = (ImGui::GetWindowContentRegionWidth() / NUM_QUANTIZER_COLORS_PER_ROW) - (2 * _spc);
+		//int wb = (_w / (int)NUM_QUANTIZER_COLORS_PER_ROW) - (2 * _spc);
+		int wb = (ImGui::GetWindowContentRegionWidth() / (int)NUM_QUANTIZER_COLORS_PER_ROW) - (2 * _spc);
 
 		for (int n = 0; n < p.size(); n++)
 		{
 			ImGui::PushID(n);
+
+			// split in rows
+			if ((n % ((int)NUM_QUANTIZER_COLORS_PER_ROW)) != 0) ImGui::SameLine();
 
 			// box colors
 
@@ -134,13 +174,7 @@ void ofxColorQuantizerHelper::draw_Gui()
 				ImVec2(wb, wb)))
 			{
 				//TODO:
-				//last_ColorPicked_Palette = n;
-			}
-
-			// make rows
-			if (n == 0) ImGui::SameLine();
-			else {
-				if ((n % NUM_QUANTIZER_COLORS_PER_ROW) != 0) ImGui::SameLine();
+				//last_ = n;
 			}
 
 			ImGui::PopID();
@@ -148,7 +182,7 @@ void ofxColorQuantizerHelper::draw_Gui()
 
 		//-
 
-		ImGui::Dummy(ImVec2(0.0f, 10));
+		ImGui::Dummy(ImVec2(0, 10));
 
 		// draw image preview
 
@@ -158,7 +192,9 @@ void ofxColorQuantizerHelper::draw_Gui()
 			float h = tex.getHeight();
 			float ratio = h / w;
 
-			if (ImGui::ImageButton((ImTextureID)(uintptr_t)fbo.getTexture(0).getTextureData().textureID, ImVec2(_w, _w * ratio)))
+			if (ImGui::ImageButton(
+				(ImTextureID)(uintptr_t)fbo.getTexture(0).getTextureData().textureID, 
+				ImVec2(_w100, _w100 * ratio)))
 			{
 				ofLogNotice(__FUNCTION__) << "Image Pressed";
 			}
@@ -168,7 +204,7 @@ void ofxColorQuantizerHelper::draw_Gui()
 		//ImGui::Dummy(ImVec2(0.0f, 5));
 		//ImGui::Text(currentImage_name.get().c_str());
 
-		ImGui::Dummy(ImVec2(0.0f, 5));
+		ImGui::Dummy(ImVec2(0, 5));
 
 		//-
 
@@ -233,8 +269,8 @@ void ofxColorQuantizerHelper::draw_Gui()
 				float next_button_x2 = last_button_x2 + style.ItemSpacing.x + button_sz.x; // Expected position if next button was on same line
 				if (n + 1 < buttons_count && next_button_x2 < _wx2) ImGui::SameLine();
 				ImGui::PopID();
-			}
-		}
+	}
+}
 		ImGui::End();
 #endif
 	}
@@ -271,15 +307,9 @@ bool compareSaturation(const colorMapping &s1, const colorMapping &s2)
 //--------------------------------------------------------------
 void ofxColorQuantizerHelper::loadPrev()
 {
-	// refresh dir
-	dir.listDir(pathFolerDrag);
-	dir.allowExt("jpg");
-	dir.allowExt("png");
-	dir.sort();
-	currentImage.setMax(dir.size() - 1);
-	currentImage--;
-	if (currentImage < 0) currentImage = dir.size() - 1;
-	//currentImage = 0;
+	if (currentImage <= 0) currentImage = dir.size() - 1;
+	else currentImage--;
+
 	ofLogNotice(__FUNCTION__) << "currentImage:" << ofToString(currentImage);
 	if (dir.size() > 0 && currentImage < dir.size() - 1)
 	{
@@ -292,16 +322,9 @@ void ofxColorQuantizerHelper::loadPrev()
 //--------------------------------------------------------------
 void ofxColorQuantizerHelper::loadNext()
 {
-	// refresh dir
-	dir.listDir(pathFolerDrag);
-	dir.allowExt("jpg");
-	dir.allowExt("png");
-	dir.sort();
-	currentImage.setMax(dir.size() - 1);
-	currentImage++;
-	if (currentImage > dir.size() - 1)
-		currentImage = 0;
-	//currentImage = dir.size() - 1;
+	if (currentImage < dir.size() - 1) currentImage++;
+	else if (currentImage == dir.size() - 1) currentImage = 0;
+	
 	ofLogNotice(__FUNCTION__) << "currentImage:" << ofToString(currentImage);
 	if (dir.size() > 0 && currentImage < dir.size())
 	{
@@ -337,13 +360,17 @@ void ofxColorQuantizerHelper::filesRefresh()
 	{
 		imageName = dir.getName(currentImage);
 		imageName_path = dir.getPath(currentImage);
+
 		buildFromImageFile(imageName_path, numColors);
 	}
 
 	// log files on folder
+	imageNames.clear();
 	for (int i = 0; i < dir.size(); i++)
 	{
 		ofLogNotice(__FUNCTION__) << "file " << "[" << ofToString(i) << "] " << dir.getName(i);
+
+		imageNames.push_back(dir.getName(i));
 	}
 
 	currentImage.setMax(dir.size() - 1);
@@ -357,9 +384,10 @@ void ofxColorQuantizerHelper::filesRefresh()
 	textureSource.resize(dir.size());
 	textureSourceID.clear();
 	textureSourceID.resize(dir.size());
-	for (int i = 0; i < dir.size(); i++) {
+	for (int i = 0; i < dir.size(); i++) 
+	{
 		textureSourceID[i] = gui_ImGui.loadTexture(textureSource[i], dir.getPath(i));
-}
+	}
 #endif
 }
 
@@ -554,7 +582,7 @@ void ofxColorQuantizerHelper::draw()
 				ofTranslate(imgW + 20, 0);
 
 				//bg box
-				ofSetColor(0, 50);
+				ofSetColor(0, 128);
 				ofFill();
 				ofDrawRectangle(0, 0, _ww, -imgH);
 
@@ -730,15 +758,25 @@ void ofxColorQuantizerHelper::build()
 {
 	if (isLoadedImage)
 	{
-		colorQuantizer.setNumColors(numColors + 1);
+		int _max = numColors;
+		//int _max = numColors + 1;
+		//int _max = colorQuantizer.getNumColors();
+		//int _max = colorQuantizer.getNumColors() + 1;
+
+		colorQuantizer.setNumColors(_max);
+
 		colorQuantizer.quantize(imageCopy.getPixels());
 
 		sortedColors.clear();;
-		sortedColors.resize(colorQuantizer.getNumColors());
+		//sortedColors.resize(colorQuantizer.getNumColors());
+		sortedColors.resize(_max);
 
-		for (int i = 0; i < colorQuantizer.getNumColors(); i++)
+		for (int i = 0; i < _max; i++)
 		{
-			ofFloatColor fc = ofFloatColor(colorQuantizer.getColors()[i].r / 255.0, colorQuantizer.getColors()[i].g / 255.0, colorQuantizer.getColors()[i].b / 255.0);
+			ofFloatColor fc = ofFloatColor(
+				colorQuantizer.getColors()[i].r / 255.0f,
+				colorQuantizer.getColors()[i].g / 255.0f,
+				colorQuantizer.getColors()[i].b / 255.0f);
 			ofVec3f labCol = ColorConverter::rgbToLab(fc);
 
 			sortedColors[i].distance = ColorConverter::calcChroma(labCol);
@@ -770,7 +808,7 @@ void ofxColorQuantizerHelper::quantizeImage(std::string imgName, int _numColors)
 		//imageCopy.load(imgName);
 
 		// resize to speed up
-		imageCopy.resize(imageCopy.getWidth() / 4, imageCopy.getHeight() / 4);
+		imageCopy.resize(imageCopy.getWidth() / 4.f, imageCopy.getHeight() / 4.f);
 
 		build();
 	}
@@ -882,16 +920,16 @@ void ofxColorQuantizerHelper::Changed_parameters(ofAbstractParameter &e)
 	}
 	else if (_name == currentImage.getName())
 	{
-		// refresh dir
-		dir.listDir(pathFolerDrag);
-		dir.allowExt("jpg");
-		dir.allowExt("png");
-		dir.sort();
-		currentImage.setMax(dir.size() - 1);
+		//// refresh dir
+		//dir.listDir(pathFolerDrag);
+		//dir.allowExt("jpg");
+		//dir.allowExt("png");
+		//dir.sort();
+		//currentImage.setMax(dir.size() - 1);
 
 		ofLogNotice(__FUNCTION__) << "currentImage: " << ofToString(currentImage);
 
-		if (dir.size() > 0 && currentImage < dir.size() - 1)
+		if (dir.size() > 0 && currentImage <= dir.size() - 1)
 		{
 			imageName = dir.getName(currentImage);
 			currentImage_name = imageName;
@@ -916,7 +954,10 @@ void ofxColorQuantizerHelper::Changed_parameters(ofAbstractParameter &e)
 void ofxColorQuantizerHelper::rebuildMap()
 {
 	palette.clear();
-	int palSize = colorQuantizer.getNumColors();
+
+	int palSize = numColors;
+	//int palSize = colorQuantizer.getNumColors();
+	
 	palette.resize(palSize);
 
 	//palette = colorQuantizer.getColors();

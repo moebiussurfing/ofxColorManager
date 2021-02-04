@@ -556,7 +556,7 @@ void ofxColorManager::setup()
 
 	//-
 
-	bRandomColor.set("RANDOM c", false);
+	bRandomColor.set("RANDOM C", false);
 	bAddColor.set("ADD", false);
 	bEditPalette.set("EDIT", false);
 	bRemoveColor.set("REMOVE", false);
@@ -2097,8 +2097,10 @@ void ofxColorManager::gui_PaletteEditor()
 					//ImGui::SameLine();
 
 					//re arrenge
-					if (ImGui::Button("RANDOM p", ImVec2(_w, 0.5 * BUTTON_BIG_HEIGHT)))
+					if (ImGui::Button("RANDOM SORT", ImVec2(_w, 0.5 * BUTTON_BIG_HEIGHT)))
 					{
+						ENABLE_Callbacks_Engines = false;
+
 						//auto rng = std::default_random_engine{};
 						//std::shuffle(std::begin(palette), std::end(palette), rng);
 						srand(unsigned(time(NULL)));
@@ -2106,6 +2108,8 @@ void ofxColorManager::gui_PaletteEditor()
 						DEMO2_Svg.setPaletteColors(palette);
 						gradientEngine.build_FromPaleletteRef(palette);
 						last_Index_ColorPalette = 0;
+
+						ENABLE_Callbacks_Engines = true;
 					}
 
 					if (ImGui::RadioButton("Copy", mode == Mode_Copy)) { mode = Mode_Copy; } ImGui::SameLine();
@@ -2451,18 +2455,18 @@ void ofxColorManager::gui_Library()
 
 		//ImGui::Dummy(ImVec2(0, 5));
 
-		// lib name
+		// 1. lib name (ie: pantone)
 		s = colorBrowser.getNameLib();
 		ImGui::Text(s.c_str());
 
-		ImGui::Dummy(ImVec2(0, 5));
+		//ImGui::Dummy(ImVec2(0, 5));
 
-		// color name
+		// 2. color name
 		ImGui::Text(last_Lib_NameColor.c_str());
 
 		//ImGui::Dummy(ImVec2(0, 5));
 
-		// index
+		// 3. index/total
 		s = ofToString(last_Lib_Index) + "/" + ofToString(lib_TotalColors - 1);
 		ImGui::Text(s.c_str());
 
@@ -2528,7 +2532,7 @@ void ofxColorManager::gui_Library()
 
 		// arrow buttons
 
-		ImGui::Dummy(ImVec2(0, 5));
+		//ImGui::Dummy(ImVec2(0, 5));
 
 		if (bPagerized)
 		{
@@ -2556,14 +2560,17 @@ void ofxColorManager::gui_Library()
 
 			ImGui::PopButtonRepeat();
 
-			//ImGui::SameLine();
-
 			//-
 
 			// page
+			ImGui::SameLine();
+			ImGui::PushItemWidth(_w * 0.5);
 			ofxImGui::AddParameter(lib_Page_Index);//page slider selector
 			//ImGui::SliderInt("PAGE", &lib_Page_Index, 0, lib_Page_Max);//page slider selector
 			//ImGui::DragInt("PAGE", (int *)&lib_Page_Index, 0, lib_Page_Max);//collide..
+			ImGui::PopItemWidth();
+
+			lib_Page_Index = ofClamp(lib_Page_Index, 0, lib_Page_Index.getMax());
 		}
 
 		ImGui::Dummy(ImVec2(0, 5));
@@ -2599,7 +2606,6 @@ void ofxColorManager::gui_Library()
 			//--
 
 			// color box
-
 			{
 				ImGui::PushID(n);
 
@@ -4686,7 +4692,7 @@ void ofxColorManager::Changed_ColorPicked(ofFloatColor &c)
 	//--
 
 	// workflow
-	refresh_Pick_ToEngines();
+	if (ENABLE_Callbacks_Engines) refresh_Pick_ToEngines();
 }
 
 //--------------------------------------------------------------
@@ -4714,7 +4720,9 @@ void ofxColorManager::Changed_ParamsPalette(ofAbstractParameter &e)
 	{
 		bFlipUserPalette = false;
 
+		ENABLE_Callbacks_Engines = false;
 		build_Palette_Flip();
+		ENABLE_Callbacks_Engines = true;
 	}
 }
 
@@ -5313,13 +5321,14 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	{
 		if (bEditPalette)
 		{
-			// workflow
-			//avoid collide palette auto builder with the edited color
-			if (SHOW_Range) SHOW_Range = false;
-			if (SHOW_Theory) SHOW_Theory = false;
-			if (SHOW_ColourLovers) SHOW_ColourLovers = false;
-			if (SHOW_Quantizer) SHOW_Quantizer = false;
+			//// workflow
+			////avoid collide palette auto builder with the edited color
+			//if (SHOW_Range) SHOW_Range = false;
+			//if (SHOW_Theory) SHOW_Theory = false;
+			//if (SHOW_ColourLovers) SHOW_ColourLovers = false;
+			//if (SHOW_Quantizer) SHOW_Quantizer = false;
 
+			//selected color from palette
 			last_Index_ColorPalette = ofClamp(last_Index_ColorPalette, 0, last_Index_ColorPalette.getMax());
 		}
 	}
@@ -5745,6 +5754,11 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				{
 					last_Index_Preset--;
 				}
+				else
+				{
+					if (last_Index_Preset == 0)
+						last_Index_Preset = files.size() - 1;
+				}
 
 				if (last_Index_Preset < files.size() && files.size() > 0)
 				{
@@ -5761,7 +5775,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				{
 					last_Index_Preset++;
 				}
-				else if (last_Index_Preset == files.size() - 1) {//cycle
+				else if (last_Index_Preset >= files.size() - 1) {//cycle
 					last_Index_Preset = 0;
 				}
 
@@ -5816,7 +5830,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		{
 			if (key == OF_KEY_UP || (key == ' ' && mod_CONTROL))
 			{
-				last_Index_Range--;
+				if (last_Index_Range == 0) last_Index_Range = NUM_TYPES_RANGES - 1;
+				else if (last_Index_Range > 0) last_Index_Range--;
 				last_Index_Range = (int)ofClamp(last_Index_Range, 0, NUM_TYPES_RANGES - 1);
 
 				for (int i = 0; i < NUM_TYPES_RANGES; i++)
@@ -5829,7 +5844,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			}
 			if (key == OF_KEY_DOWN || (key == ' ' && !mod_CONTROL))
 			{
-				last_Index_Range++;
+				if (last_Index_Range >= NUM_TYPES_RANGES - 1) last_Index_Range = 0;
+				else last_Index_Range++;
 				last_Index_Range = (int)ofClamp(last_Index_Range, 0, NUM_TYPES_RANGES - 1);
 
 				for (int i = 0; i < NUM_TYPES_RANGES; i++)
@@ -5844,7 +5860,6 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			//{
 			//	if (last_Index_Range == NUM_TYPES_RANGES - 1) last_Index_Range = 0;//cycle
 			//	else if (last_Index_Range < NUM_TYPES_RANGES - 1) last_Index_Range++;
-
 			//	for (int i = 0; i < NUM_TYPES_RANGES; i++)
 			//	{
 			//		types_Range[i].disableEvents();
@@ -5876,8 +5891,10 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		{
 			if (key == OF_KEY_UP || (key == ' ' && mod_CONTROL))
 			{
-				last_Index_Theory_PickPalette = last_Index_Theory_PickPalette.get() - 1;
+				if (last_Index_Theory_PickPalette == 0) last_Index_Theory_PickPalette = last_Index_Theory_PickPalette.getMax();
+				else if (last_Index_Theory_PickPalette > 0) last_Index_Theory_PickPalette = last_Index_Theory_PickPalette.get() - 1;
 			}
+
 			if (key == OF_KEY_DOWN || (key == ' ' && !mod_CONTROL))
 			{
 				//last_Index_Theory_PickPalette = last_Index_Theory_PickPalette.get() + 1;
@@ -5890,6 +5907,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 					last_Index_Theory_PickPalette = last_Index_Theory_PickPalette.get() + 1;
 				}
 			}
+
 			//if (key == ' ')//cycle
 			//{
 			//	if (last_Index_Theory_PickPalette == last_Index_Theory_PickPalette.getMax())//cycle 
@@ -6156,10 +6174,11 @@ void ofxColorManager::mouseScrolled(ofMouseEventArgs &eventArgs)
 	const float &scrollY = eventArgs.scrollY;
 	ofLogNotice(__FUNCTION__) << "scrollX: " << scrollX << "  scrollY: " << scrollY;
 
-	if (DEMO2_Edit) 
+	if (DEMO2_Edit)
 	{
-		if (scrollY == 1) DEMO2_Scale += 0.1f;
-		else if (scrollY == -1) DEMO2_Scale -= 0.1f;
+		if (DEMO2_Svg.rectDgSvg.inside(glm::vec2(x, y)))//zoom 
+			if (scrollY == 1) DEMO2_Scale += 0.1f;
+			else if (scrollY == -1) DEMO2_Scale -= 0.1f;
 	}
 }
 

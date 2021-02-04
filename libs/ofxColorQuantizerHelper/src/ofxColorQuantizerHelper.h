@@ -262,6 +262,7 @@ private:
 	ofImage imageCopy;
 	std::string imageName_path;
 	std::string imageName;
+	vector<std::string> imageNames;
 
 	struct weightedColor
 	{
