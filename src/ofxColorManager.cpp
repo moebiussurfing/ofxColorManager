@@ -708,21 +708,30 @@ void ofxColorManager::setup()
 
 	// GUI
 
-#ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
-	ofxSurfingHelpers::ImGui_FontCustom();
-#endif
-
-	// create
-	gui.setup();
-	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-	ImGui::GetIO().MouseDrawCursor = false;
+	//official fork
+	////#ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
+	////	ofxSurfingHelpers::ImGui_FontCustom();
+	////#endif
+	//gui.setup();
+	//ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	//ImGui::GetIO().MouseDrawCursor = false;
 
 	//TODO:
 	//daan fork
-	//gui.setup(nullptr, true, ImGuiConfigFlags_DockingEnable, true, true);
-	//gui.setup(nullptr, true, false, true, true);
+	gui.setup(nullptr, true, ImGuiConfigFlags_DockingEnable, true, false);
 
-	// theme customize
+	// fonts
+#ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
+	auto normalCharRanges = ImGui::GetIO().Fonts->GetGlyphRangesDefault();
+	float _size = 10.f;
+	string _name = "telegrama_render.otf";
+	string _path = "assets/fonts/" + _name;//assets folder
+	customFont = gui.addFont(_path, _size, nullptr, normalCharRanges);
+#endif
+
+	//-
+
+	// theme
 #ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
 	ofxSurfingHelpers::ImGui_ThemeMoebiusSurfing();
 	//ofxSurfingHelpers::ImGui_ThemeModernDark();
@@ -978,6 +987,12 @@ void ofxColorManager::startup()
 	{
 		name_TARGET[0] = PRESET_Name;
 	}
+
+	//--
+
+#ifdef LINK_TCP_MASTER_CLIENT
+	setupLink();
+#endif
 }
 
 //--------------------------------------------------------------
@@ -987,9 +1002,15 @@ void ofxColorManager::update(ofEventArgs & args)
 
 	//--
 
+#ifdef LINK_TCP_MASTER_CLIENT
+	updateLink();
+#endif
+
+	//--
+
 	// auto pilot browse presets
 
-	if (auto_pilot && (ofGetElapsedTimeMillis() - auto_pilot_timer > 1000))
+	if (auto_pilot && (ofGetElapsedTimeMillis() - auto_pilot_timer > auto_pilot_Duration * 1000))
 	{
 		auto_pilot_timer = ofGetElapsedTimeMillis();
 
@@ -1472,6 +1493,13 @@ void ofxColorManager::draw(ofEventArgs & args)
 			ofxSurfingHelpers::drawTextBoxed(font, str);
 		}
 		ofPopMatrix();
+
+
+		//--
+
+#ifdef LINK_TCP_MASTER_CLIENT
+		drawLink();
+#endif
 	}
 }
 
@@ -3567,11 +3595,12 @@ void ofxColorManager::gui_Presets()
 		//-
 
 		// palette colors mini preview
-
+		// auto browse presets. to testing and auto export
 		if (ofxImGui::AddParameter(auto_pilot))
 		{
 
 		}
+		if (auto_pilot) ofxImGui::AddParameter(auto_pilot_Duration);
 
 		ImGui::Dummy(ImVec2(0, 5));
 
@@ -4194,6 +4223,7 @@ void ofxColorManager::gui_Demo()
 bool ofxColorManager::draw_Gui()
 {
 	gui.begin();
+	ImGui::PushFont(customFont);
 
 	//--
 
@@ -4221,6 +4251,7 @@ bool ofxColorManager::draw_Gui()
 
 	//--
 
+	ImGui::PopFont();
 	gui.end();
 
 	//-
@@ -6843,6 +6874,8 @@ void ofxColorManager::exportPalette()
 {
 	ofLogNotice(__FUNCTION__) << "----------------- EXPORT PALETTE -----------------";
 
+	ofJson j;
+
 	// default OF data path
 	if (bExportPreset_DefaultPath)
 	{
@@ -6863,7 +6896,7 @@ void ofxColorManager::exportPalette()
 	{
 		// A. save palette colors only (without background neither gradient)
 		//using ofxSerializer
-		ofJson j = palette;
+		j = palette;
 		string _path = path_FileExport + "_Palette.json";
 		ofLogNotice(__FUNCTION__) << "\n" << ofToString(j);
 
@@ -6884,5 +6917,121 @@ void ofxColorManager::exportPalette()
 		PRESET_Temp.preset_Save(path_FileExport + "_Bundled", true);
 
 		//preset_Save(path_Folder_ExportColor_Custom);
+
+		j = PRESET_Temp.getPresetJsonLastSaved();//for TCP link only
+	}
+
+	//--
+
+	//TODO: add bundle json too
+	//j = PRESET_Temp.getJson();
+	//j = load(path_FileExport + "_Bundled"
+#ifdef LINK_TCP_MASTER_CLIENT
+	std::stringstream ss;
+	ss << j;
+	//ss << "[/TCP]";
+
+	ofLogNotice(__FUNCTION__) << "LINK: " + ss.str();
+
+	TCP.sendToAll(ss.str());//send to all clients
+	//for (int i = 0; i < TCP.getLastID(); i++)//many clients can be connected 
+	//{
+	//	//TCP.send(i, ss.str());
+	//}
+
+	storeText.push_back(ss.str() + "\n");
+#endif
+
+	//--
+
+}
+
+#ifdef LINK_TCP_MASTER_CLIENT
+//--------------------------------------------------------------
+void ofxColorManager::setupLink() {
+
+	// setup the server to listen on 11999
+	ofxTCPSettings settings(port);
+
+	// set other options
+	//settings.blocking = false;
+	//settings.reuse = true;
+	//settings.messageDelimiter = "\n";
+
+	TCP.setup(settings);
+
+	// optionally set the delimiter to something else.  
+	//The delimiter in the client and the server have to be the same, default being [/TCP]
+	//TCP.setMessageDelimiter("\n");
+	lastCheckLink = 0;
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::updateLink() {
+
+	// for each client lets send them a message letting them know what port they are connected on
+	// we throttle the message sending frequency to once every 100ms
+	uint64_t now = ofGetElapsedTimeMillis();
+	if (now - lastCheckLink >= 2000)
+	{
+		for (int i = 0; i < TCP.getLastID(); i++)
+		{
+			if (!TCP.isClientConnected(i)) continue;
+
+			ofLogNotice(__FUNCTION__) << "Connected on port: " + ofToString(TCP.getClientPort(i));
+
+			//TCP.send(i, "hello client - you are connected on port - " + ofToString(TCP.getClientPort(i)));
+		}
+		lastCheckLink = now;
 	}
 }
+
+//--------------------------------------------------------------
+void ofxColorManager::drawLink() {
+	string ss;
+	ss = "TCP SERVER\n\port: " + ofToString(TCP.getPort()) + "\n";
+
+	// for each connected client lets get the data being sent and lets print it to the screen
+	for (unsigned int i = 0; i < (unsigned int)TCP.getLastID(); i++) {
+
+		if (!TCP.isClientConnected(i))continue;
+
+		// get the ip and port of the client
+		string port = ofToString(TCP.getClientPort(i));
+		string ip = TCP.getClientIP(i);
+		string info = "client " + ofToString(i) + " " + ip + ":" + port;
+
+		// if we don't have a string allocated yet
+		// lets create one
+		if (i >= storeText.size())
+		{
+			storeText.push_back(string());
+		}
+
+		// receive all the available messages, separated by \n
+		// and keep only the last one
+		string str;
+		string tmp;
+		do
+		{
+			str = tmp;
+			tmp = TCP.receive(i);
+		} while (tmp != "");
+
+		// if there was a message set it to the corresponding client
+		if (str.length() > 0)
+		{
+			storeText[i] = str;
+		}
+
+		//// draw the info text and the received text bellow it
+		//ofDrawBitmapString(info, xPos, yPos);
+		//ofDrawBitmapString(storeText[i], 25, yPos + 20);
+
+		ss += info;
+		ss += storeText[i];
+	}
+
+	ofxSurfingHelpers::drawTextBoxed(font, ss, 20, 20);
+}
+#endif

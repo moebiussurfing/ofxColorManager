@@ -50,6 +50,11 @@ TODO:
 
 #define AUTO_DRAW_CALLBACK
 
+#define LINK_TCP_MASTER_CLIENT
+#ifdef LINK_TCP_MASTER_CLIENT
+#include "ofxNetwork.h"
+#endif
+
 //------
 
 #include <random>
@@ -143,6 +148,19 @@ using namespace ImGui_PalettesPicker;
 
 class ofxColorManager : public ofBaseApp
 {
+#ifdef LINK_TCP_MASTER_CLIENT
+	ofxTCPServer TCP;
+	//ofTrueTypeFont  mono;
+	//ofTrueTypeFont  monosm;
+	vector <string> storeText;
+	uint64_t lastCheckLink;
+	int port = 6666;
+	std::string host = "127.0.0.1";
+	void updateLink();
+	void setupLink();
+	void drawLink();
+#endif
+
 	//--
 
 private:
@@ -238,8 +256,9 @@ private:
 	//--
 
 private:
-	ofParameter<bool> auto_pilot{ "autoPilot", false};
+	ofParameter<bool> auto_pilot{ "autoPilot", false };
 	int auto_pilot_timer;
+	ofParameter<int> auto_pilot_Duration{ "Time", 1, 1, 20 };
 
 	ofParameter<bool> SHOW_ImGui{ "ImGui", true };
 
@@ -300,7 +319,7 @@ private:
 	ofParameter<std::string> AppMode_name;
 #define NUM_APP_MODES 5
 	enum Element { Element_0, Element_1, Element_2, Element_3, Element_4, Element_COUNT };
-	const char* element_names[Element_COUNT] = { "NONE", "THEORY", "RANGE", "LOVERS", "PICTURE"};
+	const char* element_names[Element_COUNT] = { "NONE", "THEORY", "RANGE", "LOVERS", "PICTURE" };
 	int current_element = Element_0;
 
 	//--
@@ -588,7 +607,7 @@ public:
 	vector<ofColor> getPalette();
 	std::string getPaletteName();
 	ofColor getColor(int index = -1);
-	
+
 	//get color from gradient at prc
 	ofColor getColorAtPercent(float control)
 	{
@@ -675,6 +694,7 @@ private:
 
 private:
 	ofxImGui::Gui gui;
+	ImFont* customFont = nullptr;
 
 	ofxImGui::Settings mainSettings = ofxImGui::Settings();
 
