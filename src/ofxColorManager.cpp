@@ -730,8 +730,8 @@ void ofxColorManager::setup()
 #ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
 	auto normalCharRanges = ImGui::GetIO().Fonts->GetGlyphRangesDefault();
 	float _size = 10.f;
-	string _name = "telegrama_render.otf";
-	string _path = "assets/fonts/" + _name;//assets folder
+	std::string _name = "telegrama_render.otf";
+	std::string _path = "assets/fonts/" + _name;//assets folder
 	customFont = gui.addFont(_path, _size, nullptr, normalCharRanges);
 #endif
 
@@ -2870,10 +2870,15 @@ void ofxColorManager::gui_Export()
 				ImGui::Text("Preset:");
 				ImGui::Text(PRESET_Temp.name.c_str());
 
-				ImGui::Dummy(ImVec2(0, 2));
-				ImGui::Text("Gradient:");
-				ImGui::Text(gradientEngine.path_Name_Gradient.c_str());
-				//ImGui::Text(path_Name_Gradient.c_str());
+				//#ifdef USE_SIMPLE_PRESET_PALETTE
+				//				std::string _path = path_FileExport + "_Palette.json";
+				//				ImGui::Text(_path.c_str());//hardcoded
+				//#endif
+
+								//ImGui::Dummy(ImVec2(0, 2));
+								//ImGui::Text("Gradient:");
+								//ImGui::Text(gradientEngine.path_Name_Gradient.c_str());
+								////ImGui::Text(path_Name_Gradient.c_str());
 
 				ImGui::Dummy(ImVec2(0, 5));
 				ImGui::Checkbox("Auto-resize", &auto_resize);
@@ -6409,8 +6414,8 @@ void ofxColorManager::preset_RefreshFiles()
 
 	//--
 
-	//(files_Names.size());//?
-	for (int i = 0; i < files_Names.size() && i < kit.size(); i++)
+	kit.resize(files_Names.size());
+	for (int i = 0; i < files_Names.size(); i++)
 	{
 		kit[i] = PRESET_Temp.getPreset(files_Names[i]);
 
@@ -6525,13 +6530,13 @@ void ofxColorManager::preset_Save(std::string p)
 
 	PRESET_Temp.setName_TARGET(p);
 	PRESET_Temp.setPalette_TARGET(palette);
-	
+
 #ifndef USE_SIMPLE_PRESET_PALETTE	
 	PRESET_Temp.setNameCurve_TARGET(PRESET_Name_Gradient);
 #endif
 	PRESET_Temp.setBackgroundColor(color_BackGround.get());//no pointer now
 
-	PRESET_Temp.preset_Save(p);
+	PRESET_Temp.preset_Save(p, false);
 	//PRESET_Temp.preset_Save(PRESET_Name);
 }
 
@@ -6910,7 +6915,7 @@ void ofxColorManager::exportPalette()
 		// A. save palette colors only (without background neither gradient)
 		//using ofxSerializer
 		j = palette;
-		string _path = path_FileExport + "_Palette.json";
+		std::string _path = path_FileExport + "_Palette.json";
 		ofLogNotice(__FUNCTION__) << "\n" << ofToString(j);
 
 		ofSavePrettyJson(_path, j);
@@ -6939,20 +6944,21 @@ void ofxColorManager::exportPalette()
 	//-
 
 #ifdef USE_SIMPLE_PRESET_PALETTE
-	{
-		// A. save palette colors only (without background neither gradient)
-		//using ofxSerializer
-		j = palette;
-		string _path = path_FileExport + "_Palette.json";
-		ofLogNotice(__FUNCTION__) << "\n" << ofToString(j);
+	// save palette colors only (without background neither gradient, bg or name)
+	//using ofxSerializer
+	j = palette;
+	std::string _path = path_FileExport + "_Palette.json";
+	ofLogNotice(__FUNCTION__) << "\n" << ofToString(j);
 
-		ofSavePrettyJson(_path, j);
-	}
+	ofSavePrettyJson(_path, j);
 #endif
 
 	//--
 
-	//TODO: add bundle json too
+	// TCP LINK
+
+	//TODO: 
+	//add bundle json too
 	//j = PRESET_Temp.getJson();
 	//j = load(path_FileExport + "_Bundled"
 #ifdef LINK_TCP_MASTER_CLIENT
@@ -7016,7 +7022,7 @@ void ofxColorManager::updateLink() {
 
 //--------------------------------------------------------------
 void ofxColorManager::drawLink() {
-	string ss;
+	std::string ss;
 	ss = "TCP SERVER\n\port: " + ofToString(TCP.getPort()) + "\n";
 
 	// for each connected client lets get the data being sent and lets print it to the screen
@@ -7025,21 +7031,21 @@ void ofxColorManager::drawLink() {
 		if (!TCP.isClientConnected(i))continue;
 
 		// get the ip and port of the client
-		string port = ofToString(TCP.getClientPort(i));
-		string ip = TCP.getClientIP(i);
-		string info = "client " + ofToString(i) + " " + ip + ":" + port;
+		std::string port = ofToString(TCP.getClientPort(i));
+		std::string ip = TCP.getClientIP(i);
+		std::string info = "client " + ofToString(i) + " " + ip + ":" + port;
 
 		// if we don't have a string allocated yet
 		// lets create one
 		if (i >= storeText.size())
 		{
-			storeText.push_back(string());
+			storeText.push_back(std::string());
 		}
 
 		// receive all the available messages, separated by \n
 		// and keep only the last one
-		string str;
-		string tmp;
+		std::string str;
+		std::string tmp;
 		do
 		{
 			str = tmp;

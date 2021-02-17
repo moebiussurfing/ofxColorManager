@@ -4,7 +4,6 @@ ofxGui
 ofxImGui
 ofxPoco
 ofxIO
-ofxMouseRuler
 ofxNetwork
 ofxOpenCv
 ofxPSBlend

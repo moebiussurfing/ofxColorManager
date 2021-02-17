@@ -7,19 +7,21 @@
 
 TODO:
 
++ fix name linking / new preset
++ fix color lovers layout reset / 
 + theory and range selectors do not update demo2 svg
 + fix theory: sometimes not upadting demo2 svg colors
-+ should clean: disable al and enable the required only
++ should clean: disable all and enable the required only
 
 + palette editor broken
++ smaller spaccing
 
-+ fix colour lovers growing gui
++ fix colour lovers / quantizer growing gui
 + fix pick color: lovers, quantizer..
 + add callback disabler for engines when using presets?
++ ImGui docking layout
 
 */
-
-//#define USE_SIMPLE_PRESET_PALETTE
 
 //----------
 
@@ -157,7 +159,7 @@ class ofxColorManager : public ofBaseApp
 	ofxTCPServer TCP;
 	//ofTrueTypeFont  mono;
 	//ofTrueTypeFont  monosm;
-	vector <string> storeText;
+	vector <std::string> storeText;
 	uint64_t lastCheckLink;
 	int port = 6666;
 	std::string host = "127.0.0.1";
