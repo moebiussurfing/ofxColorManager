@@ -93,8 +93,11 @@ void ofxColorManager::build_Palette_Engine()
 	//TODO:
 	// setup linking pointers to get back on load
 	PRESET_Temp.setName_TARGET(_name);
-	PRESET_Temp.setNameCurve_TARGET(PRESET_Name_Gradient);
 	PRESET_Temp.setPalette_TARGET(palette);
+
+#ifndef USE_SIMPLE_PRESET_PALETTE	
+	PRESET_Temp.setNameCurve_TARGET(PRESET_Name_Gradient);
+#endif
 
 	//----
 
@@ -424,7 +427,7 @@ void ofxColorManager::setup()
 
 		ofLogNotice("colourLoversHelper > Name Palette: ") << n;
 
-		});
+	});
 
 #endif
 
@@ -455,7 +458,7 @@ void ofxColorManager::setup()
 
 		refresh_Libs();
 
-		});
+	});
 
 	//-
 
@@ -465,7 +468,7 @@ void ofxColorManager::setup()
 
 		refresh_Libs();
 
-		});
+	});
 
 	//----
 
@@ -571,7 +574,8 @@ void ofxColorManager::setup()
 	//-
 
 	SHOW_Gradient.set("GRADIENT", true);
-	gradientEngine.SHOW_Gradient.makeReferenceTo(SHOW_Gradient);
+	SHOW_Gradient.makeReferenceTo(gradientEngine.SHOW_Gradient);
+	//gradientEngine.SHOW_Gradient.makeReferenceTo(SHOW_Gradient);
 
 	// gradient
 	gradientEngine.setup();
@@ -623,8 +627,10 @@ void ofxColorManager::setup()
 	SHOW_Demos.set("DEMO", false);
 
 	//bAutoResizePalette.set("AutoResize", false);
+#ifndef USE_SIMPLE_PRESET_PALETTE	
 	bModeBundlePreset.set("Mode Bundle", false);
 	bModePalettePreset.set("Mode Palette", false);
+#endif
 	bAutoExportPreset.set("Auto Export", false);
 	bExportPreset_DefaultPath.set("Path /bin/data", true);
 	path_Folder_ExportColor_Custom.set("ExportPath", "");
@@ -783,8 +789,10 @@ void ofxColorManager::setup()
 
 	// export colors
 	params_Export.setName("ExportColors");
+#ifndef USE_SIMPLE_PRESET_PALETTE	
 	params_Export.add(bModeBundlePreset);
 	params_Export.add(bModePalettePreset);
+#endif
 	params_Export.add(bAutoExportPreset);
 	params_Export.add(bExportPreset_DefaultPath);
 	params_Export.add(path_Folder_ExportColor_Custom);
@@ -909,8 +917,10 @@ void ofxColorManager::setup()
 	params_control.add(SHOW_ALL_GUI);
 	params_control.add(SHOW_Gradient);
 
+#ifndef USE_SIMPLE_PRESET_PALETTE	
 	params_control.add(bModeBundlePreset);
 	params_control.add(bModePalettePreset);
+#endif
 
 	params_control.add(DEMO2_Edit);
 	params_control.add(DEMO2_Scale);
@@ -2812,9 +2822,10 @@ void ofxColorManager::gui_Export()
 				exportPalette();
 			}
 			//ImGui::PopItemWidth();
-
+#ifndef USE_SIMPLE_PRESET_PALETTE	
 			ofxSurfingHelpers::AddBigToggle(bModeBundlePreset, _w, BUTTON_BIG_HEIGHT / 2);
 			ofxSurfingHelpers::AddBigToggle(bModePalettePreset, _w, BUTTON_BIG_HEIGHT / 2);
+#endif
 			ofxImGui::AddParameter(bAutoExportPreset);
 
 			if (ImGui::CollapsingHeader("Advanced"))
@@ -3881,7 +3892,7 @@ void ofxColorManager::gui_Presets()
 
 			//--
 
-			refresh_RearrengeFiles(textInput_New);
+			refresh_Files(textInput_New);
 		}
 
 		if (ImGui::Button("REFRESH KIT", ImVec2(_w50, _h * 0.5)))
@@ -3977,7 +3988,7 @@ void ofxColorManager::gui_Presets()
 
 					//--
 
-					refresh_RearrengeFiles(textInput_New);
+					refresh_Files(textInput_New);
 				}
 				else ofLogError(__FUNCTION__) << "Empty name on textInput !";
 			}
@@ -4223,7 +4234,10 @@ void ofxColorManager::gui_Demo()
 bool ofxColorManager::draw_Gui()
 {
 	gui.begin();
+
+#ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
 	ImGui::PushFont(customFont);
+#endif
 
 	//--
 
@@ -4251,7 +4265,10 @@ bool ofxColorManager::draw_Gui()
 
 	//--
 
+#ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
 	ImGui::PopFont();
+#endif
+
 	gui.end();
 
 	//-
@@ -5119,6 +5136,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 	//-
 
+#ifndef USE_SIMPLE_PRESET_PALETTE	
 	//export modes
 	else if (name == bModeBundlePreset.getName())
 	{
@@ -5128,6 +5146,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	{
 		bModeBundlePreset = !bModePalettePreset;
 	}
+#endif
 
 	//----
 
@@ -5916,18 +5935,6 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				}
 				types_Range[last_Index_Range] = true;
 			}
-			//if (key == ' ')
-			//{
-			//	if (last_Index_Range == NUM_TYPES_RANGES - 1) last_Index_Range = 0;//cycle
-			//	else if (last_Index_Range < NUM_TYPES_RANGES - 1) last_Index_Range++;
-			//	for (int i = 0; i < NUM_TYPES_RANGES; i++)
-			//	{
-			//		types_Range[i].disableEvents();
-			//		types_Range[i] = false;
-			//		types_Range[i].enableEvents();
-			//	}
-			//	types_Range[last_Index_Range] = true;
-			//}
 
 			//switch color c1/c2 selectors
 			if (key == OF_KEY_BACKSPACE)
@@ -6277,7 +6284,7 @@ void ofxColorManager::removeMouseListeners()
 // settings
 
 //--------------------------------------------------------------
-void ofxColorManager::refresh_RearrengeFiles(std::string name)
+void ofxColorManager::refresh_Files(std::string name)
 {
 	//--
 
@@ -6316,6 +6323,7 @@ void ofxColorManager::refresh_RearrengeFiles(std::string name)
 		preset_Load(PRESET_Name);
 	}
 }
+
 //--------------------------------------------------------------
 void ofxColorManager::preset_RefreshFiles()
 {
@@ -6371,8 +6379,7 @@ void ofxColorManager::preset_RefreshFiles()
 	// should check names because sorting changes..
 	if (files_Names.size() > 0)
 	{
-		if (last_Index_Preset > files_Names.size() - 1)
-			last_Index_Preset = files_Names.size() - 1;
+		if (last_Index_Preset > files_Names.size() - 1) last_Index_Preset = files_Names.size() - 1;
 
 		//else if (last_Index_Preset > files_Names.size() - 1)
 
@@ -6402,8 +6409,8 @@ void ofxColorManager::preset_RefreshFiles()
 
 	//--
 
-	kit.resize(files_Names.size());
-	for (int i = 0; i < files_Names.size(); i++)
+	//(files_Names.size());//?
+	for (int i = 0; i < files_Names.size() && i < kit.size(); i++)
 	{
 		kit[i] = PRESET_Temp.getPreset(files_Names[i]);
 
@@ -6436,8 +6443,11 @@ void ofxColorManager::preset_Load(std::string p)
 
 	// setup linking pointers to get back on load
 	PRESET_Temp.setName_TARGET(p);
-	PRESET_Temp.setNameCurve_TARGET(PRESET_Name_Gradient);
 	PRESET_Temp.setPalette_TARGET(palette);
+
+#ifndef USE_SIMPLE_PRESET_PALETTE	
+	PRESET_Temp.setNameCurve_TARGET(PRESET_Name_Gradient);
+#endif
 
 	//--
 
@@ -6458,7 +6468,8 @@ void ofxColorManager::preset_Load(std::string p)
 		ofLogError(__FUNCTION__) << "Preset file " << p << " not found! ";
 		return;
 	}
-	// preset loaded succesfully !
+	// palette and name will we auto updated here bc are pointer-back-referenced
+	// preset loaded succesfully here!
 
 	//--
 
@@ -6473,7 +6484,7 @@ void ofxColorManager::preset_Load(std::string p)
 	vector<ofColor> _p = PRESET_Temp.getPalette();
 	for (int i = 0; i < _p.size(); i++)
 	{
-		ofLogNotice(__FUNCTION__) << "Col: " << ofToString(i) << " " << ofToString(_p[i]);
+		ofLogNotice(__FUNCTION__) << "Color #" << ofToString(i) << " " << ofToString(_p[i]);
 		palette_AddColor(_p[i]);
 	}
 
@@ -6488,10 +6499,7 @@ void ofxColorManager::preset_Load(std::string p)
 	//if (DEMO1_Test && DEMO_Auto) myDEMO1.reStart();
 
 	// load first color
-	if (palette.size() > 0)
-	{
-		color_Picked = ofFloatColor(palette[0]);
-	}
+	if (palette.size() > 0) color_Picked = ofFloatColor(palette[0]);
 
 	//--
 
@@ -6516,12 +6524,15 @@ void ofxColorManager::preset_Save(std::string p)
 	//this is using pointers.. ?
 
 	PRESET_Temp.setName_TARGET(p);
-	PRESET_Temp.setNameCurve_TARGET(PRESET_Name_Gradient);
 	PRESET_Temp.setPalette_TARGET(palette);
+	
+#ifndef USE_SIMPLE_PRESET_PALETTE	
+	PRESET_Temp.setNameCurve_TARGET(PRESET_Name_Gradient);
+#endif
 	PRESET_Temp.setBackgroundColor(color_BackGround.get());//no pointer now
 
-	//PRESET_Temp.preset_Save(PRESET_Name);
 	PRESET_Temp.preset_Save(p);
+	//PRESET_Temp.preset_Save(PRESET_Name);
 }
 
 //----
@@ -6892,6 +6903,8 @@ void ofxColorManager::exportPalette()
 
 	//-
 
+#ifndef USE_SIMPLE_PRESET_PALETTE
+
 	if (!bModeBundlePreset)
 	{
 		// A. save palette colors only (without background neither gradient)
@@ -6920,6 +6933,22 @@ void ofxColorManager::exportPalette()
 
 		j = PRESET_Temp.getPresetJsonLastSaved();//for TCP link only
 	}
+
+#endif
+
+	//-
+
+#ifndef USE_SIMPLE_PRESET_PALETTE
+	{
+		// A. save palette colors only (without background neither gradient)
+		//using ofxSerializer
+		j = palette;
+		string _path = path_FileExport + "_Palette.json";
+		ofLogNotice(__FUNCTION__) << "\n" << ofToString(j);
+
+		ofSavePrettyJson(_path, j);
+	}
+#endif
 
 	//--
 

@@ -11,5 +11,4 @@ ofxPSBlend
 ofxSurfingHelpers
 ofxSvg
 ofxSvgLoader
-ofxTweeny
 ofxXmlSettings

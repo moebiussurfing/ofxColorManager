@@ -19,12 +19,17 @@ TODO:
 
 */
 
+//#define USE_SIMPLE_PRESET_PALETTE
 
 //----------
 
 // OPTIONAL
 
 //#define USE_RECTANGLE_INTERFACES // TODO: a custom final user size ofxInterface
+
+//TODO:
+// an extended preset format
+//#define USE_BUNDLE_TYPE_PRESET
 
 //	modules
 // can't be disabled now..
@@ -432,8 +437,10 @@ private:
 	ofParameterGroup params_Export;
 	ofParameter<bool> bAutoExportPreset;
 	ofParameter<bool> bExportPreset_DefaultPath;
+#ifndef USE_SIMPLE_PRESET_PALETTE	
 	ofParameter<bool> bModeBundlePreset;
 	ofParameter<bool> bModePalettePreset;
+#endif
 	void exportPalette();
 
 	//--
@@ -580,16 +587,16 @@ public:
 	// must be initialized before setup
 
 	void setName_TARGET(std::string &s);
-	std::string *name_TARGET;
+	std::string *name_TARGET = NULL;
 
 	void setColor_TARGET(ofColor &c);
-	ofColor *color_TARGET;//backwards pointer to ofApp picker color
+	ofColor *color_TARGET = NULL;//backwards pointer to ofApp picker color
 
 	void setColorBg_TARGET(ofColor &c);
-	ofColor *colorBg_TARGET;//backwards pointer to ofApp background color
+	ofColor *colorBg_TARGET = NULL;//backwards pointer to ofApp background color
 
 	void setPalette_TARGET(vector<ofColor> &p);
-	vector<ofColor> *palette_TARGET;//backwards pointer to ofApp palette
+	vector<ofColor> *palette_TARGET = NULL;//backwards pointer to ofApp palette
 
 private:
 	void refresh_Palette_TARGET(vector<ofColor> &p);
@@ -932,7 +939,7 @@ private:
 	bool focus_1;
 	int has_focus = 0;
 	char tab[128];
-	void refresh_RearrengeFiles(std::string name);
+	void refresh_Files(std::string name);
 
 	//--
 
