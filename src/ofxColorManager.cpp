@@ -6901,7 +6901,7 @@ void ofxColorManager::exportPalette()
 	}
 	ofLogNotice(__FUNCTION__) << "Export path: " << path_FileExport;
 
-	//-
+	//--
 
 #ifndef USE_SIMPLE_PRESET_PALETTE
 
@@ -6938,7 +6938,7 @@ void ofxColorManager::exportPalette()
 
 	//-
 
-#ifndef USE_SIMPLE_PRESET_PALETTE
+#ifdef USE_SIMPLE_PRESET_PALETTE
 	{
 		// A. save palette colors only (without background neither gradient)
 		//using ofxSerializer
@@ -6972,7 +6972,6 @@ void ofxColorManager::exportPalette()
 #endif
 
 	//--
-
 }
 
 #ifdef LINK_TCP_MASTER_CLIENT

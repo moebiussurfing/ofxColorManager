@@ -11,7 +11,6 @@ public:
     void setup();
 	void draw();
     void keyPressed(int key);
-	//void dragEvent(ofDragInfo dragInfo);
 
     ofxColorManager colorManager;
 	
@@ -25,13 +24,11 @@ public:
     ofColor colorBg;
 	std::string name;
 
-	//-
+	//--
 
 	// test scene
 	ofxPanel gui;
 	bool bGui = false;
 	ofParameter<bool> bDraw_ofApp{ "Debug", false };
 	void draw_TEST_ofApp();
-
-
 };

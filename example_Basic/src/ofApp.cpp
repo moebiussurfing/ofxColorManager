@@ -3,6 +3,7 @@
 //--------------------------------------------------------------
 void ofApp::setup()
 {
+	// debug
 	//bDraw_ofApp = true;
 	//bGui = true;
 
@@ -26,6 +27,7 @@ void ofApp::setup()
 
 	//--
 
+	// local gui
 	gui.setup("ofApp");
 	gui.add(colorManager.getParameters_Debug());
 	gui.add(bDraw_ofApp);
@@ -59,7 +61,7 @@ void ofApp::keyPressed(int key)
 		int c = 0;
 		for (auto p : palette)
 		{
-			ofLogNotice(__FUNCTION__) << "color #" << c++ << ": " << ofToString(p);
+			ofLogNotice(__FUNCTION__) << "Color #" << c++ << ": " << ofToString(p);
 		}
 	}
 }
@@ -129,8 +131,3 @@ void ofApp::draw_TEST_ofApp()
 	ofPopMatrix();
 	ofPopStyle();
 }
-
-////--------------------------------------------------------------
-//void ofApp::dragEvent(ofDragInfo info) {
-//	colorManager.dragEvent(info);
-//}
