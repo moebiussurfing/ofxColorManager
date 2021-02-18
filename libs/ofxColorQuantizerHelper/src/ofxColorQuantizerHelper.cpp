@@ -112,7 +112,7 @@ void ofxColorQuantizerHelper::draw_Gui()
 		float _h = BUTTON_BIG_HEIGHT;
 		float _w100 = ImGui::GetWindowContentRegionWidth();
 		float _w99 = _w100 - _spc * 2;
-		float _w50 = _w99 * 0.5 - _spc;
+		float _w50 = _w99 * 0.5 - _spc * 2;
 
 		//-
 
@@ -138,17 +138,19 @@ void ofxColorQuantizerHelper::draw_Gui()
 		}
 
 		ImGui::Dummy(ImVec2(0, 5));
+
+		if (ImGui::Button("SORT", ImVec2(_w99, _h)))
+		{
+			sortedType++;
+			if (sortedType > 4) sortedType = 1;
+		}
+		ImGui::Dummy(ImVec2(0, 2));
+
 		std::string s2 = sortedType_name.get();
 		ImGui::Text(s2.c_str());
 
 		if (ImGui::InputInt(sortedType.getName().c_str(), (int *)&sortedType.get())) {
 			sortedType = ofClamp(sortedType, 1, 4);
-		}
-
-		if (ImGui::Button("SORT", ImVec2(_w99, _h*0.5)))
-		{
-			sortedType++;
-			if (sortedType > 4) sortedType = 1;
 		}
 
 		//ImGui::Dummy(ImVec2(0, 5));
@@ -170,7 +172,7 @@ void ofxColorQuantizerHelper::draw_Gui()
 		{
 			int _i = currentImage;
 
-			ImGui::PushItemWidth(_w50);
+			ImGui::PushItemWidth(_w99 - 10);
 
 			if (ofxImGui::VectorCombo(" ", &_i, imageNames))
 			{
@@ -224,8 +226,8 @@ void ofxColorQuantizerHelper::draw_Gui()
 		//const auto p = getPalette();
 		const auto p = getPalette(true);
 
-		//int wb = (_w99 / (int)NUM_QUANTIZER_COLORS_PER_ROW) - 100;
-		int wb = (ImGui::GetWindowContentRegionWidth() / (int)NUM_QUANTIZER_COLORS_PER_ROW) - (2 * _spc);
+		int wb = (_w99 / (int)NUM_QUANTIZER_COLORS_PER_ROW) - 2*_spc;
+		//int wb = (ImGui::GetWindowContentRegionWidth() / (int)NUM_QUANTIZER_COLORS_PER_ROW) - (2 * _spc);
 
 		for (int n = 0; n < p.size(); n++)
 		{

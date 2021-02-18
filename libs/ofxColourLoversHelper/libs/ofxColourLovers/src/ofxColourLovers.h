@@ -24,7 +24,6 @@
 #define CL_url "http://www.colourlovers.com/api/palettes/top/?showPaletteWidths=1"
 //http://www.colourlovers.com/api/palettes/top/?lover=andreasborg&showPaletteWidths=1
 
-
 #define CL_purl "http://www.colourlovers.com/api/palette/"
 
 /*
@@ -37,8 +36,6 @@ static int stringToHex(string hex) {
 	return aHex;
 }
 
-
-
 static void hexToColor(ofColor &col, string hex) {
 	string r = hex.substr(0, 2);
 	int ri = stringToHex(r);
@@ -47,10 +44,7 @@ static void hexToColor(ofColor &col, string hex) {
 	string b = hex.substr(4, 2);
 	int bi = stringToHex(b);
 	col.set(ri, gi, bi);
-
 }
-
-
 
 class ofxColourLovers {
 
@@ -65,7 +59,6 @@ public:
 
 	static  void getTopPalettes(int numResults = 20, int resultOffset = 0, string orderCol = "numVotes", string sortBy = "DESC") {
 
-
 		getSingleton().callType = CL_GET_TOP_PALETTES;
 
 		ofxHttpForm form;//submitting form
@@ -78,9 +71,6 @@ public:
 
 		ofLogNotice(__FUNCTION__) << "url: " << url;
 
-
-
-
 		//form.clearFormFields();//clear out old send data
 
 		 /*
@@ -91,8 +81,6 @@ public:
 		  // ofLogNotice(__FUNCTION__)<<form1.elements[i]->name<< v <<endl;
 		  }*/
 
-
-
 		ofLogNotice() << "submitting getTopPalettes";
 		//status = PENDING;
 		getSingleton().http.addForm(form);
@@ -101,16 +89,11 @@ public:
 		}
 
 		//getSingleton().http.submitForm(form);
-
-
 	}
 
 	static  void getTopPalettesForLover(string lover, int numResults = 20, int resultOffset = 0, string orderCol = "numVotes", string sortBy = "DESC") {
 
-
 		getSingleton().callType = CL_GET_TOP_PALETTES_FOR_LOVER;
-
-
 
 		ofxHttpForm form;//submitting form
 		form.name = "getTopPalettesForLover";
@@ -131,8 +114,6 @@ public:
 		 // ofLogNotice(__FUNCTION__)<<form1.elements[i]->name<< v <<endl;
 		 }*/
 
-
-
 		ofLogNotice() << "submitting getTopPalettesForLover: " << lover;
 		//status = PENDING;
 
@@ -142,10 +123,7 @@ public:
 		}
 
 		//getSingleton().http.submitForm(form);//not threaded
-
-
 	}
-
 
 	static  void searchPalettes(string keywords, int numResults = 20, int resultOffset = 0, string orderCol = "numVotes", string sortBy = "DESC") {
 		ofLogNotice(__FUNCTION__) << "search: " << keywords << " max: " << numResults;
@@ -185,7 +163,6 @@ public:
 
 	static  void getPalette(string id) {
 
-
 		getSingleton().callType = CL_GET_PALETTE;
 		ofxHttpForm form;//submitting form
 		form.name = "getPalette";
@@ -205,15 +182,9 @@ public:
 		//getSingleton().http.submitForm(form);
 	}
 
-
-
-
-
 	static string hexToWeb(ofColor col) {
 		return "#" + ofToHex(col.r) + ofToHex(col.g) + ofToHex(col.b);
 	}
-
-
 
 private:
 
@@ -226,7 +197,6 @@ private:
 	static ofxColourLovers &getSingleton();//check out this pattern...it's quite sweet
 
 
-
 	virtual void newResponse(ofxHttpResponse &response) {
 		// printf("%s\n", response.responseBody.c_str());
 		string responseStr = ofToString(response.status) + ": " + (string)response.responseBody;
@@ -235,9 +205,17 @@ private:
 
 		ofLogNotice(__FUNCTION__) << "response: : " << responseStr;
 
+		//TODO:
+		if (responseStr == "-1")
+		{
+			ofLogError(__FUNCTION__) << "INVALID RESPONSE !";
+			return;
+		}
+
+		//-
+
 		ColourLoveEvent newEvent;
 		//newEvent.message = responseStr;
-
 
 		switch (getSingleton().callType) {
 		case CL_GET_TOP_PALETTES:
@@ -262,11 +240,8 @@ private:
 			ofLogNotice(__FUNCTION__) << "CL_GET_PALETTE reply";
 			break;
 
-
 		default:
 			break;
-
-
 		}
 
 		//pass this on so you can save palettes as you please
@@ -274,7 +249,6 @@ private:
 
 		ofNotifyEvent(ColourLoveEvent::events, newEvent);
 	}
-
 
 	static void parsePalettes(ofxXmlSettings &palettes, ColourLoveEvent &palette) {
 
@@ -284,7 +258,6 @@ private:
 		if (numPalettes > 0) {
 			for (int i = 0; i < numPalettes; i++) {
 				palettes.pushTag("palette", i);
-				//
 
 				ColourLovePalette cp;
 				cp.parseXML(palettes);
@@ -297,8 +270,6 @@ private:
 
 		//ofLogNotice(__FUNCTION__) << endl << ofToString(palettes);
 	}
-
-
 };
 
 #endif

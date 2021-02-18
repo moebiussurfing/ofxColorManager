@@ -146,8 +146,7 @@ void ofxColourLoversHelper::drawImGuiMain()
 			}
 
 			//ImGui::SameLine();
-			//ImGui::PushItemWidth(_w99);
-			if (ImGui::Button("SEARCH", ImVec2(_w99, 0.5 * BUTTON_BIG_HEIGHT)))
+			if (ImGui::Button("SEARCH", ImVec2(_w99, _hb)))
 			{
 				ofLogNotice(__FUNCTION__) << "searchPalettes: " << textInput_temp1_PRE;
 
@@ -157,7 +156,6 @@ void ofxColourLoversHelper::drawImGuiMain()
 
 				//textInput_temp1_PRE = textInput_temp1 = "";//clear
 			}
-			//ImGui::PopItemWidth();
 
 			//-
 
@@ -392,7 +390,7 @@ void ofxColourLoversHelper::drawImGuiMain()
 
 			ImGui::PushButtonRepeat(true);
 
-			if (ImGui::Button("Previous", ImVec2(_w50, _hb)))
+			if (ImGui::Button("Previous", ImVec2(_w50, _hb*2)))
 			{
 				prevPalette();
 
@@ -404,7 +402,7 @@ void ofxColourLoversHelper::drawImGuiMain()
 
 			ImGui::SameLine();
 
-			if (ImGui::Button("Next", ImVec2(_w50, _hb)))
+			if (ImGui::Button("Next", ImVec2(_w50, _hb*2)))
 			{
 				nextPalette();
 
