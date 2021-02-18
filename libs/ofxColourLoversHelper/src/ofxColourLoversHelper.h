@@ -21,6 +21,7 @@
 #define PANEL_WIDGETS_WIDTH 225
 #define PANEL_WIDGETS_HEIGHT 100
 #define BUTTON_BIG_HEIGHT 50
+#define BUTTON_BIG_HEIGHT2 35
 #define BUTTON_SLIM_HEIGHT 14
 //
 //--
@@ -64,7 +65,8 @@ private:
 #ifndef USE_OFX_IM_GUI_EXTERNAL
 	ofxImGui::Gui gui_ImGui;
 #endif
-	void drawImGui();
+	void drawImGuiMain();
+	void drawImGuiBrowseKits();
 	ofxImGui::Settings mainSettings;
 #endif
 
@@ -97,6 +99,8 @@ private:
 
 	ImVec4 color_Pick{ 1,1,1,0.5 };
 	float linew_Pick = 2.0;
+	bool bfocus = true;
+	bool auto_resize = true;
 
 	//--
 

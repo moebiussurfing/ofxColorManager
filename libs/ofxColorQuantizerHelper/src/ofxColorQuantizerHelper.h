@@ -10,6 +10,10 @@
 
 //-
 
+
+#define PANEL_WIDGETS_WIDTH 225
+#define PANEL_WIDGETS_HEIGHT 100
+
 #ifdef USE_OFX_GUI__QUANTIZER
 #include "ofxGui.h"
 #endif
@@ -248,6 +252,7 @@ private:
 
 	glm::vec2 position = glm::vec2(0, 0);
 	glm::vec2 size = glm::vec2(1440, 900);
+	bool auto_resize = true;
 
 	std::string pathFolder = "images/";
 	bool isLoadedImage = false;

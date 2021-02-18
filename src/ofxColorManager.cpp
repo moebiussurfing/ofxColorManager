@@ -1973,8 +1973,9 @@ void ofxColorManager::gui_PaletteEditor()
 	if (ofxImGui::BeginWindow("PALETTE EDITOR", mainSettings, flagsw))
 	{
 		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
-		float _w = ImGui::GetWindowContentRegionWidth() - 2 * _spc;
-		float _w50 = _w * 0.48;
+		float _w100 = ImGui::GetWindowContentRegionWidth();
+		float _w = _w100 - 2 * _spc;
+		float _w50 = _w * 0.5 - 1 * _spc;
 		float _h = BUTTON_BIG_HEIGHT;
 
 		ImGuiColorEditFlags _flags = ImGuiColorEditFlags_None;
@@ -2012,14 +2013,15 @@ void ofxColorManager::gui_PaletteEditor()
 					//split in rows
 					if ((n % _r) != 0)
 					{
-						if (n != 0) ImGui::SameLine();
+						if (n != 0) ImGui::SameLine(0,0);
+						//if (n != 0) ImGui::SameLine();
 					}
 
 					//----
 
 					float wb;
-					wb = (_w / _r) - (2.0f * _spc);
-					//wb = (_w / _r) - (1.5 * _spc);
+					wb = (_w / _r);// -(_r * _spc);
+					//wb = (_w / _r) - (2.0f * _spc);
 					//if (!bResponsive_Presets) wb = wb * scale_ColPalette.get();
 
 					//--
@@ -3638,12 +3640,10 @@ void ofxColorManager::gui_Presets()
 		int counter = last_Index_Preset.get();
 		//static int counter = last_Index_Preset;
 
-		//----
-
 		// index preset / total
 		int numPalettes = files_Names.size() - 1;
-		ImGui::Text("%d/%d", counter, numPalettes);
-		//ImGui::Text("%d/%d", last_Index_Preset.get(), numPalettes);
+
+		//----
 
 		ImGui::Dummy(ImVec2(0, 5));
 
@@ -3740,8 +3740,11 @@ void ofxColorManager::gui_Presets()
 
 			ImGui::PopItemWidth();
 		}
+		
+		ImGui::Text("%d/%d", counter, numPalettes);
+		//ImGui::Text("%d/%d", last_Index_Preset.get(), numPalettes);
 
-		ImGui::Dummy(ImVec2(0, 10));
+		ImGui::Dummy(ImVec2(0, 5));
 
 		//----
 
@@ -4124,7 +4127,7 @@ void ofxColorManager::gui_Gradient()
 
 			ImGui::PushItemWidth(_w20);
 			ofxImGui::AddParameter(gradientEngine.gradient_HardMode);
-			ofxImGui::AddParameter(gradientEngine.bAutoSet_Background);
+			if(gradientEngine.color_BackGround_GradientMode)ofxImGui::AddParameter(gradientEngine.bAutoSet_Background);
 			ofxSurfingHelpers::AddBigToggle(gradientEngine.color_BackGround_GradientMode, _w, _h / 2);
 			if (ImGui::Button(gradientEngine.bPalettize.getName().c_str(), ImVec2(_w, _h * 0.5)))
 			{

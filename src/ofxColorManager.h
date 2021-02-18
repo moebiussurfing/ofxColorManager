@@ -12,11 +12,8 @@ TODO:
 + theory and range selectors do not update demo2 svg
 + fix theory: sometimes not upadting demo2 svg colors
 + should clean: disable all and enable the required only
-
 + palette editor broken
-+ smaller spacing
 
-+ fix colour lovers / quantizer growing gui
 + fix pick color: lovers, quantizer..
 + add callback disabler for engines when using presets?
 + ImGui docking layout
