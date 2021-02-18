@@ -817,7 +817,7 @@ void ofxColorManager::setup()
 	params_Panels.add(SHOW_Kit);
 	params_Panels.add(AutoScroll);
 	params_Panels.add(SHOW_Gradient);
-	params_Panels.add(gradientEngine.SHOW_Editor);
+	params_Panels.add(gradientEngine.SHOW_CurveEditor);
 	//params_Panels.add(gradientEngine.SHOW_Gradient);
 	params_AppState.add(params_Panels);
 
@@ -1968,6 +1968,8 @@ void ofxColorManager::gui_PaletteEditor()
 
 	//-
 
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, PANEL_WIDGETS_HEIGHT));
+
 	if (ofxImGui::BeginWindow("PALETTE EDITOR", mainSettings, flagsw))
 	{
 		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
@@ -2217,6 +2219,8 @@ void ofxColorManager::gui_PaletteEditor()
 		}
 	}
 	ofxImGui::EndWindow(mainSettings);
+
+	ImGui::PopStyleVar();
 }
 
 //--------------------------------------------------------------
@@ -2899,6 +2903,8 @@ void ofxColorManager::gui_Picker()
 
 	//--
 
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, PANEL_WIDGETS_HEIGHT));
+
 	if (ofxImGui::BeginWindow("PICKER", mainSettings, flagsw))
 	{
 		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
@@ -3084,6 +3090,8 @@ void ofxColorManager::gui_Picker()
 		//}
 	}
 	ofxImGui::EndWindow(mainSettings);
+
+	ImGui::PopStyleVar();
 }
 
 //--------------------------------------------------------------
@@ -3176,10 +3184,6 @@ void ofxColorManager::gui_Range()
 
 	if (ofxImGui::BeginWindow("RANGE", mainSettings, flags))
 	{
-		//ImGui::Dummy(ImVec2(0, 10));
-
-		//--
-
 		float _sz = int(BUTTON_COLOR_SIZE) * scale_ColRange.get();
 		float _szLabel = 100;
 
@@ -3441,6 +3445,8 @@ void ofxColorManager::gui_Background()
 
 	//--
 
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, PANEL_WIDGETS_HEIGHT));
+
 	if (ofxImGui::BeginWindow("BACKGROUND", mainSettings, flagsw))
 	{
 		//--
@@ -3561,6 +3567,8 @@ void ofxColorManager::gui_Background()
 		}
 	}
 	ofxImGui::EndWindow(mainSettings);
+
+	ImGui::PopStyleVar();
 }
 
 //--------------------------------------------------------------
@@ -3574,24 +3582,21 @@ void ofxColorManager::gui_Presets()
 	float ww, hh;
 	ww = PANEL_WIDGETS_WIDTH;
 	hh = PANEL_WIDGETS_HEIGHT;
-	ImGui::SetWindowSize(ImVec2(ww, hh));
+	ImGui::SetWindowSize(ImVec2(ww, hh));//not doing nothing
 	ImGuiWindowFlags flags;
-	flags = ImGuiWindowFlags_None;
-	//flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
-	//TODO: not working...non stop growing..
+	flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
 
 	//--
 
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, PANEL_WIDGETS_HEIGHT));
+
 	if (ofxImGui::BeginWindow("PRESETS", mainSettings, flags))
 	{
-		//ImGui::Checkbox("Auto-resize", &auto_resize);
-
-		//--
-
 		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
-		float _w = ImGui::GetWindowContentRegionWidth() - 2 * _spc;
-		//float _w = PANEL_WIDGETS_WIDTH - 2 * _spc;
-		float _w50 = _w * 0.5;
+		float _w100 = ImGui::GetWindowContentRegionWidth();
+		//float _w99 = _w100 - 10;
+		float _w99 = _w100 - _spc;
+		float _w50 = _w99 * 0.5 - 2 * _spc;
 		float _h = BUTTON_BIG_HEIGHT;
 
 		ImGuiColorEditFlags _flags;
@@ -3618,8 +3623,8 @@ void ofxColorManager::gui_Presets()
 
 		ImGui::Dummy(ImVec2(0, 5));
 
-		ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteFloating, _w, _h * 0.5);
-		ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteEditor, _w, _h * 0.5);
+		ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteFloating, _w99, _h * 0.5);
+		ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteEditor, _w99, _h * 0.5);
 
 		//ImGui::Text("Name");
 		ImGui::Dummy(ImVec2(0, 5));
@@ -3628,7 +3633,7 @@ void ofxColorManager::gui_Presets()
 
 		//----
 
-		ImGui::Dummy(ImVec2(0, 5));
+		//ImGui::Dummy(ImVec2(0, 5));
 
 		int counter = last_Index_Preset.get();
 		//static int counter = last_Index_Preset;
@@ -3715,7 +3720,7 @@ void ofxColorManager::gui_Presets()
 		{
 			int _i = last_Index_Preset;
 
-			ImGui::PushItemWidth(_w);
+			ImGui::PushItemWidth(_w99 - 10);
 
 			if (ofxImGui::VectorCombo(" ", &_i, files_Names))
 			{
@@ -3916,7 +3921,7 @@ void ofxColorManager::gui_Presets()
 		ImGui::Dummy(ImVec2(0, 5));
 
 		//new preset toggle
-		if (ofxSurfingHelpers::AddBigToggle(MODE_NewPreset, _w, _h))
+		if (ofxSurfingHelpers::AddBigToggle(MODE_NewPreset, _w99, _h))
 		{
 			//TODO:
 			textInput_New = name_TARGET[0];//set
@@ -3929,7 +3934,7 @@ void ofxColorManager::gui_Presets()
 		{
 			//ImGui::Dummy(ImVec2(0, 5));
 
-			ImGui::PushItemWidth(_w);
+			ImGui::PushItemWidth(_w99);
 			{
 				// loaded string into char array
 				char tab[32];
@@ -3978,7 +3983,7 @@ void ofxColorManager::gui_Presets()
 
 			ImGui::PushID(1);
 			ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.5f, 0.0f, 0.5f, a));
-			if (ImGui::Button("SAVE NEW", ImVec2(_w, _h)))
+			if (ImGui::Button("SAVE NEW", ImVec2(_w99, _h)))
 			{
 				has_focus = 0;
 				MODE_NewPreset = false;
@@ -4006,7 +4011,7 @@ void ofxColorManager::gui_Presets()
 
 		ImGui::Dummy(ImVec2(0, 2));
 
-		ofxSurfingHelpers::AddBigToggle(SHOW_Kit, _w, _h * 0.5);
+		ofxSurfingHelpers::AddBigToggle(SHOW_Kit, _w99, _h * 0.5);
 
 		if (SHOW_Kit) ofxImGui::AddParameter(AutoScroll);
 		//ofxImGui::AddParameter(SHOW_Kit);
@@ -4015,8 +4020,13 @@ void ofxColorManager::gui_Presets()
 		ImGui::Dummy(ImVec2(0, 5));
 
 		//--
+
+		//ImGui::Checkbox("Auto-resize", &auto_resize);
 	}
+
 	ofxImGui::EndWindow(mainSettings);
+
+	ImGui::PopStyleVar();
 
 	//----
 
@@ -4029,6 +4039,8 @@ void ofxColorManager::gui_Presets()
 		//ImGuiWindowFlags flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
 
 		//--
+
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, PANEL_WIDGETS_HEIGHT));
 
 		if (ofxImGui::BeginWindow("KIT", mainSettings, flags))
 		{
@@ -4048,6 +4060,8 @@ void ofxColorManager::gui_Presets()
 			}
 		}
 		ofxImGui::EndWindow(mainSettings);
+
+		ImGui::PopStyleVar();
 	}
 }
 
@@ -4097,7 +4111,7 @@ void ofxColorManager::gui_Gradient()
 		{
 			ImGui::Dummy(ImVec2(0, 5));
 
-			ofxSurfingHelpers::AddBigToggle(gradientEngine.SHOW_Editor, _w, _h / 2);
+			ofxSurfingHelpers::AddBigToggle(gradientEngine.SHOW_CurveEditor, _w, _h / 2);
 
 			ImGui::PushItemWidth(_w);
 			if (ImGui::Button(gradientEngine.bResetCurve.getName().c_str(), ImVec2(_w, _h)))
@@ -6003,8 +6017,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				colourLoversHelper.randomPalette();
 #endif
 				textInput_temp = PRESET_Name;
-			}
-		}
+	}
+}
 
 		//----
 
@@ -6247,8 +6261,8 @@ void ofxColorManager::mouseScrolled(ofMouseEventArgs &eventArgs)
 	if (DEMO2_Edit)
 	{
 		if (DEMO2_Svg.rectDgSvg.inside(glm::vec2(x, y)))//zoom 
-			if (scrollY == 1) DEMO2_Scale += 0.1f;
-			else if (scrollY == -1) DEMO2_Scale -= 0.1f;
+			if (scrollY == 1) DEMO2_Scale += 0.025f;
+			else if (scrollY == -1) DEMO2_Scale -= 0.025f;
 	}
 }
 
