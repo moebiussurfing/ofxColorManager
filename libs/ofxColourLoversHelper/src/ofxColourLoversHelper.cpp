@@ -88,11 +88,11 @@ void ofxColourLoversHelper::setVisible(bool b)
 //--------------------------------------------------------------
 void ofxColourLoversHelper::drawImGui()
 {
-	static bool auto_resize = true;
+	static bool auto_resize = false;
 	float ww, hh;
 	ww = PANEL_WIDGETS_WIDTH;
 	hh = PANEL_WIDGETS_HEIGHT;
-	ImGuiWindowFlags flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : 0;
+	ImGuiWindowFlags flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
 	if (!auto_resize) ImGui::SetWindowSize(ImVec2(ww, hh));
 
 	mainSettings = ofxImGui::Settings();
@@ -104,8 +104,9 @@ void ofxColourLoversHelper::drawImGui()
 #endif
 
 	//-
-
-	if (ofxImGui::BeginWindow("COLOUR-LOVERS", mainSettings, flags))
+	static bool bCollapse = false;
+	if (ofxImGui::BeginWindow("COLOUR-LOVERS", mainSettings, flags, &bCollapse))
+	//if (ofxImGui::BeginWindow("COLOUR-LOVERS", mainSettings, flags))
 	{
 		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
 		float _w;

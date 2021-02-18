@@ -14,7 +14,7 @@ TODO:
 + should clean: disable all and enable the required only
 
 + palette editor broken
-+ smaller spaccing
++ smaller spacing
 
 + fix colour lovers / quantizer growing gui
 + fix pick color: lovers, quantizer..
@@ -51,7 +51,7 @@ TODO:
 
 // extra
 //#define USE_UNDO_ENGINE
-#define USE_DEBUG_LAYOUT // includes mouse ruler
+//#define USE_DEBUG_LAYOUT // includes mouse ruler
 //#define USE_SUPER_LOG
 //#define USE_OFX_GUI
 

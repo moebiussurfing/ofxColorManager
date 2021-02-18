@@ -1008,7 +1008,7 @@ void ofxColorManager::startup()
 //--------------------------------------------------------------
 void ofxColorManager::update(ofEventArgs & args)
 {
-	if (ofGetFrameNum() % int(60 * 1.0) == 0) ofLog();//timer spaced
+	//if (ofGetFrameNum() % int(60 * 1.0) == 0) ofLog();//timer spaced
 
 	//--
 
@@ -2010,15 +2010,12 @@ void ofxColorManager::gui_PaletteEditor()
 					//split in rows
 					if ((n % _r) != 0)
 					{
-						if (n != 0)
-						{
-							ImGui::SameLine();
-						}
+						if (n != 0) ImGui::SameLine();
 					}
 
 					//----
 
-					int wb;
+					float wb;
 					wb = (_w / _r) - (2.0f * _spc);
 					//wb = (_w / _r) - (1.5 * _spc);
 					//if (!bResponsive_Presets) wb = wb * scale_ColPalette.get();
@@ -2826,7 +2823,8 @@ void ofxColorManager::gui_Export()
 			ofxSurfingHelpers::AddBigToggle(bModeBundlePreset, _w, BUTTON_BIG_HEIGHT / 2);
 			ofxSurfingHelpers::AddBigToggle(bModePalettePreset, _w, BUTTON_BIG_HEIGHT / 2);
 #endif
-			ofxImGui::AddParameter(bAutoExportPreset);
+			ofxSurfingHelpers::AddBigToggle(bAutoExportPreset, _w, BUTTON_BIG_HEIGHT / 2);
+			//ofxImGui::AddParameter(bAutoExportPreset);
 
 			if (ImGui::CollapsingHeader("Advanced"))
 			{

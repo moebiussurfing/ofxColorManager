@@ -100,15 +100,16 @@ void ofxColorQuantizerHelper::refresh_QuantizerImage()
 //--------------------------------------------------------------
 void ofxColorQuantizerHelper::draw_Gui()
 {
-	if (ofxImGui::BeginWindow("PICTURE", mainSettings, false))
+	static bool bCollapse = false;
+	if (ofxImGui::BeginWindow("PICTURE", mainSettings, ImGuiWindowFlags_None, &bCollapse))
 	{
 		//-
 
 		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
-		int _w = ImGui::GetWindowContentRegionWidth() - 2 * _spc;
-		//float _w50 = _w * 0.5;
-		float _w50 = (_w * 0.5) - (_spc * 0.5);
-		float _w100 = _w - 2 * _spc;
+		float _w100 = ImGui::GetWindowContentRegionWidth();
+		float _w99 = _w100 - 2 * _spc;
+		float _w50 = (_w100 * 0.5) - (_spc * 0.5);
+		//float _w50 = _w100 * 0.5;
 		float _h = BUTTON_BIG_HEIGHT;
 
 		//-
@@ -128,7 +129,7 @@ void ofxColorQuantizerHelper::draw_Gui()
 
 		//ofxImGui::AddGroup(colorQuantizer.getParameters(), mainSettings);
 
-		ofxSurfingHelpers::AddBigButton(bReBuild, _w, _h);
+		ofxSurfingHelpers::AddBigButton(bReBuild, _w100, _h);
 		ImGui::Dummy(ImVec2(0, 5));
 
 		if (ImGui::InputInt(numColors.getName().c_str(), (int *)&numColors.get())) {
@@ -143,7 +144,7 @@ void ofxColorQuantizerHelper::draw_Gui()
 			sortedType = ofClamp(sortedType, 1, 4);
 		}
 
-		if (ImGui::Button("SORT", ImVec2(_w, _h)))
+		if (ImGui::Button("SORT", ImVec2(_w100, _h*0.5)))
 		{
 			sortedType++;
 			if (sortedType > 4) sortedType = 1;
@@ -168,7 +169,7 @@ void ofxColorQuantizerHelper::draw_Gui()
 		{
 			int _i = currentImage;
 
-			ImGui::PushItemWidth(_w);
+			ImGui::PushItemWidth(_w100);
 
 			if (ofxImGui::VectorCombo(" ", &_i, imageNames))
 			{
@@ -222,7 +223,7 @@ void ofxColorQuantizerHelper::draw_Gui()
 		//const auto p = getPalette();
 		const auto p = getPalette(true);
 
-		//int wb = (_w / (int)NUM_QUANTIZER_COLORS_PER_ROW) - (2 * _spc);
+		//int wb = (_w100 / (int)NUM_QUANTIZER_COLORS_PER_ROW) - (2 * _spc);
 		int wb = (ImGui::GetWindowContentRegionWidth() / (int)NUM_QUANTIZER_COLORS_PER_ROW) - (2 * _spc);
 
 		for (int n = 0; n < p.size(); n++)
@@ -260,7 +261,7 @@ void ofxColorQuantizerHelper::draw_Gui()
 
 			if (ImGui::ImageButton(
 				(ImTextureID)(uintptr_t)fbo.getTexture(0).getTextureData().textureID, 
-				ImVec2(_w100, _w100 * ratio)))
+				ImVec2(_w99, _w99 * ratio)))
 			{
 				ofLogNotice(__FUNCTION__) << "Image Pressed";
 			}
