@@ -341,15 +341,22 @@ void ofxColourLoversHelper::drawImGuiMain()
 			//if (ofxImGui::BeginWindow("BROWSE", mainSettings, false))
 			//if (ofxImGui::BeginWindow(lastSearch.c_str(), mainSettings, false))
 		{
-			if (ImGui::Button("FAVORITES", ImVec2(_w50, _hb)))
-			{
-				loadFavorites();
-			}
+			//ofxImGui::AddParameter(bFavorites);
+			//ofxImGui::AddParameter(bHistory);
+
+			ofxSurfingHelpers::AddBigToggle(bFavorites, _w50, _hb * 2);
 			ImGui::SameLine();
-			if (ImGui::Button("HISTORY", ImVec2(_w50, _hb)))
-			{
-				loadHistory();
-			}
+			ofxSurfingHelpers::AddBigToggle(bHistory, _w50, _hb * 2);
+
+			//if (ImGui::Button("FAVORITES", ImVec2(_w50, _hb)))
+			//{
+			//	loadFavorites();
+			//}
+			//ImGui::SameLine();
+			//if (ImGui::Button("HISTORY", ImVec2(_w50, _hb)))
+			//{
+			//	loadHistory();
+			//}
 
 			//-
 
@@ -358,20 +365,18 @@ void ofxColourLoversHelper::drawImGuiMain()
 			//ImGui::Text(lastSearch.c_str());
 			//ImGui::Dummy(ImVec2(0.0f, 10));
 
-			// history or favorites
-			std::string ss;
-			ss = lastSearch;
-			//ss = lastSearch + "      " + s;
-
-			ImGui::Text(ss.c_str());
-			//ImGui::Text(s.c_str());
-
-			ImGui::Dummy(ImVec2(0, 5));
+			//// history or favorites
+			//std::string ss;
+			//ss = lastSearch;
+			////ss = lastSearch + "      " + s;
+			//ImGui::Text(ss.c_str());
+			////ImGui::Text(s.c_str());
+			//ImGui::Dummy(ImVec2(0, 5));
 
 			//ImGui::Text("Name:"); //ImGui::SameLine();
 			ImGui::Text(lastPaletteName.get().c_str());
 
-			////ImGui::Dummy(ImVec2(0, 5));
+			//ImGui::Dummy(ImVec2(0, 5));
 
 			//-
 
@@ -383,10 +388,12 @@ void ofxColourLoversHelper::drawImGuiMain()
 			else {
 				s = ofToString("-1/0");
 			}
-
 			ImGui::Text(s.c_str());
 
-			ImGui::Dummy(ImVec2(0, 5));
+
+			//-
+
+			//ImGui::Dummy(ImVec2(0, 5));
 
 			ImGui::PushButtonRepeat(true);
 
@@ -413,6 +420,8 @@ void ofxColourLoversHelper::drawImGuiMain()
 			}
 
 			ImGui::PopButtonRepeat();
+
+			//-
 
 			//ImGui::Dummy(ImVec2(0.0f, 5));
 
@@ -581,7 +590,7 @@ void ofxColourLoversHelper::drawImGuiBrowseKits()
 
 					ImGui::PushID(c);
 
-					int _wwB;
+					float _wwB;
 					if (MODE_FixedSize)
 					{
 						// same size for each color
@@ -632,7 +641,7 @@ void ofxColourLoversHelper::drawImGuiBrowseKits()
 						//	_scale = 1.0f;
 						//}
 
-						if (bfocus) _scale = 1.5f;
+						if (bfocus) _scale = 1.75f;
 						_hhB = _hb * _scale;
 
 						//_hhB = _hb;
@@ -881,6 +890,11 @@ void ofxColourLoversHelper::setup()
 	params.add(AutoScroll);
 	params.add(lastMenuTab);
 	//params.add(lastSearch);
+	params.add(bFavorites);
+	params.add(bHistory);
+
+	bFavorites.setSerializable(false);
+	bHistory.setSerializable(false);
 
 	ofxSurfingHelpers::loadGroup(params, path_AppSettings);
 
@@ -898,10 +912,29 @@ void ofxColourLoversHelper::setup()
 
 	//-
 
+
+	//--------------------------------------------------------------
+	listener_bFavorites = bFavorites.newListener([this](bool &b) {
+		ofLogNotice("ofxColorManager > bFavorites: ") << b;
+
+		bHistory = !bFavorites;
+		if (b) loadFavorites();
+	});
+
+	//--------------------------------------------------------------
+	listener_bHistory = bHistory.newListener([this](bool &b) {
+		ofLogNotice("ofxColorManager > bHistory: ") << b;
+
+		bFavorites = !bHistory;
+		if (b) loadHistory();
+	});
+
+
 	if (lastMenuTab.get() == "FAVORITES") loadFavorites();
 	else if (lastMenuTab.get() == "HISTORY") loadHistory();
+	loadFavorites();
 
-	//loadFavorites();
+	//--
 
 	// auto load first palette of favourites
 	if (palettes.size() > 0)
@@ -1636,6 +1669,8 @@ void ofxColourLoversHelper::loadFavorites()
 	lastSearch = "FAVORITES";
 	lastMenuTab = lastSearch;
 
+	if (!bFavorites) bFavorites = true;
+
 	//lastSearch_PRE = lastSearch;
 
 	//TODO:
@@ -1690,6 +1725,8 @@ void ofxColourLoversHelper::loadHistory()
 
 	lastSearch = "HISTORY";
 	lastMenuTab = lastSearch;
+
+	if (!bHistory) bHistory = true;
 
 	//lastSearch_PRE = lastSearch;
 

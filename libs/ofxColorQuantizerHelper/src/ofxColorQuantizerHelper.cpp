@@ -261,7 +261,7 @@ void ofxColorQuantizerHelper::draw_Gui()
 			float w = tex.getWidth();
 			float h = tex.getHeight();
 			float ratio = h / w;
-			float ww = _w99 - 10;
+			float ww = _w99 - 20;//hardcoded pad to avoid flickering bug..
 
 			if (ImGui::ImageButton(
 				(ImTextureID)(uintptr_t)fbo.getTexture(0).getTextureData().textureID, 

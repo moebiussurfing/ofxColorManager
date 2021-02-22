@@ -55,6 +55,12 @@ public:
 private:
 	bool bShowSearch = true;
 
+private:
+	ofParameter<bool> bFavorites{ "FAVORITES", false };
+	ofParameter<bool> bHistory{ "HISTORY", false };
+	ofEventListener listener_bFavorites;
+	ofEventListener listener_bHistory;
+
     //--
 
 public:

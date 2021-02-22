@@ -7,16 +7,16 @@
 
 TODO:
 
-+ fix name linking / new preset
-+ fix color lovers layout reset / 
++ new preset: fix name linking
 + theory and range selectors do not update demo2 svg
-+ fix theory: sometimes not upadting demo2 svg colors
 + should clean: disable all and enable the required only
 + palette editor broken
++ fix pick color: to lovers, quantizer..
 
-+ fix pick color: lovers, quantizer..
++ theory num colors not working on some types
 + add callback disabler for engines when using presets?
-+ ImGui docking layout
++ ImGui docking layout: app style
++ gui lib panel not recalls layout. improve other json libs
 
 */
 
@@ -30,14 +30,14 @@ TODO:
 // an extended preset format
 //#define USE_BUNDLE_TYPE_PRESET
 
-//	modules
+// modules
 // can't be disabled now..
 #define USE_COLOR_LOVERS
 #define USE_IMAGE_QUANTIZER
 #define USE_OFX_COLOR_BROWSER
 #define USE_EXTRA_LIBRARIES
 
-//	layout
+// layout
 #define MAX_PALETTE_COLORS 10
 #define INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
 #define BUTTON_BIG_HEIGHT 50
@@ -132,6 +132,7 @@ using namespace ofxSurfingHelpers;
 #endif
 
 #include "ofxImGui.h"
+//#include "imgui_internal.h" // <-- example uses some imgui internals...
 
 //TODO:
 //for a custom user gui
@@ -355,8 +356,10 @@ private:
 	ofParameter<bool> lib_Responsive_Mode;
 	ofParameter<bool> bPagerized;
 	ofParameter<int> sizeLibColBox;
-	ofParameter<bool> bResponsive_Presets;
+	ofParameter<bool> bResponsive_Panels;
 	ofParameter<int> sizePaletteBox;
+
+	ofParameter<bool> bFitLayout;
 
 	//-
 
@@ -552,6 +555,7 @@ private:
 	void build_Palette_Engine();
 	void build_Palette_Preset();
 	void build_Palette_Flip();
+	void build_Palette_RandomSort();
 
 	//--
 
