@@ -2248,6 +2248,7 @@ void ofxColorManager::gui_PaletteEditor()
 			//ofxImGui::AddParameter(bAutoResizePalette);//not works
 		}
 	}
+
 	ofxImGui::EndWindow(mainSettings);
 
 	ImGui::PopStyleVar();
@@ -2519,7 +2520,20 @@ void ofxColorManager::gui_PaletteFloating()
 //--------------------------------------------------------------
 void ofxColorManager::gui_Library()
 {
-	if (ofxImGui::BeginWindow("LIBRARY", mainSettings))
+	static bool auto_resize = true;
+
+	float ww, hh;
+	ww = PANEL_WIDGETS_WIDTH;
+	hh = PANEL_WIDGETS_HEIGHT;
+	ImGui::SetWindowSize(ImVec2(ww, hh));
+	ImGuiWindowFlags flagsw;
+	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
+
+	//-
+
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, PANEL_WIDGETS_HEIGHT));
+
+	if (ofxImGui::BeginWindow("LIBRARY", mainSettings, flagsw))
 	{
 		bool bUpdate = false;
 
@@ -2825,7 +2839,6 @@ void ofxColorManager::gui_Library()
 				ImGui::PopID();
 			}
 		}
-		//ofxImGui::EndTree(mainSettings);
 
 		//----
 
@@ -2834,7 +2847,10 @@ void ofxColorManager::gui_Library()
 			refresh_FromPicked();
 		}
 	}
+
 	ofxImGui::EndWindow(mainSettings);
+
+	ImGui::PopStyleVar();
 }
 
 //--------------------------------------------------------------
@@ -2964,11 +2980,12 @@ void ofxColorManager::gui_Picker()
 		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
 
 		//float _h = 0.5f * BUTTON_BIG_HEIGHT;
-		float _h = float(COLOR_STRIP_COLOR_HEIGHT);
+		float _h = 2 * float(COLOR_STRIP_COLOR_HEIGHT);
 		float _w;
+		float __w = ImGui::GetWindowContentRegionWidth();
 
 		if (auto_resize) _w = ww;
-		else _w = ImGui::GetWindowContentRegionWidth() - 2 * _spc;
+		else _w = __w - 2 * _spc;
 		float _w50 = _w * 0.5f;
 		float _w100 = _w + 2.5f * _spc;
 
@@ -2987,7 +3004,7 @@ void ofxColorManager::gui_Picker()
 
 		ImGuiColorEditFlags _flags = ImGuiColorEditFlags_NoOptions | ImGuiColorEditFlags_NoTooltip;
 
-		ImGui::ColorButton("##PickerBox", *(ImVec4 *)&cTmp, _flags, ImVec2(_w, _h));
+		ImGui::ColorButton("##PickerBox", *(ImVec4 *)&cTmp, _flags, ImVec2(__w, _h));
 
 		//-
 
