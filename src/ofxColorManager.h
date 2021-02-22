@@ -7,6 +7,7 @@
 
 TODO:
 
++ save new: restore select last saved index
 + new preset: fix name linking
 + theory and range selectors do not update demo2 svg
 + should clean: disable all and enable the required only
@@ -15,8 +16,8 @@ TODO:
 
 + theory num colors not working on some types
 + add callback disabler for engines when using presets?
-+ ImGui docking layout: app style
-+ gui lib panel not recalls layout. improve other json libs
++ gui lib improve other json libs
++ add OSC ?
 
 */
 

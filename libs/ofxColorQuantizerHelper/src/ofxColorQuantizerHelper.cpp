@@ -124,46 +124,6 @@ void ofxColorQuantizerHelper::draw_Gui()
 			ImGuiColorEditFlags_NoPicker |
 			ImGuiColorEditFlags_NoTooltip;
 
-		//-
-
-		// gui parameters
-
-		//ofxImGui::AddGroup(colorQuantizer.getParameters(), mainSettings);
-
-		ofxSurfingHelpers::AddBigButton(bReBuild, _w99, _h);
-		ImGui::Dummy(ImVec2(0, 5));
-
-		if (ImGui::InputInt(numColors.getName().c_str(), (int *)&numColors.get())) {
-			numColors = ofClamp(numColors, numColors.getMin(), numColors.getMax());
-		}
-
-		ImGui::Dummy(ImVec2(0, 5));
-
-		if (ImGui::Button("SORT", ImVec2(_w99, _h)))
-		{
-			sortedType++;
-			if (sortedType > 4) sortedType = 1;
-		}
-		ImGui::Dummy(ImVec2(0, 2));
-
-		std::string s2 = sortedType_name.get();
-		ImGui::Text(s2.c_str());
-
-		if (ImGui::InputInt(sortedType.getName().c_str(), (int *)&sortedType.get())) {
-			sortedType = ofClamp(sortedType, 1, 4);
-		}
-
-		//ImGui::Dummy(ImVec2(0, 5));
-		//ImGui::InputInt(currentImage.getName().c_str(), (int *)&currentImage.get());
-
-		//-
-
-		//// label name
-		//ImGui::Dummy(ImVec2(0.0f, 5));
-		//ImGui::Text(currentImage_name.get().c_str());
-
-		ImGui::Dummy(ImVec2(0, 5));
-
 		//----
 
 		// scrollable list
@@ -221,6 +181,31 @@ void ofxColorQuantizerHelper::draw_Gui()
 			loadNext();
 		}
 
+		//--
+
+		ImGui::Dummy(ImVec2(0.0f, 5));
+
+		// draw image preview
+
+		if (tex.isAllocated())
+		{
+			float w = tex.getWidth();
+			float h = tex.getHeight();
+			float ratio = h / w;
+			float ww = _w99 - 22;//hardcoded pad to avoid flickering bug..
+
+			if (ImGui::ImageButton(
+				(ImTextureID)(uintptr_t)fbo.getTexture(0).getTextureData().textureID,
+				ImVec2(ww, ww * ratio)))
+			{
+				ofLogNotice(__FUNCTION__) << "Image Pressed";
+			}
+		}
+
+		//// label name
+		//ImGui::Dummy(ImVec2(0.0f, 5));
+		//ImGui::Text(currentImage_name.get().c_str());
+
 		//-
 
 		//const auto p = getPalette();
@@ -254,34 +239,56 @@ void ofxColorQuantizerHelper::draw_Gui()
 
 		//ImGui::Dummy(ImVec2(0, 5));
 
-		// draw image preview
-
-		if (tex.isAllocated())
-		{
-			float w = tex.getWidth();
-			float h = tex.getHeight();
-			float ratio = h / w;
-			float ww = _w99 - 20;//hardcoded pad to avoid flickering bug..
-
-			if (ImGui::ImageButton(
-				(ImTextureID)(uintptr_t)fbo.getTexture(0).getTextureData().textureID, 
-				ImVec2(ww, ww * ratio)))
-			{
-				ofLogNotice(__FUNCTION__) << "Image Pressed";
-			}
-		}
-
-		//// label name
-		//ImGui::Dummy(ImVec2(0.0f, 5));
-		//ImGui::Text(currentImage_name.get().c_str());
-
 		ImGui::Dummy(ImVec2(0, 5));
 
 		//-
 
-		ImGui::Checkbox("Auto-resize", &auto_resize);
-		ofxImGui::AddParameter(ENABLE_Keys);
-		ofxImGui::AddParameter(ENABLE_HelpInfo);
+		// gui parameters
+
+		//ofxImGui::AddGroup(colorQuantizer.getParameters(), mainSettings);
+
+		if (ImGui::InputInt(numColors.getName().c_str(), (int *)&numColors.get())) {
+			numColors = ofClamp(numColors, numColors.getMin(), numColors.getMax());
+		}
+
+		ImGui::Dummy(ImVec2(0, 5));
+
+		if (ImGui::Button("SORT", ImVec2(_w99, _h)))
+		{
+			sortedType++;
+			if (sortedType > 4) sortedType = 1;
+		}
+		ImGui::Dummy(ImVec2(0, 2));
+
+		std::string s2 = sortedType_name.get();
+		ImGui::Text(s2.c_str());
+
+		if (ImGui::InputInt(sortedType.getName().c_str(), (int *)&sortedType.get())) {
+			sortedType = ofClamp(sortedType, 1, 4);
+		}
+
+		//ImGui::Dummy(ImVec2(0, 5));
+		//ImGui::InputInt(currentImage.getName().c_str(), (int *)&currentImage.get());
+
+		//-
+
+		//// label name
+		ImGui::Dummy(ImVec2(0, 2));
+		//ImGui::Text(currentImage_name.get().c_str());
+
+		ofxSurfingHelpers::AddBigButton(bReBuild, _w99, _h*0.5);
+		ImGui::Dummy(ImVec2(0, 5));
+
+		if (ImGui::CollapsingHeader("Advanced"))
+		{
+			ImGui::Dummy(ImVec2(0, 5));
+
+			//-
+
+			ImGui::Checkbox("Auto-resize", &auto_resize);
+			ofxImGui::AddParameter(ENABLE_Keys);
+			ofxImGui::AddParameter(ENABLE_HelpInfo);
+		}
 
 		//----
 
@@ -352,7 +359,7 @@ void ofxColorQuantizerHelper::draw_Gui()
 }
 #endif
 
-//--
+//----
 
 // sorting helpers
 
@@ -384,7 +391,7 @@ void ofxColorQuantizerHelper::loadPrev()
 	if (currentImage <= 0) currentImage = dir.size() - 1;
 	else currentImage--;
 
-	ofLogNotice(__FUNCTION__) << "currentImage:" << ofToString(currentImage);
+	ofLogNotice(__FUNCTION__) << "currentImage: " << ofToString(currentImage);
 	if (dir.size() > 0 && currentImage < dir.size() - 1)
 	{
 		imageName = dir.getName(currentImage);
@@ -399,7 +406,7 @@ void ofxColorQuantizerHelper::loadNext()
 	if (currentImage < dir.size() - 1) currentImage++;
 	else if (currentImage == dir.size() - 1) currentImage = 0;
 	
-	ofLogNotice(__FUNCTION__) << "currentImage:" << ofToString(currentImage);
+	ofLogNotice(__FUNCTION__) << "currentImage: " << ofToString(currentImage);
 	if (dir.size() > 0 && currentImage < dir.size())
 	{
 		imageName = dir.getName(currentImage);
@@ -501,7 +508,7 @@ void ofxColorQuantizerHelper::setup()
 	//--
 
 	parameters.setName("COLOR QUANTIZER");
-	parameters.add(bReBuild.set("BUILD", false));
+	parameters.add(bReBuild.set("REBUILD", false));
 	parameters.add(numColors.set("Amount Colors", 10, 1, 20));
 	parameters.add(sortedType.set("Sort Type", 1, 1, 4));
 	parameters.add(sortedType_name.set(" ", sortedType_name));

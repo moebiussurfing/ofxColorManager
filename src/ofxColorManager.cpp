@@ -110,12 +110,13 @@ void ofxColorManager::build_Palette_Engine()
 	// presets
 
 	//if (SHOW_Presets)
-	//{
-	//	if (!MODE_NewPreset) MODE_NewPreset = true;
-	//	//if (_name != "") textInput_New = _name;
-	//	//else textInput_New = "name";
-	//	textInput_New = _name;
-	//}
+	{
+		if (!MODE_NewPreset) MODE_NewPreset = true;
+		//if (_name != "") textInput_New = _name;
+		//else textInput_New = "name";
+		textInput_New = _name;
+		name_TARGET[0] = _name;
+	}
 
 	//--
 
@@ -177,14 +178,12 @@ void ofxColorManager::build_Palette_Engine()
 
 
 	//TODO:
-	build_Palette_Preset();
+	//build_Palette_Preset();//?
 
 	// export
 	if (bAutoExportPreset)
 	{
 		bExportFlag = true;
-		//ofLogNotice(__FUNCTION__) << "Auto EXPORT";
-		//exportPalette();
 	}
 }
 
@@ -241,6 +240,7 @@ void ofxColorManager::build_Palette_Preset()
 	// palette
 	refresh_Palette_TARGET(palette);
 
+	//TODO:
 	// name
 	if (name_TARGET != nullptr)
 	{
@@ -632,7 +632,7 @@ void ofxColorManager::setup()
 
 	SHOW_ALL_GUI.setName("GUI MAIN");
 	SHOW_MINI_Preview.setName("MINI PREVIEW");
-	SHOW_UserPaletteFloating.setName("PALETTE");
+	SHOW_UserPaletteFloating.setName("SHOW PALETTE");
 	SHOW_UserPaletteEditor.setName("EDITOR");
 	SHOW_Theory.setName("THEORY");
 	SHOW_debugText.setName("SHOW debug");
@@ -751,8 +751,8 @@ void ofxColorManager::setup()
 	//#endif
 
 	// daan fork
-	//gui.setup(nullptr, true, ImGuiConfigFlags_DockingEnable, true, false);
 	gui.setup(nullptr, true, ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable, true, false);
+	//gui.setup(nullptr, true, ImGuiConfigFlags_DockingEnable, true, false);
 
 	// fonts
 #ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
@@ -768,6 +768,7 @@ void ofxColorManager::setup()
 	// theme
 #ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
 	ofxSurfingHelpers::ImGui_ThemeMoebiusSurfing();
+	//ImGui::StyleColorsDark();
 	//ofxSurfingHelpers::ImGui_ThemeModernDark();
 #endif
 
@@ -1040,7 +1041,7 @@ void ofxColorManager::startup()
 //--------------------------------------------------------------
 void ofxColorManager::update(ofEventArgs & args)
 {
-	//if (ofGetFrameNum() % int(60 * 1.0) == 0) ofLog();//timer spaced
+	//if (ofGetFrameNum() % int(60 * 1.0) == 0) ofLog();//time spaced log
 
 	//--
 
@@ -1050,7 +1051,7 @@ void ofxColorManager::update(ofEventArgs & args)
 
 	//--
 
-	// auto pilot browse presets
+	// auto pilot: browse presets
 
 	if (auto_pilot && (ofGetElapsedTimeMillis() - auto_pilot_timer > auto_pilot_Duration * 1000))
 	{
@@ -1078,6 +1079,7 @@ void ofxColorManager::update(ofEventArgs & args)
 	//--
 
 	// export
+
 	if (bExportFlag)
 	{
 		bExportFlag = false;
@@ -1090,14 +1092,8 @@ void ofxColorManager::update(ofEventArgs & args)
 		}
 	}
 
-	//--
+	//-
 
-	// gradient
-	gradientEngine.update();
-
-	//----
-
-	// export
 	if (bOpen) //programmed open dialog from ImGui:
 	{
 		//Open the Open File Dialog
@@ -1127,6 +1123,12 @@ void ofxColorManager::update(ofEventArgs & args)
 		bOpen = false;
 	}
 
+	//--
+
+	// gradient
+
+	gradientEngine.update();
+
 	//----
 
 	// demos
@@ -1155,16 +1157,15 @@ void ofxColorManager::update(ofEventArgs & args)
 	//----
 
 	// lovers
-	{
-		colourLoversHelper.update();
-	}
+	colourLoversHelper.update();
 
 	//----
 
 	//TODO:
 	// this flags are only used 
 	// by quantizer and lover addons
-	// it mens that some addon has clicked/changed the main palette/color 
+	// it meAns that some module/addon has clicked/changed the main palette/color 
+	// then we will get the name and the colors.
 	//bUpdated_Palette_BACK = true;// to trig this
 
 	if (bUpdated_Palette_BACK)
@@ -1174,16 +1175,13 @@ void ofxColorManager::update(ofEventArgs & args)
 		ofLogNotice(__FUNCTION__) << "  >  bUpdated_Palette_BACK : " << bUpdated_Palette_BACK;
 
 		build_Palette_Engine();
-
+		
 		//--
 
 		// export
 		if (bAutoExportPreset)
 		{
 			bExportFlag = true;
-
-			//ofLogNotice(__FUNCTION__) << "Auto EXPORT";
-			//exportPalette();
 		}
 	}
 
@@ -1213,6 +1211,7 @@ void ofxColorManager::update(ofEventArgs & args)
 	if (color_Clicked2 != color_Clicked2_PRE && SHOW_ColourLovers)
 	{
 		ofLogNotice(__FUNCTION__) << "  >  color_Clicked2 !";
+
 		color_Clicked2_PRE = color_Clicked2;
 
 		color_Picked.set(color_Clicked2);
@@ -1227,6 +1226,7 @@ void ofxColorManager::update(ofEventArgs & args)
 		color_BACK_PRE = color_BACK;
 
 		ofLogNotice(__FUNCTION__) << "  >  color_BACK ! ";
+
 		//ofLogNotice(__FUNCTION__) << "Changed color_BACK pointer";
 
 		color_Picked.set(color_BACK);
@@ -1283,7 +1283,7 @@ void ofxColorManager::draw_Info()
 	//top
 	//pady = 20;
 	//y = pady + fontBig.getSize();
-	
+
 	//bottom
 	pady = 150;
 	y = ofGetWindowHeight() - pady - fontBig.getSize();
@@ -2065,7 +2065,7 @@ void ofxColorManager::gui_PaletteEditor()
 
 					float hb = 50;
 					//float hb = wb;
-					
+
 					//--
 
 					_flags =
@@ -2248,7 +2248,7 @@ void ofxColorManager::gui_PaletteEditor()
 							ImGui::InputFloat(scale_ColPalette.getName().c_str(), (float *)&scale_ColPalette.get(), 0.005f, 0.010);
 						}
 					}
-						ImGui::Checkbox("Auto-resize", &auto_resize);
+					ImGui::Checkbox("Auto-resize", &auto_resize);
 				}
 			}
 
@@ -2898,7 +2898,7 @@ void ofxColorManager::gui_Export()
 			if (ImGui::Button("EXPORT", ImVec2(_w, BUTTON_BIG_HEIGHT)))
 			{
 				exportPalette();
-		}
+			}
 			//ImGui::PopItemWidth();
 #ifndef USE_SIMPLE_PRESET_PALETTE	
 			ofxSurfingHelpers::AddBigToggle(bModeBundlePreset, _w, BUTTON_BIG_HEIGHT / 2);
@@ -2962,8 +2962,8 @@ void ofxColorManager::gui_Export()
 				ImGui::Dummy(ImVec2(0, 5));
 				ImGui::Checkbox("Auto-resize", &auto_resize);
 			}
+		}
 	}
-}
 	ofxImGui::EndWindow(mainSettings);
 }
 
@@ -3822,64 +3822,67 @@ void ofxColorManager::gui_Presets()
 			preset_RefreshFiles();
 		}
 
-		//ImGui::SameLine();
+		//----
 
-		if (ImGui::Button("LOAD", ImVec2(_w50, _h * 0.5)))//not required..
+		if (ImGui::CollapsingHeader("ADVANCED"))
 		{
-			ofLogNotice(__FUNCTION__) << "LOAD PRESET_Name: " << PRESET_Name;
 
-			preset_Load(PRESET_Name);
-		}
+			//ImGui::SameLine();
 
-		ImGui::SameLine();
+			if (ImGui::Button("LOAD", ImVec2(_w50, _h * 0.5)))//not required..
+			{
+				ofLogNotice(__FUNCTION__) << "LOAD PRESET_Name: " << PRESET_Name;
 
-		if (ImGui::Button("DELETE", ImVec2(_w50, _h * 0.5))) ImGui::OpenPopup("DELETE?");
-		if (ImGui::BeginPopupModal("DELETE?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
-		{
-			ImGui::Text("Current Preset will be deleted.\nThis operation cannot be undone!\n\n");
-			ImGui::Separator();
+				preset_Load(PRESET_Name);
+			}
 
-			static bool dont_ask_me_next_time = false;
-			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
-			ImGui::Checkbox("Don't ask me next time", &dont_ask_me_next_time);
-			ImGui::PopStyleVar();
+			ImGui::SameLine();
 
-			if (!dont_ask_me_next_time) {
-				if (ImGui::Button("OK", ImVec2(120, 0))) {
+			if (ImGui::Button("DELETE", ImVec2(_w50, _h * 0.5))) ImGui::OpenPopup("DELETE?");
+			if (ImGui::BeginPopupModal("DELETE?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+			{
+				ImGui::Text("Current Preset will be deleted.\nThis operation cannot be undone!\n\n");
+				ImGui::Separator();
+
+				static bool dont_ask_me_next_time = false;
+				ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+				ImGui::Checkbox("Don't ask me next time", &dont_ask_me_next_time);
+				ImGui::PopStyleVar();
+
+				if (!dont_ask_me_next_time) {
+					if (ImGui::Button("OK", ImVec2(120, 0))) {
+						ofLogNotice(__FUNCTION__) << "DELETE";
+						files[last_Index_Preset].remove();
+						preset_RefreshFiles();
+
+						ImGui::CloseCurrentPopup();
+					}
+					ImGui::SetItemDefaultFocus();
+					ImGui::SameLine();
+					if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
+				}
+				else {
 					ofLogNotice(__FUNCTION__) << "DELETE";
 					files[last_Index_Preset].remove();
 					preset_RefreshFiles();
 
 					ImGui::CloseCurrentPopup();
 				}
-				ImGui::SetItemDefaultFocus();
-				ImGui::SameLine();
-				if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
-			}
-			else {
-				ofLogNotice(__FUNCTION__) << "DELETE";
-				files[last_Index_Preset].remove();
-				preset_RefreshFiles();
 
-				ImGui::CloseCurrentPopup();
+				ImGui::EndPopup();
 			}
 
-			ImGui::EndPopup();
-		}
+			//if (ImGui::Button("DELETE", ImVec2(_w50, _h * 0.5)))//current preset
+			//{
+			//	ofLogNotice(__FUNCTION__) << "DELETE";
+			//	files[last_Index_Preset].remove();
+			//	preset_RefreshFiles();
+			//}
 
-		//if (ImGui::Button("DELETE", ImVec2(_w50, _h * 0.5)))//current preset
-		//{
-		//	ofLogNotice(__FUNCTION__) << "DELETE";
-		//	files[last_Index_Preset].remove();
-		//	preset_RefreshFiles();
-		//}
+			//ImGui::SameLine();
 
-		//ImGui::SameLine();
-
-		//----
-
-		if (ImGui::CollapsingHeader("MORE"))
-		{
+			//----
+				
 			//export user palette colors to live reload from another parallel app!
 
 			if (ImGui::Button("EXPORT", ImVec2(_w50, _h * 0.5))) ImGui::OpenPopup("EXPORT ");
@@ -4370,31 +4373,6 @@ bool ofxColorManager::draw_Gui()
 #ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
 	ImGui::PopFont();
 #endif
-
-	//// Define the ofWindow as a docking space
-	//ImGui::PushStyleColor(ImGuiCol_ChildBg, IM_COL32(0, 0, 0, 0)); // Fixes imgui to expected behaviour. Otherwise add in ImGui::DockSpace() [±line 14505] : if (flags & ImGuiDockNodeFlags_PassthruCentralNode) window_flags |= ImGuiWindowFlags_NoBackground;
-	//ImGuiID dockNodeID = ImGui::DockSpaceOverViewport(NULL, ImGuiDockNodeFlags_PassthruCentralNode);
-	//ImGui::PopStyleColor();
-
-	//ImGuiDockNode* dockNode = ImGui::DockBuilderGetNode(dockNodeID);
-	//if (dockNode) {
-	//	ImGuiDockNode* centralNode = ImGui::DockBuilderGetCentralNode(dockNodeID);
-	//	// Verifies if the central node is empty (visible empty space for oF)
-	//	if (centralNode && centralNode->IsEmpty()) {
-	//		ImRect availableSpace = centralNode->Rect();
-	//		//availableSpace.Max = availableSpace.Min + ImGui::GetContentRegionAvail();
-	//		ImGui::GetForegroundDrawList()->AddRect(availableSpace.GetTL() + ImVec2(8, 8), availableSpace.GetBR() - ImVec2(8, 8), IM_COL32(255, 50, 50, 255));
-
-	//		ImVec2 viewCenter = availableSpace.GetCenter();
-	//		// Depending on the viewports flag, the XY is either absolute or relative to the oF window.
-	//		if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable) viewCenter = viewCenter - ImVec2(ofGetWindowPositionX(), ofGetWindowPositionY());
-
-	//		//	viewCenter.x,
-	//		//	viewCenter.y,
-	//		//	availableSpace.GetSize().x - 6,
-	//		//	availableSpace.GetSize().y - 6
-	//	}
-	//}
 
 	gui.end();
 
