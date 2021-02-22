@@ -2042,23 +2042,30 @@ void ofxColorManager::gui_PaletteEditor()
 			{
 				ImGui::PushID(n);
 				{
-					// a. fixed size
-					int _max = 6;//amount colors per row
-					int _r = (int)MIN(_max, palette.size());
-					//split in rows
-					if ((n % _r) != 0)
-					{
-						if (n != 0) ImGui::SameLine(0, 0);
-						//if (n != 0) ImGui::SameLine();
-					}
+					//// a. fixed size. splitted by rows
+					//int _max = 6;//amount colors per row
+					//int _r = (int)MIN(_max, palette.size());
+					////split in rows
+					//if ((n % _r) != 0)
+					//{
+					//	if (n != 0) ImGui::SameLine(0, 0);
+					//	//if (n != 0) ImGui::SameLine();
+					//}
+
+					// b. fit for width
+					int _r = palette.size();
+					if (n != 0) ImGui::SameLine(0, 0);
 
 					//----
 
 					float wb;
-					wb = (_w / _r);// -(_r * _spc);
+					wb = (_w / _r);
 					//wb = (_w / _r) - (2.0f * _spc);
 					//if (!bResponsive_Panels) wb = wb * scale_ColPalette.get();
 
+					float hb = 50;
+					//float hb = wb;
+					
 					//--
 
 					_flags =
@@ -2076,7 +2083,7 @@ void ofxColorManager::gui_PaletteEditor()
 					ImVec2 bb;
 					//if (bResponsive_Panels) bb = button_sz;
 					//else bb = ImVec2(wb, wb);
-					bb = ImVec2(wb, wb);
+					bb = ImVec2(wb, hb);
 
 					//-
 
