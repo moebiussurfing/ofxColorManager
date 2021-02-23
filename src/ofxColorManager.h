@@ -395,7 +395,6 @@ private:
 	ofTrueTypeFont fontSmall;
 	ofTrueTypeFont fontMedium;
 	ofTrueTypeFont fontBig;
-	//bool txt_lineActive[4];//to help workflow of what's the last engine used...Not using now.
 
 	ofParameter<int> last_Index_Type{ "Last Type Index", -1, 0, 3 };//to help workflow of what's the last engine used...Not using now.
 	//0 preset name
@@ -857,9 +856,10 @@ private:
 	// demos
 private:
 	ofParameter<bool> DEMO1_Test{ "Enable DEMO1", false };
-	ofParameter<bool> DEMO2_Test{ "Enable DEMO2", false };
-	ofParameter<bool> DEMO2_Edit{ "Edit DEMO2", false };
-	ofParameter<float> DEMO2_Scale{ "Scale", 0.2, 0, 1.0f };
+	//ofParameter<bool> DEMO2_Test{ "Enable DEMO2", false };
+	//ofParameter<bool> DEMO2_Edit{ "Edit DEMO2", false };
+	//ofParameter<float> DEMO2_Scale{ "Scale", 0.2, 0, 1.0f };
+	//ofParameter<float> DEMO2_Alpha{ "Alpha", 1.0f, 0, 1.0f };
 	ofParameter<bool> DEMO_Auto{ "Auto Trig", false };
 	ofParameter<bool> DEMO_Cam{ "Edit Camera", false };
 	ofParameter<float> DEMO_Timer{ "Frequency", 0.5, 0, 1 };

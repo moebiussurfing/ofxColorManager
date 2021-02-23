@@ -13,20 +13,38 @@ class DEMO_Svg
 {
 
 public:
+	void mouseScrolled(ofMouseEventArgs &eventArgs);
+
+public:
 	std::string path_Name = "_DEMO_Svg";
 	ofxInteractiveRect rectDgSvg = { "_DEMO_Svg" };
 	std::string path_Layout;
-	
+
+	ofParameter<bool> DEMO2_Test{ "Enable DEMO2", false };
+	ofParameter<bool> DEMO2_Edit{ "Edit DEMO2", false };
+	ofParameter<float> DEMO2_Scale{ "Scale", 0.2, 0, 1.0f };
+	ofParameter<float> DEMO2_Alpha{ "Alpha", 1.0f, 0, 1.0f };
+
+	ofParameterGroup params{ "DEMO_Svg" };
+	void Changed_Controls(ofAbstractParameter &e);
+
 	void setEdit(bool b) 
 	{
 		if (b) rectDgSvg.enableEdit();
 		else rectDgSvg.disableEdit();
 	}
 	
+private:
 	float scale;
+	float alpha;
 	float ratio;
 	ofRectangle rSvgBounds;
 	
+public:
+	void setAlpha(float f) 
+	{
+		alpha = f;
+	}
 	void setScale(float f) 
 	{
 		scale = f;
@@ -45,6 +63,8 @@ public:
 
 	~DEMO_Svg()
 	{
+		ofRemoveListener(params.parameterChangedE(), this, &DEMO_Svg::Changed_Controls);
+
 		rectDgSvg.saveSettings(path_Name, path_Layout, false);
 	};
 	
@@ -83,7 +103,7 @@ private:
 	//void initializeColors();
 
 	glm::vec2 pos{ 0,0 };
-	glm::vec2 shape{ 838, 1080 };
+	glm::vec2 shape;
 
 	//--------------------------------------------------------------
 	void refresh_Gui_Layout()

@@ -17,7 +17,9 @@ void ofxColorManager::build_Palette_RandomSort()
 	//std::shuffle(std::begin(palette), std::end(palette), rng);
 	srand(unsigned(time(NULL)));
 	std::shuffle(palette.begin(), palette.end(), std::random_device());
-	DEMO2_Svg.setPaletteColors(palette);
+
+	//DEMO2_Svg.setPaletteColors(palette);
+
 	gradientEngine.build_FromPaleletteRef(palette);
 	last_Index_ColorPalette = 0;
 
@@ -49,7 +51,7 @@ void ofxColorManager::build_Palette_Flip()
 	// workflow
 	refresh_Background();
 	// DEMO 2
-	DEMO2_Svg.setPaletteColors(palette);
+	//DEMO2_Svg.setPaletteColors(palette);
 	// DEMO 1
 	if (DEMO1_Test && !DEMO_Auto) myDEMO1.reStart();
 
@@ -210,7 +212,7 @@ void ofxColorManager::build_Palette_Preset()
 	// workflow
 	refresh_Background();
 	// DEMO 2
-	DEMO2_Svg.setPaletteColors(palette);
+	//DEMO2_Svg.setPaletteColors(palette);
 	// DEMO 1
 	if (DEMO1_Test && !DEMO_Auto) myDEMO1.reStart();
 
@@ -378,19 +380,17 @@ void ofxColorManager::setup()
 	//strFont = _p + "PragmataProB_0822.ttf";
 	//strFont = _p + "Kazesawa-Extrabold.ttf";
 
-	fontBig.load(strFont, 55);
-	fontMedium.load(strFont, 28);
-	fontSmall.load(strFont, 22);
+	int _szbig = 40;
+	fontBig.load(strFont, _szbig);
+	fontMedium.load(strFont, _szbig - 10);
+	fontSmall.load(strFont, _szbig - 15);
 
-	//txt_lineActive[0] = false;
-	//txt_lineActive[1] = false;
-	//txt_lineActive[2] = false;
-	//txt_lineActive[3] = false;
 	last_Index_Type = -1;
 
 	//-
 
-	font.load("assets/fonts/telegrama_render.otf", 11, true, true, true);
+	int _sz = 11;
+	font.load("assets/fonts/telegrama_render.otf", _sz, true, true, true);
 	//font.load("assets/fonts/LCD_Solid.ttf", 11, true, true);
 	//font.load("assets/fonts/overpass-mono-bold.otf", 9, true, true);
 
@@ -450,10 +450,6 @@ void ofxColorManager::setup()
 
 	//--------------------------------------------------------------
 	listener_LoverName = colourLoversHelper.lastPaletteName.newListener([this](std::string &n) {
-		//txt_lineActive[0] = false;//preset name
-		//txt_lineActive[1] = true;//lover name
-		//txt_lineActive[2] = false;//theory name
-		//txt_lineActive[3] = false;//range name
 		last_Index_Type = 1;
 
 		ofLogNotice("colourLoversHelper > Name Palette: ") << n;
@@ -860,9 +856,10 @@ void ofxColorManager::setup()
 
 	//params_Demo.add(TEST_Mode);
 	params_Demo.add(DEMO1_Test);
-	params_Demo.add(DEMO2_Test);
-	params_Demo.add(DEMO2_Edit);
-	params_Demo.add(DEMO2_Scale);
+	params_Demo.add(DEMO2_Svg.DEMO2_Test);
+	params_Demo.add(DEMO2_Svg.DEMO2_Edit);
+	params_Demo.add(DEMO2_Svg.DEMO2_Scale);
+	params_Demo.add(DEMO2_Svg.DEMO2_Alpha);
 	params_Demo.add(DEMO_Auto);
 	params_Demo.add(DEMO_Timer);
 	params_Demo.add(DEMO_Alpha);
@@ -954,9 +951,6 @@ void ofxColorManager::setup()
 	params_control.add(bModeBundlePreset);
 	params_control.add(bModePalettePreset);
 #endif
-
-	params_control.add(DEMO2_Edit);
-	params_control.add(DEMO2_Scale);
 
 	ofAddListener(params_control.parameterChangedE(), this, &ofxColorManager::Changed_Controls);
 
@@ -1149,9 +1143,6 @@ void ofxColorManager::update(ofEventArgs & args)
 		}
 
 		//----
-
-		// DEMO2
-		if (DEMO2_Test) DEMO2_Svg.update();
 	}
 
 	//----
@@ -1311,129 +1302,6 @@ void ofxColorManager::draw_Info()
 	ofPopMatrix();
 }
 
-//TODO:
-//another draw info alternative more detailed into user workflow...
-////--------------------------------------------------------------
-//void ofxColorManager::draw_Info()
-//{
-//	ofPushMatrix();
-//	ofPushStyle();
-//
-//	//-
-//
-//	int pady = 50;
-//	int padh;
-//	int sp = 3;
-//	int x;
-//	int y;
-//	int h;
-//
-//	std::string t0 = PRESET_Name;
-//	std::string t1 = myPalette_Name_BACK;
-//	std::string t2 = name_Theory;
-//	std::string t3 = name_Range;
-//
-//	float _w0 = ofxSurfingHelpers::getWidthBBtextBoxed(fontBig, t0);
-//	float _w1 = ofxSurfingHelpers::getWidthBBtextBoxed(fontBig, t1);
-//	float _w2 = ofxSurfingHelpers::getWidthBBtextBoxed(fontMedium, t2);
-//	float _w3 = ofxSurfingHelpers::getWidthBBtextBoxed(fontSmall, t3);
-//
-//	int i = 0;
-//
-//	y = pady + fontBig.getSize();
-//
-//	ofColor c0, c1, c0_Ghost, c1_Ghost;
-//	int _alphaGhost = 32;
-//
-//	c0.set(0, 200);
-//	c1.set(255, 200);
-//
-//	c0_Ghost.set(0, _alphaGhost);
-//	c1_Ghost.set(255, _alphaGhost);
-//
-//	//TODO: create double line shadow draw methoid into ofxSurfingHelpers
-//
-//	padh = 15;
-//	h = padh;
-//	y += h;
-//
-//	//preset name
-//	//if (t0 != "" || txt_lineActive[0])//hide now used lines vs draw but transparent
-//	if (txt_lineActive[0])//hide now used lines vs draw but transparent
-//	{
-//		x = ofGetWidth() * 0.5 - _w0 * 0.5;
-//		if (txt_lineActive[i]) ofSetColor(c0);
-//		else ofSetColor(c0_Ghost);
-//		fontBig.drawString(t0, x + sp, y + sp);
-//
-//		if (txt_lineActive[i]) ofSetColor(c1);
-//		else ofSetColor(c1_Ghost);
-//		fontBig.drawString(t0, x, y);
-//
-//		padh = 25;
-//		h = fontBig.getSize() + padh;
-//		y += h;
-//	}
-//	i++;
-//
-//	//lover name
-//	//if (t1 != "" || txt_lineActive[1])
-//	if (txt_lineActive[1])
-//	{
-//		x = ofGetWidth() * 0.5 - _w1 * 0.5;
-//		if (txt_lineActive[i]) ofSetColor(c0);
-//		else ofSetColor(c0_Ghost);
-//		fontBig.drawString(t1, x + sp, y + sp);
-//
-//		if (txt_lineActive[i]) ofSetColor(c1);
-//		else ofSetColor(c1_Ghost);
-//		fontBig.drawString(t1, x, y);
-//
-//		padh = -10;
-//		h = fontBig.getSize() + padh;
-//		y += h;
-//	}
-//	i++;
-//
-//	//theory name
-//	//if (t2 != "" || txt_lineActive[1])
-//	if (txt_lineActive[2])
-//	{
-//		x = ofGetWidth() * 0.5 - _w2 * 0.5;
-//		if (txt_lineActive[i]) ofSetColor(c0);
-//		else ofSetColor(c0_Ghost);
-//		fontMedium.drawString(t2, x + sp, y + sp);
-//
-//		if (txt_lineActive[i]) ofSetColor(c1);
-//		else ofSetColor(c1_Ghost);
-//		fontMedium.drawString(t2, x, y);
-//
-//		padh = 20;
-//		h = fontMedium.getSize() + padh;
-//		y += h;
-//	}
-//	i++;
-//
-//	//range name
-//	//if (t3 != "" || txt_lineActive[3])
-//	if (txt_lineActive[3])
-//	{
-//		x = ofGetWidth() * 0.5 - _w3 * 0.5;
-//		if (txt_lineActive[i]) ofSetColor(c0);
-//		else ofSetColor(c0_Ghost);
-//		fontSmall.drawString(t3, x + sp, y + sp);
-//
-//		if (txt_lineActive[i]) ofSetColor(c1);
-//		else ofSetColor(c1_Ghost);
-//		fontSmall.drawString(t3, x, y);
-//	}
-//
-//	//-
-//
-//	ofPopStyle();
-//	ofPopMatrix();
-//}
-
 //--------------------------------------------------------------
 #ifndef AUTO_DRAW_CALLBACK
 void ofxColorManager::draw()
@@ -1462,9 +1330,9 @@ void ofxColorManager::draw(ofEventArgs & args)
 		//--
 
 		// DEMO2
-		float _w = DEMO2_Svg.getWidth();
-		if (DEMO2_Test) DEMO2_Svg.draw();
-		//if (DEMO2_Test) DEMO2_Svg.draw(glm::vec2(ofGetWidth() * 0.5 - _w * 0.5, 0));
+		DEMO2_Svg.draw();
+
+		//-
 
 		// DEMO1
 		if (DEMO1_Test) myDEMO1.draw(DEMO_Alpha);
@@ -2139,7 +2007,9 @@ void ofxColorManager::gui_PaletteEditor()
 							if (mode == Mode_Copy)
 							{
 								palette[n] = palette[payload_n];
-								DEMO2_Svg.setPaletteColors(palette);
+
+								//DEMO2_Svg.setPaletteColors(palette);
+
 								last_Index_ColorPalette = n;
 
 								refresh_Background();
@@ -2149,7 +2019,9 @@ void ofxColorManager::gui_PaletteEditor()
 								const ofColor tmp = palette[n];
 								palette[n] = palette[payload_n];
 								palette[payload_n] = tmp;
-								DEMO2_Svg.setPaletteColors(palette);
+
+								//DEMO2_Svg.setPaletteColors(palette);
+
 								last_Index_ColorPalette = n;
 
 								refresh_Background();
@@ -2472,7 +2344,8 @@ void ofxColorManager::gui_PaletteFloating()
 					if (mode == Mode_Copy)
 					{
 						palette[n] = palette[payload_n];
-						DEMO2_Svg.setPaletteColors(palette);
+
+						//DEMO2_Svg.setPaletteColors(palette);
 
 						refresh_Background();
 					}
@@ -2487,7 +2360,8 @@ void ofxColorManager::gui_PaletteFloating()
 						const ofColor tmp = palette[n];
 						palette[n] = palette[payload_n];
 						palette[payload_n] = tmp;
-						DEMO2_Svg.setPaletteColors(palette);
+
+						//DEMO2_Svg.setPaletteColors(palette);
 
 						refresh_Background();
 					}
@@ -4305,14 +4179,6 @@ void ofxColorManager::gui_Demo()
 	if (ofxImGui::BeginWindow("DEMO", mainSettings, flagsw))
 	{
 		ofxImGui::AddParameter(DEMO1_Test);
-		ofxImGui::AddParameter(DEMO2_Test);
-		ofxImGui::AddParameter(DEMO2_Edit);
-		//if (ImGui::DragFloat("Scale", &scale, 0.2, 1.0))
-		if (ofxImGui::AddParameter(DEMO2_Scale))
-		{
-			//DEMO2_Svg.setScale(DEMO2_Scale);
-		}
-
 		if (DEMO1_Test)
 		{
 			ofxImGui::AddParameter(DEMO_Auto);
@@ -4321,6 +4187,21 @@ void ofxColorManager::gui_Demo()
 			if (ofxImGui::AddParameter(DEMO_Cam))
 			{
 				myDEMO1.setEnableMouseCamera(DEMO_Cam);
+			}
+		}
+
+		//-
+
+		// svg demo 2
+		ofxImGui::AddParameter(DEMO2_Svg.DEMO2_Test);
+		if (DEMO2_Svg.DEMO2_Test)
+		{
+			ofxImGui::AddParameter(DEMO2_Svg.DEMO2_Edit);
+			if (ofxImGui::AddParameter(DEMO2_Svg.DEMO2_Scale))
+			{
+			}
+			if (ofxImGui::AddParameter(DEMO2_Svg.DEMO2_Alpha))
+			{
 			}
 		}
 	}
@@ -5152,16 +5033,6 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		}
 	}
 
-	// demo2 svg
-	else if (name == DEMO2_Edit.getName())
-	{
-		DEMO2_Svg.setEdit(DEMO2_Edit);
-	}
-	else if (name == DEMO2_Scale.getName())
-	{
-		DEMO2_Svg.setScale(DEMO2_Scale);
-	}
-
 	// app modes
 	else if (name == AppMode.getName())
 	{
@@ -5311,10 +5182,6 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		//	exportPalette();
 		//}
 
-		//txt_lineActive[0] = false;//preset name
-		//txt_lineActive[1] = false;//lover name
-		//txt_lineActive[2] = true;//theory name
-		//txt_lineActive[3] = false;//range name
 		last_Index_Type = 2;
 
 		//if (SHOW_Presets) 
@@ -5688,10 +5555,6 @@ void ofxColorManager::Changed_Range(ofAbstractParameter &e)
 					//index selected
 					last_Index_Range = i;
 					name_Range = types_Range[i].getName();
-					//txt_lineActive[0] = false;//preset name
-					//txt_lineActive[1] = false;//lover name
-					//txt_lineActive[2] = false;//theory name
-					//txt_lineActive[3] = true;//range name
 					last_Index_Type = 3;
 
 					//-
@@ -5823,10 +5686,6 @@ void ofxColorManager::refresh_Range_AutoUpdate()
 
 		types_Range[i] = true;
 		name_Range = types_Range[i].getName();
-		//txt_lineActive[0] = false;//preset name
-		//txt_lineActive[1] = false;//lover name
-		//txt_lineActive[2] = false;//theory name
-		//txt_lineActive[3] = true;//range name
 		last_Index_Type = 3;
 
 		//// presets 
@@ -6367,13 +6226,8 @@ void ofxColorManager::mouseScrolled(ofMouseEventArgs &eventArgs)
 	const float &scrollX = eventArgs.scrollX;
 	const float &scrollY = eventArgs.scrollY;
 	ofLogNotice(__FUNCTION__) << "scrollX: " << scrollX << "  scrollY: " << scrollY;
-
-	if (DEMO2_Edit)
-	{
-		if (DEMO2_Svg.rectDgSvg.inside(glm::vec2(x, y)))//zoom 
-			if (scrollY == 1) DEMO2_Scale += 0.025f;
-			else if (scrollY == -1) DEMO2_Scale -= 0.025f;
-	}
+	
+	DEMO2_Svg.mouseScrolled(eventArgs);
 }
 
 //--------------------------------------------------------------
@@ -6578,10 +6432,6 @@ void ofxColorManager::preset_Load(std::string p)
 
 	//--
 
-	//txt_lineActive[0] = true;//preset name
-	//txt_lineActive[1] = false;//lover name
-	//txt_lineActive[2] = false;//theory name
-	//txt_lineActive[3] = false;//range name
 	last_Index_Type = 0;
 
 	//--
