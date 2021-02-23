@@ -68,7 +68,7 @@ TODO:
 #include "presets/PresetPalette.h"
 
 #include "demo/DEMO_Scene.h"
-#include "demo/DEMO_Svg.h"
+#include "ofxSCENE-SVG.h"
 
 #include "client/PreviewPaletteMini.h"
 //using namespace ofxColorClient;

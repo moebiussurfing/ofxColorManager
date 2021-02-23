@@ -18,8 +18,6 @@ void ofxColorManager::build_Palette_RandomSort()
 	srand(unsigned(time(NULL)));
 	std::shuffle(palette.begin(), palette.end(), std::random_device());
 
-	//DEMO2_Svg.setPaletteColors(palette);
-
 	gradientEngine.build_FromPaleletteRef(palette);
 	last_Index_ColorPalette = 0;
 
@@ -31,9 +29,6 @@ void ofxColorManager::build_Palette_RandomSort()
 	if (bAutoExportPreset)
 	{
 		bExportFlag = true;
-
-		//ofLogNotice(__FUNCTION__) << "Auto EXPORT";
-		//exportPalette();
 	}
 }
 
@@ -50,8 +45,6 @@ void ofxColorManager::build_Palette_Flip()
 
 	// workflow
 	refresh_Background();
-	// DEMO 2
-	//DEMO2_Svg.setPaletteColors(palette);
 	// DEMO 1
 	if (DEMO1_Test && !DEMO_Auto) myDEMO1.reStart();
 
@@ -142,9 +135,6 @@ void ofxColorManager::build_Palette_Engine()
 	if (MODE_NewPreset) MODE_NewPreset = false;
 	// demo mode
 	if (DEMO1_Test && DEMO_Auto) myDEMO1.reStart();
-
-	// DEMO 2
-	DEMO2_Svg.setPaletteColors(palette);
 	// DEMO 1
 	if (DEMO1_Test && !DEMO_Auto) myDEMO1.reStart();
 
@@ -211,8 +201,6 @@ void ofxColorManager::build_Palette_Preset()
 
 	// workflow
 	refresh_Background();
-	// DEMO 2
-	//DEMO2_Svg.setPaletteColors(palette);
 	// DEMO 1
 	if (DEMO1_Test && !DEMO_Auto) myDEMO1.reStart();
 
@@ -417,11 +405,17 @@ void ofxColorManager::setup()
 
 	//----
 
-	// DEMO
+	// DEMO 1
 
 	myDEMO1.setup();
 	myDEMO1.setPalette(palette);
 	//myDEMO1.setEnableMouseCamera(true);
+
+	//-
+
+	// DEMO 2 svg
+	DEMO2_Svg.setLinkPalette(palette);
+	DEMO2_Svg.setVisible(false);
 
 	//----
 
@@ -2008,8 +2002,6 @@ void ofxColorManager::gui_PaletteEditor()
 							{
 								palette[n] = palette[payload_n];
 
-								//DEMO2_Svg.setPaletteColors(palette);
-
 								last_Index_ColorPalette = n;
 
 								refresh_Background();
@@ -2019,8 +2011,6 @@ void ofxColorManager::gui_PaletteEditor()
 								const ofColor tmp = palette[n];
 								palette[n] = palette[payload_n];
 								palette[payload_n] = tmp;
-
-								//DEMO2_Svg.setPaletteColors(palette);
 
 								last_Index_ColorPalette = n;
 
@@ -2345,23 +2335,18 @@ void ofxColorManager::gui_PaletteFloating()
 					{
 						palette[n] = palette[payload_n];
 
-						//DEMO2_Svg.setPaletteColors(palette);
-
 						refresh_Background();
 					}
 					//if (mode == Mode_Move)
 					//{
 					//	palette[n] = palette[payload_n];
 					//	palette[payload_n] = ofColor(0);
-					//	DEMO2_Svg.setPaletteColors(palette);
 					//}
 					if (mode == Mode_Swap)
 					{
 						const ofColor tmp = palette[n];
 						palette[n] = palette[payload_n];
 						palette[payload_n] = tmp;
-
-						//DEMO2_Svg.setPaletteColors(palette);
 
 						refresh_Background();
 					}
@@ -4197,12 +4182,8 @@ void ofxColorManager::gui_Demo()
 		if (DEMO2_Svg.DEMO2_Test)
 		{
 			ofxImGui::AddParameter(DEMO2_Svg.DEMO2_Edit);
-			if (ofxImGui::AddParameter(DEMO2_Svg.DEMO2_Scale))
-			{
-			}
-			if (ofxImGui::AddParameter(DEMO2_Svg.DEMO2_Alpha))
-			{
-			}
+			if (DEMO2_Svg.DEMO2_Edit) ofxImGui::AddParameter(DEMO2_Svg.DEMO2_Scale);
+			ofxImGui::AddParameter(DEMO2_Svg.DEMO2_Alpha);
 		}
 	}
 	ofxImGui::EndWindow(mainSettings);
@@ -6226,8 +6207,6 @@ void ofxColorManager::mouseScrolled(ofMouseEventArgs &eventArgs)
 	const float &scrollX = eventArgs.scrollX;
 	const float &scrollY = eventArgs.scrollY;
 	ofLogNotice(__FUNCTION__) << "scrollX: " << scrollX << "  scrollY: " << scrollY;
-	
-	DEMO2_Svg.mouseScrolled(eventArgs);
 }
 
 //--------------------------------------------------------------
