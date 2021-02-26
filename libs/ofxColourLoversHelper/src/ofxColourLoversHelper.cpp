@@ -114,7 +114,7 @@ void ofxColourLoversHelper::drawImGuiMain()
 		float _hb = BUTTON_BIG_HEIGHT * 0.5;
 		float _w100 = ImGui::GetWindowContentRegionWidth();
 		float _w99 = _w100 - 3 * _spc;
-		float _w50 = _w100/2 - _spc;
+		float _w50 = _w100 / 2 - _spc;
 		//float _w50 = _w99 * 0.5f - 2 * _spc;
 		float _w20 = _w99 * 0.2f - 3 * _spc;
 
@@ -145,7 +145,7 @@ void ofxColourLoversHelper::drawImGuiMain()
 					textInput_temp1_PRE = textInput_temp1;
 				}
 			}
-			
+
 			ImGui::Dummy(ImVec2(0, 5));
 
 			//ImGui::SameLine();
@@ -522,6 +522,26 @@ void ofxColourLoversHelper::drawImGuiBrowseKits()
 			ImGui::Text(ss.c_str());
 			ImGui::Dummy(ImVec2(0.0f, 5));
 
+			//--
+
+			//tween sizes
+			bool btween = false;
+			static float alpha;
+			static int indexExt_PRE;
+			const float step = 0.1f;
+			if (btween) {
+				if (currPalette != indexExt_PRE) {
+					indexExt_PRE = currPalette;
+					alpha = 1;
+				}
+				else
+				{
+					if (alpha > 0) alpha -= step;
+					alpha = ofClamp(alpha, 0, 1);
+				}
+				//ofLogNotice(__FUNCTION__) << "alpha:  " << alpha;
+			}
+
 			//-
 
 			float _spc = 0;
@@ -542,7 +562,7 @@ void ofxColourLoversHelper::drawImGuiBrowseKits()
 				ImGuiColorEditFlags_NoPicker |
 				ImGuiColorEditFlags_NoTooltip;
 
-			//-
+			//--
 
 			for (int i = 0; i < palettes.size(); i++)
 			{
@@ -552,8 +572,8 @@ void ofxColourLoversHelper::drawImGuiBrowseKits()
 				//autoscroll
 				if (i == currPalette)
 				{
-					if (AutoScroll) ImGui::SetScrollHereY(0.10f); // 0.0f:top, 0.5f:center, 1.0f:bottom
-					//if (AutoScroll) ImGui::SetScrollHereY(0.50f); // 0.0f:top, 0.5f:center, 1.0f:bottom
+					if (AutoScroll) ImGui::SetScrollHereY(0.1f); // 0.0f:top, 0.5f:center, 1.0f:bottom
+					//if (AutoScroll) ImGui::SetScrollHereY(0.5f); // 0.0f:top, 0.5f:center, 1.0f:bottom
 				}
 
 				//-
@@ -585,8 +605,6 @@ void ofxColourLoversHelper::drawImGuiBrowseKits()
 					if (c != 0)
 					{
 						ImGui::SameLine(0, 0);
-						//ImGui::SameLine();
-						//ImGui::SameLine(_spc, _spc);// ?
 					}
 
 					//-
@@ -632,7 +650,19 @@ void ofxColourLoversHelper::drawImGuiBrowseKits()
 					bool bDrawBorder = false;
 					float _scale = 1.0f;
 
-					if (i == currPalette)//highlight selected
+					if (i == indexExt_PRE)
+					{
+						if (btween) {
+							if (bfocus) _scale = ofMap(alpha, 1, 0, 1.75f, 1.0f, true);
+						}
+						else {
+							if (bfocus) _scale = 1.0f;
+						}
+
+						_hhB = _hb * _scale;
+					}
+
+					else if (i == currPalette)//highlight selected
 					{
 						bDrawBorder = true;
 
@@ -644,10 +674,18 @@ void ofxColourLoversHelper::drawImGuiBrowseKits()
 						//	_scale = 1.0f;
 						//}
 
-						if (bfocus) _scale = 1.75f;
+						if (btween) {
+							if (bfocus) _scale = ofMap(alpha, 1, 0, 1.75f, 1.0f, true);
+						}
+						else {
+							if (bfocus) _scale = 1.75f;
+						}
+
 						_hhB = _hb * _scale;
 
 						//_hhB = _hb;
+
+						//-
 
 						ImGui::PushStyleColor(ImGuiCol_Border, color_Pick);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, linew_Pick);
@@ -660,10 +698,8 @@ void ofxColourLoversHelper::drawImGuiBrowseKits()
 					}
 					else
 					{
-						//_hhB = _hb;
 						_hhB = _hb * _scale;
 					}
-					//_hhB = 0.7 * BUTTON_BIG_HEIGHT2;//button height
 
 					//------------
 
@@ -1307,7 +1343,7 @@ void ofxColourLoversHelper::refreshPalette()
 #ifdef USE_OFX_UI
 		lastPaletteName_UI->setLabel(lastPaletteName);
 #endif
-	}
+}
 
 	//ColourLovePalette p = palettes[currPalette];
 	//lastPaletteName = p.title;
@@ -1589,7 +1625,7 @@ void ofxColourLoversHelper::Changed_Gui_Lab(ofxUIEventArgs &e)
 	refreshPalette();
 
 	//-
-}
+		}
 #endif
 
 //--------------------------------------------------------------

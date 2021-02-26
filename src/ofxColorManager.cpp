@@ -1273,7 +1273,7 @@ void ofxColorManager::draw_Info()
 	//y = pady + fontBig.getSize();
 
 	//bottom
-	pady = 150;
+	pady = 200;
 	y = ofGetWindowHeight() - pady - fontBig.getSize();
 
 	int _alpha = 200;
@@ -3870,7 +3870,7 @@ void ofxColorManager::gui_Presets()
 		ImGui::Dummy(ImVec2(0, 5));
 
 		//new preset toggle
-		if (ofxSurfingHelpers::AddBigToggle(MODE_NewPreset, _w99, _h))
+		if (ofxSurfingHelpers::AddBigToggle(MODE_NewPreset, _w99, _h/2))
 		{
 			//TODO:
 			textInput_New = name_TARGET[0];//set
