@@ -7,17 +7,25 @@
 
 TODO:
 
++ tween lerp broswing grid palettes size for selected 
++ fix gradient sliders..
 + save new: restore select last saved index
 + new preset: fix name linking
 + theory and range selectors do not update demo2 svg
 + should clean: disable all and enable the required only
 + palette editor broken
 + fix pick color: to lovers, quantizer..
++ fix text input boxes
 
++ preset update/save do not works
 + theory num colors not working on some types
 + add callback disabler for engines when using presets?
 + gui lib improve other json libs
 + add OSC ?
++ autoresize box engine panels to num colors
++ set picker panel width locked
++ add color do not works
++ undo
 
 */
 
@@ -172,6 +180,7 @@ class ofxColorManager : public ofBaseApp
 private:
 	GradientEngine gradientEngine;
 
+
 	//--
 
 private:
@@ -264,7 +273,7 @@ private:
 private:
 	ofParameter<bool> auto_pilot{ "autoPilot", false };
 	int auto_pilot_timer;
-	ofParameter<int> auto_pilot_Duration{ "Time", 1, 1, 20 };
+	ofParameter<float> auto_pilot_Duration{ "Time", 1, 0.1, 5 };
 
 	ofParameter<bool> SHOW_ImGui{ "ImGui", true };
 
@@ -315,7 +324,7 @@ private:
 	ofParameter<bool> SHOW_UserPaletteEditor;
 	ofParameter<bool> SHOW_Theory;
 	ofParameter<bool> SHOW_Quantizer;
-	ofParameter<bool> SHOW_Gradient;
+	//ofParameter<bool> SHOW_Gradient;
 	ofParameter<bool> AutoScroll;
 
 	//-
@@ -557,6 +566,8 @@ private:
 	void build_Palette_Flip();
 	void build_Palette_RandomSort();
 
+	void doRandomizeColorPicker();
+	
 	//--
 
 public:

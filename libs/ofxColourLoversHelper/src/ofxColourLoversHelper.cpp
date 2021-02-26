@@ -114,7 +114,8 @@ void ofxColourLoversHelper::drawImGuiMain()
 		float _hb = BUTTON_BIG_HEIGHT * 0.5;
 		float _w100 = ImGui::GetWindowContentRegionWidth();
 		float _w99 = _w100 - 3 * _spc;
-		float _w50 = _w99 * 0.5f - 2 * _spc;
+		float _w50 = _w100/2 - _spc;
+		//float _w50 = _w99 * 0.5f - 2 * _spc;
 		float _w20 = _w99 * 0.2f - 3 * _spc;
 
 		//-
@@ -124,7 +125,7 @@ void ofxColourLoversHelper::drawImGuiMain()
 			ImGui::Dummy(ImVec2(0, 5));
 
 			// search
-			ImGui::Text("Keyword:");
+			ImGui::Text("Type Keyword:");
 			//std::string textInput_temp1 = "";
 
 			char tab1[32];
@@ -144,9 +145,11 @@ void ofxColourLoversHelper::drawImGuiMain()
 					textInput_temp1_PRE = textInput_temp1;
 				}
 			}
+			
+			ImGui::Dummy(ImVec2(0, 5));
 
 			//ImGui::SameLine();
-			if (ImGui::Button("SEARCH", ImVec2(_w99, _hb)))
+			if (ImGui::Button("SEARCH", ImVec2(_w100, _hb * 2)))
 			{
 				ofLogNotice(__FUNCTION__) << "searchPalettes: " << textInput_temp1_PRE;
 
@@ -274,7 +277,7 @@ void ofxColourLoversHelper::drawImGuiMain()
 
 			//ImGui::Dummy(ImVec2(0, 5));
 
-			if (ImGui::Button("CLEAR HISTORY", ImVec2(_w99, _hb)))
+			if (ImGui::Button("CLEAR HISTORY", ImVec2(_w100, _hb)))
 				ImGui::OpenPopup("CLEAR HISTORY?");
 
 			if (ImGui::BeginPopupModal("CLEAR HISTORY?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
@@ -288,7 +291,7 @@ void ofxColourLoversHelper::drawImGuiMain()
 				ImGui::PopStyleVar();
 
 				if (!dont_ask_me_next_time) {
-					if (ImGui::Button("OK", ImVec2(_w99, 0))) {
+					if (ImGui::Button("OK", ImVec2(_w100, 0))) {
 						clearHistory();
 						//workflow
 						loadHistory();
@@ -297,7 +300,7 @@ void ofxColourLoversHelper::drawImGuiMain()
 					}
 					ImGui::SetItemDefaultFocus();
 					ImGui::SameLine();
-					if (ImGui::Button("Cancel", ImVec2(_w99, 0))) { ImGui::CloseCurrentPopup(); }
+					if (ImGui::Button("Cancel", ImVec2(_w100, 0))) { ImGui::CloseCurrentPopup(); }
 				}
 				else {
 					clearHistory();
@@ -397,7 +400,7 @@ void ofxColourLoversHelper::drawImGuiMain()
 
 			ImGui::PushButtonRepeat(true);
 
-			if (ImGui::Button("Previous", ImVec2(_w50, _hb*2)))
+			if (ImGui::Button("Previous", ImVec2(_w50, _hb * 2)))
 			{
 				prevPalette();
 
@@ -409,7 +412,7 @@ void ofxColourLoversHelper::drawImGuiMain()
 
 			ImGui::SameLine();
 
-			if (ImGui::Button("Next", ImVec2(_w50, _hb*2)))
+			if (ImGui::Button("Next", ImVec2(_w50, _hb * 2)))
 			{
 				nextPalette();
 
@@ -440,16 +443,16 @@ void ofxColourLoversHelper::drawImGuiMain()
 			//ofxImGui::AddParameter(SHOW_BrowserPalettes);
 			ofxSurfingHelpers::AddBigToggle(SHOW_BrowserPalettes, _w99, _hb);
 
+			if (SHOW_BrowserPalettes) ofxImGui::AddParameter(AutoScroll);
 			ofxImGui::EndTree(mainSettings);
 
 			//ImGui::Dummy(ImVec2(0.0f, 10));
 
 			//-
 
+
 			if (ImGui::CollapsingHeader("Advanced"))
 			{
-				if (SHOW_BrowserPalettes) ofxImGui::AddParameter(AutoScroll);
-
 				//if (ImGui::Checkbox("Pick Palette", &MODE_PickPalette_BACK))
 				//{
 				//}

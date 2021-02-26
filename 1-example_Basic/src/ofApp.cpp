@@ -73,7 +73,6 @@ void ofApp::keyPressed(int key)
 //--------------------------------------------------------------
 void ofApp::draw_TEST_ofApp()
 {
-	// draw local test scene
 	ofPushStyle();
 	ofPushMatrix();
 	{
