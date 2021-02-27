@@ -555,10 +555,10 @@ void ofxColourLoversHelper::drawImGuiBrowseKits()
 			//blink when selected
 			float freq = 0.15;//speed freq
 			float min = 0.20;
-			float max = 0.60;
+			float max = 0.80;
 			float a = ofMap(glm::sin(freq * ofGetFrameNum()), -1, 1, min, max);
 
-			float linew_Pick = 1.5;
+			float linew_Pick = 2.0;
 			ImVec4 color_Pick{ 0, 0, 0, a };
 			auto color_Pick32 = IM_COL32(color_Pick.x*255.f, color_Pick.y*255.f, color_Pick.z*255.f, color_Pick.w*255.f);
 

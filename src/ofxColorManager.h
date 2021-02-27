@@ -8,7 +8,7 @@
 TODO:
 
 ++ save new hides theory
-++ 
+++ add color not working on edit
 
 + tween lerp broswing grid palettes size for selected 
 + fix gradient sliders..
