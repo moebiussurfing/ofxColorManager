@@ -46,7 +46,7 @@ void ofxColorManager::build_Palette_Flip()
 	// workflow
 	refresh_Background();
 	// DEMO 1
-	if (DEMO1_Test && !DEMO_Auto) myDEMO1.reStart();
+	//if (DEMO1_Test && !DEMO_Auto) myDEMO1.reStart();
 
 	//--
 
@@ -62,9 +62,6 @@ void ofxColorManager::build_Palette_Flip()
 	if (bAutoExportPreset)
 	{
 		bExportFlag = true;
-
-		//ofLogNotice(__FUNCTION__) << "Auto EXPORT";
-		//exportPalette();
 	}
 }
 
@@ -77,15 +74,19 @@ void ofxColorManager::build_Palette_Engine()
 
 	//--
 
+	bool bNew = false;
+
 	if (SHOW_ColourLovers)
 	{
 		_name = myPalette_Name_BACK;
 		palette_FromColourLovers();
+		bNew = true;
 	}
 	else if (SHOW_Quantizer)
 	{
 		_name = myPalette_Name_BACK;
 		palette_FromQuantizer();
+		bNew = true;
 	}
 	else if (SHOW_Theory)
 	{
@@ -93,84 +94,35 @@ void ofxColorManager::build_Palette_Engine()
 		//refresh_Theory_G1();//?
 		refresh_Theory_G2();
 		palette_FromTheory(last_Index_Theory);
+		bNew = true;
 	}
 	else if (SHOW_Range)
 	{
 		_name = name_Range;
 		palette_FromRange(last_Index_Range);
+		bNew = true;
 	}
+
+	name_TARGET[0] = _name;
 
 	//----
 
 	// presets
 
-	//if (SHOW_Presets)
-	{
-		if (!MODE_NewPreset) MODE_NewPreset = true;
-		//if (_name != "") textInput_New = _name;
-		//else textInput_New = "name";
+	if (SHOW_Presets) {
+		if (!MODE_NewPreset && bNew) MODE_NewPreset = true;
 		textInput_New = _name;
-		name_TARGET[0] = _name;
 	}
 
 	//--
 
-	//TODO:
-	// setup linking pointers to get back on load
 	PRESET_Temp.setName_TARGET(_name);
-	PRESET_Temp.setLinkPalette(palette);
 
 #ifndef USE_SIMPLE_PRESET_PALETTE	
 	PRESET_Temp.setNameCurve_TARGET(PRESET_Name_Gradient);
 #endif
 
-	//----
-
-	/*
-	// workflow
-	refresh_Background();
-
-	// workflow
-	// new preset
-	if (MODE_NewPreset) MODE_NewPreset = false;
-	// demo mode
-	if (DEMO1_Test && DEMO_Auto) myDEMO1.reStart();
-	// DEMO 1
-	if (DEMO1_Test && !DEMO_Auto) myDEMO1.reStart();
-
 	//--
-
-	last_Index_ColorPalette.setMax(palette.size() - 1);
-	//last_Index_ColorPalette = 0;
-	//if (palette.size() > 0) color_Picked = palette[last_Index_ColorPalette];
-
-	//--
-
-	// ofApp targets
-
-	// palette
-	refresh_Palette_TARGET(palette);
-
-	// name
-	if (name_TARGET != nullptr)
-	{
-		name_TARGET[0] = _name;
-	}
-
-	//--
-
-	// export
-	if (bAutoExportPreset)
-	{
-		bExportFlag = true;
-		//ofLogNotice(__FUNCTION__) << "Auto EXPORT";
-		//exportPalette();
-	}
-	*/
-
-
-	//TODO:
-	//build_Palette_Preset();//?
 
 	// export
 	if (bAutoExportPreset)
@@ -202,7 +154,7 @@ void ofxColorManager::build_Palette_Preset()
 	// workflow
 	refresh_Background();
 	// DEMO 1
-	if (DEMO1_Test && !DEMO_Auto) myDEMO1.reStart();
+	//if (DEMO1_Test && !DEMO_Auto) myDEMO1.reStart();
 
 	//// export
 	//if (bAutoExportPreset)
@@ -741,16 +693,27 @@ void ofxColorManager::setup()
 	//#endif
 
 	// daan fork
-	gui.setup(nullptr, true, ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable, true, false);
+	ImGuiConfigFlags flags;
+	flags = ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable;
+	flags |= ImGuiDockNodeFlags_NoWindowMenuButton;//from imgui_internal.h
+	flags |= ImGuiDockNodeFlags_NoCloseButton;//?
+	flags |= ImGuiDockNodeFlags_NoResizeX;
+
+	gui.setup(nullptr, true, flags, true, false);
 	//gui.setup(nullptr, true, ImGuiConfigFlags_DockingEnable, true, false);
+
+	auto &io = ImGui::GetIO();
+	io.ConfigDockingWithShift = true;
+	io.ConfigWindowsResizeFromEdges = false;//?
 
 	// fonts
 #ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
-	auto normalCharRanges = ImGui::GetIO().Fonts->GetGlyphRangesDefault();
-	float _size = 10.f;
+	auto normalCharRanges = io.Fonts->GetGlyphRangesDefault();
+	float _size = 11.f;
 	std::string _name = "telegrama_render.otf";
 	std::string _path = "assets/fonts/" + _name;//assets folder
 	customFont = gui.addFont(_path, _size, nullptr, normalCharRanges);
+	io.FontDefault = customFont;//
 #endif
 
 	//-
@@ -1029,6 +992,10 @@ void ofxColorManager::startup()
 #ifdef LINK_TCP_MASTER_CLIENT
 	setupLink();
 #endif
+
+	//-
+
+	PRESET_Temp.setLinkPalette(palette);
 }
 
 //--------------------------------------------------------------
@@ -1273,7 +1240,7 @@ void ofxColorManager::draw_Info()
 	//y = pady + fontBig.getSize();
 
 	//bottom
-	pady = 200;
+	pady = 0;
 	y = ofGetWindowHeight() - pady - fontBig.getSize();
 
 	int _alpha = 200;
@@ -2042,8 +2009,7 @@ void ofxColorManager::gui_PaletteEditor()
 
 			// edit
 
-			//ofxSurfingHelpers::AddBigToggle(bEditPalette, ww, _h * 0.5);
-			ofxSurfingHelpers::AddBigToggle(bEditPalette, _w, _h * 0.5);
+			ofxSurfingHelpers::AddBigToggle(bEditPalette, _w, _h);
 
 			if (bEditPalette)
 			{
@@ -2066,13 +2032,13 @@ void ofxColorManager::gui_PaletteEditor()
 			ImGui::Dummy(ImVec2(0, 5));
 			{
 				//flip
-				if (ofxSurfingHelpers::AddSmallButton(bFlipUserPalette, _w, 0.5 * BUTTON_BIG_HEIGHT))
+				if (ofxSurfingHelpers::AddSmallButton(bFlipUserPalette, _w, BUTTON_BIG_HEIGHT))
 				{
 				}
 				//ImGui::SameLine();
 
 				//re arrenge
-				if (ImGui::Button("SORT RANDOM", ImVec2(_w, 0.5 * BUTTON_BIG_HEIGHT)))
+				if (ImGui::Button("SORT RANDOM", ImVec2(_w, BUTTON_BIG_HEIGHT)))
 				{
 					build_Palette_RandomSort();
 				}
@@ -2469,18 +2435,17 @@ void ofxColorManager::gui_Library()
 		s = "  " + ofToString(last_Lib_Index) + "/" + ofToString(lib_TotalColors - 1);
 		ImGui::Text(s.c_str());
 
-		//ImGui::Dummy(ImVec2(0, 5));
-
 		// 2. color name
+		ImGui::Dummy(ImVec2(0, 2));
 		ImGui::Text(last_Lib_NameColor.c_str());
-
-		//ImGui::Dummy(ImVec2(0, 5));
+		ImGui::Dummy(ImVec2(0, 2));
 
 		//--
 
 		// advanced
-
+#ifdef USE_EXTRA_LIBRARIES
 		if (ImGui::CollapsingHeader("Advanced"))
+#endif
 		{
 			if (ImGui::CollapsingHeader("Layout"))
 			{
@@ -2583,7 +2548,7 @@ void ofxColorManager::gui_Library()
 
 		//----
 
-		// grid colors
+		// 2. grid colors
 
 		// responsive
 		ImVec2 _sz((float)sizeLibColBox.get(), (float)sizeLibColBox.get());
@@ -2595,6 +2560,8 @@ void ofxColorManager::gui_Library()
 		float _wx2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
 
 		//--
+
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
 
 		for (int n = lib_StartCol; n < lib_EndCol; n++)
 		{
@@ -2621,7 +2588,8 @@ void ofxColorManager::gui_Library()
 				{
 					if ((n % _colsSize) != 0)
 					{
-						ImGui::SameLine(0, ImGui::GetStyle().ItemSpacing.y);//vertical inter line
+						//ImGui::SameLine(0, ImGui::GetStyle().ItemSpacing.y);//vertical inter line
+						ImGui::SameLine(0, 0);//vertical inter line
 					}
 				}
 
@@ -2649,10 +2617,9 @@ void ofxColorManager::gui_Library()
 
 				ofFloatColor _c = ofColor(palette_Lib_Cols[n]);
 
-				if (ImGui::ColorButton("##paletteLib",
-					_c,
-					_flags,
-					_bb))
+				// if one clicked
+
+				if (ImGui::ColorButton("##paletteLib", _c, _flags, _bb))
 
 				{
 					// picked
@@ -2699,16 +2666,20 @@ void ofxColorManager::gui_Library()
 
 				float last_button_x2 = ImGui::GetItemRectMax().x;
 
-				float next_button_x2 = last_button_x2 + style.ItemSpacing.x + _sz.x; // Expected position if next button was on same line
+				float next_button_x2 = last_button_x2 + _sz.x; // Expected position if next button was on same line
+				//float next_button_x2 = last_button_x2 + style.ItemSpacing.x + _sz.x; // Expected position if next button was on same line
 
 				if (n + 1 < _countBtns && next_button_x2 < _wx2)
 				{
-					ImGui::SameLine(0, ImGui::GetStyle().ItemSpacing.y);//vertical inter line
+					ImGui::SameLine(0, 0);//vertical inter line
+					//ImGui::SameLine(0, ImGui::GetStyle().ItemSpacing.y);//vertical inter line
 				}
 
 				ImGui::PopID();
 			}
 		}
+
+		ImGui::PopStyleVar();
 
 		//----
 
@@ -2834,6 +2805,7 @@ void ofxColorManager::gui_Export()
 void ofxColorManager::gui_Picker()
 {
 	static bool auto_resize = true;
+	static bool default_wheel = false;
 	float ww, hh;
 	ww = PANEL_WIDGETS_WIDTH;
 	hh = PANEL_WIDGETS_HEIGHT;
@@ -2886,8 +2858,8 @@ void ofxColorManager::gui_Picker()
 
 			// 1. color picker
 
-			//_flagw = ImGuiTreeNodeFlags_None;
-			_flagw = ImGuiTreeNodeFlags_DefaultOpen;
+			if (default_wheel) _flagw = ImGuiTreeNodeFlags_DefaultOpen;
+			else _flagw = ImGuiTreeNodeFlags_None;
 
 			if (ImGui::CollapsingHeader("WHEEL", _flagw))
 			{
@@ -2921,8 +2893,8 @@ void ofxColorManager::gui_Picker()
 
 			// 2. square
 
-			//_flagw = ImGuiTreeNodeFlags_DefaultOpen;// open
-			_flagw = ImGuiTreeNodeFlags_None;// closed
+			if (!default_wheel) _flagw = ImGuiTreeNodeFlags_DefaultOpen;
+			else _flagw = ImGuiTreeNodeFlags_None;
 
 			if (ImGui::CollapsingHeader("SQUARE", _flagw))
 			{
@@ -3038,6 +3010,26 @@ void ofxColorManager::gui_Picker()
 
 	ImGui::PopStyleVar();
 }
+//--------------------------------------------------------------
+void ofxColorManager::gui_PanelsEngines()
+{
+	static bool auto_resize = true;
+	ImGuiWindowFlags flags;
+	flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
+
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(425, PANEL_WIDGETS_HEIGHT));
+
+	if (ofxImGui::BeginWindow("ENGINES", mainSettings, flags))
+	{
+		ofxSurfingHelpers::AddBigToggle(SHOW_Theory); ImGui::SameLine();
+		ofxSurfingHelpers::AddBigToggle(SHOW_Range); ImGui::SameLine();
+		ofxSurfingHelpers::AddBigToggle(SHOW_ColourLovers); ImGui::SameLine();
+		ofxSurfingHelpers::AddBigToggle(SHOW_Quantizer);
+	}
+	ofxImGui::EndWindow(mainSettings);
+
+	ImGui::PopStyleVar();
+}
 
 //--------------------------------------------------------------
 void ofxColorManager::gui_Panels()
@@ -3070,10 +3062,10 @@ void ofxColorManager::gui_Panels()
 
 		//--
 
-		ofxSurfingHelpers::AddBigToggle(SHOW_Theory); ImGui::SameLine();
-		ofxSurfingHelpers::AddBigToggle(SHOW_Range); ImGui::SameLine();
-		ofxSurfingHelpers::AddBigToggle(SHOW_ColourLovers); ImGui::SameLine();
-		ofxSurfingHelpers::AddBigToggle(SHOW_Quantizer);
+		//ofxSurfingHelpers::AddBigToggle(SHOW_Theory); ImGui::SameLine();
+		//ofxSurfingHelpers::AddBigToggle(SHOW_Range); ImGui::SameLine();
+		//ofxSurfingHelpers::AddBigToggle(SHOW_ColourLovers); ImGui::SameLine();
+		//ofxSurfingHelpers::AddBigToggle(SHOW_Quantizer);
 
 		//ImGui::Columns(3);
 
@@ -3100,6 +3092,8 @@ void ofxColorManager::gui_Panels()
 		ofxSurfingHelpers::AddBigToggle(SHOW_Demos); ImGui::SameLine();
 		ofxSurfingHelpers::AddBigToggle(SHOW_Export); ImGui::SameLine();
 		ofxImGui::AddParameter(ENABLE_keys);
+
+		ImGui::Checkbox("Edit Theme", &edit_theme);
 	}
 	ofxImGui::EndWindow(mainSettings);
 
@@ -3519,8 +3513,10 @@ void ofxColorManager::gui_Presets()
 	ww = PANEL_WIDGETS_WIDTH;
 	hh = PANEL_WIDGETS_HEIGHT;
 	ImGui::SetWindowSize(ImVec2(ww, hh));//not doing nothing
+
 	ImGuiWindowFlags flags;
 	flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
+	//flags |= ImGuiWindowFlags_NoBackground;
 
 	//blink when a new preset is editing
 	float freq = 0.15;//speed freq
@@ -3564,6 +3560,9 @@ void ofxColorManager::gui_Presets()
 
 		// index preset / total
 		int numPalettes = files_Names.size() - 1;
+
+		ImGui::Text("%d/%d", counter, numPalettes);
+		//ImGui::Text("%d/%d", last_Index_Preset.get(), numPalettes);
 
 		//----
 
@@ -3631,9 +3630,6 @@ void ofxColorManager::gui_Presets()
 		}
 
 		ImGui::PopButtonRepeat();
-
-		ImGui::Text("%d/%d", counter, numPalettes);
-		//ImGui::Text("%d/%d", last_Index_Preset.get(), numPalettes);
 
 		ImGui::Dummy(ImVec2(0, 5));
 
@@ -3870,7 +3866,7 @@ void ofxColorManager::gui_Presets()
 		ImGui::Dummy(ImVec2(0, 5));
 
 		//new preset toggle
-		if (ofxSurfingHelpers::AddBigToggle(MODE_NewPreset, _w99, _h/2))
+		if (ofxSurfingHelpers::AddBigToggle(MODE_NewPreset, _w99, _h / 2))
 		{
 			//TODO:
 			textInput_New = name_TARGET[0];//set
@@ -3879,52 +3875,54 @@ void ofxColorManager::gui_Presets()
 		}
 		//ofxImGui::AddParameter(MODE_NewPreset);
 
+		ImGui::Dummy(ImVec2(0, 5));
+
 		if (MODE_NewPreset.get())
 		{
-			//ImGui::Dummy(ImVec2(0, 5));
+			ImGui::PushItemWidth(_w100 - 10);
 
-			ImGui::PushItemWidth(_w99);
+			// loaded string into char array
+			char tab[32];
+			strncpy(tab, textInput_New.c_str(), sizeof(tab));
+			tab[sizeof(tab) - 1] = 0;
+
+			//char buf1[64] = ;
+			//static char buf1[64] = "";
+
+			if (ImGui::InputText("", tab, IM_ARRAYSIZE(tab)))
+				//if (ImGui::InputText("", buf1, 64))
 			{
-				// loaded string into char array
-				char tab[32];
-				strncpy(tab, textInput_New.c_str(), sizeof(tab));
-				tab[sizeof(tab) - 1] = 0;
+				textInput_New = ofToString(tab);
+				//textInput_New = ofToString(buf1);
+				name_TARGET[0] = &textInput_New[0];
+				ofLogNotice(__FUNCTION__) << "textInput_New:" << textInput_New;
 
-				//-
-
-				if (ImGui::InputText("", tab, IM_ARRAYSIZE(tab)))
-				{
-					textInput_New = ofToString(tab);
-
-					name_TARGET[0] = &textInput_New[0];
-
-					ofLogNotice(__FUNCTION__) << "textInput_New:" << textInput_New;
-				}
-
-				//-
-
-				//TODO:
-				//to disable all other key commands
-				bool b = bTextInputActive;
-				bTextInputActive = ImGui::IsItemActive();
-				if (bTextInputActive != b) ofLogNotice(__FUNCTION__) << "TextInput : " << (bTextInputActive ? "ACTIVE" : "DISABLED");
-
-				//-
-
-				////TODO: ??
-				//has_focus = 0;
-				//if (focus_1) ImGui::SetKeyboardFocusHere();
-				//ImGui::InputText("", tab, IM_ARRAYSIZE(tab));
-				//if (ImGui::IsItemActive())
-				//{
-				//	has_focus = 1;
-				//	textInput_New = ofToString(tab);
-				//	ofLogNotice(__FUNCTION__) << "textInput_New:" << textInput_New;
-				//}
-
-				//-
 			}
 			ImGui::PopItemWidth();
+
+			//-
+
+			//to disable all other key commands
+			bool b = bTextInputActive;
+			bTextInputActive = ImGui::IsItemActive();
+			if (bTextInputActive != b) ofLogNotice(__FUNCTION__) << "TextInput : " << (bTextInputActive ? "ACTIVE" : "DISABLED");
+
+			//	//-
+
+			//	////TODO: ??
+			//	//has_focus = 0;
+			//	//if (focus_1) ImGui::SetKeyboardFocusHere();
+			//	//ImGui::InputText("", tab, IM_ARRAYSIZE(tab));
+			//	//if (ImGui::IsItemActive())
+			//	//{
+			//	//	has_focus = 1;
+			//	//	textInput_New = ofToString(tab);
+			//	//	ofLogNotice(__FUNCTION__) << "textInput_New:" << textInput_New;
+			//	//}
+
+			//	//-
+			//}
+			//ImGui::PopItemWidth();
 
 			//--
 
@@ -3966,7 +3964,7 @@ void ofxColorManager::gui_Presets()
 		//ofxImGui::AddParameter(SHOW_Kit);
 		//ofxImGui::AddParameter(SHOW_PresetsPalette);
 
-		ImGui::Dummy(ImVec2(0, 5));
+		//ImGui::Dummy(ImVec2(0, 5));
 
 		//--
 
@@ -4005,7 +4003,7 @@ void ofxColorManager::gui_Presets()
 				//-
 
 				// DEMO
-				if (DEMO1_Test && !DEMO_Auto) myDEMO1.reStart();
+				//if (DEMO1_Test && !DEMO_Auto) myDEMO1.reStart();
 			}
 		}
 		ofxImGui::EndWindow(mainSettings);
@@ -4204,6 +4202,8 @@ void ofxColorManager::gui_Demo()
 			ofxImGui::AddParameter(DEMO2_Svg.DEMO2_Edit);
 			if (DEMO2_Svg.DEMO2_Edit) ofxImGui::AddParameter(DEMO2_Svg.DEMO2_Scale);
 			ofxImGui::AddParameter(DEMO2_Svg.DEMO2_Alpha);
+			ofxImGui::AddParameter(DEMO2_Svg.blendMode);
+			ofxImGui::AddParameter(DEMO2_Svg.blendModeName);
 		}
 	}
 	ofxImGui::EndWindow(mainSettings);
@@ -4244,6 +4244,7 @@ bool ofxColorManager::draw_Gui()
 #endif
 		if (SHOW_Quantizer) colorQuantizer.draw_Gui();
 		if (SHOW_Panels) gui_Panels();
+		if (SHOW_Panels) gui_PanelsEngines();
 		if (SHOW_Export) gui_Export();
 		if (SHOW_Demos) gui_Demo();
 
@@ -4257,6 +4258,14 @@ bool ofxColorManager::draw_Gui()
 	ImGui::PopFont();
 #endif
 
+	//TODO:
+	if (edit_theme) {
+		if (ofxImGui::BeginWindow("THEME", mainSettings))
+		{
+			ImGui::ShowStyleEditor();
+		}
+		ofxImGui::EndWindow(mainSettings);
+	}
 	gui.end();
 
 	//gui.draw();
@@ -5015,6 +5024,12 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 	if (false) {}
 
+	//// library
+	//else if (name == SHOW_Library.getName())
+	//{
+	//	colorBrowser.setEnableKeys(SHOW_Library);
+	//}
+
 	// layout
 	else if (name == bResponsive_Panels.getName())
 	{
@@ -5389,8 +5404,8 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			palette_RemoveColor(last_Index_ColorPalette);
 
 			// workflow
-			build_Palette_Engine();
-			last_Index_ColorPalette = last_Index_ColorPalette.getMax();
+			//build_Palette_Engine();
+			last_Index_ColorPalette = last_Index_ColorPalette.getMax();//select last
 		}
 	}
 
@@ -5691,11 +5706,11 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 	if (key == 'K') ENABLE_keys = !ENABLE_keys;
 
-	if (ENABLE_keys)
+	if (ENABLE_keys)// && !bTextInputActive)
 	{
 		//----
 
-		if (0) {}
+		if (false) {}
 
 		//--
 
@@ -5722,13 +5737,13 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		// user workflow
 
 		// randomize color
-		else if (key == OF_KEY_RETURN && !mod_CONTROL)
+		else if (key == 'r' && !mod_CONTROL)
 		{
 			doRandomizeColorPicker();
 		}
 
 		// randomize sort palette
-		else if (key == OF_KEY_RETURN && mod_CONTROL)
+		else if (key == OF_KEY_BACKSPACE && !mod_CONTROL)
 		{
 			build_Palette_RandomSort();
 		}
@@ -5752,10 +5767,12 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		}
 
 		// app modes
-		else if (key == OF_KEY_TAB && !mod_CONTROL) {
+		else if (key == OF_KEY_TAB && !mod_CONTROL)
+		{
 			AppMode++;
 		}
-		else if (key == OF_KEY_TAB && mod_CONTROL) {
+		else if (key == OF_KEY_TAB && mod_CONTROL)
+		{
 			AppMode--;
 		}
 
@@ -5763,7 +5780,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 		// editor
 
-		//if (bEditPalette)// /*&& SHOW_Presets*/ && !SHOW_Theory && !SHOW_Range && !SHOW_ColourLovers && !SHOW_Quantizer)
+		if (bEditPalette && !SHOW_Library)// /*&& SHOW_Presets*/ && !SHOW_Theory && !SHOW_Range && !SHOW_ColourLovers && !SHOW_Quantizer)
 		{
 			if (key == OF_KEY_LEFT && !mod_CONTROL)
 			{
@@ -5781,7 +5798,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 		// presets
 
-		if (SHOW_Presets && !SHOW_Theory && !SHOW_Range && !SHOW_ColourLovers && !SHOW_Quantizer)
+		if (SHOW_Presets && !SHOW_Theory && !SHOW_Range && !SHOW_ColourLovers && !SHOW_Quantizer && !SHOW_Library)
 		{
 			if (key == OF_KEY_UP || (key == ' ' && mod_CONTROL))
 			{
@@ -5843,7 +5860,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			//}
 
 			// get some presets by index random 
-			else if (key == 'R' || key == 'r')
+			else if (key == 'R')
 			{
 				last_Index_Preset = (int)ofRandom(0, files.size());
 
@@ -5861,7 +5878,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 		// range
 
-		if (SHOW_Range && !SHOW_Theory && !SHOW_ColourLovers && !SHOW_Quantizer)
+		if (SHOW_Range && !SHOW_Theory && !SHOW_ColourLovers && !SHOW_Quantizer && !SHOW_Library)
 		{
 			if (key == OF_KEY_UP || (key == ' ' && mod_CONTROL))
 			{
@@ -5910,7 +5927,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 		// theory
 
-		if (SHOW_Theory && !SHOW_Range && !SHOW_ColourLovers && !SHOW_Quantizer)
+		if (SHOW_Theory && !SHOW_Range && !SHOW_ColourLovers && !SHOW_Quantizer && !SHOW_Library)
 		{
 			if (key == OF_KEY_UP || (key == ' ' && mod_CONTROL))
 			{
@@ -5959,6 +5976,109 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			}
 		}
 
+		//-----
+
+		// library pantone
+
+		if (SHOW_Library)
+		{
+			if (key == OF_KEY_RIGHT)
+			{
+				// index
+				int n = last_ColorPicked_Lib;
+				n++;
+				n = ofClamp(n, 0, lib_TotalColors - 1);
+				last_ColorPicked_Lib = n;
+				last_Lib_Index = n;
+				// color name
+				if (n < palette_Lib_Names.size())
+				{
+					last_Lib_NameColor = palette_Lib_Names[n];
+				}
+				color_Picked = ofColor(palette_Lib_Cols[n]);
+			}
+			else if (key == OF_KEY_LEFT)
+			{
+				// index
+				int n = last_ColorPicked_Lib;
+				n--;
+				n = ofClamp(n, 0, lib_TotalColors - 1);
+				last_ColorPicked_Lib = n;
+				last_Lib_Index = n;
+				// color name
+				if (n < palette_Lib_Names.size())
+				{
+					last_Lib_NameColor = palette_Lib_Names[n];
+				}
+				color_Picked = ofColor(palette_Lib_Cols[n]);
+			}
+			else if (key == OF_KEY_DOWN)
+			{
+				// index
+				int n = last_ColorPicked_Lib;
+				n = n + lib_RowSize;
+				n = ofClamp(n, 0, lib_TotalColors - 1);
+				last_ColorPicked_Lib = n;
+				last_Lib_Index = n;
+				// color name
+				if (n < palette_Lib_Names.size())
+				{
+					last_Lib_NameColor = palette_Lib_Names[n];
+				}
+				color_Picked = ofColor(palette_Lib_Cols[n]);
+			}
+			else if (key == OF_KEY_UP)
+			{
+				// index
+				int n = last_ColorPicked_Lib;
+				n = n - lib_RowSize;
+				n = ofClamp(n, 0, lib_TotalColors - 1);
+				last_ColorPicked_Lib = n;
+				last_Lib_Index = n;
+				// color name
+				if (n < palette_Lib_Names.size())
+				{
+					last_Lib_NameColor = palette_Lib_Names[n];
+				}
+				color_Picked = ofColor(palette_Lib_Cols[n]);
+			}
+
+			else if (key == OF_KEY_RIGHT_SHIFT)
+			{
+				lib_Page_Index++;
+				lib_Page_Index = ofClamp(lib_Page_Index, lib_Page_Index.getMin(), lib_Page_Index.getMax());
+
+				// index
+				int n = lib_Page_Index * lib_Page_NumColors;
+				n = ofClamp(n, 0, lib_TotalColors - 1);
+				last_ColorPicked_Lib = n;
+				last_Lib_Index = n;
+				// color name
+				if (n < palette_Lib_Names.size())
+				{
+					last_Lib_NameColor = palette_Lib_Names[n];
+				}
+				color_Picked = ofColor(palette_Lib_Cols[n]);
+			}
+			else if (key == OF_KEY_LEFT_SHIFT)
+			{
+				lib_Page_Index--;
+				lib_Page_Index = ofClamp(lib_Page_Index, lib_Page_Index.getMin(), lib_Page_Index.getMax());
+
+				// index
+				int n = lib_Page_Index * lib_Page_NumColors;
+				n = ofClamp(n, 0, lib_TotalColors - 1);
+				last_ColorPicked_Lib = n;
+				last_Lib_Index = n;
+				// color name
+				if (n < palette_Lib_Names.size())
+				{
+					last_Lib_NameColor = palette_Lib_Names[n];
+				}
+				color_Picked = ofColor(palette_Lib_Cols[n]);
+			}
+		}
+
 		//----
 
 		// extra
@@ -5980,7 +6100,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		else if (key == 'D')
 		{
 			DEMO1_Test = !DEMO1_Test;
-			if (DEMO1_Test&& DEMO_Auto) myDEMO1.reStart();
+			//if (DEMO1_Test&& DEMO_Auto) myDEMO1.reStart();
 		}
 
 		//else if (key == 'g') {
@@ -6111,8 +6231,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			SHOW_Quantizer = false;
 			SHOW_Presets = false;
 		}
-			}
-		}
+	}
+}
 
 //--------------------------------------------------------------
 void ofxColorManager::keyReleased(ofKeyEventArgs &eventArgs)
@@ -6379,9 +6499,7 @@ void ofxColorManager::preset_Load(std::string p)
 
 	//--
 
-	// setup linking pointers to get back on load
 	PRESET_Temp.setName_TARGET(p);
-	PRESET_Temp.setLinkPalette(palette);
 
 #ifndef USE_SIMPLE_PRESET_PALETTE	
 	PRESET_Temp.setNameCurve_TARGET(PRESET_Name_Gradient);
@@ -6424,13 +6542,9 @@ void ofxColorManager::preset_Load(std::string p)
 
 	//--
 
-	//TODO:
-
 	// workflow
 	// new preset
 	if (MODE_NewPreset) MODE_NewPreset = false;
-	//// demo mode
-	//if (DEMO1_Test && DEMO_Auto) myDEMO1.reStart();
 
 	// load first color
 	if (palette.size() > 0) color_Picked = ofFloatColor(palette[0]);
@@ -6443,8 +6557,6 @@ void ofxColorManager::preset_Load(std::string p)
 	if (bAutoExportPreset)
 	{
 		bExportFlag = true;
-		//ofLogNotice(__FUNCTION__) << "Auto EXPORT";
-		//exportPalette();
 	}
 }
 
@@ -6452,13 +6564,8 @@ void ofxColorManager::preset_Load(std::string p)
 void ofxColorManager::preset_Save(std::string p)
 {
 	ofLogNotice(__FUNCTION__) << "----------------- PRESET SAVE -----------------" << p;
-	//ofLogNotice(__FUNCTION__) << p;
-
-	//TODO:
-	//this is using pointers.. ?
 
 	PRESET_Temp.setName_TARGET(p);
-	PRESET_Temp.setLinkPalette(palette);
 
 #ifndef USE_SIMPLE_PRESET_PALETTE	
 	PRESET_Temp.setNameCurve_TARGET(PRESET_Name_Gradient);
@@ -6558,7 +6665,6 @@ void ofxColorManager::refresh_Pick_ToEngines()
 		color_Clicked2.set(color_Picked.get());
 	}
 	ENABLE_Callbacks_cPickers = true;
-
 
 	//--
 

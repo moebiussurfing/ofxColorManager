@@ -36,11 +36,12 @@ ofxColorsBrowser::ofxColorsBrowser()
 #ifdef USE_OFX_COLOR_BROWSER_INTERFACE
 	addMouseListeners();
 #endif
-
+#ifdef USE_OFX_COLOR_BROWSER_KEYS
 #ifdef KEY_SHORTCUTS_ENABLE
 	setEnableKeys(true);
 #else
 	setEnableKeys(false);
+#endif
 #endif
 
 	//-
@@ -518,6 +519,10 @@ void ofxColorsBrowser::setup()
 	params.add(MODE_SORTING_name);
 	params.add(ENABLE_keys);
 
+#ifndef USE_OFX_COLOR_BROWSER_INTERFACE
+	LibraryColors_Index.setSerializable(false);
+#endif
+
 	//-
 
 	gui.setup("ofxColorsBrowser");
@@ -543,7 +548,7 @@ void ofxColorsBrowser::setup()
 		clearInterface();
 		grid_create_boxes();
 
-		});
+	});
 
 	//-
 
@@ -579,7 +584,7 @@ void ofxColorsBrowser::setup()
 
 		grid_create_boxes();
 
-		});
+	});
 
 	//----
 
@@ -935,10 +940,12 @@ void ofxColorsBrowser::draw()
 	}
 }
 
+#ifdef USE_OFX_COLOR_BROWSER_KEYS
 //--------------------------------------------------------------
 void ofxColorsBrowser::keyPressed(ofKeyEventArgs &eventArgs)
 {
 	const int &key = eventArgs.key;
+
 	ofLogNotice(__FUNCTION__) << " : " << key;
 
 	if (key == 'K')
@@ -953,22 +960,22 @@ void ofxColorsBrowser::keyPressed(ofKeyEventArgs &eventArgs)
 
 		//-
 
-#ifdef USE_OFX_COLOR_BROWSER_INTERFACE
+		if (false) {}
 
-		if (key == 'g')
-		{
-			setToggleVisible();
-		}
+		//if (key == 'g')
+		//{
+		//	setToggleVisible();
+		//}
 
-		else if (key == 'D')
-		{
-			setToggleVisibleDebug();
-		}
+		//else if (key == 'D')
+		//{
+		//	setToggleVisibleDebug();
+		//}
 
-		else if (key == 'G')
-		{
-			bGui = !bGui;
-		}
+		//else if (key == 'G')
+		//{
+		//	bGui = !bGui;
+		//}
 
 		// 0. card selector
 
@@ -1052,11 +1059,11 @@ void ofxColorsBrowser::keyPressed(ofKeyEventArgs &eventArgs)
 			cardNum = currColor / cardSize;
 			refresh_Clicks();
 		}
-#endif
+		//#endif
 
-		//-
+				//-
 
-		// 2. change to next palette
+				// 2. change to next palette
 
 		if (key == OF_KEY_BACKSPACE)
 		{
@@ -1255,6 +1262,7 @@ void ofxColorsBrowser::keyPressed(ofKeyEventArgs &eventArgs)
 		//}
 	}
 }
+#endif
 
 //--------------------------------------------------------------
 void ofxColorsBrowser::clearInterface()
@@ -1266,11 +1274,11 @@ void ofxColorsBrowser::clearInterface()
 #endif	
 }
 
+#ifdef USE_OFX_COLOR_BROWSER_KEYS
 //--------------------------------------------------------------
 void ofxColorsBrowser::keyReleased(ofKeyEventArgs &eventArgs)
 {
 }
-
 //--------------------------------------------------------------
 void ofxColorsBrowser::addKeysListeners()
 {
@@ -1282,6 +1290,7 @@ void ofxColorsBrowser::removeKeysListeners()
 {
 	ofRemoveListener(ofEvents().keyPressed, this, &ofxColorsBrowser::keyPressed);
 }
+#endif
 
 //--------------------------------------------------------------
 void ofxColorsBrowser::mouseDragged(ofMouseEventArgs &eventArgs)
@@ -1496,7 +1505,6 @@ void ofxColorsBrowser::mouseReleased(ofMouseEventArgs &eventArgs)
 #ifdef USE_OFX_COLOR_BROWSER_INTERFACE
 	if (ENABLE_clicks)
 	{
-
 		const int &x = eventArgs.x;
 		const int &y = eventArgs.y;
 		const int &button = eventArgs.button;
@@ -1532,8 +1540,11 @@ void ofxColorsBrowser::removeMouseListeners()
 //--------------------------------------------------------------
 void ofxColorsBrowser::exit()
 {
-#ifdef USE_OFX_COLOR_BROWSER_INTERFACE
+#ifdef USE_OFX_COLOR_BROWSER_KEYS
 	removeKeysListeners();
+#endif
+
+#ifdef USE_OFX_COLOR_BROWSER_INTERFACE
 	removeMouseListeners();
 
 	//setEnableInterfaceClicks(false);

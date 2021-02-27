@@ -8,6 +8,7 @@
 
 //uncomment to run the bundled example!
 //#define USE_OFX_COLOR_BROWSER_INTERFACE // include boxes interface
+//#define USE_OFX_COLOR_BROWSER_KEYS
 
 //----
 
@@ -84,6 +85,7 @@ public:
 
 	// API
 
+public:
 	void load_Pantone_JSON();
 
 	void setPosition(glm::vec2 p);
@@ -157,7 +159,7 @@ public:
 	{
 		ENABLE_keys = b;
 
-#ifdef USE_OFX_COLOR_BROWSER_INTERFACE
+#ifdef USE_OFX_COLOR_BROWSER_KEYS
 		if (ENABLE_keys) addKeysListeners();
 		else removeKeysListeners();
 #endif
@@ -168,7 +170,7 @@ public:
 	{
 		ENABLE_keys = b;
 
-#ifdef USE_OFX_COLOR_BROWSER_INTERFACE
+#ifdef USE_OFX_COLOR_BROWSER_KEYS
 		if (ENABLE_keys) addKeysListeners();
 		else removeKeysListeners();
 #endif
@@ -297,8 +299,10 @@ private:
 	//----
 
 public:
+#ifdef USE_OFX_COLOR_BROWSER_KEYS
 	void keyPressed(ofKeyEventArgs &eventArgs);
 	void keyReleased(ofKeyEventArgs &eventArgs);
+#endif
 
 	void mouseDragged(ofMouseEventArgs &eventArgs);
 	void mousePressed(ofMouseEventArgs &eventArgs);
@@ -370,6 +374,11 @@ public:
 private:
 	// last clicked color box
 	std::string currName = "";
-	int currColor = -1;
 	int currColor_OriginalPos = -1;
+	int currColor = -1;
+
+public:
+	int getCurrentColorIndex() {
+		return currColor;
+	}
 };

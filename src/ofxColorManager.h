@@ -26,6 +26,7 @@ TODO:
 + set picker panel width locked
 + add color do not works
 + undo
++ mode no bakcground to use gradient picker engine
 
 */
 
@@ -44,7 +45,7 @@ TODO:
 #define USE_COLOR_LOVERS
 #define USE_IMAGE_QUANTIZER
 #define USE_OFX_COLOR_BROWSER
-#define USE_EXTRA_LIBRARIES
+//#define USE_EXTRA_LIBRARIES//TODO:
 
 // layout
 #define MAX_PALETTE_COLORS 10
@@ -141,7 +142,7 @@ using namespace ofxSurfingHelpers;
 #endif
 
 #include "ofxImGui.h"
-//#include "imgui_internal.h" // <-- example uses some imgui internals...
+#include "imgui_internal.h" // <-- example uses some imgui internals...
 
 //TODO:
 //for a custom user gui
@@ -162,6 +163,10 @@ using namespace ImGui_PalettesPicker;
 
 class ofxColorManager : public ofBaseApp
 {
+private:
+	bool edit_theme = false;
+
+private:
 #ifdef LINK_TCP_MASTER_CLIENT
 	ofxTCPServer TCP;
 	//ofTrueTypeFont  mono;
@@ -179,7 +184,6 @@ class ofxColorManager : public ofBaseApp
 
 private:
 	GradientEngine gradientEngine;
-
 
 	//--
 
@@ -733,6 +737,7 @@ private:
 	void gui_Background();
 	void gui_Range();
 	void gui_Panels();
+	void gui_PanelsEngines();
 	void gui_Demo();
 	void gui_Export();
 	void gui_Gradient();

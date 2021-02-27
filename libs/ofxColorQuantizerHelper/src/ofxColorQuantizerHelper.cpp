@@ -185,33 +185,14 @@ void ofxColorQuantizerHelper::draw_Gui()
 
 		ImGui::Dummy(ImVec2(0.0f, 5));
 
-		// draw image preview
-
-		if (tex.isAllocated())
-		{
-			float w = tex.getWidth();
-			float h = tex.getHeight();
-			float ratio = h / w;
-			float ww = _w99 - 22;//hardcoded pad to avoid flickering bug..
-
-			if (ImGui::ImageButton(
-				(ImTextureID)(uintptr_t)fbo.getTexture(0).getTextureData().textureID,
-				ImVec2(ww, ww * ratio)))
-			{
-				ofLogNotice(__FUNCTION__) << "Image Pressed";
-			}
-		}
-
-		//// label name
-		//ImGui::Dummy(ImVec2(0.0f, 5));
-		//ImGui::Text(currentImage_name.get().c_str());
-
 		//-
+
+		// 1. palette colors
 
 		//const auto p = getPalette();
 		const auto p = getPalette(true);
 
-		int wb = (_w99 / (int)NUM_QUANTIZER_COLORS_PER_ROW) - 2*_spc;
+		int wb = (_w99 / (int)NUM_QUANTIZER_COLORS_PER_ROW) - 2 * _spc;
 		//int wb = (ImGui::GetWindowContentRegionWidth() / (int)NUM_QUANTIZER_COLORS_PER_ROW) - (2 * _spc);
 
 		for (int n = 0; n < p.size(); n++)
@@ -235,9 +216,41 @@ void ofxColorQuantizerHelper::draw_Gui()
 			ImGui::PopID();
 		}
 
+		ImGui::Dummy(ImVec2(0, 5));
+
 		//-
 
-		//ImGui::Dummy(ImVec2(0, 5));
+		// 2. image preview
+
+		if (tex.isAllocated())
+		{
+			float w = tex.getWidth();
+			float h = tex.getHeight();
+			float ratio = h / w;
+			float ww;
+
+			if (h > 350) {
+				h = 350;
+				w = h / ratio;
+				ww = _w50;
+			}
+			else {
+				ww = _w99 - 22;//hardcoded pad to avoid flickering bug..
+			}
+
+			if (ImGui::ImageButton(
+				(ImTextureID)(uintptr_t)fbo.getTexture(0).getTextureData().textureID,
+				ImVec2(ww, ww * ratio)))
+			{
+				ofLogNotice(__FUNCTION__) << "Image Pressed";
+			}
+		}
+
+		//// label name
+		//ImGui::Dummy(ImVec2(0.0f, 5));
+		//ImGui::Text(currentImage_name.get().c_str());
+
+		//-
 
 		ImGui::Dummy(ImVec2(0, 5));
 
