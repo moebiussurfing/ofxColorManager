@@ -5996,6 +5996,9 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 					last_Lib_NameColor = palette_Lib_Names[n];
 				}
 				color_Picked = ofColor(palette_Lib_Cols[n]);
+				//go to page
+				int pag = n / lib_Page_NumColors;
+				if (lib_Page_Index != pag) lib_Page_Index = pag;
 			}
 			else if (key == OF_KEY_LEFT)
 			{
@@ -6011,6 +6014,9 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 					last_Lib_NameColor = palette_Lib_Names[n];
 				}
 				color_Picked = ofColor(palette_Lib_Cols[n]);
+				//go to page
+				int pag = n / lib_Page_NumColors;
+				if (lib_Page_Index != pag) lib_Page_Index = pag;
 			}
 			else if (key == OF_KEY_DOWN)
 			{
