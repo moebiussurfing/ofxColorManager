@@ -7,6 +7,9 @@
 
 TODO:
 
+++ save new hides theory
+++ 
+
 + tween lerp broswing grid palettes size for selected 
 + fix gradient sliders..
 + save new: restore select last saved index

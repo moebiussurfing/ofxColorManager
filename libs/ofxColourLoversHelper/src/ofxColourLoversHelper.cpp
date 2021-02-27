@@ -551,8 +551,15 @@ void ofxColourLoversHelper::drawImGuiBrowseKits()
 			float _hb;
 
 			//border style
-			float linew_Pick = 2.5;
-			ImVec4 color_Pick{ 0, 0, 0, 0.25 };
+
+			//blink when selected
+			float freq = 0.15;//speed freq
+			float min = 0.20;
+			float max = 0.60;
+			float a = ofMap(glm::sin(freq * ofGetFrameNum()), -1, 1, min, max);
+
+			float linew_Pick = 1.5;
+			ImVec4 color_Pick{ 0, 0, 0, a };
 			auto color_Pick32 = IM_COL32(color_Pick.x*255.f, color_Pick.y*255.f, color_Pick.z*255.f, color_Pick.w*255.f);
 
 			//-
@@ -572,8 +579,8 @@ void ofxColourLoversHelper::drawImGuiBrowseKits()
 				//autoscroll
 				if (i == currPalette)
 				{
-					if (AutoScroll) ImGui::SetScrollHereY(0.1f); // 0.0f:top, 0.5f:center, 1.0f:bottom
-					//if (AutoScroll) ImGui::SetScrollHereY(0.5f); // 0.0f:top, 0.5f:center, 1.0f:bottom
+					//if (AutoScroll) ImGui::SetScrollHereY(0.25f); // 0.0f:top, 0.5f:center, 1.0f:bottom
+					if (AutoScroll) ImGui::SetScrollHereY(0.5f); // 0.0f:top, 0.5f:center, 1.0f:bottom
 				}
 
 				//-
@@ -693,8 +700,8 @@ void ofxColourLoversHelper::drawImGuiBrowseKits()
 
 						//-
 
-						//group border
-						ImGui::BeginGroup();
+						////group border
+						//ImGui::BeginGroup();
 					}
 					else
 					{
@@ -708,10 +715,8 @@ void ofxColourLoversHelper::drawImGuiBrowseKits()
 					//ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, 1.0);
 
 					if (ImGui::ColorButton(
-						name.c_str(),
-						palettes[i].colours[c],
-						_flags,
-						ImVec2(_wwB, _hhB)))
+						name.c_str(), palettes[i].colours[c],
+						_flags, ImVec2(_wwB, _hhB)))
 					{
 						//-
 
@@ -777,11 +782,11 @@ void ofxColourLoversHelper::drawImGuiBrowseKits()
 						ImGui::PopStyleColor();
 						ImGui::PopStyleVar(1);
 
-						//group border
-						ImGui::EndGroup();
-						auto pos2 = ImGui::GetCursorScreenPos();
-						float pad = 2.0f;
-						ImGui::GetWindowDrawList()->AddRect(ImVec2(pos1.x - pad, pos1.y), ImVec2(pos1.x + _w + pad, pos2.y + pad), color_Pick32);
+						////group border
+						//ImGui::EndGroup();
+						//auto pos2 = ImGui::GetCursorScreenPos();
+						//float pad = 2.0f;
+						//ImGui::GetWindowDrawList()->AddRect(ImVec2(pos1.x - pad, pos1.y), ImVec2(pos1.x + _w + pad, pos2.y + pad), color_Pick32);
 					}
 
 					//-

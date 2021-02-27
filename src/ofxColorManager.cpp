@@ -3881,19 +3881,17 @@ void ofxColorManager::gui_Presets()
 		{
 			ImGui::PushItemWidth(_w100 - 10);
 
+			//TODO:
+			//this breakes the mouse cursor inside text input..
+
 			// loaded string into char array
 			char tab[32];
 			strncpy(tab, textInput_New.c_str(), sizeof(tab));
 			tab[sizeof(tab) - 1] = 0;
 
-			//char buf1[64] = ;
-			//static char buf1[64] = "";
-
 			if (ImGui::InputText("", tab, IM_ARRAYSIZE(tab)))
-				//if (ImGui::InputText("", buf1, 64))
 			{
 				textInput_New = ofToString(tab);
-				//textInput_New = ofToString(buf1);
 				name_TARGET[0] = &textInput_New[0];
 				ofLogNotice(__FUNCTION__) << "textInput_New:" << textInput_New;
 
@@ -6052,7 +6050,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			else if (key == OF_KEY_RIGHT_SHIFT)
 			{
 				lib_Page_Index++;
-				lib_Page_Index = ofClamp(lib_Page_Index, lib_Page_Index.getMin(), lib_Page_Index.getMax());
+				if (lib_Page_Index > lib_Page_Index.getMax()) lib_Page_Index = lib_Page_Index.getMin();
+				//lib_Page_Index = ofClamp(lib_Page_Index, lib_Page_Index.getMin(), lib_Page_Index.getMax());
 
 				// index
 				int n = lib_Page_Index * lib_Page_NumColors;
@@ -6069,7 +6068,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			else if (key == OF_KEY_LEFT_SHIFT)
 			{
 				lib_Page_Index--;
-				lib_Page_Index = ofClamp(lib_Page_Index, lib_Page_Index.getMin(), lib_Page_Index.getMax());
+				if (lib_Page_Index < lib_Page_Index.getMin()) lib_Page_Index = lib_Page_Index.getMax();
+				//lib_Page_Index = ofClamp(lib_Page_Index, lib_Page_Index.getMin(), lib_Page_Index.getMax());
 
 				// index
 				int n = lib_Page_Index * lib_Page_NumColors;
@@ -6237,8 +6237,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			SHOW_Quantizer = false;
 			SHOW_Presets = false;
 		}
-	}
-}
+			}
+		}
 
 //--------------------------------------------------------------
 void ofxColorManager::keyReleased(ofKeyEventArgs &eventArgs)
@@ -6495,13 +6495,17 @@ void ofxColorManager::preset_Load(std::string p)
 
 	//--
 
-	//TODO:
-	// workflow
-	//avoid collide palette auto builder with auto generator engines
-	if (SHOW_Range) SHOW_Range = false;
-	if (SHOW_Theory) SHOW_Theory = false;
-	if (SHOW_ColourLovers) SHOW_ColourLovers = false;
-	if (SHOW_Quantizer) SHOW_Quantizer = false;
+	////TODO:
+	//ENABLE_Callbacks_cPickers = false;
+	ENABLE_Callbacks_Engines = false;
+
+	////TODO:
+	//// workflow
+	////avoid collide palette auto builder with auto generator engines
+	//if (SHOW_Range) SHOW_Range = false;
+	//if (SHOW_Theory) SHOW_Theory = false;
+	//if (SHOW_ColourLovers) SHOW_ColourLovers = false;
+	//if (SHOW_Quantizer) SHOW_Quantizer = false;
 
 	//--
 
@@ -6549,6 +6553,7 @@ void ofxColorManager::preset_Load(std::string p)
 	//--
 
 	// workflow
+
 	// new preset
 	if (MODE_NewPreset) MODE_NewPreset = false;
 
@@ -6564,6 +6569,11 @@ void ofxColorManager::preset_Load(std::string p)
 	{
 		bExportFlag = true;
 	}
+
+	//--
+
+	ENABLE_Callbacks_Engines = true;
+	//ENABLE_Callbacks_cPickers = true;
 }
 
 //--------------------------------------------------------------
@@ -6572,14 +6582,11 @@ void ofxColorManager::preset_Save(std::string p)
 	ofLogNotice(__FUNCTION__) << "----------------- PRESET SAVE -----------------" << p;
 
 	PRESET_Temp.setName_TARGET(p);
-
 #ifndef USE_SIMPLE_PRESET_PALETTE	
 	PRESET_Temp.setNameCurve_TARGET(PRESET_Name_Gradient);
 #endif
 	PRESET_Temp.setBackgroundColor(color_BackGround.get());//no pointer now
-
 	PRESET_Temp.preset_Save(p, false);
-	//PRESET_Temp.preset_Save(PRESET_Name);
 }
 
 //----
