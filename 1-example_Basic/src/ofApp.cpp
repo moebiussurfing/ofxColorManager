@@ -21,7 +21,7 @@ void ofApp::setup()
 	colorManager.setPalette_TARGET(palette); // 1. the palette
 	colorManager.setColorBg_TARGET(colorBg); // 2. the background color 
 	colorManager.setColor_TARGET(colorPick); // 3. the picked color 
-	colorManager.setName_TARGET(name); // 4. the name of preset or enigne
+	colorManager.setLinkName(name); // 4. the name of preset or enigne
 
 	colorManager.setup();
 

@@ -6,6 +6,7 @@ ofxColorClient
 ofxColorManager
 ofxImGui
 ofxIO
+ofxMouseRuler
 ofxPoco
 ofxSCENE-SVG
 ofxSurfingHelpers

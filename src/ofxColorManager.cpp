@@ -116,7 +116,7 @@ void ofxColorManager::build_Palette_Engine()
 
 	//--
 
-	PRESET_Temp.setName_TARGET(_name);
+	PRESET_Temp.setLinkName(_name);
 
 #ifndef USE_SIMPLE_PRESET_PALETTE	
 	PRESET_Temp.setNameCurve_TARGET(PRESET_Name_Gradient);
@@ -607,6 +607,8 @@ void ofxColorManager::setup()
 	bModePalettePreset.set("Mode Palette", false);
 #endif
 	bAutoExportPreset.set("Auto Export", false);
+	bExportByTCP.set("TCP", false);
+	bExportByFile.set("FILE", false);
 	bExportPreset_DefaultPath.set("Path /bin/data", true);
 	path_Folder_ExportColor_Custom.set("ExportPath", "");
 
@@ -778,6 +780,8 @@ void ofxColorManager::setup()
 	params_Export.add(bModePalettePreset);
 #endif
 	params_Export.add(bAutoExportPreset);
+	params_Export.add(bExportByFile);
+	params_Export.add(bExportByTCP);
 	params_Export.add(bExportPreset_DefaultPath);
 	params_Export.add(path_Folder_ExportColor_Custom);
 	params_AppState.add(params_Export);
@@ -2737,54 +2741,51 @@ void ofxColorManager::gui_Export()
 	ImGuiWindowFlags flagsw;
 	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
 
+	//ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(425, PANEL_WIDGETS_HEIGHT));
+
 	//--
 
 	if (ofxImGui::BeginWindow("Live Export", mainSettings, flagsw))
 	{
 		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
 
-		//float _h = 0.5f * BUTTON_BIG_HEIGHT;
-		//float _h = float(COLOR_STRIP_COLOR_HEIGHT);
-		float _w;
-
-		//if (auto_resize) _w = ww;
-		//else _w = ImGui::GetWindowContentRegionWidth() - 2 * _spc;
-		_w = ImGui::GetWindowContentRegionWidth() - 2 * _spc;
-		float _w50 = _w * 0.5f;
-		float _w100 = _w + 2.5f * _spc;
+		float _h = BUTTON_BIG_HEIGHT;
+		float _w100 = ImGui::GetWindowContentRegionWidth();
+		float _w99 = _w100 - 2 * _spc;
+		float _w50 = _w99 / 2 - _spc;
 
 		//--
-
-		//ImGui::Separator();
-		//ImGui::Dummy(ImVec2(0, 10));
 
 		//if (ImGui::CollapsingHeader("Live Export"))
 		{
 			//ImGui::PushItemWidth(ImGui::GetWindowContentRegionWidth());
-			if (ImGui::Button("EXPORT", ImVec2(_w, BUTTON_BIG_HEIGHT)))
+			if (ImGui::Button("EXPORT", ImVec2(_w99, _h)))
 			{
 				exportPalette();
 			}
+
 			//ImGui::PopItemWidth();
 #ifndef USE_SIMPLE_PRESET_PALETTE	
-			ofxSurfingHelpers::AddBigToggle(bModeBundlePreset, _w, BUTTON_BIG_HEIGHT / 2);
-			ofxSurfingHelpers::AddBigToggle(bModePalettePreset, _w, BUTTON_BIG_HEIGHT / 2);
+			ofxSurfingHelpers::AddBigToggle(bModeBundlePreset, _w99, _h / 2);
+			ofxSurfingHelpers::AddBigToggle(bModePalettePreset, _w99, _h / 2);
 #endif
-			ofxSurfingHelpers::AddBigToggle(bAutoExportPreset, _w, BUTTON_BIG_HEIGHT / 2);
+			ofxSurfingHelpers::AddBigToggle(bAutoExportPreset, _w99, _h / 2);
+			ofxSurfingHelpers::AddBigToggle(bExportByFile, _w50, _h / 2); ImGui::SameLine();
+			ofxSurfingHelpers::AddBigToggle(bExportByTCP, _w50, _h / 2);
 			//ofxImGui::AddParameter(bAutoExportPreset);
 
 			if (ImGui::CollapsingHeader("Advanced"))
 			{
 				ofxImGui::AddParameter(bExportPreset_DefaultPath);
 				if (!bExportPreset_DefaultPath)
-					if (ImGui::Button("Set Path", ImVec2(_w, 0.5*BUTTON_BIG_HEIGHT)))
+					if (ImGui::Button("Set Path", ImVec2(_w99, 0.5*_h)))
 					{
 						bOpen = true;
 					}
 
 				ImGui::Dummy(ImVec2(0, 2));
-				std::string ss;
 
+				std::string ss;
 				if (!bExportPreset_DefaultPath) {
 					ss = path_Folder_ExportColor_Custom.get();
 				}
@@ -2808,7 +2809,6 @@ void ofxColorManager::gui_Export()
 					ImGui::EndTooltip();
 				}
 
-
 				ImGui::Text("Names:");
 				ImGui::Dummy(ImVec2(0, 2));
 
@@ -2831,6 +2831,8 @@ void ofxColorManager::gui_Export()
 		}
 	}
 	ofxImGui::EndWindow(mainSettings);
+
+	//ImGui::PopStyleVar();
 }
 
 //--------------------------------------------------------------
@@ -3065,7 +3067,7 @@ void ofxColorManager::gui_PanelsEngines()
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::gui_Panels()
+void ofxColorManager::gui_PanelsMain()
 {
 	ImGuiWindowFlags flags;
 
@@ -3073,7 +3075,7 @@ void ofxColorManager::gui_Panels()
 	flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;//TODO: not working for my toggles
 	//flags = ImGuiWindowFlags_None;
 
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(425, PANEL_WIDGETS_HEIGHT));
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(325, PANEL_WIDGETS_HEIGHT));
 
 	//----
 
@@ -4097,11 +4099,17 @@ void ofxColorManager::gui_Gradient()
 		{
 			ImGui::Dummy(ImVec2(0, 5));;
 
+			//TODO:
+			//should make all this internal in the addon
+			//to avoid use gradientEngine. with public variables
+			//add void drawGui()
+
 			ofxSurfingHelpers::AddBigToggle(gradientEngine.SHOW_CurveEditor, _w, _h / 2);
 			////TODO:
 			//ofxSurfingHelpers::AddBigToggle(gradientEngine.SHOW_Gradient, _w, _h / 2);
 
 			ImGui::PushItemWidth(_w);
+
 			if (ImGui::Button(gradientEngine.bResetCurve.getName().c_str(), ImVec2(_w, _h)))
 			{
 				gradientEngine.bResetCurve = true;
@@ -4110,9 +4118,16 @@ void ofxColorManager::gui_Gradient()
 
 			ImGui::Dummy(ImVec2(0, 5));
 
+			ofxImGui::AddParameter(gradientEngine.pickIn);
+
 			ImGui::PushItemWidth(_w20);
-			ofxImGui::AddParameter(gradientEngine.gradient_HardMode);
-			if (gradientEngine.color_BackGround_GradientMode)ofxImGui::AddParameter(gradientEngine.bAutoSet_Background);
+
+
+			if (gradientEngine.color_BackGround_GradientMode) 
+			{
+				ofxImGui::AddParameter(color_BackGround);
+				ofxImGui::AddParameter(gradientEngine.bAutoSet_Background);
+			}
 			ofxSurfingHelpers::AddBigToggle(gradientEngine.color_BackGround_GradientMode, _w, _h / 2);
 			if (ImGui::Button(gradientEngine.bPalettize.getName().c_str(), ImVec2(_w, _h * 0.5)))
 			{
@@ -4131,53 +4146,10 @@ void ofxColorManager::gui_Gradient()
 
 		//--
 
-		// curve Test
-
-		//if (ImGui::TreeNode("CURVE TEST"))
-		//_flagw = ImGuiWindowFlags_;
-		if (ImGui::CollapsingHeader("Curve TEST"))
-			//if (ofxImGui::BeginTree("CURVE TEST", mainSettings))
-		{
-			ImGui::PushItemWidth(_w50);
-
-			ofxImGui::AddParameter(gradientEngine.bTEST_Enable);
-			//ImGui::Checkbox("Enable", &TEST_Mode); 
-
-			if (gradientEngine.bTEST_Enable)
-			{
-				ImGui::SameLine();
-				ImGui::Checkbox("LFO", &gradientEngine.bTEST_LFO_Mode);
-			}
-			ImGui::SliderFloat("Speed", &gradientEngine.TEST_Speed, 0.0f, 1.0f);
-
-			ImGui::PopItemWidth();
-
-			//-
-
-			//ImGui::TreePop();
-			//ofxImGui::EndTree(mainSettings);
-		}
-
-		//ImGui::Dummy(ImVec2(0, 5));
-
-		//--
-
 		if (ImGui::CollapsingHeader("Advanced", _flagw))
 		{
-			// ctrl in/out
-			//ImGui::PushItemWidth(_w50);
-
+			ofxImGui::AddParameter(gradientEngine.gradient_HardMode);
 			ofxImGui::AddParameter(gradientEngine.expTweak);
-
-			//ImGui::Dummy(ImVec2(0, 2));
-
-			if (ofxImGui::AddParameter(gradientEngine.pickIn))
-			{
-			}
-
-			//ofxImGui::AddParameter(gradientEngine.curveOut);
-
-			//ImGui::PopItemWidth();
 
 			//-
 
@@ -4186,8 +4158,32 @@ void ofxColorManager::gui_Gradient()
 			if (ofxSurfingHelpers::AddBigToggle(gradientEngine.bEditLayout, _w, 0.5 * _h))
 			{
 			}
-			//ofxImGui::AddParameter(bEditLayout);
 			ImGui::PopItemWidth();
+
+			//--
+
+			// curve Test
+
+			if (ImGui::CollapsingHeader("Curve TEST"))
+			{
+				ImGui::PushItemWidth(_w50);
+
+				ofxImGui::AddParameter(gradientEngine.bTEST_Enable);
+				//ImGui::Checkbox("Enable", &TEST_Mode); 
+				if (gradientEngine.bTEST_Enable)
+				{
+					ImGui::SameLine();
+					ImGui::Checkbox("LFO", &gradientEngine.bTEST_LFO_Mode);
+				}
+				ImGui::SliderFloat("Speed", &gradientEngine.TEST_Speed, 0.0f, 1.0f);
+
+				ImGui::PopItemWidth();
+
+				//-
+
+				//ImGui::TreePop();
+				//ofxImGui::EndTree(mainSettings);
+			}
 
 			ImGui::Checkbox("Auto-resize", &auto_resize);
 		}
@@ -4284,7 +4280,7 @@ bool ofxColorManager::draw_Gui()
 		if (SHOW_ColourLovers) colourLoversHelper.draw();
 #endif
 		if (SHOW_Quantizer) colorQuantizer.draw_Gui();
-		if (SHOW_Panels) gui_Panels();
+		if (SHOW_Panels) gui_PanelsMain();
 		if (SHOW_Panels) gui_PanelsEngines();
 		if (SHOW_Export) gui_Export();
 		if (SHOW_Demos) gui_Demo();
@@ -5191,7 +5187,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	else if (name == bModePalettePreset.getName())
 	{
 		bModeBundlePreset = !bModePalettePreset;
-}
+	}
 #endif
 
 	//----
@@ -5793,6 +5789,9 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			// randomize sort palette
 			else if (key == OF_KEY_BACKSPACE && !mod_CONTROL)
 			{
+				//wf
+				if (bEditPalette) bEditPalette = false;
+
 				build_Palette_RandomSort();
 			}
 
@@ -5961,8 +5960,11 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			}
 
 			//switch color c1/c2 selectors
-			if (key == OF_KEY_BACKSPACE)
+			if (key == OF_KEY_BACKSPACE && !mod_CONTROL)
 			{
+				//wf
+				if (bEditPalette) bEditPalette = false;
+
 				if (!bAuto_Color1_FromPicker_Range && !bAuto_Color2_FromPicker_Range) bAuto_Color1_FromPicker_Range = true;
 				else if (bAuto_Color1_FromPicker_Range && !bAuto_Color2_FromPicker_Range) bAuto_Color2_FromPicker_Range = true;
 				else if (!bAuto_Color1_FromPicker_Range && bAuto_Color2_FromPicker_Range) bAuto_Color1_FromPicker_Range = true;
@@ -6118,7 +6120,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				}
 				color_Picked = ofColor(palette_Lib_Cols[n]);
 			}
-			else if (key == OF_KEY_LEFT && !mod_CONTROL)
+			else if (key == OF_KEY_LEFT && mod_CONTROL)
 			{
 				lib_Page_Index--;
 				if (lib_Page_Index < lib_Page_Index.getMin()) lib_Page_Index = lib_Page_Index.getMax();
@@ -6147,7 +6149,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		{
 			mouseRuler.toggleVisibility();
 			//myDEMO1.toggleMouseCamera();
-	}
+		}
 #endif
 		// TEST
 		if (key == 'T')
@@ -6296,7 +6298,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			SHOW_Quantizer = false;
 			SHOW_Presets = false;
 		}
-}
+	}
 }
 
 //--------------------------------------------------------------
@@ -6568,7 +6570,7 @@ void ofxColorManager::preset_Load(std::string p)
 
 	//--
 
-	PRESET_Temp.setName_TARGET(p);
+	PRESET_Temp.setLinkName(p);
 
 #ifndef USE_SIMPLE_PRESET_PALETTE	
 	PRESET_Temp.setNameCurve_TARGET(PRESET_Name_Gradient);
@@ -6641,7 +6643,7 @@ void ofxColorManager::preset_Save(std::string p)
 {
 	ofLogNotice(__FUNCTION__) << "----------------- PRESET SAVE -----------------" << p;
 
-	PRESET_Temp.setName_TARGET(p);
+	PRESET_Temp.setLinkName(p);
 #ifndef USE_SIMPLE_PRESET_PALETTE	
 	PRESET_Temp.setNameCurve_TARGET(PRESET_Name_Gradient);
 #endif
@@ -6754,7 +6756,7 @@ void ofxColorManager::refresh_Pick_ToEngines()
 // API - pointer references to ofApp color and palette
 
 //--------------------------------------------------------------
-void ofxColorManager::setName_TARGET(std::string &s)
+void ofxColorManager::setLinkName(std::string &s)
 {
 	ofLogNotice(__FUNCTION__) << s;
 	name_TARGET = &s;
@@ -7008,6 +7010,7 @@ void ofxColorManager::exportPalette()
 
 	ofJson j;
 
+	// check if requires create folder
 	// default OF data path
 	if (bExportPreset_DefaultPath)
 	{
@@ -7024,74 +7027,82 @@ void ofxColorManager::exportPalette()
 
 	//--
 
-#ifndef USE_SIMPLE_PRESET_PALETTE
+//#ifndef USE_SIMPLE_PRESET_PALETTE
+//
+//	if (!bModeBundlePreset)
+//	{
+//		// A. save palette colors only (without background neither gradient)
+//		//using ofxSerializer
+//		j = palette;
+//		std::string _path = path_FileExport + "_Palette.json";
+//		ofLogNotice(__FUNCTION__) << "\n" << ofToString(j);
+//
+//		ofSavePrettyJson(_path, j);
+//	}
+//
+//	//-
+//
+//	else if (bModeBundlePreset)
+//	{
+//		// B. save full preset
+//		//TODO:
+//		//should save colors + bakground too + gradient! = preset
+//		PRESET_Name_Gradient = gradientEngine.path_Name_Gradient;
+//		PRESET_Temp.name = PRESET_Name;//? should use pointer
+//		PRESET_Temp.nameCurve = PRESET_Name_Gradient;//? path_Name_Gradient
+//
+//		PRESET_Temp.preset_Save(path_FileExport + "_Bundled", true);
+//
+//		//preset_Save(path_Folder_ExportColor_Custom);
+//
+//		j = PRESET_Temp.getPresetJsonLastSaved();//for TCP link only
+//	}
+//
+//#endif
 
-	if (!bModeBundlePreset)
-	{
-		// A. save palette colors only (without background neither gradient)
+	//--
+
+	// a. FILE WATCH
+
+	if (bExportByFile) {
+
+#ifdef USE_SIMPLE_PRESET_PALETTE
+		// save palette colors only (without background neither gradient, bg or name)
 		//using ofxSerializer
 		j = palette;
 		std::string _path = path_FileExport + "_Palette.json";
 		ofLogNotice(__FUNCTION__) << "\n" << ofToString(j);
 
 		ofSavePrettyJson(_path, j);
-	}
-
-	//-
-
-	else if (bModeBundlePreset)
-	{
-		// B. save full preset
-		//TODO:
-		//should save colors + bakground too + gradient! = preset
-		PRESET_Name_Gradient = gradientEngine.path_Name_Gradient;
-		PRESET_Temp.name = PRESET_Name;//? should use pointer
-		PRESET_Temp.nameCurve = PRESET_Name_Gradient;//? path_Name_Gradient
-
-		PRESET_Temp.preset_Save(path_FileExport + "_Bundled", true);
-
-		//preset_Save(path_Folder_ExportColor_Custom);
-
-		j = PRESET_Temp.getPresetJsonLastSaved();//for TCP link only
-	}
-
 #endif
-
-	//-
-
-#ifdef USE_SIMPLE_PRESET_PALETTE
-	// save palette colors only (without background neither gradient, bg or name)
-	//using ofxSerializer
-	j = palette;
-	std::string _path = path_FileExport + "_Palette.json";
-	ofLogNotice(__FUNCTION__) << "\n" << ofToString(j);
-
-	ofSavePrettyJson(_path, j);
-#endif
+	}
 
 	//--
 
-	// TCP LINK
+	// b. TCP-LINK
 
-	//TODO: 
-	//add bundle json too
-	//j = PRESET_Temp.getJson();
-	//j = load(path_FileExport + "_Bundled"
+	if (bExportByTCP) {
+
+		//TODO: 
+		//add bundle json too
+		//j = PRESET_Temp.getJson();
+		//j = load(path_FileExport + "_Bundled"
 #ifdef LINK_TCP_MASTER_CLIENT
-	std::stringstream ss;
-	ss << j;
-	//ss << "[/TCP]";
+		std::stringstream ss;
+		ss << j;
+		//ss << "[/TCP]";
 
-	ofLogNotice(__FUNCTION__) << "LINK: " + ss.str();
+		ofLogNotice(__FUNCTION__) << "LINK: " + ss.str();
 
-	TCP.sendToAll(ss.str());//send to all clients
-	//for (int i = 0; i < TCP.getLastID(); i++)//many clients can be connected 
-	//{
-	//	//TCP.send(i, ss.str());
-	//}
+		TCP.sendToAll(ss.str());//send to all clients
+		//for (int i = 0; i < TCP.getLastID(); i++)//many clients can be connected 
+		//{
+		//	//TCP.send(i, ss.str());
+		//}
 
-	storeText.push_back(ss.str() + "\n");
+		storeText.push_back(ss.str() + "\n");
 #endif
+	}
 
 	//--
 }

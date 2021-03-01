@@ -1,20 +1,13 @@
 
 #pragma once
-
 #include "ofMain.h"
 
 /*
 
 TODO:
 
-++ mode no background to use gradient picker engine
-++ add color not working on edit
-++ fix text input boxes
-
-+ tween lerp broswing grid palettes size for selected 
-+ theory num colors not working on some types
++ fix text input boxes
 + add OSC ?
-+ autoresize box engine panels to num colors
 + undo
 
 */
@@ -23,21 +16,15 @@ TODO:
 
 // OPTIONAL
 
-//#define USE_RECTANGLE_INTERFACES // TODO: a custom final user size ofxInterface
-
-//TODO:
-// an extended preset format
-//#define USE_BUNDLE_TYPE_PRESET
-
 // modules
 // can't be disabled now..
 #define USE_COLOR_LOVERS
 #define USE_IMAGE_QUANTIZER
 #define USE_OFX_COLOR_BROWSER
-//#define USE_EXTRA_LIBRARIES//TODO:
-//#define MODE_BACKGROUND//TODO:
 
-// layout
+#define AUTO_DRAW_CALLBACK //avoids manual draw
+
+// layout constants
 #define MAX_PALETTE_COLORS 10
 #define INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
 #define BUTTON_BIG_HEIGHT 50
@@ -47,34 +34,35 @@ TODO:
 #define PANEL_WIDGETS_HEIGHT 500
 
 // extra
-//#define USE_UNDO_ENGINE
-//#define USE_DEBUG_LAYOUT // includes mouse ruler
+#define LINK_TCP_MASTER_CLIENT
+#define USE_DEBUG_LAYOUT //includes mouse ruler to help layout design
+//#define USE_UNDO_ENGINE //TODO:
+//#define USE_RECTANGLE_INTERFACES //TODO: a custom final user size ofxInterface
+//#define USE_BUNDLE_TYPE_PRESET //TODO: an extended preset format: +bg, pick states, name...etc
+//#define USE_EXTRA_LIBRARIES //TODO: now only Pantone
+//#define MODE_BACKGROUND //TODO: show bg color (gradient picker engine) on mode no background
 //#define USE_SUPER_LOG
 //#define USE_OFX_GUI
 
-#define AUTO_DRAW_CALLBACK
+//------
 
-#define LINK_TCP_MASTER_CLIENT
+#include "ofxColorPalette.h"
+
+//-
+
 #ifdef LINK_TCP_MASTER_CLIENT
 #include "ofxNetwork.h"
 #endif
 
-//------
-
 #include <random>
 
-//#include "presets/PresetManager.h"
 #include "presets/PresetPalette.h"
+//#include "presets/PresetManager.h"
 
 #include "demo/DEMO_Scene.h"
 #include "ofxSCENE-SVG.h"
 
 #include "client/PreviewPaletteMini.h"
-//using namespace ofxColorClient;
-
-//-
-
-#include "ofxColorPalette.h"
 
 #ifdef USE_OFX_COLOR_BROWSER
 #include "ofxColorsBrowser.h"
@@ -95,8 +83,6 @@ using namespace ofxColorTheory;
 #include "ofxColorQuantizerHelper.h"
 #endif
 
-//--
-
 #ifdef USE_UNDO_ENGINE
 #include "ofxUndoSimple.h"
 #endif
@@ -114,7 +100,7 @@ using namespace ofxColorTheory;
 #include "ofxSurfing_ImGui.h"
 using namespace ofxSurfingHelpers;
 
-//-
+//--
 
 // NOTE: all color theory stuff it's badly spreaded a bit..
 // bc I am using some different addons combined..
@@ -123,10 +109,9 @@ using namespace ofxSurfingHelpers;
 #define NUM_COLOR_THEORY_TYPES_G2 7
 #define NUM_TYPES_RANGES 12
 
-//-
+//--
 
-// gui
-
+// gui internal/debug ofxGui
 #ifdef USE_OFX_GUI
 #include "ofxGui.h"
 #endif
@@ -134,20 +119,19 @@ using namespace ofxSurfingHelpers;
 #include "ofxImGui.h"
 #include "imgui_internal.h" // <-- example uses some imgui internals...
 
-//TODO:
-//for a custom user gui
+#include "ImGui_PalettesPicker.h"
+using namespace ImGui_PalettesPicker;
+
+//#include "ofxInteractiveRect.h" // engine to move the gui
+
+#include "GradientEngine.h"
+
+//TODO: for a custom user gui
 #ifdef USE_RECTANGLE_INTERFACES
 #include "ofxInterface.h"
 #include "interface/ButtonPaletteSelector.h"
 #include "interface/ButtonExample.h"
 #endif
-
-#include "ImGui_PalettesPicker.h"
-using namespace ImGui_PalettesPicker;
-
-#include "ofxInteractiveRect.h" // engine to move the gui. TODO: add resize by mouse too.
-
-#include "GradientEngine.h"
 
 //--
 
@@ -443,6 +427,8 @@ private:
 private:
 	ofParameterGroup params_Export;
 	ofParameter<bool> bAutoExportPreset;
+	ofParameter<bool> bExportByFile;
+	ofParameter<bool> bExportByTCP;
 	ofParameter<bool> bExportPreset_DefaultPath;
 #ifndef USE_SIMPLE_PRESET_PALETTE	
 	ofParameter<bool> bModeBundlePreset;
@@ -596,7 +582,7 @@ public:
 	// ofApp project local variables, registered
 	// must be initialized before setup
 
-	void setName_TARGET(std::string &s);
+	void setLinkName(std::string &s);
 	std::string *name_TARGET = NULL;
 
 	void setColor_TARGET(ofColor &c);
@@ -730,7 +716,7 @@ private:
 	void gui_Background();
 #endif
 	void gui_Range();
-	void gui_Panels();
+	void gui_PanelsMain();
 	void gui_PanelsEngines();
 	void gui_Demo();
 	void gui_Export();
