@@ -591,7 +591,9 @@ void ofxColorManager::setup()
 	SHOW_Presets.set("PRESETS", true);
 	SHOW_Kit.set("SHOW KIT", true);
 	AutoScroll.set("AutoScroll", true);
+#ifdef MODE_BACKGROUND
 	SHOW_BackGround.set("BACKGROUND", true);
+#endif
 	SHOW_Picker.set("PICKER", true);
 	SHOW_Library.set("LIBRARY", false);
 	SHOW_Range.set("RANGE", true);
@@ -784,7 +786,9 @@ void ofxColorManager::setup()
 	params_Panels.add(SHOW_Presets);
 	params_Panels.add(SHOW_UserPaletteFloating);
 	params_Panels.add(SHOW_UserPaletteEditor);
+#ifdef MODE_BACKGROUND
 	params_Panels.add(SHOW_BackGround);
+#endif
 	params_Panels.add(SHOW_Library);
 	params_Panels.add(SHOW_Picker);
 	params_Panels.add(SHOW_Range);
@@ -888,7 +892,9 @@ void ofxColorManager::setup()
 	params_control.add(SHOW_Demos);
 	params_control.add(SHOW_BrowserColors);
 	params_control.add(SHOW_Presets);
+#ifdef MODE_BACKGROUND
 	params_control.add(SHOW_BackGround);
+#endif
 	params_control.add(SHOW_Library);
 	params_control.add(SHOW_Theory);
 	params_control.add(SHOW_Range);
@@ -1922,7 +1928,7 @@ void ofxColorManager::gui_PaletteEditor()
 					//wb = (_w / _r) - (2.0f * _spc);
 					//if (!bResponsive_Panels) wb = wb * scale_ColPalette.get();
 
-					float hb = 35;
+					float hb = 40;
 					//float hb = wb;
 
 					//--
@@ -3101,25 +3107,28 @@ void ofxColorManager::gui_Panels()
 
 		ofxSurfingHelpers::AddBigToggle(SHOW_Presets); ImGui::SameLine();
 		ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteEditor); ImGui::SameLine();
-		ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteFloating); ImGui::SameLine();
-		ofxSurfingHelpers::AddBigToggle(gradientEngine.SHOW_Gradient);
+		ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteFloating); //ImGui::SameLine();
 		//ofxSurfingHelpers::AddBigToggle(SHOW_Gradient);
 
 		//ImGui::NextColumn();
 		//ImGui::Separator();
 
 		ofxSurfingHelpers::AddBigToggle(SHOW_Picker); ImGui::SameLine();
-		ofxSurfingHelpers::AddBigToggle(SHOW_Library); ImGui::SameLine();
+		ofxSurfingHelpers::AddBigToggle(SHOW_Library);
+		ImGui::SameLine();
+#ifdef MODE_BACKGROUND
 		ofxSurfingHelpers::AddBigToggle(SHOW_BackGround);// ImGui::SameLine();
+#endif
+		ofxSurfingHelpers::AddBigToggle(gradientEngine.SHOW_Gradient);
 
 		//ImGui::NextColumn();
 		//ImGui::Separator();
 
 		ofxSurfingHelpers::AddBigToggle(SHOW_MINI_Preview); ImGui::SameLine();
 		ofxSurfingHelpers::AddBigToggle(SHOW_Demos); ImGui::SameLine();
-		ofxSurfingHelpers::AddBigToggle(SHOW_Export); ImGui::SameLine();
-		ofxImGui::AddParameter(ENABLE_keys);
+		ofxSurfingHelpers::AddBigToggle(SHOW_Export);// ImGui::SameLine();
 
+		ofxImGui::AddParameter(ENABLE_keys); ImGui::SameLine();
 		ImGui::Checkbox("Edit Theme", &edit_theme);
 	}
 	ofxImGui::EndWindow(mainSettings);
@@ -3393,6 +3402,7 @@ void ofxColorManager::gui_Range()
 	ofxImGui::EndWindow(mainSettings);
 }
 
+#ifdef MODE_BACKGROUND
 //--------------------------------------------------------------
 void ofxColorManager::gui_Background()
 {
@@ -3530,6 +3540,7 @@ void ofxColorManager::gui_Background()
 
 	ImGui::PopStyleVar();
 }
+#endif
 
 //--------------------------------------------------------------
 void ofxColorManager::gui_Presets()
@@ -4263,7 +4274,9 @@ bool ofxColorManager::draw_Gui()
 		if (SHOW_Presets) gui_Presets();
 		if (SHOW_Picker) gui_Picker();
 		if (SHOW_Library) gui_Library();
+#ifdef MODE_BACKGROUND
 		if (SHOW_BackGround) gui_Background();
+#endif
 
 		if (SHOW_Theory) gui_Theory();
 		if (SHOW_Range) gui_Range();
@@ -5416,9 +5429,15 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 			palette_AddColor(ofColor(color_Picked.get()));
 
-			// workflow
-			build_Palette_Engine();
-			last_Index_ColorPalette = last_Index_ColorPalette.getMax();
+			//--
+
+			refresh_Palette_TARGET(palette);
+
+			// export
+			if (bAutoExportPreset)
+			{
+				bExportFlag = true;
+			}
 		}
 	}
 
@@ -5763,29 +5782,33 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//--
 
 		// user workflow
-
-		// randomize color
-		else if (key == 'r' && !mod_CONTROL)
+		if (bEditPalette)
 		{
-			doRandomizeColorPicker();
+			// randomize color
+			if (key == 'r' && !mod_CONTROL)
+			{
+				doRandomizeColorPicker();
+			}
+
+			// randomize sort palette
+			else if (key == OF_KEY_BACKSPACE && !mod_CONTROL)
+			{
+				build_Palette_RandomSort();
+			}
+
+			// flip palette
+			else if (key == OF_KEY_BACKSPACE && mod_CONTROL)
+			{
+				ENABLE_Callbacks_Engines = false;
+				build_Palette_Flip();
+				ENABLE_Callbacks_Engines = true;
+			}
 		}
 
-		// randomize sort palette
-		else if (key == OF_KEY_BACKSPACE && !mod_CONTROL)
-		{
-			build_Palette_RandomSort();
-		}
-
-		// flip palette
-		else if (key == OF_KEY_BACKSPACE && mod_CONTROL)
-		{
-			ENABLE_Callbacks_Engines = false;
-			build_Palette_Flip();
-			ENABLE_Callbacks_Engines = true;
-		}
+		//--
 
 		// amount colors
-		else if (key == '-' && !mod_CONTROL)
+		if (key == '-' && !mod_CONTROL)
 		{
 			numColors_Engines--;
 		}
@@ -6010,7 +6033,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 		if (SHOW_Library)
 		{
-			if (key == OF_KEY_RIGHT)
+			if (key == OF_KEY_RIGHT && !mod_CONTROL)
 			{
 				// index
 				int n = last_ColorPicked_Lib;
@@ -6028,7 +6051,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				int pag = n / lib_Page_NumColors;
 				if (lib_Page_Index != pag) lib_Page_Index = pag;
 			}
-			else if (key == OF_KEY_LEFT)
+			else if (key == OF_KEY_LEFT && !mod_CONTROL)
 			{
 				// index
 				int n = last_ColorPicked_Lib;
@@ -6046,7 +6069,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				int pag = n / lib_Page_NumColors;
 				if (lib_Page_Index != pag) lib_Page_Index = pag;
 			}
-			else if (key == OF_KEY_DOWN)
+			else if (key == OF_KEY_DOWN && !mod_CONTROL)
 			{
 				// index
 				int n = last_ColorPicked_Lib;
@@ -6061,7 +6084,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				}
 				color_Picked = ofColor(palette_Lib_Cols[n]);
 			}
-			else if (key == OF_KEY_UP)
+			else if (key == OF_KEY_UP && !mod_CONTROL)
 			{
 				// index
 				int n = last_ColorPicked_Lib;
@@ -6077,7 +6100,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				color_Picked = ofColor(palette_Lib_Cols[n]);
 			}
 
-			else if (key == OF_KEY_RIGHT_SHIFT)
+			else if (key == OF_KEY_RIGHT && mod_CONTROL)
 			{
 				lib_Page_Index++;
 				if (lib_Page_Index > lib_Page_Index.getMax()) lib_Page_Index = lib_Page_Index.getMin();
@@ -6095,7 +6118,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				}
 				color_Picked = ofColor(palette_Lib_Cols[n]);
 			}
-			else if (key == OF_KEY_LEFT_SHIFT)
+			else if (key == OF_KEY_LEFT && !mod_CONTROL)
 			{
 				lib_Page_Index--;
 				if (lib_Page_Index < lib_Page_Index.getMin()) lib_Page_Index = lib_Page_Index.getMax();
@@ -6201,10 +6224,12 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		{
 			SHOW_Picker = !SHOW_Picker;
 		}
+#ifdef MODE_BACKGROUND
 		else if (key == OF_KEY_F5)//bg
 		{
 			SHOW_BackGround = !SHOW_BackGround;
 		}
+#endif
 		else if (key == OF_KEY_F6)//library
 		{
 			SHOW_Library = !SHOW_Library;
@@ -6222,7 +6247,9 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				SHOW_UserPaletteEditor = false;
 				SHOW_Picker = false;
 				SHOW_Library = false;
+#ifdef MODE_BACKGROUND
 				SHOW_BackGround = false;
+#endif
 				SHOW_Theory = false;
 				SHOW_Range = false;
 				SHOW_ColourLovers = false;
@@ -6260,7 +6287,9 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			gradientEngine.SHOW_Gradient = false;
 			//SHOW_Gradient = false;
 			SHOW_Library = false;
+#ifdef MODE_BACKGROUND
 			SHOW_BackGround = false;
+#endif
 			SHOW_Theory = false;
 			SHOW_Range = false;
 			SHOW_ColourLovers = false;
@@ -6268,7 +6297,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			SHOW_Presets = false;
 		}
 }
-			}
+}
 
 //--------------------------------------------------------------
 void ofxColorManager::keyReleased(ofKeyEventArgs &eventArgs)
@@ -7024,7 +7053,7 @@ void ofxColorManager::exportPalette()
 		//preset_Save(path_Folder_ExportColor_Custom);
 
 		j = PRESET_Temp.getPresetJsonLastSaved();//for TCP link only
-}
+	}
 
 #endif
 
@@ -7065,7 +7094,7 @@ void ofxColorManager::exportPalette()
 #endif
 
 	//--
-		}
+}
 
 #ifdef LINK_TCP_MASTER_CLIENT
 //--------------------------------------------------------------

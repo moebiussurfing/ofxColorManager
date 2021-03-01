@@ -7,29 +7,15 @@
 
 TODO:
 
-++ save new hides theory
+++ mode no background to use gradient picker engine
 ++ add color not working on edit
+++ fix text input boxes
 
 + tween lerp broswing grid palettes size for selected 
-+ fix gradient sliders..
-+ save new: restore select last saved index
-+ new preset: fix name linking
-+ theory and range selectors do not update demo2 svg
-+ should clean: disable all and enable the required only
-+ palette editor broken
-+ fix pick color: to lovers, quantizer..
-+ fix text input boxes
-
-+ preset update/save do not works
 + theory num colors not working on some types
-+ add callback disabler for engines when using presets?
-+ gui lib improve other json libs
 + add OSC ?
 + autoresize box engine panels to num colors
-+ set picker panel width locked
-+ add color do not works
 + undo
-+ mode no bakcground to use gradient picker engine
 
 */
 
@@ -49,6 +35,7 @@ TODO:
 #define USE_IMAGE_QUANTIZER
 #define USE_OFX_COLOR_BROWSER
 //#define USE_EXTRA_LIBRARIES//TODO:
+//#define MODE_BACKGROUND//TODO:
 
 // layout
 #define MAX_PALETTE_COLORS 10
@@ -323,7 +310,9 @@ private:
 	ofParameter<bool> SHOW_Presets;
 	ofParameter<bool> SHOW_Kit;
 	ofParameter<bool> SHOW_Demos;
+#ifdef MODE_BACKGROUND
 	ofParameter<bool> SHOW_BackGround;
+#endif
 	ofParameter<bool> SHOW_Picker;
 	ofParameter<bool> SHOW_Library;
 	ofParameter<bool> SHOW_Range;
@@ -737,7 +726,9 @@ private:
 	void gui_Theory();
 	void gui_Picker();
 	void gui_Library();
+#ifdef MODE_BACKGROUND
 	void gui_Background();
+#endif
 	void gui_Range();
 	void gui_Panels();
 	void gui_PanelsEngines();
