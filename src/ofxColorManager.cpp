@@ -702,6 +702,10 @@ void ofxColorManager::setup()
 	flags |= ImGuiDockNodeFlags_NoWindowMenuButton;//from imgui_internal.h
 	flags |= ImGuiDockNodeFlags_NoCloseButton;//?
 	flags |= ImGuiDockNodeFlags_NoResizeX;
+	flags |= ImGuiDockNodeFlags_NoWindowMenuButton;
+
+	//ImGuiDockNode* Node = ImGui::DockBuilderGetNode(DockID);
+	//Node->LocalFlags |= ImGuiDockNodeFlags_NoWindowMenuButton | ImGuiDockNodeFlags_NoCloseButton;
 
 	gui.setup(nullptr, true, flags, true, false);
 	//gui.setup(nullptr, true, ImGuiConfigFlags_DockingEnable, true, false);
@@ -728,6 +732,11 @@ void ofxColorManager::setup()
 	//ImGui::StyleColorsDark();
 	//ofxSurfingHelpers::ImGui_ThemeModernDark();
 #endif
+
+	style = &ImGui::GetStyle();
+	//color_Pick = style->Colors[ImGuiCol_Separator];
+	color_Pick = ImVec4(0, 0, 0, 0.8);
+	//color_Pick = ImVec4(1, 1, 1, 1);
 
 	mainSettings = ofxImGui::Settings();
 
@@ -1461,8 +1470,9 @@ void ofxColorManager::gui_Theory()
 		int _h = int(COLOR_STRIP_COLOR_HEIGHT);
 		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
 		float _w100 = ImGui::GetWindowContentRegionWidth();
-		float _w = _w100 - 3 * _spc;
-		float _w50 = MAX(150, _w * 0.33);
+		float _w = _w100 - 4 * _spc;
+		float _w50 = MAX(150, _w / 2);
+		//float _w50 = MAX(150, _w * 0.33);
 
 		const float butlabelw = 150;//label text width
 
@@ -1471,7 +1481,7 @@ void ofxColorManager::gui_Theory()
 		// box size
 		static float _wSz;
 		static float _hSz;
-		_hSz = 35;
+		_hSz = 32;
 		_wSz = _wc;
 		//_wSz = ofClamp(_wc, 40, 50);//limit
 
@@ -1507,7 +1517,7 @@ void ofxColorManager::gui_Theory()
 
 		// 1. mini box color
 
-		if (ImGui::ColorButton("##BoxTheory", *(ImVec4 *)&tmpRef.r, _flags, ImVec2(_w, _h * 2)))
+		if (ImGui::ColorButton("##BoxTheory", *(ImVec4 *)&tmpRef.r, _flags, ImVec2(_w, _h)))
 		{
 		}
 
@@ -1515,32 +1525,13 @@ void ofxColorManager::gui_Theory()
 
 		// 2. two pickers
 
-		if (ImGui::CollapsingHeader("BASE COLOR"))
+		if (ImGui::CollapsingHeader("BASE COLOR", ImGuiWindowFlags_NoCollapse))
 		{
-			ImGui::Columns(2, NULL, false);
-
-			ImGui::PushItemWidth(_w50);
-
-			// 1. wheel
-
-			if (ImGui::ColorPicker3("##PickerTheory", &tmpRef.r, _flags))
-			{
-				ofLogNotice(__FUNCTION__) << "Wheel Picker Theory : moved";
-
-				color_TheoryBase.set(tmpRef);
-
-				if (bAuto_Theory_FromPicker) color_Picked.set(color_TheoryBase.get());
-
-				bUpdate = true;
-
-				//-
-			}
-
-			ImGui::PopItemWidth();
+			//ImGui::Columns(2, NULL, false);
 
 			//--
 
-			// 2. square
+			// 1. square
 
 			_flags =
 				ImGuiColorEditFlags_NoSmallPreview |
@@ -1550,8 +1541,6 @@ void ofxColorManager::gui_Theory()
 				ImGuiColorEditFlags_NoSidePreview |
 				ImGuiColorEditFlags_NoAlpha |
 				ImGuiColorEditFlags_PickerHueBar;
-
-			ImGui::NextColumn();
 
 			ImGui::PushItemWidth(_w50);
 
@@ -1571,7 +1560,39 @@ void ofxColorManager::gui_Theory()
 
 			ImGui::PopItemWidth();
 
-			ImGui::Columns(1);
+			//--
+
+			//ImGui::NextColumn();
+
+			//// 2. wheel
+
+			//_flags =
+			//	ImGuiColorEditFlags_NoSmallPreview |
+			//	ImGuiColorEditFlags_NoTooltip |
+			//	ImGuiColorEditFlags_NoLabel |
+			//	ImGuiColorEditFlags_NoSidePreview |
+			//	ImGuiColorEditFlags_NoAlpha |
+			//	ImGuiColorEditFlags_NoInputs |
+			//	ImGuiColorEditFlags_PickerHueWheel;
+
+			//ImGui::PushItemWidth(_w50);
+
+			//if (ImGui::ColorPicker3("##PickerTheory", &tmpRef.r, _flags))
+			//{
+			//	ofLogNotice(__FUNCTION__) << "Wheel Picker Theory : moved";
+
+			//	color_TheoryBase.set(tmpRef);
+
+			//	if (bAuto_Theory_FromPicker) color_Picked.set(color_TheoryBase.get());
+
+			//	bUpdate = true;
+
+			//	//-
+			//}
+
+			//ImGui::PopItemWidth();
+
+			//ImGui::Columns(1);
 		}
 
 		//----
@@ -1605,6 +1626,7 @@ void ofxColorManager::gui_Theory()
 		//----
 
 		ImGuiColorEditFlags _flagsc;
+
 		_flagsc =
 			ImGuiColorEditFlags_NoAlpha |
 			ImGuiColorEditFlags_NoPicker |
@@ -1615,18 +1637,23 @@ void ofxColorManager::gui_Theory()
 		for (int i = 0; i < NUM_COLOR_THEORY_TYPES_G1; i++)
 		{
 			// border to selected
+
 			bool bDrawBorder = false;
+
 			if (i == last_Index_Theory)
 			{
-				bDrawBorder = true && bEditPalette;//wf
+				bDrawBorder = true;
 
 				ImGui::PushStyleColor(ImGuiCol_Border, color_Pick);
 				ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, linew_Pick);
+
+				const ImVec4 colorActive = style->Colors[ImGuiCol_ButtonHovered];
+				ImGui::PushStyleColor(ImGuiCol_Button, colorActive);
 			}
 
 			//-
 
-			// label button G1
+			// 1.1 label button G1
 
 			//std::string _label = ColorWheelSchemes::colorSchemeNames[i];
 			if (ofxSurfingHelpers::AddSmallButton(theory_Types_G1[i], butlabelw, _hSz))
@@ -1641,7 +1668,7 @@ void ofxColorManager::gui_Theory()
 
 			if (bDrawBorder)
 			{
-				ImGui::PopStyleColor();
+				ImGui::PopStyleColor(2);
 				ImGui::PopStyleVar(1);
 			}
 
@@ -1651,7 +1678,7 @@ void ofxColorManager::gui_Theory()
 
 			//--
 
-			// colors G1 
+			// 1.2 colors G1 
 
 			int _total = colors_Theory_G1[i].size();
 
@@ -1679,7 +1706,7 @@ void ofxColorManager::gui_Theory()
 				}
 				else if (_total < numColors_Engines)
 				{
-					_szw = _ww / _total - _spc;
+					_szw = _ww / _total - 3 * _spc;
 				}
 
 				//ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
@@ -1737,16 +1764,21 @@ void ofxColorManager::gui_Theory()
 			// border to selected
 
 			bool bDrawBorder = false;
+
 			if ((NUM_COLOR_THEORY_TYPES_G1 + i) == last_Index_Theory)
 			{
-				bDrawBorder = true && bEditPalette;//wf
+				//bDrawBorder = true && !bEditPalette;//wf
+				bDrawBorder = true;
 				ImGui::PushStyleColor(ImGuiCol_Border, color_Pick);
 				ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, linew_Pick);
+
+				const ImVec4 colorActive = style->Colors[ImGuiCol_ButtonHovered];
+				ImGui::PushStyleColor(ImGuiCol_Button, colorActive);
 			}
 
 			//-
 
-			// label button G2
+			// 2.1 label button G2
 
 			if (ofxSurfingHelpers::AddSmallButton(types_Theory_G2[i], butlabelw, _hSz))
 			{
@@ -1760,7 +1792,7 @@ void ofxColorManager::gui_Theory()
 
 			if (bDrawBorder)
 			{
-				ImGui::PopStyleColor();
+				ImGui::PopStyleColor(2);
 				ImGui::PopStyleVar(1);
 			}
 
@@ -1830,7 +1862,7 @@ void ofxColorManager::gui_Theory()
 					_szw = _ww / _total - _spc;
 				}
 
-				// colors G2 
+				// 2.2 colors G2 
 
 				//ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
 
@@ -1898,7 +1930,6 @@ void ofxColorManager::gui_PaletteEditor()
 		{
 			//responsive
 			ImVec2 button_sz((float)sizePaletteBox.get(), (float)sizePaletteBox.get());
-			ImGuiStyle& style = ImGui::GetStyle();
 			int _amtBtn = palette.size();
 			float _wx2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
 
@@ -1968,8 +1999,8 @@ void ofxColorManager::gui_PaletteEditor()
 					if (n == last_Index_ColorPalette && bEditPalette)
 					{
 						bDrawBorder = true;
-						ImGui::PushStyleColor(ImGuiCol_Border, color_Pick);
 						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, linew_Pick);
+						ImGui::PushStyleColor(ImGuiCol_Border, color_Pick);
 					}
 
 					//-
@@ -2184,7 +2215,6 @@ void ofxColorManager::gui_PaletteFloating()
 		// responsive
 		ImVec2 button_sz((float)sizePaletteBox.get(), (float)sizePaletteBox.get());
 
-		ImGuiStyle& style = ImGui::GetStyle();
 		int _amtBtn = palette.size();
 		float _wx2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
 
@@ -2222,7 +2252,7 @@ void ofxColorManager::gui_PaletteFloating()
 				{
 					//std::string name = ofToString(n);
 
-					const ImVec4 color2 = style.Colors[ImGuiCol_Button];//do not changes the color
+					const ImVec4 color2 = style->Colors[ImGuiCol_Button];//do not changes the color
 					ImGui::PushStyleColor(ImGuiCol_Button, color2);
 				}
 
@@ -2382,7 +2412,7 @@ void ofxColorManager::gui_PaletteFloating()
 				{
 					ImGui::PopStyleColor();
 					float last_button_x2 = ImGui::GetItemRectMax().x;
-					float next_button_x2 = last_button_x2 + style.ItemSpacing.x + button_sz.x; // Expected position if next button was on same line
+					float next_button_x2 = last_button_x2 + style->ItemSpacing.x + button_sz.x; // Expected position if next button was on same line
 					if (n + 1 < _amtBtn && next_button_x2 < _wx2) ImGui::SameLine();
 				}
 			}
@@ -2595,7 +2625,6 @@ void ofxColorManager::gui_Library()
 		// responsive
 		ImVec2 _sz((float)sizeLibColBox.get(), (float)sizeLibColBox.get());
 
-		ImGuiStyle& style = ImGui::GetStyle();
 		int _countBtns;
 		if (lib_Responsive_Mode) _countBtns = lib_TotalColors;
 		else _countBtns = lib_EndCol - lib_StartCol;
@@ -2614,7 +2643,7 @@ void ofxColorManager::gui_Library()
 			{
 				ImGui::PushID(n);
 
-				const ImVec4 color2 = style.Colors[ImGuiCol_Button];//do not changes the color
+				const ImVec4 color2 = style->Colors[ImGuiCol_Button];//do not changes the color
 				ImGui::PushStyleColor(ImGuiCol_Button, color2);
 			}
 
@@ -2709,7 +2738,7 @@ void ofxColorManager::gui_Library()
 				float last_button_x2 = ImGui::GetItemRectMax().x;
 
 				float next_button_x2 = last_button_x2 + _sz.x; // Expected position if next button was on same line
-				//float next_button_x2 = last_button_x2 + style.ItemSpacing.x + _wSz.x; // Expected position if next button was on same line
+				//float next_button_x2 = last_button_x2 + style->ItemSpacing.x + _wSz.x; // Expected position if next button was on same line
 
 				if (n + 1 < _countBtns && next_button_x2 < _wx2)
 				{
@@ -3174,13 +3203,12 @@ void ofxColorManager::gui_Range()
 		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
 		float _w100 = ImGui::GetWindowContentRegionWidth();
 		float _w99 = _w100 - 2 * _spc;
-		float _w50 = _w99 / 2.0f;
-		//float _w50 = _w99 * 0.45f;
-		//float _w100 = _w99;
+		float _w50 = _w99 / 2;
+		float _w49 = _w50 * 0.85f;
 
 		float _szLabel = 75;//label text
-		float _wSz = (_w99 - _szLabel) / numColors_Range.get();
-		float _hSz = int(BUTTON_COLOR_SIZE) * scale_ColRange.get();
+		float _wSz = (_w99 - _szLabel) / numColors_Range.get();//color boxes
+		float _hSz = int(BUTTON_COLOR_SIZE) * scale_ColRange.get();//color boxes
 
 		ofFloatColor _c1;
 		ofFloatColor _c2;
@@ -3196,13 +3224,16 @@ void ofxColorManager::gui_Range()
 			ImGuiColorEditFlags_HSV |
 			ImGuiColorEditFlags_RGB |
 			ImGuiColorEditFlags_NoAlpha |
-			ImGuiColorEditFlags_PickerHueWheel;
+			ImGuiColorEditFlags_NoInputs |
+			//ImGuiColorEditFlags_PickerHueWheel;// wheel
+			ImGuiColorEditFlags_PickerHueBar;// square
+
 
 		//----
 
 		// 1. pickers
 		{
-			bool bChanged = false;//some picker changed
+			bool bChanged = false;// some picker changed
 
 			ImGui::Dummy(ImVec2(0, 5));
 
@@ -3214,10 +3245,13 @@ void ofxColorManager::gui_Range()
 				ImGui::Columns(2);
 
 				ImGui::PushItemWidth(_w50);
+
+				// 1.1.a toggles auto pick
 				ImGui::Text("Color 1");
-				ofxSurfingHelpers::AddBigToggle(bAuto_Color1_FromPicker_Range, _w50, BUTTON_BIG_HEIGHT);
+				ofxSurfingHelpers::AddBigToggle(bAuto_Color1_FromPicker_Range, _w50, BUTTON_BIG_HEIGHT/2);
 				//ofxImGui::AddParameter(bAuto_Color1_FromPicker_Range);
-				// mini box
+				
+				// 1.2 mini box
 				if (ImGui::ColorButton("##C1", *(ImVec4 *)&_c1[0], _flags, ImVec2(_w50, _h)))
 				{
 					bChanged = true;
@@ -3228,10 +3262,13 @@ void ofxColorManager::gui_Range()
 				ImGui::NextColumn();
 
 				ImGui::PushItemWidth(_w50);
+
+				// 1.1.a toggles auto pick
 				ImGui::Text("Color 2");
-				ofxSurfingHelpers::AddBigToggle(bAuto_Color2_FromPicker_Range, _w50, BUTTON_BIG_HEIGHT);
+				ofxSurfingHelpers::AddBigToggle(bAuto_Color2_FromPicker_Range, _w50, BUTTON_BIG_HEIGHT/2);
 				//ofxImGui::AddParameter(bAuto_Color2_FromPicker_Range);
-				// mini box
+				
+				// 1.2.a mini box
 				if (ImGui::ColorButton("##C2", *(ImVec4 *)&_c2[0], _flags, ImVec2(_w50, _h)))
 				{
 					bChanged = true;
@@ -3244,14 +3281,14 @@ void ofxColorManager::gui_Range()
 
 			//----
 
-			if (ImGui::CollapsingHeader("PICKERS"))
+			if (ImGui::CollapsingHeader("PICKERS", ImGuiWindowFlags_NoCollapse))
 			{
 				// picker 1
 
 				ImGui::Columns(2);
 
 				// wheel
-				ImGui::PushItemWidth(MIN(_w50, PANEL_WIDGETS_WIDTH));
+				ImGui::PushItemWidth(MIN(_w49, PANEL_WIDGETS_WIDTH));
 				if (ImGui::ColorPicker3("1", &_c1[0], _flags))
 				{
 					if (bAuto_Color1_FromPicker_Range) color_Picked.set(_c1[0]);
@@ -3269,7 +3306,7 @@ void ofxColorManager::gui_Range()
 				// picker 2
 
 				// wheel
-				ImGui::PushItemWidth(MIN(_w50, PANEL_WIDGETS_WIDTH));
+				ImGui::PushItemWidth(MIN(_w49, PANEL_WIDGETS_WIDTH));
 				if (ImGui::ColorPicker3("2", &_c2[0], _flags))
 				{
 					if (bAuto_Color2_FromPicker_Range) color_Picked.set(_c2[0]);
@@ -3359,22 +3396,28 @@ void ofxColorManager::gui_Range()
 		{
 			// 2.1 each labels itself for each row (1st box)
 			{
-				// label button
+				// 2.1.1 label button
 
 				//-
 
 				// border to selected
 				bool bDrawBorder = false;
+
 				if (t == last_Index_Range)
 				{
 					bDrawBorder = true;
+
 					ImGui::PushStyleColor(ImGuiCol_Border, color_Pick);
 					ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, linew_Pick);
+
+					const ImVec4 colorActive = style->Colors[ImGuiCol_ButtonHovered];
+					ImGui::PushStyleColor(ImGuiCol_Button, colorActive);
 				}
 
 				//-
 
-				// label name 
+				// 2.1.2 label name 
+
 				//whick range lab type
 
 				if (ofxSurfingHelpers::AddSmallButton(types_Range[t], _szLabel, _hSz))
@@ -3386,8 +3429,8 @@ void ofxColorManager::gui_Range()
 
 				if (bDrawBorder)
 				{
-					ImGui::PopStyleColor();
-					ImGui::PopStyleVar(1);
+					ImGui::PopStyleVar();
+					ImGui::PopStyleColor(2);
 				}
 
 				ImGui::SameLine();
@@ -5942,7 +5985,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 		// range
 
-		if (SHOW_Range && !SHOW_Theory && !SHOW_ColourLovers && !SHOW_Quantizer && !SHOW_Library)
+		if (SHOW_Range && !SHOW_Theory && !SHOW_ColourLovers && !SHOW_Quantizer)// && !SHOW_Library)
 		{
 			if (key == OF_KEY_UP || (key == ' ' && mod_CONTROL))
 			{
@@ -6045,7 +6088,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 		//-----
 
-		// library pantone
+		// library Pantone
 
 		if (SHOW_Library)
 		{
@@ -6099,6 +6142,9 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 					last_Lib_NameColor = palette_Lib_Names[n];
 				}
 				color_Picked = ofColor(palette_Lib_Cols[n]);
+				//go to page
+				int pag = n / lib_Page_NumColors;
+				if (lib_Page_Index != pag) lib_Page_Index = pag;
 			}
 			else if (key == OF_KEY_UP && !mod_CONTROL)
 			{
@@ -6114,6 +6160,9 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 					last_Lib_NameColor = palette_Lib_Names[n];
 				}
 				color_Picked = ofColor(palette_Lib_Cols[n]);
+				//go to page
+				int pag = n / lib_Page_NumColors;
+				if (lib_Page_Index != pag) lib_Page_Index = pag;
 			}
 
 			else if (key == OF_KEY_RIGHT && mod_CONTROL)

@@ -529,7 +529,7 @@ private:
 	//layout selected boxes colors
 	//ImVec4 color_Pick{ 0, 0, 0, 0.75f };//black
 	//float linew_Pick = 3.0f;
-	ImVec4 color_Pick{ 1, 1, 1, 0.5f };//white
+	ImVec4 color_Pick;
 	float linew_Pick = 1.0f;
 
 	//-
@@ -698,7 +698,7 @@ private:
 private:
 	ofxImGui::Gui gui;
 	ImFont* customFont = nullptr;
-
+	ImGuiStyle *style = nullptr;
 	ofxImGui::Settings mainSettings = ofxImGui::Settings();
 
 	bool mouseOverGui;

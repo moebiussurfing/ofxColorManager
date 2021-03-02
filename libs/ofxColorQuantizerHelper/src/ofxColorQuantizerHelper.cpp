@@ -228,14 +228,15 @@ void ofxColorQuantizerHelper::draw_Gui()
 			float h = tex.getHeight();
 			float ratio = h / w;
 			float ww;
+			float hMax = 400;
 
-			if (h > 350) {
-				h = 350;
+			if (h > hMax) {
+				h = hMax;
 				w = h / ratio;
 				ww = _w50;
 			}
 			else {
-				ww = _w99 - 22;//hardcoded pad to avoid flickering bug..
+				ww = _w99 - 20;//hardcoded pad to avoid flickering bug...
 			}
 
 			if (ImGui::ImageButton(
