@@ -99,7 +99,7 @@ public:
 	void set_palette_Type(int p);
 	void set_sorted_Type(int p);
 
-	// TODO: resize buttons to fit..
+	//TODO: resize buttons to fit..
 	//void setSize(glm::vec2 size);
 
 	void setRowsSize(int rows);

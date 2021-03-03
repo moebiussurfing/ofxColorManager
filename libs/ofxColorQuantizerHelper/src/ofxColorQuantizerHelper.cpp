@@ -228,14 +228,15 @@ void ofxColorQuantizerHelper::draw_Gui()
 			float h = tex.getHeight();
 			float ratio = h / w;
 			float ww;
-			float hMax = 400;
 
-			if (h > hMax) {
-				h = hMax;
-				w = h / ratio;
-				ww = _w50;
-			}
-			else {
+			//float hMax = 400;
+			//if (h > hMax) {
+			//	h = hMax;
+			//	w = h / ratio;
+			//	ww = _w50;
+			//}
+			//else 
+			{
 				ww = _w99 - 20;//hardcoded pad to avoid flickering bug...
 			}
 
@@ -1023,6 +1024,9 @@ void ofxColorQuantizerHelper::Changed_parameters(ofAbstractParameter &e)
 		{
 			bReBuild = false;
 			build();
+
+			// workflow
+			refresh_Files();
 		}
 	}
 	else if (_name == currentImage.getName())

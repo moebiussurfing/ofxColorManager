@@ -2,7 +2,7 @@
 #pragma once
 #include "ofMain.h"
 
-//--
+//----
 //
 // OPTIONAL
 //
@@ -24,7 +24,7 @@
 #define BUTTON_BIG_HEIGHT2 35
 #define BUTTON_SLIM_HEIGHT 14
 //
-//--
+//----
 
 #include "ofxSurfingHelpers.h"
 #include "ofxSurfing_ImGui.h"
@@ -54,6 +54,8 @@ public:
 
 private:
 	bool bShowSearch = true;
+	ofParameter<bool> ShowAdvancedLayout{ "Show Advanced", false };
+	// shows advancded panels to tweak layout or workflow behaviour
 
 private:
 	ofParameter<bool> bFavorites{ "FAVORITES", false };

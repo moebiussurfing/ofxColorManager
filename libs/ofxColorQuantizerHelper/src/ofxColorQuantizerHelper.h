@@ -6,7 +6,7 @@
 // OPTIONAL
 //#define USE_OFX_GUI__QUANTIZER // comment to disable internal gui
 #define USE_IM_GUI__QUANTIZER
-//#define USE_IM_GUI__QUANTIZER_INTERNAL // TODO: to make grid thumbs browser we need the ImGui instance internal.. 
+//#define USE_IM_GUI__QUANTIZER_INTERNAL //TODO: to make grid thumbs browser we need the ImGui instance internal.. 
 
 //-
 

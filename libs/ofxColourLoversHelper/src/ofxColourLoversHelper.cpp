@@ -444,47 +444,53 @@ void ofxColourLoversHelper::drawImGuiMain()
 			ofxSurfingHelpers::AddBigToggle(SHOW_BrowserPalettes, _w99, _hb);
 
 			if (SHOW_BrowserPalettes) ofxImGui::AddParameter(AutoScroll);
+
+			ImGui::SameLine();
+			ofxImGui::AddParameter(ShowAdvancedLayout);
+
 			ofxImGui::EndTree(mainSettings);
 
 			//ImGui::Dummy(ImVec2(0.0f, 10));
 
 			//-
 
-
-			if (ImGui::CollapsingHeader("Advanced"))
+			if (ShowAdvancedLayout)
 			{
-				//if (ImGui::Checkbox("Pick Palette", &MODE_PickPalette_BACK))
-				//{
-				//}
-				//if (ImGui::Checkbox("Pick Color", &MODE_PickColor_BACK))
-				//{
-				//}
-				ofxImGui::AddParameter(MODE_PickPalette_BACK);
-				ofxImGui::AddParameter(MODE_PickColor_BACK);
-
-				ofxImGui::AddParameter(ENABLER_Keys);
-
-				if (ImGui::CollapsingHeader("Layout"))
+				if (ImGui::CollapsingHeader("Advanced"))
 				{
-					//if (ImGui::Checkbox("Fixed Width", &MODE_FixedSize))
-					bool bPre = MODE_FixedSize;
-					if (ofxImGui::AddParameter(MODE_FixedSize))
-					{
-						if (MODE_FixedSize != bPre)
-						{
-							build_Gui_Lab();
-						}
-					}
-					if (ofxImGui::AddParameter(MODE_Slim))
-					{
-					}
+					//if (ImGui::Checkbox("Pick Palette", &MODE_PickPalette_BACK))
+					//{
+					//}
+					//if (ImGui::Checkbox("Pick Color", &MODE_PickColor_BACK))
+					//{
+					//}
+					ofxImGui::AddParameter(MODE_PickPalette_BACK);
+					ofxImGui::AddParameter(MODE_PickColor_BACK);
 
-					// layout
-					ImGui::Checkbox("Focus", &bfocus);
-					ImGui::Checkbox("Auto-resize", &auto_resize);
+					ofxImGui::AddParameter(ENABLER_Keys);
+
+					if (ImGui::CollapsingHeader("Layout"))
+					{
+						//if (ImGui::Checkbox("Fixed Width", &MODE_FixedSize))
+						bool bPre = MODE_FixedSize;
+						if (ofxImGui::AddParameter(MODE_FixedSize))
+						{
+							if (MODE_FixedSize != bPre)
+							{
+								build_Gui_Lab();
+							}
+						}
+						if (ofxImGui::AddParameter(MODE_Slim))
+						{
+						}
+
+						// layout
+						ImGui::Checkbox("Focus", &bfocus);
+						ImGui::Checkbox("Auto-resize", &auto_resize);
+					}
+					//ImGui::Dummy(ImVec2(0, 10));
+					//ImGui::Dummy(ImVec2(0, 10));
 				}
-				//ImGui::Dummy(ImVec2(0, 10));
-				//ImGui::Dummy(ImVec2(0, 10));
 			}
 		}
 		//ofxImGui::EndWindow(mainSettings);
@@ -1348,7 +1354,7 @@ void ofxColourLoversHelper::refreshPalette()
 #ifdef USE_OFX_UI
 		lastPaletteName_UI->setLabel(lastPaletteName);
 #endif
-}
+	}
 
 	//ColourLovePalette p = palettes[currPalette];
 	//lastPaletteName = p.title;
@@ -1383,7 +1389,7 @@ void ofxColourLoversHelper::refreshPalette()
 
 	//-
 
-	// TODO: workflow...auto trig last color too... (it's done before too..but require when controlling by keyboard next/prev palette)
+	//TODO: workflow...auto trig last color too... (it's done before too..but require when controlling by keyboard next/prev palette)
 
 	//    if (MODE_PickPalette_BACK && MODE_PickColor_BACK)
 	////    if (MODE_PickColor_BACK)
@@ -1630,7 +1636,7 @@ void ofxColourLoversHelper::Changed_Gui_Lab(ofxUIEventArgs &e)
 	refreshPalette();
 
 	//-
-		}
+}
 #endif
 
 //--------------------------------------------------------------
@@ -1652,7 +1658,7 @@ void ofxColourLoversHelper::setPalette(int pId)
 	//
 	//    // get palettes BACK
 	//
-	////            // TODO: not required?
+	////            //TODO: not required?
 	////    int sizePalette = p.colours.size();
 	////    if (sizePalette>0 && myPalette_BACK!= nullptr)
 	////    {
@@ -1671,7 +1677,7 @@ void ofxColourLoversHelper::Changed_ColourPalette(ofxUIEventArgs &e)
 	//    int kind = e.widget->getKind();
 	//    int uid = e.widget->getID();
 	//
-	//    // TODO: add button with same name
+	//    //TODO: add button with same name
 	//    if(name=="ADD FAVOURITE" && currPalette>-1)
 	//    {
 	//        std::string str = "palettes/favourites/"+palettes[currPalette].id+ ".xml";
@@ -1721,7 +1727,7 @@ void ofxColourLoversHelper::loadFavorites()
 	//BUG: CRASHES IF EMPTY FOLDER
 	if (_files.numFiles() > 0) build_Gui_Lab();
 
-	//// TODO: startup
+	////TODO: startup
 	//currPalette = 0;
 	////updateFlag = 1;
 	//setPalette(currPalette);
@@ -1780,7 +1786,7 @@ void ofxColourLoversHelper::loadHistory()
 
 	build_Gui_Lab();
 
-	//// TODO: startup
+	////TODO: startup
 	//currPalette = 1;
 	////updateFlag = 1;
 	//setPalette(currPalette);

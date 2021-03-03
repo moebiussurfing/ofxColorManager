@@ -23,7 +23,7 @@ TODO:
 #define USE_IMAGE_QUANTIZER
 #define USE_OFX_COLOR_BROWSER
 
-#define AUTO_DRAW_CALLBACK //avoids manual draw
+#define AUTO_DRAW_CALLBACK // avoids manual draw
 
 // layout constants
 #define MAX_PALETTE_COLORS 10
@@ -35,8 +35,8 @@ TODO:
 #define PANEL_WIDGETS_HEIGHT 500
 
 // extra
+#define USE_DEBUG_LAYOUT // includes mouse ruler to help layout design
 #define LINK_TCP_MASTER_CLIENT
-#define USE_DEBUG_LAYOUT //includes mouse ruler to help layout design
 //#define USE_UNDO_ENGINE //TODO:
 //#define USE_RECTANGLE_INTERFACES //TODO: a custom final user size ofxInterface
 //#define USE_BUNDLE_TYPE_PRESET //TODO: an extended preset format: +bg, pick states, name...etc
@@ -58,7 +58,6 @@ TODO:
 #include <random>
 
 #include "presets/PresetPalette.h"
-//#include "presets/PresetManager.h"
 
 #include "demo/DEMO_Scene.h"
 #include "ofxSCENE-SVG.h"
@@ -123,11 +122,9 @@ using namespace ofxSurfingHelpers;
 #include "ImGui_PalettesPicker.h"
 using namespace ImGui_PalettesPicker;
 
-//#include "ofxInteractiveRect.h" // engine to move the gui
-
 #include "GradientEngine.h"
 
-//TODO: for a custom user gui
+//TODO: for a posible future custom multitouch user GUI
 #ifdef USE_RECTANGLE_INTERFACES
 #include "ofxInterface.h"
 #include "interface/ButtonPaletteSelector.h"
@@ -138,50 +135,6 @@ using namespace ImGui_PalettesPicker;
 
 class ofxColorManager : public ofBaseApp
 {
-private:
-	bool edit_theme = false;
-
-private:
-#ifdef LINK_TCP_MASTER_CLIENT
-	ofxTCPServer TCP;
-	//ofTrueTypeFont  mono;
-	//ofTrueTypeFont  monosm;
-	vector <std::string> storeText;
-	uint64_t lastCheckLink;
-	int port = 6666;
-	std::string host = "127.0.0.1";
-	void updateLink();
-	void setupLink();
-	void drawLink();
-#endif
-
-	//--
-
-private:
-	GradientEngine gradientEngine;
-
-	//--
-
-private:
-	PreviewPaletteMini miniPreview;
-
-	DEMO_Svg DEMO2_Svg;
-
-	//TODO:
-	shared_ptr<ColorWheelScheme> _scheme;
-
-	bool bExportFlag = false;//flag to avoid multiple overflow of calls.. we read on update()
-
-	//TODO:
-	enum typeEngine
-	{
-		TYPE_PRESET = 0,
-		TYPE_LOVER,
-		TYPE_THEORY,
-		TYPE_RANGE,
-	};
-
-	//--
 
 public:
 	ofxColorManager();
@@ -236,8 +189,48 @@ private:
 private:
 	float dt;
 	float fps;
+private:
+	bool edit_theme = false;
 
-	//-
+#ifdef LINK_TCP_MASTER_CLIENT
+private:
+	ofxTCPServer TCP;
+	vector <std::string> storeText;
+	uint64_t lastCheckLink;
+	int port = 66666;
+	std::string host = "127.0.0.1";//localhost
+	void updateLink();
+	void setupLink();
+	void drawLink();
+#endif
+
+	//--
+
+private:
+	GradientEngine gradientEngine;
+
+	//--
+
+private:
+	PreviewPaletteMini miniPreview;
+
+	DEMO_Svg DEMO2_Svg;
+
+	//TODO:
+	shared_ptr<ColorWheelScheme> _scheme;
+
+	bool bExportFlag = false;//flag to avoid multiple overflow of calls.. we read on update()
+
+	//TODO:
+	enum typeEngine
+	{
+		TYPE_PRESET = 0,
+		TYPE_LOVER,
+		TYPE_THEORY,
+		TYPE_RANGE,
+	};
+
+	//--
 
 	// number of colors. 
 	// must be even sometimes to get same size in all palettes
@@ -250,6 +243,9 @@ private:
 	//--
 
 private:
+	ofParameter<bool> ShowAdvancedLayout{ "Show Advanced", false };
+	//shows advanced panels to tweak layout or workflow behaviour
+
 	ofParameter<bool> auto_pilot{ "autoPilot", false };
 	int auto_pilot_timer;
 	ofParameter<float> auto_pilot_Duration{ "Time", 1, 0.1, 5 };
@@ -328,17 +324,11 @@ private:
 	std::string path_AppState;
 	std::string path_Presets;
 	std::string path_Palettes;
+
 	//export
 	std::string path_Name_ExportColor;
 	ofParameter <std::string> path_Folder_ExportColor_Custom;
 	ofParameter <std::string> path_Folder_ExportColor_Data;
-
-	////gradient
-	//std::string path_Folder_Gradient;
-	//std::string path_Layout;
-	//std::string path_Gradient_LUT;
-	//std::string path_Gradient_Preset;
-	//std::string path_Name_Gradient;
 
 	//--
 
@@ -589,13 +579,13 @@ public:
 	void setLinkName(std::string &s);
 	std::string *name_TARGET = NULL;
 
-	void setColor_TARGET(ofColor &c);
+	void setLinkColorPick(ofColor &c);
 	ofColor *color_TARGET = NULL;//backwards pointer to ofApp picker color
 
-	void setColorBg_TARGET(ofColor &c);
+	void setLinkColorBg(ofColor &c);
 	ofColor *colorBg_TARGET = NULL;//backwards pointer to ofApp background color
 
-	void setPalette_TARGET(vector<ofColor> &p);
+	void setLinkPalette(vector<ofColor> &p);
 	vector<ofColor> *palette_TARGET = NULL;//backwards pointer to ofApp palette
 
 private:

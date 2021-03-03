@@ -18,10 +18,10 @@ void ofApp::setup()
 	// we subscribe our local colors
 	// using pointers/references
 	// to be all autoupdated (as targets)
-	colorManager.setPalette_TARGET(palette); // 1. the palette
-	colorManager.setColorBg_TARGET(colorBg); // 2. the background color 
-	colorManager.setColor_TARGET(colorPick); // 3. the picked color 
-	colorManager.setLinkName(name); // 4. the name of preset or enigne
+	colorManager.setLinkPalette(palette);		// 1. the palette
+	colorManager.setLinkColorBg(colorBg);		// 2. the background color 
+	colorManager.setLinkColorPick(colorPick);	// 3. the picked color 
+	colorManager.setLinkName(name);				// 4. the name of preset or enigne
 
 	colorManager.setup();
 
@@ -66,7 +66,9 @@ void ofApp::keyPressed(int key)
 	}
 }
 
-//--
+
+//---------
+/* Scene */
 
 // a testing scene to preview the colors
 
