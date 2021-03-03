@@ -99,7 +99,7 @@ void ofxColorManager::build_Palette_Engine()
 	else if (SHOW_Range)
 	{
 		_name = name_Range;
-		palette_FromRange(last_Index_Range);
+		if (last_Index_Range > 0) palette_FromRange(last_Index_Range);
 		bNew = true;
 	}
 
@@ -968,17 +968,21 @@ void ofxColorManager::startup()
 	//--
 
 	//startup
-	last_Index_Theory = 0;
-	theory_Types_G1[last_Index_Theory] = true;//on button
+	bLast_Index_Theory = true;
+	bLast_Index_Range = true;
+	//last_Index_Theory = -1;
+	if (last_Index_Theory > 0)
+		theory_Types_G1[last_Index_Theory] = true;//on button
 
-	last_Index_Range = 0;
-	types_Range[last_Index_Range] = true;//on button
+	//last_Index_Range = -1;
+	if (last_Index_Range > 0)
+		types_Range[last_Index_Range] = true;//on button
 
-	//--
+		//--
 
-	// preset manager
+		// preset manager
 
-	//load last session preset index
+		//load last session preset index
 	if (last_Index_Preset < files.size())
 	{
 		PRESET_Name = files_Names[last_Index_Preset];
@@ -1465,8 +1469,6 @@ void ofxColorManager::gui_Theory()
 
 	if (ofxImGui::BeginWindow("THEORY", mainSettings, flags))
 	{
-		//--
-
 		int _h = int(COLOR_STRIP_COLOR_HEIGHT);
 		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
 		float _w100 = ImGui::GetWindowContentRegionWidth();
@@ -1485,7 +1487,7 @@ void ofxColorManager::gui_Theory()
 		_wSz = _wc;
 		//_wSz = ofClamp(_wc, 40, 50);//limit
 
-		//-
+		//--
 
 		ImGuiColorEditFlags _flags;
 
@@ -1640,7 +1642,7 @@ void ofxColorManager::gui_Theory()
 
 			bool bDrawBorder = false;
 
-			if (i == last_Index_Theory)
+			if (i == last_Index_Theory && bLast_Index_Theory)
 			{
 				bDrawBorder = true;
 
@@ -1662,6 +1664,7 @@ void ofxColorManager::gui_Theory()
 
 				//wf
 				if (bEditPalette) bEditPalette = false;
+				bLast_Index_Theory = true;
 			}
 
 			//-
@@ -1706,7 +1709,7 @@ void ofxColorManager::gui_Theory()
 				}
 				else if (_total < numColors_Engines)
 				{
-					_szw = _ww / _total - 3 * _spc;
+					_szw = _ww / _total - (_total * _spc);
 				}
 
 				//ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
@@ -1715,7 +1718,6 @@ void ofxColorManager::gui_Theory()
 					_c,
 					_flagsc,
 					ImVec2(_szw, _hSz)))
-					//ImVec2(_szw, _szh)))
 				{
 					//TODO: not using these pickers
 					//color_Picked.set(_c);
@@ -1765,10 +1767,11 @@ void ofxColorManager::gui_Theory()
 
 			bool bDrawBorder = false;
 
-			if ((NUM_COLOR_THEORY_TYPES_G1 + i) == last_Index_Theory)
+			if ((NUM_COLOR_THEORY_TYPES_G1 + i) == last_Index_Theory && bLast_Index_Theory)
 			{
 				//bDrawBorder = true && !bEditPalette;//wf
 				bDrawBorder = true;
+
 				ImGui::PushStyleColor(ImGuiCol_Border, color_Pick);
 				ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, linew_Pick);
 
@@ -1786,6 +1789,8 @@ void ofxColorManager::gui_Theory()
 
 				//wf
 				if (bEditPalette) bEditPalette = false;
+
+				bLast_Index_Theory = true;
 			}
 
 			//-
@@ -1803,6 +1808,7 @@ void ofxColorManager::gui_Theory()
 			for (int n = 0; n < _total; n++)
 			{
 				ofColor _c;
+
 				ImGui::PushID(n);
 
 				if (n == 0) ImGui::SameLine();
@@ -1870,13 +1876,10 @@ void ofxColorManager::gui_Theory()
 					_c,
 					_flagsc,
 					ImVec2(_szw, _hSz)))
-					//ImVec2(_szw, _szh)))
 				{
 					//TODO: not using these pickers
 					//color_Picked.set(_c);
 				}
-
-				//ImGui::PopStyleVar();
 
 				ImGui::PopID();
 			}
@@ -1884,6 +1887,7 @@ void ofxColorManager::gui_Theory()
 
 		//----
 
+		//analog tweak
 		if (last_Index_Theory == 12) ofxImGui::AddParameter(analogSpread);
 
 		//----
@@ -2567,9 +2571,9 @@ void ofxColorManager::gui_Library()
 				ImGui::Dummy(ImVec2(0, 5));
 
 				ofxImGui::AddParameter(colorBrowser.ENABLE_keys);
-			}
-#endif
 		}
+#endif
+	}
 
 		//--
 
@@ -2758,7 +2762,7 @@ void ofxColorManager::gui_Library()
 		{
 			refresh_FromPicked();
 		}
-	}
+}
 
 	ofxImGui::EndWindow(mainSettings);
 
@@ -3225,8 +3229,8 @@ void ofxColorManager::gui_Range()
 			ImGuiColorEditFlags_RGB |
 			ImGuiColorEditFlags_NoAlpha |
 			ImGuiColorEditFlags_NoInputs |
-			//ImGuiColorEditFlags_PickerHueWheel;// wheel
 			ImGuiColorEditFlags_PickerHueBar;// square
+			//ImGuiColorEditFlags_PickerHueWheel;// wheel
 
 
 		//----
@@ -3248,9 +3252,9 @@ void ofxColorManager::gui_Range()
 
 				// 1.1.a toggles auto pick
 				ImGui::Text("Color 1");
-				ofxSurfingHelpers::AddBigToggle(bAuto_Color1_FromPicker_Range, _w50, BUTTON_BIG_HEIGHT/2);
+				ofxSurfingHelpers::AddBigToggle(bAuto_Color1_FromPicker_Range, _w50, BUTTON_BIG_HEIGHT / 2);
 				//ofxImGui::AddParameter(bAuto_Color1_FromPicker_Range);
-				
+
 				// 1.2 mini box
 				if (ImGui::ColorButton("##C1", *(ImVec4 *)&_c1[0], _flags, ImVec2(_w50, _h)))
 				{
@@ -3265,9 +3269,9 @@ void ofxColorManager::gui_Range()
 
 				// 1.1.a toggles auto pick
 				ImGui::Text("Color 2");
-				ofxSurfingHelpers::AddBigToggle(bAuto_Color2_FromPicker_Range, _w50, BUTTON_BIG_HEIGHT/2);
+				ofxSurfingHelpers::AddBigToggle(bAuto_Color2_FromPicker_Range, _w50, BUTTON_BIG_HEIGHT / 2);
 				//ofxImGui::AddParameter(bAuto_Color2_FromPicker_Range);
-				
+
 				// 1.2.a mini box
 				if (ImGui::ColorButton("##C2", *(ImVec4 *)&_c2[0], _flags, ImVec2(_w50, _h)))
 				{
@@ -3362,9 +3366,7 @@ void ofxColorManager::gui_Range()
 
 			//-
 
-			if (ofxSurfingHelpers::AddIntStepped(numColors_Range))
-			{
-			}
+			if (ofxSurfingHelpers::AddIntStepped(numColors_Range)) {}
 			//ofxImGui::AddParameter(numColors_Range);
 			//if (ImGui::InputInt(numColors_Range.getName().c_str(), (int *)&numColors_Range.get(), 1, 2))
 			//{}
@@ -3403,7 +3405,7 @@ void ofxColorManager::gui_Range()
 				// border to selected
 				bool bDrawBorder = false;
 
-				if (t == last_Index_Range)
+				if (t == last_Index_Range && bLast_Index_Range)
 				{
 					bDrawBorder = true;
 
@@ -3682,7 +3684,6 @@ void ofxColorManager::gui_Presets()
 				{
 					counter--;
 					last_Index_Preset = counter;
-
 				}
 				else
 				{
@@ -4376,6 +4377,7 @@ bool ofxColorManager::draw_Gui()
 void ofxColorManager::palette_FromTheory(int p)
 {
 	ofLogNotice(__FUNCTION__) << p;
+	if (p < 0) return;
 
 	palette_Clear();
 
@@ -4948,6 +4950,7 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 
 		last_Index_Theory_PickPalette = ofClamp(
 			last_Index_Theory_PickPalette.get(),
+			//-1,
 			last_Index_Theory_PickPalette.getMin(),
 			last_Index_Theory_PickPalette.getMax());
 
@@ -4961,17 +4964,34 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 			types_Theory_G2[i] = false;
 		}
 
-		//enable
-		if (last_Index_Theory_PickPalette >= 0 &&
-			last_Index_Theory_PickPalette < NUM_COLOR_THEORY_TYPES_G1)
+		if (bLast_Index_Theory)
 		{
-			theory_Types_G1[last_Index_Theory_PickPalette] = true;
+			//enable
+			if (last_Index_Theory_PickPalette >= 0 &&
+				last_Index_Theory_PickPalette < NUM_COLOR_THEORY_TYPES_G1)
+			{
+				theory_Types_G1[last_Index_Theory_PickPalette] = true;
+			}
+			if (last_Index_Theory_PickPalette >= NUM_COLOR_THEORY_TYPES_G1 &&
+				last_Index_Theory_PickPalette < NUM_COLOR_THEORY_TYPES_G1 + NUM_COLOR_THEORY_TYPES_G2)
+			{
+				types_Theory_G2[last_Index_Theory_PickPalette - NUM_COLOR_THEORY_TYPES_G1] = true;
+			}
 		}
-		if (last_Index_Theory_PickPalette >= NUM_COLOR_THEORY_TYPES_G1 &&
-			last_Index_Theory_PickPalette < NUM_COLOR_THEORY_TYPES_G1 + NUM_COLOR_THEORY_TYPES_G2)
-		{
-			types_Theory_G2[last_Index_Theory_PickPalette - NUM_COLOR_THEORY_TYPES_G1] = true;
-		}
+
+		////wf
+		//// -1: disable all
+		//if (last_Index_Theory_PickPalette == -1)
+		//{
+		//	for (int i = 0; i < NUM_COLOR_THEORY_TYPES_G1; i++)
+		//	{
+		//		theory_Types_G1[i] = false;
+		//	}
+		//	for (int i = NUM_COLOR_THEORY_TYPES_G1; i < NUM_COLOR_THEORY_TYPES_G1 + NUM_COLOR_THEORY_TYPES_G2; i++)
+		//	{
+		//		types_Theory_G2[last_Index_Theory_PickPalette - NUM_COLOR_THEORY_TYPES_G1] = false;
+		//	}
+		//}
 	}
 
 	//----
@@ -5152,7 +5172,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		//	AppMode.getMax());
 
 		//cycle
-		if (AppMode > AppMode.getMax()) 
+		if (AppMode > AppMode.getMax())
 			AppMode.setWithoutEventNotifications(AppMode.getMin());
 		else if (AppMode < 0)
 			AppMode.setWithoutEventNotifications(AppMode.getMax());
@@ -5179,6 +5199,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			SHOW_Range = false;
 			SHOW_ColourLovers = false;
 			SHOW_Quantizer = false;
+			bLast_Index_Theory = true;
 		}
 		break;
 
@@ -5189,6 +5210,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			SHOW_Theory = false;
 			SHOW_ColourLovers = false;
 			SHOW_Quantizer = false;
+			bLast_Index_Range = true;
 		}
 		break;
 
@@ -5276,30 +5298,54 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	{
 		build_Palette_Engine();
 
+		last_Index_Theory = (int)ofClamp(
+			last_Index_Theory,
+			last_Index_Theory.getMin(),
+			last_Index_Theory.getMax());
+
 		//// export
 		//if (bAutoExportPreset)
 		//{
 		//	ofLogNotice(__FUNCTION__) << "Auto EXPORT";
 		//	exportPalette();
 		//}
-
-		last_Index_Type = 2;
 
 		//if (SHOW_Presets) 
 		//{
 		//	textInput_New = name_Theory;
 		//	MODE_NewPreset = true;
 		//}
+
+		last_Index_Type = 2;
+
+		if (!bLast_Index_Theory) bLast_Index_Theory = true;
 	}
 
 	else if (name == last_Index_Range.getName())
 	{
+		last_Index_Range = (int)ofClamp(
+			last_Index_Range,
+			last_Index_Range.getMin(),
+			last_Index_Range.getMax());
+
+		//if (last_Index_Range == -1) 
+		//{
+		//	for (int t = 0; t < int(NUM_TYPES_RANGES); t++)
+		//	{
+		//		types_Range[t] = false;
+		//	}
+		//}
+
 		//// export
 		//if (bAutoExportPreset)
 		//{
 		//	ofLogNotice(__FUNCTION__) << "Auto EXPORT";
 		//	exportPalette();
 		//}
+
+		last_Index_Type = 3;
+
+		if (!bLast_Index_Range) bLast_Index_Range = true;
 	}
 
 	//----
@@ -5396,8 +5442,17 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		{
 			AppMode = 1;
 
-			//// workflow
-			//if (bEditPalette) bEditPalette = false;
+			// workflow
+			if (bEditPalette) bEditPalette = false;
+
+			bLast_Index_Theory = true;
+
+			//last_Index_Theory_PickPalette = last_Index_Theory_PickPalette;
+
+			if (bAuto_Theory_FromPicker) color_Picked = color_TheoryBase.get();
+
+			//TODO:
+			refresh_FromPicked();
 
 			//TODO:
 			refresh_Theory_G1();
@@ -5412,8 +5467,8 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		{
 			AppMode = 2;
 
-			//// workflow
-			//if (bEditPalette) bEditPalette = false;
+			// workflow
+			if (bEditPalette) bEditPalette = false;
 
 			//--
 
@@ -5707,6 +5762,10 @@ void ofxColorManager::palette_FromQuantizer()
 //--------------------------------------------------------------
 void ofxColorManager::palette_FromRange(int index)
 {
+	ofLogNotice(__FUNCTION__) << index;
+
+	if (index < 0) return;
+
 	last_Index_Range = index;//TODO:
 
 	ofLogNotice(__FUNCTION__);
@@ -5753,8 +5812,10 @@ void ofxColorManager::refresh_Range_AutoUpdate()
 {
 	ofLogNotice(__FUNCTION__);
 
+	if (last_Index_Range < 0) return;
+
 	//auto create palette
-	if (autoGenerate_Range && (last_Index_Range != -1))
+	if (autoGenerate_Range)// && (last_Index_Range != -1))
 	{
 		int i = last_Index_Range;
 
@@ -6000,6 +6061,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 					types_Range[i].enableEvents();
 				}
 				types_Range[last_Index_Range] = true;
+
+				bLast_Index_Range = true;
 			}
 			if (key == OF_KEY_DOWN || (key == ' ' && !mod_CONTROL))
 			{
@@ -6014,6 +6077,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 					types_Range[i].enableEvents();
 				}
 				types_Range[last_Index_Range] = true;
+
+				bLast_Index_Range = true;
 			}
 
 			//switch color c1/c2 selectors
@@ -6043,6 +6108,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			{
 				if (last_Index_Theory_PickPalette == 0) last_Index_Theory_PickPalette = last_Index_Theory_PickPalette.getMax();
 				else if (last_Index_Theory_PickPalette > 0) last_Index_Theory_PickPalette = last_Index_Theory_PickPalette.get() - 1;
+
+				bLast_Index_Theory = true;
 			}
 
 			if (key == OF_KEY_DOWN || (key == ' ' && !mod_CONTROL))
@@ -6056,18 +6123,9 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				else {
 					last_Index_Theory_PickPalette = last_Index_Theory_PickPalette.get() + 1;
 				}
-			}
 
-			//if (key == ' ')//cycle
-			//{
-			//	if (last_Index_Theory_PickPalette == last_Index_Theory_PickPalette.getMax())//cycle 
-			//	{
-			//		last_Index_Theory_PickPalette = last_Index_Theory_PickPalette.getMin();
-			//	}
-			//	else {
-			//		last_Index_Theory_PickPalette = last_Index_Theory_PickPalette.get() + 1;
-			//	}
-			//}
+				bLast_Index_Theory = true;
+			}
 		}
 
 		//----
@@ -6474,8 +6532,6 @@ void ofxColorManager::removeMouseListeners()
 //--------------------------------------------------------------
 void ofxColorManager::refresh_Files(std::string name)
 {
-	//--
-
 	// workflow
 
 	//go to ne index after adding a new preset
@@ -6484,6 +6540,7 @@ void ofxColorManager::refresh_Files(std::string name)
 
 	//locate new position of old (saved) preset
 	int ii = -1;
+
 	for (size_t i = 0; i < files.size() && ii == -1; i++)
 	{
 		std::string n = files_Names[i];
@@ -6699,6 +6756,15 @@ void ofxColorManager::preset_Load(std::string p)
 	//TODO:
 	ENABLE_Callbacks_Engines = true;
 	//ENABLE_Callbacks_cPickers = true;
+
+	//--
+
+	//wf
+	//last_Index_Theory_PickPalette = -1;
+	//last_Index_Range = -1;
+
+	bLast_Index_Theory = false;
+	bLast_Index_Range = false;
 }
 
 //--------------------------------------------------------------
@@ -6762,7 +6828,7 @@ void ofxColorManager::refresh_Pick_ToEngines()
 	//-
 
 	//TODO:
-	if (bEditPalette) 
+	if (bEditPalette)
 	{
 		// export
 		if (bAutoExportPreset)
@@ -7102,7 +7168,7 @@ void ofxColorManager::exportPalette()
 		ofxSurfingHelpers::CheckFolder(path_Folder_ExportColor_Custom);
 	}
 	ofLogNotice(__FUNCTION__) << "Export path: " << path_FileExport;
-	
+
 	//--
 
 	// a. FILE WATCH

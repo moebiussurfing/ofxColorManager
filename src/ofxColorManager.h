@@ -7,8 +7,9 @@
 TODO:
 
 + fix text input boxes
-+ add OSC ?
++ performance: reduce callbacks not required re calls a bit
 + undo
++ add OSC
 
 */
 
@@ -374,6 +375,9 @@ private:
 	ofParameter<int> last_Index_Preset{ "Preset Index", 0, 0, 0 };//selected preset
 	int last_Lib_Index = -1;//last library picked color
 
+	bool bLast_Index_Theory = true;
+	bool bLast_Index_Range = true;
+	
 	//--
 
 private:

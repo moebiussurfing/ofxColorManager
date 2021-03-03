@@ -1,12 +1,12 @@
-ofxGui
-ofxNetwork
-ofxOpenCv
-ofxXmlSettings
 ofxColorClient
 ofxColorManager
+ofxGui
 ofxImGui
+ofxPoco
 ofxIO
 ofxMouseRuler
-ofxPoco
+ofxNetwork
+ofxOpenCv
 ofxSCENE-SVG
 ofxSurfingHelpers
+ofxXmlSettings
