@@ -45,12 +45,8 @@ void ofApp::setup()
 
 void ofApp::draw()
 {
-	/*
-
-	Draw your Scene using the palette colors
-	Nothing more!
-	
-	*/
+	// Draw your Scene using the palette colors
+	// Nothing more!
 }
 ```
 
@@ -77,7 +73,6 @@ Look into each folder for authoring credits, original forks, and license info.*
 
 ## Tested systems
 - **Windows 10** / **VS 2017** / **OF ~0.11**
-- **macOS High Sierra** / **Xcode 9/10** / **OF ~0.11**
 
 ## TODO
 
