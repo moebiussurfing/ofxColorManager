@@ -9,7 +9,11 @@ TODO:
 + fix text input boxes
 + performance: reduce callbacks not required re calls a bit
 + undo
-+ add OSC
++ add OSC?
+
+BUGS:
+
++ TCP port number switch, problems on reconnect.
 
 */
 
@@ -429,6 +433,7 @@ private:
 	ofParameter<bool> bModePalettePreset;
 #endif
 	void exportPalette();
+	void exportKit();
 
 	//--
 
@@ -933,7 +938,7 @@ private:
 	bool focus_1;
 	int has_focus = 0;
 	char tab[128];
-	void refresh_Files(std::string name);
+	void refresh_FilesSorting(std::string name);
 
 	//--
 
