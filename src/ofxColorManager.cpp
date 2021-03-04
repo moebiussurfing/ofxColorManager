@@ -574,7 +574,7 @@ void ofxColorManager::setup()
 
 	SHOW_ALL_GUI.setName("GUI MAIN");
 	SHOW_MINI_Preview.setName("MINI PREVIEW");
-	SHOW_UserPaletteFloating.setName("SHOW PALETTE");
+	SHOW_UserPaletteFloating.setName("PALETTE");
 	SHOW_UserPaletteEditor.setName("EDITOR");
 	SHOW_Theory.setName("THEORY");
 	SHOW_debugText.setName("SHOW debug");
@@ -734,7 +734,6 @@ void ofxColorManager::setup()
 #endif
 
 	style = &ImGui::GetStyle();
-	//color_Pick = style->Colors[ImGuiCol_Separator];
 	color_Pick = ImVec4(0, 0, 0, 0.8);
 	//color_Pick = ImVec4(1, 1, 1, 1);
 
@@ -2512,7 +2511,7 @@ void ofxColorManager::gui_Library()
 		ImGui::SameLine();
 
 		// 3. index/total
-		s = "        " + ofToString(last_Lib_Index) + "/" + ofToString(lib_TotalColors - 1);
+		s = "          " + ofToString(last_Lib_Index) + "/" + ofToString(lib_TotalColors - 1);
 		ImGui::Text(s.c_str());
 
 		// 2. color name
@@ -4858,7 +4857,7 @@ void ofxColorManager::palette_Clear()
 //--------------------------------------------------------------
 void ofxColorManager::Changed_ColorPicked(ofFloatColor &c)
 {
-	ofLogNotice(__FUNCTION__) << " >>>>  color_Picked  >>>>  " << ofToString(c);// color_Picked
+	ofLogNotice(__FUNCTION__) << "----------------------------> color_Picked : " << ofToString(c);// color_Picked
 
 	// update TARGET color pointer (ofApp)
 	if (color_TARGET != nullptr)
@@ -4879,7 +4878,7 @@ void ofxColorManager::Changed_ColorPicked(ofFloatColor &c)
 //--------------------------------------------------------------
 void ofxColorManager::Changed_ColorClicked(ofFloatColor &c)
 {
-	ofLogNotice(__FUNCTION__) << " >>>>  color_Clicked  >>>>  " << ofToString(c);// color_Clicked
+	ofLogNotice(__FUNCTION__) << "----------------------------> color_Clicked : " << ofToString(c);// color_Clicked
 
 	// update TARGET color pointer (ofApp)
 	if (color_TARGET != nullptr)
@@ -5410,7 +5409,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	{
 		if (name == color_HUE.getName()) // "H"
 		{
-			ofLogNotice(__FUNCTION__) << " >>>>  " << name << " : " << e;
+			ofLogNotice(__FUNCTION__) << "----------------------------> " << name << " : " << e;
 
 			ofFloatColor c;
 			c.set(color_Picked.get());
@@ -5420,7 +5419,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		}
 		else if (name == color_SAT.getName()) // "S"
 		{
-			ofLogNotice(__FUNCTION__) << " >>>>  " << name << " : " << e;
+			ofLogNotice(__FUNCTION__) << "----------------------------> " << name << " : " << e;
 
 			ofFloatColor c;
 			c.set(color_Picked.get());
@@ -5430,7 +5429,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		}
 		else if (name == color_BRG.getName()) // "B"
 		{
-			ofLogNotice(__FUNCTION__) << " >>>>  " << name << " : " << e;
+			ofLogNotice(__FUNCTION__) << "----------------------------> " << name << " : " << e;
 
 			ofFloatColor c;
 			c.set(color_Picked.get());
@@ -6824,7 +6823,7 @@ void ofxColorManager::refresh_Pick_ToHSB()
 //--------------------------------------------------------------
 void ofxColorManager::refresh_Pick_ToEngines()
 {
-	ofLogNotice(__FUNCTION__) << " >>>> Spread color_Picked : " << ofToString(color_Picked);
+	ofLogNotice(__FUNCTION__) << "----------------------------> Spread color_Picked : " << ofToString(color_Picked);
 
 	//--
 
@@ -6845,7 +6844,7 @@ void ofxColorManager::refresh_Pick_ToEngines()
 		}
 	}
 
-	//-
+	//--
 
 	//TODO:
 	if (bEditPalette)
@@ -6858,7 +6857,7 @@ void ofxColorManager::refresh_Pick_ToEngines()
 		}
 	}
 
-	//-
+	//--
 
 	//TODO: ?
 	if (bEditPalette) return;
@@ -6872,29 +6871,34 @@ void ofxColorManager::refresh_Pick_ToEngines()
 
 		// 1. theory color base
 
-		if (bAuto_Theory_FromPicker)
+		if (SHOW_Range)
 		{
-			color_TheoryBase = color_Picked.get();
+			if (bAuto_Theory_FromPicker)
+			{
+				color_TheoryBase = color_Picked.get();
+			}
 		}
 
 		//-
 
 		// 2. range color1
-
-		if (bAuto_Color1_FromPicker_Range)
+		if (SHOW_Range)
 		{
-			color_1_Range = color_Picked.get();
-			if (autoGenerate_Range) generate_Range(color_1_Range.get(), color_2_Range.get());
-		}
+			if (bAuto_Color1_FromPicker_Range)
+			{
+				color_1_Range = color_Picked.get();
+				if (autoGenerate_Range) generate_Range(color_1_Range.get(), color_2_Range.get());
+			}
 
-		//-
+			//-
 
-		// 3. range color2
+			// 3. range color2
 
-		if (bAuto_Color2_FromPicker_Range)
-		{
-			color_2_Range = color_Picked.get();
-			if (autoGenerate_Range) generate_Range(color_1_Range.get(), color_2_Range.get());
+			if (bAuto_Color2_FromPicker_Range)
+			{
+				color_2_Range = color_Picked.get();
+				if (autoGenerate_Range) generate_Range(color_1_Range.get(), color_2_Range.get());
+			}
 		}
 
 		//--
@@ -7190,23 +7194,19 @@ void ofxColorManager::exportKit()
 		//save all files
 		for (size_t i = 0; i < files.size(); i++)
 		{
-			//ofBuffer buff = files[i].readToBuffer();
-			//std::string path_file = path_export + "/" + files[i].getBaseName() + ".json";
-			////std::string path_file = path_export + "/" + files_Names[i];
-			//bool fileWritten = ofBufferToFile(path_file, buff);
-			//ofLogNotice(__FUNCTION__) << path_file;
-
 			const filesystem::path path_From = files[i].getAbsolutePath();
 			const filesystem::path path_To = path_export + "/" + files[i].getFileName();
 			ofLogNotice(__FUNCTION__) << "Copy " << path_From << " > " << path_To;
 
-			ofFile file;
-			bool b = file.copyFromTo(path_From, path_To, false, true);
-			//bool ofFile::copyFromTo(const filesystem::path &pathSrc, const filesystem::path &pathDst, bool bRelativeToData = true, bool overwrite = false)
+			ofFile _file;
+			bool b = _file.copyFromTo(path_From, path_To, false, true);
+			if (b) ofLogNotice(__FUNCTION__) << "Saved";
+			else ofLogError(__FUNCTION__) << "Saving Failed!";
 		}
 
 		//TODO:
 		//open system file browser
+		//ofxNative
 	}
 	else
 	{

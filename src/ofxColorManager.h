@@ -529,7 +529,7 @@ private:
 	//ImVec4 color_Pick{ 0, 0, 0, 0.75f };//black
 	//float linew_Pick = 3.0f;
 	ImVec4 color_Pick;
-	float linew_Pick = 1.0f;
+	float linew_Pick = 1.5f;
 
 	//-
 
