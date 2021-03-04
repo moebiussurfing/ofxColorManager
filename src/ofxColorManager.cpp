@@ -76,19 +76,7 @@ void ofxColorManager::build_Palette_Engine()
 
 	bool bNew = false;
 
-	if (SHOW_ColourLovers)
-	{
-		_name = myPalette_Name_BACK;
-		palette_FromColourLovers();
-		bNew = true;
-	}
-	else if (SHOW_Quantizer)
-	{
-		_name = myPalette_Name_BACK;
-		palette_FromQuantizer();
-		bNew = true;
-	}
-	else if (SHOW_Theory)
+	if (SHOW_Theory)
 	{
 		_name = name_Theory;
 		//refresh_Theory_G1();//?
@@ -102,6 +90,18 @@ void ofxColorManager::build_Palette_Engine()
 		if (last_Index_Range > 0) palette_FromRange(last_Index_Range);
 		bNew = true;
 	}
+	else if (SHOW_ColourLovers)
+	{
+		_name = myPalette_Name_BACK;
+		palette_FromColourLovers();
+		bNew = true;
+	}
+	else if (SHOW_Quantizer)
+	{
+		_name = myPalette_Name_BACK;
+		palette_FromQuantizer();
+		bNew = true;
+	}
 
 	name_TARGET[0] = _name;
 
@@ -109,7 +109,8 @@ void ofxColorManager::build_Palette_Engine()
 
 	// presets
 
-	if (SHOW_Presets) {
+	if (SHOW_Presets) 
+	{
 		if (!MODE_NewPreset && bNew) MODE_NewPreset = true;
 		textInput_New = _name;
 	}
@@ -153,15 +154,6 @@ void ofxColorManager::build_Palette_Preset()
 
 	// workflow
 	refresh_Background();
-	// DEMO 1
-	//if (DEMO1_Test && !DEMO_Auto) myDEMO1.reStart();
-
-	//// export
-	//if (bAutoExportPreset)
-	//{
-	//	ofLogNotice(__FUNCTION__) << "Auto EXPORT";
-	//	//exportPalette();
-	//}
 
 	//--
 
@@ -1062,7 +1054,7 @@ void ofxColorManager::update(ofEventArgs & args)
 
 	// export
 
-	if (bExportFlag)
+	if (bExportFlag)//trig if flagged. generally, maximum once per frame
 	{
 		bExportFlag = false;
 
@@ -1074,7 +1066,7 @@ void ofxColorManager::update(ofEventArgs & args)
 		}
 	}
 
-	//-
+	//--
 
 	if (bOpen) //programmed open dialog from ImGui:
 	{
@@ -2680,7 +2672,7 @@ void ofxColorManager::gui_Library()
 				{
 					bDrawBorder = true;
 					ImGui::PushStyleColor(ImGuiCol_Border, color_Pick);
-					ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, linew_Pick);
+					ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, linew_Pick + 0.5);
 				}
 
 				//--
@@ -2951,7 +2943,7 @@ void ofxColorManager::gui_Picker()
 
 		ImGuiColorEditFlags _flags = ImGuiColorEditFlags_NoOptions | ImGuiColorEditFlags_NoTooltip;
 
-		ImGui::ColorButton("##PickerBox", *(ImVec4 *)&cTmp, _flags, ImVec2(__w, _h));
+		ImGui::ColorButton("##PickerBox", *(ImVec4 *)&cTmp, _flags, ImVec2(__w, _h/2));
 
 		//-
 
@@ -4527,7 +4519,7 @@ void ofxColorManager::palette_FromTheory(int p)
 	//if (bAutoExportPreset)
 	//{
 	//	ofLogNotice(__FUNCTION__) << "Auto EXPORT";
-	//	exportPalette();
+	//	bExportFlag = true;
 	//}
 }
 
@@ -4611,7 +4603,7 @@ void ofxColorManager::refresh_Theory_G1() //populates palettes
 		_scheme->setPrimaryColor(color_TheoryBase.get());
 
 		colors_Theory_G1[i] = _scheme->interpolate(numColors_Theory_G1.get());
-		ofLogNotice(__FUNCTION__) << i;// << " " << _scheme->;
+		ofLogVerbose(__FUNCTION__) << i;// << " " << _scheme->;
 	}
 }
 
@@ -4758,7 +4750,7 @@ void ofxColorManager::refresh_Palette_TARGET(vector<ofColor> &p)
 //--------------------------------------------------------------
 void ofxColorManager::palette_AddColor(ofColor c)
 {
-	ofLogNotice(__FUNCTION__) << "+ " << ofToString(palette.size()) << " : " << ofToString(c);
+	ofLogNotice(__FUNCTION__) << ofToString(palette.size()) << " : " << ofToString(c);
 
 	palette.push_back(c);
 
@@ -4954,7 +4946,7 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 
 	else if (name == last_Index_Theory_PickPalette.getName())
 	{
-		ofLogWarning(__FUNCTION__) << "  >>>  last_Index_Theory_PickPalette : " << last_Index_Theory_PickPalette;
+		ofLogWarning(__FUNCTION__) << "----------------------------> last_Index_Theory_PickPalette : " << last_Index_Theory_PickPalette;
 
 		last_Index_Theory_PickPalette = ofClamp(
 			last_Index_Theory_PickPalette.get(),
@@ -5311,19 +5303,6 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			last_Index_Theory.getMin(),
 			last_Index_Theory.getMax());
 
-		//// export
-		//if (bAutoExportPreset)
-		//{
-		//	ofLogNotice(__FUNCTION__) << "Auto EXPORT";
-		//	exportPalette();
-		//}
-
-		//if (SHOW_Presets) 
-		//{
-		//	textInput_New = name_Theory;
-		//	MODE_NewPreset = true;
-		//}
-
 		last_Index_Type = 2;
 
 		if (!bLast_Index_Theory) bLast_Index_Theory = true;
@@ -5344,13 +5323,6 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		//	}
 		//}
 
-		//// export
-		//if (bAutoExportPreset)
-		//{
-		//	ofLogNotice(__FUNCTION__) << "Auto EXPORT";
-		//	exportPalette();
-		//}
-
 		last_Index_Type = 3;
 
 		if (!bLast_Index_Range) bLast_Index_Range = true;
@@ -5368,15 +5340,6 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		numColors_Range = numColors_Engines;
 
 		palettes_Resize();
-
-		////--
-
-		//// export
-		//if (bAutoExportPreset)
-		//{
-		//	ofLogNotice(__FUNCTION__) << "Auto EXPORT";
-		//	exportPalette();
-		//}
 	}
 
 	else if (name == numColors_Theory_G2.getName())
@@ -5807,10 +5770,8 @@ void ofxColorManager::palette_FromRange(int index)
 		// export
 		if (bAutoExportPreset)
 		{
+			ofLogNotice(__FUNCTION__) << "Auto EXPORT";
 			bExportFlag = true;
-
-			//ofLogNotice(__FUNCTION__) << "Auto EXPORT";
-			//exportPalette();
 		}
 	}
 }
@@ -6853,7 +6814,7 @@ void ofxColorManager::refresh_Pick_ToEngines()
 		if (bAutoExportPreset)
 		{
 			ofLogNotice(__FUNCTION__) << "Auto EXPORT";
-			exportPalette();
+			bExportFlag = true;
 		}
 	}
 
@@ -6871,7 +6832,7 @@ void ofxColorManager::refresh_Pick_ToEngines()
 
 		// 1. theory color base
 
-		if (SHOW_Range)
+		if (SHOW_Theory)
 		{
 			if (bAuto_Theory_FromPicker)
 			{
@@ -7116,8 +7077,7 @@ void ofxColorManager::setup_Range()
 void ofxColorManager::generate_Range(ofColor col1, ofColor col2) {
 	if (bRange_Intitiated)
 	{
-
-		ofLogNotice(__FUNCTION__);
+		//ofLogNotice(__FUNCTION__);
 		ofLogNotice(__FUNCTION__) << "col1:" << ofToString(col1) << " > col2:" << ofToString(col2);
 
 		int _max = 400;
@@ -7132,8 +7092,8 @@ void ofxColorManager::generate_Range(ofColor col1, ofColor col2) {
 		{
 			_step = _max / _div;
 
-			ofLogNotice(__FUNCTION__) << "_div : " << _div;
-			ofLogNotice(__FUNCTION__) << "_step: " << _step;
+			ofLogVerbose(__FUNCTION__) << "_div : " << _div;
+			ofLogVerbose(__FUNCTION__) << "_step: " << _step;
 
 			if (_step > 0)
 			{
@@ -7150,13 +7110,13 @@ void ofxColorManager::generate_Range(ofColor col1, ofColor col2) {
 
 						ofColor color = ofxColorMorph::colorMorph(pos, left, col1, right, col2, static_cast<type>(i));
 
-						ofLogNotice(__FUNCTION__) << i << ":" << j << " \t> " << color;
+						ofLogVerbose(__FUNCTION__) << i << " : " << j << " > " << color;
 
 						palette_Range.push_back(color);
 					}
 				}
 
-				ofLogNotice(__FUNCTION__) << "palette_Range size: " << palette_Range.size();
+				ofLogVerbose(__FUNCTION__) << "palette_Range size: " << palette_Range.size();
 			}
 			else
 			{

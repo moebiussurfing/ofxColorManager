@@ -850,7 +850,7 @@ private:
 
 	// demos
 private:
-	ofParameter<bool> DEMO1_Test{ "Enable DEMO1", false };
+	ofParameter<bool> DEMO1_Test{ "Enable DEMO Bubbles", false };
 	//ofParameter<bool> DEMO2_Test{ "Enable DEMO2", false };
 	//ofParameter<bool> DEMO2_Edit{ "Edit DEMO2", false };
 	//ofParameter<float> DEMO2_Scale{ "Scale", 0.2, 0, 1.0f };
