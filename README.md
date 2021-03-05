@@ -20,7 +20,7 @@ This **openFrameworks** add-on is a palette and **kit of tools** to create color
 ## ofxColorClient 
   * A Lightweight version of the add-on just to use presets. 
   * To work linked to this **MASTER** addon but as a minimal **CLIENT** into your own **OF App**. 
-  * Standalone mode to browse and use your kit with preset files.
+  * Or just as standalone mode to browse and use your kit with preset files.
 
 ## Other Features
 * Demo Scenes for fast preview.
@@ -67,12 +67,12 @@ void ofApp::draw()
 * [ofxSCENE-SVG](https://github.com/moebiussurfing/ofxSCENE-SVG)  
   for some example only 
 
-Already packed into ```OF_ADDON/libs```. No need to add them manually with the **OF Project Generator**:  
+Already packed into ```OF_ADDON/libs```. No need to add them manually with the ```OF Project Generator```:  
+*Thanks a lot to all these ofxAddons coders.  
+Look into each folder for authoring credits, original forks, and license info.*  
 * [ofxColorQuantizerHelper](https://github.com/moebiussurfing/ofxColorQuantizerHelper)
 * [ofxColorsBrowser](https://github.com/moebiussurfing/ofxColorsBrowser)
 * [ofxColourLoversHelper](https://github.com/moebiussurfing/ofxColourLoversHelper)  
-*Thanks a lot to all these ofxAddons coders. 
-Look into each folder for authoring credits, original forks, and license info.*  
 
 ## File format
 The **JSON** file format of a preset it's simple. This is a 3 colors palette file content as an example:
