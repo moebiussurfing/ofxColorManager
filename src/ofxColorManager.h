@@ -48,6 +48,7 @@ BUGS:
 //#define MODE_BACKGROUND //TODO: show bg color (gradient picker engine) on mode no background
 //#define USE_SUPER_LOG
 //#define USE_OFX_GUI
+//#define SHOW_THEM_EDITOR //TODO: show ImGUi editor for debug. do not stores or load presets
 
 //------
 
@@ -193,6 +194,7 @@ private:
 private:
 	float dt;
 	float fps;
+
 private:
 	bool edit_theme = false;
 
@@ -247,7 +249,7 @@ private:
 	//--
 
 private:
-	ofParameter<bool> ShowAdvancedLayout{ "Show Advanced", false };
+	ofParameter<bool> ShowAdvancedLayout{ "Extra", false };
 	//shows advanced panels to tweak layout or workflow behaviour
 
 	ofParameter<bool> auto_pilot{ "autoPilot", false };

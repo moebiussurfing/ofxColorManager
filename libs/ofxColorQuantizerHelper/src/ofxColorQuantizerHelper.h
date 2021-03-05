@@ -45,9 +45,13 @@ class ofxColorQuantizerHelper
 //	vector<GLuint> textureSourceID;
 	//void draw_Gui2();
 
+public:
+	ofParameter<bool> ShowAdvancedLayout{ "Show Advanced", false };
 
 public:
 	void draw_Gui();
+
+private:
 	ofTexture tex;
 	ofFbo fbo;
 	void refresh_QuantizerImage();

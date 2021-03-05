@@ -565,7 +565,7 @@ void ofxColorManager::setup()
 	// panels
 
 	SHOW_ALL_GUI.setName("GUI MAIN");
-	SHOW_MINI_Preview.setName("MINI PALETTE");
+	SHOW_MINI_Preview.setName("MINI");
 	SHOW_UserPaletteFloating.setName("PALETTE");
 	SHOW_UserPaletteEditor.setName("EDITOR");
 	SHOW_Theory.setName("THEORY");
@@ -914,6 +914,7 @@ void ofxColorManager::setup()
 
 	params_control.add(bResponsive_Panels);
 	params_control.add(bFitLayout);
+	params_control.add(ShowAdvancedLayout);
 
 #ifndef USE_SIMPLE_PRESET_PALETTE	
 	params_control.add(bModeBundlePreset);
@@ -1247,27 +1248,43 @@ void ofxColorManager::draw_Info()
 
 	std::string t0 = name_TARGET[0];
 
+	//get text width
 	float _w0 = ofxSurfingHelpers::getWidthBBtextBoxed(fontBig, t0);
 
-	//top
-	//pady = 20;
+	//--
+	
+	//// a. top
+	//pady = 150;//with upper palette
+	////pady = 20;
 	//y = pady + fontBig.getSize();
+	//h = padh;
+	//y += h;
+	//x = ofGetWidth() * 0.5 - _w0 * 0.5;
 
-	//bottom
-	pady = 0;
-	y = ofGetWindowHeight() - pady - fontBig.getSize();
+	//// b. bottom
+	//pady = 0;
+	//y = ofGetWindowHeight() - pady - fontBig.getSize();
+	//h = padh;
+	//y += h;
+	//x = ofGetWidth() * 0.5 - _w0 * 0.5;
+
+	// c. locked to svg demo
+	x = DEMO2_Svg.getPositionTittle().x;
+	y = DEMO2_Svg.getPositionTittle().y;
+	pady = - 30;
+	y += pady;
+	x -= _w0 * 0.5;
+
+	//--
 
 	int _alpha = 200;
 	ofColor c0, c1;
 	c0.set(0, _alpha * a);
 	c1.set(255, _alpha * a);
 
-	h = padh;
-	y += h;
 
 	// label tittle
 
-	x = ofGetWidth() * 0.5 - _w0 * 0.5;
 	ofSetColor(c0);
 	fontBig.drawString(t0, x + sp, y + sp);
 
@@ -1909,7 +1926,7 @@ void ofxColorManager::gui_PaletteEditor()
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, PANEL_WIDGETS_HEIGHT));
 
-	if (ofxImGui::BeginWindow("PALETTE EDITOR", mainSettings, flagsw))
+	if (ofxImGui::BeginWindow("EDITOR", mainSettings, flagsw))
 	{
 		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
 		float _w100 = ImGui::GetWindowContentRegionWidth();
@@ -2503,7 +2520,7 @@ void ofxColorManager::gui_Library()
 		ImGui::SameLine();
 
 		// 3. index/total
-		s = "          " + ofToString(last_Lib_Index) + "/" + ofToString(lib_TotalColors - 1);
+		s = "           " + ofToString(last_Lib_Index) + "/" + ofToString(lib_TotalColors - 1);
 		ImGui::Text(s.c_str());
 
 		// 2. color name
@@ -3135,8 +3152,7 @@ void ofxColorManager::gui_PanelsMain()
 	ImGuiWindowFlags flags;
 
 	static bool auto_resize = true;
-	flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;//TODO: not working for my toggles
-	//flags = ImGuiWindowFlags_None;
+	flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(325, PANEL_WIDGETS_HEIGHT));
 
@@ -3144,71 +3160,136 @@ void ofxColorManager::gui_PanelsMain()
 
 	if (ofxImGui::BeginWindow("MAIN PANEL", mainSettings, flags))
 	{
-		//ImGui::Columns(1);
 
-		////app mode
-		////ImGui::Text(AppMode_name.get().c_str());
-		////ofxImGui::AddStepper(AppMode, 1, 2);
+		ofxSurfingHelpers::AddBigToggle(SHOW_Presets, 100, BUTTON_BIG_HEIGHT); 
+		ImGui::SameLine();
+		ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteEditor, 100, BUTTON_BIG_HEIGHT);
+		ImGui::SameLine();
+		ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteFloating, 100, BUTTON_BIG_HEIGHT);
+		ImGui::SameLine();
 
-		//const char* current_element_name = (current_element >= 0 && current_element <
-		//	Element_COUNT) ? element_names[current_element] : "Unknown";
-
-		//if (ImGui::SliderInt("APP MODE", &current_element, 0, Element_COUNT - 1, current_element_name))
-		//	if (current_element != AppMode) AppMode = current_element;
-
-		//ImGui::Dummy(ImVec2(0, 10));
-
-		//--
-
-		//ofxSurfingHelpers::AddBigToggle(SHOW_Theory); ImGui::SameLine();
-		//ofxSurfingHelpers::AddBigToggle(SHOW_Range); ImGui::SameLine();
-		//ofxSurfingHelpers::AddBigToggle(SHOW_ColourLovers); ImGui::SameLine();
-		//ofxSurfingHelpers::AddBigToggle(SHOW_Quantizer);
-
-		//ImGui::Columns(3);
-
-		//ImGui::NextColumn();
-		////ImGui::Separator();
-
-		ofxSurfingHelpers::AddBigToggle(SHOW_Presets); ImGui::SameLine();
-		ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteEditor); ImGui::SameLine();
-		ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteFloating); //ImGui::SameLine();
-		//ofxSurfingHelpers::AddBigToggle(SHOW_Gradient);
-
-		//ImGui::NextColumn();
 		//ImGui::Separator();
-
-		ofxSurfingHelpers::AddBigToggle(SHOW_Picker); ImGui::SameLine();
-		ofxSurfingHelpers::AddBigToggle(SHOW_Library);
+		
+		ofxSurfingHelpers::AddBigToggle(SHOW_Picker, 100, BUTTON_BIG_HEIGHT);
+		ImGui::SameLine();
+		ofxSurfingHelpers::AddBigToggle(SHOW_Library, 100, BUTTON_BIG_HEIGHT); 
 		ImGui::SameLine();
 #ifdef MODE_BACKGROUND
-		ofxSurfingHelpers::AddBigToggle(SHOW_BackGround);// ImGui::SameLine();
+		ofxSurfingHelpers::AddBigToggle(SHOW_BackGround, 100, BUTTON_BIG_HEIGHT); 
+		ImGui::SameLine();
 #endif
-		ofxSurfingHelpers::AddBigToggle(gradientEngine.SHOW_Gradient);
+		ofxSurfingHelpers::AddBigToggle(gradientEngine.SHOW_Gradient, 100, BUTTON_BIG_HEIGHT);
+		ImGui::SameLine();
 
-		//ImGui::NextColumn();
 		//ImGui::Separator();
+		
+		ofxSurfingHelpers::AddBigToggle(SHOW_Export, 100, BUTTON_BIG_HEIGHT); 
+		ImGui::SameLine();
+		ofxSurfingHelpers::AddBigToggle(SHOW_Demos, 100, BUTTON_BIG_HEIGHT);
+		ImGui::SameLine();
+		ofxSurfingHelpers::AddBigToggle(SHOW_MINI_Preview, 100, BUTTON_BIG_HEIGHT);
+		ImGui::SameLine();
 
-		ofxSurfingHelpers::AddBigToggle(SHOW_MINI_Preview); ImGui::SameLine();
-		ofxSurfingHelpers::AddBigToggle(SHOW_Demos); ImGui::SameLine();
-		ofxSurfingHelpers::AddBigToggle(SHOW_Export);// ImGui::SameLine();
-
-		//--
-
-		// shows advancded panels to tweak layout or workflow behaviour
 		ofxImGui::AddParameter(ShowAdvancedLayout);
-
+		ImGui::SameLine();
 		if (ShowAdvancedLayout)
 		{
 			ImGui::SameLine();
 			ofxImGui::AddParameter(ENABLE_keys); ImGui::SameLine();
+
+#ifdef SHOW_THEM_EDITOR
 			ImGui::Checkbox("Edit Theme", &edit_theme);
+#endif
 		}
 	}
 	ofxImGui::EndWindow(mainSettings);
 
 	ImGui::PopStyleVar();
 }
+
+////--------------------------------------------------------------
+//void ofxColorManager::gui_PanelsMain()
+//{
+//	ImGuiWindowFlags flags;
+//
+//	static bool auto_resize = true;
+//	flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;//TODO: not working for my toggles
+//	//flags = ImGuiWindowFlags_None;
+//
+//	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(325, PANEL_WIDGETS_HEIGHT));
+//
+//	//----
+//
+//	if (ofxImGui::BeginWindow("MAIN PANEL", mainSettings, flags))
+//	{
+//		//ImGui::Columns(1);
+//
+//		////app mode
+//		////ImGui::Text(AppMode_name.get().c_str());
+//		////ofxImGui::AddStepper(AppMode, 1, 2);
+//
+//		//const char* current_element_name = (current_element >= 0 && current_element <
+//		//	Element_COUNT) ? element_names[current_element] : "Unknown";
+//
+//		//if (ImGui::SliderInt("APP MODE", &current_element, 0, Element_COUNT - 1, current_element_name))
+//		//	if (current_element != AppMode) AppMode = current_element;
+//
+//		//ImGui::Dummy(ImVec2(0, 10));
+//
+//		//--
+//
+//		//ofxSurfingHelpers::AddBigToggle(SHOW_Theory); ImGui::SameLine();
+//		//ofxSurfingHelpers::AddBigToggle(SHOW_Range); ImGui::SameLine();
+//		//ofxSurfingHelpers::AddBigToggle(SHOW_ColourLovers); ImGui::SameLine();
+//		//ofxSurfingHelpers::AddBigToggle(SHOW_Quantizer);
+//
+//		//ImGui::Columns(3);
+//
+//		//ImGui::NextColumn();
+//		////ImGui::Separator();
+//
+//		ofxSurfingHelpers::AddBigToggle(SHOW_Presets); ImGui::SameLine();
+//		ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteEditor); ImGui::SameLine();
+//		ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteFloating); //ImGui::SameLine();
+//		//ofxSurfingHelpers::AddBigToggle(SHOW_Gradient);
+//
+//		//ImGui::NextColumn();
+//		//ImGui::Separator();
+//
+//		ofxSurfingHelpers::AddBigToggle(SHOW_Picker); ImGui::SameLine();
+//		ofxSurfingHelpers::AddBigToggle(SHOW_Library);
+//		ImGui::SameLine();
+//#ifdef MODE_BACKGROUND
+//		ofxSurfingHelpers::AddBigToggle(SHOW_BackGround);// ImGui::SameLine();
+//#endif
+//		ofxSurfingHelpers::AddBigToggle(gradientEngine.SHOW_Gradient);
+//
+//		//ImGui::NextColumn();
+//		//ImGui::Separator();
+//
+//		ofxSurfingHelpers::AddBigToggle(SHOW_Export); ImGui::SameLine();
+//		ofxSurfingHelpers::AddBigToggle(SHOW_Demos); ImGui::SameLine();
+//		ofxSurfingHelpers::AddBigToggle(SHOW_MINI_Preview);// ImGui::SameLine();
+//
+//		//--
+//
+//		// shows advancded panels to tweak layout or workflow behaviour
+//		ofxImGui::AddParameter(ShowAdvancedLayout);
+//
+//		if (ShowAdvancedLayout)
+//		{
+//			ImGui::SameLine();
+//			ofxImGui::AddParameter(ENABLE_keys); ImGui::SameLine();
+//
+//#ifdef SHOW_THEM_EDITOR
+//			ImGui::Checkbox("Edit Theme", &edit_theme);
+//#endif
+//		}
+//	}
+//	ofxImGui::EndWindow(mainSettings);
+//
+//	ImGui::PopStyleVar();
+//}
 
 //--------------------------------------------------------------
 void ofxColorManager::gui_Range()
@@ -5154,6 +5235,13 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		}
 	}
 
+	// advanced toggle
+	else if (name == ShowAdvancedLayout.getName())
+	{
+		colorQuantizer.ShowAdvancedLayout = ShowAdvancedLayout;
+		colourLoversHelper.ShowAdvancedLayout = ShowAdvancedLayout;
+	}
+
 	// layout
 	else if (name == bFitLayout.getName())
 	{
@@ -5854,6 +5942,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		else if (key == 'g')
 		{
 			setToggleVisible();
+
 			// workflowh
 			if (!SHOW_ALL_GUI) ENABLE_HelpInfo = false;
 		}
@@ -5862,6 +5951,52 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		{
 			SHOW_MINI_Preview = !SHOW_MINI_Preview;
 		}
+
+		//----
+
+		// extra
+
+#ifdef USE_DEBUG_LAYOUT
+		else if (key == 'M')
+		{
+			mouseRuler.toggleVisibility();
+			//myDEMO1.toggleMouseCamera();
+		}
+#endif
+		// TEST
+		if (key == 'T')
+		{
+			gradientEngine.setToggleTest();
+		}
+
+		// DEMO
+		else if (key == 'D')
+		{
+			DEMO1_Test = !DEMO1_Test;
+			//if (DEMO1_Test&& DEMO_Auto) myDEMO1.reStart();
+		}
+
+		//else if (key == 'g') {
+		//    SHOW_ALL_GUI = !SHOW_ALL_GUI;
+		//    setVisible(SHOW_ALL_GUI);
+		//}
+
+		else if (key == 'e' || key == 'E')
+		{
+			bEditPalette = !bEditPalette;
+		}
+
+		////edit layout
+		//else if (key == 'E' || key == 'e')
+		//{
+		//	bEditLayout = !bEditLayout;
+		//}
+
+		//else if (key == 'd')
+		//{
+		//    // DEBUG INTERFACE
+		//    bShowDebug = !bShowDebug;
+		//}
 
 		//--
 
@@ -6230,52 +6365,6 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				color_Picked = ofColor(palette_Lib_Cols[n]);
 			}
 		}
-
-		//----
-
-		// extra
-
-#ifdef USE_DEBUG_LAYOUT
-		else if (key == 'M')
-		{
-			mouseRuler.toggleVisibility();
-			//myDEMO1.toggleMouseCamera();
-		}
-#endif
-		// TEST
-		if (key == 'T')
-		{
-			gradientEngine.setToggleTest();
-		}
-
-		// DEMO
-		else if (key == 'D')
-		{
-			DEMO1_Test = !DEMO1_Test;
-			//if (DEMO1_Test&& DEMO_Auto) myDEMO1.reStart();
-		}
-
-		//else if (key == 'g') {
-		//    SHOW_ALL_GUI = !SHOW_ALL_GUI;
-		//    setVisible(SHOW_ALL_GUI);
-		//}
-
-		else if (key == 'e' || key == 'E')
-		{
-			bEditPalette = !bEditPalette;
-		}
-
-		////edit layout
-		//else if (key == 'E' || key == 'e')
-		//{
-		//	bEditLayout = !bEditLayout;
-		//}
-
-		//else if (key == 'd')
-		//{
-		//    // DEBUG INTERFACE
-		//    bShowDebug = !bShowDebug;
-		//}
 
 		//----
 

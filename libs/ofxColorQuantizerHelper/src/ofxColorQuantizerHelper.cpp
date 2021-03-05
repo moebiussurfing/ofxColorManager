@@ -294,15 +294,18 @@ void ofxColorQuantizerHelper::draw_Gui()
 		ofxSurfingHelpers::AddBigButton(bReBuild, _w99, _h*0.5);
 		ImGui::Dummy(ImVec2(0, 5));
 
-		if (ImGui::CollapsingHeader("Advanced"))
+		if (ShowAdvancedLayout)
 		{
-			ImGui::Dummy(ImVec2(0, 5));
+			if (ImGui::CollapsingHeader("Advanced"))
+			{
+				ImGui::Dummy(ImVec2(0, 5));
 
-			//-
+				//-
 
-			ImGui::Checkbox("Auto-resize", &auto_resize);
-			ofxImGui::AddParameter(ENABLE_Keys);
-			ofxImGui::AddParameter(ENABLE_HelpInfo);
+				ImGui::Checkbox("Auto-resize", &auto_resize);
+				ofxImGui::AddParameter(ENABLE_Keys);
+				ofxImGui::AddParameter(ENABLE_HelpInfo);
+			}
 		}
 
 		//----

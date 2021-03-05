@@ -54,7 +54,6 @@ public:
 
 private:
 	bool bShowSearch = true;
-	ofParameter<bool> ShowAdvancedLayout{ "Show Advanced", false };
 	// shows advancded panels to tweak layout or workflow behaviour
 
 private:
@@ -109,6 +108,9 @@ private:
 	float linew_Pick = 2.0;
 	bool bfocus = true;
 	bool auto_resize = true;
+
+public:
+	ofParameter<bool> ShowAdvancedLayout{ "Show Advanced", false };
 
 	//--
 

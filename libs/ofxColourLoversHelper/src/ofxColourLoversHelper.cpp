@@ -445,8 +445,11 @@ void ofxColourLoversHelper::drawImGuiMain()
 
 			if (SHOW_BrowserPalettes) ofxImGui::AddParameter(AutoScroll);
 
-			ImGui::SameLine();
-			ofxImGui::AddParameter(ShowAdvancedLayout);
+			if (ShowAdvancedLayout)
+			{
+				ImGui::SameLine();
+				ofxImGui::AddParameter(ShowAdvancedLayout);
+			}
 
 			ofxImGui::EndTree(mainSettings);
 
