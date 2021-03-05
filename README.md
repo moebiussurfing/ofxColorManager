@@ -1,6 +1,6 @@
 # ofxColorManager
 
-# Description
+## Description
 This **openFrameworks** add-on is a palette and **kit of tools** to create color presets for your scenes.  
 
 ## Screenshot
@@ -8,25 +8,29 @@ This **openFrameworks** add-on is a palette and **kit of tools** to create color
 
 ## Overview
 Included Tools and Engines:  
-* Algorithmic **Theory** colors.
-* **Range spaces** of two colors.
+* Algorithmic **Theory** colors from a base color.
+* **Range spaces** between two colors.
 * **Colour Lovers** online **API** to search keywords, handle favorites and history search.
 * **Extract** the dominant colors **from images**.
 * **Gradient** designer with an extra picked color.
-* User **Kit Presets Browser**: Receive from all engines, duplicate presets and preview all your kit.
+* **Kit Presets Browser**: 
+  * Receive from all engines and save. 
+  * Name, delete or duplicate presets from your kit.
+  * Preview all your kit on a scrollable panel.
+
 * ```ofxColorClient```: 
   * A Lightweight version of the add-on. 
   * To work linked to this **MASTER** addon but as a minimal **CLIENT** into your own **OF App**. 
   * Standalone mode to browse and use your kit with preset files.
 
-## Features
+## Other Features
 * Demo Scenes for fast preview.
 * ImGui based GUI. Docked and customizable.
 * Linkable with ```ofxColorClient``` trough TCP or Watching files.
-* Kit exporter of all ```JSON``` preset files to your project data path.
 * Wheel and rectangle color pickers.
 * **Pantone** library with 2000+ colors.
 * Edit, rearrenge, delete and drag colors. 
+* Kit exporter of all ```JSON``` preset files to your project data path.
 
 ## Usage
 ### ofApp.h
@@ -73,6 +77,31 @@ Already packed into ```OF_ADDON/libs```. No need to add them manually with the *
 * [ofxColourLoversHelper](https://github.com/moebiussurfing/ofxColourLoversHelper)
 *Thanks a lot to all these ofxAddons coders. 
 Look into each folder for authoring credits, original forks, and license info.*  
+
+## File format
+The **JSON** file format of a preset it's simple. This is a 3 colors palette file content as an example:
+```.json
+[
+    {
+        "a": 255,
+        "b": 206,
+        "g": 69,
+        "r": 4
+    },
+    {
+        "a": 255,
+        "b": 165,
+        "g": 103,
+        "r": 3
+    },
+    {
+        "a": 255,
+        "b": 125,
+        "g": 137,
+        "r": 3
+    }
+]
+```
 
 ## Tested systems
 - **Windows 10** / **VS 2017** / **OF ~0.11**
