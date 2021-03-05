@@ -2672,7 +2672,7 @@ void ofxColorManager::gui_Library()
 				{
 					bDrawBorder = true;
 					ImGui::PushStyleColor(ImGuiCol_Border, color_Pick);
-					ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, linew_Pick + 0.5);
+					ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, linew_Pick + 1.0);
 				}
 
 				//--
@@ -4297,6 +4297,7 @@ void ofxColorManager::gui_Demo()
 			ofxImGui::AddParameter(DEMO2_Svg.blendModeName);
 			ofxImGui::AddParameter(DEMO2_Svg.fileIndex);
 			ofxImGui::AddParameter(DEMO2_Svg.fileIndexName);
+			ofxImGui::AddParameter(DEMO2_Svg.enable_Mask);
 		}
 	}
 	ofxImGui::EndWindow(mainSettings);

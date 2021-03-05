@@ -8,7 +8,7 @@ TODO:
 
 + fix text input boxes
 + performance: reduce callbacks not required re calls a bit
-+ undo
++ undo engine
 + add OSC?
 
 BUGS:
