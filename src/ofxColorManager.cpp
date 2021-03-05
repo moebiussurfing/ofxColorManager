@@ -18,7 +18,7 @@ void ofxColorManager::build_Palette_RandomSort()
 	srand(unsigned(time(NULL)));
 	std::shuffle(palette.begin(), palette.end(), std::random_device());
 
-	gradientEngine.build_FromPaleletteRef(palette);
+	gradientEngine.build_FromPaletteLinked(palette);
 	last_Index_ColorPalette = 0;
 
 	ENABLE_Callbacks_Engines = true;
@@ -109,7 +109,7 @@ void ofxColorManager::build_Palette_Engine()
 
 	// presets
 
-	if (SHOW_Presets) 
+	if (SHOW_Presets)
 	{
 		if (!MODE_NewPreset && bNew) MODE_NewPreset = true;
 		textInput_New = _name;
@@ -565,7 +565,7 @@ void ofxColorManager::setup()
 	// panels
 
 	SHOW_ALL_GUI.setName("GUI MAIN");
-	SHOW_MINI_Preview.setName("MINI PREVIEW");
+	SHOW_MINI_Preview.setName("MINI PALETTE");
 	SHOW_UserPaletteFloating.setName("PALETTE");
 	SHOW_UserPaletteEditor.setName("EDITOR");
 	SHOW_Theory.setName("THEORY");
@@ -821,7 +821,7 @@ void ofxColorManager::setup()
 
 	//params_Demo.add(TEST_Mode);
 	params_Demo.add(DEMO1_Test);
-	params_Demo.add(DEMO2_Svg.DEMO2_Test);
+	params_Demo.add(DEMO2_Svg.DEMO2_Enable);
 	params_Demo.add(DEMO2_Svg.DEMO2_Edit);
 	params_Demo.add(DEMO2_Svg.DEMO2_Scale);
 	params_Demo.add(DEMO2_Svg.DEMO2_Alpha);
@@ -2943,7 +2943,7 @@ void ofxColorManager::gui_Picker()
 
 		ImGuiColorEditFlags _flags = ImGuiColorEditFlags_NoOptions | ImGuiColorEditFlags_NoTooltip;
 
-		ImGui::ColorButton("##PickerBox", *(ImVec4 *)&cTmp, _flags, ImVec2(__w, _h/2));
+		ImGui::ColorButton("##PickerBox", *(ImVec4 *)&cTmp, _flags, ImVec2(__w, _h / 2));
 
 		//-
 
@@ -4286,9 +4286,9 @@ void ofxColorManager::gui_Demo()
 		//-
 
 		// svg demo 2
-		ofxSurfingHelpers::AddBigToggle(DEMO2_Svg.DEMO2_Test, _w100);
-		//ofxImGui::AddParameter(DEMO2_Svg.DEMO2_Test);
-		if (DEMO2_Svg.DEMO2_Test)
+		ofxSurfingHelpers::AddBigToggle(DEMO2_Svg.DEMO2_Enable, _w100);
+		//ofxImGui::AddParameter(DEMO2_Svg.DEMO2_Enable);
+		if (DEMO2_Svg.DEMO2_Enable)
 		{
 			ofxImGui::AddParameter(DEMO2_Svg.DEMO2_Edit);
 			if (DEMO2_Svg.DEMO2_Edit) ofxImGui::AddParameter(DEMO2_Svg.DEMO2_Scale);
@@ -6913,21 +6913,15 @@ void ofxColorManager::setLinkPalette(vector<ofColor> &p)
 	palette_TARGET = &p;
 }
 
-////--
-//
-////--------------------------------------------------------------
-//void ofxColorManager::setControl_Gradient(float control)
-//{
-//	ofLogNotice(__FUNCTION__) << control;
-//
-//	if (!bEditLayout)
-//	{
-//		curvePickIn.setWithoutEventNotifications(control);
-//		//curvePickIn = control;
-//
-//		curve_Slider_Pick.setPercent(control);
-//	}
-//}
+//--
+
+//--------------------------------------------------------------
+void ofxColorManager::setPickControl(float control)
+{
+	ofLogNotice(__FUNCTION__) << control;
+
+	gradientEngine.pickIn = control;
+}
 
 //--------------------------------------------------------------
 std::string ofxColorManager::getPaletteName() {

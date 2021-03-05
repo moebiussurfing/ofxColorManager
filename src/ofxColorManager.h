@@ -621,7 +621,9 @@ public:
 	// setters
 
 public:
-	//void setControl_Gradient(float control);
+	void setPickControl(float control);//set the input control for gradient selector. to control the picked color
+
+public:
 	void setVisible(bool b);
 	void setToggleVisible();
 	void setVisible_GUI_MINI(bool b);
@@ -851,7 +853,7 @@ private:
 	// demos
 private:
 	ofParameter<bool> DEMO1_Test{ "Enable DEMO Bubbles", false };
-	//ofParameter<bool> DEMO2_Test{ "Enable DEMO2", false };
+	//ofParameter<bool> DEMO2_Enable{ "Enable DEMO2", false };
 	//ofParameter<bool> DEMO2_Edit{ "Edit DEMO2", false };
 	//ofParameter<float> DEMO2_Scale{ "Scale", 0.2, 0, 1.0f };
 	//ofParameter<float> DEMO2_Alpha{ "Alpha", 1.0f, 0, 1.0f };
