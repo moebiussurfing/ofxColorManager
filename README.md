@@ -11,17 +11,16 @@ Included tools and engines:
 * **Colour Lovers** online **API** to search keywords, handle favorites and history search.
 * **Extract** or quantize dominant colors **from images**.
 * Curved Gradients for an extra picked color or **gradient design**.
-* User **Kit Presets browser**: edit, rearrenge, delete colors, duplicate presets, preview your kit.
+* User **Kit Presets browser**: edit, rearrenge, delete and drag colors, duplicate presets, preview your kit.
 * ofxColorClient: A twin add-on to work linked to this **MASTER** addon or standalone but as minimal **CLIENT** into your own **OF App**. 
 
 ## Features
 * Demo Scenes for fast preview.
-* ImGui based GUI.
+* ImGui based GUI. Docked and customizable.
 * Linkable with ```ofxColorClient``` trough TCP or Watching files.
-* Kit exporter of all ```JSON``` preset files.
-* Color pickers.
-* Pantone library with 2000+ colors.
-* Draggable color boxes.
+* Kit exporter of all ```JSON``` preset files to your project data path.
+* Wheel and rectangle color pickers.
+* **Pantone** library with 2000+ colors.
 
 ## Usage
 ### ofApp.h
