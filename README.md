@@ -6,8 +6,7 @@ This **openFrameworks** add-on is a palette and **kit of tools** to create color
 ## Screenshot
 ![image](/readme_images/Capture.JPG?raw=true "image")
 
-## Overview
-Included Tools and Engines:  
+## Included Tools and Engines:  
 * Algorithmic **Theory** colors from a base color.
 * **Range Spaces** between two colors.
 * **Colour Lovers** online **API** to search keywords, handle favorites and history search.
@@ -18,7 +17,7 @@ Included Tools and Engines:
   * Name, delete or duplicate presets from your kit.
   * Preview all your kit on a scrollable panel.
 
-* **ofxColorClient**: 
+## ofxColorClient 
   * A Lightweight version of the add-on just to use presets. 
   * To work linked to this **MASTER** addon but as a minimal **CLIENT** into your own **OF App**. 
   * Standalone mode to browse and use your kit with preset files.
