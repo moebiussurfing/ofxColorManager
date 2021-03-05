@@ -2,7 +2,7 @@
 This **openFrameworks** add-on is a palette and **colors manager** to create color presets for your scenes.  
 
 ## Screenshot
-![image](/readme_images/Capture.jpg?raw=true "image")
+![image](/readme_images/Capture.JPG?raw=true "image")
 
 ## Highlights
 Included tools and engines:  
