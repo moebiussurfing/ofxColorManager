@@ -40,6 +40,7 @@ BUGS:
 
 // extra
 #define USE_DEBUG_LAYOUT // includes mouse ruler to help layout design
+#define USE_MINIMAL_GUI // hide some widgets to minimize elements
 #define LINK_TCP_MASTER_CLIENT
 //#define USE_UNDO_ENGINE //TODO:
 //#define USE_RECTANGLE_INTERFACES //TODO: a custom final user size ofxInterface
@@ -249,7 +250,7 @@ private:
 	//--
 
 private:
-	ofParameter<bool> ShowAdvancedLayout{ "Extra", false };
+	ofParameter<bool> SHOW_AdvancedLayout{ "Extra", false };
 	//shows advanced panels to tweak layout or workflow behaviour
 
 	ofParameter<bool> auto_pilot{ "autoPilot", false };
@@ -724,6 +725,10 @@ private:
 	void gui_Demo();
 	void gui_Export();
 	void gui_Gradient();
+	
+#ifndef USE_MINIMAL_GUI
+	void gui_Extra();
+#endif
 
 	//--
 

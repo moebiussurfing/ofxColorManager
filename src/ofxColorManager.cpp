@@ -914,7 +914,7 @@ void ofxColorManager::setup()
 
 	params_control.add(bResponsive_Panels);
 	params_control.add(bFitLayout);
-	params_control.add(ShowAdvancedLayout);
+	params_control.add(SHOW_AdvancedLayout);
 
 #ifndef USE_SIMPLE_PRESET_PALETTE	
 	params_control.add(bModeBundlePreset);
@@ -1271,9 +1271,9 @@ void ofxColorManager::draw_Info()
 	// c. locked to svg demo
 	x = DEMO2_Svg.getPositionTittle().x;
 	y = DEMO2_Svg.getPositionTittle().y;
-	pady = - 30;
+	pady = - 40;
 	y += pady;
-	x -= _w0 * 0.5;
+	x -= _w0 * 0.5;//center
 
 	//--
 
@@ -1616,7 +1616,7 @@ void ofxColorManager::gui_Theory()
 		// amount colors
 		if (ofxSurfingHelpers::AddIntStepped(numColors_Engines)) {}
 
-		if (ShowAdvancedLayout)
+		if (SHOW_AdvancedLayout)
 		{
 			if (ImGui::CollapsingHeader("Advanced"))
 			{
@@ -2136,14 +2136,15 @@ void ofxColorManager::gui_PaletteEditor()
 
 			//--
 
+#ifndef USE_MINIMAL_GUI
 			//ImGui::Separator();
 			ImGui::Dummy(ImVec2(0, 2));
 
 			// show floating palette
 			ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteFloating, _w, _h * 0.5);
+#endif
 
-
-			if (ShowAdvancedLayout)
+			if (SHOW_AdvancedLayout)
 			{
 				ImGui::Dummy(ImVec2(0, 2));
 
@@ -2187,8 +2188,6 @@ void ofxColorManager::gui_PaletteEditor()
 void ofxColorManager::gui_PaletteFloating()
 {
 	static bool auto_resize = false;
-	//static bool auto_resize = true;
-	//bool auto_resize = bAutoResizePalette.get();
 
 	float ww, hh;
 	ww = PANEL_WIDGETS_WIDTH;
@@ -2196,7 +2195,6 @@ void ofxColorManager::gui_PaletteFloating()
 	ImGui::SetWindowSize(ImVec2(ww, hh));
 	ImGuiWindowFlags flagsw;
 	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
-	//flagsw = false;
 
 	//-
 
@@ -2535,7 +2533,7 @@ void ofxColorManager::gui_Library()
 		if (ImGui::CollapsingHeader("Advanced"))
 #endif
 		{
-			if (ShowAdvancedLayout)
+			if (SHOW_AdvancedLayout)
 			{
 				if (ImGui::CollapsingHeader("Layout"))
 				{
@@ -3135,19 +3133,21 @@ void ofxColorManager::gui_PanelsEngines()
 
 	if (ofxImGui::BeginWindow("ENGINES", mainSettings, flags))
 	{
-		float w = 80;
-		ofxSurfingHelpers::AddBigToggle(SHOW_Theory, w); ImGui::SameLine();
-		ofxSurfingHelpers::AddBigToggle(SHOW_Range, w); ImGui::SameLine();
-		ofxSurfingHelpers::AddBigToggle(SHOW_ColourLovers, w); ImGui::SameLine();
-		ofxSurfingHelpers::AddBigToggle(SHOW_Quantizer, w);
+		float _w = 80;
+
+		ofxSurfingHelpers::AddBigToggle(SHOW_Theory, _w); ImGui::SameLine();
+		ofxSurfingHelpers::AddBigToggle(SHOW_Range, _w); ImGui::SameLine();
+		ofxSurfingHelpers::AddBigToggle(SHOW_ColourLovers, _w); ImGui::SameLine();
+		ofxSurfingHelpers::AddBigToggle(SHOW_Quantizer, _w);
 	}
 	ofxImGui::EndWindow(mainSettings);
 
 	ImGui::PopStyleVar();
 }
 
+#ifndef USE_MINIMAL_GUI
 //--------------------------------------------------------------
-void ofxColorManager::gui_PanelsMain()
+void ofxColorManager::gui_Extra()
 {
 	ImGuiWindowFlags flags;
 
@@ -3158,41 +3158,10 @@ void ofxColorManager::gui_PanelsMain()
 
 	//----
 
-	if (ofxImGui::BeginWindow("MAIN PANEL", mainSettings, flags))
+	if (ofxImGui::BeginWindow("EXTRA", mainSettings, flags))
 	{
-
-		ofxSurfingHelpers::AddBigToggle(SHOW_Presets, 100, BUTTON_BIG_HEIGHT); 
 		ImGui::SameLine();
-		ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteEditor, 100, BUTTON_BIG_HEIGHT);
-		ImGui::SameLine();
-		ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteFloating, 100, BUTTON_BIG_HEIGHT);
-		ImGui::SameLine();
-
-		//ImGui::Separator();
-		
-		ofxSurfingHelpers::AddBigToggle(SHOW_Picker, 100, BUTTON_BIG_HEIGHT);
-		ImGui::SameLine();
-		ofxSurfingHelpers::AddBigToggle(SHOW_Library, 100, BUTTON_BIG_HEIGHT); 
-		ImGui::SameLine();
-#ifdef MODE_BACKGROUND
-		ofxSurfingHelpers::AddBigToggle(SHOW_BackGround, 100, BUTTON_BIG_HEIGHT); 
-		ImGui::SameLine();
-#endif
-		ofxSurfingHelpers::AddBigToggle(gradientEngine.SHOW_Gradient, 100, BUTTON_BIG_HEIGHT);
-		ImGui::SameLine();
-
-		//ImGui::Separator();
-		
-		ofxSurfingHelpers::AddBigToggle(SHOW_Export, 100, BUTTON_BIG_HEIGHT); 
-		ImGui::SameLine();
-		ofxSurfingHelpers::AddBigToggle(SHOW_Demos, 100, BUTTON_BIG_HEIGHT);
-		ImGui::SameLine();
-		ofxSurfingHelpers::AddBigToggle(SHOW_MINI_Preview, 100, BUTTON_BIG_HEIGHT);
-		ImGui::SameLine();
-
-		ofxImGui::AddParameter(ShowAdvancedLayout);
-		ImGui::SameLine();
-		if (ShowAdvancedLayout)
+		//if (SHOW_AdvancedLayout)
 		{
 			ImGui::SameLine();
 			ofxImGui::AddParameter(ENABLE_keys); ImGui::SameLine();
@@ -3201,6 +3170,69 @@ void ofxColorManager::gui_PanelsMain()
 			ImGui::Checkbox("Edit Theme", &edit_theme);
 #endif
 		}
+	}
+	ofxImGui::EndWindow(mainSettings);
+
+	ImGui::PopStyleVar();
+}
+#endif
+
+//--------------------------------------------------------------
+void ofxColorManager::gui_PanelsMain()
+{
+	static bool auto_resize = true;
+	ImGuiWindowFlags flags;
+	flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
+
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(325, PANEL_WIDGETS_HEIGHT));
+
+	//----
+
+	if (ofxImGui::BeginWindow("MAIN PANEL", mainSettings, flags))
+	{
+		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
+		float _pd1 = ImGui::GetStyle().DisplayWindowPadding.x;
+		float _pd2 = ImGui::GetStyle().FramePadding.x;
+		float _w100 = ImGui::GetWindowContentRegionWidth();
+		float _w99 = _w100 - 2 * _spc - _pd1 - _pd2;
+		const int NUM_WIDGETS = 9;
+		float _w = _w99 / float(NUM_WIDGETS) - _spc;
+		//float _w = 100;
+
+		ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteFloating, _w, BUTTON_BIG_HEIGHT);
+		ImGui::SameLine();
+		ofxSurfingHelpers::AddBigToggle(SHOW_Presets, _w, BUTTON_BIG_HEIGHT); 
+		ImGui::SameLine();
+		ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteEditor, _w, BUTTON_BIG_HEIGHT);
+		ImGui::SameLine();
+
+		//ImGui::Separator();
+		
+		ofxSurfingHelpers::AddBigToggle(SHOW_Picker, _w, BUTTON_BIG_HEIGHT);
+		ImGui::SameLine();
+		ofxSurfingHelpers::AddBigToggle(SHOW_Library, _w, BUTTON_BIG_HEIGHT); 
+		ImGui::SameLine();
+#ifdef MODE_BACKGROUND
+		ofxSurfingHelpers::AddBigToggle(SHOW_BackGround, _w, BUTTON_BIG_HEIGHT); 
+		ImGui::SameLine();
+#endif
+		ofxSurfingHelpers::AddBigToggle(gradientEngine.SHOW_Gradient, _w, BUTTON_BIG_HEIGHT);
+		ImGui::SameLine();
+
+		//ImGui::Separator();
+		
+		ofxSurfingHelpers::AddBigToggle(SHOW_Export, _w, BUTTON_BIG_HEIGHT); 
+		ImGui::SameLine();
+		ofxSurfingHelpers::AddBigToggle(SHOW_Demos, _w, BUTTON_BIG_HEIGHT);
+		ImGui::SameLine();
+		ofxSurfingHelpers::AddBigToggle(SHOW_MINI_Preview, _w, BUTTON_BIG_HEIGHT);
+		ImGui::SameLine();
+
+		
+#ifndef USE_MINIMAL_GUI
+		//ofxImGui::AddParameter(SHOW_AdvancedLayout);
+		ofxSurfingHelpers::AddBigToggle(SHOW_AdvancedLayout, _w, BUTTON_BIG_HEIGHT);
+#endif
 	}
 	ofxImGui::EndWindow(mainSettings);
 
@@ -3274,9 +3306,9 @@ void ofxColorManager::gui_PanelsMain()
 //		//--
 //
 //		// shows advancded panels to tweak layout or workflow behaviour
-//		ofxImGui::AddParameter(ShowAdvancedLayout);
+//		ofxImGui::AddParameter(SHOW_AdvancedLayout);
 //
-//		if (ShowAdvancedLayout)
+//		if (SHOW_AdvancedLayout)
 //		{
 //			ImGui::SameLine();
 //			ofxImGui::AddParameter(ENABLE_keys); ImGui::SameLine();
@@ -3473,7 +3505,7 @@ void ofxColorManager::gui_Range()
 
 			//-
 
-			if (ShowAdvancedLayout)
+			if (SHOW_AdvancedLayout)
 			{
 				if (ImGui::CollapsingHeader("Advanced"))
 				{
@@ -3750,10 +3782,11 @@ void ofxColorManager::gui_Presets()
 
 		//--
 
+#ifndef USE_MINIMAL_GUI
 		ImGui::Dummy(ImVec2(0, 5));
-
 		ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteFloating, _w99, _h * 0.5);
 		ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteEditor, _w99, _h * 0.5);
+#endif
 
 		//ImGui::Text("Name");
 		ImGui::Dummy(ImVec2(0, 5));
@@ -4424,6 +4457,10 @@ bool ofxColorManager::draw_Gui()
 		if (SHOW_Panels) gui_PanelsEngines();
 		if (SHOW_Export) gui_Export();
 		if (SHOW_Demos) gui_Demo();
+
+#ifndef USE_MINIMAL_GUI
+		if (SHOW_AdvancedLayout) gui_Extra();
+#endif
 
 		if (gradientEngine.SHOW_Gradient) gui_Gradient();
 		//if (SHOW_Gradient) gui_Gradient();
@@ -5236,10 +5273,10 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	}
 
 	// advanced toggle
-	else if (name == ShowAdvancedLayout.getName())
+	else if (name == SHOW_AdvancedLayout.getName())
 	{
-		colorQuantizer.ShowAdvancedLayout = ShowAdvancedLayout;
-		colourLoversHelper.ShowAdvancedLayout = ShowAdvancedLayout;
+		colorQuantizer.SHOW_AdvancedLayout = SHOW_AdvancedLayout;
+		colourLoversHelper.SHOW_AdvancedLayout = SHOW_AdvancedLayout;
 	}
 
 	// layout

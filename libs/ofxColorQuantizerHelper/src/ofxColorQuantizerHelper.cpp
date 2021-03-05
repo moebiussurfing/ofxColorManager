@@ -294,7 +294,7 @@ void ofxColorQuantizerHelper::draw_Gui()
 		ofxSurfingHelpers::AddBigButton(bReBuild, _w99, _h*0.5);
 		ImGui::Dummy(ImVec2(0, 5));
 
-		if (ShowAdvancedLayout)
+		if (SHOW_AdvancedLayout)
 		{
 			if (ImGui::CollapsingHeader("Advanced"))
 			{

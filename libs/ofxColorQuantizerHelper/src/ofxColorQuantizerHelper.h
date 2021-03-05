@@ -46,7 +46,7 @@ class ofxColorQuantizerHelper
 	//void draw_Gui2();
 
 public:
-	ofParameter<bool> ShowAdvancedLayout{ "Show Advanced", false };
+	ofParameter<bool> SHOW_AdvancedLayout{ "Show Advanced", false };
 
 public:
 	void draw_Gui();

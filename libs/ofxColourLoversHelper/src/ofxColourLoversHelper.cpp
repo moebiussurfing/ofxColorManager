@@ -146,7 +146,7 @@ void ofxColourLoversHelper::drawImGuiMain()
 				}
 			}
 
-			ImGui::Dummy(ImVec2(0, 5));
+			//ImGui::Dummy(ImVec2(0, 2));
 
 			//ImGui::SameLine();
 			if (ImGui::Button("SEARCH", ImVec2(_w100, _hb * 2)))
@@ -206,160 +206,21 @@ void ofxColourLoversHelper::drawImGuiMain()
 			}
 #endif
 
-			ImGui::Dummy(ImVec2(0, 5));
-
-			//bool MODE_fixedSize_PRE = MODE_FixedSize;
-			//if (ImGui::Checkbox("FIXED WIDTH", &MODE_FixedSize))
-			//{
-			//	if (MODE_FixedSize != MODE_fixedSize_PRE)
-			//	{
-			//		build_Gui_Lab();
-			//	}
-			//}
-
 			//ImGui::Dummy(ImVec2(0, 5));
-
-			//ImGui::Text("Name:");
-			//ImGui::Text(lastPaletteName.c_str());
-			//ImGui::Dummy(ImVec2(0.0f, 5));
-
-			//int _w = ImGui::GetWindowContentRegionWidth();
-
-			//ImGui::PushItemWidth(_w50);
-			{
-				if (ImGui::Button("ADD FAV", ImVec2(_w50, _hb)))
-				{
-					ofxSurfingHelpers::CheckFolder(path_Global + "favorites/");
-
-					std::string str = path_Global + "favorites/" + palettes[currPalette].id + ".xml";
-
-					palettes[currPalette].save(str);
-					ofLogNotice(__FUNCTION__) << "saved favorite: " << str;
-				}
-				ImGui::SameLine();
-
-				//--
-
-				if (ImGui::Button("CLEAR FAVS", ImVec2(_w50, _hb)))
-					ImGui::OpenPopup("CLEAR FAVS?");
-
-				if (ImGui::BeginPopupModal("CLEAR FAVS?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
-				{
-					ImGui::Text("All Favorite palettes will be deleted.\nThis operation cannot be undone!\n\n");
-					ImGui::Separator();
-
-					static bool dont_ask_me_next_timeFavs = false;
-					ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
-					ImGui::Checkbox("Don't ask me next time", &dont_ask_me_next_timeFavs);
-					ImGui::PopStyleVar();
-
-					if (ImGui::Button("OK", ImVec2(_w99, 0))) {
-						clearFavourites();
-						//workflow
-						loadFavorites();
-
-						ImGui::CloseCurrentPopup();
-					}
-					ImGui::SetItemDefaultFocus();
-					ImGui::SameLine();
-					if (ImGui::Button("Cancel", ImVec2(_w99, 0))) { ImGui::CloseCurrentPopup(); }
-					ImGui::EndPopup();
-				}
-
-				//if (ImGui::Button("CLEAR FAVS", ImVec2(_w99 * 0.5, _hb)))
-				//{
-				//	clearFavourites();
-				//	//workflow
-				//	loadFavorites();
-				//}
-			}
-			//ImGui::PopItemWidth();
-
-			//ImGui::Dummy(ImVec2(0, 5));
-
-			if (ImGui::Button("CLEAR HISTORY", ImVec2(_w100, _hb)))
-				ImGui::OpenPopup("CLEAR HISTORY?");
-
-			if (ImGui::BeginPopupModal("CLEAR HISTORY?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
-			{
-				ImGui::Text("All History will be deleted.\nThis operation cannot be undone!\n\n");
-				ImGui::Separator();
-
-				static bool dont_ask_me_next_time = false;
-				ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
-				ImGui::Checkbox("Don't ask me next time", &dont_ask_me_next_time);
-				ImGui::PopStyleVar();
-
-				if (!dont_ask_me_next_time) {
-					if (ImGui::Button("OK", ImVec2(_w100, 0))) {
-						clearHistory();
-						//workflow
-						loadHistory();
-
-						ImGui::CloseCurrentPopup();
-					}
-					ImGui::SetItemDefaultFocus();
-					ImGui::SameLine();
-					if (ImGui::Button("Cancel", ImVec2(_w100, 0))) { ImGui::CloseCurrentPopup(); }
-				}
-				else {
-					clearHistory();
-					//workflow
-					loadHistory();
-
-					//ImGui::CloseCurrentPopup();
-				}
-				ImGui::EndPopup();
-			}
-
-			//if (ImGui::Button("CLEAR HISTORY", ImVec2(_w99, _hb)))
-			//{
-			//	clearHistory();
-			//	//workflow
-			//	loadHistory();
-			//}
-
-			ImGui::Dummy(ImVec2(0.0f, 2));
+			ImGui::Dummy(ImVec2(0, 2));
 
 			ImGui::SliderInt("Amnt Max", &amountResults, 25, 100);
-
-			//-
-
-			//ofxImGui::EndTree(mainSettings);
 		}
-		//ofxImGui::EndWindow(mainSettings);
 
 		//----
 
 		ImGui::Dummy(ImVec2(0, 2));
 
-		//ImGuiColorEditFlags _flags = false;
-
-		ImGuiColorEditFlags _flags =
-			ImGuiColorEditFlags_NoAlpha |
-			ImGuiColorEditFlags_NoPicker |
-			ImGuiColorEditFlags_NoTooltip;
-
-		if (ofxImGui::BeginTree("BROWSE", mainSettings))
-			//if (ofxImGui::BeginWindow("BROWSE", mainSettings, false))
-			//if (ofxImGui::BeginWindow(lastSearch.c_str(), mainSettings, false))
+		if (ImGui::CollapsingHeader("BROWSE", ImGuiWindowFlags_NoCollapse))
 		{
-			//ofxImGui::AddParameter(bFavorites);
-			//ofxImGui::AddParameter(bHistory);
-
 			ofxSurfingHelpers::AddBigToggle(bFavorites, _w50, _hb * 2);
 			ImGui::SameLine();
 			ofxSurfingHelpers::AddBigToggle(bHistory, _w50, _hb * 2);
-
-			//if (ImGui::Button("FAVORITES", ImVec2(_w50, _hb)))
-			//{
-			//	loadFavorites();
-			//}
-			//ImGui::SameLine();
-			//if (ImGui::Button("HISTORY", ImVec2(_w50, _hb)))
-			//{
-			//	loadHistory();
-			//}
 
 			//-
 
@@ -438,65 +299,157 @@ void ofxColourLoversHelper::drawImGuiMain()
 				//if (!AutoScroll) AutoScroll = true;
 			}
 
-			ImGui::Dummy(ImVec2(0, 5));
+			//--
 
-			//ofxImGui::AddParameter(SHOW_BrowserPalettes);
-			ofxSurfingHelpers::AddBigToggle(SHOW_BrowserPalettes, _w99, _hb);
-
-			if (SHOW_BrowserPalettes) ofxImGui::AddParameter(AutoScroll);
-
-			if (ShowAdvancedLayout)
+			if (ImGui::CollapsingHeader("ADVANCED", ImGuiWindowFlags_None))
 			{
-				ImGui::SameLine();
-				ofxImGui::AddParameter(ShowAdvancedLayout);
-			}
-
-			ofxImGui::EndTree(mainSettings);
-
-			//ImGui::Dummy(ImVec2(0.0f, 10));
-
-			//-
-
-			if (ShowAdvancedLayout)
-			{
-				if (ImGui::CollapsingHeader("Advanced"))
 				{
-					//if (ImGui::Checkbox("Pick Palette", &MODE_PickPalette_BACK))
-					//{
-					//}
-					//if (ImGui::Checkbox("Pick Color", &MODE_PickColor_BACK))
-					//{
-					//}
-					ofxImGui::AddParameter(MODE_PickPalette_BACK);
-					ofxImGui::AddParameter(MODE_PickColor_BACK);
-
-					ofxImGui::AddParameter(ENABLER_Keys);
-
-					if (ImGui::CollapsingHeader("Layout"))
+					if (ImGui::Button("ADD FAV", ImVec2(_w50, _hb)))
 					{
-						//if (ImGui::Checkbox("Fixed Width", &MODE_FixedSize))
-						bool bPre = MODE_FixedSize;
-						if (ofxImGui::AddParameter(MODE_FixedSize))
-						{
-							if (MODE_FixedSize != bPre)
-							{
-								build_Gui_Lab();
-							}
-						}
-						if (ofxImGui::AddParameter(MODE_Slim))
-						{
-						}
+						ofxSurfingHelpers::CheckFolder(path_Global + "favorites/");
 
-						// layout
-						ImGui::Checkbox("Focus", &bfocus);
-						ImGui::Checkbox("Auto-resize", &auto_resize);
+						std::string str = path_Global + "favorites/" + palettes[currPalette].id + ".xml";
+
+						palettes[currPalette].save(str);
+						ofLogNotice(__FUNCTION__) << "saved favorite: " << str;
 					}
-					//ImGui::Dummy(ImVec2(0, 10));
-					//ImGui::Dummy(ImVec2(0, 10));
+					ImGui::SameLine();
+
+					//--
+
+					if (ImGui::Button("CLEAR FAVS", ImVec2(_w50, _hb)))
+						ImGui::OpenPopup("CLEAR FAVS?");
+
+					if (ImGui::BeginPopupModal("CLEAR FAVS?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+					{
+						ImGui::Text("All Favorite palettes will be deleted.\nThis operation cannot be undone!\n\n");
+						ImGui::Separator();
+
+						static bool dont_ask_me_next_timeFavs = false;
+						ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+						ImGui::Checkbox("Don't ask me next time", &dont_ask_me_next_timeFavs);
+						ImGui::PopStyleVar();
+
+						if (ImGui::Button("OK", ImVec2(_w99, 0))) {
+							clearFavourites();
+							//workflow
+							loadFavorites();
+
+							ImGui::CloseCurrentPopup();
+						}
+						ImGui::SetItemDefaultFocus();
+						ImGui::SameLine();
+						if (ImGui::Button("Cancel", ImVec2(_w99, 0))) { ImGui::CloseCurrentPopup(); }
+						ImGui::EndPopup();
+					}
+
+					//if (ImGui::Button("CLEAR FAVS", ImVec2(_w99 * 0.5, _hb)))
+					//{
+					//	clearFavourites();
+					//	//workflow
+					//	loadFavorites();
+					//}
+				}
+				//ImGui::PopItemWidth();
+
+				//ImGui::Dummy(ImVec2(0, 5));
+				{
+					if (ImGui::Button("CLEAR HISTORY", ImVec2(_w100, _hb)))
+						ImGui::OpenPopup("CLEAR HISTORY?");
+
+					if (ImGui::BeginPopupModal("CLEAR HISTORY?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+					{
+						ImGui::Text("All History will be deleted.\nThis operation cannot be undone!\n\n");
+						ImGui::Separator();
+
+						static bool dont_ask_me_next_time = false;
+						ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
+						ImGui::Checkbox("Don't ask me next time", &dont_ask_me_next_time);
+						ImGui::PopStyleVar();
+
+						if (!dont_ask_me_next_time) {
+							if (ImGui::Button("OK", ImVec2(_w100, 0))) {
+								clearHistory();
+								//workflow
+								loadHistory();
+
+								ImGui::CloseCurrentPopup();
+							}
+							ImGui::SetItemDefaultFocus();
+							ImGui::SameLine();
+							if (ImGui::Button("Cancel", ImVec2(_w100, 0))) { ImGui::CloseCurrentPopup(); }
+						}
+						else {
+							clearHistory();
+							//workflow
+							loadHistory();
+
+							//ImGui::CloseCurrentPopup();
+						}
+						ImGui::EndPopup();
+					}
+
+					//if (ImGui::Button("CLEAR HISTORY", ImVec2(_w99, _hb)))
+					//{
+					//	clearHistory();
+					//	//workflow
+					//	loadHistory();
+					//}
+				}
+			
+				//--
+
+				ImGui::Dummy(ImVec2(0, 5));
+
+				//ofxImGui::AddParameter(SHOW_BrowserPalettes);
+				ofxSurfingHelpers::AddBigToggle(SHOW_BrowserPalettes, _w99, _hb);
+
+				if (SHOW_BrowserPalettes) ofxImGui::AddParameter(AutoScroll);
+
+				if (SHOW_AdvancedLayout)
+				{
+					ImGui::SameLine();
+					ofxImGui::AddParameter(SHOW_AdvancedLayout);
 				}
 			}
 		}
-		//ofxImGui::EndWindow(mainSettings);
+
+		//ImGui::Dummy(ImVec2(0, 2));
+
+		//-
+
+		if (SHOW_AdvancedLayout)
+		{
+			if (ImGui::CollapsingHeader("Advanced"))
+			{
+				ofxImGui::AddParameter(MODE_PickPalette_BACK);
+				ofxImGui::AddParameter(MODE_PickColor_BACK);
+
+				ofxImGui::AddParameter(ENABLER_Keys);
+
+				if (ImGui::CollapsingHeader("Layout"))
+				{
+					//if (ImGui::Checkbox("Fixed Width", &MODE_FixedSize))
+					bool bPre = MODE_FixedSize;
+					if (ofxImGui::AddParameter(MODE_FixedSize))
+					{
+						if (MODE_FixedSize != bPre)
+						{
+							build_Gui_Lab();
+						}
+					}
+					if (ofxImGui::AddParameter(MODE_Slim))
+					{
+					}
+
+					// layout
+					ImGui::Checkbox("Focus", &bfocus);
+					ImGui::Checkbox("Auto-resize", &auto_resize);
+				}
+			
+				//ImGui::Dummy(ImVec2(0, 10));
+			}
+		}
 	}
 	ofxImGui::EndWindow(mainSettings);
 
@@ -761,7 +714,7 @@ void ofxColourLoversHelper::drawImGuiBrowseKits()
 						if (bUpdated_Color_BACK != nullptr && MODE_PickColor_BACK)
 						{
 							(*bUpdated_Color_BACK) = true;
-						}
+					}
 
 						//-
 
@@ -780,7 +733,7 @@ void ofxColourLoversHelper::drawImGuiBrowseKits()
 
 						// worfklow
 						if (AutoScroll) AutoScroll = false;
-					}
+				}
 
 					//ImGui::PopStyleVar(1);
 
@@ -801,13 +754,13 @@ void ofxColourLoversHelper::drawImGuiBrowseKits()
 					//-
 
 					ImGui::PopID();
-				}
 			}
 		}
+	}
 		ofxImGui::EndWindow(mainSettings);
 
 		ImGui::PopStyleVar();
-	}
+}
 }
 #endif
 
@@ -849,7 +802,7 @@ void ofxColourLoversHelper::setup()
 		ofRemoveListener(ColourLoveEvent::events, this, &ofxColourLoversHelper::Changed_ColourLovers);
 		delete gui;
 		gui = 0;
-	}
+}
 
 	//-
 
@@ -1374,7 +1327,7 @@ void ofxColourLoversHelper::refreshPalette()
 		if (myPalette_Name_BACK != nullptr)
 		{
 			(*myPalette_Name_BACK) = p.title;
-		}
+	}
 
 		//-
 
@@ -1388,7 +1341,7 @@ void ofxColourLoversHelper::refreshPalette()
 		{
 			(*bUpdated_Palette_BACK) = true;
 		}
-	}
+}
 
 	//-
 
@@ -1670,7 +1623,7 @@ void ofxColourLoversHelper::setPalette(int pId)
 	////        (*myPalette_BACK) = p.colours;
 	//////        lastPaletteName = p.title;
 	////    }
-}
+		}
 
 #ifdef USE_OFX_UI
 //--------------------------------------------------------------
@@ -1717,7 +1670,7 @@ void ofxColourLoversHelper::loadFavorites()
 		ColourLovePalette cp;
 		cp.load(path_Global + "favorites/" + _files.getName(i));
 		palettes.push_back(cp);
-	}
+}
 
 	lastSearch = "FAVORITES";
 	lastMenuTab = lastSearch;
@@ -1735,7 +1688,7 @@ void ofxColourLoversHelper::loadFavorites()
 	////updateFlag = 1;
 	//setPalette(currPalette);
 	//refreshPalette();
-}
+	}
 
 //--------------------------------------------------------------
 void ofxColourLoversHelper::clearFavourites()

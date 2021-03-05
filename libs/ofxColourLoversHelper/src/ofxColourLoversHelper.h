@@ -110,7 +110,7 @@ private:
 	bool auto_resize = true;
 
 public:
-	ofParameter<bool> ShowAdvancedLayout{ "Show Advanced", false };
+	ofParameter<bool> SHOW_AdvancedLayout{ "Show Advanced", false };
 
 	//--
 
