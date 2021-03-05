@@ -1,18 +1,23 @@
-# Overview
-This **openFrameworks** add-on is a palette and **colors manager** to create color presets for your scenes.  
+# ofxColorManager
+
+# Description
+This **openFrameworks** add-on is a palette and **kit of tools** to create color presets for your scenes.  
 
 ## Screenshot
 ![image](/readme_images/Capture.JPG?raw=true "image")
 
-## Highlights
-Included tools and engines:  
-* Algorithmic **theory** color.
+## Overview
+Included Tools and Engines:  
+* Algorithmic **Theory** colors.
 * **Range spaces** of two colors.
 * **Colour Lovers** online **API** to search keywords, handle favorites and history search.
-* **Extract** or quantize dominant colors **from images**.
-* Curved Gradients for an extra picked color or **gradient design**.
-* User **Kit Presets browser**: edit, rearrenge, delete and drag colors, duplicate presets, preview your kit.
-* ofxColorClient: A twin add-on to work linked to this **MASTER** addon or standalone but as minimal **CLIENT** into your own **OF App**. 
+* **Extract** the dominant colors **from images**.
+* **Gradient** designer with an extra picked color.
+* User **Kit Presets Browser**: Receive from all engines, duplicate presets and preview all your kit.
+* ```ofxColorClient```: 
+  * A Lightweight version of the add-on. 
+  * To work linked to this **MASTER** addon but as a minimal **CLIENT** into your own **OF App**. 
+  * Standalone mode to browse and use your kit with preset files.
 
 ## Features
 * Demo Scenes for fast preview.
@@ -21,6 +26,7 @@ Included tools and engines:
 * Kit exporter of all ```JSON``` preset files to your project data path.
 * Wheel and rectangle color pickers.
 * **Pantone** library with 2000+ colors.
+* Edit, rearrenge, delete and drag colors. 
 
 ## Usage
 ### ofApp.h
@@ -30,21 +36,19 @@ Included tools and engines:
 ofxColorManager colorManager;
 
 vector<ofColor> palette;
-ofColor colorPick;
 ```
 ### ofApp.cpp
 ```.cpp
 void ofApp::setup()
 {
-	colorManager.setLinkPalette(palette);     // subscribe palette
-	colorManager.setLinkColorPick(colorPick); // subscribe picked color
+	colorManager.setLinkPalette(palette); // subscribe palette
 
 	colorManager.setup();
 }
 
 void ofApp::draw()
 {
-	// Draw your Scene using the palette colors
+	// Draw your Scene using the colors
 	// Nothing more!
 }
 ```
