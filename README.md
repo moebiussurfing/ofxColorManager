@@ -9,7 +9,7 @@ This **openFrameworks** add-on is a palette and **kit of tools** to create color
 ## Overview
 Included Tools and Engines:  
 * Algorithmic **Theory** colors from a base color.
-* **Range spaces** between two colors.
+* **Range Spaces** between two colors.
 * **Colour Lovers** online **API** to search keywords, handle favorites and history search.
 * **Extract** the dominant colors **from images**.
 * **Gradient** designer with an extra picked color.
@@ -18,19 +18,19 @@ Included Tools and Engines:
   * Name, delete or duplicate presets from your kit.
   * Preview all your kit on a scrollable panel.
 
-* ```ofxColorClient```: 
-  * A Lightweight version of the add-on. 
+* **ofxColorClient**: 
+  * A Lightweight version of the add-on just to use presets. 
   * To work linked to this **MASTER** addon but as a minimal **CLIENT** into your own **OF App**. 
   * Standalone mode to browse and use your kit with preset files.
 
 ## Other Features
 * Demo Scenes for fast preview.
 * ImGui based GUI. Docked and customizable.
-* Linkable with ```ofxColorClient``` trough TCP or Watching files.
+* Linkable with **ofxColorClient** trough TCP or Watching files.
 * Wheel and rectangle color pickers.
-* **Pantone** library with 2000+ colors.
+* **Pantone** library with **2000+** named colors.
 * Edit, rearrenge, delete and drag colors. 
-* Kit exporter of all ```JSON``` preset files to your project data path.
+* Kit exporter of all **JSON** preset files to your project data path.
 
 ## Usage
 ### ofApp.h
@@ -38,7 +38,6 @@ Included Tools and Engines:
 #include "ofxColorManager.h"
 
 ofxColorManager colorManager;
-
 vector<ofColor> palette;
 ```
 ### ofApp.cpp
@@ -46,14 +45,12 @@ vector<ofColor> palette;
 void ofApp::setup()
 {
 	colorManager.setLinkPalette(palette); // subscribe palette
-
 	colorManager.setup();
 }
 
 void ofApp::draw()
 {
-	// Draw your Scene using the colors
-	// Nothing more!
+	// Draw your Scene using the colors. Nothing more!
 }
 ```
 
@@ -74,7 +71,7 @@ void ofApp::draw()
 Already packed into ```OF_ADDON/libs```. No need to add them manually with the **OF Project Generator**:  
 * [ofxColorQuantizerHelper](https://github.com/moebiussurfing/ofxColorQuantizerHelper)
 * [ofxColorsBrowser](https://github.com/moebiussurfing/ofxColorsBrowser)
-* [ofxColourLoversHelper](https://github.com/moebiussurfing/ofxColourLoversHelper)
+* [ofxColourLoversHelper](https://github.com/moebiussurfing/ofxColourLoversHelper)  
 *Thanks a lot to all these ofxAddons coders. 
 Look into each folder for authoring credits, original forks, and license info.*  
 
