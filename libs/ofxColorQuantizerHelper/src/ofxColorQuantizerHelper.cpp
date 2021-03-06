@@ -101,7 +101,7 @@ void ofxColorQuantizerHelper::refresh_QuantizerImage()
 void ofxColorQuantizerHelper::draw_Gui()
 {
 	static bool bCollapse = false;
-	
+
 	ImGuiWindowFlags flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, PANEL_WIDGETS_HEIGHT));
@@ -228,17 +228,32 @@ void ofxColorQuantizerHelper::draw_Gui()
 			float h = tex.getHeight();
 			float ratio = h / w;
 			float ww;
+			float hh;
+
+			ww = _w99 - 20;
+			hh = ww * ratio;
+
+			const float H_MAX = 300;
+
+			if (hh > H_MAX)
+			{
+				ww = H_MAX / ratio;
+			}
+
+
+			//if (w *ratio > 400)
 
 			//float hMax = 400;
-			//if (h > hMax) {
+			//if (h > hMax) 
+			//{
 			//	h = hMax;
 			//	w = h / ratio;
 			//	ww = _w50;
 			//}
-			//else 
-			{
-				ww = _w99 - 20;//hardcoded pad to avoid flickering bug...
-			}
+			//else
+			//{
+			//	ww = _w99 - 20;//hardcoded pad to avoid flickering bug...
+			//}
 
 			if (ImGui::ImageButton(
 				(ImTextureID)(uintptr_t)fbo.getTexture(0).getTextureData().textureID,
@@ -366,8 +381,8 @@ void ofxColorQuantizerHelper::draw_Gui()
 				float next_button_x2 = last_button_x2 + style.ItemSpacing.x + button_sz.x; // Expected position if next button was on same line
 				if (n + 1 < buttons_count && next_button_x2 < _wx2) ImGui::SameLine();
 				ImGui::PopID();
-	}
-}
+			}
+		}
 		ImGui::End();
 #endif
 	}
@@ -423,7 +438,7 @@ void ofxColorQuantizerHelper::loadNext()
 {
 	if (currentImage < dir.size() - 1) currentImage++;
 	else if (currentImage == dir.size() - 1) currentImage = 0;
-	
+
 	ofLogNotice(__FUNCTION__) << "currentImage: " << ofToString(currentImage);
 	if (dir.size() > 0 && currentImage < dir.size())
 	{
@@ -483,7 +498,7 @@ void ofxColorQuantizerHelper::refresh_Files()
 	textureSource.resize(dir.size());
 	textureSourceID.clear();
 	textureSourceID.resize(dir.size());
-	for (int i = 0; i < dir.size(); i++) 
+	for (int i = 0; i < dir.size(); i++)
 	{
 		textureSourceID[i] = gui_ImGui.loadTexture(textureSource[i], dir.getPath(i));
 	}
@@ -1071,7 +1086,7 @@ void ofxColorQuantizerHelper::rebuildMap()
 
 	int palSize = numColors;
 	//int palSize = colorQuantizer.getNumColors();
-	
+
 	palette.resize(palSize);
 
 	//palette = colorQuantizer.getColors();

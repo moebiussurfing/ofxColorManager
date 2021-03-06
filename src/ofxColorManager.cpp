@@ -1645,7 +1645,7 @@ void ofxColorManager::gui_Theory()
 			// 1.1 label button G1
 
 			//align
-			ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(labelPadding, 0.5f));
+			//ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(labelPadding, 0.5f));
 
 			//std::string _label = ColorWheelSchemes::colorSchemeNames[i];
 			if (ofxSurfingHelpers::AddSmallButton(theory_Types_G1[i], butlabelw, _hSz2))
@@ -1657,7 +1657,7 @@ void ofxColorManager::gui_Theory()
 				bLast_Index_Theory = true;
 			}
 
-			ImGui::PopStyleVar();
+			//ImGui::PopStyleVar();
 
 			//-
 
@@ -1761,7 +1761,7 @@ void ofxColorManager::gui_Theory()
 			// 2.1 label button G2
 
 			//align
-			ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(labelPadding, 0.5f));
+			//ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(labelPadding, 0.5f));
 
 			if (ofxSurfingHelpers::AddSmallButton(types_Theory_G2[i], butlabelw, _hSz2))
 			{
@@ -1773,7 +1773,7 @@ void ofxColorManager::gui_Theory()
 				bLast_Index_Theory = true;
 			}
 
-			ImGui::PopStyleVar();
+			//ImGui::PopStyleVar();
 
 			//-
 
@@ -3072,9 +3072,9 @@ void ofxColorManager::gui_PanelsEngines()
 		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
 		//float _pd1 = ImGui::GetStyle().DisplayWindowPadding.x;
 		//float _pd2 = ImGui::GetStyle().FramePadding.x;
-		float _w100 = ImGui::GetContentRegionAvail().x;
-		//float _w100 = ImGui::GetWindowContentRegionWidth();
-		float _w99 = _w100;// -2 * _spc;
+		//float _w100 = ImGui::GetContentRegionAvail().x;//flicks?
+		float _w100 = ImGui::GetWindowContentRegionWidth();
+		float _w99 = _w100 - 2 * _spc;
 		//float _w99 = _w100 - 2 * _spc;
 		//float _w99 = _w100 - 2 * _spc - _pd2;
 		//float _w99 = _w100 - 2 * _spc - _pd1 - _pd2;
@@ -3432,13 +3432,13 @@ void ofxColorManager::gui_Range()
 				//whick range lab type
 
 				//align
-				ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(labelPadding, 0.5f));
+				//ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(labelPadding, 0.5f));
 
 				if (ofxSurfingHelpers::AddSmallButton(types_Range[t], _szLabel, _hSz2))
 				{
 					//ofLogNotice(__FUNCTION__) << types_Range[t].getName() << " #" << t;// ? allways triggering..
 				}
-				ImGui::PopStyleVar();
+				//ImGui::PopStyleVar();
 
 				//-
 
@@ -4289,7 +4289,7 @@ bool ofxColorManager::draw_Gui()
 	gui.begin();
 
 	//TODO:
-	ShowExampleAppMainMenuBar();
+	//ShowExampleAppMainMenuBar();
 
 	//TODO:
 	// Define the ofWindow as a docking space

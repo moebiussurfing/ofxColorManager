@@ -34,7 +34,7 @@ BUGS:
 #define PANEL_WIDGETS_HEIGHT 500
 
 // extra
-#define USE_MINIMAL_GUI // hide some widgets for layout customization to minimize elements: keys and them editor
+//#define USE_MINIMAL_GUI // hide some widgets for layout customization to minimize elements: keys and them editor
 #define USE_DEBUG_LAYOUT // includes mouse ruler to help layout design
 //#define MODE_BACKGROUND //TODO: show bg color (gradient picker engine) on mode no background
 //#define USE_UNDO_ENGINE //TODO:
@@ -989,16 +989,16 @@ static void ShowExampleAppMainMenuBar()
 			//ShowExampleMenuFile();
 			ImGui::EndMenu();
 		}
-		if (ImGui::BeginMenu("Edit"))
-		{
-			if (ImGui::MenuItem("Undo", "CTRL+Z")) {}
-			if (ImGui::MenuItem("Redo", "CTRL+Y", false, false)) {}  // Disabled item
-			ImGui::Separator();
-			if (ImGui::MenuItem("Cut", "CTRL+X")) {}
-			if (ImGui::MenuItem("Copy", "CTRL+C")) {}
-			if (ImGui::MenuItem("Paste", "CTRL+V")) {}
-			ImGui::EndMenu();
-		}
+		//if (ImGui::BeginMenu("Edit"))
+		//{
+		//	if (ImGui::MenuItem("Undo", "CTRL+Z")) {}
+		//	if (ImGui::MenuItem("Redo", "CTRL+Y", false, false)) {}  // Disabled item
+		//	ImGui::Separator();
+		//	if (ImGui::MenuItem("Cut", "CTRL+X")) {}
+		//	if (ImGui::MenuItem("Copy", "CTRL+C")) {}
+		//	if (ImGui::MenuItem("Paste", "CTRL+V")) {}
+		//	ImGui::EndMenu();
+		//}
 		ImGui::EndMainMenuBar();
 	}
 }
