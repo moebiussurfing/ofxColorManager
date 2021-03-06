@@ -5,14 +5,10 @@
 /*
 
 TODO:
-
 + fix text input boxes
-+ performance: reduce callbacks not required re calls a bit
 + undo engine
-+ add OSC?
 
 BUGS:
-
 + TCP port number switch, problems on reconnect.
 
 */
@@ -26,11 +22,10 @@ BUGS:
 #define USE_COLOR_LOVERS
 #define USE_IMAGE_QUANTIZER
 #define USE_OFX_COLOR_BROWSER
-
-#define AUTO_DRAW_CALLBACK // avoids manual draw
+#define LINK_TCP_MASTER_CLIENT
 
 // layout constants
-#define MAX_PALETTE_COLORS 10
+#define MAX_PALETTE_COLORS 20
 #define INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
 #define BUTTON_BIG_HEIGHT 50
 #define BUTTON_COLOR_SIZE 40
@@ -39,23 +34,20 @@ BUGS:
 #define PANEL_WIDGETS_HEIGHT 500
 
 // extra
+#define USE_MINIMAL_GUI // hide some widgets for layout customization to minimize elements: keys and them editor
 #define USE_DEBUG_LAYOUT // includes mouse ruler to help layout design
-#define USE_MINIMAL_GUI // hide some widgets to minimize elements
-#define LINK_TCP_MASTER_CLIENT
+//#define MODE_BACKGROUND //TODO: show bg color (gradient picker engine) on mode no background
 //#define USE_UNDO_ENGINE //TODO:
 //#define USE_RECTANGLE_INTERFACES //TODO: a custom final user size ofxInterface
 //#define USE_BUNDLE_TYPE_PRESET //TODO: an extended preset format: +bg, pick states, name...etc
 //#define USE_EXTRA_LIBRARIES //TODO: now only Pantone
-//#define MODE_BACKGROUND //TODO: show bg color (gradient picker engine) on mode no background
 //#define USE_SUPER_LOG
 //#define USE_OFX_GUI
-//#define SHOW_THEM_EDITOR //TODO: show ImGUi editor for debug. do not stores or load presets
+////#define SHOW_THEM_EDITOR //TODO: show ImGui editor for debug. do not stores or load presets. linked to USE_MINIMAL_GUI
+#define AUTO_DRAW_CALLBACK // avoids manual draw. don't need to call draw in your ofApp
+
 
 //------
-
-#include "ofxColorPalette.h"
-
-//-
 
 #ifdef LINK_TCP_MASTER_CLIENT
 #include "ofxNetwork.h"
@@ -77,6 +69,8 @@ BUGS:
 #ifdef USE_COLOR_LOVERS
 #include "ofxColourLoversHelper.h"
 #endif
+
+#include "ofxColorPalette.h"
 
 #include "ColorWheelScheme.h"
 #include "ColorWheelSchemes.h"
@@ -528,11 +522,10 @@ private:
 
 	//-
 
-	//layout selected boxes colors
-	//ImVec4 color_Pick{ 0, 0, 0, 0.75f };//black
-	//float linew_Pick = 3.0f;
-	ImVec4 color_Pick;
-	float linew_Pick = 1.5f;
+	// color and line ofr selected widgets
+	ImVec4 borderLineColor = ImVec4(0, 0, 0, 0.7);
+	float borderLineWidth = 1.0f;
+	float labelPadding = 0.0;//label buttons
 
 	//-
 
@@ -981,3 +974,109 @@ private:
 //		}
 //	}
 //};
+
+static void ShowExampleAppMainMenuBar()
+{
+	if (ImGui::BeginMainMenuBar())
+	{
+		if (ImGui::BeginMenu("File"))
+		{
+			if (ImGui::MenuItem("Export Kit", "")) {}
+			if (ImGui::MenuItem("Export Preset", "")) {}
+			if (ImGui::MenuItem("Set Export Path", "")) {}
+			if (ImGui::MenuItem("Quit", "")) { ofExit(); }
+
+			//ShowExampleMenuFile();
+			ImGui::EndMenu();
+		}
+		if (ImGui::BeginMenu("Edit"))
+		{
+			if (ImGui::MenuItem("Undo", "CTRL+Z")) {}
+			if (ImGui::MenuItem("Redo", "CTRL+Y", false, false)) {}  // Disabled item
+			ImGui::Separator();
+			if (ImGui::MenuItem("Cut", "CTRL+X")) {}
+			if (ImGui::MenuItem("Copy", "CTRL+C")) {}
+			if (ImGui::MenuItem("Paste", "CTRL+V")) {}
+			ImGui::EndMenu();
+		}
+		ImGui::EndMainMenuBar();
+	}
+}
+
+//// Note that shortcuts are currently provided for display only
+//// (future version will add explicit flags to BeginMenu() to request processing shortcuts)
+//static void ShowExampleMenuFile()
+//{
+//	ImGui::MenuItem("(demo menu)", NULL, false, false);
+//	if (ImGui::MenuItem("New")) {}
+//	if (ImGui::MenuItem("Open", "Ctrl+O")) {}
+//	if (ImGui::BeginMenu("Open Recent"))
+//	{
+//		ImGui::MenuItem("fish_hat.c");
+//		ImGui::MenuItem("fish_hat.inl");
+//		ImGui::MenuItem("fish_hat.h");
+//		if (ImGui::BeginMenu("More.."))
+//		{
+//			ImGui::MenuItem("Hello");
+//			ImGui::MenuItem("Sailor");
+//			if (ImGui::BeginMenu("Recurse.."))
+//			{
+//				ShowExampleMenuFile();
+//				ImGui::EndMenu();
+//			}
+//			ImGui::EndMenu();
+//		}
+//		ImGui::EndMenu();
+//	}
+//	if (ImGui::MenuItem("Save", "Ctrl+S")) {}
+//	if (ImGui::MenuItem("Save As..")) {}
+//
+//	ImGui::Separator();
+//	if (ImGui::BeginMenu("Options"))
+//	{
+//		static bool enabled = true;
+//		ImGui::MenuItem("Enabled", "", &enabled);
+//		ImGui::BeginChild("child", ImVec2(0, 60), true);
+//		for (int i = 0; i < 10; i++)
+//			ImGui::Text("Scrolling Text %d", i);
+//		ImGui::EndChild();
+//		static float f = 0.5f;
+//		static int n = 0;
+//		ImGui::SliderFloat("Value", &f, 0.0f, 1.0f);
+//		ImGui::InputFloat("Input", &f, 0.1f);
+//		ImGui::Combo("Combo", &n, "Yes\0No\0Maybe\0\0");
+//		ImGui::EndMenu();
+//	}
+//
+//	if (ImGui::BeginMenu("Colors"))
+//	{
+//		float sz = ImGui::GetTextLineHeight();
+//		for (int i = 0; i < ImGuiCol_COUNT; i++)
+//		{
+//			const char* name = ImGui::GetStyleColorName((ImGuiCol)i);
+//			ImVec2 p = ImGui::GetCursorScreenPos();
+//			ImGui::GetWindowDrawList()->AddRectFilled(p, ImVec2(p.x + sz, p.y + sz), ImGui::GetColorU32((ImGuiCol)i));
+//			ImGui::Dummy(ImVec2(sz, sz));
+//			ImGui::SameLine();
+//			ImGui::MenuItem(name);
+//		}
+//		ImGui::EndMenu();
+//	}
+//
+//	// Here we demonstrate appending again to the "Options" menu (which we already created above)
+//	// Of course in this demo it is a little bit silly that this function calls BeginMenu("Options") twice.
+//	// In a real code-base using it would make senses to use this feature from very different code locations.
+//	if (ImGui::BeginMenu("Options")) // <-- Append!
+//	{
+//		static bool b = true;
+//		ImGui::Checkbox("SomeOption", &b);
+//		ImGui::EndMenu();
+//	}
+//
+//	if (ImGui::BeginMenu("Disabled", false)) // Disabled
+//	{
+//		IM_ASSERT(0);
+//	}
+//	if (ImGui::MenuItem("Checked", NULL, true)) {}
+//	if (ImGui::MenuItem("Quit", "Alt+F4")) {}
+//}

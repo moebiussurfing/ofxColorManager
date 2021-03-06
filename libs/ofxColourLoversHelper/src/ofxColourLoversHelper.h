@@ -104,8 +104,8 @@ private:
 
 	//-
 
-	ImVec4 color_Pick{ 1,1,1,0.5 };
-	float linew_Pick = 2.0;
+	ImVec4 borderLineColor{ 1,1,1,0.5 };
+	float borderLineWidth = 2.0;
 	bool bfocus = true;
 	bool auto_resize = true;
 

@@ -1,12 +1,11 @@
 # ofxColorManager
 
-## Description
-This **openFrameworks** add-on is a palette and **kit of tools** to create color presets for your scenes.  
+This **openFrameworks** add-on is a palette and **kit of tools** to create palette color presets for your scenes.  
 
 ## Screenshot
 ![image](/readme_images/Capture.JPG?raw=true "image")
 
-## Included Tools and Engines:  
+## Tools and Engines:  
 * Algorithmic **Theory** colors from a base color.
 * **Range Spaces** between two colors.
 * **Colour Lovers** online **API** to search keywords, handle favorites and history search.
@@ -28,7 +27,7 @@ This **openFrameworks** add-on is a palette and **kit of tools** to create color
 * Linkable with **ofxColorClient** trough TCP or Watching files.
 * Wheel and rectangle color pickers.
 * **Pantone** library with **2000+** named colors.
-* Edit, rearrenge, delete and drag colors. 
+* Edit, add, delete, sort, and drag colors. 
 * Kit exporter of all **JSON** preset files to your project data path.
 
 ## Usage
@@ -49,14 +48,13 @@ void ofApp::setup()
 
 void ofApp::draw()
 {
-	// Draw your Scene using the colors. Nothing more!
+	// Draw your Scene using the palette colors. Nothing more!
 }
 ```
 
 ## Dependencies
 * [ofxColorClient](https://github.com/moebiussurfing/ofxColorClient)
-* [ofxImGui](https://github.com/moebiussurfing/ofxImGui)  
-  Fork from @Daandelange
+* [ofxImGui](https://github.com/moebiussurfing/ofxImGui)  Fork from @Daandelange
 * [ofxSurfingHelpers](https://github.com/moebiussurfing/ofxSurfingHelpers)  
 * [ofxIO](https://github.com/bakercp/ofxIO)
 * ofxNetwork
@@ -64,12 +62,10 @@ void ofApp::draw()
 * ofxGui
 * ofxOpenCv
 * ofxXmlSettings
-* [ofxSCENE-SVG](https://github.com/moebiussurfing/ofxSCENE-SVG)  
-  for some example only 
+* [ofxSCENE-SVG](https://github.com/moebiussurfing/ofxSCENE-SVG)  only for an example 
 
 Already packed into ```OF_ADDON/libs```. No need to add them manually with the ```OF Project Generator```:  
-*Thanks a lot to all these ofxAddons coders.  
-Look into each folder for authoring credits, original forks, and license info.*  
+*Thanks a lot to all these ofxAddons coders. Look into each folder for authoring credits, original forks, and license info.*  
 * [ofxColorQuantizerHelper](https://github.com/moebiussurfing/ofxColorQuantizerHelper)
 * [ofxColorsBrowser](https://github.com/moebiussurfing/ofxColorsBrowser)
 * [ofxColourLoversHelper](https://github.com/moebiussurfing/ofxColourLoversHelper)  

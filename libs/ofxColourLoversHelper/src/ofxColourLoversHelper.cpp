@@ -111,11 +111,15 @@ void ofxColourLoversHelper::drawImGuiMain()
 	if (ofxImGui::BeginWindow("COLOUR-LOVERS", mainSettings, flags))
 	{
 		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
+		float _pd1 = ImGui::GetStyle().DisplayWindowPadding.x;
+		float _pd2 = ImGui::GetStyle().FramePadding.x;
 		float _hb = BUTTON_BIG_HEIGHT * 0.5;
-		float _w100 = ImGui::GetWindowContentRegionWidth();
-		float _w99 = _w100 - 3 * _spc;
-		float _w50 = _w100 / 2 - _spc;
-		//float _w50 = _w99 * 0.5f - 2 * _spc;
+		float _w100 = ImGui::GetContentRegionAvailWidth();
+		//float _w100 = ImGui::GetWindowContentRegionWidth();
+		float _w99 = _w100 - _spc;
+		//float _w50 = _w100 / 2 - _spc;
+		float _w50 = _w99 / 2.0 - _spc;
+		//float _w99 = _w100 - 3 * _spc;
 		float _w20 = _w99 * 0.2f - 3 * _spc;
 
 		//-
@@ -520,9 +524,9 @@ void ofxColourLoversHelper::drawImGuiBrowseKits()
 			float max = 0.80;
 			float a = ofMap(glm::sin(freq * ofGetFrameNum()), -1, 1, min, max);
 
-			float linew_Pick = 2.0;
-			ImVec4 color_Pick{ 0, 0, 0, a };
-			auto color_Pick32 = IM_COL32(color_Pick.x*255.f, color_Pick.y*255.f, color_Pick.z*255.f, color_Pick.w*255.f);
+			float borderLineWidth = 2.0;
+			ImVec4 borderLineColor{ 0, 0, 0, a };
+			auto color_Pick32 = IM_COL32(borderLineColor.x*255.f, borderLineColor.y*255.f, borderLineColor.z*255.f, borderLineColor.w*255.f);
 
 			//-
 
@@ -656,8 +660,8 @@ void ofxColourLoversHelper::drawImGuiBrowseKits()
 
 						//-
 
-						ImGui::PushStyleColor(ImGuiCol_Border, color_Pick);
-						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, linew_Pick);
+						ImGui::PushStyleColor(ImGuiCol_Border, borderLineColor);
+						ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, borderLineWidth);
 						//ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, 3.0);
 
 						//-
