@@ -45,9 +45,14 @@ BUGS:
 //#define USE_OFX_GUI
 ////#define SHOW_THEM_EDITOR //TODO: show ImGui editor for debug. do not stores or load presets. linked to USE_MINIMAL_GUI
 #define AUTO_DRAW_CALLBACK // avoids manual draw. don't need to call draw in your ofApp
+#define USE_OFX_WINDOWAPP// window manager
 
 
 //------
+
+#ifdef USE_OFX_WINDOWAPP
+#include "ofxWindowApp.h"
+#endif
 
 #ifdef LINK_TCP_MASTER_CLIENT
 #include "ofxNetwork.h"
@@ -60,7 +65,7 @@ BUGS:
 #include "demo/DEMO_Scene.h"
 #include "ofxSCENE-SVG.h"
 
-#include "client/PreviewPaletteMini.h"
+#include "gui/PreviewPaletteMini.h"
 
 #ifdef USE_OFX_COLOR_BROWSER
 #include "ofxColorsBrowser.h"
@@ -183,6 +188,13 @@ private:
 	//--
 
 	void draw_Info();
+	
+	//--
+
+public:
+#ifdef USE_OFX_WINDOWAPP
+	ofxWindowApp windowApp;
+#endif
 
 	//--
 

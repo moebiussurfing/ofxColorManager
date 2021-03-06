@@ -272,6 +272,12 @@ void ofxColorManager::setup()
 {
 	ofLogNotice(__FUNCTION__) << endl << endl << "----------------- SETUP -----------------" << endl;
 
+#ifdef USE_OFX_WINDOWAPP
+	windowApp.setFrameRate(60);
+	windowApp.setVerticalSync(true);
+	windowApp.setShowDebug(false);
+#endif
+
 	//TODO:
 	setup_Range();
 
@@ -712,11 +718,12 @@ void ofxColorManager::setup()
 
 	// daan fork
 	ImGuiConfigFlags flags;
-	flags = ImGuiConfigFlags_DockingEnable | ImGuiConfigFlags_ViewportsEnable;
-	flags |= ImGuiDockNodeFlags_NoWindowMenuButton;//from imgui_internal.h
-	flags |= ImGuiDockNodeFlags_NoCloseButton;//?
-	flags |= ImGuiDockNodeFlags_NoResizeX;
-	flags |= ImGuiDockNodeFlags_NoWindowMenuButton;
+	flags = ImGuiConfigFlags_DockingEnable;
+	//flags |= ImGuiConfigFlags_ViewportsEnable;
+	//flags |= ImGuiDockNodeFlags_NoWindowMenuButton;//from imgui_internal.h
+	//flags |= ImGuiDockNodeFlags_NoCloseButton;//?
+	//flags |= ImGuiDockNodeFlags_NoResizeX;
+	//flags |= ImGuiDockNodeFlags_NoWindowMenuButton;
 
 	//ImGuiDockNode* Node = ImGui::DockBuilderGetNode(DockID);
 	//Node->LocalFlags |= ImGuiDockNodeFlags_NoWindowMenuButton | ImGuiDockNodeFlags_NoCloseButton;
@@ -2110,11 +2117,14 @@ void ofxColorManager::gui_PaletteEditor()
 			//--
 
 #ifndef USE_MINIMAL_GUI
-			//ImGui::Separator();
-			ImGui::Dummy(ImVec2(0, 2));
+			if (SHOW_AdvancedLayout)
+			{
+				//ImGui::Separator();
+				ImGui::Dummy(ImVec2(0, 2));
 
-			// show floating palette
-			ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteFloating, _w, _h * 0.5);
+				// show floating palette
+				ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteFloating, _w, _h * 0.5);
+			}
 #endif
 
 			if (SHOW_AdvancedLayout)
@@ -2167,7 +2177,7 @@ void ofxColorManager::gui_PaletteFloating()
 	hh = PANEL_WIDGETS_HEIGHT;
 	ImGui::SetWindowSize(ImVec2(ww, hh));
 	ImGuiWindowFlags flagsw;
-	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
+	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None | ImGuiWindowFlags_NoScrollbar;
 
 	//-
 
@@ -2536,9 +2546,9 @@ void ofxColorManager::gui_Library()
 				ImGui::Dummy(ImVec2(0, 5));
 
 				ofxImGui::AddParameter(colorBrowser.ENABLE_keys);
-			}
-#endif
 		}
+#endif
+	}
 
 		//--
 
@@ -2725,7 +2735,7 @@ void ofxColorManager::gui_Library()
 		{
 			refresh_FromPicked();
 		}
-	}
+}
 
 	ofxImGui::EndWindow(mainSettings);
 
@@ -2889,7 +2899,7 @@ void ofxColorManager::gui_Picker()
 
 		//if (auto_resize) _w = ww;
 		//else _w = _w100 - 2 * _spc;
-		float _w50 = _w99 / 2.0 ;
+		float _w50 = _w99 / 2.0;
 		//float _w100 = _w99 + 2.5f * _spc;
 
 		//--
@@ -2971,7 +2981,7 @@ void ofxColorManager::gui_Picker()
 					ImGuiColorEditFlags_NoAlpha |
 					ImGuiColorEditFlags_PickerHueBar;
 
-				ImGui::PushItemWidth(- 5);
+				ImGui::PushItemWidth(-5);
 
 				if (ImGui::ColorPicker4("##PickerSquare", (float *)&cTmp, _flags))
 				{
@@ -2990,11 +3000,11 @@ void ofxColorManager::gui_Picker()
 
 		if (ImGui::CollapsingHeader("HSB", ImGuiWindowFlags_NoCollapse))
 		{
-			ImGui::PushItemWidth(- 30);
+			ImGui::PushItemWidth(-30);
 
-			if (ofxImGui::AddParameter(color_HUE)){}
-			if (ofxImGui::AddParameter(color_SAT)){}
-			if (ofxImGui::AddParameter(color_BRG)){}
+			if (ofxImGui::AddParameter(color_HUE)) {}
+			if (ofxImGui::AddParameter(color_SAT)) {}
+			if (ofxImGui::AddParameter(color_BRG)) {}
 
 			ImGui::PopItemWidth();
 		}
@@ -3003,7 +3013,7 @@ void ofxColorManager::gui_Picker()
 
 		if (ImGui::CollapsingHeader("Randomizer"))
 		{
-			ImGui::PushItemWidth(- 60);
+			ImGui::PushItemWidth(-60);
 			//ImGui::PushItemWidth(_w99 - 40);
 
 			if (bColor_HUE || bColor_SAT || bColor_BRG)
@@ -3064,7 +3074,7 @@ void ofxColorManager::gui_PanelsEngines()
 	static bool auto_resize = false;
 	ImGuiWindowFlags flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
 
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(425, PANEL_WIDGETS_HEIGHT));
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(200, PANEL_WIDGETS_HEIGHT));
 
 	if (ofxImGui::BeginWindow("ENGINES", mainSettings, flags))
 	{
@@ -3074,7 +3084,7 @@ void ofxColorManager::gui_PanelsEngines()
 		//float _pd2 = ImGui::GetStyle().FramePadding.x;
 		//float _w100 = ImGui::GetContentRegionAvail().x;//flicks?
 		float _w100 = ImGui::GetWindowContentRegionWidth();
-		float _w99 = _w100 - 2 * _spc;
+		float _w99 = _w100 - 4 * _spc;
 		//float _w99 = _w100 - 2 * _spc;
 		//float _w99 = _w100 - 2 * _spc - _pd2;
 		//float _w99 = _w100 - 2 * _spc - _pd1 - _pd2;
@@ -3082,11 +3092,13 @@ void ofxColorManager::gui_PanelsEngines()
 		//float _w = _w99 / float(NUM_WIDGETS) - 2 * _spc;
 		//float _w = 80;
 		float _w = _w99 / float(NUM_WIDGETS) - _spc;
+		float _h100 = 50;//fit window
+		//float _h100 = ImGui::GetContentRegionAvail().y;//fit window
 
-		ofxSurfingHelpers::AddBigToggle(SHOW_Theory, _w); ImGui::SameLine();
-		ofxSurfingHelpers::AddBigToggle(SHOW_Range, _w); ImGui::SameLine();
-		ofxSurfingHelpers::AddBigToggle(SHOW_ColourLovers, _w); ImGui::SameLine();
-		ofxSurfingHelpers::AddBigToggle(SHOW_Quantizer, _w);
+		ofxSurfingHelpers::AddBigToggle(SHOW_Theory, _w, _h100); ImGui::SameLine();
+		ofxSurfingHelpers::AddBigToggle(SHOW_Range, _w, _h100); ImGui::SameLine();
+		ofxSurfingHelpers::AddBigToggle(SHOW_ColourLovers, _w, _h100); ImGui::SameLine();
+		ofxSurfingHelpers::AddBigToggle(SHOW_Quantizer, _w, _h100);
 	}
 	ofxImGui::EndWindow(mainSettings);
 
@@ -6392,8 +6404,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			SHOW_ColourLovers = false;
 			SHOW_Quantizer = false;
 			SHOW_Presets = false;
+		}
 	}
-}
 }
 
 //--------------------------------------------------------------

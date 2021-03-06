@@ -3,15 +3,10 @@
 //--------------------------------------------------------------
 void ofApp::setup()
 {
-	// debug
-	//bDraw_ofApp = true;
-	//bGui = true;
-
-	//-
-
 	ofEnableAlphaBlending();
-	ofSetFrameRate(60);
-	ofSetWindowPosition(-1920, 18);
+
+	//ofSetFrameRate(60);
+	//ofSetWindowPosition(-1920, 18);
 
 	//--
 

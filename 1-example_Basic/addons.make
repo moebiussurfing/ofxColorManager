@@ -9,4 +9,5 @@ ofxNetwork
 ofxOpenCv
 ofxSCENE-SVG
 ofxSurfingHelpers
+ofxWindowApp
 ofxXmlSettings
