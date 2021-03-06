@@ -11,6 +11,7 @@ TODO:
 + fix text input boxes
 + undo engine
 + fix copy drag editor
++ palette shifter
 
 BUGS:
 + TCP port number switch, problems on reconnect.

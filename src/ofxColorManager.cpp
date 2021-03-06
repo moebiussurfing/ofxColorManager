@@ -30,6 +30,9 @@ void ofxColorManager::build_Palette_RandomSort()
 	{
 		bExportFlag = true;
 	}
+
+	// workflow
+	refresh_EnginesFromPreset();
 }
 
 //--------------------------------------------------------------
@@ -63,6 +66,9 @@ void ofxColorManager::build_Palette_Flip()
 	{
 		bExportFlag = true;
 	}
+
+	// workflow
+	refresh_EnginesFromPreset();
 }
 
 //--------------------------------------------------------------
@@ -1938,7 +1944,7 @@ void ofxColorManager::gui_PaletteEditor()
 
 			//--
 
-			// all color boxes
+			// 1. all color boxes
 			for (int n = 0; n < palette.size(); n++)
 			{
 				ImGui::PushID(n);
@@ -2078,7 +2084,7 @@ void ofxColorManager::gui_PaletteEditor()
 
 			//----
 
-			// edit
+			// 2. edit
 
 			ofxSurfingHelpers::AddBigToggle(bEditPalette, _w, _h);
 
@@ -2086,6 +2092,9 @@ void ofxColorManager::gui_PaletteEditor()
 			{
 				ImGui::Dummy(ImVec2(0, 5));
 				{
+					if (ImGui::RadioButton("Copy", mode == Mode_Copy)) { mode = Mode_Copy; } ImGui::SameLine();
+					if (ImGui::RadioButton("Swap", mode == Mode_Swap)) { mode = Mode_Swap; }
+
 					ofxSurfingHelpers::AddBigButton(bAddColor, _w50, _h * 0.5); ImGui::SameLine();
 					ofxSurfingHelpers::AddBigButton(bRemoveColor, _w50, _h * 0.5);
 					ofxSurfingHelpers::AddBigToggle(bClearPalette, _w50, _h * 0.5);
@@ -2113,9 +2122,6 @@ void ofxColorManager::gui_PaletteEditor()
 				{
 					build_Palette_RandomSort();
 				}
-
-				if (ImGui::RadioButton("Copy", mode == Mode_Copy)) { mode = Mode_Copy; } ImGui::SameLine();
-				if (ImGui::RadioButton("Swap", mode == Mode_Swap)) { mode = Mode_Swap; }
 			}
 
 			//--
@@ -3802,7 +3808,92 @@ void ofxColorManager::gui_Presets()
 
 		//----
 
+		// new preset 
+
+		// new preset manual toggle
+		if (ofxSurfingHelpers::AddBigToggle(MODE_NewPreset, _w99, _h / 2))
+		{
+			//TODO:
+			textInput_New = name_TARGET[0];//set
+			//name_TARGET[0] = &textInput_New[0];//set
+			if (textInput_New == "") textInput_New = "type";
+		}
+
+		if (MODE_NewPreset.get())
+		{
+			ImGui::PushItemWidth(_w100 - 10);
+
+			//TODO:
+			//this breakes the mouse cursor inside text input..
+
+			// loaded string into char array
+			char tab[32];
+			strncpy(tab, textInput_New.c_str(), sizeof(tab));
+			tab[sizeof(tab) - 1] = 0;
+
+			if (ImGui::InputText("", tab, IM_ARRAYSIZE(tab)))
+			{
+				textInput_New = ofToString(tab);
+				name_TARGET[0] = &textInput_New[0];
+				ofLogNotice(__FUNCTION__) << "textInput_New:" << textInput_New;
+
+			}
+			ImGui::PopItemWidth();
+
+			//-
+
+			//to disable all other key commands
+			bool b = bTextInputActive;
+			bTextInputActive = ImGui::IsItemActive();
+			if (bTextInputActive != b) ofLogNotice(__FUNCTION__) << "TextInput : " << (bTextInputActive ? "ACTIVE" : "DISABLED");
+
+			//--
+
+			//	////TODO: ??
+			//	//has_focus = 0;
+			//	//if (focus_1) ImGui::SetKeyboardFocusHere();
+			//	//ImGui::InputText("", tab, IM_ARRAYSIZE(tab));
+			//	//if (ImGui::IsItemActive())
+			//	//{
+			//	//	has_focus = 1;
+			//	//	textInput_New = ofToString(tab);
+			//	//	ofLogNotice(__FUNCTION__) << "textInput_New:" << textInput_New;
+			//	//}
+
+			//--
+
+			ImGui::PushID(1);
+			ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.5f, 0.0f, 0.5f, a));
+			if (ImGui::Button("SAVE NEW", ImVec2(_w99, _h)))
+			{
+				//NOTE: preset filename must to not include any extra '.' char
+				//clean all extra '.' chars
+				ofStringReplace(textInput_New, ".", "");
+
+				//has_focus = 0;
+				MODE_NewPreset = false;
+				if (textInput_New != "")
+				{
+					ofLogNotice(__FUNCTION__) << "textInput_New: " << textInput_New;
+
+					preset_Save(textInput_New);
+					preset_RefreshFiles();
+
+					//--
+
+					refresh_FilesSorting(textInput_New);
+				}
+				else ofLogError(__FUNCTION__) << "Empty name on textInput !";
+			}
+			ImGui::PopStyleColor(1);
+			ImGui::PopID();
+		}
+
+		//----
+
 		// 2. presets
+
+		ImGui::Dummy(ImVec2(0, 2));
 
 		if (ImGui::CollapsingHeader("ADVANCED"))
 		{
@@ -3986,91 +4077,6 @@ void ofxColorManager::gui_Presets()
 			}
 
 			if (auto_pilot) ofxImGui::AddParameter(auto_pilot_Duration);
-		}
-
-		ImGui::Dummy(ImVec2(0, 2));
-
-		//----
-
-		// new preset 
-
-		// new preset manual toggle
-		if (ofxSurfingHelpers::AddBigToggle(MODE_NewPreset, _w99, _h / 2))
-		{
-			//TODO:
-			textInput_New = name_TARGET[0];//set
-			//name_TARGET[0] = &textInput_New[0];//set
-			if (textInput_New == "") textInput_New = "type";
-		}
-
-		if (MODE_NewPreset.get())
-		{
-			ImGui::PushItemWidth(_w100 - 10);
-
-			//TODO:
-			//this breakes the mouse cursor inside text input..
-
-			// loaded string into char array
-			char tab[32];
-			strncpy(tab, textInput_New.c_str(), sizeof(tab));
-			tab[sizeof(tab) - 1] = 0;
-
-			if (ImGui::InputText("", tab, IM_ARRAYSIZE(tab)))
-			{
-				textInput_New = ofToString(tab);
-				name_TARGET[0] = &textInput_New[0];
-				ofLogNotice(__FUNCTION__) << "textInput_New:" << textInput_New;
-
-			}
-			ImGui::PopItemWidth();
-
-			//-
-
-			//to disable all other key commands
-			bool b = bTextInputActive;
-			bTextInputActive = ImGui::IsItemActive();
-			if (bTextInputActive != b) ofLogNotice(__FUNCTION__) << "TextInput : " << (bTextInputActive ? "ACTIVE" : "DISABLED");
-
-			//--
-
-			//	////TODO: ??
-			//	//has_focus = 0;
-			//	//if (focus_1) ImGui::SetKeyboardFocusHere();
-			//	//ImGui::InputText("", tab, IM_ARRAYSIZE(tab));
-			//	//if (ImGui::IsItemActive())
-			//	//{
-			//	//	has_focus = 1;
-			//	//	textInput_New = ofToString(tab);
-			//	//	ofLogNotice(__FUNCTION__) << "textInput_New:" << textInput_New;
-			//	//}
-
-			//--
-
-			ImGui::PushID(1);
-			ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.5f, 0.0f, 0.5f, a));
-			if (ImGui::Button("SAVE NEW", ImVec2(_w99, _h)))
-			{
-				//NOTE: preset filename must to not include any extra '.' char
-				//clean all extra '.' chars
-				ofStringReplace(textInput_New, ".", "");
-
-				//has_focus = 0;
-				MODE_NewPreset = false;
-				if (textInput_New != "")
-				{
-					ofLogNotice(__FUNCTION__) << "textInput_New: " << textInput_New;
-
-					preset_Save(textInput_New);
-					preset_RefreshFiles();
-
-					//--
-
-					refresh_FilesSorting(textInput_New);
-				}
-				else ofLogError(__FUNCTION__) << "Empty name on textInput !";
-			}
-			ImGui::PopStyleColor(1);
-			ImGui::PopID();
 		}
 
 		//----
@@ -4873,6 +4879,12 @@ void ofxColorManager::Changed_ColorPicked(ofFloatColor &c)
 
 	// workflow
 	if (ENABLE_Callbacks_Engines) refresh_Pick_ToEngines();
+
+	if (SHOW_Presets)
+	{
+		// workflow
+		refresh_EnginesFromPreset();
+	}
 }
 
 //--------------------------------------------------------------

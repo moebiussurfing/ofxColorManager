@@ -1,6 +1,6 @@
 # ofxColorManager
 
-This **openFrameworks** add-on is a palette and **kit of tools** to create palette color presets for your scenes.  
+This **openFrameworks** add-on is a palette and **kit of tools** to design palette color presets for your scenes.  
 
 ## Screenshot
 ![image](/readme_images/Capture.JPG?raw=true "image")
@@ -48,7 +48,7 @@ void ofApp::setup()
 
 void ofApp::draw()
 {
-	// Draw your Scene using the palette colors. Nothing more!
+	// Use the palette colors to draw your Scene. Nothing more!
 }
 ```
 
