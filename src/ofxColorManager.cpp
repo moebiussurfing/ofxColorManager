@@ -643,13 +643,13 @@ void ofxColorManager::setup()
 			name = "COMPLEMENT SAT";
 			break;
 		case 1:
-			name = "COMPLEMENT BRIGHT";
+			name = "COMPLEMENT BRT";
 			break;
 		case 2:
-			name = "MONOCHROME SATURAT";
+			name = "MONOCHROME SAT";
 			break;
 		case 3:
-			name = "MONOCHROME BRIGHT";
+			name = "MONOCHROME BRT";
 			break;
 		case 4:
 			name = "ANALOGUE";
@@ -658,7 +658,7 @@ void ofxColorManager::setup()
 			name = "TRIAD";
 			break;
 		case 6:
-			name = "COMPLEMENT TRIAD";
+			name = "TRIAD COMPLEMENT";
 			break;
 
 			//case 0:
@@ -1805,7 +1805,7 @@ void ofxColorManager::gui_Theory()
 					break;
 				case 1:
 					if (n < complementBrightness.size()) _c = complementBrightness[n];
-					_name = "COMPLEMENT BRIGTH";
+					_name = "COMPLEMENT BRT";
 					break;
 				case 2:
 					if (n < monochrome.size()) _c = monochrome[n];
@@ -1813,7 +1813,7 @@ void ofxColorManager::gui_Theory()
 					break;
 				case 3:
 					if (n < monochromeBrightness.size()) _c = monochromeBrightness[n];
-					_name = "MONOCHROME BRIGHT";
+					_name = "MONOCHROME BRT";
 					break;
 				case 4:
 					if (n < analogue.size()) _c = analogue[n];
@@ -1825,7 +1825,7 @@ void ofxColorManager::gui_Theory()
 					break;
 				case 6:
 					if (n < complementTriad.size()) _c = complementTriad[n];
-					_name = "COMPLEMENT TRIAD";
+					_name = "TRIAD COMPLEMENT";
 					break;
 				}
 
