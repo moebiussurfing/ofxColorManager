@@ -1040,6 +1040,8 @@ void ofxColorManager::startup()
 	//-
 
 	PRESET_Temp.setLinkPalette(palette);
+
+	preset_Load(PRESET_Name);
 }
 
 //--------------------------------------------------------------
@@ -1515,7 +1517,6 @@ void ofxColorManager::gui_Theory()
 		float _w99 = _w100 - 2 * _spc;
 		float _w50 = MAX(150, _w99 / 2);
 
-
 		float _wc = (_w99 - butlabelw) / numColors_Engines;
 
 		// box size
@@ -1876,7 +1877,7 @@ void ofxColorManager::gui_Theory()
 
 		//----
 
-		//analog tweak
+		// analog has an extra tweak
 		if (last_Index_Theory == 12) ofxImGui::AddParameter(analogSpread);
 
 		//----
@@ -2061,6 +2062,9 @@ void ofxColorManager::gui_PaletteEditor()
 							ofLogNotice(__FUNCTION__) << "DONE Dragged";
 
 							gradientEngine.buildFrom_TARGET();
+
+							// workflow
+							refresh_EnginesFromPreset();
 						}
 						ImGui::EndDragDropTarget();
 					}
@@ -2375,6 +2379,9 @@ void ofxColorManager::gui_PaletteFloating()
 					ofLogNotice(__FUNCTION__) << "DONE Dragged _c";
 
 					gradientEngine.buildFrom_TARGET();
+
+					// workflow
+					refresh_EnginesFromPreset();
 				}
 				ImGui::EndDragDropTarget();
 			}
@@ -2546,9 +2553,9 @@ void ofxColorManager::gui_Library()
 				ImGui::Dummy(ImVec2(0, 5));
 
 				ofxImGui::AddParameter(colorBrowser.ENABLE_keys);
-		}
+			}
 #endif
-	}
+		}
 
 		//--
 
@@ -2735,7 +2742,7 @@ void ofxColorManager::gui_Library()
 		{
 			refresh_FromPicked();
 		}
-}
+	}
 
 	ofxImGui::EndWindow(mainSettings);
 
@@ -5274,7 +5281,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	else if (name == bModePalettePreset.getName())
 	{
 		bModeBundlePreset = !bModePalettePreset;
-}
+	}
 #endif
 
 	//----
@@ -5609,7 +5616,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	//{
 	//	if (bLock_palette) bAuto_Build_Palette = false;
 	//}
-	}
+}
 
 //--------------------------------------------------------------
 void ofxColorManager::Changed_Range(ofAbstractParameter &e)
@@ -6752,10 +6759,15 @@ void ofxColorManager::preset_Load(std::string p)
 
 	//--
 
+	// engines
+
 	// workflow
 	// untick engines toggles
 	bLast_Index_Theory = false;
 	bLast_Index_Range = false;
+
+	// workflow
+	refresh_EnginesFromPreset();
 }
 
 //--------------------------------------------------------------
@@ -6785,6 +6797,29 @@ void ofxColorManager::refresh_FromPicked()
 	ofLogNotice(__FUNCTION__);
 
 	color_TheoryBase.set(color_Picked.get());
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::refresh_EnginesFromPreset()
+{
+	ofLogNotice(__FUNCTION__);
+
+	if (palette.size() > 0)
+	{
+		// theory
+		//color_Picked = palette[0];
+		if (bAuto_Theory_FromPicker)
+		{
+			color_TheoryBase = palette[0];
+			refresh_Theory_G2();
+		}
+
+		// range
+		color_1_Range = palette[0];//first color
+		color_2_Range = palette[palette.size() - 1];///last color
+		generate_Range(color_1_Range.get(), color_2_Range.get());
+	}
+
 }
 
 //--------------------------------------------------------------
@@ -6859,13 +6894,16 @@ void ofxColorManager::refresh_Pick_ToEngines()
 
 		//-
 
-		// 2. range color1
 		if (SHOW_Range)
 		{
+			bool bDoGen = false;
+
+			// 2. range color1
+
 			if (bAuto_Color1_FromPicker_Range)
 			{
 				color_1_Range = color_Picked.get();
-				if (autoGenerate_Range) generate_Range(color_1_Range.get(), color_2_Range.get());
+				bDoGen = true;
 			}
 
 			//-
@@ -6875,8 +6913,10 @@ void ofxColorManager::refresh_Pick_ToEngines()
 			if (bAuto_Color2_FromPicker_Range)
 			{
 				color_2_Range = color_Picked.get();
-				if (autoGenerate_Range) generate_Range(color_1_Range.get(), color_2_Range.get());
+				bDoGen = true;
 			}
+
+			if (autoGenerate_Range && bDoGen) generate_Range(color_1_Range.get(), color_2_Range.get());
 		}
 
 		//--

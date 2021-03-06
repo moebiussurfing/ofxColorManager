@@ -5,8 +5,12 @@
 /*
 
 TODO:
++ startup: load a preset
++ store app state: preset, theory, colors a-b
++ workflow: on load preset, set theory colors from color 0
 + fix text input boxes
 + undo engine
++ fix copy drag editor
 
 BUGS:
 + TCP port number switch, problems on reconnect.
@@ -757,6 +761,8 @@ private:
 
 	void refresh_Pick_ToHSB();
 	void refresh_FromPicked();
+
+	void refresh_EnginesFromPreset();
 
 	// main color
 	ofParameter<ofFloatColor> color_Picked;
