@@ -1508,6 +1508,7 @@ void ofxColorManager::gui_Theory()
 		float _w99 = _w100 - 2 * _spc;
 		float _w50 = MAX(150, _w99 / 2);
 
+
 		float _wc = (_w99 - butlabelw) / numColors_Engines;
 
 		// box size
@@ -1563,7 +1564,7 @@ void ofxColorManager::gui_Theory()
 				ImGuiColorEditFlags_NoSidePreview |
 				ImGuiColorEditFlags_NoAlpha |
 				ImGuiColorEditFlags_PickerHueBar;
-				//ImGuiColorEditFlags_PickerHueWheel;
+			//ImGuiColorEditFlags_PickerHueWheel;
 
 			ImGui::PushItemWidth(_w50);
 
@@ -1689,7 +1690,7 @@ void ofxColorManager::gui_Theory()
 				//ie: even allways
 				float _szw, _szh;
 				_szh = _wSz;
-				
+
 				float _ww = (numColors_Engines * _wSz) + (numColors_Engines * _spc) - _spc;//exact used zone
 
 				if (_total == numColors_Engines)//total is the effective amount
@@ -2104,7 +2105,7 @@ void ofxColorManager::gui_PaletteEditor()
 
 				if (ImGui::RadioButton("Copy", mode == Mode_Copy)) { mode = Mode_Copy; } ImGui::SameLine();
 				if (ImGui::RadioButton("Swap", mode == Mode_Swap)) { mode = Mode_Swap; }
-		}
+			}
 
 			//--
 
@@ -2148,8 +2149,8 @@ void ofxColorManager::gui_PaletteEditor()
 
 				//ofxImGui::AddParameter(bAutoResizePalette);//not works
 			}
+		}
 	}
-}
 
 	ofxImGui::EndWindow(mainSettings);
 
@@ -2537,7 +2538,7 @@ void ofxColorManager::gui_Library()
 				ofxImGui::AddParameter(colorBrowser.ENABLE_keys);
 			}
 #endif
-				}
+		}
 
 		//--
 
@@ -2724,12 +2725,12 @@ void ofxColorManager::gui_Library()
 		{
 			refresh_FromPicked();
 		}
-			}
+	}
 
 	ofxImGui::EndWindow(mainSettings);
 
 	ImGui::PopStyleVar();
-		}
+}
 
 //--------------------------------------------------------------
 void ofxColorManager::gui_Export()
@@ -2864,15 +2865,14 @@ void ofxColorManager::gui_Export()
 //--------------------------------------------------------------
 void ofxColorManager::gui_Picker()
 {
-	static bool auto_resize = true;
+	static bool auto_resize = false;
 	static bool default_wheel = false;//or squared picker
 	float ww, hh;
 	ww = PANEL_WIDGETS_WIDTH;
 	hh = PANEL_WIDGETS_HEIGHT;
 	ImGui::SetWindowSize(ImVec2(ww, hh));
 
-	ImGuiWindowFlags flagsw;
-	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
+	ImGuiWindowFlags flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
 
 	//--
 
@@ -2889,7 +2889,7 @@ void ofxColorManager::gui_Picker()
 
 		//if (auto_resize) _w = ww;
 		//else _w = _w100 - 2 * _spc;
-		float _w50 = _w99 * 0.5f;
+		float _w50 = _w99 / 2.0 ;
 		//float _w100 = _w99 + 2.5f * _spc;
 
 		//--
@@ -2971,7 +2971,7 @@ void ofxColorManager::gui_Picker()
 					ImGuiColorEditFlags_NoAlpha |
 					ImGuiColorEditFlags_PickerHueBar;
 
-				ImGui::PushItemWidth(_w99);
+				ImGui::PushItemWidth(- 5);
 
 				if (ImGui::ColorPicker4("##PickerSquare", (float *)&cTmp, _flags))
 				{
@@ -2990,17 +2990,11 @@ void ofxColorManager::gui_Picker()
 
 		if (ImGui::CollapsingHeader("HSB", ImGuiWindowFlags_NoCollapse))
 		{
-			ImGui::PushItemWidth(_w99 - 20);
+			ImGui::PushItemWidth(- 30);
 
-			if (ofxImGui::AddParameter(color_HUE))
-			{
-			}
-			if (ofxImGui::AddParameter(color_SAT))
-			{
-			}
-			if (ofxImGui::AddParameter(color_BRG))
-			{
-			}
+			if (ofxImGui::AddParameter(color_HUE)){}
+			if (ofxImGui::AddParameter(color_SAT)){}
+			if (ofxImGui::AddParameter(color_BRG)){}
 
 			ImGui::PopItemWidth();
 		}
@@ -3009,7 +3003,8 @@ void ofxColorManager::gui_Picker()
 
 		if (ImGui::CollapsingHeader("Randomizer"))
 		{
-			ImGui::PushItemWidth(_w99 - 40);
+			ImGui::PushItemWidth(- 60);
+			//ImGui::PushItemWidth(_w99 - 40);
 
 			if (bColor_HUE || bColor_SAT || bColor_BRG)
 				ofxSurfingHelpers::AddBigButton(bRandomColor, _w99, _h);
@@ -3066,7 +3061,7 @@ void ofxColorManager::gui_Picker()
 //--------------------------------------------------------------
 void ofxColorManager::gui_PanelsEngines()
 {
-	static bool auto_resize = true;
+	static bool auto_resize = false;
 	ImGuiWindowFlags flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(425, PANEL_WIDGETS_HEIGHT));
@@ -3079,7 +3074,8 @@ void ofxColorManager::gui_PanelsEngines()
 		//float _pd2 = ImGui::GetStyle().FramePadding.x;
 		float _w100 = ImGui::GetContentRegionAvail().x;
 		//float _w100 = ImGui::GetWindowContentRegionWidth();
-		float _w99 = _w100 - 2 * _spc;
+		float _w99 = _w100;// -2 * _spc;
+		//float _w99 = _w100 - 2 * _spc;
 		//float _w99 = _w100 - 2 * _spc - _pd2;
 		//float _w99 = _w100 - 2 * _spc - _pd1 - _pd2;
 		//float _w99 = _w100;
@@ -3126,16 +3122,16 @@ void ofxColorManager::gui_Extra()
 	ofxImGui::EndWindow(mainSettings);
 
 	ImGui::PopStyleVar();
-	}
+}
 #endif
 
 //--------------------------------------------------------------
 void ofxColorManager::gui_PanelsMain()
 {
-	static bool auto_resize = true;
+	static bool auto_resize = false;
 	ImGuiWindowFlags flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
 
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(325, PANEL_WIDGETS_HEIGHT));
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(800, PANEL_WIDGETS_HEIGHT));
 
 	//----
 
@@ -3146,14 +3142,14 @@ void ofxColorManager::gui_PanelsMain()
 #else
 		const int NUM_WIDGETS = 9;
 #endif
-
-		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
+		//float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
+		float _spc = ImGui::GetStyle().ItemSpacing.x;
 		float _pd1 = ImGui::GetStyle().DisplayWindowPadding.x;
 		float _pd2 = ImGui::GetStyle().FramePadding.x;
 		float _w100 = ImGui::GetWindowContentRegionWidth();
-		float _h100 = ImGui::GetContentRegionAvail().y;
-		//float _h100 = BUTTON_BIG_HEIGHT;
-		float _w99 = _w100 - 2 * _spc - _pd1 - _pd2;
+		float _h100 = ImGui::GetContentRegionAvail().y;//fit window
+		//float _h100 = BUTTON_BIG_HEIGHT;//fix height
+		float _w99 = _w100;// -1 * _spc;
 		float _w = _w99 / float(NUM_WIDGETS) - _spc;
 
 		ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteFloating, _w, _h100);
@@ -3596,23 +3592,23 @@ void ofxColorManager::gui_Background()
 						{
 							//ImGui::Text("From Gradient:");
 							ofxImGui::AddParameter(gradientEngine.pickIn);
-			}
-		}
-	}
+						}
+					}
+				}
 				ofxImGui::AddParameter(color_backGround_SET);
 
 				ImGui::PopItemWidth();
 
 				//ImGui::Dummy(ImVec2(0, 5));
 				//ImGui::Checkbox("Auto-Resize", &auto_resize);
-}
+			}
 
 			//-
 
 			//TODO: 
 			//? should update only when changed
 			if (bChanged) color_BackGround = color;
-}
+		}
 	}
 	ofxImGui::EndWindow(mainSettings);
 
@@ -3660,9 +3656,12 @@ void ofxColorManager::gui_Presets()
 		//--
 
 #ifndef USE_MINIMAL_GUI
-		ImGui::Dummy(ImVec2(0, 5));
-		ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteFloating, _w99, _h * 0.5);
-		ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteEditor, _w99, _h * 0.5);
+		if (SHOW_AdvancedLayout)
+		{
+			ImGui::Dummy(ImVec2(0, 5));
+			ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteFloating, _w99, _h * 0.5);
+			ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteEditor, _w99, _h * 0.5);
+		}
 #endif
 
 		//ImGui::Text("Name");
@@ -4334,7 +4333,7 @@ bool ofxColorManager::draw_Gui()
 
 		if (gradientEngine.SHOW_Gradient) gui_Gradient();
 		//if (SHOW_Gradient) gui_Gradient();
-}
+	}
 
 	//--
 
@@ -5241,8 +5240,8 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		if (colorBg_TARGET != nullptr)
 		{
 			colorBg_TARGET->set(color_BackGround.get());
+		}
 	}
-}
 
 	//----
 
@@ -5263,7 +5262,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	else if (name == bModePalettePreset.getName())
 	{
 		bModeBundlePreset = !bModePalettePreset;
-	}
+}
 #endif
 
 	//----
@@ -5577,6 +5576,14 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			color_backGround_SET = false;
 			color_BackGround.set(ofColor(color_Picked.get()));
 		}
+	}
+
+	//--
+
+	// demos
+	else if (name == SHOW_Demos.getName())
+	{
+		if (!SHOW_Demos) DEMO2_Svg.DEMO2_Edit = false;
 	}
 
 	//---
@@ -6385,8 +6392,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			SHOW_ColourLovers = false;
 			SHOW_Quantizer = false;
 			SHOW_Presets = false;
-		}
 	}
+}
 }
 
 //--------------------------------------------------------------

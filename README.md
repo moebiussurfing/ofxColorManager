@@ -12,7 +12,7 @@ This **openFrameworks** add-on is a palette and **kit of tools** to create palet
 * **Extract** the dominant colors **from images**.
 * **Gradient** designer with an extra picked color.
 * **Kit Presets Browser**: 
-  * Receive from all engines and save. 
+  * Receive the palette and save preset from then engines. 
   * Name, delete or duplicate presets from your kit.
   * Preview all your kit on a scrollable panel.
 
@@ -62,7 +62,7 @@ void ofApp::draw()
 * ofxGui
 * ofxOpenCv
 * ofxXmlSettings
-* [ofxSCENE-SVG](https://github.com/moebiussurfing/ofxSCENE-SVG)  only for an example 
+* [ofxSCENE-SVG](https://github.com/moebiussurfing/ofxSCENE-SVG)  Only for an example 
 
 Already packed into ```OF_ADDON/libs```. No need to add them manually with the ```OF Project Generator```:  
 *Thanks a lot to all these ofxAddons coders. Look into each folder for authoring credits, original forks, and license info.*  
