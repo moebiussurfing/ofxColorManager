@@ -1692,7 +1692,7 @@ void ofxColorManager::gui_Theory()
 		//--
 
 		//offset
-		float _offset = 15;
+		float _offset = 18;
 		_h100 = ImGui::GetContentRegionAvail().y;
 		_hSz2 = ((_h100 - _offset) / _numTheories) - _spcy;
 
