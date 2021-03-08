@@ -357,7 +357,8 @@ void ofxColorManager::setup()
 	std::string strFont;
 	std::string _p = "assets/fonts/";
 
-	strFont = _p + "GTAmerica-ExtendedBlack.ttf";
+	strFont = _p + "Ruda-Bold.ttf";
+	//strFont = _p + "GTAmerica-ExtendedBlack.ttf";
 	//strFont = _p + "GTAmerica-ExpandedBold.ttf";
 	//strFont = _p + "telegrama_render.otf";
 	//strFont = _p + "PragmataProB_0822.ttf";
@@ -372,6 +373,7 @@ void ofxColorManager::setup()
 
 	//-
 
+	// help info
 	int _sz = 11;
 	font.load("assets/fonts/telegrama_render.otf", _sz, true, true, true);
 	//font.load("assets/fonts/LCD_Solid.ttf", 11, true, true);
@@ -765,15 +767,15 @@ void ofxColorManager::setup()
 	ImGuiConfigFlags flags;
 	flags = ImGuiConfigFlags_DockingEnable;
 	flags |= ImGuiDockNodeFlags_NoTabBar;
+	//flags |= ImGuiDockNodeFlags_NoCloseButton; // hides the close button on the right
+	//flags |= ImGuiDockNodeFlags_NoResize;
+	//flags |= ImGuiDockNodeFlags_NoTabBar;
 	//flags |= ImGuiDockNodeFlags_AutoHideTabBar;
 	//flags |= ImGuiConfigFlags_ViewportsEnable;
 	//flags |= ImGuiDockNodeFlags_NoWindowMenuButton;//from imgui_internal.h
 	//flags |= ImGuiDockNodeFlags_NoCloseButton;//?
 	//flags |= ImGuiDockNodeFlags_NoResizeX;
 	//flags |= ImGuiDockNodeFlags_NoWindowMenuButton;
-	flags |= ImGuiDockNodeFlags_NoCloseButton; // hides the close button on the right
-	flags |= ImGuiDockNodeFlags_NoResize;
-	flags |= ImGuiDockNodeFlags_NoTabBar;
 	//flags |= ImGuiDockNodeFlags_noNoTabCloseButton; // hides the close button on the tab
 	//flags |= ImGuiDockNodeFlags_NoTabListPopup; // hides the tab list on the left
 	//flags |= ImGuiDockNodeFlags_NoTabTooltip; // hides the tab tooltip
@@ -782,7 +784,6 @@ void ofxColorManager::setup()
 	//Node->LocalFlags |= ImGuiDockNodeFlags_NoWindowMenuButton | ImGuiDockNodeFlags_NoCloseButton;
 
 	gui.setup(nullptr, true, flags, true, false);
-	//gui.setup(nullptr, true, ImGuiConfigFlags_DockingEnable, true, false);
 
 	auto &io = ImGui::GetIO();
 	io.ConfigDockingWithShift = true;
@@ -791,11 +792,16 @@ void ofxColorManager::setup()
 	// fonts
 #ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
 	auto normalCharRanges = io.Fonts->GetGlyphRangesDefault();
-	float _size = 11.f;
-	std::string _name = "telegrama_render.otf";
+
+	//float _size = 11.f;
+	//std::string _name = "telegrama_render.otf";
+	
+	float _size = 14.f;
+	std::string _name = "Ruda-Bold.ttf";
+
 	std::string _path = "assets/fonts/" + _name;//assets folder
 	customFont = gui.addFont(_path, _size, nullptr, normalCharRanges);
-	io.FontDefault = customFont;//
+	io.FontDefault = customFont;
 #endif
 
 	//-
@@ -1575,7 +1581,7 @@ void ofxColorManager::gui_Theory()
 		float _hSz2;
 
 		// box size
-		float _wSz = ((_w99 - butlabelw - _spcx - 10) / numColors_Engines);
+		float _wSz = ((_w99 - butlabelw - _spcx - 5) / numColors_Engines);
 		float _hSz = 32;
 
 		float _wSz2;//for when amount colors differs the expected due to some theory limitations
@@ -3246,16 +3252,16 @@ void ofxColorManager::gui_PanelsMain()
 		ofxSurfingHelpers::AddBigToggle(SHOW_BackGround, _w, _h);
 		ImGui::SameLine();
 #endif
-		ofxSurfingHelpers::AddBigToggle(gradientEngine.SHOW_Gradient, _w, _h);
-		ImGui::SameLine();
 
 		//ImGui::Separator();
 
-		ofxSurfingHelpers::AddBigToggle(SHOW_Export, _w, _h);
-		ImGui::SameLine();
 		ofxSurfingHelpers::AddBigToggle(SHOW_Demos, _w, _h);
 		ImGui::SameLine();
+		ofxSurfingHelpers::AddBigToggle(gradientEngine.SHOW_Gradient, _w, _h);
+		ImGui::SameLine();
 		ofxSurfingHelpers::AddBigToggle(SHOW_MINI_Preview, _w, _h);
+		ImGui::SameLine();
+		ofxSurfingHelpers::AddBigToggle(SHOW_Export, _w, _h);
 
 #ifndef USE_MINIMAL_GUI
 		ImGui::SameLine();
@@ -4002,22 +4008,20 @@ void ofxColorManager::gui_Presets()
 
 		if (ImGui::CollapsingHeader("ADVANCED"))
 		{
-			if (ImGui::Button("SAVE", ImVec2(_w50, _h * 0.5)))
+			if (ImGui::Button("UPDATE", ImVec2(_w50, _h * 0.5)))
 			{
-				ofLogNotice(__FUNCTION__) << "SAVE";
-
 				//TODO
 				//should re load by same name and get what position on vector
 				//is to reload current preset number
 				//textInput_temp = ofToString(tab2);
 				//ofLogNotice(__FUNCTION__) << "textInput_temp:" << textInput_temp;
 
-				PRESET_Name = textInput_temp;
+				//PRESET_Name = textInput_temp;
+				textInput_New = PRESET_Name;
 
-				ofLogNotice(__FUNCTION__) << "PRESET_name: " << PRESET_Name;
+				ofLogNotice(__FUNCTION__) << "UPDATE : " << PRESET_Name;
 
-				//PRESET_Temp.palette = palette;
-
+				//save/update
 				preset_Save(PRESET_Name);
 				preset_RefreshFiles();
 			}
@@ -4026,9 +4030,9 @@ void ofxColorManager::gui_Presets()
 
 			ImGui::SameLine();
 
-			if (ImGui::Button("LOAD", ImVec2(_w50, _h * 0.5)))//not required..
+			if (ImGui::Button("RELOAD", ImVec2(_w50, _h * 0.5)))//not required..
 			{
-				ofLogNotice(__FUNCTION__) << "LOAD PRESET_Name: " << PRESET_Name;
+				ofLogNotice(__FUNCTION__) << "RELOAD : " << PRESET_Name;
 
 				preset_Load(PRESET_Name);
 			}
@@ -4056,7 +4060,7 @@ void ofxColorManager::gui_Presets()
 					}
 					ImGui::SetItemDefaultFocus();
 					ImGui::SameLine();
-					if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
+					if (ImGui::Button("CANCEL", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
 				}
 				else {
 					ofLogNotice(__FUNCTION__) << "DELETE";
@@ -4069,25 +4073,15 @@ void ofxColorManager::gui_Presets()
 				ImGui::EndPopup();
 			}
 
-			//if (ImGui::Button("DELETE", ImVec2(_w50, _h * 0.5)))//current preset
-			//{
-			//	ofLogNotice(__FUNCTION__) << "DELETE";
-			//	files[last_Index_Preset].remove();
-			//	preset_RefreshFiles();
-			//}
-
-			//ImGui::SameLine();
-
 			//----
 
 			ImGui::SameLine();
 
-			if (ImGui::Button("COPY", ImVec2(_w50, _h * 0.5)))
+			if (ImGui::Button("CLONE", ImVec2(_w50, _h * 0.5)))
 			{
-				ofLogNotice(__FUNCTION__) << "COPY";
+				ofLogNotice(__FUNCTION__) << "CLONE";
 
-				textInput_New = PRESET_Name + "_copy";
-				//textInput_New = textInput_New + "_copy";
+				textInput_New = PRESET_Name + "_";
 
 				preset_Save(textInput_New);
 				preset_RefreshFiles();
@@ -6892,22 +6886,22 @@ void ofxColorManager::refresh_EnginesFromPalette()
 	ofLogNotice(__FUNCTION__);
 
 	//TODO:
-	//if (palette.size() > 0)
-	//{
-	//	// theory
-	//	//color_Picked = palette[0];
-	//	if (bAuto_Theory_FromPicker)
-	//	{
-	//		//color_TheoryBase = palette[0];
-	//		color_TheoryBase = palette[last_Index_ColorPalette];
-	//		refresh_Theory_G2();
-	//	}
+	if (palette.size() > 0)
+	{
+		// theory
+		//color_Picked = palette[0];
+		if (bAuto_Theory_FromPicker)
+		{
+			//color_TheoryBase = palette[0];
+			color_TheoryBase = palette[last_Index_ColorPalette];
+			refresh_Theory_G2();
+		}
 
-	//	// range
-	//	color_1_Range = palette[0];//first color
-	//	color_2_Range = palette[palette.size() - 1];///last color
-	//	generate_Range(color_1_Range.get(), color_2_Range.get());
-	//}
+		// range
+		color_1_Range = palette[0];//first color
+		color_2_Range = palette[palette.size() - 1];///last color
+		generate_Range(color_1_Range.get(), color_2_Range.get());
+	}
 }
 
 //--------------------------------------------------------------

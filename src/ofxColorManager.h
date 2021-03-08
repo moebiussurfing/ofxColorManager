@@ -13,6 +13,7 @@ TODO:
 BUGS:
 + TCP port number switch, problems on reconnect.
 + not updating when save for update an existing preset.
++ theory picker calls too much callbacks
 
 */
 
