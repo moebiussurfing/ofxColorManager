@@ -93,12 +93,10 @@ void ofxColourLoversHelper::drawImGuiMain()
 	ww = PANEL_WIDGETS_WIDTH;
 	hh = PANEL_WIDGETS_HEIGHT;
 
-	ImGuiWindowFlags flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
-	if (!auto_resize) ImGui::SetWindowSize(ImVec2(ww, hh));
+	ImGuiWindowFlags flags = auto_resize1 ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
+	if (!auto_resize1) ImGui::SetWindowSize(ImVec2(ww, hh));
 
 	mainSettings = ofxImGui::Settings();
-
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, PANEL_WIDGETS_HEIGHT));
 
 	//--
 
@@ -106,21 +104,19 @@ void ofxColourLoversHelper::drawImGuiMain()
 	gui_ImGui.begin();
 #endif
 
-	//-
+	//--
+
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, PANEL_WIDGETS_HEIGHT));
 
 	if (ofxImGui::BeginWindow("COLOUR-LOVERS", mainSettings, flags))
 	{
-		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
-		float _pd1 = ImGui::GetStyle().DisplayWindowPadding.x;
-		float _pd2 = ImGui::GetStyle().FramePadding.x;
-		float _hb = BUTTON_BIG_HEIGHT * 0.5;
-		float _w100 = ImGui::GetContentRegionAvailWidth();
-		//float _w100 = ImGui::GetWindowContentRegionWidth();
-		float _w99 = _w100 - _spc;
-		//float _w50 = _w100 / 2 - _spc;
-		float _w50 = _w99 / 2.0 - _spc;
-		//float _w99 = _w100 - 3 * _spc;
-		float _w20 = _w99 * 0.2f - 3 * _spc;
+		float _h = BUTTON_BIG_HEIGHT;
+		float _hb = _h * 0.5;
+		float _spc = ImGui::GetStyle().ItemSpacing.x;
+		float _w100 = ImGui::GetContentRegionAvail().x;
+		float _w99 = _w100;// -_spc;
+		float _w50 = _w100 / 2;// -_spc;
+		//float _w20 = _w100 / 5 - _spc;
 
 		//-
 
@@ -222,9 +218,9 @@ void ofxColourLoversHelper::drawImGuiMain()
 
 		if (ImGui::CollapsingHeader("BROWSE", ImGuiWindowFlags_NoCollapse))
 		{
-			ofxSurfingHelpers::AddBigToggle(bFavorites, _w50, _hb * 1);
+			ofxSurfingHelpers::AddBigToggle(bFavorites, _w50, _hb * 2);
 			ImGui::SameLine();
-			ofxSurfingHelpers::AddBigToggle(bHistory, _w50, _hb * 1);
+			ofxSurfingHelpers::AddBigToggle(bHistory, _w50, _hb * 2);
 
 			//-
 
@@ -293,7 +289,7 @@ void ofxColourLoversHelper::drawImGuiMain()
 
 			//ImGui::Dummy(ImVec2(0.0f, 5));
 
-			if (ImGui::Button("Randomize", ImVec2(_w99, _hb)))
+			if (ImGui::Button("Randomize", ImVec2(_w100, _hb)))
 			{
 				randomPalette();
 
@@ -334,7 +330,7 @@ void ofxColourLoversHelper::drawImGuiMain()
 						ImGui::Checkbox("Don't ask me next time", &dont_ask_me_next_timeFavs);
 						ImGui::PopStyleVar();
 
-						if (ImGui::Button("OK", ImVec2(_w99, 0))) {
+						if (ImGui::Button("OK", ImVec2(_w100, 0))) {
 							clearFavourites();
 							//workflow
 							loadFavorites();
@@ -343,11 +339,11 @@ void ofxColourLoversHelper::drawImGuiMain()
 						}
 						ImGui::SetItemDefaultFocus();
 						ImGui::SameLine();
-						if (ImGui::Button("Cancel", ImVec2(_w99, 0))) { ImGui::CloseCurrentPopup(); }
+						if (ImGui::Button("Cancel", ImVec2(_w100, 0))) { ImGui::CloseCurrentPopup(); }
 						ImGui::EndPopup();
 					}
 
-					//if (ImGui::Button("CLEAR FAVS", ImVec2(_w99 * 0.5, _hb)))
+					//if (ImGui::Button("CLEAR FAVS", ImVec2(_w100 * 0.5, _hb)))
 					//{
 					//	clearFavourites();
 					//	//workflow
@@ -393,7 +389,7 @@ void ofxColourLoversHelper::drawImGuiMain()
 						ImGui::EndPopup();
 					}
 
-					//if (ImGui::Button("CLEAR HISTORY", ImVec2(_w99, _hb)))
+					//if (ImGui::Button("CLEAR HISTORY", ImVec2(_w100, _hb)))
 					//{
 					//	clearHistory();
 					//	//workflow
@@ -406,7 +402,7 @@ void ofxColourLoversHelper::drawImGuiMain()
 				ImGui::Dummy(ImVec2(0, 5));
 
 				//ofxImGui::AddParameter(SHOW_BrowserPalettes);
-				ofxSurfingHelpers::AddBigToggle(SHOW_BrowserPalettes, _w99, _hb);
+				ofxSurfingHelpers::AddBigToggle(SHOW_BrowserPalettes, _w100, _hb);
 
 				if (SHOW_AdvancedLayout)
 				{
@@ -448,7 +444,8 @@ void ofxColourLoversHelper::drawImGuiMain()
 
 					// layout
 					ImGui::Checkbox("Focus", &bfocus);
-					ImGui::Checkbox("Auto-resize", &auto_resize);
+					ImGui::Checkbox("Auto-resize Main", &auto_resize1);
+					ImGui::Checkbox("Auto-resize Kit", &auto_resize2);
 				}
 
 				//ImGui::Dummy(ImVec2(0, 10));
@@ -473,10 +470,12 @@ void ofxColourLoversHelper::drawImGuiMain()
 //--------------------------------------------------------------
 void ofxColourLoversHelper::drawImGuiBrowseKits()
 {
+	//auto_resize = false;
+
 	// palette rows with all color boxes
 	if (SHOW_BrowserPalettes)
 	{
-		ImGuiWindowFlags flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
+		ImGuiWindowFlags flags = auto_resize2 ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, PANEL_WIDGETS_HEIGHT));
 
@@ -511,8 +510,10 @@ void ofxColourLoversHelper::drawImGuiBrowseKits()
 
 			//-
 
-			float _spc = 0;
-			float _w = ImGui::GetWindowContentRegionWidth();
+			//float _spc = 0;
+			float _spc = ImGui::GetStyle().ItemSpacing.x;
+			float _w = ImGui::GetContentRegionAvail().x;
+			//float _w = ImGui::GetWindowContentRegionWidth();
 			float _hhB;//applyed
 			float _hb;
 
@@ -580,10 +581,7 @@ void ofxColourLoversHelper::drawImGuiBrowseKits()
 
 				for (int c = 0; c < _sizeP; c++)
 				{
-					if (c != 0)
-					{
-						ImGui::SameLine(0, 0);
-					}
+					if (c != 0) ImGui::SameLine(0, 0);
 
 					//-
 
@@ -598,7 +596,8 @@ void ofxColourLoversHelper::drawImGuiBrowseKits()
 					else
 					{
 						// different sizes with original colourLover Palettes
-						_wwB = (palettes[i].colorWidths[c] * _w) - _spc;
+						_wwB = (palettes[i].colorWidths[c] * _w);
+						//_wwB = (palettes[i].colorWidths[c] * _w) - _spc;
 					}
 
 					//-

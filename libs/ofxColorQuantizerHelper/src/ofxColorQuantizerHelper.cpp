@@ -100,19 +100,19 @@ void ofxColorQuantizerHelper::refresh_QuantizerImage()
 //--------------------------------------------------------------
 void ofxColorQuantizerHelper::draw_Gui()
 {
-	static bool bCollapse = false;
+	auto_resize = true;
 
 	ImGuiWindowFlags flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, PANEL_WIDGETS_HEIGHT));
 
-	if (ofxImGui::BeginWindow("PICTURE", mainSettings, flags, &bCollapse))
+	if (ofxImGui::BeginWindow("PICTURE", mainSettings, flags))
 	{
-		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
 		float _h = BUTTON_BIG_HEIGHT;
-		float _w100 = ImGui::GetWindowContentRegionWidth();
-		float _w99 = _w100 - _spc * 2;
-		float _w50 = _w99 * 0.5 - _spc * 2;
+		float _spc = ImGui::GetStyle().ItemSpacing.x;
+		float _w100 = ImGui::GetContentRegionAvail().x;
+		float _w99 = _w100 - _spc;
+		float _w50 = _w99 / 2;
 
 		//-
 
@@ -230,7 +230,7 @@ void ofxColorQuantizerHelper::draw_Gui()
 			float ww;
 			float hh;
 
-			ww = _w99 - 20;
+			ww = _w100 - 20;
 			hh = ww * ratio;
 
 			const float H_MAX = 300;
@@ -283,7 +283,7 @@ void ofxColorQuantizerHelper::draw_Gui()
 
 		ImGui::Dummy(ImVec2(0, 5));
 
-		if (ImGui::Button("SORT", ImVec2(_w99, _h)))
+		if (ImGui::Button("SORT", ImVec2(_w100, _h)))
 		{
 			sortedType++;
 			if (sortedType > 4) sortedType = 1;
@@ -306,7 +306,7 @@ void ofxColorQuantizerHelper::draw_Gui()
 		ImGui::Dummy(ImVec2(0, 2));
 		//ImGui::Text(currentImage_name.get().c_str());
 
-		ofxSurfingHelpers::AddBigButton(bReBuild, _w99, _h*0.5);
+		ofxSurfingHelpers::AddBigButton(bReBuild, _w100, _h*0.5);
 		ImGui::Dummy(ImVec2(0, 5));
 
 		if (SHOW_AdvancedLayout)

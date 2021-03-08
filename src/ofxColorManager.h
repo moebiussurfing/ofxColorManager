@@ -5,16 +5,14 @@
 /*
 
 TODO:
-+ startup: load a preset
-+ store app state: preset, theory, colors a-b
-+ workflow: on load preset, set theory colors from color 0
 + fix text input boxes
++ store app state: preset, theory, colors a-b
 + undo engine
-+ fix copy drag editor
 + palette shifter
 
 BUGS:
 + TCP port number switch, problems on reconnect.
++ not updating when save for update an existing preset.
 
 */
 
@@ -22,15 +20,19 @@ BUGS:
 
 // OPTIONAL
 
+// comment for advanced mode
+// hide some widgets for layout customization to minimize elements: keys, layout customize and theme editor
+#define USE_MINIMAL_GUI 
+
 // modules
 // can't be disabled now..
 #define USE_COLOR_LOVERS
 #define USE_IMAGE_QUANTIZER
 #define USE_OFX_COLOR_BROWSER
 #define LINK_TCP_MASTER_CLIENT
+#define MAX_PALETTE_COLORS 20
 
 // layout constants
-#define MAX_PALETTE_COLORS 20
 #define INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
 #define BUTTON_BIG_HEIGHT 50
 #define BUTTON_COLOR_SIZE 40
@@ -39,7 +41,6 @@ BUGS:
 #define PANEL_WIDGETS_HEIGHT 500
 
 // extra
-//#define USE_MINIMAL_GUI // hide some widgets for layout customization to minimize elements: keys and them editor
 #define USE_DEBUG_LAYOUT // includes mouse ruler to help layout design
 //#define MODE_BACKGROUND //TODO: show bg color (gradient picker engine) on mode no background
 //#define USE_UNDO_ENGINE //TODO:
@@ -544,6 +545,13 @@ private:
 	float borderLineWidth = 1.0f;
 	float labelPadding = 0.0;//label buttons
 
+	enum Mode
+	{
+		Mode_Copy,
+		Mode_Swap
+	};
+	int mode = 1;
+
 	//-
 
 	// colour lovers
@@ -557,8 +565,10 @@ private:
 private:
 	void build_Palette_Engine();
 	void build_Palette_Preset();
-	void build_Palette_Flip();
-	void build_Palette_RandomSort();
+
+	void build_Palette_SortFlip();
+	void build_Palette_SortRandom();
+	void build_Palette_SortShift(bool bDirLeft = false);
 
 	void doRandomizeColorPicker();
 	
@@ -757,13 +767,14 @@ private:
 
 	void setBackground_ENABLE(bool b);
 
-	bool ENABLE_Callbacks_cPickers = true;
-	bool ENABLE_Callbacks_Engines = true;
+	bool ENABLE_CALLBACKS_Pickers = true;
+	bool ENABLE_CALLBACKS_Engines = true;
 
 	void refresh_Pick_ToHSB();
 	void refresh_FromPicked();
 
-	void refresh_EnginesFromPreset();
+	void refresh_EnginesFromPalette();
+	void refresh_ColorPickedFromEngines();
 
 	// main color
 	ofParameter<ofFloatColor> color_Picked;
@@ -934,8 +945,9 @@ private:
 
 	// guis
 	void gui_Presets();
+	void gui_Kit();
 	void gui_PaletteFloating();
-	void gui_PaletteEditor();
+	void gui_Editor();
 
 	//--
 
