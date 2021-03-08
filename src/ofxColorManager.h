@@ -770,6 +770,7 @@ private:
 
 	bool ENABLE_CALLBACKS_Pickers = true;
 	bool ENABLE_CALLBACKS_Engines = true;
+	bool ENABLE_CALLBACKS_Range = true;
 
 	void refresh_Pick_ToHSB();
 	void refresh_FromPicked();
