@@ -1878,7 +1878,7 @@ void ofxColorManager::gui_Theory()
 
 				if (ImGui::ColorButton(ss.c_str(), _c, _flagsc, ImVec2(_wSz2, _hSz2)))
 				{
-					ofLogWarning(__FUNCTION__) << "click: " << i << "," << n;
+					ofLogWarning(__FUNCTION__) << "click: " << i + NUM_COLOR_THEORY_TYPES_G1 << "," << n;
 
 					//TODO: not using these pickers
 					color_Picked.set(_c);
