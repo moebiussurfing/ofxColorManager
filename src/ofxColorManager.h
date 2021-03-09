@@ -286,6 +286,8 @@ private:
 	//-
 
 public:
+
+	//--------------------------------------------------------------
 	void presetNext() {
 		if (last_Index_Preset < files.size() - 1)
 		{
@@ -302,7 +304,11 @@ public:
 
 			preset_Load(PRESET_Name);
 		}
+
+		if (!AutoScroll) AutoScroll = true;
 	}
+
+	//--------------------------------------------------------------
 	void presetPrevious() {
 		if (last_Index_Preset > 0)
 		{
@@ -321,7 +327,10 @@ public:
 
 			preset_Load(PRESET_Name);
 		}
+
+		if (!AutoScroll) AutoScroll = true;
 	}
+
 public:
 	// public basic params
 	ofParameterGroup params_Debug{ "ofxColorManager" };
@@ -759,9 +768,11 @@ private:
 
 private:
 	ofxImGui::Gui gui;
+	ofxImGui::Settings mainSettings = ofxImGui::Settings();
 	ImFont* customFont = nullptr;
 	ImGuiStyle *style = nullptr;
-	ofxImGui::Settings mainSettings = ofxImGui::Settings();
+	//ImGuiIO &io;
+	//ImGuiIO *io = nullptr;
 
 	ImGuiWindowFlags flagsWindows;
 

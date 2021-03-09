@@ -114,8 +114,8 @@ void ofxColourLoversHelper::drawImGuiMain()
 		float _hb = _h * 0.5;
 		float _spc = ImGui::GetStyle().ItemSpacing.x;
 		float _w100 = ImGui::GetContentRegionAvail().x;
-		float _w99 = _w100 -_spc;
-		float _w50 = _w99/ 2;// -_spc;
+		float _w99 = _w100 - _spc;
+		float _w50 = _w99 / 2;// -_spc;
 
 		//-
 
@@ -502,8 +502,10 @@ void ofxColourLoversHelper::drawImGuiBrowseKits()
 			static float alpha;
 			static int indexExt_PRE;
 			const float step = 0.1f;
-			if (btween) {
-				if (currPalette != indexExt_PRE) {
+			if (btween)
+			{
+				if (currPalette != indexExt_PRE)
+				{
 					indexExt_PRE = currPalette;
 					alpha = 1;
 				}
@@ -767,6 +769,20 @@ void ofxColourLoversHelper::drawImGuiBrowseKits()
 					ImGui::PopID();
 				}
 			}
+
+			//--
+
+			//TODO:
+			//disable scroll
+			auto &io = ImGui::GetIO();
+			if (io.MouseHoveredViewport)
+			{
+				float wheel = io.MouseWheel;
+				if (wheel != 0)
+				{
+					if (AutoScroll) AutoScroll = false;
+				}
+			}
 		}
 		ofxImGui::EndWindow(mainSettings);
 
@@ -971,7 +987,7 @@ void ofxColourLoversHelper::setup()
 	//// setPalette(currPalette);
 	// refreshPalette();
 	// }
-	}
+}
 
 
 //--------------------------------------------------------------
@@ -1121,8 +1137,8 @@ void ofxColourLoversHelper::build_Gui_Lab()
 			buttonColoursPalette.push_back(btn);
 
 			currX += currW;
-		}
 	}
+}
 
 	gui_Lab->getRect()->setHeight(palettes.size() * (cdim + 4) + startY);
 	gui_Lab->setSnapping(0);
@@ -1138,7 +1154,7 @@ void ofxColourLoversHelper::build_Gui_Lab()
 	setPalette(currPalette);
 	refreshPalette();
 	//#endif
-	}
+			}
 
 //--------------------------------------------------------------
 void ofxColourLoversHelper::update()
@@ -1285,7 +1301,7 @@ void ofxColourLoversHelper::Changed_Gui(ofxUIEventArgs &e)
 		{
 			ofLogWarning(__FUNCTION__) << "OFX_UI_TEXTINPUT_ON_ENTER";
 			ENABLER_Keys = true;
-		}
+}
 		else if (ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS)
 		{
 			ofLogWarning(__FUNCTION__) << "OFX_UI_TEXTINPUT_ON_UNFOCUS";
@@ -1293,13 +1309,13 @@ void ofxColourLoversHelper::Changed_Gui(ofxUIEventArgs &e)
 		}
 
 		ofLogWarning(__FUNCTION__) << "ENABLER_Keys: " << (ENABLER_Keys ? "TRUE" : "FALSE");
-	}
+		}
 
 	//-
 
 	//TODO: disabled beacause dont know what does and blocks next/prev by keys
 	//currPalette=-1;
-}
+	}
 #endif
 
 
@@ -1403,7 +1419,7 @@ void ofxColourLoversHelper::refreshPalette()
 				btn->setDrawOutline(false);
 			}
 		}
-	}
+}
 #endif
 }
 
@@ -1486,6 +1502,8 @@ void ofxColourLoversHelper::nextPalette(bool cycled)
 			}
 		}
 	}
+
+	if (!AutoScroll) AutoScroll = true;
 }
 
 //--------------------------------------------------------------
@@ -1529,6 +1547,8 @@ void ofxColourLoversHelper::prevPalette()
 			}
 		}
 	}
+
+		if (!AutoScroll) AutoScroll = true;
 }
 
 #ifdef USE_OFX_UI
@@ -1587,7 +1607,7 @@ void ofxColourLoversHelper::Changed_Gui_Lab(ofxUIEventArgs &e)
 	if (bUpdated_Color_BACK != nullptr && MODE_PickColor_BACK)
 	{
 		(*bUpdated_Color_BACK) = true;
-	}
+}
 
 	//-
 
