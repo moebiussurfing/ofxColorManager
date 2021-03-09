@@ -732,6 +732,7 @@ private:
 
 	bool guiVisible;
 
+	void setup_Gui();
 	bool draw_Gui();
 
 	void gui_Theory();
@@ -775,6 +776,7 @@ private:
 	void refresh_Pick_ToHSB();
 	void refresh_FromPicked();
 
+	bool bFlag_refresh_EnginesFromPalette = false;
 	void refresh_EnginesFromPalette();
 	void refresh_ColorPickedFromEngines();
 
@@ -1112,4 +1114,26 @@ static void ShowExampleAppMainMenuBar()
 //	}
 //	if (ImGui::MenuItem("Checked", NULL, true)) {}
 //	if (ImGui::MenuItem("Quit", "Alt+F4")) {}
+//}
+
+//inline void hideDockWindow(string name)
+//{
+//	char *cstr = &name[0];
+//
+//	//https://stackoverflow.com/questions/7352099/stdstring-to-char/7352131
+//	//const char *cstr = name.c_str();
+//
+//	bool m_show_tabs = false;
+//
+//	if (ImGui::IsWindowDocked()) {
+//		auto* wnd = ImGui::FindWindowByName(cstr);
+//		if (wnd) {
+//			ImGuiDockNode* node = wnd->DockNode;
+//			if (node)// && (!m_show_tabs && !node->IsHiddenTabBar()) || (m_show_tabs && node->IsHiddenTabBar())) 
+//			//if (node && (!m_show_tabs && !node->IsHiddenTabBar()) || (m_show_tabs && node->IsHiddenTabBar())) 
+//			{
+//				node->WantHiddenTabBarToggle = true;
+//			}
+//		}
+//	}
 //}

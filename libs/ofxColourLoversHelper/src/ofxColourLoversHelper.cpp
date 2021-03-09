@@ -114,9 +114,8 @@ void ofxColourLoversHelper::drawImGuiMain()
 		float _hb = _h * 0.5;
 		float _spc = ImGui::GetStyle().ItemSpacing.x;
 		float _w100 = ImGui::GetContentRegionAvail().x;
-		float _w99 = _w100;// -_spc;
-		float _w50 = _w100 / 2;// -_spc;
-		//float _w20 = _w100 / 5 - _spc;
+		float _w99 = _w100 -_spc;
+		float _w50 = _w99/ 2;// -_spc;
 
 		//-
 
@@ -218,6 +217,10 @@ void ofxColourLoversHelper::drawImGuiMain()
 
 		if (ImGui::CollapsingHeader("BROWSE", ImGuiWindowFlags_NoCollapse))
 		{
+			_w100 = ImGui::GetContentRegionAvail().x;
+			_w99 = _w100 - _spc;
+			_w50 = _w99 / 2;// -_spc;
+
 			ofxSurfingHelpers::AddBigToggle(bFavorites, _w50, _hb * 2);
 			ImGui::SameLine();
 			ofxSurfingHelpers::AddBigToggle(bHistory, _w50, _hb * 2);
@@ -246,10 +249,12 @@ void ofxColourLoversHelper::drawImGuiMain()
 
 			// index/max
 			std::string s;
-			if (_files.numFiles() > 0) {
+			if (_files.numFiles() > 0)
+			{
 				s = ofToString(currPalette) + "/" + ofToString(palettes.size() - 1);
 			}
-			else {
+			else
+			{
 				s = ofToString("-1/0");
 			}
 			ImGui::Text(s.c_str());
@@ -257,32 +262,30 @@ void ofxColourLoversHelper::drawImGuiMain()
 
 			//-
 
-			//ImGui::Dummy(ImVec2(0, 5));
-
 			ImGui::PushButtonRepeat(true);
-
-			if (ImGui::Button("Previous", ImVec2(_w50, _hb * 2)))
 			{
-				prevPalette();
+				if (ImGui::Button("Previous", ImVec2(_w50, _hb * 2)))
+				{
+					prevPalette();
 
-				//-
+					//-
 
-				// worfklow
-				//if (!AutoScroll) AutoScroll = true;
+					// worfklow
+					//if (!AutoScroll) AutoScroll = true;
+				}
+
+				ImGui::SameLine();
+
+				if (ImGui::Button("Next", ImVec2(_w50, _hb * 2)))
+				{
+					nextPalette();
+
+					//-
+
+					// worfklow
+					//if (!AutoScroll) AutoScroll = true;
+				}
 			}
-
-			ImGui::SameLine();
-
-			if (ImGui::Button("Next", ImVec2(_w50, _hb * 2)))
-			{
-				nextPalette();
-
-				//-
-
-				// worfklow
-				//if (!AutoScroll) AutoScroll = true;
-			}
-
 			ImGui::PopButtonRepeat();
 
 			//-
@@ -303,6 +306,10 @@ void ofxColourLoversHelper::drawImGuiMain()
 
 			if (ImGui::CollapsingHeader("ADVANCED", ImGuiWindowFlags_None))
 			{
+				_w100 = ImGui::GetContentRegionAvail().x;
+				_w99 = _w100 - _spc;
+				_w50 = _w99 / 2;// -_spc;
+
 				{
 					if (ImGui::Button("ADD FAV", ImVec2(_w50, _hb)))
 					{
@@ -317,8 +324,7 @@ void ofxColourLoversHelper::drawImGuiMain()
 
 					//--
 
-					if (ImGui::Button("CLEAR FAVS", ImVec2(_w50, _hb)))
-						ImGui::OpenPopup("CLEAR FAVS?");
+					if (ImGui::Button("CLEAR FAVS", ImVec2(_w50, _hb))) ImGui::OpenPopup("CLEAR FAVS?");
 
 					if (ImGui::BeginPopupModal("CLEAR FAVS?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
 					{
@@ -330,7 +336,7 @@ void ofxColourLoversHelper::drawImGuiMain()
 						ImGui::Checkbox("Don't ask me next time", &dont_ask_me_next_timeFavs);
 						ImGui::PopStyleVar();
 
-						if (ImGui::Button("OK", ImVec2(_w100, 0))) {
+						if (ImGui::Button("OK", ImVec2(_w99, 0))) {
 							clearFavourites();
 							//workflow
 							loadFavorites();
@@ -339,11 +345,11 @@ void ofxColourLoversHelper::drawImGuiMain()
 						}
 						ImGui::SetItemDefaultFocus();
 						ImGui::SameLine();
-						if (ImGui::Button("Cancel", ImVec2(_w100, 0))) { ImGui::CloseCurrentPopup(); }
+						if (ImGui::Button("Cancel", ImVec2(_w99, 0))) { ImGui::CloseCurrentPopup(); }
 						ImGui::EndPopup();
 					}
 
-					//if (ImGui::Button("CLEAR FAVS", ImVec2(_w100 * 0.5, _hb)))
+					//if (ImGui::Button("CLEAR FAVS", ImVec2(_w99* 0.5, _hb)))
 					//{
 					//	clearFavourites();
 					//	//workflow
@@ -354,8 +360,7 @@ void ofxColourLoversHelper::drawImGuiMain()
 
 				//ImGui::Dummy(ImVec2(0, 5));
 				{
-					if (ImGui::Button("CLEAR HISTORY", ImVec2(_w100, _hb)))
-						ImGui::OpenPopup("CLEAR HISTORY?");
+					if (ImGui::Button("CLEAR HISTORY", ImVec2(_w100, _hb))) ImGui::OpenPopup("CLEAR HISTORY?");
 
 					if (ImGui::BeginPopupModal("CLEAR HISTORY?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
 					{
@@ -368,7 +373,7 @@ void ofxColourLoversHelper::drawImGuiMain()
 						ImGui::PopStyleVar();
 
 						if (!dont_ask_me_next_time) {
-							if (ImGui::Button("OK", ImVec2(_w100, 0))) {
+							if (ImGui::Button("OK", ImVec2(_w99, 0))) {
 								clearHistory();
 								//workflow
 								loadHistory();
@@ -377,7 +382,7 @@ void ofxColourLoversHelper::drawImGuiMain()
 							}
 							ImGui::SetItemDefaultFocus();
 							ImGui::SameLine();
-							if (ImGui::Button("Cancel", ImVec2(_w100, 0))) { ImGui::CloseCurrentPopup(); }
+							if (ImGui::Button("Cancel", ImVec2(_w99, 0))) { ImGui::CloseCurrentPopup(); }
 						}
 						else {
 							clearHistory();
@@ -389,7 +394,7 @@ void ofxColourLoversHelper::drawImGuiMain()
 						ImGui::EndPopup();
 					}
 
-					//if (ImGui::Button("CLEAR HISTORY", ImVec2(_w100, _hb)))
+					//if (ImGui::Button("CLEAR HISTORY", ImVec2(_w99, _hb)))
 					//{
 					//	clearHistory();
 					//	//workflow
@@ -422,9 +427,12 @@ void ofxColourLoversHelper::drawImGuiMain()
 		{
 			if (ImGui::CollapsingHeader("Advanced"))
 			{
+				_w100 = ImGui::GetContentRegionAvail().x;
+				_w99 = _w100 - _spc;
+				_w50 = _w100 / 2;// -_spc;
+
 				ofxImGui::AddParameter(MODE_PickPalette_BACK);
 				ofxImGui::AddParameter(MODE_PickColor_BACK);
-
 				ofxImGui::AddParameter(ENABLER_Keys);
 
 				if (ImGui::CollapsingHeader("Layout"))
@@ -447,8 +455,6 @@ void ofxColourLoversHelper::drawImGuiMain()
 					ImGui::Checkbox("Auto-resize Main", &auto_resize1);
 					ImGui::Checkbox("Auto-resize Kit", &auto_resize2);
 				}
-
-				//ImGui::Dummy(ImVec2(0, 10));
 			}
 		}
 	}
