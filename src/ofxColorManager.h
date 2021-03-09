@@ -195,7 +195,7 @@ private:
 	//--
 
 	void draw_Info();
-	
+
 	//--
 
 public:
@@ -415,15 +415,16 @@ private:
 	// current selectors states on user session
 
 	ofParameter<int> last_Index_Theory_PickPalette;
-	ofParameter<int> last_Index_Theory{ "Last Theory Index", -1, 0, NUM_COLOR_THEORY_TYPES_G1 - 1 };//selected theory algorithm
-	ofParameter<int> last_Index_Range{ "Last Range Index", -1, 0, NUM_TYPES_RANGES - 1 };//selected range algorithm
-	ofParameter<int> last_Index_ColorPalette{ "Selected", -1, 0, 0 };//selected color on palette on editing
+	ofParameter<int> last_Index_Theory{ "Last Theory Index", 0, 0,
+		NUM_COLOR_THEORY_TYPES_G1 + NUM_COLOR_THEORY_TYPES_G2 - 1 };//selected theory algorithm
+	ofParameter<int> last_Index_Range{ "Last Range Index", 0, 0, NUM_TYPES_RANGES - 1 };//selected range algorithm
+	ofParameter<int> last_Index_ColorPalette{ "Selected", 0, 0, 0 };//selected color on palette on editing
 	ofParameter<int> last_Index_Preset{ "Preset Index", 0, 0, 0 };//selected preset
 	int last_Lib_Index = -1;//last library picked color
 
 	bool bLast_Index_Theory = true;
 	bool bLast_Index_Range = true;
-	
+
 	//--
 
 private:
@@ -608,7 +609,7 @@ private:
 	void build_Palette_SortShift(bool bDirLeft = false);
 
 	void doRandomizeColorPicker();
-	
+
 	//--
 
 public:
@@ -761,7 +762,7 @@ private:
 	ImFont* customFont = nullptr;
 	ImGuiStyle *style = nullptr;
 	ofxImGui::Settings mainSettings = ofxImGui::Settings();
-	
+
 	ImGuiWindowFlags flagsWindows;
 
 	bool mouseOverGui;
@@ -785,7 +786,7 @@ private:
 	void gui_Demo();
 	void gui_Export();
 	void gui_Gradient();
-	
+
 #ifndef USE_MINIMAL_GUI
 	void gui_Extra();
 #endif

@@ -135,7 +135,7 @@ void ofxColorManager::build_Palette_Engine()
 	else if (SHOW_Range)
 	{
 		_name = name_Range;
-		if (last_Index_Range > 0) palette_FromRange(last_Index_Range);
+		if (last_Index_Range >= 0) palette_FromRange(last_Index_Range);
 		bNew = true;
 	}
 	else if (SHOW_ColourLovers)
@@ -1492,7 +1492,7 @@ void ofxColorManager::gui_Theory()
 	ww = PANEL_WIDGETS_WIDTH;
 	hh = PANEL_WIDGETS_HEIGHT;
 	ImGui::SetWindowSize(ImVec2(ww, hh));
-	
+
 	ImGuiWindowFlags flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
 	flags |= flagsWindows;
 
@@ -1504,6 +1504,8 @@ void ofxColorManager::gui_Theory()
 
 	if (ofxImGui::BeginWindow("THEORY", mainSettings, flags))
 	{
+		ImGui::Dummy(ImVec2(0, 5));
+
 		float _h = float(COLOR_STRIP_COLOR_HEIGHT);
 		float _spcx = ImGui::GetStyle().ItemInnerSpacing.x;
 		float _spcy = ImGui::GetStyle().ItemInnerSpacing.y;
@@ -1610,7 +1612,7 @@ void ofxColorManager::gui_Theory()
 
 		//--
 
-		ImGui::Dummy(ImVec2(0, 2));
+		ImGui::Dummy(ImVec2(0, 5));
 
 		//----
 
@@ -2178,7 +2180,7 @@ void ofxColorManager::gui_PaletteFloating()
 	ww = PANEL_WIDGETS_WIDTH;
 	hh = PANEL_WIDGETS_HEIGHT;
 	ImGui::SetWindowSize(ImVec2(ww, hh));
-	
+
 	ImGuiWindowFlags flagsw;
 	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None | ImGuiWindowFlags_NoScrollbar;
 	flagsw |= flagsWindows;
@@ -2429,7 +2431,7 @@ void ofxColorManager::gui_Library()
 	ww = PANEL_WIDGETS_WIDTH;
 	hh = PANEL_WIDGETS_HEIGHT;
 	ImGui::SetWindowSize(ImVec2(ww, hh));
-	
+
 	ImGuiWindowFlags flagsw;
 	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
 	flagsw |= flagsWindows;
@@ -2771,7 +2773,7 @@ void ofxColorManager::gui_Export()
 	ww = PANEL_WIDGETS_WIDTH;
 	hh = PANEL_WIDGETS_HEIGHT;
 	ImGui::SetWindowSize(ImVec2(ww, hh));
-	
+
 	ImGuiWindowFlags flagsw;
 	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
 	flagsw |= flagsWindows;
@@ -3095,7 +3097,7 @@ void ofxColorManager::gui_Picker()
 void ofxColorManager::gui_PanelsEngines()
 {
 	static bool auto_resize = false;
-	
+
 	ImGuiWindowFlags flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
 	flags |= flagsWindows;
 
@@ -3163,7 +3165,7 @@ void ofxColorManager::gui_Extra()
 void ofxColorManager::gui_PanelsMain()
 {
 	static bool auto_resize = false;
-	
+
 	ImGuiWindowFlags flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
 	flags |= flagsWindows;
 
@@ -3237,7 +3239,7 @@ void ofxColorManager::gui_Range()
 	hh = PANEL_WIDGETS_HEIGHT;
 	ImGui::SetWindowSize(ImVec2(ww, hh));
 	ImGuiWindowFlags flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
-	
+
 	flags |= flagsWindows;
 
 	//--
@@ -3395,8 +3397,12 @@ void ofxColorManager::gui_Range()
 
 			if (ofxSurfingHelpers::AddIntStepped(numColors_Range)) {}
 
-			_hSz2 = ImGui::GetContentRegionAvail().y / int(NUM_TYPES_RANGES) - ImGui::GetStyle().ItemSpacing.y;
-			//_hSz2 = ImGui::GetContentRegionAvail().y / int(NUM_TYPES_RANGES) - ImGui::GetStyle().ItemInnerSpacing.y;
+			int __sz = int(NUM_TYPES_RANGES);
+
+#ifndef USE_MINIMAL_GUI
+			if (SHOW_AdvancedLayout) __sz++;
+#endif
+			_hSz2 = ImGui::GetContentRegionAvail().y / __sz - ImGui::GetStyle().ItemSpacing.y;
 
 			//-
 
@@ -3661,18 +3667,13 @@ void ofxColorManager::gui_Kit()
 	//add kit palettes browser
 	if (SHOW_Kit)
 	{
-		//ww = PANEL_WIDGETS_WIDTH;
-		//hh = PANEL_WIDGETS_HEIGHT;
-		//ImGui::SetWindowSize(ImVec2(ww, hh));
-
-		//--
-
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, PANEL_WIDGETS_HEIGHT));
 
 		if (ofxImGui::BeginWindow("KIT", mainSettings, flags))
 		{
 			// populate widgets
-			int indexPreset = gui_GridPalettes(kit, last_Index_Preset, AutoScroll.get(), true);
+			bool bfocus = false;
+			int indexPreset = gui_GridPalettes(kit, last_Index_Preset, AutoScroll.get(), bfocus);
 
 			// workflow
 			if (indexPreset != -1)
@@ -3685,7 +3686,6 @@ void ofxColorManager::gui_Kit()
 
 		ImGui::PopStyleVar();
 	}
-
 }
 
 //--------------------------------------------------------------
@@ -3701,8 +3701,6 @@ void ofxColorManager::gui_Presets()
 	flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
 
 	flags |= flagsWindows;
-	//flags |= ImGuiWindowFlags_NoMove;
-	//flags |= ImGuiWindowFlags_NoBackground;
 
 	//blink when a new preset is editing
 	float freq = 0.15;//speed freq
@@ -4252,7 +4250,7 @@ void ofxColorManager::gui_Demo()
 	ww = PANEL_WIDGETS_WIDTH;
 	hh = PANEL_WIDGETS_HEIGHT;
 	ImGui::SetWindowSize(ImVec2(ww, hh));
-	
+
 	ImGuiWindowFlags flagsw;
 	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
 	flagsw |= flagsWindows;
@@ -4314,7 +4312,7 @@ void ofxColorManager::setup_Gui()
 	flags |= ImGuiDockNodeFlags_NoResizeX;
 	flags |= ImGuiDockNodeFlags_NoResizeY;
 	flags |= ImGuiDockNodeFlags_NoResize;
-	flags |= ImGuiDockNodeFlags_NoTabBar; 
+	flags |= ImGuiDockNodeFlags_NoTabBar;
 	flags |= ImGuiDockNodeFlags_AutoHideTabBar;
 	//flags |= ImGuiConfigFlags_ViewportsEnable;
 
@@ -4330,7 +4328,7 @@ void ofxColorManager::setup_Gui()
 	//Node->LocalFlags |= ImGuiDockNodeFlags_NoWindowMenuButton | ImGuiDockNodeFlags_NoCloseButton;
 
 	//-
-	
+
 	gui.setup(nullptr, true, flags, true, false);
 
 	// io
@@ -4338,7 +4336,8 @@ void ofxColorManager::setup_Gui()
 	io.ConfigDockingWithShift = true;
 	io.ConfigInputTextCursorBlink = true;//?
 	//io.ConfigWindowsResizeFromEdges = false;//?
-	//io.= true;//?
+
+	//--
 
 	// fonts
 #ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
@@ -4350,12 +4349,14 @@ void ofxColorManager::setup_Gui()
 	float _size = 14.f;
 	std::string _name = "Ruda-Bold.ttf";
 
+	//-
+
 	std::string _path = "assets/fonts/" + _name;//assets folder
 	customFont = gui.addFont(_path, _size, nullptr, normalCharRanges);
 	io.FontDefault = customFont;
 #endif
 
-	//-
+	//--
 
 	// theme
 #ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
@@ -5409,7 +5410,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	else if (name == last_Index_ColorPalette.getName())
 	{
 		last_Index_ColorPalette = (int)ofClamp(
-			last_Index_ColorPalette,
+			last_Index_ColorPalette.get(),
 			last_Index_ColorPalette.getMin(),
 			last_Index_ColorPalette.getMax());
 
@@ -5444,18 +5445,10 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	else if (name == last_Index_Range.getName())
 	{
 		last_Index_Range = (int)ofClamp(
-			last_Index_Range,
+			last_Index_Range.get(),
 			last_Index_Range.getMin(),
 			last_Index_Range.getMax());
-
-		//if (last_Index_Range == -1) 
-		//{
-		//	for (int t = 0; t < int(NUM_TYPES_RANGES); t++)
-		//	{
-		//		types_Range[t] = false;
-		//	}
-		//}
-
+		
 		last_Index_Type = 3;
 
 		if (!bLast_Index_Range) bLast_Index_Range = true;
@@ -5993,22 +5986,27 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 	{
 		//----
 
-		if (false) {}
-		
-		//browse presets
-		else if (key == OF_KEY_LEFT && !mod_CONTROL)
-		{
-			presetPrevious();
-			return;
-		}
+		// presets control
 
-		else if (key == OF_KEY_RIGHT && !mod_CONTROL)
+		if (!SHOW_Library)
 		{
-			presetNext();
-			return;
+			//browse presets
+			if (key == OF_KEY_LEFT && !mod_CONTROL)
+			{
+				presetPrevious();
+				return;
+			}
+
+			else if (key == OF_KEY_RIGHT && !mod_CONTROL)
+			{
+				presetNext();
+				return;
+			}
 		}
 
 		//--
+
+		if (false) {}
 
 		// help
 		else if (key == 'h' || key == 'H')
@@ -6150,7 +6148,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 		if (SHOW_Presets && !SHOW_Theory && !SHOW_Range && !SHOW_ColourLovers && !SHOW_Quantizer && !SHOW_Library)
 		{
-			if (key == OF_KEY_UP  || (key == ' ' && mod_CONTROL))
+			if (key == OF_KEY_UP || (key == ' ' && mod_CONTROL))
 			{
 				presetPrevious();
 			}
@@ -6525,8 +6523,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			SHOW_Quantizer = false;
 			SHOW_Presets = false;
 		}
-			}
-		}
+	}
+}
 
 //--------------------------------------------------------------
 void ofxColorManager::keyReleased(ofKeyEventArgs &eventArgs)

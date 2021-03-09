@@ -119,7 +119,7 @@ void ofxColourLoversHelper::drawImGuiMain()
 
 		//-
 
-		if (ImGui::CollapsingHeader("HTTP SEARCH"))
+		if (ImGui::CollapsingHeader("SEARCH"))
 		{
 			ImGui::Dummy(ImVec2(0, 5));
 
@@ -148,7 +148,7 @@ void ofxColourLoversHelper::drawImGuiMain()
 			//ImGui::Dummy(ImVec2(0, 2));
 
 			//ImGui::SameLine();
-			if (ImGui::Button("SEARCH", ImVec2(_w100, _hb * 2)))
+			if (ImGui::Button("ONLINE SEARCH", ImVec2(_w100, _hb * 2)))
 			{
 				ofLogNotice(__FUNCTION__) << "searchPalettes: " << textInput_temp1_PRE;
 
@@ -489,9 +489,10 @@ void ofxColourLoversHelper::drawImGuiBrowseKits()
 		{
 			float _spc2 = 2;//spacing between palettes 
 
-			std::string ss = lastSearch;
-			ImGui::Text(ss.c_str());
-			ImGui::Dummy(ImVec2(0, 5));
+			////label: favorites or history
+			//std::string ss = lastSearch;
+			//ImGui::Text(ss.c_str());
+			//ImGui::Dummy(ImVec2(0, 5));
 
 			//--
 
@@ -547,14 +548,7 @@ void ofxColourLoversHelper::drawImGuiBrowseKits()
 			for (int i = 0; i < palettes.size(); i++)
 			{
 				// group border
-				auto pos1 = ImGui::GetCursorScreenPos();
-
-				// autoscroll
-				if (i == currPalette)
-				{
-					//if (AutoScroll) ImGui::SetScrollHereY(0.25f); // 0.0f:top, 0.5f:center, 1.0f:bottom
-					if (AutoScroll) ImGui::SetScrollHereY(0.f); // 0.0f:top, 0.5f:center, 1.0f:bottom
-				}
+				//auto pos1 = ImGui::GetCursorScreenPos();
 
 				//-
 
@@ -566,6 +560,11 @@ void ofxColourLoversHelper::drawImGuiBrowseKits()
 
 				ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 2));
 				ImGui::Text(_name.c_str());
+				// autoscroll
+				if (i == currPalette)
+				{
+					if (AutoScroll) ImGui::SetScrollHereY(0.0f); // 0.0f:top, 0.5f:center, 1.0f:bottom
+				}
 				ImGui::PopStyleVar();
 
 				//-

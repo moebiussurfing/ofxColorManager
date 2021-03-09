@@ -107,10 +107,11 @@ private:
 
 	ImVec4 borderLineColor{ 1,1,1,0.5 };
 	float borderLineWidth = 2.0;
-	bool bfocus = true;
 	bool auto_resize1 = true;
 	bool auto_resize2 = false;
 	//bool auto_resize = true;
+	bool bfocus = false;
+	//bool bfocus = true;
 
 public:
 	ofParameter<bool> SHOW_AdvancedLayout{ "Show Advanced", false };
