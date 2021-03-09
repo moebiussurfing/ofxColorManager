@@ -21,9 +21,9 @@ BUGS:
 
 // OPTIONAL
 
-// comment for advanced mode
+// comment for advanced mode. uncomment for simple user mode.
 // hide some widgets for layout customization to minimize elements: keys, layout customize and theme editor
-#define USE_MINIMAL_GUI 
+//#define USE_MINIMAL_GUI 
 
 // modules
 // can't be disabled now..
@@ -286,6 +286,43 @@ private:
 	//-
 
 public:
+	void presetNext() {
+		if (last_Index_Preset < files.size() - 1)
+		{
+			last_Index_Preset++;
+		}
+		else if (last_Index_Preset >= files.size() - 1) {//cycle
+			last_Index_Preset = 0;
+		}
+
+		if (last_Index_Preset < files.size() && files.size() > 0)
+		{
+			PRESET_Name = files_Names[last_Index_Preset];
+			ofLogNotice(__FUNCTION__) << "PRESET_Name: [" + ofToString(last_Index_Preset) + "] " << PRESET_Name;
+
+			preset_Load(PRESET_Name);
+		}
+	}
+	void presetPrevious() {
+		if (last_Index_Preset > 0)
+		{
+			last_Index_Preset--;
+		}
+		else
+		{
+			if (last_Index_Preset == 0)
+				last_Index_Preset = files.size() - 1;
+		}
+
+		if (last_Index_Preset < files.size() && files.size() > 0)
+		{
+			PRESET_Name = files_Names[last_Index_Preset];
+			ofLogNotice(__FUNCTION__) << "PRESET_Name: [" + ofToString(last_Index_Preset) + "] " << PRESET_Name;
+
+			preset_Load(PRESET_Name);
+		}
+	}
+public:
 	// public basic params
 	ofParameterGroup params_Debug{ "ofxColorManager" };
 	ofParameter<bool> SHOW_MINI_Preview;
@@ -301,7 +338,6 @@ public:
 	}
 
 private:
-
 	ofParameter<bool> SHOW_ColourLovers;
 	ofParameter<bool> SHOW_ColourLovers_searcher;
 	ofParameter<bool> SHOW_BrowserColors;
@@ -725,6 +761,8 @@ private:
 	ImFont* customFont = nullptr;
 	ImGuiStyle *style = nullptr;
 	ofxImGui::Settings mainSettings = ofxImGui::Settings();
+	
+	ImGuiWindowFlags flagsWindows;
 
 	bool mouseOverGui;
 	bool mouseOverGui_PRE;
