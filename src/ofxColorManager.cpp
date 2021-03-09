@@ -127,8 +127,6 @@ void ofxColorManager::build_Palette_Engine()
 	if (SHOW_Theory)
 	{
 		_name = name_Theory;
-		//refresh_Theory_G1();//?
-		refresh_Theory_G2();
 		palette_FromTheory(last_Index_Theory);
 		bNew = true;
 	}
@@ -3126,7 +3124,6 @@ void ofxColorManager::gui_PanelsEngines()
 		float _h100 = ImGui::GetContentRegionAvail().y;
 		float _h = BUTTON_BIG_HEIGHT;
 		//float _h = _h100 - _spcy;
-		//float _h = _h100 - _spcy;
 		float _w99 = _w100;// -_spcx;
 		float _w50 = _w99 / 2;
 		float _w = _w100 / NUM_WIDGETS - _spcx;
@@ -3200,7 +3197,8 @@ void ofxColorManager::gui_PanelsMain()
 		float _h100 = ImGui::GetContentRegionAvail().y;
 		float _w99 = _w100;// -_spcx;
 		float _w = _w99 / NUM_WIDGETS - _spcx;
-		float _h = _h100 - _spcy;
+		//float _h = _h100 - _spcy;
+		float _h = BUTTON_BIG_HEIGHT;
 
 		ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteFloating, _w, _h);
 		ImGui::SameLine();
@@ -5350,19 +5348,7 @@ void ofxColorManager::Changed_ColorTheory(ofAbstractParameter &e)
 	else if (name == color_TheoryBase.getName())
 	{
 		refresh_Theory_G1();
-
-		//color_TheoryBase.set(color_Picked);
-
-		// ?
-		//refresh_Theory_G2();
-
-		//TODO:
-
-		////refresh
-		//ENABLE_CALLBACKS_Pickers = false;
-		//refresh_Pick_ToHSB();
-		//ENABLE_CALLBACKS_Pickers = true;
-		//refresh_Pick_ToEngines();
+		refresh_Theory_G2();
 	}
 
 	//else if (name == colorScheme.getName())
@@ -7246,7 +7232,7 @@ void ofxColorManager::refresh_EnginesFromPalette()
 		{
 			//color_TheoryBase = palette[0];
 			color_TheoryBase = palette[last_Index_ColorPalette];
-			refresh_Theory_G2();
+			//refresh_Theory_G2();
 		}
 
 		//--
