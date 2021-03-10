@@ -462,8 +462,11 @@ private:
 	void palette_FromRange(int index);
 
 private:
-	ofParameter<ofColor> color_1_Range;
-	ofParameter<ofColor> color_2_Range;
+	ofParameter<ofFloatColor> color_1_Range;
+	ofParameter<ofFloatColor> color_2_Range;
+	//ofParameter<ofColor> color_1_Range;
+	//ofParameter<ofColor> color_2_Range;
+
 	std::vector<ofColor> palette_Range;
 	std::vector<std::string> names_Types_Range;
 	ofParameter<bool> autoGenerate_Range;
