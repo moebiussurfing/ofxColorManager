@@ -83,8 +83,6 @@ void ofxColorManager::build_Palette_SortFlip()
 
 	// workflow
 	refresh_Background();
-	// DEMO 1
-	//if (DEMO1_Test && !DEMO_Auto) myDEMO1.reStart();
 
 	//--
 
@@ -165,6 +163,11 @@ void ofxColorManager::build_Palette_Engine()
 #ifndef USE_SIMPLE_PRESET_PALETTE	
 	PRESET_Temp.setNameCurve_TARGET(PRESET_Name_Gradient);
 #endif
+
+	//--
+
+	// workflow
+	if (DEMO1_Enable) myDEMO1.reStart();
 
 	//--
 
@@ -282,9 +285,9 @@ ofxColorManager::ofxColorManager()
 	helpInfo += "G                     GUI\n";
 	helpInfo += "\n";
 	helpInfo += "SPACE                 NEXT PRESET\n";
-	helpInfo += "Left|Right            BROWSE PRESETS\n";
-	helpInfo += "Down|Up               BROWSE ENGINE TYPES\n";
-	helpInfo += "-|+                   AMOUNT COLORS\n";
+	helpInfo += "Left|Right            <  > PRESETS\n";
+	helpInfo += "Down|Up               <  > ENGINE TYPES\n";
+	helpInfo += "   -|+                AMOUNT COLORS\n";
 	helpInfo += "BACKSPACE             AUX\n";
 	helpInfo += "RETURN                RANDOM\n";
 	helpInfo += "\n";
@@ -306,7 +309,7 @@ ofxColorManager::ofxColorManager()
 	helpInfo += "\n";
 
 	helpInfo += "ENGINES\n";
-	helpInfo += "TAB                   THEORY\n";
+	helpInfo += "TAB >                 THEORY\n";
 	helpInfo += "                      RANGE\n";
 	helpInfo += "                      LOVERS\n";
 	helpInfo += "                      PICTURE\n";
@@ -832,7 +835,7 @@ void ofxColorManager::setup()
 #endif
 
 	//params_Demo.add(TEST_Mode);
-	params_Demo.add(DEMO1_Test);
+	params_Demo.add(DEMO1_Enable);
 	params_Demo.add(DEMO2_Svg.DEMO2_Enable);
 	params_Demo.add(DEMO2_Svg.DEMO2_Edit);
 	params_Demo.add(DEMO2_Svg.DEMO2_Scale);
@@ -1135,7 +1138,7 @@ void ofxColorManager::update(ofEventArgs & args)
 	// demos
 	{
 		// DEMO1
-		if (DEMO1_Test)
+		if (DEMO1_Enable)
 		{
 			myDEMO1.update();
 			if (DEMO_Auto) {}
@@ -1331,21 +1334,21 @@ void ofxColorManager::draw()
 void ofxColorManager::draw(ofEventArgs & args)
 #endif
 {
-
 	if (SHOW_Scene)
 	{
 		// background
+
+		// background mode
+#ifdef MODE_BACKGROUND
 		if (background_Draw_ENABLE)
 		{
 			ofClear(color_BackGround.get());
 		}
-
-		//--
-
-		//debug
-		if (0)
+#endif
+		// using gradient
+		if (!DEMO2_Svg.DEMO2_Enable)
 		{
-			ofDrawBitmapStringHighlight("last_Index_Theory: " + ofToString(last_Index_Theory), 20, 20);
+			ofClear(gradientEngine.getColorPicked());
 		}
 
 		//--
@@ -1356,7 +1359,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 		//-
 
 		// DEMO1
-		if (DEMO1_Test) myDEMO1.draw(DEMO_Alpha);
+		if (DEMO1_Enable) myDEMO1.draw(DEMO_Alpha);
 
 		//--
 
@@ -2234,7 +2237,7 @@ void ofxColorManager::gui_Editor()
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::gui_PaletteFloating()
+void ofxColorManager::gui_Palette()
 {
 	static bool auto_resize = false;
 
@@ -2247,9 +2250,9 @@ void ofxColorManager::gui_PaletteFloating()
 	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None | ImGuiWindowFlags_NoScrollbar;
 	flagsw |= flagsWindows;
 
-	//flagsw += ImGuiDockNodeFlags_AutoHideTabBar;
-	//flagsw += ImGuiDockNodeFlags_NoTabBar;
-	flagsw |= ImGuiWindowFlags_NoCollapse;
+	//flagsw |= ImGuiWindowFlags_NoCollapse;
+	//flagsw |= ImGuiDockNodeFlags_AutoHideTabBar;
+	//flagsw |= ImGuiDockNodeFlags_NoTabBar;
 	//flagsw |= ImGuiDockNodeFlags_NoCloseButton;
 
 	//-
@@ -2283,16 +2286,7 @@ void ofxColorManager::gui_PaletteFloating()
 
 		int _amtBtn = palette.size();
 		float _wx2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
-
-		//--
-
-		//enum Mode
-		//{
-		//	Mode_Copy,
-		//	Mode_Swap
-		//};
-		//static int mode = 1;
-
+		
 		//-
 
 		// color buttons
@@ -2303,7 +2297,6 @@ void ofxColorManager::gui_PaletteFloating()
 
 			if (bFitLayout)
 			{
-				//std::string name = ofToString(n);
 				if (n != 0)
 				{
 					ImGui::SameLine(0, 0);
@@ -2314,7 +2307,6 @@ void ofxColorManager::gui_PaletteFloating()
 				// responsive buttons size
 				if (bResponsive_Panels)
 				{
-					//std::string name = ofToString(n);
 					const ImVec4 color2 = style->Colors[ImGuiCol_Button];//do not changes the color
 					ImGui::PushStyleColor(ImGuiCol_Button, color2);
 				}
@@ -2630,9 +2622,9 @@ void ofxColorManager::gui_Library()
 				ImGui::Dummy(ImVec2(0, 5));
 
 				ofxImGui::AddParameter(colorBrowser.ENABLE_keys);
-			}
-#endif
 		}
+#endif
+	}
 
 		//--
 
@@ -2819,7 +2811,7 @@ void ofxColorManager::gui_Library()
 		{
 			refresh_FromPicked();
 		}
-	}
+}
 
 	ofxImGui::EndWindow(mainSettings);
 
@@ -2951,12 +2943,12 @@ void ofxColorManager::gui_Export()
 
 				ImGui::Checkbox("Auto-Resize", &auto_resize);
 			}
+			}
 		}
-	}
 	ofxImGui::EndWindow(mainSettings);
 
 	ImGui::PopStyleVar();
-}
+	}
 
 //--------------------------------------------------------------
 void ofxColorManager::gui_Picker()
@@ -3286,7 +3278,7 @@ void ofxColorManager::gui_PanelsMain()
 		ImGui::SameLine();
 		ofxSurfingHelpers::AddBigToggle(SHOW_AdvancedLayout, _w, _h);
 #endif
-	}
+}
 	ofxImGui::EndWindow(mainSettings);
 
 	ImGui::PopStyleVar();
@@ -3945,9 +3937,9 @@ void ofxColorManager::gui_Presets()
 			//to disable all other key commands
 			bool b = bTextInputActive;
 			bTextInputActive = ImGui::IsItemActive();
-			
+
 			//changed
-			if (bTextInputActive != b) 
+			if (bTextInputActive != b)
 				ofLogNotice(__FUNCTION__) << "TextInput : " << (bTextInputActive ? "ACTIVE" : "DISABLED");
 
 			//--
@@ -4321,8 +4313,8 @@ void ofxColorManager::gui_Demo()
 
 		//-
 
-		ofxSurfingHelpers::AddBigToggle(DEMO1_Test, _w100);
-		if (DEMO1_Test)
+		ofxSurfingHelpers::AddBigToggle(DEMO1_Enable, _w100);
+		if (DEMO1_Enable)
 		{
 			ofxImGui::AddParameter(DEMO_Auto);
 			ofxImGui::AddParameter(DEMO_Timer);
@@ -4477,7 +4469,7 @@ bool ofxColorManager::draw_Gui()
 
 		if (SHOW_ALL_GUI)
 		{
-			if (SHOW_UserPaletteFloating) gui_PaletteFloating();
+			if (SHOW_UserPaletteFloating) gui_Palette();
 			if (SHOW_UserPaletteEditor) gui_Editor();
 			if (SHOW_Presets) gui_Presets();
 			if (SHOW_Kit) gui_Kit();
@@ -4535,7 +4527,9 @@ bool ofxColorManager::draw_Gui()
 	//-
 
 	//return ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow);
-	return ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow) && bTextInputActive;
+
+	bool b = ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow) && bTextInputActive;
+	return b;
 }
 
 //--------------------------------------------------------------
@@ -4998,7 +4992,7 @@ void ofxColorManager::palette_Clear()
 
 	//-
 
-	if (DEMO1_Test) myDEMO1.clear();
+	if (DEMO1_Enable) myDEMO1.clear();
 
 	//--
 
@@ -5609,6 +5603,13 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 			// workflow
 			if (bEditPalette) bEditPalette = false;
+			
+			if (bAuto_Color1_FromPicker_Range) {
+				color_Picked.set(color_1_Range.get());
+			}
+			else if (bAuto_Color2_FromPicker_Range) {
+				color_Picked.set(color_2_Range.get());
+			}
 
 			//--
 
@@ -5620,7 +5621,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			if (bAuto_Color1_FromPicker_Range) {
 				color_Picked.set(color_1_Range.get());
 			}
-			if (bAuto_Color2_FromPicker_Range) {
+			else if (bAuto_Color2_FromPicker_Range) {
 				color_Picked.set(color_2_Range.get());
 			}
 
@@ -6047,8 +6048,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//----
 
 		// presets control
-
-		if (SHOW_Presets && !SHOW_Library)
+		if ((!SHOW_Theory && !SHOW_Range && !SHOW_ColourLovers && !SHOW_Quantizer)
+			|| (SHOW_Presets && !SHOW_Library))
 		{
 			//browse presets
 			if (key == OF_KEY_LEFT && !mod_CONTROL)
@@ -6102,8 +6103,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		// DEMO
 		else if (key == 'D')
 		{
-			DEMO1_Test = !DEMO1_Test;
-			//if (DEMO1_Test&& DEMO_Auto) myDEMO1.reStart();
+			DEMO1_Enable = !DEMO1_Enable;
+			//if (DEMO1_Enable&& DEMO_Auto) myDEMO1.reStart();
 		}
 
 		//else if (key == 'g') {
@@ -6323,22 +6324,6 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				}
 			}
 		}
-
-		//----
-//
-//		// lovers
-//
-//		if (SHOW_ColourLovers && !SHOW_Presets)
-//		{
-//			// 3. randomly get a palette from colour lovers only
-//			if ((key == 'r' || key == 'R' || key == OF_KEY_RETURN) && !mod_CONTROL)
-//			{
-//#ifdef USE_COLOR_LOVERS
-//				colourLoversHelper.randomPalette();
-//#endif
-//				textInput_temp = PRESET_Name;
-//			}
-//		}
 
 		//-----
 
@@ -6602,7 +6587,7 @@ void ofxColorManager::mousePressed(ofMouseEventArgs &eventArgs)
 
 	// DEMO
 
-	if (DEMO1_Test && !mouseLockedByGui)
+	if (DEMO1_Enable && !mouseLockedByGui)
 	{
 		if (!DEMO_Auto) {//disable mouse on auto mode
 			//second mouse button cleans DEMO
@@ -6910,6 +6895,9 @@ void ofxColorManager::preset_Load(std::string p)
 
 	// workflow
 	bFlag_refresh_EnginesFromPalette = true;
+
+	// workflow
+	if (DEMO1_Enable) myDEMO1.reStart();
 }
 
 //--------------------------------------------------------------

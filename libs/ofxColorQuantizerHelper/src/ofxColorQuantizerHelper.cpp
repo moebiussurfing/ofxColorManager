@@ -118,8 +118,7 @@ void ofxColorQuantizerHelper::draw_Gui()
 
 		ImGui::Dummy(ImVec2(0, 5));
 
-		ImGuiColorEditFlags colorEdiFlags;
-		colorEdiFlags =
+		ImGuiColorEditFlags colorEdiFlags =
 			ImGuiColorEditFlags_NoAlpha |
 			ImGuiColorEditFlags_NoPicker |
 			ImGuiColorEditFlags_NoTooltip;
@@ -156,10 +155,8 @@ void ofxColorQuantizerHelper::draw_Gui()
 
 			ImGui::PopItemWidth();
 		}
-		//ImGui::Dummy(ImVec2(0, 5));
 
 		// index / total
-		//ImGui::Dummy(ImVec2(0, 5));
 		std::string s = ofToString(currentImage.get()) + "/" + ofToString(getAountFiles() - 1);
 		ImGui::Text(s.c_str());
 
@@ -183,35 +180,36 @@ void ofxColorQuantizerHelper::draw_Gui()
 
 		//--
 
-		ImGui::Dummy(ImVec2(0.0f, 5));
+		ImGui::Dummy(ImVec2(0, 5));
 
 		//-
 
 		// 1. palette colors
 
-		//const auto p = getPalette();
 		const auto p = getPalette(true);
 
-		int wb = (_w99 / (int)NUM_QUANTIZER_COLORS_PER_ROW) - 2 * _spc;
-		//int wb = (ImGui::GetWindowContentRegionWidth() / (int)NUM_QUANTIZER_COLORS_PER_ROW) - (2 * _spc);
+		//// split in rows
+		//int wb = (_w99 / (int)NUM_QUANTIZER_COLORS_PER_ROW) - 2 * _spc;
+
+		// fit width
+		float wb = (_w100 / (int)p.size());// -_spc;
+		float hb = BUTTON_BIG_HEIGHT;
 
 		for (int n = 0; n < p.size(); n++)
 		{
 			ImGui::PushID(n);
 
-			// split in rows
-			if ((n % ((int)NUM_QUANTIZER_COLORS_PER_ROW)) != 0) ImGui::SameLine();
+			//// split in rows
+			//if ((n % ((int)NUM_QUANTIZER_COLORS_PER_ROW)) != 0) ImGui::SameLine();
+			//ImGui::SameLine();
+
+			// fit width
+			ImGui::SameLine(0, 0);
+
+			//-
 
 			// box colors
-
-			if (ImGui::ColorButton("##paletteQuantizer",
-				p[n],
-				colorEdiFlags,
-				ImVec2(wb, wb)))
-			{
-				//TODO:
-				//last_ = n;
-			}
+			if (ImGui::ColorButton("##paletteQuantizer", p[n], colorEdiFlags, ImVec2(wb, hb))) {}
 
 			ImGui::PopID();
 		}
@@ -264,7 +262,7 @@ void ofxColorQuantizerHelper::draw_Gui()
 		}
 
 		//// label name
-		//ImGui::Dummy(ImVec2(0.0f, 5));
+		//ImGui::Dummy(ImVec2(0, 5));
 		//ImGui::Text(currentImage_name.get().c_str());
 
 		//-
@@ -306,7 +304,18 @@ void ofxColorQuantizerHelper::draw_Gui()
 		ImGui::Dummy(ImVec2(0, 2));
 		//ImGui::Text(currentImage_name.get().c_str());
 
-		ofxSurfingHelpers::AddBigButton(bReBuild, _w100, _h*0.5);
+		ofxSurfingHelpers::AddBigButton(bReBuild, _w100, _h);
+		if (ImGui::Button("REFRESH FILES", ImVec2(_w100, _h/2))) 
+		{
+			// workflow
+			//to allow add more files on runtime
+			int currentImage_PRE = currentImage;
+			refresh_Files();
+			currentImage = currentImage_PRE;
+			build();
+		
+		}
+
 		ImGui::Dummy(ImVec2(0, 5));
 
 		if (SHOW_AdvancedLayout)
@@ -389,7 +398,7 @@ void ofxColorQuantizerHelper::draw_Gui()
 	ofxImGui::EndWindow(mainSettings);
 
 	ImGui::PopStyleVar();
-}
+		}
 #endif
 
 //----
@@ -518,7 +527,7 @@ void ofxColorQuantizerHelper::refresh_Files()
 	for (int i = 0; i < dir.size(); i++)
 	{
 		textureSourceID[i] = gui_ImGui.loadTexture(textureSource[i], dir.getPath(i));
-}
+	}
 #endif
 
 	//--
@@ -907,7 +916,6 @@ void ofxColorQuantizerHelper::build()
 		//int _max = colorQuantizer.getNumColors() + 1;
 
 		colorQuantizer.setNumColors(_max);
-
 		colorQuantizer.quantize(imageCopy.getPixels());
 
 		sortedColors.clear();;
@@ -1059,9 +1067,6 @@ void ofxColorQuantizerHelper::Changed_parameters(ofAbstractParameter &e)
 		{
 			bReBuild = false;
 			build();
-
-			// workflow
-			refresh_Files();
 		}
 	}
 	else if (_name == currentImage.getName())
@@ -1329,7 +1334,7 @@ void ofxColorQuantizerHelper::keyPressed(ofKeyEventArgs &eventArgs)
 		{
 			loadPrev();
 		}
-		if (key == OF_KEY_DOWN || key == ' ')
+		if (key == OF_KEY_DOWN)// || key == ' ')
 		{
 			loadNext();
 		}

@@ -5,17 +5,17 @@
 
 /*
 
-TODO:
-
-+ fix text input boxes. now we must to mantain click on text input..
-+ undo engine
-
-
 BUGS:
-
++ fix text input boxes. 
+	now we must to mantain click on text input..
+	lock key input problems..
++ switching from theory to range do not links well the colors
 + TCP port number switch, problems on reconnect.
 + not updating when save for update an existing preset.
 + theory picker calls too much callbacks
+
+TODO:
++ undo engine
 
 */
 
@@ -942,7 +942,7 @@ private:
 
 	// demos
 private:
-	ofParameter<bool> DEMO1_Test{ "Enable DEMO Bubbles", false };
+	ofParameter<bool> DEMO1_Enable{ "Enable DEMO Bubbles", false };
 	//ofParameter<bool> DEMO2_Enable{ "Enable DEMO2", false };
 	//ofParameter<bool> DEMO2_Edit{ "Edit DEMO2", false };
 	//ofParameter<float> DEMO2_Scale{ "Scale", 0.2, 0, 1.0f };
@@ -1006,7 +1006,7 @@ private:
 	// guis
 	void gui_Presets();
 	void gui_Kit();
-	void gui_PaletteFloating();
+	void gui_Palette();
 	void gui_Editor();
 
 	//--

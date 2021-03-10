@@ -14,6 +14,9 @@
 #define PANEL_WIDGETS_WIDTH 225
 #define PANEL_WIDGETS_HEIGHT 100
 
+#define BUTTON_BIG_HEIGHT 50
+#define NUM_QUANTIZER_COLORS_PER_ROW 4
+
 #ifdef USE_OFX_GUI__QUANTIZER
 #include "ofxGui.h"
 #endif
@@ -55,10 +58,7 @@ private:
 	ofTexture tex;
 	ofFbo fbo;
 	void refresh_QuantizerImage();
-	ofxImGui::Settings mainSettings = ofxImGui::Settings();
-#define BUTTON_BIG_HEIGHT 50
-#define NUM_QUANTIZER_COLORS_PER_ROW 4
-	
+	ofxImGui::Settings mainSettings = ofxImGui::Settings();	
 
 #ifdef USE_IM_GUI__QUANTIZER_INTERNAL
 	//TODO:
