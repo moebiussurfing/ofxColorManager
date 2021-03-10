@@ -1864,6 +1864,11 @@ void ofxColourLoversHelper::keyPressed(ofKeyEventArgs &eventArgs)
 			prevPalette();
 		}
 
+		if (key == OF_KEY_BACKSPACE)
+		{
+			bFavorites = !bFavorites;
+		}
+
 		//if (key == 'f')
 		//{
 		//    std::string str = "palettes/favourites/"+palettes[currPalette].id+ ".xml";

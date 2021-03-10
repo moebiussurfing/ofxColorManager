@@ -1276,7 +1276,8 @@ ofxColorQuantizerHelper::ofxColorQuantizerHelper()
 //--------------------------------------------------------------
 void ofxColorQuantizerHelper::keyPressed(ofKeyEventArgs &eventArgs)
 {
-	if (ENABLE_Keys) {
+	if (ENABLE_Keys) 
+	{
 		const int &key = eventArgs.key;
 		ofLogNotice(__FUNCTION__) << "key: " << key;
 
@@ -1319,22 +1320,23 @@ void ofxColorQuantizerHelper::keyPressed(ofKeyEventArgs &eventArgs)
 		//-
 
 		// sort types
-		if (key == OF_KEY_LEFT)
-		{
-			sortedType++;
-			if (sortedType > 4) sortedType = 1;
-		}
-		if (key == OF_KEY_RIGHT)
-		{
-			sortedType--;
-			if (sortedType < 1) sortedType = 4;
-		}
-		//if (key == 's' || key == OF_KEY_BACKSPACE)
+		//if (key == OF_KEY_LEFT)
 		//{
 		//	sortedType++;
-		//	if (sortedType > 4)
-		//		sortedType = 1;
+		//	if (sortedType > 4) sortedType = 1;
 		//}
+		//if (key == OF_KEY_RIGHT)
+		//{
+		//	sortedType--;
+		//	if (sortedType < 1) sortedType = 4;
+		//}
+
+		if (key == 's' || key == OF_KEY_BACKSPACE)
+		{
+			sortedType++;
+			if (sortedType > 4)
+				sortedType = 1;
+		}
 
 		//-
 
