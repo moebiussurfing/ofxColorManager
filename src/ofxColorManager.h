@@ -2,20 +2,23 @@
 #pragma once
 #include "ofMain.h"
 
+
 /*
 
 TODO:
-+ fix text input boxes
-+ store app state: preset, theory, colors a-b
+
++ fix text input boxes. now we must to mantain click on text input..
 + undo engine
-+ palette shifter
+
 
 BUGS:
+
 + TCP port number switch, problems on reconnect.
 + not updating when save for update an existing preset.
 + theory picker calls too much callbacks
 
 */
+
 
 //----------
 
@@ -1013,14 +1016,11 @@ private:
 	void preset_Save(std::string p);
 	void preset_Load(std::string p);
 
-	//TODO: this is to save an standalone palette
-	//void palette_save(std::string p);
-	//void palette_load(std::string p);
-
 	//-
 
-	//new preset
 private:
+
+	// new preset
 	ofParameter<bool> MODE_NewPreset{ "NEW PRESET", false };
 
 	std::string textInput_New = "name..";
@@ -1028,6 +1028,7 @@ private:
 	bool focus_1;
 	int has_focus = 0;
 	char tab[128];
+
 	void refresh_FilesSorting(std::string name);
 
 	//--

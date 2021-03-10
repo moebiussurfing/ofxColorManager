@@ -311,7 +311,7 @@ void ofxColourLoversHelper::drawImGuiMain()
 				_w50 = _w99 / 2;// -_spc;
 
 				{
-					if (ImGui::Button("ADD FAV", ImVec2(_w50, _hb)))
+					if (ImGui::Button("ADD FAVORITE", ImVec2(_w100, _hb)))
 					{
 						ofxSurfingHelpers::CheckFolder(path_Global + "favorites/");
 
@@ -320,13 +320,13 @@ void ofxColourLoversHelper::drawImGuiMain()
 						palettes[currPalette].save(str);
 						ofLogNotice(__FUNCTION__) << "saved favorite: " << str;
 					}
-					ImGui::SameLine();
+					//ImGui::SameLine();
 
 					//--
 
-					if (ImGui::Button("CLEAR FAVS", ImVec2(_w50, _hb))) ImGui::OpenPopup("CLEAR FAVS?");
+					if (ImGui::Button("CLEAR FAVORITES", ImVec2(_w50, _hb))) ImGui::OpenPopup("CLEAR FAVORITES?");
 
-					if (ImGui::BeginPopupModal("CLEAR FAVS?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+					if (ImGui::BeginPopupModal("CLEAR FAVORITES?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
 					{
 						ImGui::Text("All Favorite palettes will be deleted.\nThis operation cannot be undone!\n\n");
 						ImGui::Separator();
@@ -357,10 +357,10 @@ void ofxColourLoversHelper::drawImGuiMain()
 					//}
 				}
 				//ImGui::PopItemWidth();
-
+				ImGui::SameLine();
 				//ImGui::Dummy(ImVec2(0, 5));
 				{
-					if (ImGui::Button("CLEAR HISTORY", ImVec2(_w100, _hb))) ImGui::OpenPopup("CLEAR HISTORY?");
+					if (ImGui::Button("CLEAR HISTORY", ImVec2(_w50, _hb))) ImGui::OpenPopup("CLEAR HISTORY?");
 
 					if (ImGui::BeginPopupModal("CLEAR HISTORY?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
 					{
