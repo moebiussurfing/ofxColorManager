@@ -224,7 +224,7 @@ private:
 	std::string host = "127.0.0.1";//localhost
 	void updateLink();
 	void setupLink();
-	void drawLink();
+	void drawLink(int x = 20, int y = 20);
 #endif
 
 	//--

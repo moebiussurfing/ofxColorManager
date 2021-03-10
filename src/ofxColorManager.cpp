@@ -276,33 +276,41 @@ ofxColorManager::ofxColorManager()
 	//--
 
 	helpInfo = "HELP INFO\n\n";
-	helpInfo += "H                   HELP\n";
+
+	helpInfo += "H                     HELP\n";
 	//helpInfo += "K                   KEYS\n";
-	helpInfo += "G                   GUI\n";
+	helpInfo += "G                     GUI\n";
 	helpInfo += "\n";
-	helpInfo += "SPACE               >>\n";
-	helpInfo += "Down|Up             BROWSE\n";
-	helpInfo += "-|+                 AMOUNT COLORS\n";
+	helpInfo += "SPACE                 NEXT\n";
+	helpInfo += "Down|Up|Left|Right    BROWSE\n";
+	helpInfo += "-|+                   AMOUNT COLORS\n";
 	helpInfo += "\n";
 	//helpInfo += "\n";
+
 	helpInfo += "PANELS\n";
-	helpInfo += "F1                  PRESETS\n";
-	helpInfo += "F2                  PALETTE COLORS\n";
-	helpInfo += "F3                  PALETTE EDITOR\n";
-	helpInfo += "F4                  PICKER\n";
-	helpInfo += "F5                  BACKGROUND\n";
-	helpInfo += "F6                  LIBRARY\n";
-	helpInfo += "F7                  GRADIENT\n";
+	helpInfo += "F1                    PALETTE\n";
+	helpInfo += "F2                    EDITOR\n";
+	helpInfo += "F3                    PRESETS\n";
+	helpInfo += "F4                    KIT\n";
+	helpInfo += "F5                    PICKER\n";
+	helpInfo += "F6                    LIBRARY\n";
+	helpInfo += "F7                    DEMO\n";
+	helpInfo += "F8                    GRADIENT\n";
+	helpInfo += "F9                    MINI\n";
+	helpInfo += "F10                   EXPORT\n";
+	helpInfo += "F11                   RESTORE\n";
+	//helpInfo += "F6                    BACKGROUND\n";
 	helpInfo += "\n";
+
 	helpInfo += "ENGINES\n";
-	helpInfo += "TAB                 APP MODES\n";
-	helpInfo += "                    THEORY\n";
-	helpInfo += "                    RANGE\n";
-	helpInfo += "                    LOVERS\n";
-	helpInfo += "                    PICTURE\n";
+	helpInfo += "TAB                   \n";
+	helpInfo += "                      THEORY\n";
+	helpInfo += "                      RANGE\n";
+	helpInfo += "                      LOVERS\n";
+	helpInfo += "                      PICTURE\n";
 	helpInfo += "\n";
-	helpInfo += "F11                 HIDE ALL\n";
 	helpInfo += "\n";
+
 	//helpInfo += "TEST\n";
 	//helpInfo += "D                   DEMO SCENE\n";
 	//helpInfo += "T                   GRADIENT TEST\n";
@@ -1410,12 +1418,15 @@ void ofxColorManager::draw(ofEventArgs & args)
 	if (ENABLE_HelpInfo)
 	{
 		std::string str = helpInfo;
+
 		ofPushMatrix();
+		int w = ofxSurfingHelpers::getWidthBBtextBoxed(font, str);
+		int h = ofxSurfingHelpers::getHeightBBtextBoxed(font, str);
+		int x = ofGetWidth() * 0.5 - w * 0.5;
+		int y = ofGetHeight() * 0.5 - h * 0.5;
 		{
 			//center box
-			int w = ofxSurfingHelpers::getWidthBBtextBoxed(font, str);
-			int h = ofxSurfingHelpers::getHeightBBtextBoxed(font, str);
-			ofTranslate(ofGetWidth() * 0.5 - w * 0.5, ofGetHeight() * 0.5 - h * 0.5);
+			ofTranslate(x, y);
 			ofSetColor(255, 255);
 			ofxSurfingHelpers::drawTextBoxed(font, str);
 		}
@@ -1424,7 +1435,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 		//--
 
 #ifdef LINK_TCP_MASTER_CLIENT
-		drawLink();
+		drawLink(x, y + h + 20);
 #endif
 	}
 }
@@ -2603,9 +2614,9 @@ void ofxColorManager::gui_Library()
 				ImGui::Dummy(ImVec2(0, 5));
 
 				ofxImGui::AddParameter(colorBrowser.ENABLE_keys);
-		}
+			}
 #endif
-	}
+		}
 
 		//--
 
@@ -2792,7 +2803,7 @@ void ofxColorManager::gui_Library()
 		{
 			refresh_FromPicked();
 		}
-}
+	}
 
 	ofxImGui::EndWindow(mainSettings);
 
@@ -3855,7 +3866,7 @@ void ofxColorManager::gui_Presets()
 		{
 			int _i = last_Index_Preset;
 
-			ImGui::PushItemWidth(_w99);
+			ImGui::PushItemWidth(_w100);
 
 			if (ofxImGui::VectorCombo(" ", &_i, files_Names))
 			{
@@ -4912,7 +4923,7 @@ void ofxColorManager::palette_RemoveColor(int c)
 
 		// 1. debug after remove color from palette vector
 		ofLogNotice(__FUNCTION__) << "Palette content: ";
-		for (unsigned i = 0; i < palette.size(); ++i) ofLogNotice(__FUNCTION__) << ' ' << palette[i];
+		for (unsigned i = 0; i < palette.size(); ++i) ofLogNotice(__FUNCTION__) << palette[i];
 		ofLogNotice(__FUNCTION__) << '\n';
 		ofLogNotice(__FUNCTION__) << "palette size post: " << palette.size();
 
@@ -5329,7 +5340,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 		switch (AppMode.get())
 		{
-		// none
+			// none
 		case 0:
 		{
 			SHOW_Theory = false;
@@ -5413,7 +5424,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	else if (name == bModePalettePreset.getName())
 	{
 		bModeBundlePreset = !bModePalettePreset;
-}
+	}
 #endif
 
 	//----
@@ -6186,25 +6197,6 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				presetNext();
 			}
 
-			//else if (key == ' ' && !mod_CONTROL)
-			//{
-			//	if (last_Index_Preset < files.size() - 1)
-			//	{
-			//		last_Index_Preset++;
-			//	}
-			//	else
-			//	{
-			//		if (last_Index_Preset == files.size() - 1) last_Index_Preset = 0;//cycle
-			//	}
-
-			//	if (last_Index_Preset < files.size())
-			//	{
-			//		PRESET_Name = files_Names[last_Index_Preset];
-			//		ofLogNotice(__FUNCTION__) << "PRESET_Name: [" + ofToString(last_Index_Preset) + "] " << PRESET_Name;
-			//		preset_Load(PRESET_Name);
-			//	}
-			//}
-
 			// get some presets by index random 
 			else if (key == 'R')
 			{
@@ -6226,37 +6218,40 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 		if (SHOW_Range && !SHOW_Theory && !SHOW_ColourLovers && !SHOW_Quantizer)// && !SHOW_Library)
 		{
-			if (key == OF_KEY_UP || (key == ' ' && mod_CONTROL))
+			if (!SHOW_Presets)
 			{
-				if (last_Index_Range == 0) last_Index_Range = NUM_TYPES_RANGES - 1;
-				else if (last_Index_Range > 0) last_Index_Range--;
-				last_Index_Range = (int)ofClamp(last_Index_Range, 0, NUM_TYPES_RANGES - 1);
-
-				for (int i = 0; i < NUM_TYPES_RANGES; i++)
+				if (key == OF_KEY_UP || (key == ' ' && mod_CONTROL))
 				{
-					types_Range[i].disableEvents();
-					types_Range[i] = false;
-					types_Range[i].enableEvents();
+					if (last_Index_Range == 0) last_Index_Range = NUM_TYPES_RANGES - 1;
+					else if (last_Index_Range > 0) last_Index_Range--;
+					last_Index_Range = (int)ofClamp(last_Index_Range, 0, NUM_TYPES_RANGES - 1);
+
+					for (int i = 0; i < NUM_TYPES_RANGES; i++)
+					{
+						types_Range[i].disableEvents();
+						types_Range[i] = false;
+						types_Range[i].enableEvents();
+					}
+					types_Range[last_Index_Range] = true;
+
+					bLast_Index_Range = true;
 				}
-				types_Range[last_Index_Range] = true;
-
-				bLast_Index_Range = true;
-			}
-			if (key == OF_KEY_DOWN || (key == ' ' && !mod_CONTROL))
-			{
-				if (last_Index_Range >= NUM_TYPES_RANGES - 1) last_Index_Range = 0;
-				else last_Index_Range++;
-				last_Index_Range = (int)ofClamp(last_Index_Range, 0, NUM_TYPES_RANGES - 1);
-
-				for (int i = 0; i < NUM_TYPES_RANGES; i++)
+				if (key == OF_KEY_DOWN || (key == ' ' && !mod_CONTROL))
 				{
-					types_Range[i].disableEvents();
-					types_Range[i] = false;
-					types_Range[i].enableEvents();
-				}
-				types_Range[last_Index_Range] = true;
+					if (last_Index_Range >= NUM_TYPES_RANGES - 1) last_Index_Range = 0;
+					else last_Index_Range++;
+					last_Index_Range = (int)ofClamp(last_Index_Range, 0, NUM_TYPES_RANGES - 1);
 
-				bLast_Index_Range = true;
+					for (int i = 0; i < NUM_TYPES_RANGES; i++)
+					{
+						types_Range[i].disableEvents();
+						types_Range[i] = false;
+						types_Range[i].enableEvents();
+					}
+					types_Range[last_Index_Range] = true;
+
+					bLast_Index_Range = true;
+				}
 			}
 
 			//switch color c1/c2 selectors
@@ -6282,27 +6277,30 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 		if (SHOW_Theory && !SHOW_Range && !SHOW_ColourLovers && !SHOW_Quantizer && !SHOW_Library)
 		{
-			if (key == OF_KEY_UP || (key == ' ' && mod_CONTROL))
+			if (!SHOW_Presets)
 			{
-				if (last_Index_Theory_PickPalette == 0) last_Index_Theory_PickPalette = last_Index_Theory_PickPalette.getMax();
-				else if (last_Index_Theory_PickPalette > 0) last_Index_Theory_PickPalette = last_Index_Theory_PickPalette.get() - 1;
-
-				bLast_Index_Theory = true;
-			}
-
-			if (key == OF_KEY_DOWN || (key == ' ' && !mod_CONTROL))
-			{
-				//last_Index_Theory_PickPalette = last_Index_Theory_PickPalette.get() + 1;
-
-				if (last_Index_Theory_PickPalette == last_Index_Theory_PickPalette.getMax())//cycle 
+				if (key == OF_KEY_UP || (key == ' ' && mod_CONTROL))
 				{
-					last_Index_Theory_PickPalette = last_Index_Theory_PickPalette.getMin();
-				}
-				else {
-					last_Index_Theory_PickPalette = last_Index_Theory_PickPalette.get() + 1;
+					if (last_Index_Theory_PickPalette == 0) last_Index_Theory_PickPalette = last_Index_Theory_PickPalette.getMax();
+					else if (last_Index_Theory_PickPalette > 0) last_Index_Theory_PickPalette = last_Index_Theory_PickPalette.get() - 1;
+
+					bLast_Index_Theory = true;
 				}
 
-				bLast_Index_Theory = true;
+				if (key == OF_KEY_DOWN || (key == ' ' && !mod_CONTROL))
+				{
+					//last_Index_Theory_PickPalette = last_Index_Theory_PickPalette.get() + 1;
+
+					if (last_Index_Theory_PickPalette == last_Index_Theory_PickPalette.getMax())//cycle 
+					{
+						last_Index_Theory_PickPalette = last_Index_Theory_PickPalette.getMin();
+					}
+					else {
+						last_Index_Theory_PickPalette = last_Index_Theory_PickPalette.get() + 1;
+					}
+
+					bLast_Index_Theory = true;
+				}
 			}
 		}
 
@@ -6462,94 +6460,76 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 		//-
 
-		else if (key == OF_KEY_F1)//presets
-		{
-			SHOW_Presets = !SHOW_Presets;
-		}
-		else if (key == OF_KEY_F2)//floating palette
+		else if (key == OF_KEY_F1)//floating palette
 		{
 			SHOW_UserPaletteFloating = !SHOW_UserPaletteFloating;
 		}
-		else if (key == OF_KEY_F3)//palette editor
+		else if (key == OF_KEY_F2)//palette editor
 		{
 			SHOW_UserPaletteEditor = !SHOW_UserPaletteEditor;
 		}
-
-		else if (key == OF_KEY_F4)//picker
+		else if (key == OF_KEY_F3)//presets
+		{
+			SHOW_Presets = !SHOW_Presets;
+		}
+		else if (key == OF_KEY_F4)//kit
+		{
+			SHOW_Kit = !SHOW_Kit;
+		}
+		else if (key == OF_KEY_F5)//picker
 		{
 			SHOW_Picker = !SHOW_Picker;
 		}
-#ifdef MODE_BACKGROUND
-		else if (key == OF_KEY_F5)//bg
-		{
-			SHOW_BackGround = !SHOW_BackGround;
-		}
-#endif
+		//#ifdef MODE_BACKGROUND
+		//		else if (key == OF_KEY_F5)//bg
+		//		{
+		//			SHOW_BackGround = !SHOW_BackGround;
+		//		}
+		//#endif
 		else if (key == OF_KEY_F6)//library
 		{
 			SHOW_Library = !SHOW_Library;
 		}
-
-		else if (key == OF_KEY_F7)//curve
+		else if (key == OF_KEY_F7)//demo
+		{
+			SHOW_Demos = !SHOW_Demos;
+		}
+		else if (key == OF_KEY_F8)//gradient
 		{
 			//SHOW_Gradient = !SHOW_Gradient;
 			gradientEngine.SHOW_Gradient = !gradientEngine.SHOW_Gradient;
-
-			//if (SHOW_Gradient) 
-			if (gradientEngine.SHOW_Gradient)
-			{
-				SHOW_UserPaletteFloating = false;
-				SHOW_UserPaletteEditor = false;
-				SHOW_Picker = false;
-				SHOW_Library = false;
-#ifdef MODE_BACKGROUND
-				SHOW_BackGround = false;
-#endif
-				SHOW_Theory = false;
-				SHOW_Range = false;
-				SHOW_ColourLovers = false;
-				SHOW_Quantizer = false;
-				//SHOW_Presets = false;
-			}
+		}
+		else if (key == OF_KEY_F9)//mini
+		{
+			SHOW_MINI_Preview = !SHOW_MINI_Preview;
+		}
+		else if (key == OF_KEY_F10)//export
+		{
+			SHOW_Export = !SHOW_Export;
 		}
 
 		//-
 
-		// engines
-
-		//else if (key == OF_KEY_F5)//theory
-		//{
-		//	SHOW_Theory = !SHOW_Theory;
-		//}
-		//else if (key == OF_KEY_F6)//range
-		//{
-		//	SHOW_Range = !SHOW_Range;
-		//}
-		//else if (key == OF_KEY_F7)//lovers
-		//{
-		//	SHOW_ColourLovers = !SHOW_ColourLovers;
-		//}
-		//else if (key == OF_KEY_F8)//quantizer
-		//{
-		//	SHOW_Quantizer = !SHOW_Quantizer;
-		//}
-
-		else if (key == OF_KEY_F11)//all off
+		else if (key == OF_KEY_F11)//restore all
 		{
-			SHOW_UserPaletteFloating = false;
-			SHOW_UserPaletteEditor = false;
-			SHOW_Picker = false;
-			gradientEngine.SHOW_Gradient = false;
-			//SHOW_Gradient = false;
+			SHOW_UserPaletteFloating = true;
+			SHOW_UserPaletteEditor = true;
+			SHOW_Presets = true;
+			SHOW_Kit = true;
+			SHOW_Picker = true;
 			SHOW_Library = false;
+			SHOW_Demos = false;
+			SHOW_MINI_Preview = false;
+			gradientEngine.SHOW_Gradient = false;
 #ifdef MODE_BACKGROUND
-			SHOW_BackGround = false;
+			SHOW_BackGround = true;
 #endif
+			SHOW_AdvancedLayout = false;
+			
 			SHOW_Theory = false;
 			SHOW_Range = false;
 			SHOW_ColourLovers = false;
 			SHOW_Quantizer = false;
-			SHOW_Presets = false;
 		}
 	}
 }
@@ -6557,9 +6537,6 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 //--------------------------------------------------------------
 void ofxColorManager::keyReleased(ofKeyEventArgs &eventArgs)
 {
-	//if (eventArgs.key == ' ')
-	//{
-	//}
 }
 
 //--------------------------------------------------------------
@@ -7512,9 +7489,9 @@ void ofxColorManager::updateLink() {
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::drawLink() {
-	std::string ss;
-	ss = "TCP SERVER\n\port: " + ofToString(TCP.getPort()) + "\n";
+void ofxColorManager::drawLink(int x, int y)
+{
+	std::string ss = "TCP SERVER\n\port: " + ofToString(TCP.getPort()) + "\n";
 
 	// for each connected client lets get the data being sent and lets print it to the screen
 	for (unsigned int i = 0; i < (unsigned int)TCP.getLastID(); i++) {
@@ -7557,7 +7534,7 @@ void ofxColorManager::drawLink() {
 		ss += storeText[i];
 	}
 
-	ofxSurfingHelpers::drawTextBoxed(font, ss, 20, 20);
+	ofxSurfingHelpers::drawTextBoxed(font, ss, x, y);
 }
 #endif
 
