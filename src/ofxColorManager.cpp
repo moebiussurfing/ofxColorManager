@@ -6027,7 +6027,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 		// presets control
 
-		if (!SHOW_Library)
+		if (!SHOW_Library && SHOW_Presets)
 		{
 			//browse presets
 			if (key == OF_KEY_LEFT && !mod_CONTROL)
@@ -6036,7 +6036,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				return;
 			}
 
-			else if (key == OF_KEY_RIGHT && !mod_CONTROL)
+			else if ((key == OF_KEY_RIGHT || key == ' ') && !mod_CONTROL)
 			{
 				presetNext();
 				return;
@@ -6458,8 +6458,6 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 		// panels
 
-		//-
-
 		else if (key == OF_KEY_F1)//floating palette
 		{
 			SHOW_UserPaletteFloating = !SHOW_UserPaletteFloating;
@@ -6524,12 +6522,12 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 #ifdef MODE_BACKGROUND
 			SHOW_BackGround = true;
 #endif
-			SHOW_AdvancedLayout = false;
-			
 			SHOW_Theory = false;
 			SHOW_Range = false;
 			SHOW_ColourLovers = false;
 			SHOW_Quantizer = false;
+			
+			SHOW_AdvancedLayout = false;
 		}
 	}
 }

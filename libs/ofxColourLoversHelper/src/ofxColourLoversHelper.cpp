@@ -557,16 +557,15 @@ void ofxColourLoversHelper::drawImGuiBrowseKits()
 				// 1. spacing
 				ImGui::Dummy(ImVec2(0, _spc2));
 
+				// autoscroll
+				if (i == currPalette) if (AutoScroll) ImGui::SetScrollHereY(0.0f); // 0.0f:top, 0.5f:center, 1.0f:bottom
+
 				// 2. label tittle
 				std::string _name = palettes[i].title;
 
 				ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 2));
 				ImGui::Text(_name.c_str());
-				// autoscroll
-				if (i == currPalette)
-				{
-					if (AutoScroll) ImGui::SetScrollHereY(0.0f); // 0.0f:top, 0.5f:center, 1.0f:bottom
-				}
+
 				ImGui::PopStyleVar();
 
 				//-
@@ -926,10 +925,10 @@ void ofxColourLoversHelper::setup()
 	params.add(bFavorites);
 	params.add(bHistory);
 
-	bFavorites.setSerializable(false);
-	bHistory.setSerializable(false);
+	//bFavorites.setSerializable(false);
+	//bHistory.setSerializable(false);
 
-	ofxSurfingHelpers::loadGroup(params, path_AppSettings);
+	//ofxSurfingHelpers::loadGroup(params, path_AppSettings);
 
 	//----
 
@@ -987,6 +986,8 @@ void ofxColourLoversHelper::setup()
 	//// setPalette(currPalette);
 	// refreshPalette();
 	// }
+
+	ofxSurfingHelpers::loadGroup(params, path_AppSettings);
 }
 
 
