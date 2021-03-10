@@ -83,6 +83,9 @@ public:
 
 	void loadNext();
 	void loadPrev();
+	void randomPalette
+	
+	();
 
 private:
 	//easy callback

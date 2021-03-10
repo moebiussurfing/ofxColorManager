@@ -782,7 +782,7 @@ private:
 
 	ImGuiWindowFlags flagsWindows;
 
-	bool mouseOverGui;
+	bool mouseLockedByGui;
 	bool mouseOverGui_PRE;
 	bool bCheckMouseOverTextInput = true;//flag to return mouse over any gui panel or over text input only!
 

@@ -449,6 +449,23 @@ void ofxColorQuantizerHelper::loadNext()
 }
 
 //--------------------------------------------------------------
+void ofxColorQuantizerHelper::randomPalette()
+{
+	int pmin, pmax;
+	pmin = 0;
+	pmax = dir.size();
+	currentImage = ofRandom(pmin, pmax);
+
+	ofLogNotice(__FUNCTION__) << "currentImage: " << ofToString(currentImage);
+	if (dir.size() > 0 && currentImage < dir.size())
+	{
+		imageName = dir.getName(currentImage);
+		imageName_path = dir.getPath(currentImage);
+		buildFromImageFile(imageName_path, numColors);
+	}
+}
+
+//--------------------------------------------------------------
 void ofxColorQuantizerHelper::refresh_Files()
 {
 	// load dragged images folder
@@ -501,7 +518,7 @@ void ofxColorQuantizerHelper::refresh_Files()
 	for (int i = 0; i < dir.size(); i++)
 	{
 		textureSourceID[i] = gui_ImGui.loadTexture(textureSource[i], dir.getPath(i));
-	}
+}
 #endif
 
 	//--
@@ -1276,7 +1293,7 @@ ofxColorQuantizerHelper::ofxColorQuantizerHelper()
 //--------------------------------------------------------------
 void ofxColorQuantizerHelper::keyPressed(ofKeyEventArgs &eventArgs)
 {
-	if (ENABLE_Keys) 
+	if (ENABLE_Keys)
 	{
 		const int &key = eventArgs.key;
 		ofLogNotice(__FUNCTION__) << "key: " << key;
@@ -1315,6 +1332,11 @@ void ofxColorQuantizerHelper::keyPressed(ofKeyEventArgs &eventArgs)
 		if (key == OF_KEY_DOWN || key == ' ')
 		{
 			loadNext();
+		}
+
+		if (key == OF_KEY_RETURN)
+		{
+			randomPalette();
 		}
 
 		//-

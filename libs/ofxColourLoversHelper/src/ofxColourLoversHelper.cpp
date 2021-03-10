@@ -119,7 +119,7 @@ void ofxColourLoversHelper::drawImGuiMain()
 
 		//-
 
-		if (ImGui::CollapsingHeader("SEARCH"))
+		if (ImGui::CollapsingHeader("HTTP SEARCH"))
 		{
 			ImGui::Dummy(ImVec2(0, 5));
 
@@ -148,7 +148,7 @@ void ofxColourLoversHelper::drawImGuiMain()
 			//ImGui::Dummy(ImVec2(0, 2));
 
 			//ImGui::SameLine();
-			if (ImGui::Button("ONLINE SEARCH", ImVec2(_w100, _hb * 2)))
+			if (ImGui::Button("SEARCH", ImVec2(_w100, _hb * 2)))
 			{
 				ofLogNotice(__FUNCTION__) << "searchPalettes: " << textInput_temp1_PRE;
 
@@ -1867,6 +1867,11 @@ void ofxColourLoversHelper::keyPressed(ofKeyEventArgs &eventArgs)
 		if (key == OF_KEY_BACKSPACE)
 		{
 			bFavorites = !bFavorites;
+		}
+
+		if (key == OF_KEY_RETURN)
+		{
+			randomPalette();
 		}
 
 		//if (key == 'f')
