@@ -1525,6 +1525,8 @@ void ofxColorManager::gui_Theory()
 	flags |= flagsWindows;
 
 	const float butlabelw = 180;// width label text
+	//offset
+	float _offset = 20;//to include extra slider for analog
 
 	//--
 
@@ -1654,8 +1656,6 @@ void ofxColorManager::gui_Theory()
 
 		//--
 
-		//offset
-		float _offset = 18;//to include extra slider for analog
 		_h100 = ImGui::GetContentRegionAvail().y;
 		_hSz2 = ((_h100 - _offset) / _numTheories) - _spcy;
 
@@ -3251,11 +3251,14 @@ void ofxColorManager::gui_PanelsMain()
 #endif
 		float _spcx = ImGui::GetStyle().ItemSpacing.x;
 		float _spcy = ImGui::GetStyle().ItemSpacing.y;
-		float _w100 = ImGui::GetContentRegionAvail().x;
-		float maxw = 850;
-		bool bMini = _w100 < maxw;
 		float _h100 = ImGui::GetContentRegionAvail().y;
+		float _w100 = ImGui::GetContentRegionAvail().x;
 		float _w99 = _w100;// -_spcx;
+
+		//layout
+		float maxw = 850;
+		//bool bMini = _w100 < maxw;
+		bool bMini = true;
 
 		float _w;
 		if (!bMini)_w = _w99 / NUM_WIDGETS - _spcx;
@@ -3266,17 +3269,15 @@ void ofxColorManager::gui_PanelsMain()
 
 		ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteFloating, _w, _h);
 		ImGui::SameLine();
-		ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteEditor, _w, _h);
-		ImGui::SameLine();
 		ofxSurfingHelpers::AddBigToggle(SHOW_Presets, _w, _h);
 		ImGui::SameLine();
 		ofxSurfingHelpers::AddBigToggle(SHOW_Kit, _w, _h);
 		ImGui::SameLine();
-
-		//ImGui::Separator();
-
+		ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteEditor, _w, _h);
+		ImGui::SameLine();
 		ofxSurfingHelpers::AddBigToggle(SHOW_Picker, _w, _h);
 		ImGui::SameLine();
+
 #ifdef MODE_BACKGROUND
 		ofxSurfingHelpers::AddBigToggle(SHOW_BackGround, _w, _h);
 		ImGui::SameLine();
