@@ -286,6 +286,7 @@ ofxColorManager::ofxColorManager()
 	helpInfo += "\n";
 	helpInfo += "SPACE                 NEXT PRESET\n";
 	helpInfo += "Left|Right            <  > PRESETS\n";
+	helpInfo += "Left|Right+Ctrl       <  > SHIFT\n";
 	helpInfo += "Down|Up               <  > ENGINE TYPES\n";
 	helpInfo += "   -|+                AMOUNT COLORS\n";
 	helpInfo += "BACKSPACE             AUX\n";
@@ -2033,10 +2034,7 @@ void ofxColorManager::gui_Editor()
 
 					//-
 
-					if (ImGui::ColorButton("##paletteDragEditor",
-						palette[n],
-						_flags,
-						bb))
+					if (ImGui::ColorButton("##paletteDragEditor", palette[n], _flags, bb))
 					{
 						last_Index_ColorPalette = n;
 
@@ -2101,6 +2099,14 @@ void ofxColorManager::gui_Editor()
 
 							// workflow
 							bFlag_refresh_EnginesFromPalette = true;
+
+							//--
+
+							// export
+							if (bAutoExportPreset)
+							{
+								bExportFlag = true;
+							}
 
 						}
 						ImGui::EndDragDropTarget();
@@ -2286,7 +2292,7 @@ void ofxColorManager::gui_Palette()
 
 		int _amtBtn = palette.size();
 		float _wx2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
-		
+
 		//-
 
 		// color buttons
@@ -2440,12 +2446,20 @@ void ofxColorManager::gui_Palette()
 					//--
 
 					// update all pallete (Curve)
-					ofLogNotice(__FUNCTION__) << "DONE Dragged _c";
+					ofLogNotice(__FUNCTION__) << "DONE Dragged";
 
 					gradientEngine.buildFrom_TARGET();
 
 					// workflow
 					bFlag_refresh_EnginesFromPalette = true;
+
+					//--
+
+					// export
+					if (bAutoExportPreset)
+					{
+						bExportFlag = true;
+					}
 
 				}
 				ImGui::EndDragDropTarget();
@@ -2851,7 +2865,7 @@ void ofxColorManager::gui_Export()
 			if (ImGui::Button("EXPORT PRESET", ImVec2(_w100, _h)))
 			{
 				exportPalette();
-			}
+		}
 			//ImGui::PopItemWidth();
 
 #ifndef USE_SIMPLE_PRESET_PALETTE	
@@ -2943,12 +2957,12 @@ void ofxColorManager::gui_Export()
 
 				ImGui::Checkbox("Auto-Resize", &auto_resize);
 			}
-			}
-		}
+	}
+}
 	ofxImGui::EndWindow(mainSettings);
 
 	ImGui::PopStyleVar();
-	}
+}
 
 //--------------------------------------------------------------
 void ofxColorManager::gui_Picker()
@@ -3185,7 +3199,7 @@ void ofxColorManager::gui_PanelsEngines()
 
 #ifndef USE_MINIMAL_GUI
 //--------------------------------------------------------------
-void ofxColorManager::gui_Extra()
+void ofxColorManager::gui_Advanced()
 {
 	static bool auto_resize = true;
 
@@ -3230,17 +3244,23 @@ void ofxColorManager::gui_PanelsMain()
 
 	if (ofxImGui::BeginWindow("MAIN PANEL", mainSettings, flags))
 	{
+		int NUM_WIDGETS = 11;//expected num widgets
+
 #ifndef USE_MINIMAL_GUI
-		const int NUM_WIDGETS = 11;//extra advanced toggle
-#else
-		const int NUM_WIDGETS = 10;
+		NUM_WIDGETS++;//extra advanced toggle
 #endif
 		float _spcx = ImGui::GetStyle().ItemSpacing.x;
 		float _spcy = ImGui::GetStyle().ItemSpacing.y;
 		float _w100 = ImGui::GetContentRegionAvail().x;
+		float maxw = 850;
+		bool bMini = _w100 < maxw;
 		float _h100 = ImGui::GetContentRegionAvail().y;
 		float _w99 = _w100;// -_spcx;
-		float _w = _w99 / NUM_WIDGETS - _spcx;
+
+		float _w;
+		if (!bMini)_w = _w99 / NUM_WIDGETS - _spcx;
+		else _w = _w99 / 6 - _spcx;
+
 		//float _h = _h100 - _spcy;
 		float _h = BUTTON_BIG_HEIGHT;
 
@@ -3257,14 +3277,17 @@ void ofxColorManager::gui_PanelsMain()
 
 		ofxSurfingHelpers::AddBigToggle(SHOW_Picker, _w, _h);
 		ImGui::SameLine();
-		ofxSurfingHelpers::AddBigToggle(SHOW_Library, _w, _h);
-		ImGui::SameLine();
 #ifdef MODE_BACKGROUND
 		ofxSurfingHelpers::AddBigToggle(SHOW_BackGround, _w, _h);
 		ImGui::SameLine();
 #endif
+		ofxSurfingHelpers::AddBigToggle(SHOW_Library, _w, _h);
+		if (!bMini) ImGui::SameLine();//split if mini
 
 		//ImGui::Separator();
+
+		ofxSurfingHelpers::AddBigToggle(SHOW_Engines, _w, _h);
+		ImGui::SameLine();
 
 		ofxSurfingHelpers::AddBigToggle(SHOW_Demos, _w, _h);
 		ImGui::SameLine();
@@ -3278,7 +3301,7 @@ void ofxColorManager::gui_PanelsMain()
 		ImGui::SameLine();
 		ofxSurfingHelpers::AddBigToggle(SHOW_AdvancedLayout, _w, _h);
 #endif
-}
+	}
 	ofxImGui::EndWindow(mainSettings);
 
 	ImGui::PopStyleVar();
@@ -4128,7 +4151,7 @@ void ofxColorManager::gui_Presets()
 
 			ImGui::SameLine();
 
-			if (ImGui::Button("REFRESH KIT", ImVec2(_w50, _h * 0.5)))
+			if (ImGui::Button("REFRESH", ImVec2(_w50, _h * 0.5)))
 			{
 				ofLogNotice(__FUNCTION__) << "REFRESH KIT";
 
@@ -4141,9 +4164,9 @@ void ofxColorManager::gui_Presets()
 
 			// palette colors mini preview
 			// auto browse presets. to testing and auto export
-			if (ofxImGui::AddParameter(auto_pilot))
-			{
-			}
+			ImGui::PushItemWidth(_w99);
+			if (ofxImGui::AddParameter(auto_pilot)) {}
+			ImGui::PopItemWidth();
 
 			if (auto_pilot) ofxImGui::AddParameter(auto_pilot_Duration);
 		}
@@ -4327,6 +4350,10 @@ void ofxColorManager::gui_Demo()
 
 		//-
 
+		ImGui::Dummy(ImVec2(0, 2));
+		ImGui::Separator();
+		ImGui::Dummy(ImVec2(0, 2));
+
 		// svg demo 2
 		ofxSurfingHelpers::AddBigToggle(DEMO2_Svg.DEMO2_Enable, _w100);
 		if (DEMO2_Svg.DEMO2_Enable)
@@ -4478,22 +4505,27 @@ bool ofxColorManager::draw_Gui()
 #ifdef MODE_BACKGROUND
 			if (SHOW_BackGround) gui_Background();
 #endif
-			if (SHOW_Theory) gui_Theory();
-			if (SHOW_Range) gui_Range();
+			if (SHOW_Engines)
+			{
+				if (SHOW_Panels) gui_PanelsEngines();
+				if (SHOW_Theory) gui_Theory();
+				if (SHOW_Range) gui_Range();
 #ifdef USE_COLOR_LOVERS
-			if (SHOW_ColourLovers) colourLoversHelper.draw();
+				if (SHOW_ColourLovers) colourLoversHelper.draw();
 #endif
-			if (SHOW_Quantizer) colorQuantizer.draw_Gui();
+				if (SHOW_Quantizer) colorQuantizer.draw_Gui();
+			}
+
 			if (SHOW_Panels) gui_PanelsMain();
-			if (SHOW_Panels) gui_PanelsEngines();
+
 			if (SHOW_Export) gui_Export();
 			if (SHOW_Demos) gui_Demo();
 #ifndef USE_MINIMAL_GUI
-			if (SHOW_AdvancedLayout) gui_Extra();
+			if (SHOW_AdvancedLayout) gui_Advanced();
 #endif
 			if (gradientEngine.SHOW_Gradient) gui_Gradient();
 			//if (SHOW_Gradient) gui_Gradient();
-		}
+	}
 
 		//--
 
@@ -4514,7 +4546,7 @@ bool ofxColorManager::draw_Gui()
 		}
 
 		//--
-	}
+}
 	gui.end();
 
 	//-
@@ -5379,8 +5411,8 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		// range
 		case 2:
 		{
-			SHOW_Range = true;
 			SHOW_Theory = false;
+			SHOW_Range = true;
 			SHOW_ColourLovers = false;
 			SHOW_Quantizer = false;
 			bLast_Index_Range = true;
@@ -5390,9 +5422,9 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		// lovers
 		case 3:
 		{
-			SHOW_ColourLovers = true;
 			SHOW_Theory = false;
 			SHOW_Range = false;
+			SHOW_ColourLovers = true;
 			SHOW_Quantizer = false;
 		}
 		break;
@@ -5400,10 +5432,10 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		// quantizer
 		case 4:
 		{
-			SHOW_Quantizer = true;
 			SHOW_Theory = false;
 			SHOW_Range = false;
 			SHOW_ColourLovers = false;
+			SHOW_Quantizer = true;
 		}
 		break;
 		}
@@ -5603,11 +5635,15 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 			// workflow
 			if (bEditPalette) bEditPalette = false;
-			
-			if (bAuto_Color1_FromPicker_Range) {
+
+			bLast_Index_Range = true;
+
+			if (bAuto_Color1_FromPicker_Range)
+			{
 				color_Picked.set(color_1_Range.get());
 			}
-			else if (bAuto_Color2_FromPicker_Range) {
+			else if (bAuto_Color2_FromPicker_Range)
+			{
 				color_Picked.set(color_2_Range.get());
 			}
 
@@ -5616,27 +5652,28 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			// workflow
 			refresh_Pick_ToEngines();
 		}
-		else
-		{
-			if (bAuto_Color1_FromPicker_Range) {
-				color_Picked.set(color_1_Range.get());
-			}
-			else if (bAuto_Color2_FromPicker_Range) {
-				color_Picked.set(color_2_Range.get());
-			}
 
-			//--
+		//else
+		//{
+		//	if (bAuto_Color1_FromPicker_Range) {
+		//		color_Picked.set(color_1_Range.get());
+		//	}
+		//	else if (bAuto_Color2_FromPicker_Range) {
+		//		color_Picked.set(color_2_Range.get());
+		//	}
 
-			//if (bAuto_Theory_FromPicker)
-			//{
-			//	color_TheoryBase = color_Picked.get();
-			//}
+		//	//--
 
-			//--
+		//	//if (bAuto_Theory_FromPicker)
+		//	//{
+		//	//	color_TheoryBase = color_Picked.get();
+		//	//}
 
-			// workflow
-			refresh_Pick_ToEngines();
-		}
+		//	//--
+
+		//	// workflow
+		//	refresh_Pick_ToEngines();
+		//}
 	}
 
 	// lovers
@@ -6061,6 +6098,19 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			else if ((key == OF_KEY_RIGHT || key == ' ') && !mod_CONTROL)
 			{
 				presetNext();
+				return;
+			}
+
+			//shift
+			if (key == OF_KEY_LEFT && mod_CONTROL)
+			{
+				build_Palette_SortShift(true);
+				return;
+			}
+
+			else if ((key == OF_KEY_RIGHT || key == ' ') && mod_CONTROL)
+			{
+				build_Palette_SortShift();
 				return;
 			}
 		}

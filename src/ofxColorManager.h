@@ -266,10 +266,11 @@ private:
 	//--
 
 private:
-	ofParameter<bool> SHOW_AdvancedLayout{ "Extra", false };
+	ofParameter<bool> SHOW_AdvancedLayout{ "ADVANCED", false };
+	ofParameter<bool> SHOW_Engines{ "ENGINES", true };
 	//shows advanced panels to tweak layout or workflow behaviour
 
-	ofParameter<bool> auto_pilot{ "autoPilot", false };
+	ofParameter<bool> auto_pilot{ "Slide Show", false };
 	int auto_pilot_timer;
 	ofParameter<float> auto_pilot_Duration{ "Time", 1, 0.1, 5 };
 
@@ -805,7 +806,7 @@ private:
 	void gui_Gradient();
 
 #ifndef USE_MINIMAL_GUI
-	void gui_Extra();
+	void gui_Advanced();
 #endif
 
 	//--

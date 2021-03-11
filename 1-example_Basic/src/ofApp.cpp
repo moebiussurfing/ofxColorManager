@@ -3,6 +3,7 @@
 //--------------------------------------------------------------
 void ofApp::setup()
 {
+	ofSetWindowTitle("ofxColorManager");
 	ofEnableAlphaBlending();
 	//ofSetFrameRate(60);
 

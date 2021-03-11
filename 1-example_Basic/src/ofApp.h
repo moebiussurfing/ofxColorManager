@@ -14,7 +14,7 @@ public:
 
     ofxColorManager colorManager;
 	
-	//-
+	//--
 
     // local colors
 	// auto-updated as targets
