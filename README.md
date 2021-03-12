@@ -6,27 +6,28 @@ This **openFrameworks** add-on is a **kit of Engines and Tools** to design prese
 ![image](/readme_images/Capture.JPG?raw=true "image")
 
 ## Engines:  
-  1. Algorithmic **Theory** colors from a base color.
+  1. 10+ Algorithmic **Theory** colors from a base color.
   2. **Range Spaces** between two colors.
   3. **Colour Lovers** online **API** to search keywords, handle favorites and history search.
   4. **Extract** the dominant colors **from images**.
 
 ## Tools:  
-* **Gradient** designer with an extra picked color.
-* **Kit Presets Browser**: 
+* **Gradient** designer with an extra pickeable color.
+* **Kit Browser**: 
   * Receive palette presets from then engines and save. 
   * Name, delete or duplicate presets from your kit.
   * Preview all your kit on a scrollable panel.
 
 ## Modes:
-  1. Powered Standalone Mode:
-    Use this addon inside your OF App when you want to use all the tools bundled.
-    Requires all the dependencies. (Similar to the inclued example)
-  2. Linked Mode:
-    Link the ofxColorManager App/Example to your OF-App with the client add-on inside.
+  1. **Powered Standalone Mode**:  
+    Use this addon inside your **OF App** when you want to use all the tools bundled.  
+    Requires all the dependencies.  
+    (Similar to the inclued example)
+  2. **Linked Mode**:  
+    Link the ofxColorManager App/Example to your OF-App with the client add-on inside.  
     Allows all the tools, but using two separated apps.
-  3. Minimal Standalone:
-    Using the client add-on only. The more Lightweight version that allows you to browse your local preset files.
+  3. **Minimal Standalone**:  
+    Using the **client add-on** only. The more **Lightweight** version that allows you to browse your local preset files.  
     Bundled with a minimal set of tools: kit broser, palette and gradient previews...
 
 ## ofxColorClient 
@@ -44,8 +45,9 @@ This **openFrameworks** add-on is a **kit of Engines and Tools** to design prese
 * Kit exporter of all **JSON** preset files to your project data path.
 
 ## Usage
-That's similar to 1-example_Basic. This is recommended to de Power Standalone Mode.  
-For the other two Modes using the CLIENT, you can use the 1-example_Basic as-is.
+That's similar to **1-example_Basic**.  
+This is recommended to de **Power Standalone Mode**.  
+For the other two Modes using the **CLIENT**, you can use the **1-example_Basic** as-is.
 ### ofApp.h
 ```.cpp
 #include "ofxColorManager.h"
