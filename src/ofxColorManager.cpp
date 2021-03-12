@@ -296,9 +296,9 @@ ofxColorManager::ofxColorManager()
 
 	helpInfo += "PANELS\n";
 	helpInfo += "F1                    PALETTE\n";
-	helpInfo += "F2                    EDITOR\n";
-	helpInfo += "F3                    PRESETS\n";
-	helpInfo += "F4                    KIT\n";
+	helpInfo += "F2                    PRESETS\n";
+	helpInfo += "F3                    KIT\n";
+	helpInfo += "F4                    EDITOR\n";
 	helpInfo += "F5                    PICKER\n";
 	helpInfo += "F6                    LIBRARY\n";
 	helpInfo += "F7                    DEMO\n";
@@ -4467,9 +4467,12 @@ bool ofxColorManager::draw_Gui()
 	gui.begin();
 	{
 		//--
-
+		
 		//TODO:
-		//ShowExampleAppMainMenuBar();
+		if (SHOW_AdvancedLayout)
+		{
+			ShowExampleAppMainMenuBar();
+		}
 
 		//--
 
@@ -6508,17 +6511,17 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		{
 			SHOW_UserPaletteFloating = !SHOW_UserPaletteFloating;
 		}
-		else if (key == OF_KEY_F2)//palette editor
-		{
-			SHOW_UserPaletteEditor = !SHOW_UserPaletteEditor;
-		}
-		else if (key == OF_KEY_F3)//presets
+		else if (key == OF_KEY_F2)//presets
 		{
 			SHOW_Presets = !SHOW_Presets;
 		}
-		else if (key == OF_KEY_F4)//kit
+		else if (key == OF_KEY_F3)//kit
 		{
 			SHOW_Kit = !SHOW_Kit;
+		}
+		else if (key == OF_KEY_F4)//palette editor
+		{
+			SHOW_UserPaletteEditor = !SHOW_UserPaletteEditor;
 		}
 		else if (key == OF_KEY_F5)//picker
 		{

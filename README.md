@@ -1,36 +1,51 @@
 # ofxColorManager
 
-This **openFrameworks** add-on is a palette and **kit of tools** to design palette color presets for your scenes.  
+This **openFrameworks** add-on is a **kit of Engines and Tools** to design presets of color palettes for your scenes.  
 
 ## Screenshot
 ![image](/readme_images/Capture.JPG?raw=true "image")
 
-## Tools and Engines:  
-* Algorithmic **Theory** colors from a base color.
-* **Range Spaces** between two colors.
-* **Colour Lovers** online **API** to search keywords, handle favorites and history search.
-* **Extract** the dominant colors **from images**.
+## Engines:  
+  1. Algorithmic **Theory** colors from a base color.
+  2. **Range Spaces** between two colors.
+  3. **Colour Lovers** online **API** to search keywords, handle favorites and history search.
+  4. **Extract** the dominant colors **from images**.
+
+## Tools:  
 * **Gradient** designer with an extra picked color.
 * **Kit Presets Browser**: 
-  * Receive the palette and save preset from then engines. 
+  * Receive palette presets from then engines and save. 
   * Name, delete or duplicate presets from your kit.
   * Preview all your kit on a scrollable panel.
 
+## Modes:
+  1. Powered Standalone Mode:
+    Use this addon inside your OF App when you want to use all the tools bundled.
+    Requires all the dependencies. (Similar to the inclued example)
+  2. Linked Mode:
+    Link the ofxColorManager App/Example to your OF-App with the client add-on inside.
+    Allows all the tools, but using two separated apps.
+  3. Minimal Standalone:
+    Using the client add-on only. The more Lightweight version that allows you to browse your local preset files.
+    Bundled with a minimal set of tools: kit broser, palette and gradient previews...
+
 ## ofxColorClient 
-  * A Lightweight version of the add-on just to use presets. 
+  * A Lightweight version of the add-on just to use your presets Kit, or: 
   * To work linked to this **MASTER** addon but as a minimal **CLIENT** into your own **OF App**. 
   * Or just as standalone mode to browse and use your kit with preset files.
 
 ## Other Features
-* Demo Scenes for fast preview.
+* Demo Scenes for fast preview. Colored SVG and bubble scenes.
 * ImGui based GUI. Docked and customizable.
 * Linkable with **ofxColorClient** trough TCP or Watching files.
-* Wheel and rectangle color pickers.
+* Hue Wheel and rectangle color pickers with HSB sliders.
 * **Pantone** library with **2000+** named colors.
-* Edit, add, delete, sort, and drag colors. 
+* Edit, add, delete, sort, shift, and drag your palette colors. 
 * Kit exporter of all **JSON** preset files to your project data path.
 
 ## Usage
+That's similar to 1-example_Basic. This is recommended to de Power Standalone Mode.  
+For the other two Modes using the CLIENT, you can use the 1-example_Basic as-is.
 ### ofApp.h
 ```.cpp
 #include "ofxColorManager.h"
@@ -57,11 +72,11 @@ void ofApp::draw()
 * [ofxImGui](https://github.com/moebiussurfing/ofxImGui)  Fork from @Daandelange
 * [ofxSurfingHelpers](https://github.com/moebiussurfing/ofxSurfingHelpers)  
 * [ofxIO](https://github.com/bakercp/ofxIO)
-* ofxNetwork
-* ofxPoco
-* ofxGui
-* ofxOpenCv
-* ofxXmlSettings
+* ofxNetwork [OF]
+* ofxPoco [OF]
+* ofxGui [OF]
+* ofxOpenCv [OF]
+* ofxXmlSettings [OF]
 * [ofxSCENE-SVG](https://github.com/moebiussurfing/ofxSCENE-SVG)  Only for an example 
 
 Already packed into ```OF_ADDON/libs```. No need to add them manually with the ```OF Project Generator```:  
