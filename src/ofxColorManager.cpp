@@ -2612,9 +2612,9 @@ void ofxColorManager::gui_Library()
 				ImGui::Dummy(ImVec2(0, 5));
 
 				ofxImGui::AddParameter(colorBrowser.ENABLE_keys);
-		}
+			}
 #endif
-	}
+		}
 
 		//--
 
@@ -2801,7 +2801,7 @@ void ofxColorManager::gui_Library()
 		{
 			refresh_FromPicked();
 		}
-}
+	}
 
 	ofxImGui::EndWindow(mainSettings);
 
@@ -2841,7 +2841,7 @@ void ofxColorManager::gui_Export()
 			if (ImGui::Button("EXPORT PRESET", ImVec2(_w100, _h)))
 			{
 				exportPalette();
-		}
+			}
 			//ImGui::PopItemWidth();
 
 #ifndef USE_SIMPLE_PRESET_PALETTE	
@@ -2933,8 +2933,8 @@ void ofxColorManager::gui_Export()
 
 				ImGui::Checkbox("Auto-Resize", &auto_resize);
 			}
+		}
 	}
-}
 	ofxImGui::EndWindow(mainSettings);
 
 	ImGui::PopStyleVar();
@@ -4443,7 +4443,7 @@ bool ofxColorManager::draw_Gui()
 	gui.begin();
 	{
 		//--
-		
+
 		//TODO:
 		if (SHOW_AdvancedLayout && show_app_main_menu_bar)
 		{
@@ -4505,7 +4505,7 @@ bool ofxColorManager::draw_Gui()
 #endif
 			if (gradientEngine.SHOW_Gradient) gui_Gradient();
 			//if (SHOW_Gradient) gui_Gradient();
-	}
+		}
 
 		//--
 
@@ -4528,7 +4528,7 @@ bool ofxColorManager::draw_Gui()
 		if (show_app_about) { ofxColorManager_ShowAboutWindow(&show_app_about); }
 
 		//--
-}
+	}
 	gui.end();
 
 	//-
@@ -5040,11 +5040,14 @@ void ofxColorManager::Changed_ColorPicked(ofFloatColor &c)
 	// workflow
 	if (ENABLE_CALLBACKS_Engines) refresh_Pick_ToEngines();
 
-	if (SHOW_Presets)
-	{
-		// workflow
-		bFlag_refresh_EnginesFromPalette = true;
-	}
+	//--
+
+	////TODO:
+	//if (SHOW_Presets)
+	//{
+	//	// workflow
+	//	bFlag_refresh_EnginesFromPalette = true;
+	//}
 }
 
 //--------------------------------------------------------------
@@ -5486,6 +5489,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 	else if (name == last_Index_Theory.getName())
 	{
+		//TODO:
 		//build_Palette_Engine();
 
 		last_Index_Theory = (int)ofClamp(
@@ -5614,7 +5618,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 	else if (name == SHOW_Range.getName())
 	{
-			bLast_Index_Range = SHOW_Range;
+		bLast_Index_Range = SHOW_Range;
 
 		if (SHOW_Range.get())
 		{
@@ -5641,24 +5645,24 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 		else
 		{
-		//	if (bAuto_Color1_FromPicker_Range) {
-		//		color_Picked.set(color_1_Range.get());
-		//	}
-		//	else if (bAuto_Color2_FromPicker_Range) {
-		//		color_Picked.set(color_2_Range.get());
-		//	}
+			//	if (bAuto_Color1_FromPicker_Range) {
+			//		color_Picked.set(color_1_Range.get());
+			//	}
+			//	else if (bAuto_Color2_FromPicker_Range) {
+			//		color_Picked.set(color_2_Range.get());
+			//	}
 
-		//	//--
+			//	//--
 
-		//	//if (bAuto_Theory_FromPicker)
-		//	//{
-		//	//	color_TheoryBase = color_Picked.get();
-		//	//}
+			//	//if (bAuto_Theory_FromPicker)
+			//	//{
+			//	//	color_TheoryBase = color_Picked.get();
+			//	//}
 
-		//	//--
+			//	//--
 
-		//	// workflow
-		//	refresh_Pick_ToEngines();
+			//	// workflow
+			//	refresh_Pick_ToEngines();
 		}
 	}
 
@@ -7422,7 +7426,7 @@ void ofxColorManager::exportKit()
 	str += "YOUR_OF_CLIENT_APP/bin/data/ofxColorManager/kits/presets\n";
 	str += "Where your client app will scan the folder\n";
 	str += "and list the preset files.\n";
-		
+
 	ofFileDialogResult openFileResult = ofSystemLoadDialog(str, true);
 
 	std::string path_export;
