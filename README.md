@@ -23,7 +23,7 @@ This **openFrameworks** add-on is a **kit of Engines and Tools** to design prese
     Use this add-on inside your **OF_App** when you want to use all the tools bundled.  
     Requires all the dependencies. (Similar to the inclued example)
   2. **Linked Mode**:  
-    Link the **ofxColorManager** container **OF_App** [**MASTER**] to your **OF_App** [**CLIENT**] with the client add-on inside.  
+    Link the **ofxColorManager** container **MASTER OF_App** to your **CLIENT OF_App** with the client add-on inside.  
     Allows all the tools, but a more handy setup using two separated apps.
   3. **Minimal Standalone Mode**:  
     Using the **client add-on** only.  
@@ -32,7 +32,7 @@ This **openFrameworks** add-on is a **kit of Engines and Tools** to design prese
 
 ## ofxColorClient 
   * A Lightweight version of the add-on just to use your presets Kit, or: 
-  * To work linked to this **MASTER** addon but as a minimal **CLIENT** into your own **OF_App**. 
+  * To work linked to this **MASTER OF_App** addon but as a minimal version into your own **CLIENT OF_App**. 
   * Or just as standalone mode to browse and use your kit with preset files.
 
 ## Other Features

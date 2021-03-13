@@ -1122,6 +1122,8 @@ private:
 		ImGui::Text("moebiussurfing@gmail.com");
 		ImGui::Text("Thanks to the coders of all included libraries or addons and their contributors.");
 		ImGui::Text("ofxColorManager is licensed under the MIT License, see LICENSE for more information.");
+
+		ImGui::End();
 	}
 
 
