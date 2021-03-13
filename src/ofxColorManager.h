@@ -6,7 +6,7 @@
 /*
 
 BUGS:
-+ fix text input boxes. 
++ fix text input boxes.
 	now we must to mantain click on text input..
 	lock key input problems..
 + switching from theory to range do not links well the colors
@@ -503,6 +503,7 @@ private:
 #endif
 	void exportPalette();
 	void exportKit();
+	void setPathPresetWatch();
 
 	//--
 
@@ -1044,7 +1045,7 @@ private:
 	vector<vector<ofColor>> palettesKit;
 	vector<PresetData> kit;
 	//vector<PaletteData> kit;
-};
+
 
 //--
 
@@ -1065,130 +1066,85 @@ private:
 //	}
 //};
 
-static void ShowExampleAppMainMenuBar()
-{
-	if (ImGui::BeginMainMenuBar())
+private:
+	bool show_app_main_menu_bar = true;
+	bool show_app_about = false;
+
+	void ofxColorManager_ShowExampleAppMainMenuBar()
 	{
-		if (ImGui::BeginMenu("File"))
+		if (ImGui::BeginMainMenuBar())
 		{
-			if (ImGui::MenuItem("Export Kit", "")) {}
-			if (ImGui::MenuItem("Export Preset", "")) {}
-			if (ImGui::MenuItem("Set Export Path", "")) {}
-			if (ImGui::MenuItem("Quit", "")) { ofExit(); }
 
-			//ShowExampleMenuFile();
-			ImGui::EndMenu();
+			if (ImGui::BeginMenu("File"))
+			{
+				if (ImGui::BeginMenu("Export Preset"))
+				{
+					if (ImGui::MenuItem("Set Export Path", "")) { setPathPresetWatch(); }
+					if (ImGui::MenuItem("Export Preset", "")) { exportPalette(); }
+				
+					ImGui::EndMenu();
+				}
+				if (ImGui::MenuItem("Export Kit", "")) { exportKit(); }
+
+				ImGui::Separator();
+			
+				if (ImGui::MenuItem("Quit", "")) { ofExit(); }
+				//ShowExampleMenuFile();
+				
+				ImGui::EndMenu();
+			}
+
+			if (ImGui::BeginMenu("Tools"))
+			{
+				if (ImGui::MenuItem("Menu Bar", "hide")) { show_app_main_menu_bar = false; };
+				ImGui::MenuItem("About ofxColorManager", NULL, &show_app_about);
+				
+				ImGui::EndMenu();
+			}
+
+			ImGui::EndMainMenuBar();
 		}
-		//if (ImGui::BeginMenu("Edit"))
-		//{
-		//	if (ImGui::MenuItem("Undo", "CTRL+Z")) {}
-		//	if (ImGui::MenuItem("Redo", "CTRL+Y", false, false)) {}  // Disabled item
-		//	ImGui::Separator();
-		//	if (ImGui::MenuItem("Cut", "CTRL+X")) {}
-		//	if (ImGui::MenuItem("Copy", "CTRL+C")) {}
-		//	if (ImGui::MenuItem("Paste", "CTRL+V")) {}
-		//	ImGui::EndMenu();
-		//}
-		ImGui::EndMainMenuBar();
 	}
-}
 
-//// Note that shortcuts are currently provided for display only
-//// (future version will add explicit flags to BeginMenu() to request processing shortcuts)
-//static void ShowExampleMenuFile()
-//{
-//	ImGui::MenuItem("(demo menu)", NULL, false, false);
-//	if (ImGui::MenuItem("New")) {}
-//	if (ImGui::MenuItem("Open", "Ctrl+O")) {}
-//	if (ImGui::BeginMenu("Open Recent"))
-//	{
-//		ImGui::MenuItem("fish_hat.c");
-//		ImGui::MenuItem("fish_hat.inl");
-//		ImGui::MenuItem("fish_hat.h");
-//		if (ImGui::BeginMenu("More.."))
-//		{
-//			ImGui::MenuItem("Hello");
-//			ImGui::MenuItem("Sailor");
-//			if (ImGui::BeginMenu("Recurse.."))
-//			{
-//				ShowExampleMenuFile();
-//				ImGui::EndMenu();
-//			}
-//			ImGui::EndMenu();
-//		}
-//		ImGui::EndMenu();
-//	}
-//	if (ImGui::MenuItem("Save", "Ctrl+S")) {}
-//	if (ImGui::MenuItem("Save As..")) {}
-//
-//	ImGui::Separator();
-//	if (ImGui::BeginMenu("Options"))
-//	{
-//		static bool enabled = true;
-//		ImGui::MenuItem("Enabled", "", &enabled);
-//		ImGui::BeginChild("child", ImVec2(0, 60), true);
-//		for (int i = 0; i < 10; i++)
-//			ImGui::Text("Scrolling Text %d", i);
-//		ImGui::EndChild();
-//		static float f = 0.5f;
-//		static int n = 0;
-//		ImGui::SliderFloat("Value", &f, 0.0f, 1.0f);
-//		ImGui::InputFloat("Input", &f, 0.1f);
-//		ImGui::Combo("Combo", &n, "Yes\0No\0Maybe\0\0");
-//		ImGui::EndMenu();
-//	}
-//
-//	if (ImGui::BeginMenu("Colors"))
-//	{
-//		float sz = ImGui::GetTextLineHeight();
-//		for (int i = 0; i < ImGuiCol_COUNT; i++)
-//		{
-//			const char* name = ImGui::GetStyleColorName((ImGuiCol)i);
-//			ImVec2 p = ImGui::GetCursorScreenPos();
-//			ImGui::GetWindowDrawList()->AddRectFilled(p, ImVec2(p.x + sz, p.y + sz), ImGui::GetColorU32((ImGuiCol)i));
-//			ImGui::Dummy(ImVec2(sz, sz));
-//			ImGui::SameLine();
-//			ImGui::MenuItem(name);
-//		}
-//		ImGui::EndMenu();
-//	}
-//
-//	// Here we demonstrate appending again to the "Options" menu (which we already created above)
-//	// Of course in this demo it is a little bit silly that this function calls BeginMenu("Options") twice.
-//	// In a real code-base using it would make senses to use this feature from very different code locations.
-//	if (ImGui::BeginMenu("Options")) // <-- Append!
-//	{
-//		static bool b = true;
-//		ImGui::Checkbox("SomeOption", &b);
-//		ImGui::EndMenu();
-//	}
-//
-//	if (ImGui::BeginMenu("Disabled", false)) // Disabled
-//	{
-//		IM_ASSERT(0);
-//	}
-//	if (ImGui::MenuItem("Checked", NULL, true)) {}
-//	if (ImGui::MenuItem("Quit", "Alt+F4")) {}
-//}
+	void ofxColorManager_ShowAboutWindow(bool* p_open)
+	{
+		if (!ImGui::Begin("About ofxColorManager", p_open, ImGuiWindowFlags_AlwaysAutoResize))
+		{
+			ImGui::End();
+			return;
+		}
+		ImGui::Text("ofxColorManager is version 1.0rc");
+		ImGui::Separator();
+		ImGui::Text("Coded by moebiusSurfing.");
+		ImGui::Text("Manu Molina.");
+		ImGui::Text("Barcelona / Buenos Aires. 2019-2021");
+		ImGui::Text("https://github.com/moebiussurfing");
+		ImGui::Text("moebiussurfing@gmail.com");
+		ImGui::Text("Thanks to the coders of all included libraries or addons and their contributors.");
+		ImGui::Text("ofxColorManager is licensed under the MIT License, see LICENSE for more information.");
+	}
 
-//inline void hideDockWindow(string name)
-//{
-//	char *cstr = &name[0];
-//
-//	//https://stackoverflow.com/questions/7352099/stdstring-to-char/7352131
-//	//const char *cstr = name.c_str();
-//
-//	bool m_show_tabs = false;
-//
-//	if (ImGui::IsWindowDocked()) {
-//		auto* wnd = ImGui::FindWindowByName(cstr);
-//		if (wnd) {
-//			ImGuiDockNode* node = wnd->DockNode;
-//			if (node)// && (!m_show_tabs && !node->IsHiddenTabBar()) || (m_show_tabs && node->IsHiddenTabBar())) 
-//			//if (node && (!m_show_tabs && !node->IsHiddenTabBar()) || (m_show_tabs && node->IsHiddenTabBar())) 
-//			{
-//				node->WantHiddenTabBarToggle = true;
-//			}
-//		}
-//	}
-//}
+
+	//inline void hideDockWindow(string name)
+	//{
+	//	char *cstr = &name[0];
+	//
+	//	//https://stackoverflow.com/questions/7352099/stdstring-to-char/7352131
+	//	//const char *cstr = name.c_str();
+	//
+	//	bool m_show_tabs = false;
+	//
+	//	if (ImGui::IsWindowDocked()) {
+	//		auto* wnd = ImGui::FindWindowByName(cstr);
+	//		if (wnd) {
+	//			ImGuiDockNode* node = wnd->DockNode;
+	//			if (node)// && (!m_show_tabs && !node->IsHiddenTabBar()) || (m_show_tabs && node->IsHiddenTabBar())) 
+	//			//if (node && (!m_show_tabs && !node->IsHiddenTabBar()) || (m_show_tabs && node->IsHiddenTabBar())) 
+	//			{
+	//				node->WantHiddenTabBarToggle = true;
+	//			}
+	//		}
+	//	}
+	//}
+
+};

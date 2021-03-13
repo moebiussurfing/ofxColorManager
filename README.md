@@ -6,10 +6,10 @@ This **openFrameworks** add-on is a **kit of Engines and Tools** to design prese
 ![image](/readme_images/Capture.JPG?raw=true "image")
 
 ## Engines:  
-  1. 10+ Algorithmic **Theory** colors from a base color.
-  2. **Range Spaces** between two colors.
+  1. 15 Algorithmic **Theory** colors from a base color.
+  2. 12 **Range Spaces** between two colors.
   3. **Colour Lovers** online **API** to search keywords, handle favorites and history search.
-  4. **Extract** the dominant colors **from images**.
+  4. **Extract** the dominant colors **from image files**.
 
 ## Tools:  
 * **Gradient** designer with an extra pickeable color.
@@ -74,11 +74,11 @@ void ofApp::draw()
 * [ofxImGui](https://github.com/moebiussurfing/ofxImGui)  Fork from @Daandelange
 * [ofxSurfingHelpers](https://github.com/moebiussurfing/ofxSurfingHelpers)  
 * [ofxIO](https://github.com/bakercp/ofxIO)
-* ofxNetwork [OF]
-* ofxPoco [OF]
-* ofxGui [OF]
-* ofxOpenCv [OF]
-* ofxXmlSettings [OF]
+* ofxNetwork [**OF**]
+* ofxPoco [**OF**]
+* ofxGui [**OF**]
+* ofxOpenCv [**OF**]
+* ofxXmlSettings [**OF**]
 * [ofxSCENE-SVG](https://github.com/moebiussurfing/ofxSCENE-SVG)  Only for an example 
 
 Already packed into ```OF_ADDON/libs```. No need to add them manually with the ```OF Project Generator```:  

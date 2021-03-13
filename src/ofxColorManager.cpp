@@ -1101,31 +1101,7 @@ void ofxColorManager::update(ofEventArgs & args)
 
 	if (bOpen)
 	{
-		//Open the Open File Dialog
-		ofFileDialogResult openFileResult = ofSystemLoadDialog("Select the export path", true);
-
-		//Check if the user opened a file
-		if (openFileResult.bSuccess)
-		{
-			//processOpenFileSelection(openFileResult);
-
-			path_Folder_ExportColor_Custom = openFileResult.getPath();
-
-			path_Folder_ExportColor_Custom += "\\";// windows
-
-			//path_FileExport = path_Folder_ExportColor_Custom.get() + "\\liveColors.json";
-			path_FileExport = path_Folder_ExportColor_Custom.get() + path_Name_ExportColor + ".json";
-			bExportPreset_DefaultPath = false;//flag
-			ofLogNotice(__FUNCTION__) << "User selected a path: " << path_Folder_ExportColor_Custom;
-		}
-		else
-		{
-			ofLogNotice(__FUNCTION__) << "User hit cancel";
-			path_Folder_ExportColor_Custom = "";
-			bExportPreset_DefaultPath = true;// set back default OF_APP/bin/data
-		}
-
-		bOpen = false;
+		setPathPresetWatch();
 	}
 
 	//--
@@ -1524,7 +1500,7 @@ void ofxColorManager::gui_Theory()
 	ImGuiWindowFlags flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
 	flags |= flagsWindows;
 
-	const float butlabelw = 180;// width label text
+	const float butlabelw = 140;// width label text
 	//offset
 	float _offset = 20;//to include extra slider for analog
 
@@ -4469,9 +4445,9 @@ bool ofxColorManager::draw_Gui()
 		//--
 		
 		//TODO:
-		if (SHOW_AdvancedLayout)
+		if (SHOW_AdvancedLayout && show_app_main_menu_bar)
 		{
-			ShowExampleAppMainMenuBar();
+			ofxColorManager_ShowExampleAppMainMenuBar();
 		}
 
 		//--
@@ -4548,6 +4524,8 @@ bool ofxColorManager::draw_Gui()
 			}
 			ofxImGui::EndWindow(mainSettings);
 		}
+
+		if (show_app_about) { ofxColorManager_ShowAboutWindow(&show_app_about); }
 
 		//--
 }
@@ -5363,6 +5341,9 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			//flagsWindows |= ImGuiWindowFlags_NoDecoration;
 			//flagsWindows |= ImGuiWindowFlags_NoBackground;
 		}
+
+		//wf
+		if (!show_app_main_menu_bar) show_app_main_menu_bar = true;
 	}
 
 	// layout
@@ -7389,14 +7370,56 @@ void ofxColorManager::generate_Range(ofColor col1, ofColor col2) {
 //----
 
 //--------------------------------------------------------------
+void ofxColorManager::setPathPresetWatch()
+{
+	ofLogNotice(__FUNCTION__) << "----------------- SET PRESET PATH -----------------";
+
+	//Open the Open File Dialog
+	std::string str = "Select the preset export path.\n";
+	str += "Typically you should set something like:\n";
+	str += "'OF_ADDON/ofxColorClient/3-example_AdvancedScenes/bin/data'\n";
+	str += "Where YOUR_OF_CLIENT_APP will be watching for changing on the preset file.\n";
+	str += "And to reload. This is the alternative LINK-MODE to the TCP based one.\n";
+	ofFileDialogResult openFileResult = ofSystemLoadDialog(str, true);
+
+	//Check if the user opened a file
+	if (openFileResult.bSuccess)
+	{
+		//processOpenFileSelection(openFileResult);
+
+		path_Folder_ExportColor_Custom = openFileResult.getPath();
+
+		path_Folder_ExportColor_Custom += "\\";// windows
+
+		//path_FileExport = path_Folder_ExportColor_Custom.get() + "\\liveColors.json";
+		path_FileExport = path_Folder_ExportColor_Custom.get() + path_Name_ExportColor + ".json";
+		bExportPreset_DefaultPath = false;//flag
+		ofLogNotice(__FUNCTION__) << "User selected a path: " << path_Folder_ExportColor_Custom;
+	}
+	else
+	{
+		ofLogNotice(__FUNCTION__) << "User hit cancel";
+		path_Folder_ExportColor_Custom = "";
+		bExportPreset_DefaultPath = true;// set back default OF_APP/bin/data
+	}
+
+	bOpen = false;
+}
+
+//--------------------------------------------------------------
 void ofxColorManager::exportKit()
 {
 	ofLogNotice(__FUNCTION__) << "----------------- EXPORT KIT -----------------";
 
 	// refresh
 	preset_RefreshFiles();
-
-	ofFileDialogResult openFileResult = ofSystemLoadDialog("Select the export path for the Kit presets", true);
+	std::string str = "Select the Export Path for the Kit preset files.\n";
+	str += "Typically you should set something like:\n";
+	str += "YOUR_OF_CLIENT_APP/bin/data/ofxColorManager/kits/presets\n";
+	str += "Where your client app will scan the folder\n";
+	str += "and list the preset files.\n";
+		
+	ofFileDialogResult openFileResult = ofSystemLoadDialog(str, true);
 
 	std::string path_export;
 
