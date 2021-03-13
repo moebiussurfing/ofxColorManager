@@ -71,7 +71,7 @@ void ofApp::draw()
 
 ## Dependencies
 * [ofxColorClient](https://github.com/moebiussurfing/ofxColorClient)
-* [ofxImGui](https://github.com/moebiussurfing/ofxImGui)  Fork from @Daandelange
+* [ofxImGui](https://github.com/moebiussurfing/ofxImGui)  Fork from @Daandelange Thanks **Daan**!
 * [ofxSurfingHelpers](https://github.com/moebiussurfing/ofxSurfingHelpers)  
 * [ofxIO](https://github.com/bakercp/ofxIO)
 * ofxNetwork [**OF**]
@@ -80,6 +80,7 @@ void ofApp::draw()
 * ofxOpenCv [**OF**]
 * ofxXmlSettings [**OF**]
 * [ofxSCENE-SVG](https://github.com/moebiussurfing/ofxSCENE-SVG)  Only for an example 
+* [ofxScaleDragRect](https://github.com/moebiussurfing/ofxScaleDragRect)
 
 Already packed into ```OF_ADDON/libs```. No need to add them manually with the ```OF Project Generator```:  
 *Thanks a lot to all these ofxAddons coders. Look into each folder for authoring credits, original forks, and license info.*  

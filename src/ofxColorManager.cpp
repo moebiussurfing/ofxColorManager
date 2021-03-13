@@ -1276,7 +1276,7 @@ void ofxColorManager::draw_Info()
 	// c. locked to svg demo
 	x = DEMO2_Svg.getPositionTittle().x;
 	y = DEMO2_Svg.getPositionTittle().y;
-	pady = fontBig.getSize();
+	pady = fontBig.getSize() / 2;
 	y -= pady;
 	x -= _w0 * 0.5;//center
 
@@ -5364,11 +5364,11 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		//	AppMode.getMin(),
 		//	AppMode.getMax());
 
-		//cycle
-		if (AppMode > AppMode.getMax()) AppMode.setWithoutEventNotifications(AppMode.getMin());
-		else if (AppMode < 0) AppMode.setWithoutEventNotifications(AppMode.getMax());
-		if (current_element != AppMode) current_element = AppMode.get();
-		AppMode_name = ofToString(element_names[AppMode.get()]);
+		////cycle
+		//if (AppMode > AppMode.getMax()) AppMode.setWithoutEventNotifications(AppMode.getMin());
+		//else if (AppMode < 0) AppMode.setWithoutEventNotifications(AppMode.getMax());
+		//if (current_element != AppMode) current_element = AppMode.get();
+		//AppMode_name = ofToString(element_names[AppMode.get()]);
 
 		switch (AppMode.get())
 		{
@@ -5486,7 +5486,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 	else if (name == last_Index_Theory.getName())
 	{
-		build_Palette_Engine();
+		//build_Palette_Engine();
 
 		last_Index_Theory = (int)ofClamp(
 			last_Index_Theory,
@@ -5588,6 +5588,8 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 	if (name == SHOW_Theory.getName())
 	{
+		bLast_Index_Theory = SHOW_Theory;
+
 		if (SHOW_Theory.get())
 		{
 			AppMode = 1;
@@ -5595,18 +5597,16 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			// workflow
 			if (bEditPalette) bEditPalette = false;
 
-			bLast_Index_Theory = true;
+			////last_Index_Theory_PickPalette = last_Index_Theory_PickPalette;
 
-			//last_Index_Theory_PickPalette = last_Index_Theory_PickPalette;
+			//if (bAuto_Theory_FromPicker) color_Picked = color_TheoryBase.get();
 
-			if (bAuto_Theory_FromPicker) color_Picked = color_TheoryBase.get();
+			////TODO:
+			//refresh_FromPicked();
 
-			//TODO:
-			refresh_FromPicked();
-
-			//TODO:
-			refresh_Theory_G1();
-			refresh_Theory_G2();
+			////TODO:
+			//refresh_Theory_G1();
+			//refresh_Theory_G2();
 		}
 	}
 
@@ -5614,6 +5614,8 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 	else if (name == SHOW_Range.getName())
 	{
+			bLast_Index_Range = SHOW_Range;
+
 		if (SHOW_Range.get())
 		{
 			AppMode = 2;
@@ -5621,25 +5623,24 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			// workflow
 			if (bEditPalette) bEditPalette = false;
 
-			bLast_Index_Range = true;
 
-			if (bAuto_Color1_FromPicker_Range)
-			{
-				color_Picked.set(color_1_Range.get());
-			}
-			else if (bAuto_Color2_FromPicker_Range)
-			{
-				color_Picked.set(color_2_Range.get());
-			}
+			//if (bAuto_Color1_FromPicker_Range)
+			//{
+			//	color_Picked.set(color_1_Range.get());
+			//}
+			//else if (bAuto_Color2_FromPicker_Range)
+			//{
+			//	color_Picked.set(color_2_Range.get());
+			//}
 
-			//--
+			////--
 
-			// workflow
-			refresh_Pick_ToEngines();
+			//// workflow
+			//refresh_Pick_ToEngines();
 		}
 
-		//else
-		//{
+		else
+		{
 		//	if (bAuto_Color1_FromPicker_Range) {
 		//		color_Picked.set(color_1_Range.get());
 		//	}
@@ -5658,7 +5659,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 		//	// workflow
 		//	refresh_Pick_ToEngines();
-		//}
+		}
 	}
 
 	// lovers
@@ -7070,7 +7071,9 @@ void ofxColorManager::refresh_Pick_ToEngines()
 	{
 		//-
 
-		// 1. theory color base
+		// theory 
+
+		// color base
 
 		if (SHOW_Theory)
 		{
@@ -7082,7 +7085,8 @@ void ofxColorManager::refresh_Pick_ToEngines()
 
 		//-
 
-		//TODO:
+		// range
+
 		if (SHOW_Range)
 		{
 			bool bDoGen = false;
@@ -7097,7 +7101,7 @@ void ofxColorManager::refresh_Pick_ToEngines()
 			//-
 
 			// 3. range color2
-			if (bAuto_Color2_FromPicker_Range)
+			else if (bAuto_Color2_FromPicker_Range)
 			{
 				color_2_Range = color_Picked.get();
 				bDoGen = true;
@@ -7110,7 +7114,7 @@ void ofxColorManager::refresh_Pick_ToEngines()
 
 		//TODO:
 		// mirror clicked/picked colors
-		color_Clicked2.set(color_Picked.get());
+		//color_Clicked2.set(color_Picked.get());
 	}
 	ENABLE_CALLBACKS_Pickers = true;
 

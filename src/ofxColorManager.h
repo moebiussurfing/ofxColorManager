@@ -1113,14 +1113,15 @@ private:
 			ImGui::End();
 			return;
 		}
-		ImGui::Text("ofxColorManager is version 1.0rc");
+		ImGui::Text("ofxColorManager v1.0rc");
 		ImGui::Separator();
 		ImGui::Text("Coded by moebiusSurfing.");
 		ImGui::Text("Manu Molina.");
 		ImGui::Text("Barcelona / Buenos Aires. 2019-2021");
 		ImGui::Text("https://github.com/moebiussurfing");
-		ImGui::Text("moebiussurfing@gmail.com");
-		ImGui::Text("Thanks to the coders of all included libraries or addons and their contributors.");
+		ImGui::Text("moebiusSurfing@gmail.com");
+		ImGui::Text("Thanks to the coders and contributors of all included libraries or addons.");
+		ImGui::Text("Especially to the openFrameworks community!");
 		ImGui::Text("ofxColorManager is licensed under the MIT License, see LICENSE for more information.");
 
 		ImGui::End();
