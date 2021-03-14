@@ -12,9 +12,9 @@ This **openFrameworks** add-on is a **kit of Engines and Tools** to design prese
   4. **Extract** the dominant colors **from image files**.
 
 ## Tools:  
-* **Gradient** designer with an extra pickeable color.
-* **Kit Browser**: 
-  * Receive palettes from all the engines and save a presets. 
+* **Gradient Designer** with an available extra pickeable color.
+* **Kit of Presets Browser**: 
+  * Receive palettes from all the engines and save presets. 
   * Name, delete or duplicate presets from your kit.
   * Preview all your kit of preset on a scrollable clickable panel.
 
@@ -91,7 +91,7 @@ Already packed into ```OF_ADDON/libs```. No need to add them manually with the `
 * [ofxColourLoversHelper](https://github.com/moebiussurfing/ofxColourLoversHelper)  
 
 ## File format
-The **JSON** file format of a preset it's simple. This is a 3 colors palette file content as an example:
+The **JSON** file format of a preset it's simple. This is an example of a 3 colors palette file content:
 ```json
 [
     {
@@ -121,8 +121,7 @@ The **JSON** file format of a preset it's simple. This is a 3 colors palette fil
 ## NOTES
 
 ## Author
-An addon by **@moebiusSurfing**  
-*(ManuMolina). 2020.*
+An addon by **@moebiusSurfing**. *(ManuMolina). 2020.*
 
 ## License
 *MIT License.*
