@@ -7,9 +7,7 @@
 
 BUGS:
 + workflow for lovers and quantizer broken..
-+ fix text input boxes.
-	now we must to mantain click on text input..
-	lock key input problems..
++ fix text input boxes. now we must to mantain click on text input and lock keycommands..
 + TCP port number switch, problems on reconnect.
 + TAB stucks on Picture engine
 + check theory picker if calls too much callbacks

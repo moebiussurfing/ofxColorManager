@@ -145,6 +145,7 @@ private:
 public:
 	void nextPalette(bool cycled = false);
     void prevPalette();
+    void refreshPalette();
     void randomPalette();
 
     //--
@@ -188,9 +189,6 @@ private:
     ofParameter<bool> ENABLER_Keys {"Enable Keys", true};
 
 private:
-
-    void refreshPalette();
-
 	ofParameter<bool> MODE_FixedSize{ "Fixed Width", false };
 	ofParameter<bool> MODE_Slim{ "Slim", false };
 

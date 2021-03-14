@@ -331,7 +331,7 @@ void ofxColorQuantizerHelper::draw_Gui()
 
 				//-
 
-				ImGui::Checkbox("Auto-resize", &auto_resize);
+				ImGui::Checkbox("Auto-Resize", &auto_resize);
 				ofxImGui::AddParameter(ENABLE_Keys);
 				ofxImGui::AddParameter(ENABLE_HelpInfo);
 			}

@@ -301,10 +301,12 @@ private:
 		}
 	};
 
+public:
 	void build();//split from quantizer to avoid reload image
 
 	//-
 
+private:
 	void buildFromImageFile(std::string path, int num);
 	void buildFromImageUrl(std::string url, int num);
 

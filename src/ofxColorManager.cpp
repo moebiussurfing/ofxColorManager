@@ -3015,6 +3015,7 @@ void ofxColorManager::gui_Picker()
 		float _w100 = ImGui::GetContentRegionAvail().x;
 		float _w99 = _w100;
 		float _w50 = _w99 / 2.0;
+		float _w75 = _w99 * 0.7;
 
 		//--
 
@@ -3115,7 +3116,8 @@ void ofxColorManager::gui_Picker()
 
 		if (ImGui::CollapsingHeader("HSB", ImGuiWindowFlags_NoCollapse))
 		{
-			ImGui::PushItemWidth(-30);
+			//ImGui::PushItemWidth(-30);
+			ImGui::PushItemWidth(_w75);
 
 			if (ofxImGui::AddParameter(color_HUE)) {}
 			if (ofxImGui::AddParameter(color_SAT)) {}
@@ -3128,10 +3130,7 @@ void ofxColorManager::gui_Picker()
 
 		if (ImGui::CollapsingHeader("Randomizer"))
 		{
-			//ImGui::PushItemWidth(_w99 - 40);
-
-			if (bColor_HUE || bColor_SAT || bColor_BRG)
-				ofxSurfingHelpers::AddBigButton(bRandomColor, _w99, _h);
+			if (bColor_HUE || bColor_SAT || bColor_BRG) ofxSurfingHelpers::AddBigButton(bRandomColor, _w99, _h);
 
 			if (bColor_HUE) color_HUE_0 = color_HUE;
 			if (bColor_SAT) color_SAT_0 = color_SAT;
@@ -3144,6 +3143,7 @@ void ofxColorManager::gui_Picker()
 			ImGui::PopItemWidth();
 
 			ImGui::PushItemWidth(-60);
+
 			if (bColor_HUE)
 				if (ofxImGui::AddParameter(color_HUE_Power))
 				{
@@ -3161,6 +3161,7 @@ void ofxColorManager::gui_Picker()
 				{
 					ofLogNotice(__FUNCTION__) << "BRG P : moved";
 				}
+
 			ImGui::PopItemWidth();
 		}
 
@@ -5634,7 +5635,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 	//----
 
-	// panels
+	//engine panels
 
 	// theory
 
@@ -5683,9 +5684,9 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 			//// workflow
 			//if (SHOW_ColourLovers || SHOW_Range)
-			//{
+			{
 				refresh_EnginesFromPalette();
-			//}
+			}
 
 			// workflow
 			if (bEditPalette) bEditPalette = false;
@@ -5708,7 +5709,11 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			//// workflow
 			//if (bEditPalette) bEditPalette = false;
 
+			// workflow
 			refresh_EnginesFromPalette();
+
+			// workflow
+			colourLoversHelper.refreshPalette();
 		}
 	}
 
@@ -5722,6 +5727,9 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 			//// workflow
 			//if (bEditPalette) bEditPalette = false;
+
+			// workflow
+			colorQuantizer.build();
 		}
 
 		colorQuantizer.setActive(SHOW_Quantizer);
