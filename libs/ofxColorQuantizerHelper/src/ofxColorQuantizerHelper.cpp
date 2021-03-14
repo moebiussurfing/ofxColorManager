@@ -180,7 +180,7 @@ void ofxColorQuantizerHelper::draw_Gui()
 
 		//--
 
-		ImGui::Dummy(ImVec2(0, 5));
+		ImGui::Dummy(ImVec2(0, 2));
 
 		//-
 
@@ -214,7 +214,7 @@ void ofxColorQuantizerHelper::draw_Gui()
 			ImGui::PopID();
 		}
 
-		ImGui::Dummy(ImVec2(0, 5));
+		//ImGui::Dummy(ImVec2(0, 5));
 
 		//-
 
@@ -253,11 +253,16 @@ void ofxColorQuantizerHelper::draw_Gui()
 			//	ww = _w99 - 20;//hardcoded pad to avoid flickering bug...
 			//}
 
-			if (ImGui::ImageButton(
+			if (ImGui::ImageButton
+			(
 				(ImTextureID)(uintptr_t)fbo.getTexture(0).getTextureData().textureID,
 				ImVec2(ww, ww * ratio)))
 			{
 				ofLogNotice(__FUNCTION__) << "Image Pressed";
+				//workflow
+				//sorf
+				sortedType++;
+				if (sortedType > 4) sortedType = 1;
 			}
 		}
 
@@ -1015,6 +1020,12 @@ void ofxColorQuantizerHelper::Changed_parameters(ofAbstractParameter &e)
 			// set BACK name clicked
 			if (myPalette_Name_BACK != nullptr)
 			{
+				//TODO: this should be done in all name setters..
+				////NOTE: preset filename must to not include any extra '.' char
+				////clean all extra '.' chars
+				//std::string __imageName = imageName;
+				//ofStringReplace(__imageName, ".", "");
+
 				(*myPalette_Name_BACK) = imageName;
 			}
 

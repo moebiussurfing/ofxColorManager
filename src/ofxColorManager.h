@@ -6,16 +6,18 @@
 /*
 
 BUGS:
++ workflow for lovers and quantizer broken..
 + fix text input boxes.
 	now we must to mantain click on text input..
 	lock key input problems..
-+ switching from theory to range do not links well the colors
 + TCP port number switch, problems on reconnect.
-+ not updating when save for update an existing preset.
-+ theory picker calls too much callbacks
++ TAB stucks on Picture engine
++ check theory picker if calls too much callbacks
++ pickers hangs flickering sometimes
 
 TODO:
 + undo engine
++ add demo to about window using an fbo
 
 */
 
@@ -157,6 +159,7 @@ public:
 
 	void setup();
 	void startup();
+	void update(ofEventArgs & args);
 
 	//TODO: 
 	//to allow auto update we must set the order priority layer/drawing
@@ -166,11 +169,6 @@ public:
 #ifdef AUTO_DRAW_CALLBACK
 	void draw(ofEventArgs & args);
 #endif
-
-	void update(ofEventArgs & args);
-	//void update();
-
-	//-
 
 public:
 	void exit();
@@ -197,11 +195,12 @@ private:
 
 	//--
 
+private:
 	void draw_Info();
 
 	//--
 
-public:
+private:
 #ifdef USE_OFX_WINDOWAPP
 	ofxWindowApp windowApp;
 #endif
@@ -257,6 +256,7 @@ private:
 
 	// number of colors. 
 	// must be even sometimes to get same size in all palettes
+
 private:
 	ofParameter<int> numColors_Engines;
 	ofParameter<int> numColors_Range;
@@ -271,11 +271,14 @@ private:
 	//shows advanced panels to tweak layout or workflow behaviour
 
 	ofParameter<bool> auto_pilot{ "Slide Show", false };
-	int auto_pilot_timer;
 	ofParameter<float> auto_pilot_Duration{ "Time", 1, 0.1, 5 };
+	int auto_pilot_timer;
+
+	//--
 
 	ofParameter<bool> SHOW_ImGui{ "ImGui", true };
 
+private:
 	ofParameter<bool> ENABLE_HelpInfo;
 	std::string helpInfo;//key commands
 
@@ -336,12 +339,14 @@ public:
 	}
 
 public:
+
 	// public basic params
 	ofParameterGroup params_Debug{ "ofxColorManager" };
 	ofParameter<bool> SHOW_MINI_Preview;
 	ofParameter<bool> SHOW_ALL_GUI;
 	ofParameter<bool> SHOW_Scene;
 
+	//--------------------------------------------------------------
 	ofParameterGroup &getParameters_Debug() {
 		params_Debug.add(SHOW_Scene);
 		params_Debug.add(SHOW_ALL_GUI);
@@ -360,9 +365,6 @@ private:
 	ofParameter<bool> SHOW_Presets;
 	ofParameter<bool> SHOW_Kit;
 	ofParameter<bool> SHOW_Demos;
-#ifdef MODE_BACKGROUND
-	ofParameter<bool> SHOW_BackGround;
-#endif
 	ofParameter<bool> SHOW_Picker;
 	ofParameter<bool> SHOW_Library;
 	ofParameter<bool> SHOW_Range;
@@ -370,22 +372,28 @@ private:
 	ofParameter<bool> SHOW_UserPaletteEditor;
 	ofParameter<bool> SHOW_Theory;
 	ofParameter<bool> SHOW_Quantizer;
+#ifdef MODE_BACKGROUND
+	ofParameter<bool> SHOW_BackGround;
+#endif
 	//ofParameter<bool> SHOW_Gradient;
 	ofParameter<bool> AutoScroll;
 
 	//-
 
+private:
 	// app modes
 	ofParameter<int> AppMode;
 	ofParameter<std::string> AppMode_name;
 #define NUM_APP_MODES 5
-	enum Element { Element_0, Element_1, Element_2, Element_3, Element_4, Element_COUNT };
-	const char* element_names[Element_COUNT] = { "NONE", "THEORY", "RANGE", "LOVERS", "PICTURE" };
-	int current_element = Element_0;
+	//TODO:
+	//using an int slider
+	//enum Element { Element_0, Element_1, Element_2, Element_3, Element_4, Element_COUNT };
+	//const char* element_names[Element_COUNT] = { "NONE", "THEORY", "RANGE", "LOVERS", "PICTURE" };
+	//int current_element = Element_0;
 
 	//--
 
-	// settings paths
+	// settings file paths
 private:
 	std::string path_Global;
 	std::string path_Kits;
@@ -468,8 +476,6 @@ private:
 private:
 	ofParameter<ofFloatColor> color_1_Range;
 	ofParameter<ofFloatColor> color_2_Range;
-	//ofParameter<ofColor> color_1_Range;
-	//ofParameter<ofColor> color_2_Range;
 
 	std::vector<ofColor> palette_Range;
 	std::vector<std::string> names_Types_Range;
@@ -655,7 +661,7 @@ public:
 
 	// API 
 
-	// pointers back to autoupdate 
+	// pointers back to autoupdate our app.
 	// ofApp project local variables, registered
 	// must be initialized before setup
 
@@ -674,7 +680,7 @@ public:
 private:
 	void refresh_Palette_TARGET(vector<ofColor> &p);
 
-	//-----------------------------------------------------------
+	//----
 
 public:
 
@@ -694,7 +700,7 @@ public:
 		gradientEngine.getColorAtPercent(control);
 	}
 
-	//-
+	//---
 
 	// setters
 
@@ -757,14 +763,14 @@ private:
 	ofParameter<float> analogSpread;
 
 	////TODO:
-	////global modificators
+	////global modificators to be aplyied to all the palette
 	////not implemented yet..
 	//ofParameter<int> BRIGHTNESS;
 	//ofParameter<int> SATURATION;
+	//ofParameter<bool> bLock_palette;
 
 	ofParameter<bool> bRandomPalette;
 	ofParameter<bool> bAuto_Build_Palette;//trig last used algo palette on click or change color
-	//ofParameter<bool> bLock_palette;
 
 private:
 	void refresh_Theory_G2();
@@ -779,33 +785,35 @@ private:
 	ofxImGui::Settings mainSettings = ofxImGui::Settings();
 	ImFont* customFont = nullptr;
 	ImGuiStyle *style = nullptr;
-	//ImGuiIO &io;
-	//ImGuiIO *io = nullptr;
-
 	ImGuiWindowFlags flagsWindows;
 
+	// mouse or key locker
 	bool mouseLockedByGui;
 	bool mouseOverGui_PRE;
 	bool bCheckMouseOverTextInput = true;//flag to return mouse over any gui panel or over text input only!
-
 	bool guiVisible;
 
 	void setup_Gui();
 	bool draw_Gui();
 
+	// ImGui panels
 	void gui_Theory();
 	void gui_Picker();
 	void gui_Library();
-#ifdef MODE_BACKGROUND
-	void gui_Background();
-#endif
 	void gui_Range();
 	void gui_PanelsMain();
 	void gui_PanelsEngines();
 	void gui_Demo();
 	void gui_Export();
 	void gui_Gradient();
+	void gui_Presets();
+	void gui_Kit();
+	void gui_Palette();
+	void gui_Editor();
 
+#ifdef MODE_BACKGROUND
+	void gui_Background();
+#endif
 #ifndef USE_MINIMAL_GUI
 	void gui_Advanced();
 #endif
@@ -893,7 +901,7 @@ private:
 
 	//--
 
-	// manager
+	// editor
 
 private:
 	vector<ofColor> palette;// main user palette
@@ -912,7 +920,6 @@ private:
 
 	// libs library palette
 	// using colorBrowser
-
 private:
 
 #ifdef USE_OFX_COLOR_BROWSER
@@ -945,10 +952,6 @@ private:
 	// demos
 private:
 	ofParameter<bool> DEMO1_Enable{ "Enable DEMO Bubbles", false };
-	//ofParameter<bool> DEMO2_Enable{ "Enable DEMO2", false };
-	//ofParameter<bool> DEMO2_Edit{ "Edit DEMO2", false };
-	//ofParameter<float> DEMO2_Scale{ "Scale", 0.2, 0, 1.0f };
-	//ofParameter<float> DEMO2_Alpha{ "Alpha", 1.0f, 0, 1.0f };
 	ofParameter<bool> DEMO_Auto{ "Auto Trig", false };
 	ofParameter<bool> DEMO_Cam{ "Edit Camera", false };
 	ofParameter<float> DEMO_Timer{ "Frequency", 0.5, 0, 1 };
@@ -959,7 +962,7 @@ private:
 
 	//--
 
-	// app settings xml
+	// app settings json/xml
 private:
 	ofParameterGroup params_AppState;//without callbacks, just to handle settings
 	ofParameterGroup params_Panels{ "PANELS" };
@@ -981,35 +984,15 @@ private:
 
 private:
 
-	// preset manager
-
-	// addon client
-	// preset + editor
-
-	//--
-
 	// presets
 
 private:
 	PresetPalette PRESET_Temp;
 
-	//TODO:
-	//PresetManager myPresetManager;
-
 private:
-	//TODO
-	//BUG: should create a default preset because if myPreset is not detected it crashes
-	//default preset
+	//default name 
 	std::string PRESET_Name = "_emptyPreset";
 	std::string PRESET_Name_Gradient = "_";
-
-	//--
-
-	// guis
-	void gui_Presets();
-	void gui_Kit();
-	void gui_Palette();
-	void gui_Editor();
 
 	//--
 
@@ -1022,54 +1005,59 @@ private:
 
 private:
 
-	// new preset
+	// new preset state mode
 	ofParameter<bool> MODE_NewPreset{ "NEW PRESET", false };
 
 	std::string textInput_New = "name..";
+
 	//TODO:
+	//handle text input focus to disable key commands..
 	bool focus_1;
 	int has_focus = 0;
 	char tab[128];
-
-	void refresh_FilesSorting(std::string name);
 
 	//--
 
 	// preset files
 
-	void preset_RefreshFiles();
+	void preset_RefreshFiles();//read folder files
+	void refresh_FilesSorting(std::string name);//after saving new preset, refresh files and select the just saved preset
 	std::vector<std::string> files_Names;
 	std::vector<ofFile> files;
-	std::string textInput_temp = "type name";
-
 	vector<vector<ofColor>> palettesKit;
 	vector<PresetData> kit;
-	//vector<PaletteData> kit;
 
+	std::string textInput_temp = "type name";
 
-//--
+	//----
 
-//private:
-//	// Helper to display a little (?) mark which shows a tooltip when hovered.
-//	// In your own code you may want to display an actual icon if you are using a merged icon fonts (see docs/FONTS.txt)
-//	static void HelpMarker(const char* desc)
-//	{
-//		ImGui::TextDisabled("(?)");
-//		if (ImGui::IsItemHovered())
-//		{
-//			ImGui::BeginTooltip();
-//			ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-//			ImGui::TextUnformatted(desc);
-//			ImGui::PopTextWrapPos();
-//			ImGui::EndTooltip();
-//		}
-//	}
-//};
+	// extra ImGui methods
+
+private:
+	//TODO:
+	// Helper to display a little (?) mark which shows a tooltip when hovered.
+	// In your own code you may want to display an actual icon if you are using a merged icon fonts (see docs/FONTS.txt)
+//--------------------------------------------------------------
+	static void HelpMarker(const char* desc)
+	{
+		ImGui::TextDisabled("(?)");
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::BeginTooltip();
+			ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+			ImGui::TextUnformatted(desc);
+			ImGui::PopTextWrapPos();
+			ImGui::EndTooltip();
+		}
+	}
+
+	//--
 
 private:
 	bool show_app_main_menu_bar = true;
 	bool show_app_about = false;
 
+	//--------------------------------------------------------------
 	void ofxColorManager_ShowExampleAppMainMenuBar()
 	{
 		if (ImGui::BeginMainMenuBar())
@@ -1081,16 +1069,15 @@ private:
 				{
 					if (ImGui::MenuItem("Set Export Path", "")) { setPathPresetWatch(); }
 					if (ImGui::MenuItem("Export Preset", "")) { exportPalette(); }
-				
+
 					ImGui::EndMenu();
 				}
 				if (ImGui::MenuItem("Export Kit", "")) { exportKit(); }
 
 				ImGui::Separator();
-			
+
 				if (ImGui::MenuItem("Quit", "")) { ofExit(); }
-				//ShowExampleMenuFile();
-				
+
 				ImGui::EndMenu();
 			}
 
@@ -1098,7 +1085,7 @@ private:
 			{
 				if (ImGui::MenuItem("Menu Bar", "hide")) { show_app_main_menu_bar = false; };
 				ImGui::MenuItem("About ofxColorManager", NULL, &show_app_about);
-				
+
 				ImGui::EndMenu();
 			}
 
@@ -1106,6 +1093,7 @@ private:
 		}
 	}
 
+	//--------------------------------------------------------------
 	void ofxColorManager_ShowAboutWindow(bool* p_open)
 	{
 		if (!ImGui::Begin("About ofxColorManager", p_open, ImGuiWindowFlags_AlwaysAutoResize))
@@ -1115,11 +1103,10 @@ private:
 		}
 		ImGui::Text("ofxColorManager v1.0rc");
 		ImGui::Separator();
-		ImGui::Text("Coded by moebiusSurfing.");
-		ImGui::Text("Manu Molina.");
-		ImGui::Text("Barcelona / Buenos Aires. 2019-2021");
-		ImGui::Text("https://github.com/moebiussurfing");
-		ImGui::Text("moebiusSurfing@gmail.com");
+		ImGui::Text("Coded by moebiusSurfing. Manu Molina");
+		ImGui::Text("Barcelona|Buenos Aires. 2019-2021");
+		ImGui::Text("GITHUB https://github.com/moebiussurfing");
+		ImGui::Text("EMAIL moebiusSurfing@gmail.com");
 		ImGui::Text("Thanks to the coders and contributors of all included libraries or addons.");
 		ImGui::Text("Especially to the openFrameworks community!");
 		ImGui::Text("ofxColorManager is licensed under the MIT License, see LICENSE for more information.");
@@ -1127,7 +1114,9 @@ private:
 		ImGui::End();
 	}
 
-
+	//TODO:
+	//trying to hide the 'x' button of panels when docking and to lock the resizing of panels
+	//--------------------------------------------------------------
 	//inline void hideDockWindow(string name)
 	//{
 	//	char *cstr = &name[0];
