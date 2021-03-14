@@ -6,29 +6,31 @@ This **openFrameworks** add-on is a **kit of Engines and Tools** to design prese
 ![image](/readme_images/Capture.JPG?raw=true "image")
 
 ## Engines:  
-  1. 15 Algorithmic **Theory** colors from a base color.
-  2. 12 **Range Spaces** between two colors.
-  3. **Colour Lovers** online **API** to search keywords, handle favorites and history search.
+  1. **10+** Algorithmic **Theory Schemes** from a base color.
+  2. **10+** **Range Spaces** between two colors.
+  3. **Colour Lovers API** to search keywords online, handle favorites and history search.
   4. **Extract** the dominant colors **from image files**.
 
 ## Tools:  
 * **Gradient** designer with an extra pickeable color.
 * **Kit Browser**: 
-  * Receive palette presets from then engines and save. 
+  * Receive palettes from all the engines and save a presets. 
   * Name, delete or duplicate presets from your kit.
-  * Preview all your kit on a scrollable panel.
+  * Preview all your kit of preset on a scrollable clickable panel.
 
 ## Modes:
   1. **Powered Standalone Mode**:  
     Use this add-on inside your **OF_App** when you want to use all the tools bundled.  
-    Requires all the dependencies. (Similar to the inclued example)
+    Requires all the dependencies. (Similar to the included example)  
+
   2. **Linked Mode**:  
     Link the **ofxColorManager** container **MASTER OF_App** to your **CLIENT OF_App** with the client add-on inside.  
-    Allows all the tools, but a more handy setup using two separated apps.
+    Allows all the tools, but a more handy setup using two separated apps.  
+
   3. **Minimal Standalone Mode**:  
     Using the **client add-on** only.  
-    The more **Lightweight** version that allows you to browse your local preset files.  
-    Bundled with a minimal set of tools: kit broser, palette and gradient previews...
+    The more **Lightweight** mode that allows you to browse your local preset files.  
+    Bundled with a minimal set of tools: kit browser, palette and gradient previews and tweened transitions.
 
 ## ofxColorClient 
   * A Lightweight version of the add-on just to use your presets Kit, or: 
@@ -74,10 +76,10 @@ void ofApp::draw()
 * [ofxImGui](https://github.com/moebiussurfing/ofxImGui)  Fork from @Daandelange Thanks **Daan**!
 * [ofxSurfingHelpers](https://github.com/moebiussurfing/ofxSurfingHelpers)  
 * [ofxIO](https://github.com/bakercp/ofxIO)
-* ofxNetwork [**OF**]
-* ofxPoco [**OF**]
-* ofxGui [**OF**]
-* ofxOpenCv [**OF**]
+* ofxNetwork  [**OF**]
+* ofxPoco  [**OF**]
+* ofxGui  [**OF**]
+* ofxOpenCv  [**OF**]
 * ofxXmlSettings [**OF**]
 * [ofxSCENE-SVG](https://github.com/moebiussurfing/ofxSCENE-SVG)  Only for an example 
 * [ofxScaleDragRect](https://github.com/moebiussurfing/ofxScaleDragRect)
@@ -90,7 +92,7 @@ Already packed into ```OF_ADDON/libs```. No need to add them manually with the `
 
 ## File format
 The **JSON** file format of a preset it's simple. This is a 3 colors palette file content as an example:
-```.json
+```json
 [
     {
         "a": 255,
@@ -116,7 +118,7 @@ The **JSON** file format of a preset it's simple. This is a 3 colors palette fil
 ## Tested systems
 - **Windows 10** / **VS 2017** / **OF ~0.11**
 
-## TODO
+## NOTES
 
 ## Author
 An addon by **@moebiusSurfing**  
