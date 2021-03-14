@@ -8,7 +8,7 @@ This **openFrameworks** add-on is a **kit of Engines and Tools** to design prese
 ## Engines:  
   1. **10+** Algorithmic **Theory Schemes** from a base color.
   2. **10+** **Range Spaces** between two colors.
-  3. **Colour Lovers API** to search keywords online, handle favorites and history search.
+  3. [**Colour Lovers API**](https://www.colourlovers.com/) to search keywords online, handle favorites and history search.
   4. **Extract** the dominant colors **from image files**.
 
 ## Tools:  
