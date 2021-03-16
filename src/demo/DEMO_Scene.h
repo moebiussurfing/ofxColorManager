@@ -66,8 +66,15 @@ public:
 
 	void setEnableMouseCamera(bool b) {
 		ofLogNotice(__FUNCTION__);
-		if (b) cam.enableMouseInput();
-		else cam.disableMouseInput();
+		if (b) {
+			cam.enableMouseInput();
+			cam.enableMouseMiddleButton();
+			//cam.enableInertia();
+			//cam.setenableInertia();
+		}
+		else {
+			cam.disableMouseInput();
+		}
 	}
 
 	void setEnableMouse(bool b) {

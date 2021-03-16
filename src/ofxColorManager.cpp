@@ -1368,14 +1368,18 @@ void ofxColorManager::draw(ofEventArgs & args)
 		//--
 
 		// DEMO1
-		if (DEMO1_Enable || show_app_about)
+		if (DEMO1_Enable)
+		{
+			myDEMO1.draw(DEMO_Alpha);
+		}
+		if (show_app_about)
 		{
 			fboBig.begin();
-			ofClear(_cBg);
+			ofClear(gradientEngine.getColorPicked());
 			myDEMO1.draw(DEMO_Alpha);
 			fboBig.end();
 		}
-		if (DEMO1_Enable) fboBig.draw(0, 0, ofGetWidth(), ofGetHeight());
+		//if (DEMO1_Enable) fboBig.draw(0, 0, ofGetWidth(), ofGetHeight());
 
 		//--
 

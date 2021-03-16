@@ -1096,26 +1096,72 @@ private:
 	//--------------------------------------------------------------
 	void ofxColorManager_ShowAboutWindow(bool* p_open)
 	{
-		if (!ImGui::Begin("About", p_open, ImGuiWindowFlags_AlwaysAutoResize))
+		ImGuiWindowFlags flags;
+		flags = ImGuiWindowFlags_AlwaysAutoResize;
+		//flags = ImGuiWindowFlags_None;
+		
+		//ImGuiIO& io = ImGui::GetIO();
+		//// Set the window position
+		//ImGui::SetNextWindowPos(ImVec2(0, 0), 0, ImVec2(0, 0));
+		//// Set the size of the window
+		//ImGui::SetNextWindowSize(ImVec2(io.DisplaySize.x, io.DisplaySize.y));
+		//// Set the window to be transparent
+		//ImGui::SetNextWindowBgAlpha(0);
+
+		//// Texture ID
+		//static ImTextureID bg_tex_id = 0;
+		//if (!bg_tex_id)
+		//{
+		//	// Here you use opencv to load the picture. Of course you can also use other ways to load the picture
+		//	// loadTexture is a custom function used to load image characters as textures. If you do n’t know how to load textures, you can use Baidu.
+		//	bg_tex_id = (GLuint *)fbo.getTexture(0).getTextureData().textureID;
+		//}
+
+		//ImGui::Begin("background", NULL, ImGuiWindowFlags_NoMove |
+		//	ImGuiWindowFlags_NoTitleBar |
+		//	ImGuiWindowFlags_NoBringToFrontOnFocus |
+		//	ImGuiWindowFlags_NoInputs |
+		//	ImGuiWindowFlags_NoCollapse |
+		//	ImGuiWindowFlags_NoResize |
+		//	ImGuiWindowFlags_NoScrollbar);
+
+		//// Set the padding of the window to 0 to fill the window with the picture control
+		//ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+		//// Set the window to no border
+		//ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0);
+
+		if (!ImGui::Begin("About", p_open, flags))
 		{
 			ImGui::End();
 			return;
 		}
-		ImGui::Text("ofxColorManager v1.0rc");
+
+		//ImGui::Image(bg_tex_id, ImGui::GetContentRegionAvail());
+
+		ImGui::Text("ofxColorManager v1.0");
 		ImGui::Separator();
-		ImGui::Text("Coded by moebiusSurfing)");
-		ImGui::Text("Manu Molina. 2019-2021");
-		ImGui::Text("Barcelona / Buenos Aires.");
-		ImGui::Text("GITHUB: https://github.com/moebiussurfing");
-		ImGui::Text("EMAIL : moebiusSurfing@gmail.com");
-		ImGui::Text("Thanks to:");
+		ImGui::Text("Coded by moebiusSurfing");
+		ImGui::Text("Manu Molina. 2019 - 2021");
+		ImGui::Text("Barcelona / Buenos Aires");
+		ImGui::Dummy(ImVec2(0, 2));
+		ImGui::Text("GITHUB");
+		ImGui::Text("https://github.com/moebiussurfing");
+		ImGui::Dummy(ImVec2(0, 2));
+		ImGui::Text("EMAIL");
+		ImGui::Text("moebiusSurfing@gmail.com");
+		ImGui::Dummy(ImVec2(0, 2));
+		ImGui::Text("Thanks:");
 		ImGui::Text("Coders and contributors of all included libraries or addons,");
-		ImGui::Text("especially to the openFrameworks community!");
-		ImGui::Text("Licensed under the MIT License,");
+		ImGui::Text("especially to the openFrameworks community !");
+		ImGui::Dummy(ImVec2(0, 2));
+		ImGui::Text("Licensed under the MIT License.");
+		ImGui::Dummy(ImVec2(0, 2));
 
 		draw_DemoFbo();
 
 		ImGui::End();
+
+		//ImGui::PopStyleVar(2);
 	}
 
 	//TODO:
@@ -1148,6 +1194,7 @@ private:
 	ofTexture tex;
 	ofFbo fbo;//mini preview
 	ofFbo fboBig;//fullscreen fbo
+	float wAboutDemo = 300;
 
 	//--------------------------------------------------------------
 	void refresh_DemoFbo()
@@ -1157,10 +1204,24 @@ private:
 		bool b = ofGetUsingArbTex();
 		ofDisableArbTex();
 
-		fboBig.allocate(ofGetWidth(), ofGetHeight());
+		ofFbo::Settings settingsBig;
+		settingsBig.numSamples = 16;
+		settingsBig.useStencil = true;
+		settingsBig.useDepth = false;
+		settingsBig.width = ofGetWidth();
+		settingsBig.height = ofGetHeight();
+		fboBig.allocate(settingsBig);
 
-		float _ww = 400;
-		fbo.allocate(_ww, _ww * (9 / 16.f));
+		float _ww = wAboutDemo;
+		
+		ofFbo::Settings settings;
+		settings.numSamples = 16;
+		settings.useStencil = true;
+		settings.useDepth = false;
+		settings.width = _ww;
+		settings.height = _ww * (9 / 16.f);
+		fbo.allocate(settings);
+		
 		fbo.createAndAttachTexture(GL_RGB, 0); //Position
 		fbo.createAndAttachTexture(GL_RGBA32F, 1); //velocity
 		fbo.createAndAttachRenderbuffer(GL_DEPTH_COMPONENT, GL_DEPTH_ATTACHMENT);
@@ -1175,12 +1236,6 @@ private:
 		fbo.end();
 
 		if (b) ofEnableArbTex();
-
-		//fbo.begin();//draw once only
-		//ofClear(0, 0, 0, 0);
-		////myDEMO1.draw(DEMO_Alpha); 
-		////tex.draw(0, 0);
-		//fbo.end();
 	}
 
 	//--------------------------------------------------------------
@@ -1189,22 +1244,15 @@ private:
 		float _spc = ImGui::GetStyle().ItemSpacing.x;
 		float _w100 = ImGui::GetContentRegionAvail().x;
 
-		float w = 400;
+		float w = wAboutDemo;
 		float h = w * (9 / 16.f);
-
-		//float ratio = h / w;
-		//float ww;
-		//float hh;
-		//ww = _w100 - 20;
-		//hh = ww * ratio;
 
 		fbo.begin();
 		ofClear(0, 0);
 		fboBig.draw(0, 0, w, h);
 		fbo.end();
 
-		if (ImGui::ImageButton
-		(
+		if (ImGui::ImageButton(
 			(ImTextureID)(uintptr_t)fbo.getTexture(0).getTextureData().textureID,
 			ImVec2(w, h)))
 		{
