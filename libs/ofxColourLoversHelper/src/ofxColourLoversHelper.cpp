@@ -259,6 +259,7 @@ void ofxColourLoversHelper::drawImGuiMain()
 			}
 			ImGui::Text(s.c_str());
 
+			//ImGui::Dummy(ImVec2(0, 5));
 
 			//-
 
@@ -287,6 +288,35 @@ void ofxColourLoversHelper::drawImGuiMain()
 				}
 			}
 			ImGui::PopButtonRepeat();
+
+			//-
+
+			// palette colors
+
+			ImGuiColorEditFlags colorEdiFlags =
+				ImGuiColorEditFlags_NoAlpha |
+				ImGuiColorEditFlags_NoPicker |
+				ImGuiColorEditFlags_NoTooltip;
+
+			const auto p = palettes[currPalette].colours;
+			//myPalette_BACK
+
+			// fit width
+			float wb = (_w100 / (int)p.size());// -_spc;
+			float hb = BUTTON_BIG_HEIGHT;
+
+			for (int n = 0; n < p.size(); n++)
+			{
+				ImGui::PushID(n);
+
+				// fit width
+				if (n != 0) ImGui::SameLine(0, 0);
+
+				// box colors
+				if (ImGui::ColorButton("##paletteLover", p[n], colorEdiFlags, ImVec2(wb, hb))) {}
+
+				ImGui::PopID();
+			}
 
 			//-
 
@@ -1138,7 +1168,7 @@ void ofxColourLoversHelper::build_Gui_Lab()
 			buttonColoursPalette.push_back(btn);
 
 			currX += currW;
-	}
+}
 }
 
 	gui_Lab->getRect()->setHeight(palettes.size() * (cdim + 4) + startY);
@@ -1155,7 +1185,7 @@ void ofxColourLoversHelper::build_Gui_Lab()
 	setPalette(currPalette);
 	refreshPalette();
 	//#endif
-			}
+}
 
 //--------------------------------------------------------------
 void ofxColourLoversHelper::update()
@@ -1302,7 +1332,7 @@ void ofxColourLoversHelper::Changed_Gui(ofxUIEventArgs &e)
 		{
 			ofLogWarning(__FUNCTION__) << "OFX_UI_TEXTINPUT_ON_ENTER";
 			ENABLER_Keys = true;
-}
+		}
 		else if (ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS)
 		{
 			ofLogWarning(__FUNCTION__) << "OFX_UI_TEXTINPUT_ON_UNFOCUS";
@@ -1310,7 +1340,7 @@ void ofxColourLoversHelper::Changed_Gui(ofxUIEventArgs &e)
 		}
 
 		ofLogWarning(__FUNCTION__) << "ENABLER_Keys: " << (ENABLER_Keys ? "TRUE" : "FALSE");
-		}
+}
 
 	//-
 
@@ -1414,13 +1444,13 @@ void ofxColourLoversHelper::refreshPalette()
 			if (i == currPalette)
 			{
 				btn->setDrawOutline(true);
-			}
+}
 			else
 			{
 				btn->setDrawOutline(false);
 			}
 		}
-}
+	}
 #endif
 }
 
@@ -1549,7 +1579,7 @@ void ofxColourLoversHelper::prevPalette()
 		}
 	}
 
-		if (!AutoScroll) AutoScroll = true;
+	if (!AutoScroll) AutoScroll = true;
 }
 
 #ifdef USE_OFX_UI
@@ -1608,7 +1638,7 @@ void ofxColourLoversHelper::Changed_Gui_Lab(ofxUIEventArgs &e)
 	if (bUpdated_Color_BACK != nullptr && MODE_PickColor_BACK)
 	{
 		(*bUpdated_Color_BACK) = true;
-}
+	}
 
 	//-
 
@@ -1624,7 +1654,7 @@ void ofxColourLoversHelper::Changed_Gui_Lab(ofxUIEventArgs &e)
 	refreshPalette();
 
 	//-
-}
+			}
 #endif
 
 //--------------------------------------------------------------
@@ -1962,7 +1992,7 @@ void ofxColourLoversHelper::exit()
 #endif
 
 	ofRemoveListener(ColourLoveEvent::events, this, &ofxColourLoversHelper::Changed_ColourLovers);
-}
+		}
 
 //--------------------------------------------------------------
 ofxColourLoversHelper::~ofxColourLoversHelper()

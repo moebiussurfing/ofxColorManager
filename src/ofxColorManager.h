@@ -1140,6 +1140,7 @@ private:
 
 		ImGui::Text("ofxColorManager v1.0");
 		ImGui::Separator();
+		ImGui::Dummy(ImVec2(0, 2));
 		ImGui::Text("Coded by moebiusSurfing");
 		ImGui::Text("Manu Molina. 2019 - 2021");
 		ImGui::Text("Barcelona / Buenos Aires");
@@ -1151,7 +1152,8 @@ private:
 		ImGui::Text("moebiusSurfing@gmail.com");
 		ImGui::Dummy(ImVec2(0, 2));
 		ImGui::Text("Thanks:");
-		ImGui::Text("Coders and contributors of all included libraries or addons,");
+		ImGui::Text("Coders and contributors of");
+		ImGui::Text("all included libraries or addons,");
 		ImGui::Text("especially to the openFrameworks community !");
 		ImGui::Dummy(ImVec2(0, 2));
 		ImGui::Text("Licensed under the MIT License.");
@@ -1257,6 +1259,8 @@ private:
 			ImVec2(w, h)))
 		{
 			ofLogNotice(__FUNCTION__) << "Image Pressed";
+
+			presetNext();
 		}
 	}
 };

@@ -156,11 +156,16 @@ void ofxColorQuantizerHelper::draw_Gui()
 			ImGui::PopItemWidth();
 		}
 
+		ImGui::Dummy(ImVec2(0, 2));
+
+		//name
+		ImGui::Text(dir.getName(currentImage).c_str());
+
 		// index / total
 		std::string s = ofToString(currentImage.get()) + "/" + ofToString(getAountFiles() - 1);
 		ImGui::Text(s.c_str());
 
-		ImGui::Dummy(ImVec2(0, 5));
+		//ImGui::Dummy(ImVec2(0, 2));
 
 		//----
 
@@ -188,9 +193,6 @@ void ofxColorQuantizerHelper::draw_Gui()
 
 		const auto p = getPalette(true);
 
-		//// split in rows
-		//int wb = (_w99 / (int)NUM_QUANTIZER_COLORS_PER_ROW) - 2 * _spc;
-
 		// fit width
 		float wb = (_w100 / (int)p.size());// -_spc;
 		float hb = BUTTON_BIG_HEIGHT;
@@ -199,14 +201,8 @@ void ofxColorQuantizerHelper::draw_Gui()
 		{
 			ImGui::PushID(n);
 
-			//// split in rows
-			//if ((n % ((int)NUM_QUANTIZER_COLORS_PER_ROW)) != 0) ImGui::SameLine();
-			//ImGui::SameLine();
-
 			// fit width
 			ImGui::SameLine(0, 0);
-
-			//-
 
 			// box colors
 			if (ImGui::ColorButton("##paletteQuantizer", p[n], colorEdiFlags, ImVec2(wb, hb))) {}
@@ -237,7 +233,6 @@ void ofxColorQuantizerHelper::draw_Gui()
 			{
 				ww = H_MAX / ratio;
 			}
-
 
 			//if (w *ratio > 400)
 

@@ -846,10 +846,10 @@ void ofxColorManager::setup()
 
 	//params_Demo.add(TEST_Mode);
 	params_Demo.add(DEMO1_Enable);
-	params_Demo.add(DEMO2_Svg.DEMO2_Enable);
-	params_Demo.add(DEMO2_Svg.DEMO2_Edit);
-	params_Demo.add(DEMO2_Svg.DEMO2_Scale);
-	params_Demo.add(DEMO2_Svg.DEMO2_Alpha);
+	//params_Demo.add(DEMO2_Svg.DEMO2_Enable);
+	//params_Demo.add(DEMO2_Svg.DEMO2_Edit);
+	//params_Demo.add(DEMO2_Svg.DEMO2_Scale);
+	//params_Demo.add(DEMO2_Svg.DEMO2_Alpha);
 	params_Demo.add(DEMO_Auto);
 	params_Demo.add(DEMO_Timer);
 	params_Demo.add(DEMO_Alpha);
