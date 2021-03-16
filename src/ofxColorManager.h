@@ -321,8 +321,7 @@ public:
 		}
 		else
 		{
-			if (last_Index_Preset == 0)
-				last_Index_Preset = files.size() - 1;
+			if (last_Index_Preset == 0) last_Index_Preset = files.size() - 1;
 		}
 
 		if (last_Index_Preset < files.size() && files.size() > 0)
@@ -1063,10 +1062,9 @@ private:
 	{
 		if (ImGui::BeginMainMenuBar())
 		{
-
 			if (ImGui::BeginMenu("File"))
 			{
-				if (ImGui::BeginMenu("Export Preset"))
+				if (ImGui::BeginMenu("Export Linked Preset"))
 				{
 					if (ImGui::MenuItem("Set Export Path", "")) { setPathPresetWatch(); }
 					if (ImGui::MenuItem("Export Preset", "")) { exportPalette(); }
@@ -1074,8 +1072,8 @@ private:
 					ImGui::EndMenu();
 				}
 				if (ImGui::MenuItem("Export Kit", "")) { exportKit(); }
-				if (ImGui::MenuItem("Save Preset File", "")) { savePresetFile(); }
 				if (ImGui::MenuItem("Load Preset File", "")) { loadPresetFile(); }
+				if (ImGui::MenuItem("Save Preset File", "")) { savePresetFile(); }
 
 				ImGui::Separator();
 
@@ -1084,10 +1082,9 @@ private:
 				ImGui::EndMenu();
 			}
 
-			if (ImGui::BeginMenu("Tools"))
+			if (ImGui::BeginMenu("View"))
 			{
-				//ImGui::MenuItem("Menu Bar", "hide", &show_app_main_menu_bar);
-				ImGui::MenuItem("About ofxColorManager", NULL, &show_app_about);
+				ImGui::MenuItem("About", NULL, &show_app_about);
 
 				ImGui::EndMenu();
 			}
@@ -1099,20 +1096,24 @@ private:
 	//--------------------------------------------------------------
 	void ofxColorManager_ShowAboutWindow(bool* p_open)
 	{
-		if (!ImGui::Begin("About ofxColorManager", p_open, ImGuiWindowFlags_AlwaysAutoResize))
+		if (!ImGui::Begin("About", p_open, ImGuiWindowFlags_AlwaysAutoResize))
 		{
 			ImGui::End();
 			return;
 		}
 		ImGui::Text("ofxColorManager v1.0rc");
 		ImGui::Separator();
-		ImGui::Text("Coded by moebiusSurfing. Manu Molina");
-		ImGui::Text("Barcelona|Buenos Aires. 2019-2021");
-		ImGui::Text("GITHUB https://github.com/moebiussurfing");
-		ImGui::Text("EMAIL moebiusSurfing@gmail.com");
-		ImGui::Text("Thanks to the coders and contributors of all included libraries or addons.");
-		ImGui::Text("Especially to the openFrameworks community!");
-		ImGui::Text("ofxColorManager is licensed under the MIT License, see LICENSE for more information.");
+		ImGui::Text("Coded by moebiusSurfing)");
+		ImGui::Text("Manu Molina. 2019-2021");
+		ImGui::Text("Barcelona / Buenos Aires.");
+		ImGui::Text("GITHUB: https://github.com/moebiussurfing");
+		ImGui::Text("EMAIL : moebiusSurfing@gmail.com");
+		ImGui::Text("Thanks to:");
+		ImGui::Text("Coders and contributors of all included libraries or addons,");
+		ImGui::Text("especially to the openFrameworks community!");
+		ImGui::Text("Licensed under the MIT License,");
+
+		draw_DemoFbo();
 
 		ImGui::End();
 	}
@@ -1142,4 +1143,72 @@ private:
 	//	}
 	//}
 
+	// demo to draw into about panel
+private:
+	ofTexture tex;
+	ofFbo fbo;//mini preview
+	ofFbo fboBig;//fullscreen fbo
+
+	//--------------------------------------------------------------
+	void refresh_DemoFbo()
+	{
+		ofLogNotice(__FUNCTION__);
+
+		bool b = ofGetUsingArbTex();
+		ofDisableArbTex();
+
+		fboBig.allocate(ofGetWidth(), ofGetHeight());
+
+		float _ww = 400;
+		fbo.allocate(_ww, _ww * (9 / 16.f));
+		fbo.createAndAttachTexture(GL_RGB, 0); //Position
+		fbo.createAndAttachTexture(GL_RGBA32F, 1); //velocity
+		fbo.createAndAttachRenderbuffer(GL_DEPTH_COMPONENT, GL_DEPTH_ATTACHMENT);
+		fbo.checkStatus();
+
+		fboBig.begin();
+		ofClear(0, 0);
+		fboBig.end();
+
+		fbo.begin();
+		ofClear(0, 0);
+		fbo.end();
+
+		if (b) ofEnableArbTex();
+
+		//fbo.begin();//draw once only
+		//ofClear(0, 0, 0, 0);
+		////myDEMO1.draw(DEMO_Alpha); 
+		////tex.draw(0, 0);
+		//fbo.end();
+	}
+
+	//--------------------------------------------------------------
+	void draw_DemoFbo()
+	{
+		float _spc = ImGui::GetStyle().ItemSpacing.x;
+		float _w100 = ImGui::GetContentRegionAvail().x;
+
+		float w = 400;
+		float h = w * (9 / 16.f);
+
+		//float ratio = h / w;
+		//float ww;
+		//float hh;
+		//ww = _w100 - 20;
+		//hh = ww * ratio;
+
+		fbo.begin();
+		ofClear(0, 0);
+		fboBig.draw(0, 0, w, h);
+		fbo.end();
+
+		if (ImGui::ImageButton
+		(
+			(ImTextureID)(uintptr_t)fbo.getTexture(0).getTextureData().textureID,
+			ImVec2(w, h)))
+		{
+			ofLogNotice(__FUNCTION__) << "Image Pressed";
+		}
+	}
 };

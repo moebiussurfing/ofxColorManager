@@ -167,7 +167,7 @@ void ofxColorManager::build_Palette_Engine()
 	//--
 
 	// workflow
-	if (DEMO1_Enable) myDEMO1.reStart();
+	if (DEMO1_Enable || show_app_about) myDEMO1.reStart();
 
 	//--
 
@@ -300,6 +300,7 @@ ofxColorManager::ofxColorManager()
 	helpInfo += "\n";
 
 	helpInfo += "PANELS\n";
+	helpInfo += "\n";
 	helpInfo += "F1                    PALETTE\n";
 	helpInfo += "F2                    PRESETS\n";
 	helpInfo += "F3                    KIT\n";
@@ -315,6 +316,7 @@ ofxColorManager::ofxColorManager()
 	helpInfo += "\n";
 
 	helpInfo += "ENGINES\n";
+	helpInfo += "\n";
 	helpInfo += "TAB                     > \n";
 	helpInfo += " +Ctrl                <   \n";
 	helpInfo += "                      THEORY\n";
@@ -947,6 +949,8 @@ void ofxColorManager::setup()
 
 	ofAddListener(params_control.parameterChangedE(), this, &ofxColorManager::Changed_Controls);
 
+	refresh_DemoFbo();
+
 	//------------------------------------------------
 
 	// startup
@@ -1123,7 +1127,7 @@ void ofxColorManager::update(ofEventArgs & args)
 	// demos
 	{
 		// DEMO1
-		if (DEMO1_Enable)
+		if (DEMO1_Enable || show_app_about)
 		{
 			myDEMO1.update();
 			if (DEMO_Auto) {}
@@ -1342,27 +1346,36 @@ void ofxColorManager::draw(ofEventArgs & args)
 		// background
 
 		// background mode
+		ofColor _cBg;
 #ifdef MODE_BACKGROUND
 		if (background_Draw_ENABLE)
 		{
-			ofClear(color_BackGround.get());
+			_cBg = color_BackGround.get();
 		}
 #endif
 		// using gradient
 		if (!DEMO2_Svg.DEMO2_Enable)
 		{
-			ofClear(gradientEngine.getColorPicked());
+			_cBg = gradientEngine.getColorPicked();
 		}
+		ofClear(_cBg);
 
 		//--
 
 		// DEMO2
 		DEMO2_Svg.draw();
 
-		//-
+		//--
 
 		// DEMO1
-		if (DEMO1_Enable) myDEMO1.draw(DEMO_Alpha);
+		if (DEMO1_Enable || show_app_about)
+		{
+			fboBig.begin();
+			ofClear(_cBg);
+			myDEMO1.draw(DEMO_Alpha);
+			fboBig.end();
+		}
+		if (DEMO1_Enable) fboBig.draw(0, 0, ofGetWidth(), ofGetHeight());
 
 		//--
 
@@ -1456,9 +1469,9 @@ void ofxColorManager::draw(ofEventArgs & args)
 
 		//--
 
-#ifdef LINK_TCP_MASTER_CLIENT
-		drawLink(x, y + h + 20);
-#endif
+//#ifdef LINK_TCP_MASTER_CLIENT
+//		drawLink(x, y + h + 20);
+//#endif
 	}
 }
 
@@ -3867,18 +3880,7 @@ void ofxColorManager::gui_Presets()
 		float _w50 = _w99 / 2;
 
 		ImGuiColorEditFlags _flags;
-
-		//--
-
-//#ifndef USE_MINIMAL_GUI
-//		if (SHOW_AdvancedLayout)
-//		{
-//			ImGui::Dummy(ImVec2(0, 5));
-//			ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteFloating, _w99, _h * 0.5);
-//			ofxSurfingHelpers::AddBigToggle(SHOW_UserPaletteEditor, _w99, _h * 0.5);
-//		}
-//#endif
-
+		
 		//ImGui::Text("Name");
 		ImGui::Dummy(ImVec2(0, 5));
 
@@ -5060,7 +5062,7 @@ void ofxColorManager::palette_Clear()
 
 	//-
 
-	if (DEMO1_Enable) myDEMO1.clear();
+	if (DEMO1_Enable || show_app_about) myDEMO1.clear();
 
 	//--
 
@@ -6696,7 +6698,7 @@ void ofxColorManager::mousePressed(ofMouseEventArgs &eventArgs)
 
 	// DEMO
 
-	if (DEMO1_Enable && !mouseLockedByGui)
+	if ((DEMO1_Enable || show_app_about) && !mouseLockedByGui)
 	{
 		if (!DEMO_Auto) {//disable mouse on auto mode
 			//second mouse button cleans DEMO
@@ -7011,7 +7013,7 @@ void ofxColorManager::preset_Load(std::string p, bool absolutePath)
 	bFlag_refresh_EnginesFromPalette = true;
 
 	// workflow
-	if (DEMO1_Enable) myDEMO1.reStart();
+	if (DEMO1_Enable || show_app_about) myDEMO1.reStart();
 }
 
 //--------------------------------------------------------------
@@ -7083,6 +7085,7 @@ void ofxColorManager::refresh_EnginesFromPalette()
 		{
 			color_1_Range.setWithoutEventNotifications(palette[0]);//first color
 			color_2_Range.setWithoutEventNotifications(palette[palette.size() - 1]);//last color
+
 			if (autoGenerate_Range) generate_Range(color_1_Range.get(), color_2_Range.get());
 		}
 	}
@@ -7651,16 +7654,29 @@ void ofxColorManager::loadPresetFile()
 	ofFileDialogResult openFileResult = ofSystemLoadDialog(str, false);
 
 	std::string _path;
+	std::string _name;
 
 	//Check if the user opened a file
 	if (openFileResult.bSuccess)
 	{
 		_path = openFileResult.getPath();
+		_name = openFileResult.getName();
+		
+		auto _nameExt = ofSplitString(_name, ".");//remove ext
+		if (_nameExt.size()==2) _name = _nameExt[0];
+		PRESET_Name = _name;
+		name_TARGET[0] = _name;
+		PRESET_Temp.setLinkName(_name);
 
-		ofLogNotice(__FUNCTION__) << ": " << _path;
+		ofLogNotice(__FUNCTION__) << ": " << _path << " | " << _name;
 
 		preset_Load(_path, true);
-		//PRESET_Temp.preset_Load(_path, true);
+	
+		// workflow
+
+		// new preset
+		if (!MODE_NewPreset) MODE_NewPreset = true;
+		textInput_New = _name;
 	}
 	else
 	{
