@@ -213,7 +213,7 @@ void ofxColourLoversHelper::drawImGuiMain()
 
 		//----
 
-		ImGui::Dummy(ImVec2(0, 2));
+		//ImGui::Dummy(ImVec2(0, 2));
 
 		if (ImGui::CollapsingHeader("BROWSE", ImGuiWindowFlags_NoCollapse))
 		{
@@ -224,113 +224,6 @@ void ofxColourLoversHelper::drawImGuiMain()
 			ofxSurfingHelpers::AddBigToggle(bFavorites, _w50, _hb * 2);
 			ImGui::SameLine();
 			ofxSurfingHelpers::AddBigToggle(bHistory, _w50, _hb * 2);
-
-			//-
-
-			ImGui::Dummy(ImVec2(0, 5));
-
-			//ImGui::Text(lastSearch.c_str());
-			//ImGui::Dummy(ImVec2(0.0f, 10));
-
-			//// history or favorites
-			//std::string ss;
-			//ss = lastSearch;
-			////ss = lastSearch + "      " + s;
-			//ImGui::Text(ss.c_str());
-			////ImGui::Text(s.c_str());
-			//ImGui::Dummy(ImVec2(0, 5));
-
-			//ImGui::Text("Name:"); //ImGui::SameLine();
-			ImGui::Text(lastPaletteName.get().c_str());
-
-			//ImGui::Dummy(ImVec2(0, 5));
-
-			//-
-
-			// index/max
-			std::string s;
-			if (_files.numFiles() > 0)
-			{
-				s = ofToString(currPalette) + "/" + ofToString(palettes.size() - 1);
-			}
-			else
-			{
-				s = ofToString("-1/0");
-			}
-			ImGui::Text(s.c_str());
-
-			//ImGui::Dummy(ImVec2(0, 5));
-
-			//-
-
-			ImGui::PushButtonRepeat(true);
-			{
-				if (ImGui::Button("Previous", ImVec2(_w50, _hb * 2)))
-				{
-					prevPalette();
-
-					//-
-
-					// worfklow
-					//if (!AutoScroll) AutoScroll = true;
-				}
-
-				ImGui::SameLine();
-
-				if (ImGui::Button("Next", ImVec2(_w50, _hb * 2)))
-				{
-					nextPalette();
-
-					//-
-
-					// worfklow
-					//if (!AutoScroll) AutoScroll = true;
-				}
-			}
-			ImGui::PopButtonRepeat();
-
-			//-
-
-			// palette colors
-
-			ImGuiColorEditFlags colorEdiFlags =
-				ImGuiColorEditFlags_NoAlpha |
-				ImGuiColorEditFlags_NoPicker |
-				ImGuiColorEditFlags_NoTooltip;
-
-			const auto p = palettes[currPalette].colours;
-			//myPalette_BACK
-
-			// fit width
-			float wb = (_w100 / (int)p.size());// -_spc;
-			float hb = BUTTON_BIG_HEIGHT;
-
-			for (int n = 0; n < p.size(); n++)
-			{
-				ImGui::PushID(n);
-
-				// fit width
-				if (n != 0) ImGui::SameLine(0, 0);
-
-				// box colors
-				if (ImGui::ColorButton("##paletteLover", p[n], colorEdiFlags, ImVec2(wb, hb))) {}
-
-				ImGui::PopID();
-			}
-
-			//-
-
-			//ImGui::Dummy(ImVec2(0.0f, 5));
-
-			if (ImGui::Button("Randomize", ImVec2(_w100, _hb)))
-			{
-				randomPalette();
-
-				//-
-
-				// worfklow
-				//if (!AutoScroll) AutoScroll = true;
-			}
 
 			//--
 
@@ -445,8 +338,113 @@ void ofxColourLoversHelper::drawImGuiMain()
 					ofxImGui::AddParameter(SHOW_AdvancedLayout);
 				}
 			}
+		}
 
-			if (SHOW_BrowserPalettes) ofxImGui::AddParameter(AutoScroll);
+		//-
+
+		ImGui::Dummy(ImVec2(0, 5));
+
+		//ImGui::Text(lastSearch.c_str());
+		//ImGui::Dummy(ImVec2(0.0f, 10));
+
+		//// history or favorites
+		//std::string ss;
+		//ss = lastSearch;
+		////ss = lastSearch + "      " + s;
+		//ImGui::Text(ss.c_str());
+		////ImGui::Text(s.c_str());
+		//ImGui::Dummy(ImVec2(0, 5));
+
+		//ImGui::Text("Name:"); //ImGui::SameLine();
+		ImGui::Text(lastPaletteName.get().c_str());
+
+		//ImGui::Dummy(ImVec2(0, 5));
+
+		//-
+
+		// index/max
+		std::string s;
+		if (_files.numFiles() > 0)
+		{
+			s = ofToString(currPalette) + "/" + ofToString(palettes.size() - 1);
+		}
+		else
+		{
+			s = ofToString("-1/0");
+		}
+		ImGui::Text(s.c_str());
+
+		//ImGui::Dummy(ImVec2(0, 5));
+
+		//-
+
+		ImGui::PushButtonRepeat(true);
+		{
+			if (ImGui::Button("Previous", ImVec2(_w50, _hb * 2)))
+			{
+				prevPalette();
+
+				//-
+
+				// worfklow
+				//if (!AutoScroll) AutoScroll = true;
+			}
+
+			ImGui::SameLine();
+
+			if (ImGui::Button("Next", ImVec2(_w50, _hb * 2)))
+			{
+				nextPalette();
+
+				//-
+
+				// worfklow
+				//if (!AutoScroll) AutoScroll = true;
+			}
+		}
+		ImGui::PopButtonRepeat();
+
+		//-
+
+		// palette colors
+
+		ImGuiColorEditFlags colorEdiFlags =
+			ImGuiColorEditFlags_NoAlpha |
+			ImGuiColorEditFlags_NoPicker |
+			ImGuiColorEditFlags_NoTooltip;
+
+		const auto p = palettes[currPalette].colours;
+		//myPalette_BACK
+
+		// fit width
+		float wb = (_w100 / (int)p.size());// -_spc;
+		float hb = BUTTON_BIG_HEIGHT;
+
+		for (int n = 0; n < p.size(); n++)
+		{
+			ImGui::PushID(n);
+
+			// fit width
+			if (n != 0) ImGui::SameLine(0, 0);
+
+			// box colors
+			if (ImGui::ColorButton("##paletteLover", p[n], colorEdiFlags, ImVec2(wb, hb))) {}
+
+			ImGui::PopID();
+		}
+
+		//-
+
+		//ImGui::Dummy(ImVec2(0.0f, 5));
+
+		if (ImGui::Button("Randomize", ImVec2(_w100, _hb)))
+		{
+			randomPalette();
+
+			//-
+
+			// worfklow
+			//if (!AutoScroll) AutoScroll = true;
 		}
 
 		//ImGui::Dummy(ImVec2(0, 2));
@@ -487,6 +485,8 @@ void ofxColourLoversHelper::drawImGuiMain()
 				}
 			}
 		}
+
+		if (SHOW_BrowserPalettes) ofxImGui::AddParameter(AutoScroll);
 	}
 	ofxImGui::EndWindow(mainSettings);
 
@@ -1168,8 +1168,8 @@ void ofxColourLoversHelper::build_Gui_Lab()
 			buttonColoursPalette.push_back(btn);
 
 			currX += currW;
-}
-}
+		}
+	}
 
 	gui_Lab->getRect()->setHeight(palettes.size() * (cdim + 4) + startY);
 	gui_Lab->setSnapping(0);
@@ -1340,13 +1340,13 @@ void ofxColourLoversHelper::Changed_Gui(ofxUIEventArgs &e)
 		}
 
 		ofLogWarning(__FUNCTION__) << "ENABLER_Keys: " << (ENABLER_Keys ? "TRUE" : "FALSE");
-}
+	}
 
 	//-
 
 	//TODO: disabled beacause dont know what does and blocks next/prev by keys
 	//currPalette=-1;
-	}
+}
 #endif
 
 
@@ -1444,7 +1444,7 @@ void ofxColourLoversHelper::refreshPalette()
 			if (i == currPalette)
 			{
 				btn->setDrawOutline(true);
-}
+			}
 			else
 			{
 				btn->setDrawOutline(false);
@@ -1654,7 +1654,7 @@ void ofxColourLoversHelper::Changed_Gui_Lab(ofxUIEventArgs &e)
 	refreshPalette();
 
 	//-
-			}
+}
 #endif
 
 //--------------------------------------------------------------
@@ -1992,7 +1992,7 @@ void ofxColourLoversHelper::exit()
 #endif
 
 	ofRemoveListener(ColourLoveEvent::events, this, &ofxColourLoversHelper::Changed_ColourLovers);
-		}
+}
 
 //--------------------------------------------------------------
 ofxColourLoversHelper::~ofxColourLoversHelper()

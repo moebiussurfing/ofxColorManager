@@ -1,17 +1,17 @@
 --------------ofNode parameters--------------
 position
-1.4969e-09, -5.3502e-08, -2.50219e-08
+0, 0, 0
 scale
 1, 1, 1
 orientation
--0.843504, 0.5363, 0.025206, 0.0160289
+1, 0, 0, 0
 --------------ofCamera parameters--------------
 fov
 60
 near
-9.18853
+9.11925
 far
-9188.53
+9119.25
 lensOffset
 0, 0
 forceAspectRatio
@@ -36,8 +36,8 @@ m
 relativeYAxis
 0
 doInertia
-1
+0
 upAxis
 0, 1, 0
 controlArea
-0, 0, 0, 1920, 1061
+0, 0, 0, 1916, 1053

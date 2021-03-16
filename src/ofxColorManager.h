@@ -1190,13 +1190,16 @@ private:
 	//		}
 	//	}
 	//}
+	
+	//--
 
 	// demo to draw into about panel
 private:
 	ofTexture tex;
 	ofFbo fbo;//mini preview
 	ofFbo fboBig;//fullscreen fbo
-	float wAboutDemo = 300;
+	float wAboutDemo = 250;
+	float tweenD = 1;
 
 	//--------------------------------------------------------------
 	void refresh_DemoFbo()
@@ -1251,6 +1254,26 @@ private:
 
 		fbo.begin();
 		ofClear(0, 0);
+
+		//faded zoom
+		bool bSmooth = true;
+#define Z_MIN 1.5//zoom
+#define Z_MAX 9.0
+#define T_MIN 60//speed frames
+#define T_MAX 240
+		static float max1 = 2;
+		static int timer1 = 100;
+		int frame = ofGetFrameNum() % timer1;
+		float s = ofMap(frame, 0, timer1, -1.0, 1.0f);
+		if (ofGetFrameNum() % timer1 == 0 && !bSmooth)
+		{
+			timer1 = ofRandom(T_MIN, T_MAX);
+		}
+		tweenD -= 0.1f;
+		tweenD = ofClamp(tweenD, 0, 1);
+		ofScale(Z_MIN + max1 * abs(0.1 * glm::sin(s)));
+		ofScale(1 + 2.0 * tweenD);
+
 		fboBig.draw(0, 0, w, h);
 		fbo.end();
 
@@ -1261,6 +1284,8 @@ private:
 			ofLogNotice(__FUNCTION__) << "Image Pressed";
 
 			presetNext();
+
+			tweenD = 1;
 		}
 	}
 };
