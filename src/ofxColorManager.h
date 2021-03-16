@@ -505,9 +505,12 @@ private:
 	ofParameter<bool> bModeBundlePreset;
 	ofParameter<bool> bModePalettePreset;
 #endif
+	void setPathPresetWatch();
 	void exportPalette();
 	void exportKit();
-	void setPathPresetWatch();
+
+	void loadPresetFile();
+	void savePresetFile();
 
 	//--
 
@@ -996,8 +999,8 @@ private:
 
 private:
 
-	void preset_Save(std::string p);
-	void preset_Load(std::string p);
+	void preset_Save(std::string p, bool absolutePath = false);
+	void preset_Load(std::string p, bool absolutePath = false);
 
 	//-
 
@@ -1052,7 +1055,7 @@ private:
 	//--
 
 private:
-	bool show_app_main_menu_bar = true;
+	ofParameter<bool> show_app_main_menu_bar{ "Show Menu Bar", true };
 	bool show_app_about = false;
 
 	//--------------------------------------------------------------
@@ -1071,6 +1074,8 @@ private:
 					ImGui::EndMenu();
 				}
 				if (ImGui::MenuItem("Export Kit", "")) { exportKit(); }
+				if (ImGui::MenuItem("Save Preset File", "")) { savePresetFile(); }
+				if (ImGui::MenuItem("Load Preset File", "")) { loadPresetFile(); }
 
 				ImGui::Separator();
 
@@ -1081,7 +1086,7 @@ private:
 
 			if (ImGui::BeginMenu("Tools"))
 			{
-				if (ImGui::MenuItem("Menu Bar", "hide")) { show_app_main_menu_bar = false; };
+				//ImGui::MenuItem("Menu Bar", "hide", &show_app_main_menu_bar);
 				ImGui::MenuItem("About ofxColorManager", NULL, &show_app_about);
 
 				ImGui::EndMenu();

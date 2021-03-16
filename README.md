@@ -121,7 +121,7 @@ The **JSON** file format of a preset it's simple. This is an example of a 3 colo
 ## NOTES
 
 ## Author
-An addon by **@moebiusSurfing**. *(ManuMolina). 2020.*
+An addon by **@moebiusSurfing**. *( ManuMolina ). 2019-2021.*
 
 ## License
 *MIT License.*

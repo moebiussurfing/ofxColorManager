@@ -280,22 +280,24 @@ ofxColorManager::ofxColorManager()
 
 	helpInfo = "HELP INFO\n\n";
 
-	//helpInfo += "K                   KEYS\n";
 	helpInfo += "H                     HELP\n";
 	helpInfo += "G                     GUI\n";
 	helpInfo += "F                     FULL SCREEN\n";
+	//helpInfo += "K                   KEYS\n";
 	helpInfo += "\n";
+
 	helpInfo += "SPACE                   > PRESETS\n";
 	helpInfo += "Left|Right            < > PRESETS\n";
-	helpInfo += "+Ctrl                 < > SHIFT COLORS\n";
+	helpInfo += " +Ctrl                < > SHIFT COLORS\n";
 	helpInfo += "Down|Up               < > ENGINE TYPES\n";
 	helpInfo += "-|+                   AMOUNT COLORS\n";
-	helpInfo += "BACKSPACE             AUX 1\n";
-	helpInfo += "+Ctrl                 AUX 2\n";
-	helpInfo += "RETURN                RANDOM 1\n";
-	helpInfo += "+Ctrl                 RANDOM 2\n";
 	helpInfo += "\n";
-	//helpInfo += "\n";
+
+	helpInfo += "BACKSPACE             AUX 1\n";
+	helpInfo += " +Ctrl                AUX 2\n";
+	helpInfo += "RETURN                RANDOM 1\n";
+	helpInfo += " +Ctrl                RANDOM 2\n";
+	helpInfo += "\n";
 
 	helpInfo += "PANELS\n";
 	helpInfo += "F1                    PALETTE\n";
@@ -314,7 +316,7 @@ ofxColorManager::ofxColorManager()
 
 	helpInfo += "ENGINES\n";
 	helpInfo += "TAB                     > \n";
-	helpInfo += "+Ctrl                 <   \n";
+	helpInfo += " +Ctrl                <   \n";
 	helpInfo += "                      THEORY\n";
 	helpInfo += "                      RANGE\n";
 	helpInfo += "                      LOVERS\n";
@@ -936,6 +938,7 @@ void ofxColorManager::setup()
 	params_control.add(bResponsive_Panels);
 	params_control.add(bFitLayout);
 	params_control.add(SHOW_AdvancedLayout);
+	params_control.add(show_app_main_menu_bar);
 
 #ifndef USE_SIMPLE_PRESET_PALETTE	
 	params_control.add(bModeBundlePreset);
@@ -3068,7 +3071,7 @@ void ofxColorManager::gui_Picker()
 
 				//-
 
-				ImGui::PushItemWidth(- 5);
+				ImGui::PushItemWidth(-5);
 				if (ImGui::ColorPicker4("##PickerWheel", (float *)&cTmp, _flags))
 				{
 					ofLogNotice(__FUNCTION__) << "Wheel Picker : moved";
@@ -3242,7 +3245,8 @@ void ofxColorManager::gui_Advanced()
 		{
 			//ImGui::SameLine();
 			ofxImGui::AddParameter(ENABLE_keys); //ImGui::SameLine();
-
+			ofxImGui::AddParameter(show_app_main_menu_bar); //ImGui::SameLine();
+			//ImGui::Checkbox("Show Menu Bar", &show_app_main_menu_bar);
 			//#ifdef SHOW_THEM_EDITOR
 			ImGui::Checkbox("Edit Theme", &edit_theme);
 			//#endif
@@ -4494,7 +4498,7 @@ bool ofxColorManager::draw_Gui()
 		//--
 
 		//TODO:
-		if (SHOW_AdvancedLayout && show_app_main_menu_bar)
+		if (show_app_main_menu_bar)
 		{
 			ofxColorManager_ShowExampleAppMainMenuBar();
 		}
@@ -5395,7 +5399,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		}
 
 		//wf
-		if (!show_app_main_menu_bar) show_app_main_menu_bar = true;
+		//if (!show_app_main_menu_bar) show_app_main_menu_bar = true;
 	}
 
 	// layout
@@ -6900,7 +6904,7 @@ void ofxColorManager::preset_RefreshFiles()
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::preset_Load(std::string p)
+void ofxColorManager::preset_Load(std::string p, bool absolutePath)
 {
 	ofLogNotice(__FUNCTION__) << "----------------- PRESET LOAD -----------------";
 	ofLogNotice(__FUNCTION__) << p;
@@ -6910,6 +6914,8 @@ void ofxColorManager::preset_Load(std::string p)
 	//TODO:
 	//ENABLE_CALLBACKS_Pickers = false;
 	ENABLE_CALLBACKS_Engines = false;
+
+	//--
 
 	////TODO:
 	//// workflow
@@ -6934,10 +6940,13 @@ void ofxColorManager::preset_Load(std::string p)
 
 	//--
 
-	p = p + ".json";
+	if (!absolutePath) p = p + ".json";
+
+	//--
 
 	// 1. load palette preset (target will be the above pointers) //TODO: should (late?) improve this..
-	bool b = PRESET_Temp.preset_Load(p);
+	bool b = PRESET_Temp.preset_Load(p, absolutePath);
+	//bool b = PRESET_Temp.preset_Load(p);
 	if (!b)
 	{
 		ofLogError(__FUNCTION__) << "Preset file " << p << " not found! ";
@@ -7006,7 +7015,7 @@ void ofxColorManager::preset_Load(std::string p)
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::preset_Save(std::string p)
+void ofxColorManager::preset_Save(std::string p, bool absolutePath)
 {
 	ofLogNotice(__FUNCTION__) << "----------------- PRESET SAVE -----------------";
 
@@ -7593,6 +7602,70 @@ void ofxColorManager::exportPalette()
 	}
 
 	//--
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::savePresetFile()
+{
+	ofLogNotice(__FUNCTION__) << "----------------- SAVE PALETTE -----------------";
+
+	//Open the Open File Dialog
+	std::string str = "Select the Preset Save path.\n";
+	str += "Typically you use this saving type to BACKUP file.\n";
+	//str += "'OF_ADDON/ofxColorClient/3-example_AdvancedScenes/bin/data'\n";
+	//str += "Where YOUR_OF_CLIENT_APP will be watching for changing on the preset file.\n";
+	//str += "And to reload. This is the alternative LINK-MODE to the TCP based one.\n";
+	ofFileDialogResult openFileResult = ofSystemLoadDialog(str, true);
+
+	std::string _path;
+
+	//Check if the user opened a file
+	if (openFileResult.bSuccess)
+	{
+		_path = openFileResult.getPath();
+		ofStringReplace(textInput_New, ".", "");
+		_path += "\\";// windows
+		_path += textInput_New;
+
+		ofLogNotice(__FUNCTION__) << ": " << _path;
+
+		PRESET_Temp.preset_Save(_path, true);
+	}
+	else
+	{
+		ofLogError(__FUNCTION__) << "File '" << _path << "' NOT FOUND";
+	}
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::loadPresetFile()
+{
+	ofLogNotice(__FUNCTION__) << "----------------- LOAD PALETTE -----------------";
+
+	//Open the Open File Dialog
+	std::string str = "Select the Preset Load path.\n";
+	str += "Typically you use this loading type to load a BACKUP file.\n";
+	//str += "'OF_ADDON/ofxColorClient/3-example_AdvancedScenes/bin/data'\n";
+	//str += "Where YOUR_OF_CLIENT_APP will be watching for changing on the preset file.\n";
+	//str += "And to reload. This is the alternative LINK-MODE to the TCP based one.\n";
+	ofFileDialogResult openFileResult = ofSystemLoadDialog(str, false);
+
+	std::string _path;
+
+	//Check if the user opened a file
+	if (openFileResult.bSuccess)
+	{
+		_path = openFileResult.getPath();
+
+		ofLogNotice(__FUNCTION__) << ": " << _path;
+
+		preset_Load(_path, true);
+		//PRESET_Temp.preset_Load(_path, true);
+	}
+	else
+	{
+		ofLogError(__FUNCTION__) << "File '" << _path << "' NOT FOUND";
+	}
 }
 
 #ifdef LINK_TCP_MASTER_CLIENT
