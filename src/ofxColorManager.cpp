@@ -168,6 +168,7 @@ void ofxColorManager::build_Palette_Engine()
 
 	// workflow
 	if (DEMO1_Enable || show_app_about) myDEMO1.reStart();
+	if (DEMO5_Enable || show_app_about) myDEMO5.start();
 
 	//--
 
@@ -429,6 +430,14 @@ void ofxColorManager::setup()
 	myDEMO1.setPalette(palette);
 	//myDEMO1.setEnableMouseCamera(true);
 
+	//--
+
+	// DEMO 5
+
+	myDEMO5.setup();
+	myDEMO5.setPalette(palette);
+	//myDEMO1.setEnableMouseCamera(true);
+
 	//-
 
 	// DEMO 2 svg
@@ -534,7 +543,7 @@ void ofxColorManager::setup()
 
 	color_HUE.set("H", 0, 0, 255);
 	color_SAT.set("S", 0, 0, 255);
-	color_BRG.set("B", 0, 0, 255);
+	color_BRG.set("V", 0, 0, 255);
 
 	params_color.setName("COLOR");
 	params_color.add(color_HUE);
@@ -602,6 +611,7 @@ void ofxColorManager::setup()
 	color_BRG_0.setSerializable(false);
 
 	DEMO_Cam.setSerializable(false);
+	DEMO5_Cam.setSerializable(false);
 	//DEMO2_Edit.setSerializable(false);
 
 	ofAddListener(params_Theory.parameterChangedE(), this, &ofxColorManager::Changed_Controls);
@@ -844,20 +854,21 @@ void ofxColorManager::setup()
 	params_AppState.add(params_Background);
 #endif
 
-	//params_Demo.add(TEST_Mode);
+	//TODO:
+	//params_Picker.add(BRIGHTNESS);
+	//params_Picker.add(SATURATION);
+
 	params_Demo.add(DEMO1_Enable);
-	//params_Demo.add(DEMO2_Svg.DEMO2_Enable);
-	//params_Demo.add(DEMO2_Svg.DEMO2_Edit);
-	//params_Demo.add(DEMO2_Svg.DEMO2_Scale);
-	//params_Demo.add(DEMO2_Svg.DEMO2_Alpha);
 	params_Demo.add(DEMO_Auto);
 	params_Demo.add(DEMO_Timer);
 	params_Demo.add(DEMO_Alpha);
 	params_Demo.add(DEMO_Cam);
+	params_Demo.add(DEMO5_Enable);
+	params_Demo.add(myDEMO5.DEMO5_Alpha);
+	params_Demo.add(myDEMO5.DEMO5_Speed);
+	params_Demo.add(myDEMO5.DEMO5_Zoom);
+	params_Demo.add(DEMO5_Cam);
 	params_AppState.add(params_Demo);
-
-	//params_Picker.add(BRIGHTNESS);
-	//params_Picker.add(SATURATION);
 
 	params_Picker.add(bColor_HUE);
 	params_Picker.add(bColor_SAT);
@@ -1140,6 +1151,8 @@ void ofxColorManager::update(ofEventArgs & args)
 		}
 	}
 
+	if (DEMO5_Enable || show_app_about) myDEMO5.update();
+
 	//----
 
 	// lovers
@@ -1351,7 +1364,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 		if (background_Draw_ENABLE)
 		{
 			_cBg = color_BackGround.get();
-		}
+	}
 #endif
 		// using gradient
 		if (!DEMO2_Svg.DEMO2_Enable)
@@ -1368,15 +1381,26 @@ void ofxColorManager::draw(ofEventArgs & args)
 		//--
 
 		// DEMO1
-		if (DEMO1_Enable)
-		{
-			myDEMO1.draw(DEMO_Alpha);
-		}
+		// bubbles
+		if (DEMO1_Enable) myDEMO1.draw(DEMO_Alpha);
+
+		//-
+
+		// DEMO5
+		//spheres
+		if (DEMO5_Enable) myDEMO5.draw();
+
+		//about window demos
 		if (show_app_about)
 		{
 			fboBig.begin();
 			ofClear(gradientEngine.getColorPicked());
-			myDEMO1.draw(DEMO_Alpha);
+
+			//if (DEMO1_Enable) myDEMO1.draw(DEMO_Alpha);
+			//if (DEMO5_Enable) myDEMO5.draw(DEMO5_Alpha);
+			//myDEMO1.draw(DEMO_Alpha);
+			myDEMO5.draw();
+
 			fboBig.end();
 		}
 		//if (DEMO1_Enable) fboBig.draw(0, 0, ofGetWidth(), ofGetHeight());
@@ -1394,7 +1418,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 			// info
 			draw_Info();
 		}
-	}
+}
 
 	//--
 
@@ -2562,6 +2586,7 @@ void ofxColorManager::gui_Library()
 
 		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
 		float _w = ImGui::GetWindowContentRegionWidth() - _spc;
+		float _w50 = _w * 0.6;
 
 		int _colsSize;
 		if (lib_CardsMode) _colsSize = lib_RowSize;
@@ -2636,6 +2661,8 @@ void ofxColorManager::gui_Library()
 			{
 				if (ImGui::CollapsingHeader("Layout"))
 				{
+					ImGui::PushItemWidth(_w50);
+
 					ImGui::InputInt(sizeLibColBox.getName().c_str(), (int*)&sizeLibColBox.get(), 1, 5);
 					ofxImGui::AddParameter(lib_Responsive_Mode);
 					ofxImGui::AddParameter(bPagerized);
@@ -2656,6 +2683,8 @@ void ofxColorManager::gui_Library()
 
 						}
 					}
+
+					ImGui::PopItemWidth();
 				}
 			}
 
@@ -2683,9 +2712,9 @@ void ofxColorManager::gui_Library()
 				ImGui::Dummy(ImVec2(0, 5));
 
 				ofxImGui::AddParameter(colorBrowser.ENABLE_keys);
-			}
-#endif
 		}
+#endif
+	}
 
 		//--
 
@@ -2872,7 +2901,7 @@ void ofxColorManager::gui_Library()
 		{
 			refresh_FromPicked();
 		}
-	}
+}
 
 	ofxImGui::EndWindow(mainSettings);
 
@@ -3884,7 +3913,7 @@ void ofxColorManager::gui_Presets()
 		float _w50 = _w99 / 2;
 
 		ImGuiColorEditFlags _flags;
-		
+
 		//ImGui::Text("Name");
 		ImGui::Dummy(ImVec2(0, 5));
 
@@ -4211,7 +4240,7 @@ void ofxColorManager::gui_Presets()
 
 		ImGui::Dummy(ImVec2(0, 2));
 
-		ofxSurfingHelpers::AddBigToggle(SHOW_Kit, _w100, _h * 0.5);
+		//ofxSurfingHelpers::AddBigToggle(SHOW_Kit, _w100, _h * 0.5);
 
 		if (SHOW_Kit) ofxImGui::AddParameter(AutoScroll);
 
@@ -4372,15 +4401,33 @@ void ofxColorManager::gui_Demo()
 
 		//-
 
+		//demo bubbles
 		ofxSurfingHelpers::AddBigToggle(DEMO1_Enable, _w100);
 		if (DEMO1_Enable)
 		{
+			ofxImGui::AddParameter(DEMO_Alpha);
 			ofxImGui::AddParameter(DEMO_Auto);
 			ofxImGui::AddParameter(DEMO_Timer);
-			ofxImGui::AddParameter(DEMO_Alpha);
 			if (ofxImGui::AddParameter(DEMO_Cam))
 			{
 				myDEMO1.setEnableMouseCamera(DEMO_Cam);
+			}
+		}
+
+		ImGui::Dummy(ImVec2(0, 2));
+		ImGui::Separator();
+		ImGui::Dummy(ImVec2(0, 2));
+
+		//demo spheres
+		ofxSurfingHelpers::AddBigToggle(DEMO5_Enable, _w100);
+		if (DEMO5_Enable)
+		{
+			ofxImGui::AddParameter(myDEMO5.DEMO5_Alpha);
+			ofxImGui::AddParameter(myDEMO5.DEMO5_Zoom);
+			ofxImGui::AddParameter(myDEMO5.DEMO5_Speed);
+			if (ofxImGui::AddParameter(DEMO5_Cam))
+			{
+				myDEMO5.setEnableMouseCamera(DEMO5_Cam);
 			}
 		}
 
@@ -5518,7 +5565,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	else if (name == bModePalettePreset.getName())
 	{
 		bModeBundlePreset = !bModePalettePreset;
-	}
+}
 #endif
 
 	//----
@@ -5856,9 +5903,15 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	// demos
 	else if (name == SHOW_Demos.getName())
 	{
+		DEMO_Cam = false;
+		myDEMO1.setEnableMouseCamera(DEMO_Cam);
+
 		if (!SHOW_Demos) DEMO2_Svg.DEMO2_Edit = false;
 
 		DEMO2_Svg.setEnableKeys(SHOW_Demos);
+
+		DEMO5_Cam = false;
+		myDEMO5.setEnableMouseCamera(DEMO5_Cam);
 	}
 
 	//---
@@ -6192,27 +6245,14 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			gradientEngine.setToggleTest();
 		}
 
-		// DEMO
-		else if (key == 'D')
-		{
-			DEMO1_Enable = !DEMO1_Enable;
-			//if (DEMO1_Enable&& DEMO_Auto) myDEMO1.reStart();
-		}
-
-		//else if (key == 'g') {
-		//    SHOW_ALL_GUI = !SHOW_ALL_GUI;
-		//    setVisible(SHOW_ALL_GUI);
-		//}
-
 		else if (key == 'e' || key == 'E')
 		{
 			bEditPalette = !bEditPalette;
 		}
 
-		//else if (key == 'd')
-		//{
-		//    // DEBUG INTERFACE
-		//    bShowDebug = !bShowDebug;
+		//else if (key == 'g') {
+		//    SHOW_ALL_GUI = !SHOW_ALL_GUI;
+		//    setVisible(SHOW_ALL_GUI);
 		//}
 
 		//--
@@ -6709,6 +6749,8 @@ void ofxColorManager::mousePressed(ofMouseEventArgs &eventArgs)
 			if (button == 2) myDEMO1.clear();
 			else myDEMO1.start();//trig DEMO start
 		}
+
+		if (DEMO5_Enable || show_app_about) myDEMO5.start();
 	}
 }
 
@@ -7018,6 +7060,8 @@ void ofxColorManager::preset_Load(std::string p, bool absolutePath)
 
 	// workflow
 	if (DEMO1_Enable || show_app_about) myDEMO1.reStart();
+	if (DEMO5_Enable || show_app_about) myDEMO5.start();
+	//tweenD = 1;
 }
 
 //--------------------------------------------------------------
@@ -7665,9 +7709,9 @@ void ofxColorManager::loadPresetFile()
 	{
 		_path = openFileResult.getPath();
 		_name = openFileResult.getName();
-		
+
 		auto _nameExt = ofSplitString(_name, ".");//remove ext
-		if (_nameExt.size()==2) _name = _nameExt[0];
+		if (_nameExt.size() == 2) _name = _nameExt[0];
 		PRESET_Name = _name;
 		name_TARGET[0] = _name;
 		PRESET_Temp.setLinkName(_name);
@@ -7675,7 +7719,7 @@ void ofxColorManager::loadPresetFile()
 		ofLogNotice(__FUNCTION__) << ": " << _path << " | " << _name;
 
 		preset_Load(_path, true);
-	
+
 		// workflow
 
 		// new preset

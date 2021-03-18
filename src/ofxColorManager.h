@@ -6,7 +6,6 @@
 /*
 
 BUGS:
-+ workflow for lovers and quantizer broken..
 + fix text input boxes. now we must to mantain click on text input and lock keycommands..
 + TCP port number switch, problems on reconnect.
 + TAB stucks on Picture engine
@@ -16,6 +15,7 @@ BUGS:
 TODO:
 + undo engine
 + add demo to about window using an fbo
++ fix demo1 camera and tween
 
 */
 
@@ -72,7 +72,9 @@ TODO:
 
 #include "presets/PresetPalette.h"
 
+// demo scenes
 #include "demo/DEMO_Scene.h"
+#include "demo/DEMO_SceneSpheres.h"
 #include "ofxSCENE-SVG.h"
 
 #include "gui/PreviewPaletteMini.h"
@@ -591,6 +593,7 @@ private:
 	// DEMO
 private:
 	DEMO_Scene myDEMO1;
+	DEMO_SceneSpheres myDEMO5;
 
 	//--
 
@@ -950,15 +953,26 @@ private:
 	//--
 
 	// demos
+	void setupDemos();
+	void updateDemos();
+	void drawDemos();
+
 private:
 	ofParameter<bool> DEMO1_Enable{ "Enable DEMO Bubbles", false };
 	ofParameter<bool> DEMO_Auto{ "Auto Trig", false };
-	ofParameter<bool> DEMO_Cam{ "Edit Camera", false };
+	ofParameter<bool> DEMO_Cam{ "Edit Camera Bubbles", false };
 	ofParameter<float> DEMO_Timer{ "Frequency", 0.5, 0, 1 };
-	ofParameter<float> DEMO_Alpha{ "Alpha", 0.8, 0, 1 };
+	ofParameter<float> DEMO_Alpha{ "Alpha 1", 0.8, 0, 1 };
 	int Demo_Timer = 0;
 	int Demo_Timer_Max = 15000;
 	bool bTEST_pause = false;
+
+	ofParameter<bool> DEMO5_Cam{ "Edit Camera Spheres", false };
+	//ofParameter<float> DEMO5_Speed{ "Speed", 0.5, 0, 1 };
+	//ofParameter<float> DEMO5_Zoom{ "Zoom", 0.5, 0, 1 };
+	//ofParameter<float> DEMO5_Alpha{ "Alpha Spheres", 0.8, 0, 1 };
+
+	ofParameter<bool> DEMO5_Enable{ "Enable DEMO Spheres", false };
 
 	//--
 
@@ -1084,6 +1098,11 @@ private:
 
 			if (ImGui::BeginMenu("View"))
 			{
+				auto pref = show_app_main_menu_bar.get();
+				if (ImGui::MenuItem("Show Menu Bar", NULL, &pref))
+				{
+					show_app_main_menu_bar = pref;
+				}
 				ImGui::MenuItem("About", NULL, &show_app_about);
 
 				ImGui::EndMenu();
@@ -1099,7 +1118,10 @@ private:
 		ImGuiWindowFlags flags;
 		flags = ImGuiWindowFlags_AlwaysAutoResize;
 		//flags = ImGuiWindowFlags_None;
-		
+
+		//TODO:
+		// draw texture inside backgroundg
+
 		//ImGuiIO& io = ImGui::GetIO();
 		//// Set the window position
 		//ImGui::SetNextWindowPos(ImVec2(0, 0), 0, ImVec2(0, 0));
@@ -1141,9 +1163,8 @@ private:
 		ImGui::Text("ofxColorManager v1.0");
 		ImGui::Separator();
 		ImGui::Dummy(ImVec2(0, 2));
-		ImGui::Text("Coded by moebiusSurfing");
-		ImGui::Text("Manu Molina. 2019 - 2021");
-		ImGui::Text("Barcelona / Buenos Aires");
+		ImGui::Text("Coded by moebiusSurfing. (Manu Molina)");
+		ImGui::Text("Barcelona / Buenos Aires. 2019 - 2021");
 		ImGui::Dummy(ImVec2(0, 2));
 		ImGui::Text("GITHUB");
 		ImGui::Text("https://github.com/moebiussurfing");
@@ -1156,10 +1177,13 @@ private:
 		ImGui::Text("all included libraries or addons,");
 		ImGui::Text("especially to the openFrameworks community !");
 		ImGui::Dummy(ImVec2(0, 2));
-		ImGui::Text("Licensed under the MIT License.");
+		ImGui::Text("MIT License.");
+		//ImGui::Text("Peace");
 		ImGui::Dummy(ImVec2(0, 2));
 
 		draw_DemoFbo();
+		ImGui::Text("DemoScene coded by junkiyoshi.com");
+		ImGui::Text("Thanks");
 
 		ImGui::End();
 
@@ -1190,7 +1214,7 @@ private:
 	//		}
 	//	}
 	//}
-	
+
 	//--
 
 	// demo to draw into about panel
@@ -1218,7 +1242,7 @@ private:
 		fboBig.allocate(settingsBig);
 
 		float _ww = wAboutDemo;
-		
+
 		ofFbo::Settings settings;
 		settings.numSamples = 16;
 		settings.useStencil = true;
@@ -1226,7 +1250,7 @@ private:
 		settings.width = _ww;
 		settings.height = _ww * (9 / 16.f);
 		fbo.allocate(settings);
-		
+
 		fbo.createAndAttachTexture(GL_RGB, 0); //Position
 		fbo.createAndAttachTexture(GL_RGBA32F, 1); //velocity
 		fbo.createAndAttachRenderbuffer(GL_DEPTH_COMPONENT, GL_DEPTH_ATTACHMENT);
@@ -1248,33 +1272,15 @@ private:
 	{
 		float _spc = ImGui::GetStyle().ItemSpacing.x;
 		float _w100 = ImGui::GetContentRegionAvail().x;
-
 		float w = wAboutDemo;
 		float h = w * (9 / 16.f);
 
 		fbo.begin();
-		ofClear(0, 0);
-
-		//faded zoom
-		bool bSmooth = true;
-#define Z_MIN 1.5//zoom
-#define Z_MAX 9.0
-#define T_MIN 60//speed frames
-#define T_MAX 240
-		static float max1 = 2;
-		static int timer1 = 100;
-		int frame = ofGetFrameNum() % timer1;
-		float s = ofMap(frame, 0, timer1, -1.0, 1.0f);
-		if (ofGetFrameNum() % timer1 == 0 && !bSmooth)
 		{
-			timer1 = ofRandom(T_MIN, T_MAX);
-		}
-		tweenD -= 0.1f;
-		tweenD = ofClamp(tweenD, 0, 1);
-		ofScale(Z_MIN + max1 * abs(0.1 * glm::sin(s)));
-		ofScale(1 + 2.0 * tweenD);
+			ofClear(0, 0);
 
-		fboBig.draw(0, 0, w, h);
+			fboBig.draw(0, 0, w, h);
+		}
 		fbo.end();
 
 		if (ImGui::ImageButton(
@@ -1284,8 +1290,6 @@ private:
 			ofLogNotice(__FUNCTION__) << "Image Pressed";
 
 			presetNext();
-
-			tweenD = 1;
 		}
 	}
 };

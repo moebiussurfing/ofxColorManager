@@ -1,9 +1,7 @@
 //
 // Created by moebiussurfing on 8/6/19.
 //
-
-#ifndef INC_4_COLORMANAGER_DEMO_PALETTE_H
-#define INC_4_COLORMANAGER_DEMO_PALETTE_H
+#pragma once
 
 #include "ofMain.h";
 
@@ -12,7 +10,7 @@
 class DEMO_Scene {
 
 private:
-	std::string _name = "DEMO_Cam";
+	std::string _name = "DEMO_Bubbles_Cam";
 
 public:
 	~DEMO_Scene() 
@@ -106,5 +104,3 @@ private:
 	// DEMO 2
 	bool ENABLE_DEMO2 = true;
 };
-
-#endif //INC_4_COLORMANAGER_DEMO_PALETTE_H

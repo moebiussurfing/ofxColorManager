@@ -221,6 +221,8 @@ void ofxColourLoversHelper::drawImGuiMain()
 			_w99 = _w100 - _spc;
 			_w50 = _w99 / 2;// -_spc;
 
+			// mode selectors
+
 			ofxSurfingHelpers::AddBigToggle(bFavorites, _w50, _hb * 2);
 			ImGui::SameLine();
 			ofxSurfingHelpers::AddBigToggle(bHistory, _w50, _hb * 2);
@@ -338,11 +340,46 @@ void ofxColourLoversHelper::drawImGuiMain()
 					ofxImGui::AddParameter(SHOW_AdvancedLayout);
 				}
 			}
-		}
+		
+			//----
+
+			// scrollable list
+
+			ImGui::Dummy(ImVec2(0, 2));
+
+			if (palettes.size() != 0)
+			{
+				int _i = currPalette;
+
+				ImGui::PushItemWidth(_w99 - 10);
+
+				if (ofxImGui::VectorCombo(" ", &_i, imageNames))
+				{
+					ofLogNotice(__FUNCTION__) << "_i: " << ofToString(_i);
+
+					if (_i < imageNames.size())
+					{
+						currPalette = _i;
+						imageName = imageNames[_i];
+						ofLogNotice(__FUNCTION__) << "Combo select: " << _i;
+
+						if (imageNames.size() > 0 && currPalette < imageNames.size())
+						{
+							//imageName = dir.getName(currentImage);
+							//imageName_path = dir.getPath(currentImage);
+
+							//buildFromImageFile(imageName_path, numColors);
+						}
+					}
+				}
+
+				ImGui::PopItemWidth();
+			}
+}
 
 		//-
 
-		ImGui::Dummy(ImVec2(0, 5));
+		//ImGui::Dummy(ImVec2(0, 5));
 
 		//ImGui::Text(lastSearch.c_str());
 		//ImGui::Dummy(ImVec2(0.0f, 10));
@@ -1005,7 +1042,7 @@ void ofxColourLoversHelper::setup()
 		//updateFlag = true;
 		//setPalette(currPalette);
 		refreshPalette();
-	}
+			}
 
 	//loadHistory();
 	//// auto load first palette of favourites
@@ -1018,7 +1055,7 @@ void ofxColourLoversHelper::setup()
 	// }
 
 	ofxSurfingHelpers::loadGroup(params, path_AppSettings);
-}
+					}
 
 
 //--------------------------------------------------------------
@@ -1139,7 +1176,7 @@ void ofxColourLoversHelper::build_Gui_Lab()
 			{
 				// different sizes with original colourLover Palettes
 				currW = palettes[i].colorWidths[c] * w_Gui;
-			}
+				}
 			else
 			{
 				// same size for each color
@@ -1168,8 +1205,8 @@ void ofxColourLoversHelper::build_Gui_Lab()
 			buttonColoursPalette.push_back(btn);
 
 			currX += currW;
+			}
 		}
-	}
 
 	gui_Lab->getRect()->setHeight(palettes.size() * (cdim + 4) + startY);
 	gui_Lab->setSnapping(0);
@@ -1332,7 +1369,7 @@ void ofxColourLoversHelper::Changed_Gui(ofxUIEventArgs &e)
 		{
 			ofLogWarning(__FUNCTION__) << "OFX_UI_TEXTINPUT_ON_ENTER";
 			ENABLER_Keys = true;
-		}
+	}
 		else if (ti->getInputTriggerType() == OFX_UI_TEXTINPUT_ON_UNFOCUS)
 		{
 			ofLogWarning(__FUNCTION__) << "OFX_UI_TEXTINPUT_ON_UNFOCUS";
@@ -1452,7 +1489,7 @@ void ofxColourLoversHelper::refreshPalette()
 		}
 	}
 #endif
-}
+	}
 
 //--------------------------------------------------------------
 void ofxColourLoversHelper::randomPalette()
@@ -1685,7 +1722,7 @@ void ofxColourLoversHelper::setPalette(int pId)
 	////        (*myPalette_BACK) = p.colours;
 	//////        lastPaletteName = p.title;
 	////    }
-}
+	}
 
 #ifdef USE_OFX_UI
 //--------------------------------------------------------------
@@ -1732,6 +1769,15 @@ void ofxColourLoversHelper::loadFavorites()
 		ColourLovePalette cp;
 		cp.load(path_Global + "favorites/" + _files.getName(i));
 		palettes.push_back(cp);
+	}
+
+	// log files on folder
+	imageNames.clear();
+	for (int i = 0; i < _files.numFiles(); i++)
+	{
+		ofLogNotice(__FUNCTION__) << "file " << "[" << ofToString(i) << "] " << _files.getName(i);
+
+		imageNames.push_back(_files.getName(i));
 	}
 
 	lastSearch = "FAVORITES";
@@ -1789,6 +1835,15 @@ void ofxColourLoversHelper::loadHistory()
 		ColourLovePalette cp;
 		cp.load(path_Global + "history/" + _files.getName(i));
 		palettes.push_back(cp);
+	}
+
+	// log files on folder
+	imageNames.clear();
+	for (int i = 0; i < _files.numFiles(); i++)
+	{
+		ofLogNotice(__FUNCTION__) << "file " << "[" << ofToString(i) << "] " << _files.getName(i);
+
+		imageNames.push_back(_files.getName(i));
 	}
 
 	lastSearch = "HISTORY";
