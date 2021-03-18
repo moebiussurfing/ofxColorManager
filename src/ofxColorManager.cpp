@@ -939,6 +939,7 @@ void ofxColorManager::setup()
 	params_control.add(bFitLayout);
 	params_control.add(SHOW_AdvancedLayout);
 	params_control.add(SHOW_MainMenuBar);
+	params_control.add(SHOW_Name);
 
 #ifndef USE_SIMPLE_PRESET_PALETTE	
 	params_control.add(bModeBundlePreset);
@@ -1360,7 +1361,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 			//--
 
 			// info
-			draw_Info();
+			if (SHOW_Name) draw_Info();
 		}
 	}
 
@@ -3271,7 +3272,8 @@ void ofxColorManager::gui_Advanced()
 	{
 		ofxImGui::AddParameter(SHOW_MainMenuBar);
 		ImGui::Checkbox("Show About", &SHOW_About);
-		ImGui::Checkbox("Edit Theme", &edit_theme);
+		ofxImGui::AddParameter(SHOW_Name);
+		ImGui::Checkbox("Edit Theme", &SHOW_EditTheme);
 		//ImGui::SameLine();
 
 		ImGui::Separator();
@@ -3864,7 +3866,7 @@ void ofxColorManager::gui_InputText()
 {
 	static bool auto_resize = true;
 
-	float _ww = 600;
+	float _ww = 800;
 	float _hh = 75;
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(_ww, _hh));
 
@@ -3878,6 +3880,7 @@ void ofxColorManager::gui_InputText()
 	float max = 0.80;
 	float a = ofMap(glm::sin(freq * ofGetFrameNum()), -1, 1, min, max);
 
+	//ImGui::te
 
 	ImGuiWindowFlags flagsw;
 	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
@@ -3896,8 +3899,8 @@ void ofxColorManager::gui_InputText()
 		float _w100 = ImGui::GetContentRegionAvail().x;
 		float _w50 = _w100 / 2;
 		ImGuiColorEditFlags _flags = ImGuiColorEditFlags_None;
-
-		if (MODE_NewPreset.get())
+		
+		//if (MODE_NewPreset.get())
 		{
 			//TODO:
 			// load string into char array
@@ -4630,7 +4633,7 @@ void ofxColorManager::setup_Gui()
 
 	//-
 
-	std::string _path = "assets/fonts/";;//assets folder
+	std::string _path = "assets/fonts/";//assets folder
 	customFont = gui.addFont(_path + _name, _size, nullptr, normalCharRanges);
 	customFontBig = gui.addFont(_path + _nameBig, _sizeBig, nullptr, normalCharRanges);
 	io.FontDefault = customFont;
@@ -4643,7 +4646,7 @@ void ofxColorManager::setup_Gui()
 	ofxSurfingHelpers::ImGui_ThemeMoebiusSurfing();
 	//ImGui::StyleColorsDark();
 	//ofxSurfingHelpers::ImGui_ThemeModernDark();
-#endifMM
+#endif
 
 	//-
 
@@ -4713,7 +4716,7 @@ bool ofxColorManager::draw_Gui()
 			if (SHOW_UserPaletteEditor) gui_Editor();
 			if (SHOW_Presets) gui_Presets();
 #ifdef MODE_TEXT_INPUT_WORKAROUND
-			if (SHOW_Presets && MODE_NewPreset) gui_InputText();
+			if (SHOW_Presets /*&& MODE_NewPreset*/) gui_InputText();
 #endif
 			if (SHOW_Kit) gui_Kit();
 			if (SHOW_Picker) gui_Picker();
@@ -4751,7 +4754,7 @@ bool ofxColorManager::draw_Gui()
 
 		//TODO:
 		//extra advanced panels
-		if (edit_theme)
+		if (SHOW_EditTheme)
 		{
 			if (ofxImGui::BeginWindow("THEME", mainSettings, ImGuiWindowFlags_None))
 			{
@@ -4765,11 +4768,11 @@ bool ofxColorManager::draw_Gui()
 			}
 			ofxImGui::EndWindow(mainSettings);
 
-			if (ofxImGui::BeginWindow("VIEW PORT THUMBS", mainSettings, ImGuiWindowFlags_None))
-			{
-				ImGui::ShowViewportThumbnails();
-			}
-			ofxImGui::EndWindow(mainSettings);
+			//if (ofxImGui::BeginWindow("VIEW PORT THUMBS", mainSettings, ImGuiWindowFlags_None))
+			//{
+			//	ImGui::ShowViewportThumbnails();
+			//}
+			//ofxImGui::EndWindow(mainSettings);
 		}
 
 		if (SHOW_About) { ofxColorManager_ShowAboutWindow(&SHOW_About); }

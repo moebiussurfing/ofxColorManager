@@ -459,7 +459,7 @@ void ofxColourLoversHelper::drawImGuiMain()
 
 		//-
 
-		if (ImGui::Button("Randomize", ImVec2(_w100, _hb)))
+		if (ImGui::Button("Randomize", ImVec2(_w100, 2*_hb)))
 		{
 			randomPalette();
 

@@ -19,6 +19,12 @@ TODO:
 + fix demo1 camera and add tween
 + check theory picker if calls too much callbacks
 
+PRESET NAME
++ fit width to text
++ blink when new preset
++ update/new preset workflow
++ change colors. bg and shadow
+
 */
 
 
@@ -218,7 +224,7 @@ private:
 	float fps;
 
 private:
-	bool edit_theme = false;
+	bool SHOW_EditTheme = false;
 
 #ifdef LINK_TCP_MASTER_CLIENT
 private:
@@ -272,6 +278,7 @@ private:
 	//--
 
 private:
+	ofParameter<bool> SHOW_Name{ "Show Preset Name", false };
 	ofParameter<bool> SHOW_AdvancedLayout{ "ADVANCED", false };
 	ofParameter<bool> SHOW_Engines{ "ENGINES", true };
 	//shows advanced panels to tweak layout or workflow behaviour
