@@ -1,5 +1,6 @@
 
 #pragma once
+
 #include "ofMain.h"
 
 
@@ -8,14 +9,14 @@
 BUGS:
 + fix text input boxes. now we must to mantain click on text input and lock keycommands..
 + TCP port number switch, problems on reconnect.
-+ TAB stucks on Picture engine
 + check theory picker if calls too much callbacks
 + pickers hangs flickering sometimes
 
 TODO:
 + undo engine
-+ add demo to about window using an fbo
 + fix demo1 camera and tween
++ add tween transitions
++ export Adobe ASE
 
 */
 
@@ -43,6 +44,7 @@ TODO:
 #define COLOR_STRIP_COLOR_HEIGHT 15
 #define PANEL_WIDGETS_WIDTH 200
 #define PANEL_WIDGETS_HEIGHT 500
+//#define MODE_LOCK_DOCKING
 
 // extra
 #define USE_DEBUG_LAYOUT // includes mouse ruler to help layout design
@@ -135,6 +137,7 @@ using namespace ofxSurfingHelpers;
 
 #include "ofxImGui.h"
 #include "imgui_internal.h" // <-- example uses some imgui internals...
+#include "tools/imgui_stdlib.h" // <-- string helpers
 
 #include "ImGui_PalettesPicker.h"
 using namespace ImGui_PalettesPicker;
@@ -270,7 +273,7 @@ private:
 	ofParameter<bool> SHOW_Engines{ "ENGINES", true };
 	//shows advanced panels to tweak layout or workflow behaviour
 
-	ofParameter<bool> auto_pilot{ "Slide Show", false };
+	ofParameter<bool> auto_pilot{ "Play Slide-Show", false };
 	ofParameter<float> auto_pilot_Duration{ "Time", 1, 0.1, 5 };
 	int auto_pilot_timer;
 
@@ -1068,11 +1071,11 @@ private:
 	//--
 
 private:
-	ofParameter<bool> show_app_main_menu_bar{ "Show Menu Bar", true };
-	bool show_app_about = false;
+	ofParameter<bool> SHOW_MainMenuBar{ "Show Menu Bar", false };
+	bool SHOW_About = false;
 
 	//--------------------------------------------------------------
-	void ofxColorManager_ShowExampleAppMainMenuBar()
+	void gui_MainMenuBar()
 	{
 		if (ImGui::BeginMainMenuBar())
 		{
@@ -1096,14 +1099,26 @@ private:
 				ImGui::EndMenu();
 			}
 
+			//if (ImGui::BeginMenu("Edit"))
+			//{
+			//	//TODO:
+			//	//add other types
+			//	if (ImGui::MenuItem("Copy HEX Color", "")) { 
+			//		//TODO: convert
+			//		const char* text = ofToString(color_Picked.get().getHex()).c_str();
+			//		ImGui::SetClipboardText(text);
+			//	};
+			//	ImGui::EndMenu();
+			//}
+
 			if (ImGui::BeginMenu("View"))
 			{
-				auto pref = show_app_main_menu_bar.get();
+				auto pref = SHOW_MainMenuBar.get();
 				if (ImGui::MenuItem("Show Menu Bar", NULL, &pref))
 				{
-					show_app_main_menu_bar = pref;
+					SHOW_MainMenuBar = pref;
 				}
-				ImGui::MenuItem("About", NULL, &show_app_about);
+				ImGui::MenuItem("About", NULL, &SHOW_About);
 
 				ImGui::EndMenu();
 			}
@@ -1163,16 +1178,16 @@ private:
 		ImGui::Text("ofxColorManager v1.0");
 		ImGui::Separator();
 		ImGui::Dummy(ImVec2(0, 2));
-		ImGui::Text("Coded by moebiusSurfing. (Manu Molina)");
+		ImGui::Text("Coded by moebiusSurfing. Manu Molina");
 		ImGui::Text("Barcelona/Buenos Aires. 2019-2021");
 		ImGui::Dummy(ImVec2(0, 2));
-		ImGui::Text("GitHub :");
+		ImGui::Text("GitHub:");
 		ImGui::Text("https://github.com/moebiussurfing");
 		ImGui::Dummy(ImVec2(0, 2));
-		ImGui::Text("Email :");
+		ImGui::Text("Email:");
 		ImGui::Text("moebiusSurfing@gmail.com");
 		ImGui::Dummy(ImVec2(0, 2));
-		ImGui::Text("Thanks to :");
+		ImGui::Text("Thanks to:");
 		ImGui::Text("All the openFrameworks community,");
 		ImGui::Text("coders and contributors of");
 		ImGui::Text("included libraries and addons.");
@@ -1182,37 +1197,12 @@ private:
 		ImGui::Dummy(ImVec2(0, 2));
 
 		draw_DemoFbo();
-		ImGui::Text("Scene by junkiyoshi.com . Thanks");
+		ImGui::Text("[ Scene code by junkiyoshi.com | Thanks ]");
 
 		ImGui::End();
 
 		//ImGui::PopStyleVar(2);
 	}
-
-	//TODO:
-	//trying to hide the 'x' button of panels when docking and to lock the resizing of panels
-	//--------------------------------------------------------------
-	//inline void hideDockWindow(string name)
-	//{
-	//	char *cstr = &name[0];
-	//
-	//	//https://stackoverflow.com/questions/7352099/stdstring-to-char/7352131
-	//	//const char *cstr = name.c_str();
-	//
-	//	bool m_show_tabs = false;
-	//
-	//	if (ImGui::IsWindowDocked()) {
-	//		auto* wnd = ImGui::FindWindowByName(cstr);
-	//		if (wnd) {
-	//			ImGuiDockNode* node = wnd->DockNode;
-	//			if (node)// && (!m_show_tabs && !node->IsHiddenTabBar()) || (m_show_tabs && node->IsHiddenTabBar())) 
-	//			//if (node && (!m_show_tabs && !node->IsHiddenTabBar()) || (m_show_tabs && node->IsHiddenTabBar())) 
-	//			{
-	//				node->WantHiddenTabBarToggle = true;
-	//			}
-	//		}
-	//	}
-	//}
 
 	//--
 
@@ -1291,4 +1281,30 @@ private:
 			presetNext();
 		}
 	}
+
+
+	//TODO:
+	//trying to hide the 'x' button of panels when docking and to lock the resizing of panels
+	//--------------------------------------------------------------
+	//inline void hideDockWindow(string name)
+	//{
+	//	char *cstr = &name[0];
+	//
+	//	//https://stackoverflow.com/questions/7352099/stdstring-to-char/7352131
+	//	//const char *cstr = name.c_str();
+	//
+	//	bool m_show_tabs = false;
+	//
+	//	if (ImGui::IsWindowDocked()) {
+	//		auto* wnd = ImGui::FindWindowByName(cstr);
+	//		if (wnd) {
+	//			ImGuiDockNode* node = wnd->DockNode;
+	//			if (node)// && (!m_show_tabs && !node->IsHiddenTabBar()) || (m_show_tabs && node->IsHiddenTabBar())) 
+	//			//if (node && (!m_show_tabs && !node->IsHiddenTabBar()) || (m_show_tabs && node->IsHiddenTabBar())) 
+	//			{
+	//				node->WantHiddenTabBarToggle = true;
+	//			}
+	//		}
+	//	}
+	//}
 };

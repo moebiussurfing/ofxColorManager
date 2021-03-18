@@ -338,7 +338,7 @@ void ofxColourLoversHelper::drawImGuiMain()
 
 			// scrollable list
 
-			ImGui::Dummy(ImVec2(0, 2));
+			ImGui::Dummy(ImVec2(0, 5));
 
 			if (palettes.size() != 0)
 			{
