@@ -245,8 +245,8 @@ private:
 	void addMouseListeners();
     void removeMouseListeners();
 	
-	vector<std::string> imageNames;
-	std::string imageName;
+	vector<std::string> pNames;
+	std::string pName;
 
 public:
     void keyPressed( ofKeyEventArgs& eventArgs);

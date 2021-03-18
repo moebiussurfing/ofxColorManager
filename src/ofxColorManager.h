@@ -1164,26 +1164,25 @@ private:
 		ImGui::Separator();
 		ImGui::Dummy(ImVec2(0, 2));
 		ImGui::Text("Coded by moebiusSurfing. (Manu Molina)");
-		ImGui::Text("Barcelona / Buenos Aires. 2019 - 2021");
+		ImGui::Text("Barcelona/Buenos Aires. 2019-2021");
 		ImGui::Dummy(ImVec2(0, 2));
-		ImGui::Text("GITHUB");
+		ImGui::Text("GitHub :");
 		ImGui::Text("https://github.com/moebiussurfing");
 		ImGui::Dummy(ImVec2(0, 2));
-		ImGui::Text("EMAIL");
+		ImGui::Text("Email :");
 		ImGui::Text("moebiusSurfing@gmail.com");
 		ImGui::Dummy(ImVec2(0, 2));
-		ImGui::Text("Thanks:");
-		ImGui::Text("Coders and contributors of");
-		ImGui::Text("all included libraries or addons,");
-		ImGui::Text("especially to the openFrameworks community !");
+		ImGui::Text("Thanks to :");
+		ImGui::Text("All the openFrameworks community,");
+		ImGui::Text("coders and contributors of");
+		ImGui::Text("included libraries and addons.");
 		ImGui::Dummy(ImVec2(0, 2));
-		ImGui::Text("MIT License.");
+		ImGui::Text("MIT License");
 		//ImGui::Text("Peace");
 		ImGui::Dummy(ImVec2(0, 2));
 
 		draw_DemoFbo();
-		ImGui::Text("DemoScene coded by junkiyoshi.com");
-		ImGui::Text("Thanks");
+		ImGui::Text("Scene by junkiyoshi.com . Thanks");
 
 		ImGui::End();
 
