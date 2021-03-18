@@ -288,11 +288,15 @@ ofxColorManager::ofxColorManager()
 	//helpInfo += "K                   KEYS\n";
 	helpInfo += "\n";
 
-	helpInfo += "SPACE                   > PRESETS\n";
+	helpInfo += "SPACE                 NEXT PRESET\n";
 	helpInfo += "Left|Right            < > PRESETS\n";
 	helpInfo += " +Ctrl                < > SHIFT COLORS\n";
+	helpInfo += "\n";
+
 	helpInfo += "Down|Up               < > ENGINE TYPES\n";
 	helpInfo += "-|+                   AMOUNT COLORS\n";
+	helpInfo += "Arrows                LIBRARY COLORS\n";
+	helpInfo += " +Ctrl                < > LIBRARY PAGE\n";
 	helpInfo += "\n";
 
 	helpInfo += "BACKSPACE             AUX 1\n";
@@ -1941,7 +1945,7 @@ void ofxColorManager::gui_Editor()
 	//blink when a new preset is editing
 	float freq = 0.15;//speed freq
 	float min = 0.20;
-	float max = 0.60;
+	float max = 0.80;
 	float a = ofMap(glm::sin(freq * ofGetFrameNum()), -1, 1, min, max);
 
 	//--
@@ -2303,7 +2307,7 @@ void ofxColorManager::gui_Palette()
 		//-
 
 		// color buttons
-		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0,0));
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
 
 		for (int n = 0; n < palette.size(); n++)
 		{
@@ -2416,9 +2420,9 @@ void ofxColorManager::gui_Palette()
 			if (n == last_Index_ColorPalette && bEditPalette)
 			{
 				bDrawBorder = true;
-				ImVec4 borderLineColor2 = 
+				ImVec4 borderLineColor2 =
 					ImVec4(borderLineColor.x, borderLineColor.y, borderLineColor.z,
-					borderLineColor.w - 0.15);
+						borderLineColor.w - 0.15);
 				ImGui::PushStyleColor(ImGuiCol_Border, borderLineColor2);
 				ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, borderLineWidth + 2.5);
 			}
@@ -2621,13 +2625,13 @@ void ofxColorManager::gui_Library()
 		ImGui::SameLine();
 
 		// 3. index/total
-		s = "        " + ofToString(last_Lib_Index) + "/" + ofToString(lib_TotalColors - 1);
+		s = "  " + ofToString(last_Lib_Index) + "/" + ofToString(lib_TotalColors - 1);
 		ImGui::Text(s.c_str());
 
 		// 2. color name
-		ImGui::Dummy(ImVec2(0, 2));
+		//ImGui::Dummy(ImVec2(0, 2));
 		ImGui::Text(last_Lib_NameColor.c_str());
-		ImGui::Dummy(ImVec2(0, 2));
+		//ImGui::Dummy(ImVec2(0, 2));
 
 		//--
 
@@ -2691,9 +2695,9 @@ void ofxColorManager::gui_Library()
 				ImGui::Dummy(ImVec2(0, 5));
 
 				ofxImGui::AddParameter(colorBrowser.ENABLE_keys);
-		}
+			}
 #endif
-	}
+		}
 
 		//--
 
@@ -2729,7 +2733,7 @@ void ofxColorManager::gui_Library()
 
 			// page
 			ImGui::SameLine();
-			ImGui::PushItemWidth(_w * 0.5);
+			ImGui::PushItemWidth(_w * 0.45);
 			ofxImGui::AddParameter(lib_Page_Index);//page slider selector
 			//ImGui::SliderInt("PAGE", &lib_Page_Index, 0, lib_Page_Max);//page slider selector
 			//ImGui::DragInt("PAGE", (int *)&lib_Page_Index, 0, lib_Page_Max);//collide..
@@ -2880,7 +2884,7 @@ void ofxColorManager::gui_Library()
 		{
 			refresh_FromPicked();
 		}
-}
+	}
 
 	ofxImGui::EndWindow(mainSettings);
 
@@ -3012,12 +3016,12 @@ void ofxColorManager::gui_Export()
 
 				ImGui::Checkbox("Auto-Resize", &auto_resize);
 			}
-			}
 		}
+	}
 	ofxImGui::EndWindow(mainSettings);
 
 	ImGui::PopStyleVar();
-	}
+}
 
 //--------------------------------------------------------------
 void ofxColorManager::gui_Picker()
@@ -3263,15 +3267,16 @@ void ofxColorManager::gui_Advanced()
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(325, PANEL_WIDGETS_HEIGHT));
 
-	if (ofxImGui::BeginWindow("ADVANCED | DEBUG", mainSettings, flags))
+	if (ofxImGui::BeginWindow("ADVANCED", mainSettings, flags))
 	{
 		ofxImGui::AddParameter(SHOW_MainMenuBar);
+		ImGui::Checkbox("Show About", &SHOW_About);
 		ImGui::Checkbox("Edit Theme", &edit_theme);
 		//ImGui::SameLine();
-		
+
 		ImGui::Separator();
 		ImGui::Text("DEBUG");
-		
+
 		ofxImGui::AddParameter(ENABLE_keys);
 		bool bBlockKeys = !(ENABLE_keys && !bTextInputActive);
 		ImGui::Checkbox("Locked Keys", &bBlockKeys);
@@ -3794,7 +3799,7 @@ void ofxColorManager::gui_Kit()
 	//blink when a new preset is editing
 	float freq = 0.15;//speed freq
 	float min = 0.20;
-	float max = 0.60;
+	float max = 0.80;
 	float a = ofMap(glm::sin(freq * ofGetFrameNum()), -1, 1, min, max);
 
 	//----
@@ -3853,6 +3858,131 @@ void ofxColorManager::gui_Kit()
 	}
 }
 
+#ifdef MODE_TEXT_INPUT_WORKAROUND
+//--------------------------------------------------------------
+void ofxColorManager::gui_InputText()
+{
+	static bool auto_resize = true;
+
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(400, 75));
+
+#ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
+	ImGui::PushFont(customFontBig);
+#endif
+
+	//blink when a new preset is editing
+	float freq = 0.15;//speed freq
+	float min = 0.20;
+	float max = 0.80;
+	float a = ofMap(glm::sin(freq * ofGetFrameNum()), -1, 1, min, max);
+
+
+	ImGuiWindowFlags flagsw;
+	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
+	flagsw |= flagsWindows;
+	//flagsw |= ImGuiWindowFlags_NoDecoration;
+	flagsw |= ImGuiWindowFlags_NoTitleBar;
+	flagsw |= ImGuiWindowFlags_NoBackground;
+
+	if (ofxImGui::BeginWindow("PRESET NAME", mainSettings, flagsw))
+	{
+		ImGui::Dummy(ImVec2(0, 2));
+
+		float _hb = BUTTON_BIG_HEIGHT;
+		float _spcx = ImGui::GetStyle().ItemSpacing.x;
+		float _h = ImGui::GetContentRegionAvail().y;
+		float _w100 = ImGui::GetContentRegionAvail().x;
+		float _w50 = _w100 / 2;
+		ImGuiColorEditFlags _flags = ImGuiColorEditFlags_None;
+
+		if (MODE_NewPreset.get())
+		{
+			//TODO:
+			// load string into char array
+			char tab[32] = "type name";
+
+			// this breakes the mouse cursor inside text input..
+			strncpy(tab, textInput_New.c_str(), sizeof(tab));
+			tab[sizeof(tab) - 1] = 0;
+
+			//ImGui::PushItemWidth(_w50);
+			ImGui::PushItemWidth(-1);
+
+			if (ImGui::InputText("", tab, IM_ARRAYSIZE(tab)))
+			{
+				//TODO:
+				textInput_New = ofToString(tab);
+				name_TARGET[0] = &textInput_New[0];
+				ofLogNotice(__FUNCTION__) << "textInput_New:" << textInput_New;
+			}
+
+			ImGui::PopItemWidth();
+
+			//--
+
+			//TODO:
+			//to disable all other key commands
+			bool b = bTextInputActive;
+			bTextInputActive = ImGui::IsItemActive();
+			//changed
+			if (bTextInputActive != b) ofLogNotice(__FUNCTION__) << "TextInput : " << (bTextInputActive ? "ACTIVE" : "DISABLED");
+
+			//--
+
+			//	////TODO: ??
+			//	//has_focus = 0;
+			//	//if (focus_1) ImGui::SetKeyboardFocusHere();
+			//	//ImGui::InputText("", tab, IM_ARRAYSIZE(tab));
+			//	//if (ImGui::IsItemActive())
+			//	//{
+			//	//	has_focus = 1;
+			//	//	textInput_New = ofToString(tab);
+			//	//	ofLogNotice(__FUNCTION__) << "textInput_New:" << textInput_New;
+			//	//}
+
+			//--
+
+#define HIDE_SAVE_BUTTON
+#ifndef HIDE_SAVE_BUTTON
+			ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.5f, 0.0f, 0.0f, a));
+
+			_h = ImGui::GetContentRegionAvail().y;
+
+			if (ImGui::Button("SAVE NEW", ImVec2(_w100, _h)))
+			{
+				//NOTE: preset filename must to not include any extra '.' char
+				//clean all extra '.' chars
+				ofStringReplace(textInput_New, ".", "");
+
+				//has_focus = 0;
+				MODE_NewPreset = false;
+				if (textInput_New != "")
+				{
+					ofLogNotice(__FUNCTION__) << "textInput_New: " << textInput_New;
+
+					preset_Save(textInput_New);
+					preset_RefreshFiles();
+
+					//--
+
+					refresh_FilesSorting(textInput_New);
+				}
+				else ofLogError(__FUNCTION__) << "Empty name on textInput !";
+			}
+			ImGui::PopStyleColor();
+#endif
+		}
+	}
+	ofxImGui::EndWindow(mainSettings);
+
+#ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
+	ImGui::PopFont();
+#endif
+
+	ImGui::PopStyleVar();
+}
+#endif
+
 //--------------------------------------------------------------
 void ofxColorManager::gui_Presets()
 {
@@ -3870,7 +4000,7 @@ void ofxColorManager::gui_Presets()
 	//blink when a new preset is editing
 	float freq = 0.15;//speed freq
 	float min = 0.20;
-	float max = 0.60;
+	float max = 0.80;
 	float a = ofMap(glm::sin(freq * ofGetFrameNum()), -1, 1, min, max);
 
 	if (!auto_resize) ImGui::SetWindowSize(ImVec2(ww, hh));//not doing nothing
@@ -3968,7 +4098,7 @@ void ofxColorManager::gui_Presets()
 		// new preset 
 
 		// manual toggle
-		if (ofxSurfingHelpers::AddBigToggle(MODE_NewPreset, _w100, _h / 2))
+		if (ofxSurfingHelpers::AddBigToggle(MODE_NewPreset, _w100, _h))
 		{
 			//TODO:
 			textInput_New = name_TARGET[0];//set
@@ -3978,6 +4108,7 @@ void ofxColorManager::gui_Presets()
 
 		if (MODE_NewPreset.get())
 		{
+#ifndef MODE_TEXT_INPUT_WORKAROUND
 			//TODO:
 			// load string into char array
 			char tab[32] = "type text";
@@ -3991,10 +4122,10 @@ void ofxColorManager::gui_Presets()
 
 			if (ImGui::InputText("", tab, IM_ARRAYSIZE(tab)))
 			{
-				//	//TODO:
-				//	textInput_New = ofToString(tab);
-				//	name_TARGET[0] = &textInput_New[0];
-				//	ofLogNotice(__FUNCTION__) << "textInput_New:" << textInput_New;
+				//TODO:
+				textInput_New = ofToString(tab);
+				name_TARGET[0] = &textInput_New[0];
+				ofLogNotice(__FUNCTION__) << "textInput_New:" << textInput_New;
 			}
 
 			ImGui::PopItemWidth();
@@ -4023,7 +4154,7 @@ void ofxColorManager::gui_Presets()
 
 			//--
 
-			////ImGui::PushID(1111);
+#endif
 			ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.5f, 0.0f, 0.0f, a));
 			if (ImGui::Button("SAVE NEW", ImVec2(_w100, _h)))
 			{
@@ -4047,9 +4178,7 @@ void ofxColorManager::gui_Presets()
 				else ofLogError(__FUNCTION__) << "Empty name on textInput !";
 			}
 			ImGui::PopStyleColor();
-			////ImGui::PopID();
 		}
-
 		//----
 
 		// 2. presets
@@ -4060,7 +4189,7 @@ void ofxColorManager::gui_Presets()
 		{
 			if (ImGui::Button("UPDATE", ImVec2(_w50, _h * 0.5)))
 			{
-				//TODO
+				//TODO:
 				//should re load by same name and get what position on vector
 				//is to reload current preset number
 				//textInput_temp = ofToString(tab2);
@@ -4374,6 +4503,7 @@ void ofxColorManager::gui_Demo()
 		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
 		float _w100 = ImGui::GetWindowContentRegionWidth();
 		float _w99 = _w100 - _spc;
+		float _w50 = _w99 * 0.75;
 
 		//-
 
@@ -4381,9 +4511,12 @@ void ofxColorManager::gui_Demo()
 		ofxSurfingHelpers::AddBigToggle(DEMO1_Enable, _w100);
 		if (DEMO1_Enable)
 		{
+			ImGui::PushItemWidth(_w50);
 			ofxImGui::AddParameter(DEMO_Alpha);
 			ofxImGui::AddParameter(DEMO_Auto);
 			ofxImGui::AddParameter(DEMO_Timer);
+			ImGui::PopItemWidth();
+
 			if (ofxImGui::AddParameter(DEMO_Cam))
 			{
 				myDEMO1.setEnableMouseCamera(DEMO_Cam);
@@ -4398,6 +4531,7 @@ void ofxColorManager::gui_Demo()
 		ofxSurfingHelpers::AddBigToggle(DEMO5_Enable, _w100);
 		if (DEMO5_Enable)
 		{
+			ImGui::PushItemWidth(_w50);
 			ofxImGui::AddParameter(myDEMO5.DEMO5_Alpha);
 			ofxImGui::AddParameter(myDEMO5.DEMO5_Zoom);
 			ofxImGui::AddParameter(myDEMO5.DEMO5_Speed);
@@ -4405,6 +4539,7 @@ void ofxColorManager::gui_Demo()
 			{
 				myDEMO5.setEnableMouseCamera(DEMO5_Cam);
 			}
+			ImGui::PopItemWidth();
 		}
 
 		//-
@@ -4417,6 +4552,7 @@ void ofxColorManager::gui_Demo()
 		ofxSurfingHelpers::AddBigToggle(DEMO2_Svg.DEMO2_Enable, _w100);
 		if (DEMO2_Svg.DEMO2_Enable)
 		{
+			ImGui::PushItemWidth(_w50);
 			ofxImGui::AddParameter(DEMO2_Svg.DEMO2_Edit);
 			if (DEMO2_Svg.DEMO2_Edit) ofxImGui::AddParameter(DEMO2_Svg.DEMO2_Scale);
 			ofxImGui::AddParameter(DEMO2_Svg.DEMO2_Alpha);
@@ -4426,6 +4562,7 @@ void ofxColorManager::gui_Demo()
 			ofxImGui::AddParameter(DEMO2_Svg.fileIndexName);
 			ofxImGui::AddParameter(DEMO2_Svg.enable_Mask);
 			ofxImGui::AddParameter(DEMO2_Svg.keys);
+			ImGui::PopItemWidth();
 		}
 	}
 	ofxImGui::EndWindow(mainSettings);
@@ -4483,13 +4620,17 @@ void ofxColorManager::setup_Gui()
 	//float _size = 11.f;
 	//std::string _name = "telegrama_render.otf";
 
-	float _size = 14.f;
+	float _size = 14;
 	std::string _name = "Ruda-Bold.ttf";
+
+	float _sizeBig = 100;
+	std::string _nameBig = "Kazesawa-Extrabold.ttf";
 
 	//-
 
-	std::string _path = "assets/fonts/" + _name;//assets folder
-	customFont = gui.addFont(_path, _size, nullptr, normalCharRanges);
+	std::string _path = "assets/fonts/";;//assets folder
+	customFont = gui.addFont(_path + _name, _size, nullptr, normalCharRanges);
+	customFontBig = gui.addFont(_path + _nameBig, _sizeBig, nullptr, normalCharRanges);
 	io.FontDefault = customFont;
 #endif
 
@@ -4511,7 +4652,7 @@ void ofxColorManager::setup_Gui()
 	mainSettings = ofxImGui::Settings();
 
 	//all window panels
-	#ifdef MODE_LOCK_DOCKING
+#ifdef MODE_LOCK_DOCKING
 	flagsWindows = ImGuiWindowFlags_NoMove;
 #endif
 	//not working
@@ -4569,6 +4710,9 @@ bool ofxColorManager::draw_Gui()
 			if (SHOW_UserPaletteFloating) gui_Palette();
 			if (SHOW_UserPaletteEditor) gui_Editor();
 			if (SHOW_Presets) gui_Presets();
+#ifdef MODE_TEXT_INPUT_WORKAROUND
+			if (SHOW_Presets && MODE_NewPreset) gui_InputText();
+#endif
 			if (SHOW_Kit) gui_Kit();
 			if (SHOW_Picker) gui_Picker();
 			if (SHOW_Library) gui_Library();
@@ -5929,7 +6073,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	//{
 	//	if (bLock_palette) bAuto_Build_Palette = false;
 	//}
-	}
+}
 
 //--------------------------------------------------------------
 void ofxColorManager::Changed_Range(ofAbstractParameter &e)
@@ -6276,7 +6420,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 		//--
 
-		// user workflow
+		// workflow
 		if (bEditPalette)
 		{
 			// randomize color
@@ -6527,6 +6671,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 					int pag = n / lib_Page_NumColors;
 					if (lib_Page_Index != pag) lib_Page_Index = pag;
 				}
+
 				else if (key == OF_KEY_LEFT && !mod_CONTROL)
 				{
 					// index
@@ -6545,48 +6690,46 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 					int pag = n / lib_Page_NumColors;
 					if (lib_Page_Index != pag) lib_Page_Index = pag;
 				}
-			}
 
-			if (key == OF_KEY_DOWN && !mod_CONTROL)
-			{
-				// index
-				int n = last_ColorPicked_Lib;
-				n = n + lib_RowSize;
-				n = ofClamp(n, 0, lib_TotalColors - 1);
-				last_ColorPicked_Lib = n;
-				last_Lib_Index = n;
-				// color name
-				if (n < palette_Lib_Names.size())
+				if (key == OF_KEY_DOWN && !mod_CONTROL)
 				{
-					last_Lib_NameColor = palette_Lib_Names[n];
+					// index
+					int n = last_ColorPicked_Lib;
+					n = n + lib_RowSize;
+					n = ofClamp(n, 0, lib_TotalColors - 1);
+					last_ColorPicked_Lib = n;
+					last_Lib_Index = n;
+					// color name
+					if (n < palette_Lib_Names.size())
+					{
+						last_Lib_NameColor = palette_Lib_Names[n];
+					}
+					color_Picked = ofColor(palette_Lib_Cols[n]);
+					// go to page
+					int pag = n / lib_Page_NumColors;
+					if (lib_Page_Index != pag) lib_Page_Index = pag;
 				}
-				color_Picked = ofColor(palette_Lib_Cols[n]);
-				// go to page
-				int pag = n / lib_Page_NumColors;
-				if (lib_Page_Index != pag) lib_Page_Index = pag;
-			}
-			else if (key == OF_KEY_UP && !mod_CONTROL)
-			{
-				// index
-				int n = last_ColorPicked_Lib;
-				n = n - lib_RowSize;
-				n = ofClamp(n, 0, lib_TotalColors - 1);
-				last_ColorPicked_Lib = n;
-				last_Lib_Index = n;
-				// color name
-				if (n < palette_Lib_Names.size())
-				{
-					last_Lib_NameColor = palette_Lib_Names[n];
-				}
-				color_Picked = ofColor(palette_Lib_Cols[n]);
-				// go to page
-				int pag = n / lib_Page_NumColors;
-				if (lib_Page_Index != pag) lib_Page_Index = pag;
-			}
 
-			//if (!SHOW_Presets)
-			{
-				if (key == OF_KEY_LEFT && mod_CONTROL)
+				else if (key == OF_KEY_UP && !mod_CONTROL)
+				{
+					// index
+					int n = last_ColorPicked_Lib;
+					n = n - lib_RowSize;
+					n = ofClamp(n, 0, lib_TotalColors - 1);
+					last_ColorPicked_Lib = n;
+					last_Lib_Index = n;
+					// color name
+					if (n < palette_Lib_Names.size())
+					{
+						last_Lib_NameColor = palette_Lib_Names[n];
+					}
+					color_Picked = ofColor(palette_Lib_Cols[n]);
+					// go to page
+					int pag = n / lib_Page_NumColors;
+					if (lib_Page_Index != pag) lib_Page_Index = pag;
+				}
+
+				else if (key == OF_KEY_LEFT && mod_CONTROL)
 				{
 					lib_Page_Index--;
 					if (lib_Page_Index < lib_Page_Index.getMin()) lib_Page_Index = lib_Page_Index.getMax();
@@ -6604,6 +6747,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 					}
 					color_Picked = ofColor(palette_Lib_Cols[n]);
 				}
+
 				else if (key == OF_KEY_RIGHT && mod_CONTROL)
 				{
 					lib_Page_Index++;
@@ -6621,6 +6765,41 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 						last_Lib_NameColor = palette_Lib_Names[n];
 					}
 					color_Picked = ofColor(palette_Lib_Cols[n]);
+				}
+
+				if (key == OF_KEY_RETURN && !mod_CONTROL)//random a color
+				{
+					int n = ofRandom(0, lib_TotalColors);
+					n = ofClamp(n, 0, lib_TotalColors - 1);
+					last_ColorPicked_Lib = n;
+					last_Lib_Index = n;
+					// color name
+					if (n < palette_Lib_Names.size())
+					{
+						last_Lib_NameColor = palette_Lib_Names[n];
+					}
+					color_Picked = ofColor(palette_Lib_Cols[n]);
+					// go to page
+					int pag = n / lib_Page_NumColors;
+					if (lib_Page_Index != pag) lib_Page_Index = pag;
+				}
+
+				if (key == OF_KEY_RETURN && mod_CONTROL)//random a color from current page
+				{
+					int n = ofRandom(0, lib_Page_NumColors);
+					n = ofClamp(n, 0, lib_Page_NumColors - 1);
+					n = n + lib_Page_NumColors * lib_Page_Index;
+					last_ColorPicked_Lib = n;
+					last_Lib_Index = n;
+					// color name
+					if (n < palette_Lib_Names.size())
+					{
+						last_Lib_NameColor = palette_Lib_Names[n];
+					}
+					color_Picked = ofColor(palette_Lib_Cols[n]);
+					// go to page
+					int pag = n / lib_Page_NumColors;
+					if (lib_Page_Index != pag) lib_Page_Index = pag;
 				}
 			}
 		}

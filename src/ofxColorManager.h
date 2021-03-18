@@ -8,15 +8,16 @@
 
 BUGS:
 + fix text input boxes. now we must to mantain click on text input and lock keycommands..
+	related to docking mode. works fine when windowed
 + TCP port number switch, problems on reconnect.
-+ check theory picker if calls too much callbacks
 + pickers hangs flickering sometimes
 
 TODO:
-+ undo engine
-+ fix demo1 camera and tween
-+ add tween transitions
 + export Adobe ASE
++ add tween transitions
++ undo engine
++ fix demo1 camera and add tween
++ check theory picker if calls too much callbacks
 
 */
 
@@ -41,10 +42,12 @@ TODO:
 #define INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
 #define BUTTON_BIG_HEIGHT 50
 #define BUTTON_COLOR_SIZE 40
-#define COLOR_STRIP_COLOR_HEIGHT 15
+#define COLOR_STRIP_COLOR_HEIGHT 30
 #define PANEL_WIDGETS_WIDTH 200
 #define PANEL_WIDGETS_HEIGHT 500
-//#define MODE_LOCK_DOCKING
+
+//#define MODE_LOCK_DOCKING // disable move panels
+#define MODE_TEXT_INPUT_WORKAROUND// independent panel
 
 // extra
 #define USE_DEBUG_LAYOUT // includes mouse ruler to help layout design
@@ -790,6 +793,7 @@ private:
 	ofxImGui::Gui gui;
 	ofxImGui::Settings mainSettings = ofxImGui::Settings();
 	ImFont* customFont = nullptr;
+	ImFont* customFontBig = nullptr;
 	ImGuiStyle *style = nullptr;
 	ImGuiWindowFlags flagsWindows;
 
@@ -803,9 +807,9 @@ private:
 	bool draw_Gui();
 
 	// ImGui panels
-	void gui_Theory();
 	void gui_Picker();
 	void gui_Library();
+	void gui_Theory();
 	void gui_Range();
 	void gui_PanelsMain();
 	void gui_PanelsEngines();
@@ -813,6 +817,9 @@ private:
 	void gui_Export();
 	void gui_Gradient();
 	void gui_Presets();
+#ifdef MODE_TEXT_INPUT_WORKAROUND
+	void gui_InputText();
+#endif
 	void gui_Kit();
 	void gui_Palette();
 	void gui_Editor();
@@ -1179,8 +1186,8 @@ private:
 		ImGui::Separator();
 		ImGui::Dummy(ImVec2(0, 2));
 		ImGui::Text("Coded by:");
-		ImGui::Text("moebiusSurfing | Manu Molina");
-		ImGui::Text("Barcelona/Buenos Aires. [ 2019-2021 ]");
+		ImGui::Text("moebiusSurfing. Manu Molina");
+		ImGui::Text("Barcelona / Buenos Aires | 2019-2021");
 		ImGui::Dummy(ImVec2(0, 2));
 		ImGui::Text("GitHub:");
 		ImGui::Text("https://github.com/moebiussurfing");
@@ -1191,10 +1198,10 @@ private:
 		ImGui::Dummy(ImVec2(0, 4));
 		ImGui::Text("Thanks to:");
 		ImGui::Text("All the openFrameworks community,");
-		ImGui::Text("coders and contributors of");
-		ImGui::Text("included libraries and addons.");
+		ImGui::Text("coders and contributors of included");
+		ImGui::Text("libraries and addons.");
 		ImGui::Dummy(ImVec2(0, 2));
-		ImGui::Text("MIT License");
+		ImGui::Text("MIT License.");
 		//ImGui::Text("Peace");
 		ImGui::Dummy(ImVec2(0, 4));
 
