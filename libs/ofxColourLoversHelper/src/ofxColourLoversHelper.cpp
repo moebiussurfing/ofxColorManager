@@ -268,13 +268,6 @@ void ofxColourLoversHelper::drawImGuiMain()
 						if (ImGui::Button("Cancel", ImVec2(_w99, 0))) { ImGui::CloseCurrentPopup(); }
 						ImGui::EndPopup();
 					}
-
-					//if (ImGui::Button("CLEAR FAVS", ImVec2(_w99* 0.5, _hb)))
-					//{
-					//	clearFavourites();
-					//	//workflow
-					//	loadFavorites();
-					//}
 				}
 				//ImGui::PopItemWidth();
 				ImGui::SameLine();
@@ -312,13 +305,6 @@ void ofxColourLoversHelper::drawImGuiMain()
 						}
 						ImGui::EndPopup();
 					}
-
-					//if (ImGui::Button("CLEAR HISTORY", ImVec2(_w99, _hb)))
-					//{
-					//	clearHistory();
-					//	//workflow
-					//	loadHistory();
-					//}
 				}
 
 				//--
@@ -397,8 +383,8 @@ void ofxColourLoversHelper::drawImGuiMain()
 		//ImGui::Text(ss.c_str());
 		////ImGui::Text(s.c_str());
 
-		//ImGui::Text("Name:"); //ImGui::SameLine();
-		ImGui::Text(lastPaletteName.get().c_str());
+		//// name
+		//ImGui::Text(lastPaletteName.get().c_str());
 
 		//-
 

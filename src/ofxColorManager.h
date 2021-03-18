@@ -1178,15 +1178,17 @@ private:
 		ImGui::Text("ofxColorManager v1.0");
 		ImGui::Separator();
 		ImGui::Dummy(ImVec2(0, 2));
-		ImGui::Text("Coded by moebiusSurfing. Manu Molina");
-		ImGui::Text("Barcelona/Buenos Aires. 2019-2021");
+		ImGui::Text("Coded by:");
+		ImGui::Text("moebiusSurfing | Manu Molina");
+		ImGui::Text("Barcelona/Buenos Aires. [ 2019-2021 ]");
 		ImGui::Dummy(ImVec2(0, 2));
 		ImGui::Text("GitHub:");
 		ImGui::Text("https://github.com/moebiussurfing");
 		ImGui::Dummy(ImVec2(0, 2));
 		ImGui::Text("Email:");
 		ImGui::Text("moebiusSurfing@gmail.com");
-		ImGui::Dummy(ImVec2(0, 2));
+		
+		ImGui::Dummy(ImVec2(0, 4));
 		ImGui::Text("Thanks to:");
 		ImGui::Text("All the openFrameworks community,");
 		ImGui::Text("coders and contributors of");
@@ -1194,10 +1196,10 @@ private:
 		ImGui::Dummy(ImVec2(0, 2));
 		ImGui::Text("MIT License");
 		//ImGui::Text("Peace");
-		ImGui::Dummy(ImVec2(0, 2));
+		ImGui::Dummy(ImVec2(0, 4));
 
 		draw_DemoFbo();
-		ImGui::Text("[ Scene code by junkiyoshi.com | Thanks ]");
+		ImGui::Text("[ Scene sketch by junkiyoshi.com. Thanks ]");
 
 		ImGui::End();
 

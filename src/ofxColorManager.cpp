@@ -3268,6 +3268,10 @@ void ofxColorManager::gui_Advanced()
 		ofxImGui::AddParameter(SHOW_MainMenuBar);
 		ImGui::Checkbox("Edit Theme", &edit_theme);
 		//ImGui::SameLine();
+		
+		ImGui::Separator();
+		ImGui::Text("DEBUG");
+		
 		ofxImGui::AddParameter(ENABLE_keys);
 		bool bBlockKeys = !(ENABLE_keys && !bTextInputActive);
 		ImGui::Checkbox("Locked Keys", &bBlockKeys);
@@ -3923,7 +3927,8 @@ void ofxColorManager::gui_Presets()
 
 		ImGui::Dummy(ImVec2(0, 2));
 
-		ImGui::Text(PRESET_Name.c_str());
+		//// name
+		//ImGui::Text(PRESET_Name.c_str());
 
 		//----
 

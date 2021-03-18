@@ -158,8 +158,8 @@ void ofxColorQuantizerHelper::draw_Gui()
 
 		ImGui::Dummy(ImVec2(0, 2));
 
-		//name
-		ImGui::Text(dir.getName(currentImage).c_str());
+		//// name
+		//ImGui::Text(dir.getName(currentImage).c_str());
 
 		// index / total
 		std::string s = ofToString(currentImage.get()) + "/" + ofToString(getAountFiles() - 1);

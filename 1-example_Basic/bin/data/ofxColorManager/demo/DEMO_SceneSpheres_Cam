@@ -9,9 +9,9 @@ orientation
 fov
 60
 near
-0
+9.11925
 far
-0
+9119.25
 lensOffset
 0, 0
 forceAspectRatio
