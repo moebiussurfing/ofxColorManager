@@ -3864,7 +3864,9 @@ void ofxColorManager::gui_InputText()
 {
 	static bool auto_resize = true;
 
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(400, 75));
+	float _ww = 600;
+	float _hh = 75;
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(_ww, _hh));
 
 #ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
 	ImGui::PushFont(customFontBig);
@@ -4641,7 +4643,7 @@ void ofxColorManager::setup_Gui()
 	ofxSurfingHelpers::ImGui_ThemeMoebiusSurfing();
 	//ImGui::StyleColorsDark();
 	//ofxSurfingHelpers::ImGui_ThemeModernDark();
-#endif
+#endifMM
 
 	//-
 
