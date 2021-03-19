@@ -8179,7 +8179,7 @@ void ofxColorManager::doRandomizeColorPicker()
 		while (!rDone || times >= maxTimes)
 		{
 			_hue = ofRandom(color_HUE_0 - 128.f * color_HUE_Power, color_HUE_0 + 128.f * color_HUE_Power);
-			if (color_HUE != _hue) color_HUE = ofClamp(_hue, 0, 255);
+			if (color_HUE_0 != _hue) color_HUE = ofClamp(_hue, 0, 255);
 
 			if (color_HUE != color_HUE_0) rDone = true;
 			times++;
@@ -8193,7 +8193,7 @@ void ofxColorManager::doRandomizeColorPicker()
 		while (!rDone || times >= maxTimes)
 		{
 			_sat = ofRandom(color_SAT_0 - 128.f * color_SAT_Power, color_SAT_0 + 128.f * color_SAT_Power);
-			if (color_SAT != _sat) color_SAT = ofClamp(_sat, 0, 255);
+			if (color_SAT_0 != _sat) color_SAT = ofClamp(_sat, 0, 255);
 
 			if (color_SAT != color_SAT_0) rDone = true;
 			times++;
@@ -8207,7 +8207,7 @@ void ofxColorManager::doRandomizeColorPicker()
 		while (!rDone || times >= maxTimes)
 		{
 			_brg = ofRandom(color_BRG_0 - 128.f * color_BRG_Power, color_BRG_0 + 128.f * color_BRG_Power);
-			if (color_BRG != _brg) color_BRG = ofClamp(_brg, 0, 255);
+			if (color_BRG_0 != _brg) color_BRG = ofClamp(_brg, 0, 255);
 
 			if (color_BRG != color_BRG_0) rDone = true;
 			times++;
