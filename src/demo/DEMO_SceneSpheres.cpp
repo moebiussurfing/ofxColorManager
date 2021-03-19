@@ -12,20 +12,19 @@ void DEMO_SceneSpheres::setup() {
 
 	//-
 
-	//cam.reset();
-	//ofxLoadCamera(cam, path + _name);//not working
+	// a.
+	cam.reset();
+	ofxLoadCamera(cam, path + _name);//not working
 
-	//cam.enableOrtho();
-	cam.setDistance(750);
-	cam.reset();//initialize
-	cam.disableMouseInput();
+	//// b.
+	//cam.setDistance(750);
+	//cam.reset();//initialize
+	//cam.disableMouseInput();
 }
 
 //--------------------------------------------------------------
 void DEMO_SceneSpheres::update() {
 #define ZTW_SPEED 0.05f
-	ofPushMatrix();
-	//ofTranslate(w / 2, h / 2);
 	if (tweenD > 0)
 	{
 		tweenD -= ZTW_SPEED * DEMO5_Speed;
@@ -163,14 +162,11 @@ void DEMO_SceneSpheres::update() {
 //--------------------------------------------------------------
 void DEMO_SceneSpheres::draw()
 {
-
 #define Z_MIN 1.25//zoom
 #define Z_MAX 50.0
 #define T_MIN 60//speed frames
 #define T_MAX 240
 #define ZTW_MAX 1.2
-
-	//alpha = _alpha;
 
 	this->cam.begin();
 	{
@@ -193,15 +189,11 @@ void DEMO_SceneSpheres::draw()
 			ofScale(Z_MIN + max1 * abs(0.1 * glm::sin(s)));
 		}
 
-		ofPushMatrix();
-		//ofTranslate(w / 2, h / 2);
-		//if (tweenD > 0)
-		//{
-		//	tweenD -= ZTW_SPEED;
-		//}
-		//tweenD = ofClamp(tweenD, 0, 1);
-		ofScale(1 + ZTW_MAX * tweenD * DEMO5_Zoom);
+		//-
 
+		ofPushMatrix();
+		
+		ofScale(1 + ZTW_MAX * tweenD * DEMO5_Zoom);
 		//fboBig.draw(-w / 2, -h / 2, w, h);
 
 		ofRotateX(ofGetFrameNum() * 0.37);

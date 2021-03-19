@@ -803,6 +803,10 @@ private:
 	ImFont* customFontBig = nullptr;
 	ImGuiStyle *style = nullptr;
 	ImGuiWindowFlags flagsWindows;
+	float fontBigSize;
+	float fontSize;
+	ofParameter<int> offsetx{ "Offset x", 0, -100, 100 };
+	ofParameter<int> offsety{ "Offset y", -1, -100, 100 };
 
 	// mouse or key locker
 	bool mouseLockedByGui;
@@ -984,7 +988,7 @@ private:
 	int Demo_Timer_Max = 15000;
 	bool bTEST_pause = false;
 
-	ofParameter<bool> DEMO5_Cam{ "Edit Camera Spheres", false };
+	//ofParameter<bool> DEMO5_Cam{ "Edit Camera Spheres", false };
 	//ofParameter<float> DEMO5_Speed{ "Speed", 0.5, 0, 1 };
 	//ofParameter<float> DEMO5_Zoom{ "Zoom", 0.5, 0, 1 };
 	//ofParameter<float> DEMO5_Alpha{ "Alpha Spheres", 0.8, 0, 1 };

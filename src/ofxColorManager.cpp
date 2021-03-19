@@ -281,65 +281,65 @@ ofxColorManager::ofxColorManager()
 
 	helpInfo = "HELP INFO\n\n";
 
-	helpInfo += "H                     HELP\n";
-	//helpInfo += " +Ctrl                ABOUT\n";
-	helpInfo += "G                     GUI\n";
-	helpInfo += "F                     FULL SCREEN\n";
-	//helpInfo += "K                   KEYS\n";
+	helpInfo += "H               HELP\n";
+	helpInfo += "G               GUI\n";
+	helpInfo += "F               FULL SCREEN\n";
+	helpInfo += "A               ABOUT\n";
+	//helpInfo += "K             KEYS\n";
 	helpInfo += "\n";
 
-	helpInfo += "SPACE                 NEXT PRESET\n";
-	helpInfo += "Left|Right            < > PRESETS\n";
-	helpInfo += " +Ctrl                < > SHIFT COLORS\n";
+	helpInfo += "SPACE           NEXT PRESET\n";
+	helpInfo += "Left|Right      <> PRESETS\n";
+	helpInfo += " +Ctrl          <> SHIFT COLORS\n";
 	helpInfo += "\n";
 
-	helpInfo += "Down|Up               < > ENGINE TYPES\n";
-	helpInfo += "-|+                   AMOUNT COLORS\n";
-	helpInfo += "Arrows                LIBRARY COLORS\n";
-	helpInfo += " +Ctrl                < > LIBRARY PAGE\n";
+	helpInfo += "Down|Up         ENGINE TYPES\n";
+	helpInfo += "-|+             AMOUNT COLORS\n";
+	helpInfo += "Arrows          LIBRARY COLORS\n";
+	helpInfo += " +Ctrl          LIBRARY PAGE\n";
 	helpInfo += "\n";
 
-	helpInfo += "BACKSPACE             AUX 1\n";
-	helpInfo += " +Ctrl                AUX 2\n";
-	helpInfo += "RETURN                RANDOM 1\n";
-	helpInfo += " +Ctrl                RANDOM 2\n";
+	helpInfo += "BACKSPACE       AUX 1\n";
+	helpInfo += " +Ctrl          AUX 2\n";
+	helpInfo += "RETURN          RANDOM 1\n";
+	helpInfo += " +Ctrl          RANDOM 2\n";
 	helpInfo += "\n";
 	helpInfo += "\n";
 
 	helpInfo += "PANELS\n";
 	helpInfo += "\n";
-	helpInfo += "F1                    PALETTE\n";
-	helpInfo += "F2                    PRESETS\n";
-	helpInfo += "F3                    KIT\n";
-	helpInfo += "F4                    EDITOR\n";
-	helpInfo += "F5                    PICKER\n";
-	helpInfo += "F6                    LIBRARY\n";
-	helpInfo += "F7                    DEMO\n";
-	helpInfo += "F8                    GRADIENT\n";
-	helpInfo += "F9                    MINI\n";
-	helpInfo += "F10                   EXPORT\n";
-	helpInfo += "F11                   RESTORE\n";
-	//helpInfo += "F6                    BACKGROUND\n";
+	helpInfo += "F1              PALETTE\n";
+	helpInfo += "F2              PRESETS\n";
+	helpInfo += "F3              KIT\n";
+	helpInfo += "F4              EDITOR\n";
+	helpInfo += "F5              PICKER\n";
+	helpInfo += "F6              LIBRARY\n";
+	helpInfo += "F7              DEMO\n";
+	helpInfo += "F8              GRADIENT\n";
+	helpInfo += "F9              MINI\n";
+	helpInfo += "F10             EXPORT\n";
+	helpInfo += "F11             RESTORE\n";
+	//helpInfo += "F6              BACKGROUND\n";
 	helpInfo += "\n";
 	helpInfo += "\n";
 
 	helpInfo += "ENGINES\n";
 	helpInfo += "\n";
-	helpInfo += "TAB                     > \n";
-	helpInfo += " +Ctrl                <   \n";
-	helpInfo += "                      THEORY\n";
-	helpInfo += "                      RANGE\n";
-	helpInfo += "                      LOVERS\n";
-	helpInfo += "                      PICTURE\n";
+	helpInfo += "TAB             <> \n";
+	helpInfo += " +Ctrl             \n";
+	helpInfo += "                THEORY\n";
+	helpInfo += "                RANGE\n";
+	helpInfo += "                LOVERS\n";
+	helpInfo += "                PICTURE\n";
 	helpInfo += "\n";
 	helpInfo += "\n";
 
-	//helpInfo += "TEST\n";
-	//helpInfo += "D                   DEMO SCENE\n";
-	//helpInfo += "T                   GRADIENT TEST\n";
-	//helpInfo += "m                   MINI PREVIEW\n";
-	//helpInfo += "M                   DEBUG\n";
-}
+	//helpInfo += "TEST\n";		 
+	//helpInfo += "D              DEMO SCENE\n";
+	//helpInfo += "T              GRADIENT TEST\n";
+	//helpInfo += "m              MINI PREVIEW\n";
+	//helpInfo += "M              DEBUG\n";
+}								 
 
 //--------------------------------------------------------------
 void ofxColorManager::setup()
@@ -596,7 +596,7 @@ void ofxColorManager::setup()
 	color_BRG_0.setSerializable(false);
 
 	DEMO_Cam.setSerializable(false);
-	DEMO5_Cam.setSerializable(false);
+	myDEMO5.DEMO5_Cam.setSerializable(false);
 	//DEMO2_Edit.setSerializable(false);
 
 	ofAddListener(params_Theory.parameterChangedE(), this, &ofxColorManager::Changed_Controls);
@@ -854,7 +854,7 @@ void ofxColorManager::setup()
 	params_Demo.add(myDEMO5.DEMO5_Alpha);
 	params_Demo.add(myDEMO5.DEMO5_Speed);
 	params_Demo.add(myDEMO5.DEMO5_Zoom);
-	params_Demo.add(DEMO5_Cam);
+	params_Demo.add(myDEMO5.DEMO5_Cam);
 	params_AppState.add(params_Demo);
 
 	params_Picker.add(bColor_HUE);
@@ -1235,7 +1235,6 @@ void ofxColorManager::draw_Info()
 	float min = 0.5f;
 	float max = 1.0f;
 	float a;
-
 	if (MODE_NewPreset) a = ofMap(glm::sin(freq * ofGetFrameNum()), -1.f, 1.f, min, max);
 	else a = 1.0f;
 
@@ -1693,7 +1692,7 @@ void ofxColorManager::gui_Theory()
 			if (bDrawBorder)
 			{
 				ImGui::PopStyleColor(2);
-				ImGui::PopStyleVar(1);
+				ImGui::PopStyleVar();
 			}
 
 			//--
@@ -3048,7 +3047,7 @@ void ofxColorManager::gui_Picker()
 		float _w100 = ImGui::GetContentRegionAvail().x;
 		float _w99 = _w100;
 		float _w50 = _w99 / 2.0;
-		float _w75 = _w99 * 0.7;
+		float _w75 = _w99 * 0.75;
 
 		//--
 
@@ -3149,8 +3148,8 @@ void ofxColorManager::gui_Picker()
 
 		if (ImGui::CollapsingHeader("HSB", ImGuiWindowFlags_NoCollapse))
 		{
-			//ImGui::PushItemWidth(-30);
-			ImGui::PushItemWidth(_w75);
+			ImGui::PushItemWidth(-20);
+			//ImGui::PushItemWidth(_w75);
 
 			if (ofxImGui::AddParameter(color_HUE)) {}
 			if (ofxImGui::AddParameter(color_SAT)) {}
@@ -3169,13 +3168,13 @@ void ofxColorManager::gui_Picker()
 			if (bColor_SAT) color_SAT_0 = color_SAT;
 			if (bColor_BRG) color_BRG_0 = color_BRG;
 
-			ImGui::PushItemWidth(-60);
+			//ImGui::PushItemWidth(-60);
 			{ if (ofxImGui::AddParameter(bColor_HUE)) {}ImGui::SameLine(); }
 			{ if (ofxImGui::AddParameter(bColor_SAT)) {}ImGui::SameLine(); }
 			{ if (ofxImGui::AddParameter(bColor_BRG)) {} }
-			ImGui::PopItemWidth();
+			//ImGui::PopItemWidth();
 
-			ImGui::PushItemWidth(-60);
+			ImGui::PushItemWidth(-50);
 
 			if (bColor_HUE)
 				if (ofxImGui::AddParameter(color_HUE_Power))
@@ -3274,6 +3273,9 @@ void ofxColorManager::gui_Advanced()
 		ImGui::Checkbox("Show About", &SHOW_About);
 		ofxImGui::AddParameter(SHOW_Name);
 		ImGui::Checkbox("Edit Theme", &SHOW_EditTheme);
+		ofxImGui::AddStepper(offsetx);
+		ofxImGui::AddStepper(offsety);
+
 		//ImGui::SameLine();
 
 		ImGui::Separator();
@@ -3864,28 +3866,72 @@ void ofxColorManager::gui_Kit()
 //--------------------------------------------------------------
 void ofxColorManager::gui_InputText()
 {
+	//static bool auto_resize = false;
 	static bool auto_resize = true;
-
-	float _ww = 800;
-	float _hh = 75;
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(_ww, _hh));
 
 #ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
 	ImGui::PushFont(customFontBig);
 #endif
 
+	//CalcTextSizeA(float size, float max_width, float wrap_width, const char* text_begin, const char* text_end = NULL, const char** remaining = NULL) const; // utf8
+	ImVec2 _wt = ImGui::CalcTextSize(textInput_New.c_str());
+
+	// a. fit size to text width
+	float _ww = _wt.x + 50;
+	float _hh = fontBigSize;
+	
+	// b. locked size
+	//float _ww = 800;
+	//float _hh = 75;
+
+	ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0, 0, 0, 0.1));
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(_ww, _hh));
+	ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.0);
+
 	//blink when a new preset is editing
-	float freq = 0.15;//speed freq
-	float min = 0.20;
-	float max = 0.80;
-	float a = ofMap(glm::sin(freq * ofGetFrameNum()), -1, 1, min, max);
+	float freq = 0.2f;//speed freq
+	float min = 0.5f;
+	float max = 1.0f;
+	float a;
+	if (MODE_NewPreset) a = ofMap(glm::sin(freq * ofGetFrameNum()), -1.f, 1.f, min, max);
+	else a = 1.0f;
+
+	//--
+
+	enum THEME_COLORS
+	{
+		THEME_DAY = 0,
+		THEME_NIGHT
+	};
+	//select one
+	THEME_COLORS _THEME = THEME_NIGHT;
+	//THEME_COLORS _THEME = THEME_DAY;
+
+	//--
+
+	// label tittle
+
+	int _alpha = 240;
+	ofColor c0, c1;//shadow and letter colors
+	if (_THEME == THEME_NIGHT)
+	{
+		c0.set(0, _alpha * a * 0.9);
+		c1.set(255, _alpha * a);
+	}
+	else if (_THEME == THEME_DAY)
+	{
+		c0.set(164, _alpha * a);
+		c1.set(0, _alpha * a * 0.9);
+	}
+
+	//--
 
 	//ImGui::te
 
 	ImGuiWindowFlags flagsw;
 	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
+
 	flagsw |= flagsWindows;
-	//flagsw |= ImGuiWindowFlags_NoDecoration;
 	flagsw |= ImGuiWindowFlags_NoTitleBar;
 	flagsw |= ImGuiWindowFlags_NoBackground;
 
@@ -3898,30 +3944,45 @@ void ofxColorManager::gui_InputText()
 		float _h = ImGui::GetContentRegionAvail().y;
 		float _w100 = ImGui::GetContentRegionAvail().x;
 		float _w50 = _w100 / 2;
-		ImGuiColorEditFlags _flags = ImGuiColorEditFlags_None;
 		
-		//if (MODE_NewPreset.get())
 		{
 			//TODO:
-			// load string into char array
-			char tab[32] = "type name";
+			//fails when typying text
+			//// a. shadow text
+			//{
+			//	ImGui::BeginGroup();
+			//	ImGui::PushStyleColor(ImGuiCol_Text, c0);
+			//	ImGui::Text(textInput_New.c_str());
+			//	ImGui::PopStyleColor();
+			//	ImGui::EndGroup();
+			//	ImGui::SameLine(offsetx, offsety);
+			//}
 
-			// this breakes the mouse cursor inside text input..
-			strncpy(tab, textInput_New.c_str(), sizeof(tab));
-			tab[sizeof(tab) - 1] = 0;
+			//--
 
-			//ImGui::PushItemWidth(_w50);
-			ImGui::PushItemWidth(-1);
-
-			if (ImGui::InputText("", tab, IM_ARRAYSIZE(tab)))
+			// b. input text
 			{
 				//TODO:
-				textInput_New = ofToString(tab);
-				name_TARGET[0] = &textInput_New[0];
-				ofLogNotice(__FUNCTION__) << "textInput_New:" << textInput_New;
-			}
+				// load string into char array
+				char tab[32] = "type name";
+				// this breakes the mouse cursor inside text input..
+				strncpy(tab, textInput_New.c_str(), sizeof(tab));
+				tab[sizeof(tab) - 1] = 0;
 
-			ImGui::PopItemWidth();
+				ImGui::PushStyleColor(ImGuiCol_Text, c1);
+				ImGui::PushItemWidth(-1);
+
+				if (ImGui::InputText("", tab, IM_ARRAYSIZE(tab)))
+				{
+					//TODO:
+					textInput_New = ofToString(tab);
+					name_TARGET[0] = &textInput_New[0];
+					ofLogNotice(__FUNCTION__) << "textInput_New:" << textInput_New;
+				}
+
+				ImGui::PopItemWidth();
+				ImGui::PopStyleColor();
+			}
 
 			//--
 
@@ -3985,6 +4046,8 @@ void ofxColorManager::gui_InputText()
 #endif
 
 	ImGui::PopStyleVar();
+	ImGui::PopStyleVar();
+	ImGui::PopStyleColor();
 }
 #endif
 
@@ -4184,6 +4247,29 @@ void ofxColorManager::gui_Presets()
 			}
 			ImGui::PopStyleColor();
 		}
+		else
+		{
+			ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.5f, 0.0f, 0.0f, a));
+			if (ImGui::Button("UPDATE", ImVec2(_w100, _h)))
+			{
+				//TODO:
+				//should re load by same name and get what position on vector
+				//is to reload current preset number
+				//textInput_temp = ofToString(tab2);
+				//ofLogNotice(__FUNCTION__) << "textInput_temp:" << textInput_temp;
+
+				//PRESET_Name = textInput_temp;
+				textInput_New = PRESET_Name;
+
+				ofLogNotice(__FUNCTION__) << "UPDATE : " << PRESET_Name;
+
+				//save/update
+				preset_Save(PRESET_Name);
+				preset_RefreshFiles();
+			}
+			ImGui::PopStyleColor();
+		}
+
 		//----
 
 		// 2. presets
@@ -4540,9 +4626,9 @@ void ofxColorManager::gui_Demo()
 			ofxImGui::AddParameter(myDEMO5.DEMO5_Alpha);
 			ofxImGui::AddParameter(myDEMO5.DEMO5_Zoom);
 			ofxImGui::AddParameter(myDEMO5.DEMO5_Speed);
-			if (ofxImGui::AddParameter(DEMO5_Cam))
+			if (ofxImGui::AddParameter(myDEMO5.DEMO5_Cam))
 			{
-				myDEMO5.setEnableMouseCamera(DEMO5_Cam);
+				myDEMO5.setEnableMouseCamera(myDEMO5.DEMO5_Cam);
 			}
 			ImGui::PopItemWidth();
 		}
@@ -4625,18 +4711,41 @@ void ofxColorManager::setup_Gui()
 	//float _size = 11.f;
 	//std::string _name = "telegrama_render.otf";
 
-	float _size = 14;
+	fontSize = 14;
 	std::string _name = "Ruda-Bold.ttf";
 
-	float _sizeBig = 100;
+	fontBigSize = 100;
 	std::string _nameBig = "Kazesawa-Extrabold.ttf";
 
 	//-
 
 	std::string _path = "assets/fonts/";//assets folder
-	customFont = gui.addFont(_path + _name, _size, nullptr, normalCharRanges);
-	customFontBig = gui.addFont(_path + _nameBig, _sizeBig, nullptr, normalCharRanges);
+	customFont = gui.addFont(_path + _name, fontSize, nullptr, normalCharRanges);
+	customFontBig = gui.addFont(_path + _nameBig, fontBigSize, nullptr, normalCharRanges);
+	//customFontBig->
 	io.FontDefault = customFont;
+
+
+	// Create shadow at offset
+	//io.Fonts->TexGlyphShadowOffset = ImVec2(2, 3);
+
+	//ImVec2 offset = ImGui::GetIO().Fonts->TexGlyphShadowOffset;
+
+	//for (int y = ((fabs(offset.y) - offset.y) / 2); y < height - ((fabs(offset.y) + offset.y) / 2); y++)
+	//{
+	//	for (int x = ((fabs(offset.x) - offset.x) / 2); x < width - ((fabs(offset.x) + offset.x) / 2); x++)
+	//	{
+	//		unsigned int current_index = ((x * 4) + (width * 4 * y));
+	//		unsigned int write_shadow_index = (((x + offset.x) * 4) + (width * 4 * (y + offset.y)));
+
+	//		unsigned char current_pixel = pixels[current_index + 3];
+	//		unsigned char current_pixel_shadow = pixels[write_shadow_index + 3];
+
+	//		// Only write shadow pixels into empty areas
+	//		if (current_pixel != 0 && current_pixel_shadow == 0)
+	//			pixels_shadow[write_shadow_index + 2] = pixels[current_index + 3];
+	//	}
+	//}
 #endif
 
 	//--
@@ -6063,8 +6172,8 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 		DEMO2_Svg.setEnableKeys(SHOW_Demos);
 
-		DEMO5_Cam = false;
-		myDEMO5.setEnableMouseCamera(DEMO5_Cam);
+		myDEMO5.DEMO5_Cam = false;
+		myDEMO5.setEnableMouseCamera(myDEMO5.DEMO5_Cam);
 	}
 
 	//---
@@ -6376,7 +6485,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 		//TODO: not works
 		// about
-		else if ((key == 'h' || key == 'H') && mod_CONTROL)
+		else if ((key == 'a' || key == 'A') /*&& mod_CONTROL*/)
 		{
 			SHOW_About = !SHOW_About;
 		}
@@ -6957,8 +7066,8 @@ void ofxColorManager::mousePressed(ofMouseEventArgs &eventArgs)
 				else myDEMO1.start();//trig DEMO start
 			}
 		}
-		if (DEMO5_Enable || SHOW_About) myDEMO5.start();
 	}
+	if (DEMO5_Enable || SHOW_About) myDEMO5.start();
 }
 
 //--------------------------------------------------------------
@@ -8053,7 +8162,6 @@ void ofxColorManager::drawLink(int x, int y)
 //--------------------------------------------------------------
 void ofxColorManager::doRandomizeColorPicker()
 {
-
 	float _hue;
 	float _sat;
 	float _brg;
@@ -8062,7 +8170,7 @@ void ofxColorManager::doRandomizeColorPicker()
 	if (bColor_SAT) color_SAT_0 = color_SAT;
 	if (bColor_BRG) color_BRG_0 = color_BRG;
 
-	int maxTimes = 10;//limit retryes to avoid hanging..
+	int maxTimes = 4;//limit retryes to avoid hanging..
 
 	if (bColor_HUE)
 	{
@@ -8071,7 +8179,7 @@ void ofxColorManager::doRandomizeColorPicker()
 		while (!rDone || times >= maxTimes)
 		{
 			_hue = ofRandom(color_HUE_0 - 128.f * color_HUE_Power, color_HUE_0 + 128.f * color_HUE_Power);
-			color_HUE = ofClamp(_hue, 0, 255);
+			if (color_HUE != _hue) color_HUE = ofClamp(_hue, 0, 255);
 
 			if (color_HUE != color_HUE_0) rDone = true;
 			times++;
@@ -8085,7 +8193,7 @@ void ofxColorManager::doRandomizeColorPicker()
 		while (!rDone || times >= maxTimes)
 		{
 			_sat = ofRandom(color_SAT_0 - 128.f * color_SAT_Power, color_SAT_0 + 128.f * color_SAT_Power);
-			color_SAT = ofClamp(_sat, 0, 255);
+			if (color_SAT != _sat) color_SAT = ofClamp(_sat, 0, 255);
 
 			if (color_SAT != color_SAT_0) rDone = true;
 			times++;
@@ -8099,7 +8207,7 @@ void ofxColorManager::doRandomizeColorPicker()
 		while (!rDone || times >= maxTimes)
 		{
 			_brg = ofRandom(color_BRG_0 - 128.f * color_BRG_Power, color_BRG_0 + 128.f * color_BRG_Power);
-			color_BRG = ofClamp(_brg, 0, 255);
+			if (color_BRG != _brg) color_BRG = ofClamp(_brg, 0, 255);
 
 			if (color_BRG != color_BRG_0) rDone = true;
 			times++;
@@ -8186,3 +8294,29 @@ void ofxColorManager::drawDemos()
 	//if (DEMO1_Enable) fboBig.draw(0, 0, ofGetWidth(), ofGetHeight());
 
 }
+
+
+//#include <algorithm>
+//#define V ImVec2
+//#define R(u,v,r) {float U=u;u=cos(r)*u-sin(r)*v;v=sin(r)*U+cos(r)*v;}
+//#define S(T) 1.f/(1+exp(-(T)))*IM_PI*2
+//#define B(T) sin((T)*3)*exp(-(T))
+//int W = 11;
+//unsigned c[] = { 0xD9000080,0x750A2B18,0xDC2A2A17,0x0200025D,0x5AB1E800,0x26EAB555,0x01800100 };
+//struct T { float x, y, z; int i; bool operator<(T&o) { return z > o.z; } };
+//void FX(ImDrawList *d, V a, V b, V s, ImVec4 m, float t) {
+//	float L = fmod(t, 6) * 10; T v[221];
+//	for (int n = 3; n < 224; n++) {
+//		int i = n - 3;
+//		float x = i % 17 * W - 8.5*W, y = i / 17 * W - 6.5*W, z = 0, D = sqrt(x*x + y * y) / 32,
+//			X = S(L - 4 - D) + cos(t / 3) / 4, Y = S(L - 12 - D) + cos(t / 7) / 4, Z = S(L - 20 - D) + cos(t / 2) / 4;
+//		R(x, y, Z)R(y, z, X)R(x, z, Y)
+//			z -= L - D > 28 ? B((L - 28 - D) / 2) * 50 : 0;
+//		z = c[n / 32] & 1 << n % 32 ? z / 100 + 1 : 0;
+//		v[i] = { a.x + s.x*.5f + x / z,a.y + s.y*.5f + y / z,z,i };
+//	}
+//	std::sort(v, &v[221]);
+//	for (int i = 0; i < 221; i++)
+//		if (v[i].z != 0)
+//			d->AddCircleFilled(V(v[i].x, v[i].y), W*.8 / v[i].z, ImColor(v[i].i > 102 ? 0.f : 1.f, v[i].i < 102 ? 0.f : 1.f, 3.f - v[i].z*2.5f, 1.f));
+//}
