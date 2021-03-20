@@ -281,56 +281,56 @@ ofxColorManager::ofxColorManager()
 
 	helpInfo = "HELP\n\n";
 
-	helpInfo += "H               HELP\n";
-	helpInfo += "G               GUI\n";
-	helpInfo += "F               FULL SCREEN\n";
-	helpInfo += "A               ABOUT\n";
-	//helpInfo += "K             KEYS\n";
+	helpInfo += "H            HELP\n";
+	helpInfo += "G            GUI\n";
+	helpInfo += "F            FULL SCREEN\n";
+	helpInfo += "A            ABOUT\n";
+	//helpInfo += "K          KEYS\n";
 	helpInfo += "\n";
 
-	helpInfo += "SPACE           NEXT PRESET\n";
-	helpInfo += "Left|Right      <> PRESETS\n";
-	helpInfo += " +Ctrl          <> SHIFT COLORS\n";
+	helpInfo += "SPACE        NEXT PRESET\n";
+	helpInfo += "Left|Right   <> PRESETS\n";
+	helpInfo += " +Ctrl       <> SHIFT COLORS\n";
 	helpInfo += "\n";
 
-	helpInfo += "Down|Up         ENGINE TYPES\n";
-	helpInfo += "-|+             AMOUNT COLORS\n";
-	helpInfo += "Arrows          LIBRARY COLORS\n";
-	helpInfo += " +Ctrl          LIBRARY PAGE\n";
+	helpInfo += "Down|Up      ENGINE TYPES\n";
+	helpInfo += "-|+          AMOUNT COLORS\n";
+	helpInfo += "Arrows       LIBRARY COLORS\n";
+	helpInfo += " +Ctrl       LIBRARY PAGE\n";
 	helpInfo += "\n";
 
-	helpInfo += "BACKSPACE       AUX 1\n";
-	helpInfo += " +Ctrl          AUX 2\n";
-	helpInfo += "RETURN          RANDOM 1\n";
-	helpInfo += " +Ctrl          RANDOM 2\n";
+	helpInfo += "BACKSPACE    AUX 1\n";
+	helpInfo += " +Ctrl       AUX 2\n";
+	helpInfo += "RETURN       RANDOM 1\n";
+	helpInfo += " +Ctrl       RANDOM 2\n";
 	helpInfo += "\n";
 	helpInfo += "\n";
 
 	helpInfo += "PANELS\n";
 	helpInfo += "\n";
-	helpInfo += "F1              PALETTE\n";
-	helpInfo += "F2              PRESETS\n";
-	helpInfo += "F3              KIT\n";
-	helpInfo += "F4              EDITOR\n";
-	helpInfo += "F5              PICKER\n";
-	helpInfo += "F6              LIBRARY\n";
-	helpInfo += "F7              DEMO\n";
-	helpInfo += "F8              GRADIENT\n";
-	helpInfo += "F9              MINI\n";
-	helpInfo += "F10             EXPORT\n";
-	helpInfo += "F11             RESTORE\n";
-	//helpInfo += "F6              BACKGROUND\n";
+	helpInfo += "F1           PALETTE\n";
+	helpInfo += "F2           PRESETS\n";
+	helpInfo += "F3           KIT\n";
+	helpInfo += "F4           EDITOR\n";
+	helpInfo += "F5           PICKER\n";
+	helpInfo += "F6           LIBRARY\n";
+	helpInfo += "F7           DEMO\n";
+	helpInfo += "F8           GRADIENT\n";
+	helpInfo += "F9           MINI\n";
+	helpInfo += "F10          EXPORT\n";
+	helpInfo += "F11          RESTORE\n";
+	//helpInfo += "F6           BACKGROUND\n";
 	helpInfo += "\n";
 	helpInfo += "\n";
 
 	helpInfo += "ENGINES\n";
 	helpInfo += "\n";
-	helpInfo += "TAB             <> \n";
-	helpInfo += " +Ctrl             \n";
-	helpInfo += "                THEORY\n";
-	helpInfo += "                RANGE\n";
-	helpInfo += "                LOVERS\n";
-	helpInfo += "                PICTURE\n";
+	helpInfo += "TAB          <> \n";
+	helpInfo += " +Ctrl          \n";
+	helpInfo += "             THEORY\n";
+	helpInfo += "             RANGE\n";
+	helpInfo += "             LOVERS\n";
+	helpInfo += "             PICTURE\n";
 	helpInfo += "\n";
 	helpInfo += "\n";
 
@@ -1330,8 +1330,9 @@ void ofxColorManager::draw(ofEventArgs & args)
 	{
 		// background
 
-		// background mode
 		ofColor _cBg;
+
+		// background mode
 #ifdef MODE_BACKGROUND
 		if (background_Draw_ENABLE)
 		{
@@ -1339,10 +1340,12 @@ void ofxColorManager::draw(ofEventArgs & args)
 		}
 #endif
 		// using gradient
-		if (!DEMO2_Svg.DEMO2_Enable)
+		if (!DEMO2_Svg.DEMO2_Enable || (DEMO2_Svg.DEMO2_Enable && DEMO2_Svg.fileIndex == 0))
 		{
 			_cBg = gradientEngine.getColorPicked();
+			//nike demo has white bg
 		}
+
 		ofClear(_cBg);
 
 		//--
@@ -3884,7 +3887,7 @@ void ofxColorManager::gui_InputText()
 	//float _ww = 800;
 	//float _hh = 75;
 
-	ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0, 0, 0, 0.1));
+	ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0, 0, 0, 0.0));// make it transparent
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(_ww, _hh));
 	ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.0);
 
@@ -8275,6 +8278,8 @@ void ofxColorManager::drawDemos()
 	// DEMO5
 	// spheres
 	if (DEMO5_Enable) myDEMO5.draw();
+
+	//-
 
 	//about window demos
 	if (SHOW_About)
