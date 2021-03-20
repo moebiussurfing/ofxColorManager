@@ -3978,7 +3978,7 @@ void ofxColorManager::gui_InputText()
 					//TODO:
 					textInput_New = ofToString(tab);
 					name_TARGET[0] = &textInput_New[0];
-					ofLogNotice(__FUNCTION__) << "textInput_New:" << textInput_New;
+					ofLogVerbose(__FUNCTION__) << "text:" << textInput_New;
 				}
 
 				ImGui::PopItemWidth();
@@ -4172,7 +4172,7 @@ void ofxColorManager::gui_Presets()
 			//TODO:
 			textInput_New = name_TARGET[0];//set
 			//name_TARGET[0] = &textInput_New[0];//set
-			if (textInput_New == "") textInput_New = "type";
+			if (textInput_New == "") textInput_New = "type name";
 		}
 
 		if (MODE_NewPreset.get())
@@ -8096,13 +8096,13 @@ void ofxColorManager::updateLink() {
 	// for each client lets send them a message letting them know what port they are connected on
 	// we throttle the message sending frequency to once every 100ms
 	uint64_t now = ofGetElapsedTimeMillis();
-	if (now - lastCheckLink >= 2000)
+	if (now - lastCheckLink >= 4000)
 	{
 		for (int i = 0; i < TCP.getLastID(); i++)
 		{
 			if (!TCP.isClientConnected(i)) continue;
 
-			ofLogNotice(__FUNCTION__) << "Connected on port: " + ofToString(TCP.getClientPort(i));
+			ofLogVerbose(__FUNCTION__) << "Connected on port: " + ofToString(TCP.getClientPort(i));
 
 			//TCP.send(i, "hello client - you are connected on port - " + ofToString(TCP.getClientPort(i)));
 		}

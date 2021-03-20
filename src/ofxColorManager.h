@@ -7,34 +7,32 @@
 /*
 
 BUGS:
-+ fix text input boxes. now we must to mantain click on text input and lock keycommands..
-	related to docking mode. works fine when windowed
-+ TCP port number switch, problems on reconnect.
+
++ fix text input boxes. related to docking mode. works fine when windowed
++ TCP port number switch, some problems on reconnect bc threading not implemented. should use some sync addon or OSC.
 + pickers hangs flickering sometimes
 
-TODO:
-+ export Adobe ASE
-+ add tween transitions
-+ undo engine
-+ fix demo1 camera and add tween
-+ check theory picker if calls too much callbacks
 
-PRESET NAME
-+ fit width to text
-+ blink when new preset
-+ update/new preset workflow
-+ change colors. bg and shadow
+TODO:
+
++ export Adobe ASE
++ add tween transitions to presets
++ undo engine
++ fix demo1 camera and add tweening random jumps
++ check theory picker if calls too much callbacks
 
 */
 
 
 //----------
 
-// OPTIONAL
+// some preprocessor directives
+// mainly for debug purposes only
 
-// comment for advanced mode. uncomment for simple user mode.
-// hide some widgets for layout customization to minimize elements: keys, layout customize and theme editor
-//#define USE_MINIMAL_GUI 
+#define USE_OFX_WINDOWAPP// window manager
+#define USE_DEBUG_LAYOUT // includes mouse ruler to help layout design
+
+//--
 
 // modules
 // can't be disabled now..
@@ -52,11 +50,14 @@ PRESET NAME
 #define PANEL_WIDGETS_WIDTH 200
 #define PANEL_WIDGETS_HEIGHT 500
 
+// comment for advanced mode. uncomment for simple user mode.
+// hide some widgets for layout customization to minimize elements: keys, layout customize and theme editor
+//#define USE_MINIMAL_GUI 
+
 //#define MODE_LOCK_DOCKING // disable move panels
 #define MODE_TEXT_INPUT_WORKAROUND// independent panel
 
 // extra
-#define USE_DEBUG_LAYOUT // includes mouse ruler to help layout design
 //#define MODE_BACKGROUND //TODO: show bg color (gradient picker engine) on mode no background
 //#define USE_UNDO_ENGINE //TODO:
 //#define USE_RECTANGLE_INTERFACES //TODO: a custom final user size ofxInterface
@@ -66,10 +67,9 @@ PRESET NAME
 //#define USE_OFX_GUI
 ////#define SHOW_THEM_EDITOR //TODO: show ImGui editor for debug. do not stores or load presets. linked to USE_MINIMAL_GUI
 #define AUTO_DRAW_CALLBACK // avoids manual draw. don't need to call draw in your ofApp
-#define USE_OFX_WINDOWAPP// window manager
 
+//----------
 
-//------
 
 #ifdef USE_OFX_WINDOWAPP
 #include "ofxWindowApp.h"
@@ -78,6 +78,9 @@ PRESET NAME
 #ifdef LINK_TCP_MASTER_CLIENT
 #include "ofxNetwork.h"
 #endif
+// note that threading is not implemented. so ofxColorClient hangs some seconds when connecting retries. 
+// after some tries TCP toggle is auto disabled.
+// you must enable TCP toggle manually again.
 
 #include <random>
 
@@ -160,7 +163,7 @@ using namespace ImGui_PalettesPicker;
 #include "interface/ButtonExample.h"
 #endif
 
-//--
+//----
 
 class ofxColorManager : public ofBaseApp
 {
@@ -397,6 +400,7 @@ private:
 	ofParameter<int> AppMode;
 	ofParameter<std::string> AppMode_name;
 #define NUM_APP_MODES 5
+
 	//TODO:
 	//using an int slider
 	//enum Element { Element_0, Element_1, Element_2, Element_3, Element_4, Element_COUNT };
@@ -1040,11 +1044,11 @@ private:
 
 	std::string textInput_New = "name..";
 
-	//TODO:
-	//handle text input focus to disable key commands..
-	bool focus_1;
-	int has_focus = 0;
-	char tab[128];
+	////TODO:
+	////handle text input focus to disable key commands..
+	//bool focus_1;
+	//int has_focus = 0;
+	//char tab[128];
 
 	//--
 
@@ -1085,6 +1089,7 @@ private:
 
 	//TODO:
 	//trying to hide the 'x' button of panels when docking and to lock the resizing of panels
+//private:
 	//--------------------------------------------------------------
 	//inline void hideDockWindow(string name)
 	//{
