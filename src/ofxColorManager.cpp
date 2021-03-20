@@ -3948,7 +3948,7 @@ void ofxColorManager::gui_InputText()
 
 		{
 			//TODO:
-			//fails when typying text
+			//fails when typying text..
 			//// a. shadow text
 			//{
 			//	ImGui::BeginGroup();
