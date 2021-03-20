@@ -805,8 +805,8 @@ private:
 	ImGuiWindowFlags flagsWindows;
 	float fontBigSize;
 	float fontSize;
-	ofParameter<int> offsetx{ "Offset x", 0, -100, 100 };
-	ofParameter<int> offsety{ "Offset y", -1, -100, 100 };
+	//ofParameter<int> offsetx{ "Offset x", 0, -100, 100 };
+	//ofParameter<int> offsety{ "Offset y", -1, -100, 100 };
 
 	// mouse or key locker
 	bool mouseLockedByGui;
@@ -988,11 +988,6 @@ private:
 	int Demo_Timer_Max = 15000;
 	bool bTEST_pause = false;
 
-	//ofParameter<bool> DEMO5_Cam{ "Edit Camera Spheres", false };
-	//ofParameter<float> DEMO5_Speed{ "Speed", 0.5, 0, 1 };
-	//ofParameter<float> DEMO5_Zoom{ "Zoom", 0.5, 0, 1 };
-	//ofParameter<float> DEMO5_Alpha{ "Alpha Spheres", 0.8, 0, 1 };
-
 	ofParameter<bool> DEMO5_Enable{ "Enable DEMO Spheres", false };
 
 	//--
@@ -1066,163 +1061,11 @@ private:
 
 	//----
 
-	// extra ImGui methods
-
-private:
-	//TODO:
-	// Helper to display a little (?) mark which shows a tooltip when hovered.
-	// In your own code you may want to display an actual icon if you are using a merged icon fonts (see docs/FONTS.txt)
-//--------------------------------------------------------------
-	static void HelpMarker(const char* desc)
-	{
-		ImGui::TextDisabled("(?)");
-		if (ImGui::IsItemHovered())
-		{
-			ImGui::BeginTooltip();
-			ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-			ImGui::TextUnformatted(desc);
-			ImGui::PopTextWrapPos();
-			ImGui::EndTooltip();
-		}
-	}
-
-	//--
-
 private:
 	ofParameter<bool> SHOW_MainMenuBar{ "Show Menu Bar", false };
 	bool SHOW_About = false;
-
-	//--------------------------------------------------------------
-	void gui_MainMenuBar()
-	{
-		if (ImGui::BeginMainMenuBar())
-		{
-			if (ImGui::BeginMenu("File"))
-			{
-				if (ImGui::BeginMenu("Export Linked Preset"))
-				{
-					if (ImGui::MenuItem("Set Export Path", "")) { setPathPresetWatch(); }
-					if (ImGui::MenuItem("Export Preset", "")) { exportPalette(); }
-
-					ImGui::EndMenu();
-				}
-				if (ImGui::MenuItem("Export Kit", "")) { exportKit(); }
-				if (ImGui::MenuItem("Load Preset File", "")) { loadPresetFile(); }
-				if (ImGui::MenuItem("Save Preset File", "")) { savePresetFile(); }
-
-				ImGui::Separator();
-
-				if (ImGui::MenuItem("Quit", "")) { ofExit(); }
-
-				ImGui::EndMenu();
-			}
-
-			//if (ImGui::BeginMenu("Edit"))
-			//{
-			//	//TODO:
-			//	//add other types
-			//	if (ImGui::MenuItem("Copy HEX Color", "")) { 
-			//		//TODO: convert
-			//		const char* text = ofToString(color_Picked.get().getHex()).c_str();
-			//		ImGui::SetClipboardText(text);
-			//	};
-			//	ImGui::EndMenu();
-			//}
-
-			if (ImGui::BeginMenu("View"))
-			{
-				auto pref = SHOW_MainMenuBar.get();
-				if (ImGui::MenuItem("Show Menu Bar", NULL, &pref))
-				{
-					SHOW_MainMenuBar = pref;
-				}
-				ImGui::MenuItem("About", NULL, &SHOW_About);
-
-				ImGui::EndMenu();
-			}
-
-			ImGui::EndMainMenuBar();
-		}
-	}
-
-	//--------------------------------------------------------------
-	void ofxColorManager_ShowAboutWindow(bool* p_open)
-	{
-		ImGuiWindowFlags flags;
-		flags = ImGuiWindowFlags_AlwaysAutoResize;
-		//flags = ImGuiWindowFlags_None;
-
-		//TODO:
-		// draw texture inside backgroundg
-
-		//ImGuiIO& io = ImGui::GetIO();
-		//// Set the window position
-		//ImGui::SetNextWindowPos(ImVec2(0, 0), 0, ImVec2(0, 0));
-		//// Set the size of the window
-		//ImGui::SetNextWindowSize(ImVec2(io.DisplaySize.x, io.DisplaySize.y));
-		//// Set the window to be transparent
-		//ImGui::SetNextWindowBgAlpha(0);
-
-		//// Texture ID
-		//static ImTextureID bg_tex_id = 0;
-		//if (!bg_tex_id)
-		//{
-		//	// Here you use opencv to load the picture. Of course you can also use other ways to load the picture
-		//	// loadTexture is a custom function used to load image characters as textures. If you do n’t know how to load textures, you can use Baidu.
-		//	bg_tex_id = (GLuint *)fbo.getTexture(0).getTextureData().textureID;
-		//}
-
-		//ImGui::Begin("background", NULL, ImGuiWindowFlags_NoMove |
-		//	ImGuiWindowFlags_NoTitleBar |
-		//	ImGuiWindowFlags_NoBringToFrontOnFocus |
-		//	ImGuiWindowFlags_NoInputs |
-		//	ImGuiWindowFlags_NoCollapse |
-		//	ImGuiWindowFlags_NoResize |
-		//	ImGuiWindowFlags_NoScrollbar);
-
-		//// Set the padding of the window to 0 to fill the window with the picture control
-		//ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
-		//// Set the window to no border
-		//ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0);
-
-		if (!ImGui::Begin("About", p_open, flags))
-		{
-			ImGui::End();
-			return;
-		}
-
-		//ImGui::Image(bg_tex_id, ImGui::GetContentRegionAvail());
-
-		ImGui::Text("ofxColorManager v1.0");
-		ImGui::Separator();
-		ImGui::Dummy(ImVec2(0, 2));
-		ImGui::Text("Coded by:");
-		ImGui::Text("moebiusSurfing. Manu Molina");
-		ImGui::Text("Barcelona / Buenos Aires | 2019-2021");
-		ImGui::Dummy(ImVec2(0, 2));
-		ImGui::Text("GitHub:");
-		ImGui::Text("https://github.com/moebiussurfing");
-		ImGui::Dummy(ImVec2(0, 2));
-		ImGui::Text("Email:");
-		ImGui::Text("moebiusSurfing@gmail.com");
-		
-		ImGui::Dummy(ImVec2(0, 4));
-		ImGui::Text("Thanks to:");
-		ImGui::Text("All the openFrameworks community,");
-		ImGui::Text("coders and contributors of included");
-		ImGui::Text("libraries and addons.");
-		ImGui::Dummy(ImVec2(0, 2));
-		ImGui::Text("MIT License.");
-		//ImGui::Text("Peace");
-		ImGui::Dummy(ImVec2(0, 4));
-
-		draw_DemoFbo();
-		ImGui::Text("[ Scene sketch by junkiyoshi.com. Thanks ]");
-
-		ImGui::End();
-
-		//ImGui::PopStyleVar(2);
-	}
+	void gui_MainMenuBar();
+	void ofxColorManager_ShowAboutWindow(bool* p_open);
 
 	//--
 
@@ -1233,75 +1076,12 @@ private:
 	ofFbo fboBig;//fullscreen fbo
 	float wAboutDemo = 250;
 	float tweenD = 1;
+	void refresh_DemoFbo();
+	void draw_DemoFbo();
 
-	//--------------------------------------------------------------
-	void refresh_DemoFbo()
-	{
-		ofLogNotice(__FUNCTION__);
+	//----
 
-		bool b = ofGetUsingArbTex();
-		ofDisableArbTex();
-
-		ofFbo::Settings settingsBig;
-		settingsBig.numSamples = 16;
-		settingsBig.useStencil = true;
-		settingsBig.useDepth = false;
-		settingsBig.width = ofGetWidth();
-		settingsBig.height = ofGetHeight();
-		fboBig.allocate(settingsBig);
-
-		float _ww = wAboutDemo;
-
-		ofFbo::Settings settings;
-		settings.numSamples = 16;
-		settings.useStencil = true;
-		settings.useDepth = false;
-		settings.width = _ww;
-		settings.height = _ww * (9 / 16.f);
-		fbo.allocate(settings);
-
-		fbo.createAndAttachTexture(GL_RGB, 0); //Position
-		fbo.createAndAttachTexture(GL_RGBA32F, 1); //velocity
-		fbo.createAndAttachRenderbuffer(GL_DEPTH_COMPONENT, GL_DEPTH_ATTACHMENT);
-		fbo.checkStatus();
-
-		fboBig.begin();
-		ofClear(0, 0);
-		fboBig.end();
-
-		fbo.begin();
-		ofClear(0, 0);
-		fbo.end();
-
-		if (b) ofEnableArbTex();
-	}
-
-	//--------------------------------------------------------------
-	void draw_DemoFbo()
-	{
-		float _spc = ImGui::GetStyle().ItemSpacing.x;
-		float _w100 = ImGui::GetContentRegionAvail().x;
-		float w = wAboutDemo;
-		float h = w * (9 / 16.f);
-
-		fbo.begin();
-		{
-			ofClear(0, 0);
-
-			fboBig.draw(0, 0, w, h);
-		}
-		fbo.end();
-
-		if (ImGui::ImageButton(
-			(ImTextureID)(uintptr_t)fbo.getTexture(0).getTextureData().textureID,
-			ImVec2(w, h)))
-		{
-			ofLogNotice(__FUNCTION__) << "Image Pressed";
-
-			presetNext();
-		}
-	}
-
+	// extra ImGui methods
 
 	//TODO:
 	//trying to hide the 'x' button of panels when docking and to lock the resizing of panels
@@ -1327,4 +1107,22 @@ private:
 	//		}
 	//	}
 	//}
+
+private:
+	//TODO:
+	// Helper to display a little (?) mark which shows a tooltip when hovered.
+	// In your own code you may want to display an actual icon if you are using a merged icon fonts (see docs/FONTS.txt)
+	//--------------------------------------------------------------
+	static void HelpMarker(const char* desc)
+	{
+		ImGui::TextDisabled("(?)");
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::BeginTooltip();
+			ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+			ImGui::TextUnformatted(desc);
+			ImGui::PopTextWrapPos();
+			ImGui::EndTooltip();
+		}
+	}
 };

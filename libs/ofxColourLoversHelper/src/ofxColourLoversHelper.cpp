@@ -1902,11 +1902,11 @@ void ofxColourLoversHelper::keyPressed(ofKeyEventArgs &eventArgs)
 		}
 
 		//browse
-		if (key == OF_KEY_DOWN || key == ' ' && !mod_CONTROL)
+		if (key == OF_KEY_DOWN /*|| key == ' ' && !mod_CONTROL*/)
 		{
 			nextPalette();
 		}
-		if (key == OF_KEY_UP || key == ' ' && mod_CONTROL)
+		if (key == OF_KEY_UP /*|| key == ' ' && mod_CONTROL*/)
 		{
 			prevPalette();
 		}
