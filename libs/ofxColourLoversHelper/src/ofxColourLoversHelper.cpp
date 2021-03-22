@@ -437,8 +437,13 @@ void ofxColourLoversHelper::drawImGuiMain()
 			ImGuiColorEditFlags_NoPicker |
 			ImGuiColorEditFlags_NoTooltip;
 
-		const auto p = palettes[currPalette].colours;
-		//myPalette_BACK
+        //macOS
+        if (palettes.size()>0){
+        vector<ofColor> p =palettes[currPalette].colours;
+//        const auto p = palettes[currPalette].colours;
+//         auto p = palettes[currPalette].colours;
+        
+        //myPalette_BACK
 
 		// fit width
 		float wb = (_w100 / (int)p.size());// -_spc;
@@ -456,7 +461,7 @@ void ofxColourLoversHelper::drawImGuiMain()
 
 			ImGui::PopID();
 		}
-
+        }
 		//-
 
 		if (ImGui::Button("Randomize", ImVec2(_w100, 2*_hb)))

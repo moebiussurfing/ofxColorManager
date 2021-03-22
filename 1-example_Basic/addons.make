@@ -8,6 +8,7 @@ ofxMouseRuler
 ofxNetwork
 ofxOpenCv
 ofxSCENE-SVG
+ofxScaleDragRect
 ofxSurfingHelpers
 ofxSvg
 ofxWindowApp
