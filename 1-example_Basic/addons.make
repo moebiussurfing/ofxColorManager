@@ -1,13 +1,14 @@
 ofxColorClient
 ofxColorManager
 ofxGui
-ofxImGui
 ofxPoco
 ofxIO
+ofxImGui
 ofxMouseRuler
 ofxNetwork
 ofxOpenCv
 ofxSCENE-SVG
 ofxSurfingHelpers
+ofxSvg
 ofxWindowApp
 ofxXmlSettings
