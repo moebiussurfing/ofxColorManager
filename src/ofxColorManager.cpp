@@ -150,7 +150,7 @@ void ofxColorManager::build_Palette_Engine()
 
 	// presets
 
-	if (SHOW_Presets)
+	//if (SHOW_Presets)
 	{
 		if (!MODE_NewPreset && bNew) MODE_NewPreset = true;
 		textInput_New = _name;
@@ -3869,8 +3869,8 @@ void ofxColorManager::gui_Kit()
 //--------------------------------------------------------------
 void ofxColorManager::gui_InputText()
 {
-	//static bool auto_resize = false;
-	static bool auto_resize = true;
+	static bool auto_resize = false;
+	//static bool auto_resize = true;
 
 #ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
 	ImGui::PushFont(customFontBig);
@@ -3878,16 +3878,34 @@ void ofxColorManager::gui_InputText()
 
 	//CalcTextSizeA(float size, float max_width, float wrap_width, const char* text_begin, const char* text_end = NULL, const char** remaining = NULL) const; // utf8
 	ImVec2 _wt = ImGui::CalcTextSize(textInput_New.c_str());
+	float _spc = ImGui::GetStyle().ItemSpacing.y + ImGui::GetStyle().ItemInnerSpacing.y + 50;
 
 	// a. fit size to text width
-	float _ww = _wt.x + 50;
-	float _hh = fontBigSize;
+	float _ww = _wt.x + 130;
+	float _hh = fontBigSize + _spc;
+
+	//-
 
 	// b. locked size
 	//float _ww = 800;
 	//float _hh = 75;
 
-	ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0, 0, 0, 0.0));// make it transparent
+	//-
+
+	ImGuiWindowFlags flagsw;
+	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
+
+	//flagsw |= flagsWindows;
+	flagsw |= ImGuiWindowFlags_NoTitleBar;
+	flagsw |= ImGuiWindowFlags_NoBackground;
+	flagsw |= ImGuiWindowFlags_NoDecoration;
+
+	//ImGui::SetWindowSize(ImVec2(_ww, _hh));
+	ImGui::SetNextWindowSize(ImVec2(_ww, _hh));
+
+	//-
+
+	ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0, 0, 0, 0.05));// make it transparent
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(_ww, _hh));
 	ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.0);
 
@@ -3930,18 +3948,9 @@ void ofxColorManager::gui_InputText()
 
 	//--
 
-	//ImGui::te
-
-	ImGuiWindowFlags flagsw;
-	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
-
-	flagsw |= flagsWindows;
-	flagsw |= ImGuiWindowFlags_NoTitleBar;
-	flagsw |= ImGuiWindowFlags_NoBackground;
-
 	if (ofxImGui::BeginWindow("PRESET NAME", mainSettings, flagsw))
 	{
-		ImGui::Dummy(ImVec2(0, 2));
+		ImGui::Dummy(ImVec2(0, 5));
 
 		float _hb = BUTTON_BIG_HEIGHT;
 		float _spcx = ImGui::GetStyle().ItemSpacing.x;
@@ -4042,6 +4051,8 @@ void ofxColorManager::gui_InputText()
 			ImGui::PopStyleColor();
 #endif
 		}
+
+		ImGui::Dummy(ImVec2(0, 5));
 	}
 	ofxImGui::EndWindow(mainSettings);
 
@@ -4224,9 +4235,9 @@ void ofxColorManager::gui_Presets()
 			//	//	ofLogNotice(__FUNCTION__) << "textInput_New:" << textInput_New;
 			//	//}
 
+#endif
 			//--
 
-#endif
 			ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.5f, 0.0f, 0.0f, a));
 			if (ImGui::Button("SAVE NEW", ImVec2(_w100, _h)))
 			{
@@ -4829,7 +4840,8 @@ bool ofxColorManager::draw_Gui()
 			if (SHOW_UserPaletteEditor) gui_Editor();
 			if (SHOW_Presets) gui_Presets();
 #ifdef MODE_TEXT_INPUT_WORKAROUND
-			if (SHOW_Presets /*&& MODE_NewPreset*/) gui_InputText();
+			gui_InputText();
+			//if (SHOW_Presets /*&& MODE_NewPreset*/) gui_InputText();
 #endif
 			if (SHOW_Kit) gui_Kit();
 			if (SHOW_Picker) gui_Picker();
@@ -5715,10 +5727,13 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			//flagsWindows |= ImGuiWindowFlags_NoCollapse;
 			//flagsWindows |= ImGuiWindowFlags_NoDecoration;
 			//flagsWindows |= ImGuiWindowFlags_NoBackground;
+
+			if (SHOW_MainMenuBar) SHOW_MainMenuBar = false;
+			if (SHOW_EditTheme) SHOW_EditTheme = false;
 		}
 
 		//wf
-		//if (!SHOW_MainMenuBar) SHOW_MainMenuBar = true;
+		if (!SHOW_MainMenuBar) SHOW_MainMenuBar = true;
 	}
 
 	// layout
@@ -5831,7 +5846,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	else if (name == bModePalettePreset.getName())
 	{
 		bModeBundlePreset = !bModePalettePreset;
-	}
+}
 #endif
 
 	//----
@@ -5991,6 +6006,15 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 					color_Picked.set(color_2_Range.get());
 				}
 			}
+
+			//TODO:
+			//textInput_New = name_TARGET[0];//set
+
+			int i = last_Index_Theory_PickPalette;
+			if (i < NUM_COLOR_THEORY_TYPES_G1) 
+				name_Theory = theory_Types_G1[i].getName();
+			else if (i > NUM_COLOR_THEORY_TYPES_G1 && i < NUM_COLOR_THEORY_TYPES_G1 + NUM_COLOR_THEORY_TYPES_G2)
+				name_Theory = types_Theory_G2[i- NUM_COLOR_THEORY_TYPES_G1].getName();
 
 		}
 	}
@@ -7382,6 +7406,9 @@ void ofxColorManager::preset_Load(std::string p, bool absolutePath)
 	if (DEMO1_Enable || SHOW_About) myDEMO1.reStart();
 	if (DEMO5_Enable || SHOW_About) myDEMO5.start();
 	//tweenD = 1;
+
+	//TODO:
+	textInput_New = name_TARGET[0];//set
 }
 
 //--------------------------------------------------------------

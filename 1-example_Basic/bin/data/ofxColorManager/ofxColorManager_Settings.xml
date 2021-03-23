@@ -1,0 +1,77 @@
+{
+    "ofxColorManager": {
+        "DEMO": {
+            "Alpha_1": "0.681",
+            "Alpha_Spheres": "0.839",
+            "Auto_Trig": "0",
+            "Enable_DEMO_Bubbles": "0",
+            "Enable_DEMO_Spheres": "0",
+            "Frequency": "0.319",
+            "Speed": "0.569",
+            "Zoom": "0.316"
+        },
+        "Engines": {
+            "Amnt_Colors_Thy": "7",
+            "Analogue_Spread": "0.191",
+            "Color_1": "0.996078, 0.996078, 0.996078, 1",
+            "Color_2": "0.172549, 0.0156863, 0.254902, 1",
+            "Last_Range_Index": "6",
+            "Last_Theory_Index": "4",
+            "Preset_Index": "49",
+            "SCENE": "1"
+        },
+        "ExportColors": {
+            "Auto_Export": "1",
+            "ExportPath": "",
+            "LINK_FILE": "0",
+            "LINK_TCP": "1",
+            "Path__bin_data": "1"
+        },
+        "LIBRARY": {
+            "Columns_Max": "7",
+            "Mode_Cards": "0",
+            "Mode_Paging": "1",
+            "Page": "5",
+            "Responsive": "0",
+            "Rows_Amnt": "26",
+            "Scale": "1",
+            "Scale_Rg": "1",
+            "Size_Lib": "21"
+        },
+        "PALETTE": {
+            "Fit": "1",
+            "Max_Rows": "10",
+            "Responsive": "0",
+            "Scale_Pt": "1",
+            "Size_Plt": "25"
+        },
+        "PANELS": {
+            "AutoScroll": "1",
+            "DEMO": "0",
+            "EDITOR": "0",
+            "EXPORT": "1",
+            "GRADIENT": "0",
+            "GUI_MAIN": "1",
+            "KIT": "1",
+            "LIBRARY": "0",
+            "LOVERS": "0",
+            "MINI": "0",
+            "PALETTE": "1",
+            "PANELS": "1",
+            "PICKER": "0",
+            "PICTURE": "0",
+            "PRESETS": "1",
+            "RANGE": "0",
+            "THEORY": "0"
+        },
+        "PICKER": {
+            "BRG": "0",
+            "B_Power": "1",
+            "COLOR": "0.996078, 0.996078, 0.996078, 1",
+            "HUE": "1",
+            "H_Power": "1",
+            "SAT": "0",
+            "S_Power": "0.273"
+        }
+    }
+}

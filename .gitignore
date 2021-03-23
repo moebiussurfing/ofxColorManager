@@ -554,14 +554,3 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
-example_Basic/bin/data/settings/panels/panels_positions.json
-example_Basic/bin/data/settings/panels/group_states.json
-example_Basic/bin/data/settings/panels/control_positions.json
-example_Basic/bin/data/settings/ofxColorManager.xml
-example_Basic/bin/data/liveColors.json
-*.xml
-*.json
-*.json
-*.json
-*.xml
-example_Basic/bin/imgui.ini
