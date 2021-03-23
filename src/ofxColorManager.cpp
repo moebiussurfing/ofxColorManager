@@ -4507,7 +4507,7 @@ void ofxColorManager::gui_Gradient()
 		else _w = ImGui::GetWindowContentRegionWidth() - 3 * _spc;
 		_w50 = _w * 0.5;
 		_w20 = _w * 0.2;
-		float _w33 = -75;
+		float _w33 = -35;
 
 		_h = BUTTON_BIG_HEIGHT;
 
