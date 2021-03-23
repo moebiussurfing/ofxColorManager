@@ -108,6 +108,88 @@ void ofxColourLoversHelper::drawImGuiMain()
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, PANEL_WIDGETS_HEIGHT));
 
+	char tab1[32];
+	strncpy(tab1, textInput_temp1.c_str(), sizeof(tab1));
+	tab1[sizeof(tab1) - 1] = 0;
+
+	//----
+
+	//static bool open_popup = false;
+	//open_popup = MODE_Search;
+
+	if (MODE_Search)
+	{
+		static bool auto_resize2 = true;
+		ImGuiWindowFlags flagsw2;
+		flagsw2 = auto_resize2 ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
+
+		//flagsw2 |= flagsWindows;
+		//flagsw2 |= ImGuiWindowFlags_NoTitleBar;
+		//flagsw2 |= ImGuiWindowFlags_NoBackground;
+		//flagsw2 |= ImGuiWindowFlags_NoDecoration;
+
+		if (ofxImGui::BeginWindow("COLOUR-LOVERS QUERY", mainSettings, flagsw2))
+		{
+			float _h = BUTTON_BIG_HEIGHT;
+			float _hb = _h * 0.5;
+			float _w100 = ImGui::GetContentRegionAvail().x;
+
+			ImGui::PushItemWidth(-1);
+
+			// search
+			ImGui::Text("Type Keyword:");
+
+			if (ImGui::InputText("", tab1, IM_ARRAYSIZE(tab1), ImGuiInputTextFlags_EnterReturnsTrue))
+			{
+				textInput_temp1 = ofToString(tab1);
+				ofLogNotice(__FUNCTION__) << "input: " << textInput_temp1;
+
+				if (textInput_temp1 != textInput_temp1_PRE)
+				{
+					textInput_temp1_PRE = textInput_temp1;
+				}
+			}
+
+			//--
+
+			//TODO:
+			//to disable all other key commands
+			bool b = bTextInputActive;
+			bTextInputActive = ImGui::IsItemActive();
+			//changed
+			if (bTextInputActive != b) ofLogNotice(__FUNCTION__) << "TextInput : " << (bTextInputActive ? "ACTIVE" : "DISABLED");
+
+			//--
+
+			//blink when a new preset is editing
+			float freq = 0.15;//speed freq
+			float min = 0.20;
+			float max = 0.80;
+			float a = ofMap(glm::sin(freq * ofGetFrameNum()), -1, 1, min, max);
+			ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.5f, 0.0f, 0.0f, a));
+
+			if (ImGui::Button("SEARCH", ImVec2(_w100, _hb * 2)))
+			{
+				ofLogNotice(__FUNCTION__) << "searchPalettes: " << textInput_temp1_PRE;
+
+				ofxColourLovers::searchPalettes(textInput_temp1_PRE, amountResults);
+
+				lastSearch = textInput_temp1_PRE;
+			}
+			ImGui::PopItemWidth();
+
+			ImGui::PushItemWidth(-65);
+			ImGui::SliderInt("Amnt Max", &amountResults, 25, 100);
+			ImGui::PopItemWidth();
+
+			ImGui::PopStyleColor();
+
+		}
+		ofxImGui::EndWindow(mainSettings);
+	}
+
+	//----
+
 	if (ofxImGui::BeginWindow("COLOUR-LOVERS", mainSettings, flags))
 	{
 		float _h = BUTTON_BIG_HEIGHT;
@@ -119,17 +201,22 @@ void ofxColourLoversHelper::drawImGuiMain()
 
 		//-
 
+		ofxSurfingHelpers::AddBigToggle(MODE_Search, _w100, _h);
+
+		//-
+
+#ifndef USE_FLOATING_SEARCH_WINDOW_WORAROUND
 		if (ImGui::CollapsingHeader("HTTP SEARCH"))
 		{
+			//open_popup = true;
+
 			ImGui::Dummy(ImVec2(0, 5));
+
+			//----
 
 			// search
 			ImGui::Text("Type Keyword:");
 			//std::string textInput_temp1 = "";
-
-			char tab1[32];
-			strncpy(tab1, textInput_temp1.c_str(), sizeof(tab1));
-			tab1[sizeof(tab1) - 1] = 0;
 
 			if (ImGui::InputText("", tab1, IM_ARRAYSIZE(tab1)))
 			{
@@ -200,13 +287,16 @@ void ofxColourLoversHelper::drawImGuiMain()
 
 				lastSearch = textInput_temp3;
 				ofxColourLovers::getPalette(lastSearch);
-			}
+	}
 #endif
+			//ImGui::Dummy(ImVec2(0, 2));
 
-			ImGui::Dummy(ImVec2(0, 2));
-
+			ImGui::PushItemWidth(-40);
 			ImGui::SliderInt("Amnt Max", &amountResults, 25, 100);
-		}
+			ImGui::PopItemWidth();
+}
+		else open_popup = false;
+#endif
 
 		//----
 
@@ -437,34 +527,34 @@ void ofxColourLoversHelper::drawImGuiMain()
 			ImGuiColorEditFlags_NoPicker |
 			ImGuiColorEditFlags_NoTooltip;
 
-        //macOS
-        if (palettes.size()>0){
-        vector<ofColor> p =palettes[currPalette].colours;
-//        const auto p = palettes[currPalette].colours;
-//         auto p = palettes[currPalette].colours;
-        
-        //myPalette_BACK
+		//macOS
+		if (palettes.size() > 0) {
+			vector<ofColor> p = palettes[currPalette].colours;
+			//        const auto p = palettes[currPalette].colours;
+			//         auto p = palettes[currPalette].colours;
 
-		// fit width
-		float wb = (_w100 / (int)p.size());// -_spc;
-		float hb = BUTTON_BIG_HEIGHT;
+					//myPalette_BACK
 
-		for (int n = 0; n < p.size(); n++)
-		{
-			ImGui::PushID(n);
+					// fit width
+			float wb = (_w100 / (int)p.size());// -_spc;
+			float hb = BUTTON_BIG_HEIGHT;
 
-			// fit width
-			if (n != 0) ImGui::SameLine(0, 0);
+			for (int n = 0; n < p.size(); n++)
+			{
+				ImGui::PushID(n);
 
-			// box colors
-			if (ImGui::ColorButton("##paletteLover", p[n], colorEdiFlags, ImVec2(wb, hb))) {}
+				// fit width
+				if (n != 0) ImGui::SameLine(0, 0);
 
-			ImGui::PopID();
+				// box colors
+				if (ImGui::ColorButton("##paletteLover", p[n], colorEdiFlags, ImVec2(wb, hb))) {}
+
+				ImGui::PopID();
+			}
 		}
-        }
 		//-
 
-		if (ImGui::Button("Randomize", ImVec2(_w100, 2*_hb)))
+		if (ImGui::Button("Randomize", ImVec2(_w100, 2 * _hb)))
 		{
 			randomPalette();
 
@@ -1041,7 +1131,7 @@ void ofxColourLoversHelper::setup()
 	// }
 
 	ofxSurfingHelpers::loadGroup(params, path_AppSettings);
-			}
+	}
 
 
 //--------------------------------------------------------------
@@ -1051,7 +1141,7 @@ void ofxColourLoversHelper::setup(glm::vec2 _position, glm::vec2 _size)
 	size = _size;
 
 	setup();
-		}
+}
 
 //--------------------------------------------------------------
 void ofxColourLoversHelper::setPosition(glm::vec2 _position, glm::vec2 _size)
@@ -1192,7 +1282,7 @@ void ofxColourLoversHelper::build_Gui_Lab()
 
 			currX += currW;
 }
-	}
+}
 
 	gui_Lab->getRect()->setHeight(palettes.size() * (cdim + 4) + startY);
 	gui_Lab->setSnapping(0);
@@ -1225,10 +1315,15 @@ void ofxColourLoversHelper::update()
 }
 
 //--------------------------------------------------------------
-void ofxColourLoversHelper::draw()
+bool ofxColourLoversHelper::draw()
 {
+	bCheckMouseOverTextInputLovers = bTextInputActive;
+
+	//--
+
 #ifdef USE_OFX_IM_GUI
 	if (bIsVisible)	drawImGuiMain();
+	else bCheckMouseOverTextInputLovers = false;
 #endif
 
 	////draw raw palettes without gui
@@ -1237,6 +1332,8 @@ void ofxColourLoversHelper::draw()
 	//         palettes[i].draw(500,25*i,500,20);
 	//    }
 	//}
+
+	return bCheckMouseOverTextInputLovers;
 }
 
 #ifdef USE_OFX_UI
@@ -1360,7 +1457,7 @@ void ofxColourLoversHelper::Changed_Gui(ofxUIEventArgs &e)
 		{
 			ofLogWarning(__FUNCTION__) << "OFX_UI_TEXTINPUT_ON_UNFOCUS";
 			ENABLER_Keys = true;
-		}
+}
 
 		ofLogWarning(__FUNCTION__) << "ENABLER_Keys: " << (ENABLER_Keys ? "TRUE" : "FALSE");
 	}
@@ -1473,9 +1570,9 @@ void ofxColourLoversHelper::refreshPalette()
 				btn->setDrawOutline(false);
 			}
 }
-	}
+}
 #endif
-	}
+}
 
 //--------------------------------------------------------------
 void ofxColourLoversHelper::randomPalette()
@@ -1888,7 +1985,8 @@ void ofxColourLoversHelper::setPalette_BACK_Name(std::string &n)
 //--------------------------------------------------------------
 void ofxColourLoversHelper::keyPressed(ofKeyEventArgs &eventArgs)
 {
-	if (ENABLER_Keys) {
+	if (ENABLER_Keys && !bCheckMouseOverTextInputLovers)
+	{
 		const int key = eventArgs.key;
 
 		// modifiers
@@ -1906,7 +2004,7 @@ void ofxColourLoversHelper::keyPressed(ofKeyEventArgs &eventArgs)
 			setToggleVisible();
 		}
 
-		//browse
+		// browse
 		if (key == OF_KEY_DOWN /*|| key == ' ' && !mod_CONTROL*/)
 		{
 			nextPalette();
@@ -2014,7 +2112,7 @@ void ofxColourLoversHelper::exit()
 #endif
 
 	ofRemoveListener(ColourLoveEvent::events, this, &ofxColourLoversHelper::Changed_ColourLovers);
-}
+	}
 
 //--------------------------------------------------------------
 ofxColourLoversHelper::~ofxColourLoversHelper()

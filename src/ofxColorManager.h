@@ -821,6 +821,10 @@ private:
 	bool mouseLockedByGui;
 	bool mouseOverGui_PRE;
 	bool bCheckMouseOverTextInput = true;//flag to return mouse over any gui panel or over text input only!
+	bool bCheckMouseOverTextInputLovers = true;//flag to return mouse over any gui panel or over text input only!
+	bool bLockAllKeysByGui;
+	bool bBlockKeys;
+
 	bool guiVisible;
 
 	void setupGui();

@@ -25,6 +25,8 @@
 #define BUTTON_SLIM_HEIGHT 20
 //#define BUTTON_SLIM_HEIGHT 14
 //
+#define USE_FLOATING_SEARCH_WINDOW_WORAROUND
+
 //----
 
 #include "ofxSurfingHelpers.h"
@@ -49,7 +51,8 @@ public:
 
 	void setup(); 
 	void update();
-    void draw();
+    bool draw();
+    //void draw();
     void exit();
     void windowResized(int w, int h);
 
@@ -58,6 +61,7 @@ private:
 	// shows advancded panels to tweak layout or workflow behaviour
 
 private:
+	ofParameter<bool> MODE_Search{ "API SEARCH", false};
 	ofParameter<bool> bFavorites{ "FAVORITES", false };
 	ofParameter<bool> bHistory{ "HISTORY", false };
 	ofEventListener listener_bFavorites;
@@ -247,6 +251,9 @@ private:
 	
 	vector<std::string> pNames;
 	std::string pName;
+	
+	bool bCheckMouseOverTextInputLovers = false;
+	bool bTextInputActive = false;
 
 public:
     void keyPressed( ofKeyEventArgs& eventArgs);
