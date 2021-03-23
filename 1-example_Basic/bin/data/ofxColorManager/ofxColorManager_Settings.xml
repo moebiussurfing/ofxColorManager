@@ -7,17 +7,17 @@
             "Enable_DEMO_Bubbles": "0",
             "Enable_DEMO_Spheres": "1",
             "Frequency": "0.319",
-            "Speed": "0.569",
-            "Zoom": "0.316"
+            "Speed": "0.573",
+            "Zoom": "0.29"
         },
         "Engines": {
-            "Amnt_Colors_Thy": "7",
-            "Analogue_Spread": "0.191",
-            "Color_1": "0.729412, 0.447059, 0.219608, 1",
-            "Color_2": "0.588235, 0.588235, 0.588235, 1",
+            "Amnt_Colors_Thy": "10",
+            "Analogue_Spread": "0.527",
+            "Color_1": "0, 0.619608, 0.372549, 1",
+            "Color_2": "0.929412, 0.878431, 0.584314, 1",
             "Last_Range_Index": "6",
-            "Last_Theory_Index": "9",
-            "Preset_Index": "51",
+            "Last_Theory_Index": "1",
+            "Preset_Index": "24",
             "SCENE": "1"
         },
         "ExportColors": {
@@ -49,14 +49,14 @@
         },
         "PANELS": {
             "AutoScroll": "1",
-            "DEMO": "1",
+            "DEMO": "0",
             "EDITOR": "1",
-            "EXPORT": "1",
+            "EXPORT": "0",
             "GRADIENT": "0",
             "GUI_MAIN": "1",
             "KIT": "1",
             "LIBRARY": "1",
-            "LOVERS": "0",
+            "LOVERS": "1",
             "MINI": "0",
             "PALETTE": "1",
             "PANELS": "1",
@@ -64,12 +64,12 @@
             "PICTURE": "0",
             "PRESETS": "1",
             "RANGE": "0",
-            "THEORY": "1"
+            "THEORY": "0"
         },
         "PICKER": {
             "BRG": "0",
             "B_Power": "1",
-            "COLOR": "0.729412, 0.447059, 0.219608, 1",
+            "COLOR": "0.0117647, 0.0352941, 0.0196078, 1",
             "HUE": "1",
             "H_Power": "1",
             "SAT": "0",

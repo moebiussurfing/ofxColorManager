@@ -3281,27 +3281,24 @@ void ofxColorManager::gui_Advanced()
 
 	if (ofxImGui::BeginWindow("ADVANCED", mainSettings, flags))
 	{
+		ImGui::PushItemWidth(-100);
+
 		ofxImGui::AddParameter(SHOW_MainMenuBar);
 		ImGui::Checkbox("Show About", &SHOW_About);
-		ofxImGui::AddParameter(SHOW_Name);
 		ImGui::Checkbox("Edit Theme", &SHOW_EditTheme);
-
-		ImGui::PushItemWidth(-100);
+		ofxImGui::AddParameter(SHOW_Name);
 		ofxImGui::AddStepper(fontSizeParam);
 		ofxImGui::AddStepper(fontSizeBigParam);
-		ImGui::PopItemWidth();
-
 		//ofxImGui::AddStepper(offsetx);
 		//ofxImGui::AddStepper(offsety);
-
 		//ImGui::SameLine();
-
 		ImGui::Separator();
 		ImGui::Text("DEBUG");
-
 		ofxImGui::AddParameter(ENABLE_keys);
 		bool bBlockKeys = !(ENABLE_keys && !bTextInputActive);
 		ImGui::Checkbox("Locked Keys", &bBlockKeys);
+		
+		ImGui::PopItemWidth();
 	}
 	ofxImGui::EndWindow(mainSettings);
 
@@ -4510,6 +4507,7 @@ void ofxColorManager::gui_Gradient()
 		else _w = ImGui::GetWindowContentRegionWidth() - 3 * _spc;
 		_w50 = _w * 0.5;
 		_w20 = _w * 0.2;
+		float _w33 = -75;
 
 		_h = BUTTON_BIG_HEIGHT;
 
@@ -4532,7 +4530,6 @@ void ofxColorManager::gui_Gradient()
 			ofxSurfingHelpers::AddBigToggle(gradientEngine.SHOW_CurveEditor, _w, _h / 2);
 
 			ImGui::PushItemWidth(_w);
-
 			if (ImGui::Button(gradientEngine.bResetCurve.getName().c_str(), ImVec2(_w, _h)))
 			{
 				gradientEngine.bResetCurve = true;
@@ -4541,7 +4538,9 @@ void ofxColorManager::gui_Gradient()
 
 			ImGui::Dummy(ImVec2(0, 5));
 
+			ImGui::PushItemWidth(_w33);
 			ofxImGui::AddParameter(gradientEngine.pickIn);
+			ImGui::PopItemWidth();
 
 			//ImGui::PushItemWidth(_w20);
 
@@ -4567,7 +4566,10 @@ void ofxColorManager::gui_Gradient()
 		if (ImGui::CollapsingHeader("Advanced", _flagw))
 		{
 			ofxImGui::AddParameter(gradientEngine.gradient_HardMode);
+					
+			ImGui::PushItemWidth(_w33);
 			ofxImGui::AddParameter(gradientEngine.expTweak);
+			ImGui::PopItemWidth();
 
 			//-
 
@@ -4584,8 +4586,7 @@ void ofxColorManager::gui_Gradient()
 
 			if (ImGui::CollapsingHeader("Curve TEST"))
 			{
-				ImGui::PushItemWidth(_w50);
-
+				ImGui::PushItemWidth(_w33);
 				ofxImGui::AddParameter(gradientEngine.bTEST_Enable);
 				//ImGui::Checkbox("Enable", &TEST_Mode); 
 				if (gradientEngine.bTEST_Enable)
@@ -4594,7 +4595,6 @@ void ofxColorManager::gui_Gradient()
 					ImGui::Checkbox("LFO", &gradientEngine.bTEST_LFO_Mode);
 				}
 				ImGui::SliderFloat("Speed", &gradientEngine.TEST_Speed, 0.0f, 1.0f);
-
 				ImGui::PopItemWidth();
 			}
 
