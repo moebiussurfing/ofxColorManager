@@ -4658,7 +4658,7 @@ void ofxColorManager::gui_Demo()
 		float _w100 = ImGui::GetWindowContentRegionWidth();
 		float _w99 = _w100 - _spc;
 		float _w50 = _w99 * 0.75;
-		float _w33 = -70;
+		float _w33 = -75;
 		float _h = BUTTON_BIG_HEIGHT;
 
 		//-
@@ -6314,11 +6314,11 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		//if (SHOW_Demos) DEMO2_Svg.DEMO2_Edit = true;
 		DEMO2_Svg.DEMO2_Edit = SHOW_Demos;
 
-		// spheres
-		myDEMO5.DEMO5_Cam = DEMO5_Enable;
-		//myDEMO5.DEMO5_Cam = false;
-		//if (SHOW_Demos) myDEMO5.DEMO5_Cam = true;
-		myDEMO5.setEnableMouseCamera(myDEMO5.DEMO5_Cam);
+		//// spheres
+		//myDEMO5.DEMO5_Cam = DEMO5_Enable;
+		////myDEMO5.DEMO5_Cam = false;
+		////if (SHOW_Demos) myDEMO5.DEMO5_Cam = true;
+		//myDEMO5.setEnableMouseCamera(myDEMO5.DEMO5_Cam);
 	}
 
 	//---

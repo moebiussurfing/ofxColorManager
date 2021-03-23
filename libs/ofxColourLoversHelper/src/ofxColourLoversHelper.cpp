@@ -139,7 +139,8 @@ void ofxColourLoversHelper::drawImGuiMain()
 			strncpy(tab1, textInput_temp1.c_str(), sizeof(tab1));
 			tab1[sizeof(tab1) - 1] = 0;
 
-			if (ImGui::InputText("", tab1, IM_ARRAYSIZE(tab1), ImGuiInputTextFlags_EnterReturnsTrue))
+			//if (ImGui::InputText("", tab1, IM_ARRAYSIZE(tab1)), ImGuiInputTextFlags_EnterReturnsTrue))
+			if (ImGui::InputText("", tab1, IM_ARRAYSIZE(tab1)))
 			{
 				textInput_temp1 = ofToString(tab1);
 				ofLogNotice(__FUNCTION__) << "input: " << textInput_temp1;

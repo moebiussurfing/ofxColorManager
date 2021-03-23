@@ -3,10 +3,10 @@
         "Alpha": "0.5",
         "Blend_Type": "4",
         "Edit_DEMO_Svg": "0",
-        "Enable_DEMO_Svg": "1",
+        "Enable_DEMO_Svg": "0",
         "Enable_Keys": "0",
         "Enable_Mask": "0",
         "SVG_File": "1",
-        "Scale": "0.775"
+        "Scale": "0.75"
     }
 }
