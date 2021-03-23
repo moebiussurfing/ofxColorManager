@@ -4,7 +4,10 @@ This **openFrameworks** add-on is a **kit of Engines and Tools** to design prese
 
 ## Screenshot
 ![image](/readme_images/Capture.JPG?raw=true "image")
+
+## Video
 [![https://github.com/moebiussurfing/ofxColorManager/blob/develop/readme_images/Capture.JPG](http://img.youtube.com/vi/oSvGwpbWEuc/0.jpg)](http://www.youtube.com/watch?v=oSvGwpbWEuc "VIDEO")
+## Video
 [![VIDEO](https://github.com/moebiussurfing/ofxColorManager/blob/develop/readme_images/Capture.JPG)](http://www.youtube.com/watch?v=oSvGwpbWEuc)
 
 ## Engines:  
