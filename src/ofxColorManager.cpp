@@ -886,6 +886,8 @@ void ofxColorManager::setup()
 	//params_Palette2.add(bAuto_Build_Palette);
 	//params_Palette2.add(bAutoResizePalette);
 	params_AppState.add(params_Palette2);
+	params_AppState.add(fontSizeParam);
+	params_AppState.add(fontSizeBigParam);
 
 	//---
 
@@ -945,6 +947,8 @@ void ofxColorManager::setup()
 	params_control.add(bModeBundlePreset);
 	params_control.add(bModePalettePreset);
 #endif
+	params_control.add(fontSizeParam);
+	params_control.add(fontSizeBigParam);
 
 	ofAddListener(params_control.parameterChangedE(), this, &ofxColorManager::Changed_Controls);
 
@@ -2628,7 +2632,7 @@ void ofxColorManager::gui_Library()
 		ImGui::SameLine();
 
 		// 3. index/total
-		s = "  " + ofToString(last_Lib_Index) + "/" + ofToString(lib_TotalColors - 1);
+		s = "    " + ofToString(last_Lib_Index) + " / " + ofToString(lib_TotalColors - 1);
 		ImGui::Text(s.c_str());
 
 		// 2. color name
@@ -3087,7 +3091,8 @@ void ofxColorManager::gui_Picker()
 			if (default_wheel) _flagw = ImGuiTreeNodeFlags_DefaultOpen;
 			else _flagw = ImGuiTreeNodeFlags_None;
 
-			if (ImGui::CollapsingHeader("WHEEL", _flagw))
+			if (ImGui::TreeNodeEx("WHEEL", _flagw))
+				//if (ImGui::CollapsingHeader("WHEEL", _flagw))
 			{
 				// 1.1 circled
 				_flags =
@@ -3111,6 +3116,8 @@ void ofxColorManager::gui_Picker()
 					bChg_Pick = true;
 				}
 				ImGui::PopItemWidth();
+
+				ImGui::TreePop();
 			}
 
 			//--
@@ -3119,8 +3126,8 @@ void ofxColorManager::gui_Picker()
 
 			if (!default_wheel) _flagw = ImGuiTreeNodeFlags_DefaultOpen;
 			else _flagw = ImGuiTreeNodeFlags_None;
-
-			if (ImGui::CollapsingHeader("SQUARE", _flagw))
+			if (ImGui::TreeNodeEx("SQUARE", _flagw))
+				//if (ImGui::CollapsingHeader("SQUARE", _flagw))
 			{
 				_flags =
 					ImGuiColorEditFlags_NoSmallPreview |
@@ -3142,6 +3149,8 @@ void ofxColorManager::gui_Picker()
 					bChg_Pick = true;
 				}
 				ImGui::PopItemWidth();
+
+				ImGui::TreePop();
 			}
 		}
 
@@ -3276,6 +3285,12 @@ void ofxColorManager::gui_Advanced()
 		ImGui::Checkbox("Show About", &SHOW_About);
 		ofxImGui::AddParameter(SHOW_Name);
 		ImGui::Checkbox("Edit Theme", &SHOW_EditTheme);
+
+		ImGui::PushItemWidth(-100);
+		ofxImGui::AddStepper(fontSizeParam);
+		ofxImGui::AddStepper(fontSizeBigParam);
+		ImGui::PopItemWidth();
+
 		//ofxImGui::AddStepper(offsetx);
 		//ofxImGui::AddStepper(offsety);
 
@@ -3882,7 +3897,7 @@ void ofxColorManager::gui_InputText()
 
 	// a. fit size to text width
 	float _ww = _wt.x + 130;
-	float _hh = fontBigSize + _spc;
+	float _hh = fontSizeBigParam + _spc;
 
 	//-
 
@@ -4610,34 +4625,40 @@ void ofxColorManager::gui_Demo()
 		float _w100 = ImGui::GetWindowContentRegionWidth();
 		float _w99 = _w100 - _spc;
 		float _w50 = _w99 * 0.75;
+		float _w33 = -75;
+		float _h = BUTTON_BIG_HEIGHT;
 
 		//-
 
 		//demo bubbles
-		ofxSurfingHelpers::AddBigToggle(DEMO1_Enable, _w100);
+		ofxSurfingHelpers::AddBigToggle(DEMO1_Enable, _w100, _h);
 		if (DEMO1_Enable)
 		{
-			ImGui::PushItemWidth(_w50);
+			ImGui::PushItemWidth(_w33);
 			ofxImGui::AddParameter(DEMO_Alpha);
 			ofxImGui::AddParameter(DEMO_Auto);
 			ofxImGui::AddParameter(DEMO_Timer);
-			ImGui::PopItemWidth();
-
 			if (ofxImGui::AddParameter(DEMO_Cam))
 			{
 				myDEMO1.setEnableMouseCamera(DEMO_Cam);
 			}
+			if (ImGui::Button("Reset Camera")) {
+				myDEMO1.resetCamera();
+			}
+			ImGui::PopItemWidth();
 		}
+
+		//-
 
 		ImGui::Dummy(ImVec2(0, 2));
 		ImGui::Separator();
 		ImGui::Dummy(ImVec2(0, 2));
 
-		//demo spheres
-		ofxSurfingHelpers::AddBigToggle(DEMO5_Enable, _w100);
+		// demo spheres
+		ofxSurfingHelpers::AddBigToggle(DEMO5_Enable, _w100, _h);
 		if (DEMO5_Enable)
 		{
-			ImGui::PushItemWidth(_w50);
+			ImGui::PushItemWidth(_w33);
 			ofxImGui::AddParameter(myDEMO5.DEMO5_Alpha);
 			ofxImGui::AddParameter(myDEMO5.DEMO5_Zoom);
 			ofxImGui::AddParameter(myDEMO5.DEMO5_Speed);
@@ -4645,6 +4666,9 @@ void ofxColorManager::gui_Demo()
 			{
 				myDEMO5.setEnableMouseCamera(myDEMO5.DEMO5_Cam);
 			}
+			if (ImGui::Button("Reset Camera")) {
+				myDEMO5.resetCamera();
+			}
 			ImGui::PopItemWidth();
 		}
 
@@ -4654,19 +4678,24 @@ void ofxColorManager::gui_Demo()
 		ImGui::Separator();
 		ImGui::Dummy(ImVec2(0, 2));
 
-		// svg demo 2
-		ofxSurfingHelpers::AddBigToggle(DEMO2_Svg.DEMO2_Enable, _w100);
+		// svg demo
+		ofxSurfingHelpers::AddBigToggle(DEMO2_Svg.DEMO2_Enable, _w100, _h);
 		if (DEMO2_Svg.DEMO2_Enable)
 		{
-			ImGui::PushItemWidth(_w50);
+			ImGui::PushItemWidth(_w33);
 			ofxImGui::AddParameter(DEMO2_Svg.DEMO2_Edit);
 			if (DEMO2_Svg.DEMO2_Edit) ofxImGui::AddParameter(DEMO2_Svg.DEMO2_Scale);
 			ofxImGui::AddParameter(DEMO2_Svg.DEMO2_Alpha);
-			ofxImGui::AddParameter(DEMO2_Svg.blendMode);
+			ofxImGui::AddStepper(DEMO2_Svg.blendMode);
+			//ofxImGui::AddParameter(DEMO2_Svg.blendMode);
 			ofxImGui::AddParameter(DEMO2_Svg.blendModeName);
-			ofxImGui::AddParameter(DEMO2_Svg.fileIndex);
+			ofxImGui::AddStepper(DEMO2_Svg.fileIndex);
+			//ofxImGui::AddParameter(DEMO2_Svg.fileIndex);
 			ofxImGui::AddParameter(DEMO2_Svg.fileIndexName);
+
+#ifdef USE_SVG_MASK
 			ofxImGui::AddParameter(DEMO2_Svg.enable_Mask);
+#endif		
 			ofxImGui::AddParameter(DEMO2_Svg.keys);
 			ImGui::PopItemWidth();
 		}
@@ -4723,23 +4752,22 @@ void ofxColorManager::setup_Gui()
 
 	//-
 
-	//float _size = 11.f;
-	//std::string _name = "telegrama_render.otf";
+	//size = 11.f;
+	//"telegrama_render.otf";
 
-	fontSize = 14;
-	std::string _name = "Ruda-Bold.ttf";
+	fontSizeParam.set("Font Size", 14, 6, 20);
+	//fontName = "Ruda-Bold.ttf";
 
-	fontBigSize = 100;
-	std::string _nameBig = "Kazesawa-Extrabold.ttf";
+	fontSizeBigParam.set("Font Big Size", 100, 20, 200);
+	//fontBigName = "Kazesawa-Extrabold.ttf";
 
 	//-
 
-	std::string _path = "assets/fonts/";//assets folder
-	customFont = gui.addFont(_path + _name, fontSize, nullptr, normalCharRanges);
-	customFontBig = gui.addFont(_path + _nameBig, fontBigSize, nullptr, normalCharRanges);
-	//customFontBig->
-	io.FontDefault = customFont;
-
+	//std::string _path = "assets/fonts/";//assets folder
+	//customFont = gui.addFont(_path + fontName, fontSizeParam, nullptr, normalCharRanges);
+	//customFontBig = gui.addFont(_path + fontBigName, fontSizeBigParam, nullptr, normalCharRanges);
+	//
+	//io.FontDefault = customFont;
 
 	// Create shadow at offset
 	//io.Fonts->TexGlyphShadowOffset = ImVec2(2, 3);
@@ -5706,6 +5734,34 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		}
 	}
 
+	// font preset name size
+#ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
+	else if (name == fontSizeParam.getName())
+	{
+		auto &io = ImGui::GetIO();
+		auto normalCharRanges = io.Fonts->GetGlyphRangesDefault();
+
+		fontName = "Ruda-Bold.ttf";
+
+		std::string _path = "assets/fonts/";//assets folder
+		customFont = gui.addFont(_path + fontName, fontSizeParam, nullptr, normalCharRanges);
+
+		io.FontDefault = customFont;
+	}
+	else if (name == fontSizeBigParam.getName())
+	{
+		auto &io = ImGui::GetIO();
+		auto normalCharRanges = io.Fonts->GetGlyphRangesDefault();
+
+		fontBigName = "Kazesawa-Extrabold.ttf";
+
+		std::string _path = "assets/fonts/";//assets folder
+		customFontBig = gui.addFont(_path + fontBigName, fontSizeBigParam, nullptr, normalCharRanges);
+	}
+#endif
+
+	//--
+
 	// advanced toggle
 	else if (name == SHOW_AdvancedLayout.getName())
 	{
@@ -5728,12 +5784,13 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			//flagsWindows |= ImGuiWindowFlags_NoDecoration;
 			//flagsWindows |= ImGuiWindowFlags_NoBackground;
 
-			if (SHOW_MainMenuBar) SHOW_MainMenuBar = false;
+			// workflow
+			//if (SHOW_MainMenuBar) SHOW_MainMenuBar = false;
 			if (SHOW_EditTheme) SHOW_EditTheme = false;
 		}
 
-		//wf
-		if (!SHOW_MainMenuBar) SHOW_MainMenuBar = true;
+		////wf
+		//if (!SHOW_MainMenuBar) SHOW_MainMenuBar = true;
 	}
 
 	// layout
@@ -5846,7 +5903,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	else if (name == bModePalettePreset.getName())
 	{
 		bModeBundlePreset = !bModePalettePreset;
-}
+	}
 #endif
 
 	//----
@@ -6011,10 +6068,10 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			//textInput_New = name_TARGET[0];//set
 
 			int i = last_Index_Theory_PickPalette;
-			if (i < NUM_COLOR_THEORY_TYPES_G1) 
+			if (i < NUM_COLOR_THEORY_TYPES_G1)
 				name_Theory = theory_Types_G1[i].getName();
 			else if (i > NUM_COLOR_THEORY_TYPES_G1 && i < NUM_COLOR_THEORY_TYPES_G1 + NUM_COLOR_THEORY_TYPES_G2)
-				name_Theory = types_Theory_G2[i- NUM_COLOR_THEORY_TYPES_G1].getName();
+				name_Theory = types_Theory_G2[i - NUM_COLOR_THEORY_TYPES_G1].getName();
 
 		}
 	}
@@ -6193,13 +6250,18 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	// demos
 	else if (name == SHOW_Demos.getName())
 	{
+		//bubbles
 		DEMO_Cam = false;
 		myDEMO1.setEnableMouseCamera(DEMO_Cam);
 
 		if (!SHOW_Demos) DEMO2_Svg.DEMO2_Edit = false;
 
+		//svg
 		DEMO2_Svg.setEnableKeys(SHOW_Demos);
+		//if (SHOW_Demos) DEMO2_Svg.DEMO2_Edit = true;
+		DEMO2_Svg.DEMO2_Edit = SHOW_Demos;
 
+		//spheres
 		myDEMO5.DEMO5_Cam = false;
 		myDEMO5.setEnableMouseCamera(myDEMO5.DEMO5_Cam);
 	}
@@ -6472,7 +6534,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 		// presets control
 		if ((!SHOW_Theory && !SHOW_Range && !SHOW_ColourLovers && !SHOW_Quantizer)
-			|| (SHOW_Presets && !SHOW_Library))
+			&& (SHOW_Presets && !SHOW_Library))
 		{
 			//browse presets
 			if (key == OF_KEY_LEFT && !mod_CONTROL)
@@ -6500,6 +6562,12 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				return;
 			}
 		}
+		else if (SHOW_Presets)
+			if (key == ' ' && !mod_CONTROL)
+			{
+				presetNext();
+				return;
+			}
 
 		//--
 

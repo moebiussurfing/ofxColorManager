@@ -62,6 +62,10 @@ public:
 		palette = &_palette;
 	}
 
+	void resetCamera() {
+		cam.reset();
+	}
+
 	void setEnableMouseCamera(bool b) {
 		ofLogNotice(__FUNCTION__);
 		if (b) {

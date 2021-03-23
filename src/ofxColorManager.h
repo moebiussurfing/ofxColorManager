@@ -31,9 +31,9 @@ TODO:
 
 #define USE_OFX_WINDOWAPP// window manager
 #define USE_DEBUG_LAYOUT // includes mouse ruler to help layout design
+//#define USE_SVG_MASK // TODO: ofxScene-SVG using masked background. 
 
-//--
-
+//--g
 // modules
 // can't be disabled now..
 #define USE_COLOR_LOVERS
@@ -807,8 +807,13 @@ private:
 	ImFont* customFontBig = nullptr;
 	ImGuiStyle *style = nullptr;
 	ImGuiWindowFlags flagsWindows;
-	float fontBigSize;
-	float fontSize;
+	//float fontBigSize;
+	//float fontSize;
+	ofParameter<int> fontSizeBigParam;
+	ofParameter<int> fontSizeParam;
+	std::string fontName;
+	std::string fontBigName;
+
 	//ofParameter<int> offsetx{ "Offset x", 0, -100, 100 };
 	//ofParameter<int> offsety{ "Offset y", -1, -100, 100 };
 

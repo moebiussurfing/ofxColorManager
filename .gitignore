@@ -7,6 +7,11 @@
 ## can exclude some sttings files
 ignore.ps1
 
+config.make
+openFrameworks-Info.plist
+Project.xcconfig
+Makefile
+
 #*.XML
 #*.xml
 #*.JSON

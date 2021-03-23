@@ -46,6 +46,11 @@ public:
 		palette = &_palette;
 	}
 
+	void resetCamera() {
+		cam.reset();
+		cam.setDistance(750);
+	}
+
 	void setEnableMouseCamera(bool b) {
 		ofLogNotice(__FUNCTION__);
 		if (b) {
