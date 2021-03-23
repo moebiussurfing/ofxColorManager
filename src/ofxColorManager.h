@@ -619,9 +619,8 @@ private:
 	std::string last_Lib_NameColor = "";
 	int last_ColorPicked_Lib;
 
-	//-
+	//-	
 
-	// color and line ofr selected widgets
 	ImVec4 borderLineColor = ImVec4(0, 0, 0, 0.7);
 	float borderLineWidth = 1.0f;
 	float labelPadding = 0.0;//label buttons
@@ -652,6 +651,9 @@ private:
 	void build_Palette_SortShift(bool bDirLeft = false);
 
 	void doRandomizeColorPicker();
+
+	// library
+	void doRandomizeColorLibrary(bool bPageOnly = false);
 
 	//--
 

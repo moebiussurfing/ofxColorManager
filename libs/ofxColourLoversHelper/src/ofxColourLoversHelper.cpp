@@ -108,10 +108,6 @@ void ofxColourLoversHelper::drawImGuiMain()
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, PANEL_WIDGETS_HEIGHT));
 
-	char tab1[32];
-	strncpy(tab1, textInput_temp1.c_str(), sizeof(tab1));
-	tab1[sizeof(tab1) - 1] = 0;
-
 	//----
 
 	//static bool open_popup = false;
@@ -138,6 +134,10 @@ void ofxColourLoversHelper::drawImGuiMain()
 
 			// search
 			ImGui::Text("Type Keyword:");
+
+			char tab1[32];
+			strncpy(tab1, textInput_temp1.c_str(), sizeof(tab1));
+			tab1[sizeof(tab1) - 1] = 0;
 
 			if (ImGui::InputText("", tab1, IM_ARRAYSIZE(tab1), ImGuiInputTextFlags_EnterReturnsTrue))
 			{
@@ -175,14 +175,65 @@ void ofxColourLoversHelper::drawImGuiMain()
 				ofxColourLovers::searchPalettes(textInput_temp1_PRE, amountResults);
 
 				lastSearch = textInput_temp1_PRE;
+
+				MODE_Search = false;//close
 			}
 			ImGui::PopItemWidth();
+			ImGui::PopStyleColor();
 
 			ImGui::PushItemWidth(-65);
-			ImGui::SliderInt("Amnt Max", &amountResults, 25, 100);
+			ImGui::SliderInt("Amnt Max", &amountResults, 10, 200);
 			ImGui::PopItemWidth();
 
-			ImGui::PopStyleColor();
+			//----
+
+			//hide to debug and simplify
+			//#define EXTEND_SEARCH
+#ifdef EXTEND_SEARCH
+			//lover
+			ImGui::Text("Lover Id:");
+			std::string textInput_temp2 = "";
+
+			char tab2[32];
+			strncpy(tab2, textInput_temp2.c_str(), sizeof(tab2));
+			tab2[sizeof(tab2) - 1] = 0;
+
+			if (ImGui::InputText("", tab2, IM_ARRAYSIZE(tab2)))
+			{
+				ofLogNotice(__FUNCTION__) << "InputText:" << ofToString(tab2);
+				textInput_temp2 = ofToString(tab2);
+				ofLogNotice(__FUNCTION__) << "textInput_temp2:" << textInput_temp2;
+
+				lastSearch = textInput_temp2;
+				std::string s = textInput_temp2;
+				ofStringReplace(s, " ", "%20");
+				ofxColourLovers::getTopPalettesForLover(s, amountResults);
+			}
+
+			//-
+
+			// palette
+			ImGui::Text("Palette Id:");
+			std::string textInput_temp3 = "";
+
+			char tab3[32];
+			strncpy(tab3, textInput_temp3.c_str(), sizeof(tab3));
+			tab3[sizeof(tab3) - 1] = 0;
+
+			if (ImGui::InputText("", tab3, IM_ARRAYSIZE(tab3)))
+			{
+				ofLogNotice(__FUNCTION__) << "InputText:" << ofToString(tab3);
+				textInput_temp3 = ofToString(tab3);
+				ofLogNotice(__FUNCTION__) << "textInput_temp2:" << textInput_temp3;
+
+				lastSearch = textInput_temp3;
+				ofxColourLovers::getPalette(lastSearch);
+			}
+#endif
+			//ImGui::Dummy(ImVec2(0, 2));
+			//ImGui::PushItemWidth(-40);
+			//ImGui::SliderInt("Amnt Max", &amountResults, 25, 100);
+			//ImGui::PopItemWidth();
 
 		}
 		ofxImGui::EndWindow(mainSettings);

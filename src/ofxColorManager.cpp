@@ -1046,7 +1046,7 @@ void ofxColorManager::update(ofEventArgs & args)
 {
 	//time spaced log
 	//if (ofGetFrameNum() % int(60 * 1.0) == 0) ofLog();
-	
+
 	bBlockKeys = !(ENABLE_keys && !bTextInputActive && !bCheckMouseOverTextInputLovers);
 
 	//workaround
@@ -2567,7 +2567,18 @@ void ofxColorManager::gui_Library()
 	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
 	flagsw |= flagsWindows;
 
-	//-
+	//--
+
+	//blink when a new preset is editing
+	float freq = 0.15;//speed freq
+	float min = 0.20;
+	float max = 0.80;
+	float a = ofMap(glm::sin(freq * ofGetFrameNum()), -1, 1, min, max);
+
+	// color and line ofr selected widgets
+	ImVec4 borderLineColor2 = ImVec4(0, 0, 0, a);
+
+	//--
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, PANEL_WIDGETS_HEIGHT));
 
@@ -2579,7 +2590,7 @@ void ofxColorManager::gui_Library()
 
 		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
 		float _w = ImGui::GetWindowContentRegionWidth() - _spc;
-		float _w50 = _w * 0.6;
+		float _w50 = _w / 2 - _spc;
 
 		int _colsSize;
 		if (lib_CardsMode) _colsSize = lib_RowSize;
@@ -2705,9 +2716,9 @@ void ofxColorManager::gui_Library()
 				ImGui::Dummy(ImVec2(0, 5));
 
 				ofxImGui::AddParameter(colorBrowser.ENABLE_keys);
-		}
+			}
 #endif
-	}
+		}
 
 		//--
 
@@ -2741,9 +2752,10 @@ void ofxColorManager::gui_Library()
 
 			//-
 
-			// page
+			// page slider
+
 			ImGui::SameLine();
-			ImGui::PushItemWidth(_w * 0.45);
+			ImGui::PushItemWidth(_w * 0.4);
 			ofxImGui::AddParameter(lib_Page_Index);//page slider selector
 			//ImGui::SliderInt("PAGE", &lib_Page_Index, 0, lib_Page_Max);//page slider selector
 			//ImGui::DragInt("PAGE", (int *)&lib_Page_Index, 0, lib_Page_Max);//collide..
@@ -2751,6 +2763,19 @@ void ofxColorManager::gui_Library()
 
 			lib_Page_Index = ofClamp(lib_Page_Index, 0, lib_Page_Index.getMax());
 		}
+
+		//TODO:
+		//float _h = BUTTON_BIG_HEIGHT;
+		//ImVec2 bb{ _w50, _h / 2 };
+		//if (ImGui::Button("Random1", bb))
+		//{
+		//	doRandomizeColorLibrary(false);
+		//}
+		//ImGui::SameLine();
+		//if (ImGui::Button("Random2", bb))
+		//{
+		//	doRandomizeColorLibrary(true);
+		//}
 
 		ImGui::Dummy(ImVec2(0, 5));
 
@@ -2775,6 +2800,7 @@ void ofxColorManager::gui_Library()
 			//--
 
 			// responsive buttons size
+
 			if (lib_Responsive_Mode)
 			{
 				ImGui::PushID(n);
@@ -2805,7 +2831,7 @@ void ofxColorManager::gui_Library()
 				if (n == last_ColorPicked_Lib)
 				{
 					bDrawBorder = true;
-					ImGui::PushStyleColor(ImGuiCol_Border, borderLineColor);
+					ImGui::PushStyleColor(ImGuiCol_Border, borderLineColor2);
 					ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, borderLineWidth + 1.5);
 				}
 
@@ -2894,7 +2920,7 @@ void ofxColorManager::gui_Library()
 		{
 			refresh_FromPicked();
 		}
-}
+	}
 
 	ofxImGui::EndWindow(mainSettings);
 
@@ -3302,7 +3328,7 @@ void ofxColorManager::gui_Advanced()
 
 		//bool bBlockKeys = !(ENABLE_keys && !bTextInputActive && !bCheckMouseOverTextInputLovers);
 		//bool bBlockKeys = !(ENABLE_keys && !bTextInputActive);
-		
+
 		ImGui::Checkbox("Locked Keys", &bBlockKeys);
 		ImGui::PopItemWidth();
 	}
@@ -3596,7 +3622,7 @@ void ofxColorManager::gui_Range()
 
 				// 2.1.2 label name 
 
-				//whick range lab type
+				//which range lab type selected
 
 				//align
 				//ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(labelPadding, 0.5f));
@@ -4632,7 +4658,7 @@ void ofxColorManager::gui_Demo()
 		float _w100 = ImGui::GetWindowContentRegionWidth();
 		float _w99 = _w100 - _spc;
 		float _w50 = _w99 * 0.75;
-		float _w33 = -75;
+		float _w33 = -70;
 		float _h = BUTTON_BIG_HEIGHT;
 
 		//-
@@ -4897,7 +4923,7 @@ bool ofxColorManager::draw_Gui()
 				{
 					bCheckMouseOverTextInputLovers = colourLoversHelper.draw();
 				}
-				else 
+				else
 				{
 					bCheckMouseOverTextInputLovers = false;
 				}
@@ -4975,9 +5001,9 @@ bool ofxColorManager::draw_Gui()
 
 	//-
 
-	bLockAllKeysByGui = 
-		ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow) && 
-		bTextInputActive && 
+	bLockAllKeysByGui =
+		ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow) &&
+		bTextInputActive &&
 		bCheckMouseOverTextInputLovers;
 
 	return bLockAllKeysByGui;
@@ -6306,7 +6332,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	//{
 	//	if (bLock_palette) bAuto_Build_Palette = false;
 	//}
-}
+	}
 
 //--------------------------------------------------------------
 void ofxColorManager::Changed_Range(ofAbstractParameter &e)
@@ -6887,12 +6913,11 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 		//-----
 
-		// library Pantone
+		// library 
+		// Pantone
 
 		if (SHOW_Library)
 		{
-			//if (!SHOW_Presets)
-			{
 				if (key == OF_KEY_RIGHT && !mod_CONTROL)
 				{
 					// index
@@ -6931,7 +6956,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 					if (lib_Page_Index != pag) lib_Page_Index = pag;
 				}
 
-				if (key == OF_KEY_DOWN && !mod_CONTROL)
+				else if (key == OF_KEY_DOWN && !mod_CONTROL)
 				{
 					// index
 					int n = last_ColorPicked_Lib;
@@ -7007,8 +7032,13 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 					color_Picked = ofColor(palette_Lib_Cols[n]);
 				}
 
-				if (key == OF_KEY_RETURN && !mod_CONTROL)//random a color
+				//TODO:
+				//crash
+				else if (key == OF_KEY_RETURN && !mod_CONTROL)//random a color
 				{
+					//doRandomizeColorLibrary(false);
+
+					doRandomizeColorLibrary();
 					int n = ofRandom(0, lib_TotalColors);
 					n = ofClamp(n, 0, lib_TotalColors - 1);
 					last_ColorPicked_Lib = n;
@@ -7024,8 +7054,10 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 					if (lib_Page_Index != pag) lib_Page_Index = pag;
 				}
 
-				if (key == OF_KEY_RETURN && mod_CONTROL)//random a color from current page
+				else if (key == OF_KEY_RETURN && mod_CONTROL)//random a color from current page
 				{
+					//doRandomizeColorLibrary(true);
+
 					int n = ofRandom(0, lib_Page_NumColors);
 					n = ofClamp(n, 0, lib_Page_NumColors - 1);
 					n = n + lib_Page_NumColors * lib_Page_Index;
@@ -7041,7 +7073,6 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 					int pag = n / lib_Page_NumColors;
 					if (lib_Page_Index != pag) lib_Page_Index = pag;
 				}
-			}
 		}
 
 		//----
@@ -8650,3 +8681,44 @@ void ofxColorManager::ofxColorManager_ShowAboutWindow(bool* p_open)
 //		if (v[i].z != 0)
 //			d->AddCircleFilled(V(v[i].x, v[i].y), W*.8 / v[i].z, ImColor(v[i].i > 102 ? 0.f : 1.f, v[i].i < 102 ? 0.f : 1.f, 3.f - v[i].z*2.5f, 1.f));
 //}
+
+//TODO:
+//crash
+//--------------------------------------------------------------
+void ofxColorManager::doRandomizeColorLibrary(bool bPageOnly)
+{
+	//if (bPageOnly == true)
+	//{
+	//	int n = ofRandom(0, lib_Page_NumColors);
+	//	n = ofClamp(n, 0, lib_Page_NumColors - 1);
+	//	n = n + lib_Page_NumColors * lib_Page_Index;
+	//	last_ColorPicked_Lib = n;
+	//	last_Lib_Index = n;
+	//	// color name
+	//	if (n < palette_Lib_Names.size())
+	//	{
+	//		last_Lib_NameColor = palette_Lib_Names[n];
+	//	}
+	//	color_Picked = ofColor(palette_Lib_Cols[n]);
+	//	// go to page
+	//	int pag = n / lib_Page_NumColors;
+	//	if (lib_Page_Index != pag) lib_Page_Index = pag;
+	//}
+	//else
+	//{
+	//	doRandomizeColorLibrary();
+	//	int n = ofRandom(0, lib_TotalColors);
+	//	n = ofClamp(n, 0, lib_TotalColors - 1);
+	//	last_ColorPicked_Lib = n;
+	//	last_Lib_Index = n;
+	//	// color name
+	//	if (n < palette_Lib_Names.size())
+	//	{
+	//		last_Lib_NameColor = palette_Lib_Names[n];
+	//	}
+	//	color_Picked = ofColor(palette_Lib_Cols[n]);
+	//	// go to page
+	//	int pag = n / lib_Page_NumColors;
+	//	if (lib_Page_Index != pag) lib_Page_Index = pag;
+	//}
+};
