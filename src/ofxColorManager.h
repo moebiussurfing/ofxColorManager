@@ -483,7 +483,7 @@ private:
 
 	// range
 private:
-	void setup_Range();
+	void setupRange();
 	void generate_Range(ofColor col1, ofColor col2);
 	bool bRange_Intitiated = false;
 	void refresh_Range_AutoUpdate();
@@ -572,7 +572,7 @@ private:
 	//-
 
 private:
-	void setup_Theory_G1();
+	void setupTheory_G1();
 	void refresh_Theory_G2_2();
 
 	//-
@@ -823,7 +823,7 @@ private:
 	bool bCheckMouseOverTextInput = true;//flag to return mouse over any gui panel or over text input only!
 	bool guiVisible;
 
-	void setup_Gui();
+	void setupGui();
 	bool draw_Gui();
 
 	// ImGui panels

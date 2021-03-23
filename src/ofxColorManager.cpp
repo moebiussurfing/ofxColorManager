@@ -353,7 +353,7 @@ void ofxColorManager::setup()
 #endif
 
 	//TODO:
-	setup_Range();
+	setupRange();
 
 	//ofSetLogLevel("ofxColorManager", OF_LOG_NOTICE);
 
@@ -427,7 +427,7 @@ void ofxColorManager::setup()
 
 	// theory
 
-	setup_Theory_G1();
+	setupTheory_G1();
 
 	//----
 
@@ -751,7 +751,7 @@ void ofxColorManager::setup()
 	//----
 
 	// GUI
-	setup_Gui();
+	setupGui();
 
 	//--
 
@@ -978,7 +978,7 @@ void ofxColorManager::startup()
 	//--
 
 	// color ranges
-	setup_Range();
+	setupRange();
 
 	//--
 
@@ -4651,8 +4651,8 @@ void ofxColorManager::gui_Demo()
 		//-
 
 		ImGui::Dummy(ImVec2(0, 2));
-		ImGui::Separator();
-		ImGui::Dummy(ImVec2(0, 2));
+		//ImGui::Separator();
+		//ImGui::Dummy(ImVec2(0, 2));
 
 		// demo spheres
 		ofxSurfingHelpers::AddBigToggle(DEMO5_Enable, _w100, _h);
@@ -4675,8 +4675,8 @@ void ofxColorManager::gui_Demo()
 		//-
 
 		ImGui::Dummy(ImVec2(0, 2));
-		ImGui::Separator();
-		ImGui::Dummy(ImVec2(0, 2));
+		//ImGui::Separator();
+		//ImGui::Dummy(ImVec2(0, 2));
 
 		// svg demo
 		ofxSurfingHelpers::AddBigToggle(DEMO2_Svg.DEMO2_Enable, _w100, _h);
@@ -4696,7 +4696,10 @@ void ofxColorManager::gui_Demo()
 #ifdef USE_SVG_MASK
 			ofxImGui::AddParameter(DEMO2_Svg.enable_Mask);
 #endif		
-			ofxImGui::AddParameter(DEMO2_Svg.keys);
+			ofxImGui::AddParameter(DEMO2_Svg.keys);			
+			if (ImGui::Button("Reset")) {
+				DEMO2_Svg.reset();
+			}
 			ImGui::PopItemWidth();
 		}
 	}
@@ -4704,7 +4707,7 @@ void ofxColorManager::gui_Demo()
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::setup_Gui()
+void ofxColorManager::setupGui()
 {
 	// using Daan fork
 	ImGuiConfigFlags flags;
@@ -5192,7 +5195,7 @@ void ofxColorManager::refresh_Theory_G1() //populates palettes
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::setup_Theory_G1()
+void ofxColorManager::setupTheory_G1()
 {
 	ofLogNotice(__FUNCTION__);
 
@@ -7842,7 +7845,7 @@ void ofxColorManager::setVisible_debugText(bool b)
 //----
 
 //--------------------------------------------------------------
-void ofxColorManager::setup_Range()
+void ofxColorManager::setupRange()
 {
 	color_1_Range.set("Color 1", ofColor::red, ofColor(0), ofColor(1));
 	color_2_Range.set("Color 2", ofColor::blue, ofColor(0), ofColor(1));
@@ -8333,6 +8336,9 @@ void ofxColorManager::setupDemos()
 	// DEMO 2 svg
 	DEMO2_Svg.setLinkPalette(palette);
 	DEMO2_Svg.setVisible(false);
+#ifndef USE_SVG_MASK
+	DEMO2_Svg.enable_Mask = false;
+#endif	
 }
 
 //--------------------------------------------------------------
