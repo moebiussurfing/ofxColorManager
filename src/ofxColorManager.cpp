@@ -167,8 +167,8 @@ void ofxColorManager::build_Palette_Engine()
 	//--
 
 	// workflow
-	if (DEMO1_Enable || SHOW_About) myDEMO1.reStart();
-	if (DEMO5_Enable || SHOW_About) myDEMO5.start();
+	if (DEMO1_Enable || SHOW_About) myDEMO_Bubbles.reStart();
+	if (DEMO5_Enable || SHOW_About) myDEMO_Spheres.start();
 
 	//--
 
@@ -233,11 +233,9 @@ void ofxColorManager::build_Palette_Preset()
 ofxColorManager::ofxColorManager()
 {
 	ofAddListener(ofEvents().update, this, &ofxColorManager::update);
-#ifdef AUTO_DRAW_CALLBACK
 	ofAddListener(ofEvents().draw, this, &ofxColorManager::draw, OF_EVENT_ORDER_BEFORE_APP);
-#endif
 
-	//ofAddListener(ofEvents().update, this, &ofxColorManager::update);
+	//-
 
 	//mouse callbacks
 	ofAddListener(ofEvents().mouseDragged, this, &ofxColorManager::mouseDragged);
@@ -373,6 +371,7 @@ void ofxColorManager::setup()
 	//library
 	sizeLibColBox.set("Size Lib", 25, 10, 100);
 	lib_Responsive_Mode.set("Responsive", false);
+	lib_Responsive_Mode2.set("Responsive2", true);
 	bPagerized.set("Mode Paging", false);
 	//palette
 	sizePaletteBox.set("Size Plt", 25, 10, 500);
@@ -596,7 +595,7 @@ void ofxColorManager::setup()
 	color_BRG_0.setSerializable(false);
 
 	DEMO_Cam.setSerializable(false);
-	myDEMO5.DEMO5_Cam.setSerializable(false);
+	myDEMO_Spheres.DEMO5_Cam.setSerializable(false);
 	//DEMO2_Edit.setSerializable(false);
 
 	ofAddListener(params_Theory.parameterChangedE(), this, &ofxColorManager::Changed_Controls);
@@ -851,10 +850,10 @@ void ofxColorManager::setup()
 	params_Demo.add(DEMO_Alpha);
 	params_Demo.add(DEMO_Cam);
 	params_Demo.add(DEMO5_Enable);
-	params_Demo.add(myDEMO5.DEMO5_Alpha);
-	params_Demo.add(myDEMO5.DEMO5_Speed);
-	params_Demo.add(myDEMO5.DEMO5_Zoom);
-	params_Demo.add(myDEMO5.DEMO5_Cam);
+	params_Demo.add(myDEMO_Spheres.DEMO5_Alpha);
+	params_Demo.add(myDEMO_Spheres.DEMO5_Speed);
+	params_Demo.add(myDEMO_Spheres.DEMO5_Zoom);
+	params_Demo.add(myDEMO_Spheres.DEMO5_Cam);
 	params_AppState.add(params_Demo);
 
 	params_Picker.add(bColor_HUE);
@@ -873,6 +872,7 @@ void ofxColorManager::setup()
 	params_Library.add(scale_LibCol);
 	params_Library.add(scale_ColRange);
 	params_Library.add(lib_Responsive_Mode);
+	params_Library.add(lib_Responsive_Mode2);
 	params_Library.add(bPagerized);
 	params_Library.add(sizeLibColBox);
 	params_AppState.add(params_Library);
@@ -990,7 +990,7 @@ void ofxColorManager::startup()
 
 	//--
 
-	DEMO2_Svg.startup();
+	myDEMO_Svg.startup();
 
 	//--
 
@@ -1277,8 +1277,8 @@ void ofxColorManager::draw_Info()
 	//x = ofGetWidth() * 0.5 - _w0 * 0.5;
 
 	// c. locked to svg demo
-	x = DEMO2_Svg.getPositionTittle().x;
-	y = DEMO2_Svg.getPositionTittle().y;
+	x = myDEMO_Svg.getPositionTittle().x;
+	y = myDEMO_Svg.getPositionTittle().y;
 	pady = fontBig.getSize() / 2;
 	y -= pady;
 	x -= _w0 * 0.5;//center
@@ -1325,12 +1325,7 @@ void ofxColorManager::draw_Info()
 }
 
 //--------------------------------------------------------------
-#ifndef AUTO_DRAW_CALLBACK
-void ofxColorManager::draw()
-#endif
-#ifdef AUTO_DRAW_CALLBACK
 void ofxColorManager::draw(ofEventArgs & args)
-#endif
 {
 	if (SHOW_Scene)
 	{
@@ -1346,7 +1341,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 		}
 #endif
 		// using gradient
-		if (!DEMO2_Svg.DEMO2_Enable || (DEMO2_Svg.DEMO2_Enable && DEMO2_Svg.fileIndex == 0))
+		if (!myDEMO_Svg.DEMO2_Enable || (myDEMO_Svg.DEMO2_Enable && myDEMO_Svg.fileIndex == 0))
 		{
 			_cBg = gradientEngine.getColorPicked();
 			//nike demo has white bg
@@ -1494,9 +1489,7 @@ void ofxColorManager::exit()
 	//--
 
 	ofRemoveListener(ofEvents().update, this, &ofxColorManager::update);
-#ifdef AUTO_DRAW_CALLBACK
 	ofRemoveListener(ofEvents().draw, this, &ofxColorManager::draw);
-#endif
 
 	removeKeysListeners();
 	removeMouseListeners();
@@ -2556,7 +2549,7 @@ void ofxColorManager::gui_Palette()
 //--------------------------------------------------------------
 void ofxColorManager::gui_Library()
 {
-	static bool auto_resize = true;
+	static bool auto_resize = false;
 
 	float ww, hh;
 	ww = PANEL_WIDGETS_WIDTH;
@@ -2589,8 +2582,11 @@ void ofxColorManager::gui_Library()
 		//--
 
 		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
-		float _w = ImGui::GetWindowContentRegionWidth() - _spc;
+		//float _w = ImGui::GetWindowContentRegionWidth() - _spc;
+		float _w = ImGui::GetContentRegionAvail().x - _spc;
+		float _h = ImGui::GetContentRegionAvail().y - _spc;
 		float _w50 = _w / 2 - _spc;
+		float _w33 = -80;
 
 		int _colsSize;
 		if (lib_CardsMode) _colsSize = lib_RowSize;
@@ -2610,6 +2606,7 @@ void ofxColorManager::gui_Library()
 		//--
 
 		// pagerize
+
 		int lib_StartCol;
 		int lib_EndCol;
 
@@ -2637,8 +2634,6 @@ void ofxColorManager::gui_Library()
 
 		std::string s;
 
-		//ImGui::Dummy(ImVec2(0, 5));
-
 		// 1. lib name (ie: pantone)
 		s = colorBrowser.getNameLib();
 		ImGui::Text(s.c_str());
@@ -2650,9 +2645,7 @@ void ofxColorManager::gui_Library()
 		ImGui::Text(s.c_str());
 
 		// 2. color name
-		//ImGui::Dummy(ImVec2(0, 2));
 		ImGui::Text(last_Lib_NameColor.c_str());
-		//ImGui::Dummy(ImVec2(0, 2));
 
 		//--
 
@@ -2665,10 +2658,11 @@ void ofxColorManager::gui_Library()
 			{
 				if (ImGui::CollapsingHeader("Layout"))
 				{
-					ImGui::PushItemWidth(_w50);
+					ImGui::PushItemWidth(_w33);
 
 					ImGui::InputInt(sizeLibColBox.getName().c_str(), (int*)&sizeLibColBox.get(), 1, 5);
 					ofxImGui::AddParameter(lib_Responsive_Mode);
+					ofxImGui::AddParameter(lib_Responsive_Mode2);
 					ofxImGui::AddParameter(bPagerized);
 
 					//-
@@ -2755,7 +2749,8 @@ void ofxColorManager::gui_Library()
 			// page slider
 
 			ImGui::SameLine();
-			ImGui::PushItemWidth(_w * 0.4);
+			ImGui::PushItemWidth(_w33);
+			//ImGui::PushItemWidth(_w * 0.4);
 			ofxImGui::AddParameter(lib_Page_Index);//page slider selector
 			//ImGui::SliderInt("PAGE", &lib_Page_Index, 0, lib_Page_Max);//page slider selector
 			//ImGui::DragInt("PAGE", (int *)&lib_Page_Index, 0, lib_Page_Max);//collide..
@@ -2795,6 +2790,28 @@ void ofxColorManager::gui_Library()
 
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
 
+		_w = ImGui::GetContentRegionAvail().x - _spc;
+		_h = ImGui::GetContentRegionAvail().y - _spc;
+
+		ImVec2 _bb;
+
+		if (lib_Responsive_Mode2)
+		{
+			float _wb = _w / lib_MaxColumns;
+			float _wh = _h / lib_NumRows;
+			_bb = ImVec2(_wb,_wh);
+		}
+		else if (lib_Responsive_Mode) 
+		{
+			_bb = _sz;
+		}
+		else 
+		{
+			_bb = ImVec2(sizeLibColBox * scale_LibCol, sizeLibColBox * scale_LibCol);
+		}
+
+		//--
+
 		for (int n = lib_StartCol; n < lib_EndCol; n++)
 		{
 			//--
@@ -2821,7 +2838,6 @@ void ofxColorManager::gui_Library()
 				{
 					if ((n % _colsSize) != 0)
 					{
-						//ImGui::SameLine(0, ImGui::GetStyle().ItemSpacing.y);//vertical inter line
 						ImGui::SameLine(0, 0);//vertical inter line
 					}
 				}
@@ -2843,10 +2859,6 @@ void ofxColorManager::gui_Library()
 					ImGuiColorEditFlags_NoAlpha |
 					ImGuiColorEditFlags_NoPicker |
 					ImGuiColorEditFlags_NoTooltip;
-
-				ImVec2 _bb;
-				if (lib_Responsive_Mode) _bb = _sz;
-				else _bb = ImVec2(sizeLibColBox * scale_LibCol, sizeLibColBox * scale_LibCol);
 
 				ofFloatColor _c = ofColor(palette_Lib_Cols[n]);
 
@@ -3970,7 +3982,7 @@ void ofxColorManager::gui_InputText()
 	};
 	THEME_COLORS _THEME;
 	//select one
-	if (DEMO2_Svg.DEMO2_Enable) _THEME = THEME_DAY;//this demo has white bg
+	if (myDEMO_Svg.DEMO2_Enable) _THEME = THEME_DAY;//this demo has white bg
 	else _THEME = THEME_NIGHT;
 
 	//--
@@ -4336,7 +4348,7 @@ void ofxColorManager::gui_Presets()
 
 		ImGui::Dummy(ImVec2(0, 2));
 
-		if (ImGui::CollapsingHeader("ADVANCED"))
+		if (ImGui::CollapsingHeader("MANAGER"))
 		{
 			if (ImGui::Button("UPDATE", ImVec2(_w50, _h * 0.5)))
 			{
@@ -4658,7 +4670,7 @@ void ofxColorManager::gui_Demo()
 		float _w100 = ImGui::GetWindowContentRegionWidth();
 		float _w99 = _w100 - _spc;
 		float _w50 = _w99 * 0.75;
-		float _w33 = -75;
+		float _w33 = -80;
 		float _h = BUTTON_BIG_HEIGHT;
 
 		//-
@@ -4673,10 +4685,10 @@ void ofxColorManager::gui_Demo()
 			ofxImGui::AddParameter(DEMO_Timer);
 			if (ofxImGui::AddParameter(DEMO_Cam))
 			{
-				myDEMO1.setEnableMouseCamera(DEMO_Cam);
+				myDEMO_Bubbles.setEnableMouseCamera(DEMO_Cam);
 			}
 			if (ImGui::Button("Reset Camera")) {
-				myDEMO1.resetCamera();
+				myDEMO_Bubbles.resetCamera();
 			}
 			ImGui::PopItemWidth();
 		}
@@ -4692,15 +4704,15 @@ void ofxColorManager::gui_Demo()
 		if (DEMO5_Enable)
 		{
 			ImGui::PushItemWidth(_w33);
-			ofxImGui::AddParameter(myDEMO5.DEMO5_Alpha);
-			ofxImGui::AddParameter(myDEMO5.DEMO5_Zoom);
-			ofxImGui::AddParameter(myDEMO5.DEMO5_Speed);
-			if (ofxImGui::AddParameter(myDEMO5.DEMO5_Cam))
+			ofxImGui::AddParameter(myDEMO_Spheres.DEMO5_Alpha);
+			ofxImGui::AddParameter(myDEMO_Spheres.DEMO5_Zoom);
+			ofxImGui::AddParameter(myDEMO_Spheres.DEMO5_Speed);
+			if (ofxImGui::AddParameter(myDEMO_Spheres.DEMO5_Cam))
 			{
-				myDEMO5.setEnableMouseCamera(myDEMO5.DEMO5_Cam);
+				myDEMO_Spheres.setEnableMouseCamera(myDEMO_Spheres.DEMO5_Cam);
 			}
 			if (ImGui::Button("Reset Camera")) {
-				myDEMO5.resetCamera();
+				myDEMO_Spheres.resetCamera();
 			}
 			ImGui::PopItemWidth();
 		}
@@ -4712,26 +4724,24 @@ void ofxColorManager::gui_Demo()
 		//ImGui::Dummy(ImVec2(0, 2));
 
 		// svg demo
-		ofxSurfingHelpers::AddBigToggle(DEMO2_Svg.DEMO2_Enable, _w100, _h);
-		if (DEMO2_Svg.DEMO2_Enable)
+		ofxSurfingHelpers::AddBigToggle(myDEMO_Svg.DEMO2_Enable, _w100, _h);
+		if (myDEMO_Svg.DEMO2_Enable)
 		{
 			ImGui::PushItemWidth(_w33);
-			ofxImGui::AddParameter(DEMO2_Svg.DEMO2_Edit);
-			if (DEMO2_Svg.DEMO2_Edit) ofxImGui::AddParameter(DEMO2_Svg.DEMO2_Scale);
-			ofxImGui::AddParameter(DEMO2_Svg.DEMO2_Alpha);
-			ofxImGui::AddStepper(DEMO2_Svg.blendMode);
-			//ofxImGui::AddParameter(DEMO2_Svg.blendMode);
-			ofxImGui::AddParameter(DEMO2_Svg.blendModeName);
-			ofxImGui::AddStepper(DEMO2_Svg.fileIndex);
-			//ofxImGui::AddParameter(DEMO2_Svg.fileIndex);
-			ofxImGui::AddParameter(DEMO2_Svg.fileIndexName);
+			ofxImGui::AddParameter(myDEMO_Svg.DEMO2_Edit);
+			if (myDEMO_Svg.DEMO2_Edit) ofxImGui::AddParameter(myDEMO_Svg.DEMO2_Scale);
+			ofxImGui::AddParameter(myDEMO_Svg.DEMO2_Alpha);
+			ofxImGui::AddStepper(myDEMO_Svg.blendMode);
+			ofxImGui::AddParameter(myDEMO_Svg.blendModeName);
+			ofxImGui::AddStepper(myDEMO_Svg.fileIndex);
+			ofxImGui::AddParameter(myDEMO_Svg.fileIndexName);
 
 #ifdef USE_SVG_MASK
-			ofxImGui::AddParameter(DEMO2_Svg.enable_Mask);
+			ofxImGui::AddParameter(myDEMO_Svg.enable_Mask);
 #endif		
-			ofxImGui::AddParameter(DEMO2_Svg.keys);
+			ofxImGui::AddParameter(myDEMO_Svg.keys);
 			if (ImGui::Button("Reset")) {
-				DEMO2_Svg.reset();
+				myDEMO_Svg.reset();
 			}
 			ImGui::PopItemWidth();
 		}
@@ -5470,7 +5480,7 @@ void ofxColorManager::palette_Clear()
 
 	//-
 
-	if (DEMO1_Enable || SHOW_About) myDEMO1.clear();
+	if (DEMO1_Enable || SHOW_About) myDEMO_Bubbles.clear();
 
 	//--
 
@@ -6305,20 +6315,20 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	{
 		// bubbles
 		DEMO_Cam = false;
-		myDEMO1.setEnableMouseCamera(DEMO_Cam);
+		myDEMO_Bubbles.setEnableMouseCamera(DEMO_Cam);
 
-		if (!SHOW_Demos) DEMO2_Svg.DEMO2_Edit = false;
+		if (!SHOW_Demos) myDEMO_Svg.DEMO2_Edit = false;
 
 		// svg
-		DEMO2_Svg.setEnableKeys(SHOW_Demos);
-		//if (SHOW_Demos) DEMO2_Svg.DEMO2_Edit = true;
-		DEMO2_Svg.DEMO2_Edit = SHOW_Demos;
+		myDEMO_Svg.setEnableKeys(SHOW_Demos);
+		//myDEMO_Svg.DEMO2_Edit = SHOW_Demos;
+		////if (SHOW_Demos) myDEMO_Svg.DEMO2_Edit = true;
 
 		//// spheres
-		//myDEMO5.DEMO5_Cam = DEMO5_Enable;
-		////myDEMO5.DEMO5_Cam = false;
-		////if (SHOW_Demos) myDEMO5.DEMO5_Cam = true;
-		//myDEMO5.setEnableMouseCamera(myDEMO5.DEMO5_Cam);
+		//myDEMO_Spheres.DEMO5_Cam = DEMO5_Enable;
+		////myDEMO_Spheres.DEMO5_Cam = false;
+		////if (SHOW_Demos) myDEMO_Spheres.DEMO5_Cam = true;
+		//myDEMO_Spheres.setEnableMouseCamera(myDEMO_Spheres.DEMO5_Cam);
 	}
 
 	//---
@@ -6582,8 +6592,6 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 	if (key == 'K') ENABLE_keys = !ENABLE_keys;
 
-	//if (ENABLE_keys)
-	//if (ENABLE_keys && !bTextInputActive)
 	if (ENABLE_keys && !bBlockKeys)
 	{
 		//----
@@ -6635,7 +6643,6 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			ENABLE_HelpInfo = !ENABLE_HelpInfo;
 		}
 
-		//TODO: not works
 		// about
 		else if ((key == 'a' || key == 'A') /*&& mod_CONTROL*/)
 		{
@@ -6665,7 +6672,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		else if (key == 'M')
 		{
 			mouseRuler.toggleVisibility();
-			//myDEMO1.toggleMouseCamera();
+			//myDEMO_Bubbles.toggleMouseCamera();
 		}
 #endif
 		// TEST
@@ -6678,11 +6685,6 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		{
 			bEditPalette = !bEditPalette;
 		}
-
-		//else if (key == 'g') {
-		//    SHOW_ALL_GUI = !SHOW_ALL_GUI;
-		//    setVisible(SHOW_ALL_GUI);
-		//}
 
 		//--
 
@@ -6716,6 +6718,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//--
 
 		// amount colors
+
 		if (key == '-' && !mod_CONTROL)
 		{
 			if (numColors_Engines > 0) numColors_Engines--;
@@ -7219,12 +7222,12 @@ void ofxColorManager::mousePressed(ofMouseEventArgs &eventArgs)
 		{
 			if (!DEMO_Auto) {//disable mouse on auto mode
 				//second mouse button cleans DEMO
-				if (button == 2) myDEMO1.clear();
-				else myDEMO1.start();//trig DEMO start
+				if (button == 2) myDEMO_Bubbles.clear();
+				else myDEMO_Bubbles.start();//trig DEMO start
 			}
 		}
 	}
-	if (DEMO5_Enable || SHOW_About) myDEMO5.start();
+	if (DEMO5_Enable || SHOW_About) myDEMO_Spheres.start();
 }
 
 //--------------------------------------------------------------
@@ -7532,8 +7535,8 @@ void ofxColorManager::preset_Load(std::string p, bool absolutePath)
 	bFlag_refresh_EnginesFromPalette = true;
 
 	// workflow
-	if (DEMO1_Enable || SHOW_About) myDEMO1.reStart();
-	if (DEMO5_Enable || SHOW_About) myDEMO5.start();
+	if (DEMO1_Enable || SHOW_About) myDEMO_Bubbles.reStart();
+	if (DEMO5_Enable || SHOW_About) myDEMO_Spheres.start();
 	//tweenD = 1;
 
 	//TODO:
@@ -8377,25 +8380,25 @@ void ofxColorManager::setupDemos()
 {
 	// DEMO 1
 
-	myDEMO1.setup();
-	myDEMO1.setPalette(palette);
-	//myDEMO1.setEnableMouseCamera(true);
+	myDEMO_Bubbles.setup();
+	myDEMO_Bubbles.setPalette(palette);
+	//myDEMO_Bubbles.setEnableMouseCamera(true);
 
 	//--
 
 	// DEMO 5
 
-	myDEMO5.setup();
-	myDEMO5.setPalette(palette);
-	//myDEMO1.setEnableMouseCamera(true);
+	myDEMO_Spheres.setup();
+	myDEMO_Spheres.setPalette(palette);
+	//myDEMO_Bubbles.setEnableMouseCamera(true);
 
 	//-
 
 	// DEMO 2 svg
-	DEMO2_Svg.setLinkPalette(palette);
-	DEMO2_Svg.setVisible(false);
+	myDEMO_Svg.setLinkPalette(palette);
+	myDEMO_Svg.setVisible(false);
 #ifndef USE_SVG_MASK
-	DEMO2_Svg.enable_Mask = false;
+	myDEMO_Svg.enable_Mask = false;
 #endif	
 }
 
@@ -8405,18 +8408,18 @@ void ofxColorManager::updateDemos()
 	// DEMO1
 	if (DEMO1_Enable || SHOW_About)
 	{
-		myDEMO1.update();
+		myDEMO_Bubbles.update();
 		if (DEMO_Auto) {}
 		if ((ofGetElapsedTimeMillis() - Demo_Timer) > MAX(Demo_Timer_Max * (1 - DEMO_Timer), 10))
 		{
 			Demo_Timer = ofGetElapsedTimeMillis();
 
-			myDEMO1.start();
+			myDEMO_Bubbles.start();
 		}
 	}
 
 	// DEMO5
-	if (DEMO5_Enable || SHOW_About) myDEMO5.update();
+	if (DEMO5_Enable || SHOW_About) myDEMO_Spheres.update();
 }
 
 //--------------------------------------------------------------
@@ -8424,19 +8427,19 @@ void ofxColorManager::drawDemos()
 {
 	// DEMO1
 	// bubbles
-	if (DEMO1_Enable) myDEMO1.draw(DEMO_Alpha);
+	if (DEMO1_Enable) myDEMO_Bubbles.draw(DEMO_Alpha);
 
 	//-
 
 	// DEMO2
 	// svg
-	DEMO2_Svg.draw();
+	myDEMO_Svg.draw();
 
 	//-
 
 	// DEMO5
 	// spheres
-	if (DEMO5_Enable) myDEMO5.draw();
+	if (DEMO5_Enable) myDEMO_Spheres.draw();
 
 	//-
 
@@ -8446,10 +8449,10 @@ void ofxColorManager::drawDemos()
 		fboBig.begin();
 		ofClear(gradientEngine.getColorPicked());
 
-		//if (DEMO1_Enable) myDEMO1.draw(DEMO_Alpha);
-		//if (DEMO5_Enable) myDEMO5.draw(DEMO5_Alpha);
-		//myDEMO1.draw(DEMO_Alpha);
-		myDEMO5.draw();
+		//if (DEMO1_Enable) myDEMO_Bubbles.draw(DEMO_Alpha);
+		//if (DEMO5_Enable) myDEMO_Spheres.draw(DEMO5_Alpha);
+		//myDEMO_Bubbles.draw(DEMO_Alpha);
+		myDEMO_Spheres.draw();
 
 		fboBig.end();
 	}

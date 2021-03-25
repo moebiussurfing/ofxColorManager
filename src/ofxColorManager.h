@@ -6,13 +6,6 @@
 
 /*
 
-BUGS:
-
-+ fix text input boxes. related to docking mode. works fine when windowed
-+ TCP port number switch, some problems on reconnect bc threading not implemented. should use some sync addon or OSC.
-+ pickers hangs flickering sometimes
-
-
 TODO:
 
 + export Adobe ASE
@@ -20,6 +13,12 @@ TODO:
 + undo engine
 + fix demo1 camera and add tweening random jumps
 + check theory picker if calls too much callbacks
+
+BUGS:
+
++ fix text input boxes when docking mode.
++ TCP port number switch, some problems on reconnect bc threading not implemented. should use some sync addon or OSC.
++ ImGui pickers hangs flickering sometimes bc max width
 
 */
 
@@ -33,7 +32,8 @@ TODO:
 #define USE_DEBUG_LAYOUT // includes mouse ruler to help layout design
 //#define USE_SVG_MASK // TODO: ofxScene-SVG using masked background. 
 
-//--g
+//--
+
 // modules
 // can't be disabled now..
 #define USE_COLOR_LOVERS
@@ -55,7 +55,7 @@ TODO:
 //#define USE_MINIMAL_GUI 
 
 //#define MODE_LOCK_DOCKING // disable move panels
-#define MODE_TEXT_INPUT_WORKAROUND// independent panel
+#define MODE_TEXT_INPUT_WORKAROUND// independent panel to solve ImGui docking textinput bugs
 
 // extra
 //#define MODE_BACKGROUND //TODO: show bg color (gradient picker engine) on mode no background
@@ -66,7 +66,6 @@ TODO:
 //#define USE_SUPER_LOG
 //#define USE_OFX_GUI
 ////#define SHOW_THEM_EDITOR //TODO: show ImGui editor for debug. do not stores or load presets. linked to USE_MINIMAL_GUI
-#define AUTO_DRAW_CALLBACK // avoids manual draw. don't need to call draw in your ofApp
 
 //----------
 
@@ -175,15 +174,7 @@ public:
 	void setup();
 	void startup();
 	void update(ofEventArgs & args);
-
-	//TODO: 
-	//to allow auto update we must set the order priority layer/drawing
-#ifndef AUTO_DRAW_CALLBACK
-	void draw();
-#endif
-#ifdef AUTO_DRAW_CALLBACK
 	void draw(ofEventArgs & args);
-#endif
 
 public:
 	void exit();
@@ -251,7 +242,7 @@ private:
 private:
 	PreviewPaletteMini miniPreview;
 
-	DEMO_Svg DEMO2_Svg;
+	DEMO_Svg myDEMO_Svg;
 
 	//TODO:
 	shared_ptr<ColorWheelScheme> _scheme;
@@ -428,6 +419,7 @@ private:
 	// colors library layout
 private:
 	ofParameter<bool> lib_Responsive_Mode;
+	ofParameter<bool> lib_Responsive_Mode2;
 	ofParameter<bool> bPagerized;
 	ofParameter<int> sizeLibColBox;
 	ofParameter<bool> bResponsive_Panels;
@@ -609,8 +601,8 @@ private:
 
 	// DEMO
 private:
-	DEMO_Scene myDEMO1;
-	DEMO_SceneSpheres myDEMO5;
+	DEMO_Scene myDEMO_Bubbles;
+	DEMO_SceneSpheres myDEMO_Spheres;
 
 	//--
 

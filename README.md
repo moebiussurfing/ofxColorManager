@@ -78,7 +78,7 @@ void ofApp::draw()
 
 ## Dependencies
 * [ofxColorClient](https://github.com/moebiussurfing/ofxColorClient)
-* [ofxImGui](https://github.com/moebiussurfing/ofxImGui)  Fork from @Daandelange Thanks **Daan**!
+* [ofxImGui](https://github.com/Daandelange/ofxImGui/tree/jvcleave)  Fork from @Daandelange Thanks **Daan**!
 * [ofxSurfingHelpers](https://github.com/moebiussurfing/ofxSurfingHelpers)  
 * [ofxIO](https://github.com/bakercp/ofxIO)
 * ofxNetwork  [**OF**]

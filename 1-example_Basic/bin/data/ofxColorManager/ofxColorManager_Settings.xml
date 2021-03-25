@@ -12,12 +12,12 @@
         },
         "Engines": {
             "Amnt_Colors_Thy": "7",
-            "Analogue_Spread": "0.527",
-            "Color_1": "0.596078, 0.52549, 0.54902, 1",
-            "Color_2": "0.403922, 0.47451, 0.45098, 1",
+            "Analogue_Spread": "0.213",
+            "Color_1": "0.996078, 0.996078, 0.996078, 1",
+            "Color_2": "0.835294, 0.423529, 0.0235294, 1",
             "Last_Range_Index": "6",
-            "Last_Theory_Index": "3",
-            "Preset_Index": "25",
+            "Last_Theory_Index": "12",
+            "Preset_Index": "47",
             "SCENE": "1"
         },
         "ExportColors": {
@@ -35,6 +35,7 @@
             "Mode_Paging": "1",
             "Page": "11",
             "Responsive": "0",
+            "Responsive2": "1",
             "Rows_Amnt": "26",
             "Scale": "1",
             "Scale_Rg": "1",
@@ -64,12 +65,12 @@
             "PICTURE": "0",
             "PRESETS": "1",
             "RANGE": "0",
-            "THEORY": "0"
+            "THEORY": "1"
         },
         "PICKER": {
             "BRG": "0",
             "B_Power": "1",
-            "COLOR": "0.596078, 0.52549, 0.54902, 1",
+            "COLOR": "0.388235, 0.282353, 0.470588, 1",
             "HUE": "1",
             "H_Power": "1",
             "SAT": "0",

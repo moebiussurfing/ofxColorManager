@@ -19,7 +19,8 @@ void DEMO_SceneSpheres::setup() {
 	//// b.
 	//cam.setDistance(750);
 	//cam.reset();//initialize
-	//cam.disableMouseInput();
+
+	cam.disableMouseInput();
 }
 
 //--------------------------------------------------------------
