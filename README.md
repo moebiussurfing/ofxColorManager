@@ -35,15 +35,15 @@ This **openFrameworks** add-on is a **kit of Engines and Tools** to design prese
     Allows all the tools, but a more handy setup using two separated apps.  
 
   3. **Minimal Standalone Mode**:  
-    Using the **ofxColorClient add-on** only without all the bigger Engines and Tools.  
     The more **Lightweight** Mode that allows you to use your local preset files.  
-    Bundled with a minimal set of tools: kit browser, palette and gradient previews, and tweened transitions.  
-    ( Could be more performant in most scenarios and using fewer dependencies than in the other two modes that require **ofxColorManager**. )
-
+    Using the **ofxColorClient add-on** only, without all the bigger Engines and Tools.  
+    ( More performant in most scenarios and using fewer dependencies than in the other two modes that require **ofxColorManager**. )
+ 
 ## ofxColorClient: The player addon 
-  * A Lightweight version of the add-on just to use your presets Kit, or: 
-  * To work linked to this **MASTER OF_App** addon but as a minimal version into your own **CLIENT OF_App**. 
-  * Or just as the Standalone Mode to browse and use your kit with preset files.
+  * A Lightweight version of the add-on just to use your presets Kit. 
+  * Bundled with a minimal set of tools: Kit browser, palette and gradient previews, and tweened transitions.  
+  * To work linked to a another **OF_APP** (**MASTER**) using the **ofxColorManger** addon, but inside a minimal version into your own **OF_APP** (**CLIENT**). 
+  * Works too in the Standalone Mode to browse and use your kit with preset files.
 
 ## Other Features
 * **Demo Scenes** for fast palette preview. Colored SVG and bubble scenes.
