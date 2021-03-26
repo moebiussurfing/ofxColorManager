@@ -13,9 +13,9 @@ This **openFrameworks** add-on is a **kit of Engines and Tools** to design prese
 [![VIDEO](http://img.youtube.com/vi/oSvGwpbWEuc/0.jpg)](http://www.youtube.com/watch?v=oSvGwpbWEuc "VIDEO")
 
 ## Engines:  
-  1. **10+** Algorithmic **Theory Schemes** from a base color. (Complementary, Compound, Monocrhome, Analogous, Triad...etc)
+  1. **10+** Algorithmic **Theory Schemes** from a base color. (Complementary, Compound, Monochrome, Analogous, Triad...etc)
   2. **10+** **Range Spaces** between two colors. (RGB, LAB, CMYK, XYZ...etc)
-  3. [**Colour Lovers API**](https://www.colourlovers.com/) to search keywords online, handle favorites and history search.
+  3. [**Colour Lovers API**](https://www.colourlovers.com/) to search keywords online, handle favorites, and history search.
   4. **Extract** the dominant colors **from image files**. (Sorting by Dominance, Hue, Saturation or Brightness)
 
 ## Tools:  
@@ -23,7 +23,7 @@ This **openFrameworks** add-on is a **kit of Engines and Tools** to design prese
   * Receive palettes from all the engines and save presets. 
   * Name, delete or duplicate presets from your kit.
   * Preview all your kit of preset on a scrollable clickable panel.
-* **Gradient Designer** with an available extra pickeable color.
+* **Gradient Designer** with an available extra pickable color.
 
 ## Modes:
   1. **Powered Standalone Mode**:  
@@ -35,15 +35,15 @@ This **openFrameworks** add-on is a **kit of Engines and Tools** to design prese
     Allows all the tools, but a more handy setup using two separated apps.  
 
   3. **Minimal Standalone Mode**:  
-    Using the **ofxColorClient add-on** only without all the bigger Engines an Tools.  
+    Using the **ofxColorClient add-on** only without all the bigger Engines and Tools.  
     The more **Lightweight** Mode that allows you to use your local preset files.  
-    Bundled with a minimal set of tools: kit browser, palette and gradient previews and tweened transitions.  
-    ( Could be more performant in most scenarios, and using less dependencies than in the other two modes that requires **ofxColorManager**. )
+    Bundled with a minimal set of tools: kit browser, palette and gradient previews, and tweened transitions.  
+    ( Could be more performant in most scenarios and using fewer dependencies than in the other two modes that require **ofxColorManager**. )
 
 ## ofxColorClient: The player addon 
   * A Lightweight version of the add-on just to use your presets Kit, or: 
   * To work linked to this **MASTER OF_App** addon but as a minimal version into your own **CLIENT OF_App**. 
-  * Or just as standalone mode to browse and use your kit with preset files.
+  * Or just as the Standalone Mode to browse and use your kit with preset files.
 
 ## Other Features
 * **Demo Scenes** for fast palette preview. Colored SVG and bubble scenes.
@@ -67,13 +67,13 @@ vector<ofColor> palette;
 ```.cpp
 void ofApp::setup()
 {
-	colorManager.setLinkPalette(palette); // subscribe palette
-	colorManager.setup();
+  colorManager.setLinkPalette(palette); // subscribe palette
+  colorManager.setup();
 }
 
 void ofApp::draw()
 {
-	// Use the palette colors to draw your Scene. Nothing more!
+  // Use the palette colors to draw your Scene. Nothing more!
 }
 ```
 
@@ -127,6 +127,11 @@ The **JSON** file format of a palette preset it's simple. This is an example of 
 - **macOS**. **High Sierra** / **Xcode9** & **Xcode10** / **OF ~0.11**
 
 ## Notes / TODO
++ Processing / Unity3D / UE4 clients plugins.
++ Export Adobe ASE.
++ Tween transitions to presets.
++ Undo engine.
++ Create a more user-friendly and very simplified GUI.
 
 ## Author
 An addon by **@moebiusSurfing**  
