@@ -1,6 +1,6 @@
 # ofxColorManager
 
-This **openFrameworks** add-on is a **kit of Engines and Tools** to design presets of color palettes for your scenes.  
+This **openFrameworks** add-on is a **kit of Engines and Tools** to design and organize color palettes for your scenes.  
 
 ## Screenshot
 ![image](/readme_images/Capture.JPG?raw=true "image")
@@ -21,14 +21,19 @@ This **openFrameworks** add-on is a **kit of Engines and Tools** to design prese
   4. **Extract** the dominant colors **from image files**.  
   *Sorting by Dominance, Hue, Saturation or Brightness*
 
-## Tools:  
+## Tools  
+* **Editor**: 
+  * Organize the colors.
+  * Edit using the color pickers and the Pantone colors library.
 * **Kit of Presets Manager**: 
   * Receive palettes from all the engines and save presets. 
-  * Name, delete or duplicate presets from your kit.
+  * Name, modify, delete or duplicate presets from your kit.
   * Preview all your kit of preset on a scrollable clickable panel.
-* **Gradient Designer** with an available extra pickable color.
+* **Gradient Designer**:
+  * Autogenerates a gradient from each palette.
+  * Exposes an available extra pickable color.
 
-## Modes:
+## Modes
 
 #### 1. **Powered Standalone Mode**:  
 Use this add-on inside your **OF_App** (Scene Renderer) when you want to use all the tools bundled.  
@@ -78,7 +83,8 @@ void ofApp::setup()
 
 void ofApp::draw()
 {
-  // Use the palette colors to draw your Scene. Nothing more!
+  // Use the palette colors to draw your Scene. 
+  // Nothing more!
 }
 ```
 
@@ -132,8 +138,8 @@ The **JSON** file format of a palette preset it's simple. This is an example of 
 - **macOS**. **High Sierra** / **Xcode9** & **Xcode10** / **OF ~0.11**
 
 ## Notes / TODO
-+ Processing / Unity3D / UE4 clients plugins. (?)
-+ Export Adobe ASE. (?)
++ Processing / Unity3D / UE4 clients plugins. _(?)_
++ Export Adobe ASE. _(?)_
 + Tween transitions to presets.
 + Undo engine.
 + Create an App more user-friendly and very simplified GUI.
