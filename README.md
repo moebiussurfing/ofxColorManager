@@ -13,10 +13,13 @@ This **openFrameworks** add-on is a **kit of Engines and Tools** to design prese
 [![VIDEO](http://img.youtube.com/vi/oSvGwpbWEuc/0.jpg)](http://www.youtube.com/watch?v=oSvGwpbWEuc "VIDEO")
 
 ## Engines:  
-  1. **10+** Algorithmic **Theory Schemes** from a base color. (*Complementary, Compound, Monochrome, Analogous, Triad...etc*)
-  2. **10+** **Range Spaces** between two colors. (*RGB, LAB, CMYK, XYZ...etc*)
+  1. **10+** Algorithmic **Theory Schemes** from a base color.  
+  *Complementary, Compound, Monochrome, Analogous, Triad...etc*  
+  2. **10+** **Range Spaces** between two colors.  
+  *RGB, LAB, CMYK, XYZ...etc*  
   3. [**Colour Lovers API**](https://www.colourlovers.com/) to search keywords online, handle favorites, and history search.
-  4. **Extract** the dominant colors **from image files**. (*Sorting by Dominance, Hue, Saturation or Brightness*)
+  4. **Extract** the dominant colors **from image files**.  
+  *Sorting by Dominance, Hue, Saturation or Brightness*
 
 ## Tools:  
 * **Kit of Presets Manager**: 
@@ -42,7 +45,7 @@ Using the **ofxColorClient add-on** only, without all the bigger Engines and Too
 ( More performant in most scenarios and using fewer dependencies than in the other two modes that require **ofxColorManager**. )
  
 ## ofxColorClient: The player addon 
-  * A Lightweight version of the add-on just to use your presets Kit. 
+  * A Lightweight version of the add-on just to use your **Presets Kit**. 
   * Bundled with a minimal set of tools: Kit browser, palette and gradient previews, and tweened transitions.  
   * To work linked to a another **OF_App** (**MASTER**) using the **ofxColorManger** addon, but inside a minimal version into your own **OF_App** (**CLIENT**). 
   * Works too in the Standalone Mode to browse and use your kit with preset files.
@@ -129,11 +132,11 @@ The **JSON** file format of a palette preset it's simple. This is an example of 
 - **macOS**. **High Sierra** / **Xcode9** & **Xcode10** / **OF ~0.11**
 
 ## Notes / TODO
-+ Processing / Unity3D / UE4 clients plugins.
-+ Export Adobe ASE.
++ Processing / Unity3D / UE4 clients plugins. (?)
++ Export Adobe ASE. (?)
 + Tween transitions to presets.
 + Undo engine.
-+ Create a more user-friendly and very simplified GUI.
++ Create an App more user-friendly and very simplified GUI.
 
 ## Author
 An addon by **@moebiusSurfing**  
