@@ -6,10 +6,12 @@ This **openFrameworks** add-on is a **kit of Engines and Tools** to design and o
 ![image](/readme_images/Capture.JPG?raw=true "image")
 
 ## Videos
-**ofxColorManager**  
+**ofxColorManager**:  
+
 [![VIDEO](http://img.youtube.com/vi/oSvGwpbWEuc/0.jpg)](http://www.youtube.com/watch?v=oSvGwpbWEuc "VIDEO")
 
-**ofxColorClient**  
+**ofxColorClient**:  
+
 [![VIDEO](http://img.youtube.com/vi/oSvGwpbWEuc/0.jpg)](http://www.youtube.com/watch?v=oSvGwpbWEuc "VIDEO")
 
 ## Engines:  
@@ -19,7 +21,7 @@ This **openFrameworks** add-on is a **kit of Engines and Tools** to design and o
   *RGB, LAB, CMYK, XYZ...etc*  
   3. [**Colour Lovers API**](https://www.colourlovers.com/) to search keywords online, handle favorites, and history search.
   4. **Extract** the dominant colors **from image files**.  
-  *Sorting by Dominance, Hue, Saturation or Brightness*
+  *Sorting by Dominance, Hue, Saturation or Brightness*.
 
 ## Tools  
 * **Editor**: 
@@ -30,7 +32,7 @@ This **openFrameworks** add-on is a **kit of Engines and Tools** to design and o
   * Name, modify, delete or duplicate presets from your kit.
   * Preview all your kit of preset on a scrollable clickable panel.
 * **Gradient Designer**:
-  * Autogenerates a gradient from each palette.
+  * Auto-generates a gradient from each palette.
   * Exposes an available extra pickable color.
 
 ## Modes
@@ -61,7 +63,7 @@ Using the **ofxColorClient add-on** only, without all the bigger Engines and Too
 * **Linkable** with **ofxColorClient** trough TCP or Watching files.
 * Hue Wheel and rectangle **Color Pickers** with **HSV** sliders.
 * **Pantone** library with **2000+** named **colors**.
-* Manage: Edit, add, delete, sort, shift, and drag your palette colors. 
+* Manage: Edit, add, remove, sort, shift, and drag your palette colors. 
 * Kit exporter of all **JSON** preset files to your project data path.
 
 ## Usage
