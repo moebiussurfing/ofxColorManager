@@ -27,17 +27,14 @@ This **openFrameworks** add-on is a **kit of Engines and Tools** to design prese
 
 ## Modes:
   1. **Powered Standalone Mode**:  
-
     Use this add-on inside your **OF_App** (Scene Renderer) when you want to use all the tools bundled.  
     Requires all the **ofxColorManager** dependencies. (Similar to the included **1-example_Basic**)  
 
   2. **Linked Mode**:  
-
     Link the **ofxColorManager** container **MASTER OF_App** to your **CLIENT OF_App** with the **ofxColorClient** add-on inside.  
     Allows all the tools, but a more handy setup using two separated apps.  
 
   3. **Minimal Standalone Mode**:  
-
     Using the **ofxColorClient add-on** only without all the bigger Engines an Tools.  
     The more **Lightweight** Mode that allows you to use your local preset files.  
     Bundled with a minimal set of tools: kit browser, palette and gradient previews and tweened transitions.  
@@ -58,9 +55,6 @@ This **openFrameworks** add-on is a **kit of Engines and Tools** to design prese
 * Kit exporter of all **JSON** preset files to your project data path.
 
 ## Usage
-That's similar to **1-example_Basic**.  
-This is recommended to de **Power Standalone Mode**.  
-For the second Mode, you can use too the **1-example_Basic** as **MASTER** + another **OF_APP** example from the **ofxColorClient** as **CLIENT**.
 
 ### ofApp.h
 ```.cpp
