@@ -16,9 +16,9 @@ This **openFrameworks** add-on is a **kit of Engines and Tools** to design and o
 
 ## Engines:  
   1. **10+** Algorithmic **Theory Schemes** from a base color.  
-  *Complementary, Compound, Monochrome, Analogous, Triad...etc*  
+  *Complementary, Compound, Monochrome, Analogous, Triad...*  
   2. **10+** **Range Spaces** between two colors.  
-  *RGB, LAB, CMYK, XYZ...etc*  
+  *RGB, LAB, CMYK, XYZ...*  
   3. [**Colour Lovers API**](https://www.colourlovers.com/) to search keywords online, handle favorites, and history search.
   4. **Extract** the dominant colors **from image files**.  
   *Sorting by Dominance, Hue, Saturation or Brightness*.
