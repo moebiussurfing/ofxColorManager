@@ -27,15 +27,15 @@ This **openFrameworks** add-on is a **kit of Engines and Tools** to design prese
 
 ## Modes:
 
-#### **Powered Standalone Mode**:  
+#### 1. **Powered Standalone Mode**:  
 Use this add-on inside your **OF_App** (Scene Renderer) when you want to use all the tools bundled.  
 Requires all the **ofxColorManager** dependencies. (Similar to the included **1-example_Basic**)  
 
-#### **Linked Mode**:  
+#### 2. **Linked Mode**:  
 Link the **ofxColorManager** container **MASTER OF_App** to your **CLIENT OF_App** with the **ofxColorClient** add-on inside.  
 Allows all the tools, but a more handy setup using two separated apps.  
 
-#### **Minimal Standalone Mode**:
+#### 3. **Minimal Standalone Mode**:
 The more **Lightweight** Mode that allows you to use your local preset files.  
 Using the **ofxColorClient add-on** only, without all the bigger Engines and Tools.  
 
