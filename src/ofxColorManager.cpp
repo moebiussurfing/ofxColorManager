@@ -1231,7 +1231,7 @@ void ofxColorManager::refresh_Libs()
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::draw_Info()
+void ofxColorManager::draw_PresetName()
 {
 	//ofPushMatrix();
 	ofPushStyle();
@@ -1364,7 +1364,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 			//--
 
 			// info
-			if (SHOW_Name) draw_Info();
+			if (SHOW_Name) draw_PresetName();
 		}
 	}
 
@@ -4358,7 +4358,7 @@ void ofxColorManager::gui_Presets()
 
 		ImGui::Dummy(ImVec2(0, 2));
 
-		if (ImGui::CollapsingHeader("MANAGER"))
+		if (ImGui::CollapsingHeader("TOOLS"))
 		{
 			if (ImGui::Button("UPDATE", ImVec2(_w50, _h * 0.5)))
 			{
@@ -7142,7 +7142,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 		//-
 
-		else if (key == OF_KEY_F11)//restore all
+		else if (key == OF_KEY_F11 && !mod_CONTROL)//restore all
 		{
 			SHOW_UserPaletteFloating = true;
 			SHOW_UserPaletteEditor = true;
@@ -7162,6 +7162,10 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			SHOW_Quantizer = false;
 
 			SHOW_AdvancedLayout = false;
+		}
+		else if (key == OF_KEY_F11 && mod_CONTROL)//
+		{
+			SHOW_AdvancedLayout = !SHOW_AdvancedLayout;
 		}
 
 		//----

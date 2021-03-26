@@ -202,7 +202,7 @@ private:
 	//--
 
 private:
-	void draw_Info();
+	void draw_PresetName();
 
 	//--
 

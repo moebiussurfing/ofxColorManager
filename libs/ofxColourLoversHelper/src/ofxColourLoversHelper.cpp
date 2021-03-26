@@ -367,7 +367,7 @@ void ofxColourLoversHelper::drawImGuiMain()
 
 			//--
 
-			if (ImGui::CollapsingHeader("ADVANCED", ImGuiWindowFlags_None))
+			if (ImGui::CollapsingHeader("TOOLS", ImGuiWindowFlags_None))
 			{
 				_w100 = ImGui::GetContentRegionAvail().x;
 				_w99 = _w100 - _spc;
