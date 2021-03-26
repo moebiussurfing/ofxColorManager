@@ -39,7 +39,7 @@ This **openFrameworks** add-on is a **kit of Engines and Tools** to design and o
 
 #### 1. **Powered Standalone Mode**:  
 Use the add-on inside your **OF_App** when you want to use all the Tools bundled.  
-All into one single app: Color Manager + Scene Renderer.  
+All into one single app: _Color Manager + Scene Renderer_.  
 Requires all the **ofxColorManager** dependencies.  
 
 #### 2. **Two Apps Linked Mode**:  
@@ -49,14 +49,14 @@ Link the **ofxColorManager** container **MASTER OF_App** to your **CLIENT OF_App
 #### 3. **Minimal Standalone Mode**:
 The more **Lightweight** Mode, that allows you to use your local preset files.  
 Using the **ofxColorClient add-on** only, without all the Engines and Tools.  
-Just use your **ofxColorManager** compatible palette presets files.
-( More performant in most scenarios and using fewer dependencies than in the other two modes that require **ofxColorManager**. )
+Just use your **ofxColorManager** compatible palette presets files.  
+_( More performant in most scenarios and using fewer dependencies than in the other two modes that require **ofxColorManager**. )_
  
 ## ofxColorClient: The player addon 
   * A Lightweight version of the add-on just to use your **Presets Kit**. 
   * Bundled with a minimal set of tools: Kit browser, palette and gradient previews, and tweened transitions.  
   * To work linked to a another **OF_App** (**MASTER**) using the **ofxColorManger** addon, but inside a minimal version into your own **OF_App** (**CLIENT**). 
-  * Works too in the Standalone Mode to browse and use your kit with preset files.
+  * Works too in the **Standalone Mode** to browse and use your kit with preset files.
 
 ## Other Features
 * **Demo Scenes** for fast palette preview. Colored SVG and bubble scenes.
