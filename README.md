@@ -38,7 +38,7 @@ This **openFrameworks** add-on is a **kit of Engines and Tools** to design and o
 ## Modes
 
 #### 1. **Powered Standalone Mode**:  
-Use this add-on inside your **OF_App** (Scene Renderer) when you want to use all the tools bundled.  
+Use this add-on inside your **OF_App** (Scene Renderer) when you want to use all the tools bundled into one single app.  
 Requires all the **ofxColorManager** dependencies. (Similar to the included **1-example_Basic**)  
 
 #### 2. **Linked Mode**:  
