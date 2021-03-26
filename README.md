@@ -5,11 +5,11 @@ This **openFrameworks** add-on is a **kit of Engines and Tools** to design prese
 ## Screenshot
 ![image](/readme_images/Capture.JPG?raw=true "image")
 
-## Video
-**ofxColorManager**
+## Videos
+**ofxColorManager**  
 [![VIDEO](http://img.youtube.com/vi/oSvGwpbWEuc/0.jpg)](http://www.youtube.com/watch?v=oSvGwpbWEuc "VIDEO")
 
-**ofxColorClient**
+**ofxColorClient**  
 [![VIDEO](http://img.youtube.com/vi/oSvGwpbWEuc/0.jpg)](http://www.youtube.com/watch?v=oSvGwpbWEuc "VIDEO")
 
 ## Engines:  
@@ -27,18 +27,21 @@ This **openFrameworks** add-on is a **kit of Engines and Tools** to design prese
 
 ## Modes:
   1. **Powered Standalone Mode**:  
+
     Use this add-on inside your **OF_App** (Scene Renderer) when you want to use all the tools bundled.  
     Requires all the **ofxColorManager** dependencies. (Similar to the included **1-example_Basic**)  
 
   2. **Linked Mode**:  
+
     Link the **ofxColorManager** container **MASTER OF_App** to your **CLIENT OF_App** with the **ofxColorClient** add-on inside.  
     Allows all the tools, but a more handy setup using two separated apps.  
 
   3. **Minimal Standalone Mode**:  
+
     Using the **ofxColorClient add-on** only without all the bigger Engines an Tools.  
     The more **Lightweight** Mode that allows you to use your local preset files.  
     Bundled with a minimal set of tools: kit browser, palette and gradient previews and tweened transitions.  
-    Could be more performant in most scenarios, and using less dependencies than in the other two modes that requires **ofxColorManager**.
+    ( Could be more performant in most scenarios, and using less dependencies than in the other two modes that requires **ofxColorManager**. )
 
 ## ofxColorClient: The player addon 
   * A Lightweight version of the add-on just to use your presets Kit, or: 
@@ -57,8 +60,7 @@ This **openFrameworks** add-on is a **kit of Engines and Tools** to design prese
 ## Usage
 That's similar to **1-example_Basic**.  
 This is recommended to de **Power Standalone Mode**.  
-For the second Mode, you can use too the **1-example_Basic** **OF_APP** as **MASTER**  
-+ another **OF_APP** example from the **ofxColorClient** as **CLIENT**.
+For the second Mode, you can use too the **1-example_Basic** as **MASTER** + another **OF_APP** example from the **ofxColorClient** as **CLIENT**.
 
 ### ofApp.h
 ```.cpp
@@ -86,22 +88,23 @@ void ofApp::draw()
 * [ofxImGui](https://github.com/Daandelange/ofxImGui/tree/jvcleave)  Fork from @Daandelange Thanks **Daan**!
 * [ofxSurfingHelpers](https://github.com/moebiussurfing/ofxSurfingHelpers)  
 * [ofxIO](https://github.com/bakercp/ofxIO)
-* ofxNetwork  [**OF**]
-* ofxPoco  [**OF**]
-* ofxGui  [**OF**]
-* ofxOpenCv  [**OF**]
-* ofxXmlSettings [**OF**]
-* [ofxSCENE-SVG](https://github.com/moebiussurfing/ofxSCENE-SVG)  Only for an example 
+* ofxNetwork  [ **OF** ]
+* ofxPoco  [ **OF** ]
+* ofxGui  [ **OF** ]
+* ofxOpenCv  [ **OF** ]
+* ofxXmlSettings [ **OF** ]
+* [ofxSCENE-SVG](https://github.com/moebiussurfing/ofxSCENE-SVG)  [ Only for the example ]
 * [ofxScaleDragRect](https://github.com/moebiussurfing/ofxScaleDragRect)
 
-Already packed into ```OF_ADDON/libs```. No need to add them manually with the ```OF Project Generator```:  
-*Thanks a lot to all these ofxAddons coders. Look into each folder for authoring credits, original forks, and license info.*  
+Above addons already packed into ```OF_ADDON/libs```. No need to add them manually with the ```OF Project Generator```:  
 * [ofxColorQuantizerHelper](https://github.com/moebiussurfing/ofxColorQuantizerHelper)
 * [ofxColorsBrowser](https://github.com/moebiussurfing/ofxColorsBrowser)
 * [ofxColourLoversHelper](https://github.com/moebiussurfing/ofxColourLoversHelper)  
 
+*Thanks a lot to all these ofxAddons coders. Look into each folder for authoring credits, original forks, and license info.*  
+
 ## File format
-The **JSON** file format of a preset it's simple. This is an example of a 3 colors palette file content:
+The **JSON** file format of a palette preset it's simple. This is an example of a 3 colors palette file content:
 ```.json
 [
     {
@@ -127,8 +130,9 @@ The **JSON** file format of a preset it's simple. This is an example of a 3 colo
 
 ## Tested systems
 - **Windows 10** / **VS 2017** / **OF ~0.11**
+- **macOS**. **High Sierra** / **Xcode9** & **Xcode10** / **OF ~0.11**
 
-## NOTES / TODO
+## Notes / TODO
 
 ## Author
 An addon by **@moebiusSurfing**  
