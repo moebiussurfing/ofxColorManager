@@ -13,11 +13,12 @@ TODO:
 + undo engine
 + fix demo1 camera and add tweening random jumps
 + check theory picker if calls too much callbacks
++ plugins for UE4 / Unity3D / Processing ?
 
 BUGS:
 
 + colour lovers search hangs sometimes. error -1? breakes browser indexes
-+ fix text input boxes when docking mode.
++ fix text input boxes when docking mode. to avoid floating text input box
 + TCP port number switch, some problems on reconnect bc threading not implemented. should use some sync addon or OSC.
 + ImGui pickers hangs flickering sometimes bc max width
 
