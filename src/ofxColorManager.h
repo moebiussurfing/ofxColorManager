@@ -16,6 +16,7 @@ TODO:
 
 BUGS:
 
++ colour lovers search hangs sometimes. error -1? breakes browser indexes
 + fix text input boxes when docking mode.
 + TCP port number switch, some problems on reconnect bc threading not implemented. should use some sync addon or OSC.
 + ImGui pickers hangs flickering sometimes bc max width
@@ -167,6 +168,13 @@ using namespace ImGui_PalettesPicker;
 class ofxColorManager : public ofBaseApp
 {
 
+	//TODO:
+public:
+	const char* ini_to_load = NULL;
+	const char* ini_to_save = NULL;
+
+	//-
+
 public:
 	ofxColorManager();
 	~ofxColorManager();
@@ -273,7 +281,8 @@ private:
 
 private:
 	ofParameter<bool> SHOW_Name{ "Show Extra Preset Name", false };
-	ofParameter<bool> SHOW_AdvancedLayout{ "ADVANCED", false };
+	ofParameter<bool> SHOW_Advanced{ "ADVANCED", false };
+	ofParameter<bool> SHOW_Layouts{ "LAYOUTS", false };
 	ofParameter<bool> SHOW_Engines{ "ENGINES", true };
 	//shows advanced panels to tweak layout or workflow behaviour
 
@@ -375,7 +384,7 @@ private:
 	ofParameter<bool> SHOW_Library;
 	ofParameter<bool> SHOW_Range;
 	ofParameter<bool> SHOW_UserPaletteFloating;
-	ofParameter<bool> SHOW_UserPaletteEditor;
+	ofParameter<bool> SHOW_Editor;
 	ofParameter<bool> SHOW_Theory;
 	ofParameter<bool> SHOW_Quantizer;
 #ifdef MODE_BACKGROUND
@@ -418,8 +427,8 @@ private:
 
 	// colors library layout
 private:
-	ofParameter<bool> lib_Responsive_Mode;
-	ofParameter<bool> lib_Responsive_Mode2;
+	ofParameter<bool> lib_Responsive_ModeGrid;
+	ofParameter<bool> lib_Responsive_ModeFit;
 	ofParameter<bool> bPagerized;
 	ofParameter<int> sizeLibColBox;
 	ofParameter<bool> bResponsive_Panels;
@@ -848,6 +857,7 @@ private:
 #ifndef USE_MINIMAL_GUI
 	void gui_Advanced();
 #endif
+	void gui_Layouts();
 
 	//--
 
@@ -1071,7 +1081,7 @@ private:
 private:
 	ofParameter<bool> SHOW_MainMenuBar{ "Show Menu Bar", false };
 	bool SHOW_About = false;
-	void gui_MainMenuBar();
+	void gui_MenuBar();
 	void ofxColorManager_ShowAboutWindow(bool* p_open);
 
 	//--

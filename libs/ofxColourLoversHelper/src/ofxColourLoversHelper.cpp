@@ -653,7 +653,7 @@ void ofxColourLoversHelper::drawImGuiMain()
 			}
 		}
 
-		if (SHOW_BrowserPalettes) ofxImGui::AddParameter(AutoScroll);
+		//if (SHOW_BrowserPalettes) ofxImGui::AddParameter(AutoScroll);
 	}
 	ofxImGui::EndWindow(mainSettings);
 
