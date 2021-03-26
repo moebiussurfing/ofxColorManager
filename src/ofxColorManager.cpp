@@ -370,8 +370,8 @@ void ofxColorManager::setup()
 	//gui layout
 	//library
 	sizeLibColBox.set("Size Lib", 25, 10, 100);
-	lib_Responsive_Mode.set("Responsive", false);
-	lib_Responsive_Mode2.set("Responsive2", true);
+	lib_Responsive_Mode.set("Responsive Grid", false);
+	lib_Responsive_Mode2.set("Responsive Fit", true);
 	bPagerized.set("Mode Paging", false);
 	//palette
 	sizePaletteBox.set("Size Plt", 25, 10, 500);
@@ -2660,16 +2660,22 @@ void ofxColorManager::gui_Library()
 				{
 					ImGui::PushItemWidth(_w33);
 
-					ImGui::InputInt(sizeLibColBox.getName().c_str(), (int*)&sizeLibColBox.get(), 1, 5);
-					ofxImGui::AddParameter(lib_Responsive_Mode);
 					ofxImGui::AddParameter(lib_Responsive_Mode2);
+					if (!lib_Responsive_Mode2) {
+						ofxImGui::AddParameter(lib_Responsive_Mode);
+						ImGui::InputInt(sizeLibColBox.getName().c_str(), (int*)&sizeLibColBox.get(), 1, 5);
 					ofxImGui::AddParameter(bPagerized);
+					}
 
 					//-
 
 					// responsive
 
-					if (!lib_Responsive_Mode)
+					if (lib_Responsive_Mode2) {
+						ImGui::InputInt(lib_NumRows.getName().c_str(), (int*)&lib_NumRows.get(), 1, 5);
+						ImGui::InputInt(lib_MaxColumns.getName().c_str(), (int*)&lib_MaxColumns.get(), 1, 5);
+					}
+					else if (!lib_Responsive_Mode)
 					{
 						ofxImGui::AddParameter(lib_CardsMode);
 						ImGui::InputFloat(scale_LibCol.getName().c_str(), (float *)&scale_LibCol.get(), 0.02f, 0.1f);
@@ -2681,6 +2687,10 @@ void ofxColorManager::gui_Library()
 
 						}
 					}
+
+					//TODO:
+					lib_MaxColumns = ofClamp(lib_MaxColumns, 1, 100);
+					lib_NumRows = ofClamp(lib_NumRows, 1, 100);
 
 					ImGui::PopItemWidth();
 				}
@@ -2749,8 +2759,8 @@ void ofxColorManager::gui_Library()
 			// page slider
 
 			ImGui::SameLine();
-			ImGui::PushItemWidth(_w33);
-			//ImGui::PushItemWidth(_w * 0.4);
+			//ImGui::PushItemWidth(_w33);
+			ImGui::PushItemWidth(-35);
 			ofxImGui::AddParameter(lib_Page_Index);//page slider selector
 			//ImGui::SliderInt("PAGE", &lib_Page_Index, 0, lib_Page_Max);//page slider selector
 			//ImGui::DragInt("PAGE", (int *)&lib_Page_Index, 0, lib_Page_Max);//collide..
