@@ -38,17 +38,18 @@ This **openFrameworks** add-on is a **kit of Engines and Tools** to design and o
 ## Modes
 
 #### 1. **Powered Standalone Mode**:  
-Use this add-on inside your **OF_App** (Scene Renderer) when you want to use all the tools bundled into one single app.  
-Requires all the **ofxColorManager** dependencies. (Similar to the included **1-example_Basic**)  
+Use the add-on inside your **OF_App** when you want to use all the Tools bundled.  
+All into one single app: Color Manager + Scene Renderer.  
+Requires all the **ofxColorManager** dependencies.  
 
-#### 2. **Linked Mode**:  
+#### 2. **Two Apps Linked Mode**:  
+Allows all the Tools, but with a more handy setup: using two separated apps.  
 Link the **ofxColorManager** container **MASTER OF_App** to your **CLIENT OF_App** with the **ofxColorClient** add-on inside.  
-Allows all the tools, but a more handy setup using two separated apps.  
 
 #### 3. **Minimal Standalone Mode**:
-The more **Lightweight** Mode that allows you to use your local preset files.  
-Using the **ofxColorClient add-on** only, without all the bigger Engines and Tools.  
-
+The more **Lightweight** Mode, that allows you to use your local preset files.  
+Using the **ofxColorClient add-on** only, without all the Engines and Tools.  
+Just use your **ofxColorManager** compatible palette presets files.
 ( More performant in most scenarios and using fewer dependencies than in the other two modes that require **ofxColorManager**. )
  
 ## ofxColorClient: The player addon 
