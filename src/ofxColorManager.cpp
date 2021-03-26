@@ -283,7 +283,6 @@ ofxColorManager::ofxColorManager()
 	helpInfo += "G            GUI\n";
 	helpInfo += "F            FULL SCREEN\n";
 	helpInfo += "A            ABOUT\n";
-	//helpInfo += "K          KEYS\n";
 	helpInfo += "\n";
 
 	helpInfo += "SPACE        NEXT PRESET\n";
@@ -291,8 +290,6 @@ ofxColorManager::ofxColorManager()
 	helpInfo += " +Ctrl       <> SHIFT COLORS\n";
 	helpInfo += "\n";
 
-	helpInfo += "Down|Up      ENGINE TYPES\n";
-	helpInfo += "-|+          AMOUNT COLORS\n";
 	helpInfo += "Arrows       LIBRARY COLORS\n";
 	helpInfo += " +Ctrl       LIBRARY PAGE\n";
 	helpInfo += "\n";
@@ -301,7 +298,7 @@ ofxColorManager::ofxColorManager()
 	helpInfo += " +Ctrl       AUX 2\n";
 	helpInfo += "RETURN       RANDOM 1\n";
 	helpInfo += " +Ctrl       RANDOM 2\n";
-	helpInfo += "\n";
+	//helpInfo += "\n";
 	helpInfo += "\n";
 
 	helpInfo += "PANELS\n";
@@ -317,7 +314,6 @@ ofxColorManager::ofxColorManager()
 	helpInfo += "F9           MINI\n";
 	helpInfo += "F10          EXPORT\n";
 	helpInfo += "F11          RESTORE\n";
-	//helpInfo += "F6           BACKGROUND\n";
 	helpInfo += "\n";
 	helpInfo += "\n";
 
@@ -329,6 +325,10 @@ ofxColorManager::ofxColorManager()
 	helpInfo += "             RANGE\n";
 	helpInfo += "             LOVERS\n";
 	helpInfo += "             PICTURE\n";
+	helpInfo += "\n";
+	helpInfo += "Down|Up      ENGINE TYPES\n";
+	helpInfo += "-|+          AMOUNT COLORS\n";
+
 	helpInfo += "\n";
 	helpInfo += "\n";
 
@@ -2582,7 +2582,6 @@ void ofxColorManager::gui_Library()
 		//--
 
 		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
-		//float _w = ImGui::GetWindowContentRegionWidth() - _spc;
 		float _w = ImGui::GetContentRegionAvail().x - _spc;
 		float _h = ImGui::GetContentRegionAvail().y - _spc;
 		float _w50 = _w / 2 - _spc;
@@ -2600,8 +2599,12 @@ void ofxColorManager::gui_Library()
 		// b. responsive
 		lib_Page_NumColors = lib_NumRows * lib_MaxColumns.get();
 
-		lib_Page_Max = lib_TotalColors / (lib_Page_NumColors - 1);
-		lib_Page_Index.setMax(lib_Page_Max - 1);
+		//lib_Page_Max = lib_TotalColors / (lib_Page_NumColors - 1);
+		//lib_Page_Index.setMax(lib_Page_Max - 1);
+
+		//TODO:
+		lib_Page_Max = lib_TotalColors / lib_Page_NumColors;
+		lib_Page_Index.setMax(lib_Page_Max);
 
 		//--
 
@@ -2661,17 +2664,19 @@ void ofxColorManager::gui_Library()
 					ImGui::PushItemWidth(_w33);
 
 					ofxImGui::AddParameter(lib_Responsive_Mode2);
-					if (!lib_Responsive_Mode2) {
+					if (!lib_Responsive_Mode2)
+					{
 						ofxImGui::AddParameter(lib_Responsive_Mode);
 						ImGui::InputInt(sizeLibColBox.getName().c_str(), (int*)&sizeLibColBox.get(), 1, 5);
-					ofxImGui::AddParameter(bPagerized);
+						ofxImGui::AddParameter(bPagerized);
 					}
 
 					//-
 
 					// responsive
 
-					if (lib_Responsive_Mode2) {
+					if (lib_Responsive_Mode2)
+					{
 						ImGui::InputInt(lib_NumRows.getName().c_str(), (int*)&lib_NumRows.get(), 1, 5);
 						ImGui::InputInt(lib_MaxColumns.getName().c_str(), (int*)&lib_MaxColumns.get(), 1, 5);
 					}
@@ -2702,10 +2707,8 @@ void ofxColorManager::gui_Library()
 
 			//--
 
+			// libraries
 #ifdef USE_EXTRA_LIBRARIES
-			//ImGui::Dummy(ImVec2(0, 5));
-
-			// library
 
 			if (ImGui::CollapsingHeader("Library"))
 			{
@@ -2759,17 +2762,17 @@ void ofxColorManager::gui_Library()
 			// page slider
 
 			ImGui::SameLine();
-			//ImGui::PushItemWidth(_w33);
 			ImGui::PushItemWidth(-35);
 			ofxImGui::AddParameter(lib_Page_Index);//page slider selector
-			//ImGui::SliderInt("PAGE", &lib_Page_Index, 0, lib_Page_Max);//page slider selector
-			//ImGui::DragInt("PAGE", (int *)&lib_Page_Index, 0, lib_Page_Max);//collide..
 			ImGui::PopItemWidth();
 
-			lib_Page_Index = ofClamp(lib_Page_Index, 0, lib_Page_Index.getMax());
+			lib_Page_Index = ofClamp(lib_Page_Index.get(), 0, lib_Page_Index.getMax());
 		}
 
+		//-
+
 		//TODO:
+		// random buttons
 		//float _h = BUTTON_BIG_HEIGHT;
 		//ImVec2 bb{ _w50, _h / 2 };
 		//if (ImGui::Button("Random1", bb))
@@ -2798,6 +2801,8 @@ void ofxColorManager::gui_Library()
 
 		//--
 
+		// boxes sizes
+
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
 
 		_w = ImGui::GetContentRegionAvail().x - _spc;
@@ -2809,26 +2814,26 @@ void ofxColorManager::gui_Library()
 		{
 			float _wb = _w / lib_MaxColumns;
 			float _wh = _h / lib_NumRows;
-			_bb = ImVec2(_wb,_wh);
+			_bb = ImVec2(_wb, _wh);
 		}
-		else if (lib_Responsive_Mode) 
+		else if (lib_Responsive_Mode)
 		{
 			_bb = _sz;
 		}
-		else 
+		else
 		{
 			_bb = ImVec2(sizeLibColBox * scale_LibCol, sizeLibColBox * scale_LibCol);
 		}
 
 		//--
 
-		for (int n = lib_StartCol; n < lib_EndCol; n++)
+		for (int n = lib_StartCol; n < lib_EndCol && n < lib_TotalColors; n++)
 		{
 			//--
 
 			// responsive buttons size
 
-			if (lib_Responsive_Mode)
+			if (lib_Responsive_Mode && !lib_Responsive_Mode2)
 			{
 				ImGui::PushID(n);
 
@@ -2901,7 +2906,6 @@ void ofxColorManager::gui_Library()
 
 				//----
 
-				//TODO: 
 				// draw border to selected color
 				if (bDrawBorder)
 				{
@@ -2915,7 +2919,7 @@ void ofxColorManager::gui_Library()
 			//--
 
 			// responsive buttons size
-			if (lib_Responsive_Mode)
+			if (lib_Responsive_Mode && !lib_Responsive_Mode2)
 			{
 				ImGui::PopStyleColor();
 
@@ -4114,13 +4118,13 @@ void ofxColorManager::gui_InputText()
 					refresh_FilesSorting(textInput_New);
 				}
 				else ofLogError(__FUNCTION__) << "Empty name on textInput !";
-		}
+			}
 			ImGui::PopStyleColor();
 #endif
-	}
+		}
 
 		ImGui::Dummy(ImVec2(0, 5));
-}
+	}
 	ofxImGui::EndWindow(mainSettings);
 
 #ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
@@ -4328,7 +4332,7 @@ void ofxColorManager::gui_Presets()
 				else ofLogError(__FUNCTION__) << "Empty name on textInput !";
 			}
 			ImGui::PopStyleColor();
-	}
+		}
 		else
 		{
 			ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.5f, 0.0f, 0.0f, a));
@@ -4523,7 +4527,7 @@ void ofxColorManager::gui_Presets()
 		if (SHOW_Kit) ofxImGui::AddParameter(AutoScroll);
 
 		//ImGui::Checkbox("Auto-Resize", &auto_resize);
-}
+	}
 
 	ofxImGui::EndWindow(mainSettings);
 
@@ -5860,11 +5864,11 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			// workflow
 			//if (SHOW_MainMenuBar) SHOW_MainMenuBar = false;
 			if (SHOW_EditTheme) SHOW_EditTheme = false;
-	}
+		}
 
 		////wf
 		//if (!SHOW_MainMenuBar) SHOW_MainMenuBar = true;
-}
+	}
 
 	// layout
 	else if (name == bFitLayout.getName())
@@ -6352,7 +6356,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	//{
 	//	if (bLock_palette) bAuto_Build_Palette = false;
 	//}
-	}
+}
 
 //--------------------------------------------------------------
 void ofxColorManager::Changed_Range(ofAbstractParameter &e)
@@ -6829,13 +6833,13 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 			if (!bEditPalette)
 			{
-				//randomize the base color
+				// randomize the base color
 				if (key == OF_KEY_RETURN && !mod_CONTROL)
 				{
 					doRandomizeColorPicker();
 				}
 
-				//randomize a theory type
+				// randomize a theory type
 				if (key == OF_KEY_RETURN && mod_CONTROL)
 				{
 					// workflow
@@ -6931,161 +6935,162 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 		if (SHOW_Library)
 		{
-				if (key == OF_KEY_RIGHT && !mod_CONTROL)
+			if (key == OF_KEY_RIGHT && !mod_CONTROL)
+			{
+				// index
+				int n = last_ColorPicked_Lib;
+				n++;
+				n = ofClamp(n, 0, lib_TotalColors - 1);
+				last_ColorPicked_Lib = n;
+				last_Lib_Index = n;
+				// color name
+				if (n < palette_Lib_Names.size())
 				{
-					// index
-					int n = last_ColorPicked_Lib;
-					n++;
-					n = ofClamp(n, 0, lib_TotalColors - 1);
-					last_ColorPicked_Lib = n;
-					last_Lib_Index = n;
-					// color name
-					if (n < palette_Lib_Names.size())
-					{
-						last_Lib_NameColor = palette_Lib_Names[n];
-					}
-					color_Picked = ofColor(palette_Lib_Cols[n]);
-					//go to page
-					int pag = n / lib_Page_NumColors;
-					if (lib_Page_Index != pag) lib_Page_Index = pag;
+					last_Lib_NameColor = palette_Lib_Names[n];
 				}
+				color_Picked = ofColor(palette_Lib_Cols[n]);
+				//go to page
+				int pag = n / lib_Page_NumColors;
+				if (lib_Page_Index != pag) lib_Page_Index = pag;
+			}
 
-				else if (key == OF_KEY_LEFT && !mod_CONTROL)
+			else if (key == OF_KEY_LEFT && !mod_CONTROL)
+			{
+				// index
+				int n = last_ColorPicked_Lib;
+				n--;
+				n = ofClamp(n, 0, lib_TotalColors - 1);
+				last_ColorPicked_Lib = n;
+				last_Lib_Index = n;
+				// color name
+				if (n < palette_Lib_Names.size())
 				{
-					// index
-					int n = last_ColorPicked_Lib;
-					n--;
-					n = ofClamp(n, 0, lib_TotalColors - 1);
-					last_ColorPicked_Lib = n;
-					last_Lib_Index = n;
-					// color name
-					if (n < palette_Lib_Names.size())
-					{
-						last_Lib_NameColor = palette_Lib_Names[n];
-					}
-					color_Picked = ofColor(palette_Lib_Cols[n]);
-					//go to page
-					int pag = n / lib_Page_NumColors;
-					if (lib_Page_Index != pag) lib_Page_Index = pag;
+					last_Lib_NameColor = palette_Lib_Names[n];
 				}
+				color_Picked = ofColor(palette_Lib_Cols[n]);
+				//go to page
+				int pag = n / lib_Page_NumColors;
+				if (lib_Page_Index != pag) lib_Page_Index = pag;
+			}
 
-				else if (key == OF_KEY_DOWN && !mod_CONTROL)
+			else if (key == OF_KEY_DOWN && !mod_CONTROL)
+			{
+				// index
+				int n = last_ColorPicked_Lib;
+				if (!lib_Responsive_Mode2) n = n + lib_RowSize;
+				else  n = n + lib_MaxColumns;
+				n = ofClamp(n, 0, lib_TotalColors - 1);
+				last_ColorPicked_Lib = n;
+				last_Lib_Index = n;
+				// color name
+				if (n < palette_Lib_Names.size())
 				{
-					// index
-					int n = last_ColorPicked_Lib;
-					n = n + lib_RowSize;
-					n = ofClamp(n, 0, lib_TotalColors - 1);
-					last_ColorPicked_Lib = n;
-					last_Lib_Index = n;
-					// color name
-					if (n < palette_Lib_Names.size())
-					{
-						last_Lib_NameColor = palette_Lib_Names[n];
-					}
-					color_Picked = ofColor(palette_Lib_Cols[n]);
-					// go to page
-					int pag = n / lib_Page_NumColors;
-					if (lib_Page_Index != pag) lib_Page_Index = pag;
+					last_Lib_NameColor = palette_Lib_Names[n];
 				}
+				color_Picked = ofColor(palette_Lib_Cols[n]);
+				// go to page
+				int pag = n / lib_Page_NumColors;
+				if (lib_Page_Index != pag) lib_Page_Index = pag;
+			}
 
-				else if (key == OF_KEY_UP && !mod_CONTROL)
+			else if (key == OF_KEY_UP && !mod_CONTROL)
+			{
+				// index
+				int n = last_ColorPicked_Lib;
+				if (!lib_Responsive_Mode2) n = n - lib_RowSize;
+				else  n = n - lib_MaxColumns;
+				n = ofClamp(n, 0, lib_TotalColors - 1);
+				last_ColorPicked_Lib = n;
+				last_Lib_Index = n;
+				// color name
+				if (n < palette_Lib_Names.size())
 				{
-					// index
-					int n = last_ColorPicked_Lib;
-					n = n - lib_RowSize;
-					n = ofClamp(n, 0, lib_TotalColors - 1);
-					last_ColorPicked_Lib = n;
-					last_Lib_Index = n;
-					// color name
-					if (n < palette_Lib_Names.size())
-					{
-						last_Lib_NameColor = palette_Lib_Names[n];
-					}
-					color_Picked = ofColor(palette_Lib_Cols[n]);
-					// go to page
-					int pag = n / lib_Page_NumColors;
-					if (lib_Page_Index != pag) lib_Page_Index = pag;
+					last_Lib_NameColor = palette_Lib_Names[n];
 				}
+				color_Picked = ofColor(palette_Lib_Cols[n]);
+				// go to page
+				int pag = n / lib_Page_NumColors;
+				if (lib_Page_Index != pag) lib_Page_Index = pag;
+			}
 
-				else if (key == OF_KEY_LEFT && mod_CONTROL)
+			else if (key == OF_KEY_LEFT && mod_CONTROL)
+			{
+				lib_Page_Index--;
+				if (lib_Page_Index < lib_Page_Index.getMin()) lib_Page_Index = lib_Page_Index.getMax();
+				lib_Page_Index = ofClamp(lib_Page_Index, lib_Page_Index.getMin(), lib_Page_Index.getMax());
+
+				// index
+				int n = lib_Page_Index * lib_Page_NumColors;
+				n = ofClamp(n, 0, lib_TotalColors - 1);
+				last_ColorPicked_Lib = n;
+				last_Lib_Index = n;
+				// color name
+				if (n < palette_Lib_Names.size())
 				{
-					lib_Page_Index--;
-					if (lib_Page_Index < lib_Page_Index.getMin()) lib_Page_Index = lib_Page_Index.getMax();
-					//lib_Page_Index = ofClamp(lib_Page_Index, lib_Page_Index.getMin(), lib_Page_Index.getMax());
-
-					// index
-					int n = lib_Page_Index * lib_Page_NumColors;
-					n = ofClamp(n, 0, lib_TotalColors - 1);
-					last_ColorPicked_Lib = n;
-					last_Lib_Index = n;
-					// color name
-					if (n < palette_Lib_Names.size())
-					{
-						last_Lib_NameColor = palette_Lib_Names[n];
-					}
-					color_Picked = ofColor(palette_Lib_Cols[n]);
+					last_Lib_NameColor = palette_Lib_Names[n];
 				}
+				color_Picked = ofColor(palette_Lib_Cols[n]);
+			}
 
-				else if (key == OF_KEY_RIGHT && mod_CONTROL)
+			else if (key == OF_KEY_RIGHT && mod_CONTROL)
+			{
+				lib_Page_Index++;
+				if (lib_Page_Index > lib_Page_Index.getMax()) lib_Page_Index = lib_Page_Index.getMin();
+				lib_Page_Index = ofClamp(lib_Page_Index, lib_Page_Index.getMin(), lib_Page_Index.getMax());
+
+				// index
+				int n = lib_Page_Index * lib_Page_NumColors;
+				n = ofClamp(n, 0, lib_TotalColors - 1);
+				last_ColorPicked_Lib = n;
+				last_Lib_Index = n;
+				// color name
+				if (n < palette_Lib_Names.size())
 				{
-					lib_Page_Index++;
-					if (lib_Page_Index > lib_Page_Index.getMax()) lib_Page_Index = lib_Page_Index.getMin();
-					//lib_Page_Index = ofClamp(lib_Page_Index, lib_Page_Index.getMin(), lib_Page_Index.getMax());
-
-					// index
-					int n = lib_Page_Index * lib_Page_NumColors;
-					n = ofClamp(n, 0, lib_TotalColors - 1);
-					last_ColorPicked_Lib = n;
-					last_Lib_Index = n;
-					// color name
-					if (n < palette_Lib_Names.size())
-					{
-						last_Lib_NameColor = palette_Lib_Names[n];
-					}
-					color_Picked = ofColor(palette_Lib_Cols[n]);
+					last_Lib_NameColor = palette_Lib_Names[n];
 				}
+				color_Picked = ofColor(palette_Lib_Cols[n]);
+			}
 
+			else if (key == OF_KEY_RETURN && !mod_CONTROL)//random a color from the full library
+			{
 				//TODO:
 				//crash
-				else if (key == OF_KEY_RETURN && !mod_CONTROL)//random a color
-				{
-					//doRandomizeColorLibrary(false);
+				//doRandomizeColorLibrary(false);
 
-					doRandomizeColorLibrary();
-					int n = ofRandom(0, lib_TotalColors);
-					n = ofClamp(n, 0, lib_TotalColors - 1);
-					last_ColorPicked_Lib = n;
-					last_Lib_Index = n;
-					// color name
-					if (n < palette_Lib_Names.size())
-					{
-						last_Lib_NameColor = palette_Lib_Names[n];
-					}
-					color_Picked = ofColor(palette_Lib_Cols[n]);
-					// go to page
-					int pag = n / lib_Page_NumColors;
-					if (lib_Page_Index != pag) lib_Page_Index = pag;
-				}
+				doRandomizeColorLibrary();
+				int n = ofRandom(0, lib_TotalColors);
+				n = ofClamp(n, 0, lib_TotalColors - 1);
+				last_ColorPicked_Lib = n;
+				last_Lib_Index = n;
+				// color name
+				if (n < palette_Lib_Names.size()) last_Lib_NameColor = palette_Lib_Names[n];
+				else last_Lib_NameColor = "ERROR EMPTY_COLOR";//error
+				color_Picked = ofColor(palette_Lib_Cols[n]);
+				// go to page
+				int pag = n / lib_Page_NumColors;
+				if (lib_Page_Index != pag) lib_Page_Index = pag;
+			}
 
-				else if (key == OF_KEY_RETURN && mod_CONTROL)//random a color from current page
-				{
-					//doRandomizeColorLibrary(true);
+			else if (key == OF_KEY_RETURN && mod_CONTROL)//random a color from current page
+			{
+				//TODO:
+				//crash
+				//doRandomizeColorLibrary(true);
 
-					int n = ofRandom(0, lib_Page_NumColors);
-					n = ofClamp(n, 0, lib_Page_NumColors - 1);
-					n = n + lib_Page_NumColors * lib_Page_Index;
-					last_ColorPicked_Lib = n;
-					last_Lib_Index = n;
-					// color name
-					if (n < palette_Lib_Names.size())
-					{
-						last_Lib_NameColor = palette_Lib_Names[n];
-					}
-					color_Picked = ofColor(palette_Lib_Cols[n]);
-					// go to page
-					int pag = n / lib_Page_NumColors;
-					if (lib_Page_Index != pag) lib_Page_Index = pag;
-				}
+				int nmin = lib_Page_NumColors * lib_Page_Index;
+				int nmax = lib_Page_NumColors * (lib_Page_Index + 1);
+				nmax = ofClamp(nmax, 0, lib_TotalColors - 1);
+				int n = ofRandom(nmin, nmax);
+				last_ColorPicked_Lib = n;
+				last_Lib_Index = n;
+				// color name
+				if (n < palette_Lib_Names.size()) last_Lib_NameColor = palette_Lib_Names[n];
+				else last_Lib_NameColor = "ERROR EMPTY_COLOR";//error
+				color_Picked = ofColor(palette_Lib_Cols[n]);
+				// go to page
+				int pag = n / lib_Page_NumColors;
+				if (lib_Page_Index != pag) lib_Page_Index = pag;
+			}
 		}
 
 		//----
@@ -7112,12 +7117,6 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		{
 			SHOW_Picker = !SHOW_Picker;
 		}
-		//#ifdef MODE_BACKGROUND
-		//		else if (key == OF_KEY_F5)//bg
-		//		{
-		//			SHOW_BackGround = !SHOW_BackGround;
-		//		}
-		//#endif
 		else if (key == OF_KEY_F6)//library
 		{
 			SHOW_Library = !SHOW_Library;
@@ -7167,6 +7166,13 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		{
 			SHOW_AdvancedLayout = !SHOW_AdvancedLayout;
 		}
+
+		//#ifdef MODE_BACKGROUND
+		//		else if (key == OF_KEY_F5)//bg
+		//		{
+		//			SHOW_BackGround = !SHOW_BackGround;
+		//		}
+		//#endif
 
 		//----
 

@@ -13,10 +13,10 @@ This **openFrameworks** add-on is a **kit of Engines and Tools** to design prese
 [![VIDEO](http://img.youtube.com/vi/oSvGwpbWEuc/0.jpg)](http://www.youtube.com/watch?v=oSvGwpbWEuc "VIDEO")
 
 ## Engines:  
-  1. **10+** Algorithmic **Theory Schemes** from a base color. (Complementary, Compound, Monochrome, Analogous, Triad...etc)
-  2. **10+** **Range Spaces** between two colors. (RGB, LAB, CMYK, XYZ...etc)
+  1. **10+** Algorithmic **Theory Schemes** from a base color. (*Complementary, Compound, Monochrome, Analogous, Triad...etc*)
+  2. **10+** **Range Spaces** between two colors. (*RGB, LAB, CMYK, XYZ...etc*)
   3. [**Colour Lovers API**](https://www.colourlovers.com/) to search keywords online, handle favorites, and history search.
-  4. **Extract** the dominant colors **from image files**. (Sorting by Dominance, Hue, Saturation or Brightness)
+  4. **Extract** the dominant colors **from image files**. (*Sorting by Dominance, Hue, Saturation or Brightness*)
 
 ## Tools:  
 * **Kit of Presets Manager**: 
@@ -27,29 +27,33 @@ This **openFrameworks** add-on is a **kit of Engines and Tools** to design prese
 
 ## Modes:
   1. **Powered Standalone Mode**:  
-    Use this add-on inside your **OF_App** (Scene Renderer) when you want to use all the tools bundled.  
-    Requires all the **ofxColorManager** dependencies. (Similar to the included **1-example_Basic**)  
+  
+  Use this add-on inside your **OF_App** (Scene Renderer) when you want to use all the tools bundled.  
+  Requires all the **ofxColorManager** dependencies. (Similar to the included **1-example_Basic**)  
 
   2. **Linked Mode**:  
-    Link the **ofxColorManager** container **MASTER OF_App** to your **CLIENT OF_App** with the **ofxColorClient** add-on inside.  
-    Allows all the tools, but a more handy setup using two separated apps.  
+  
+  Link the **ofxColorManager** container **MASTER OF_App** to your **CLIENT OF_App** with the **ofxColorClient** add-on inside.  
+  Allows all the tools, but a more handy setup using two separated apps.  
 
-  3. **Minimal Standalone Mode**:  
-    The more **Lightweight** Mode that allows you to use your local preset files.  
-    Using the **ofxColorClient add-on** only, without all the bigger Engines and Tools.  
-    ( More performant in most scenarios and using fewer dependencies than in the other two modes that require **ofxColorManager**. )
+  3. **Minimal Standalone Mode**:
+    
+  The more **Lightweight** Mode that allows you to use your local preset files.  
+  Using the **ofxColorClient add-on** only, without all the bigger Engines and Tools.  
+
+  ( More performant in most scenarios and using fewer dependencies than in the other two modes that require **ofxColorManager**. )
  
 ## ofxColorClient: The player addon 
   * A Lightweight version of the add-on just to use your presets Kit. 
   * Bundled with a minimal set of tools: Kit browser, palette and gradient previews, and tweened transitions.  
-  * To work linked to a another **OF_APP** (**MASTER**) using the **ofxColorManger** addon, but inside a minimal version into your own **OF_APP** (**CLIENT**). 
+  * To work linked to a another **OF_App** (**MASTER**) using the **ofxColorManger** addon, but inside a minimal version into your own **OF_App** (**CLIENT**). 
   * Works too in the Standalone Mode to browse and use your kit with preset files.
 
 ## Other Features
 * **Demo Scenes** for fast palette preview. Colored SVG and bubble scenes.
 * **ImGui** based GUI. Docked and customizable.
 * **Linkable** with **ofxColorClient** trough TCP or Watching files.
-* Hue Wheel and rectangle **color pickers** with **HSV** sliders.
+* Hue Wheel and rectangle **Color Pickers** with **HSV** sliders.
 * **Pantone** library with **2000+** named **colors**.
 * Manage: Edit, add, delete, sort, shift, and drag your palette colors. 
 * Kit exporter of all **JSON** preset files to your project data path.
