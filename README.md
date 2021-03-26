@@ -26,17 +26,17 @@ This **openFrameworks** add-on is a **kit of Engines and Tools** to design prese
 * **Gradient Designer** with an available extra pickable color.
 
 ## Modes:
-  1. **Powered Standalone Mode**:  
+  #### **Powered Standalone Mode**:  
   
   Use this add-on inside your **OF_App** (Scene Renderer) when you want to use all the tools bundled.  
   Requires all the **ofxColorManager** dependencies. (Similar to the included **1-example_Basic**)  
 
-  2. **Linked Mode**:  
+  #### **Linked Mode**:  
   
   Link the **ofxColorManager** container **MASTER OF_App** to your **CLIENT OF_App** with the **ofxColorClient** add-on inside.  
   Allows all the tools, but a more handy setup using two separated apps.  
 
-  3. **Minimal Standalone Mode**:
+  #### **Minimal Standalone Mode**:
     
   The more **Lightweight** Mode that allows you to use your local preset files.  
   Using the **ofxColorClient add-on** only, without all the bigger Engines and Tools.  
