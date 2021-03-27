@@ -61,9 +61,9 @@ _( More performant in most scenarios and using fewer dependencies than in the ot
 ## Other Features
 * **Demo Scenes** for fast palette preview. Colored SVG and bubble scenes.
 * **ImGui** based GUI. Docked and customizable.
-* **Linkable** with **ofxColorClient** trough TCP or Watching files.
-* Hue Wheel and rectangle **Color Pickers** with **HSV** sliders.
-* **Pantone** library with **2000+** named **colors**.
+* **Linkable** with antoher app using **ofxColorClient** trough TCP or Watching files.
+* Hue wheel and rectangle **Color Pickers** with **HSV** sliders and clipboard copy/paste codes.
+* **Pantone** library with **2000+ colors**.
 * Manage: Edit, add, remove, sort, shift, and drag your palette colors. 
 * Kit exporter of all **JSON** preset files to your project data path.
 
@@ -86,7 +86,7 @@ void ofApp::setup()
 
 void ofApp::draw()
 {
-  // Use the palette colors to draw your Scene. 
+  // Use the colors. 
   // Nothing more!
 }
 ```

@@ -283,8 +283,9 @@ private:
 private:
 	ofParameter<bool> SHOW_Name{ "Show Extra Preset Name", false };
 	ofParameter<bool> SHOW_Advanced{ "ADVANCED", false };
+	ofParameter<bool> SHOW_MainPanel;
 	ofParameter<bool> SHOW_Layouts{ "LAYOUTS", false };
-	ofParameter<bool> SHOW_Engines{ "ENGINES", true };
+	ofParameter<bool> SHOW_PanelEngines{ "ENGINES", true };
 	//shows advanced panels to tweak layout or workflow behaviour
 
 	ofParameter<bool> auto_pilot{ "Play Slide-Show", false };
@@ -376,7 +377,7 @@ private:
 	ofParameter<bool> SHOW_ColourLovers_searcher;
 	ofParameter<bool> SHOW_BrowserColors;
 	ofParameter<bool> SHOW_debugText;
-	ofParameter<bool> SHOW_Panels;
+	ofParameter<bool> SHOW_Engines;
 	ofParameter<bool> SHOW_Export;
 	ofParameter<bool> SHOW_Presets;
 	ofParameter<bool> SHOW_Kit;
@@ -839,8 +840,8 @@ private:
 	void gui_Library();
 	void gui_Theory();
 	void gui_Range();
-	void gui_PanelsMain();
-	void gui_PanelsEngines();
+	void gui_MainPanel();
+	void gui_Engines();
 	void gui_Demo();
 	void gui_Export();
 	void gui_Gradient();
@@ -1083,7 +1084,7 @@ private:
 	ofParameter<bool> SHOW_MainMenuBar{ "Show Menu Bar", false };
 	bool SHOW_About = false;
 	void gui_MenuBar();
-	void ofxColorManager_ShowAboutWindow(bool* p_open);
+	void gui_About(bool* p_open);
 
 	//--
 

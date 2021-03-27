@@ -13,11 +13,11 @@
         "Engines": {
             "Amnt_Colors_Thy": "9",
             "Analogue_Spread": "0.213",
-            "Color_1": "0.25098, 0.964706, 0.258824, 1",
-            "Color_2": "0, 0.00784314, 0, 1",
+            "Color_1": "0.0196078, 0.65098, 0.431373, 1",
+            "Color_2": "0.960784, 0.235294, 0.396078, 1",
             "Last_Range_Index": "3",
             "Last_Theory_Index": "9",
-            "Preset_Index": "53",
+            "Preset_Index": "15",
             "SCENE": "1"
         },
         "ExportColors": {
@@ -29,7 +29,7 @@
         },
         "Font_Big_Size": "50",
         "Font_Size": "14",
-        "LAYOUTS": "0",
+        "LAYOUTS": "1",
         "LIBRARY": {
             "Columns_Max": "10",
             "Mode_Cards": "0",
@@ -57,7 +57,7 @@
             "GRADIENT": "0",
             "GUI_MAIN": "1",
             "KIT": "1",
-            "LIBRARY": "0",
+            "LIBRARY": "1",
             "LOVERS": "0",
             "MINI": "0",
             "PALETTE": "1",
@@ -71,7 +71,7 @@
         "PICKER": {
             "BRG": "0",
             "B_Power": "1",
-            "COLOR": "0.25098, 0.964706, 0.258824, 1",
+            "COLOR": "0.0196078, 0.65098, 0.431373, 1",
             "HUE": "1",
             "H_Power": "1",
             "SAT": "0",

@@ -14,7 +14,7 @@ void DEMO_Scene::setup() {
 
 	// DEMO 1
 
-	ofSetCircleResolution(75);
+	//ofSetCircleResolution(75);
 
 	//-
 
