@@ -9079,7 +9079,6 @@ void ofxColorManager::setAppLayout(AppLayouts mode)
 		ofSetWindowTitle(_label + "DEFAULT");
 		ini_to_load = "imgui_DEAULT.ini";
 		//appLayoutIndex = 0;
-
 		SHOW_Panels = true;
 		SHOW_PanelEngines = true;
 		SHOW_Theory = true;
@@ -9103,7 +9102,6 @@ void ofxColorManager::setAppLayout(AppLayouts mode)
 		ofSetWindowTitle(_label + "PRESETS");
 		ini_to_load = "imgui_PRESETS.ini";
 		//appLayoutIndex = 1;
-
 		SHOW_Panels = false;
 		SHOW_PanelEngines = false;
 		SHOW_Theory = false;
@@ -9127,7 +9125,6 @@ void ofxColorManager::setAppLayout(AppLayouts mode)
 		ofSetWindowTitle(_label + "ENGINES");
 		ini_to_load = "imgui_ENGINES.ini";
 		//appLayoutIndex = 2;
-
 		SHOW_Panels = false;
 		SHOW_PanelEngines = true;
 		SHOW_Theory = true;
@@ -9151,7 +9148,6 @@ void ofxColorManager::setAppLayout(AppLayouts mode)
 		ofSetWindowTitle(_label + "MINIMAL");
 		ini_to_load = "imgui_MINIMAL.ini";
 		//appLayoutIndex = 3;
-
 		SHOW_Panels = false;
 		SHOW_PanelEngines = false;
 		SHOW_Theory = false;
