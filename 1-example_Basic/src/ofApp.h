@@ -1,8 +1,9 @@
 #pragma once
+
 #include "ofMain.h"
 
 // window manager
-#define USE_OFX_WINDOWAPP // comment to exclude this non required addon
+#define USE_OFX_WINDOWAPP // comment to exclude. addon non required 
 #ifdef USE_OFX_WINDOWAPP
 #include "ofxWindowApp.h"
 #endif

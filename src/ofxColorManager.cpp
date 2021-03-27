@@ -6894,11 +6894,12 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 	{
 		//----
 
-		// presets control
+		// presets
+
 		if ((!SHOW_Theory && !SHOW_Range && !SHOW_ColourLovers && !SHOW_Quantizer)
-			&& (SHOW_Presets && !SHOW_Library))
+			|| (SHOW_Presets && !SHOW_Library))
 		{
-			//browse presets
+			// browse presets
 			if (key == OF_KEY_LEFT && !mod_CONTROL)
 			{
 				preset_Previous();
@@ -6911,7 +6912,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				return;
 			}
 
-			//shift
+			// shift
 			else if (key == OF_KEY_LEFT && mod_CONTROL)
 			{
 				build_Palette_SortShift(true);
