@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <interactiveRect>
 	<path>ofxColorManager/layout/</path>
-	<x>695</x>
-	<y>863</y>
+	<x>804</x>
+	<y>849</y>
 	<width>397</width>
 	<height>158</height>
 	<nombre>_Curve_Gui</nombre>

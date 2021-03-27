@@ -2,14 +2,14 @@
     {
         "Preset": "Big",
         "position": {
-            "x": 1922.0,
-            "y": 25.0
+            "x": 0.0,
+            "y": 0.0
         },
         "size": {
-            "height": 1053,
-            "width": 1916
+            "height": 1080,
+            "width": 1920
         },
-        "window_mode": "OF_WINDOW"
+        "window_mode": "OF_FULLSCREEN"
     },
     {
         "Preset": "Mini",

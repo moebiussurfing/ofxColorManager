@@ -276,7 +276,7 @@ ofxColorManager::ofxColorManager()
 	//--
 
 	helpInfo = "";
-	helpInfo += "           HELP\n\n\n";
+	helpInfo += "            HELP\n\n\n";
 
 	helpInfo += "H            HELP\n";
 	helpInfo += "G            GUI\n";
@@ -896,6 +896,7 @@ void ofxColorManager::setup()
 
 	params_AppState.add(SHOW_LayoutsManager);
 	params_AppState.add(appLayoutIndex);
+	params_AppState.add(SHOW_MainMenuBar);
 
 	//params_AppState.add(SHOW_Advanced);
 	SHOW_Advanced.setSerializable(false);
@@ -962,6 +963,7 @@ void ofxColorManager::setup()
 	params_control.add(fontSizeParam);
 	params_control.add(fontSizeBigParam);
 	params_control.add(appLayoutIndex);
+	params_control.add(Lock_DockingLayout);
 
 	ofAddListener(params_control.parameterChangedE(), this, &ofxColorManager::Changed_Controls);
 
@@ -2213,11 +2215,11 @@ void ofxColorManager::gui_Editor()
 					build_Palette_SortShift();
 				}
 				// sort flip
-				if (ofxSurfingHelpers::AddSmallButton(bFlipUserPalette, _w100, BUTTON_BIG_HEIGHT/2)) {}
+				if (ofxSurfingHelpers::AddSmallButton(bFlipUserPalette, _w100, BUTTON_BIG_HEIGHT / 2)) {}
 				//ImGui::SameLine();
 
 				// sort random
-				if (ImGui::Button("SORT RANDOM", ImVec2(_w100, BUTTON_BIG_HEIGHT/2)))
+				if (ImGui::Button("SORT RANDOM", ImVec2(_w100, BUTTON_BIG_HEIGHT / 2)))
 				{
 					build_Palette_SortRandom();
 				}
@@ -2292,11 +2294,6 @@ void ofxColorManager::gui_Palette()
 	ImGuiWindowFlags flagsw;
 	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None | ImGuiWindowFlags_NoScrollbar;
 	flagsw |= flagsWindows;
-
-	//flagsw |= ImGuiWindowFlags_NoCollapse;
-	//flagsw |= ImGuiDockNodeFlags_AutoHideTabBar;
-	//flagsw |= ImGuiDockNodeFlags_NoTabBar;
-	//flagsw |= ImGuiDockNodeFlags_NoCloseButton;
 
 	//-
 
@@ -2729,7 +2726,7 @@ void ofxColorManager::gui_Library()
 
 					ImGui::PopItemWidth();
 				}
-			}
+		}
 
 			//--
 
@@ -2976,12 +2973,12 @@ void ofxColorManager::gui_Library()
 		{
 			refresh_FromPicked();
 		}
-	}
+			}
 
 	ofxImGui::EndWindow(mainSettings);
 
 	ImGui::PopStyleVar();
-}
+	}
 
 //--------------------------------------------------------------
 void ofxColorManager::gui_Export()
@@ -3328,6 +3325,8 @@ void ofxColorManager::gui_EnginesPanel()
 	ImGuiWindowFlags flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
 	flags |= flagsWindows;
 
+	//--
+
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(400, BUTTON_BIG_HEIGHT + 20));
 
 	if (ofxImGui::BeginWindow("ENGINES", mainSettings, flags))
@@ -3434,6 +3433,8 @@ void ofxColorManager::gui_LayoutsPanel()
 	ImGuiWindowFlags flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
 	flags |= flagsWindows;
 
+	//--
+
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(150, 125));
 
 	if (ofxImGui::BeginWindow("LAYOUTS", mainSettings, flags))
@@ -3459,12 +3460,12 @@ void ofxColorManager::gui_LayoutsPanel()
 		if (bbox)// squared (three rows)
 		{
 			_w = _w99 / 2;
-			_h = _h99 / 3 - _spcy/3;
+			_h = _h99 / 3 - _spcy / 3;
 		}
 		else// panoramic (one row)
 		{
 			_w = _w100 / NUM_WIDGETS - _spcx;
-			_h = _h99 + _spcy/2;
+			_h = _h99 + _spcy / 2;
 		}
 
 		// layouts
@@ -4415,7 +4416,7 @@ void ofxColorManager::gui_InputText()
 	ImGui::PopStyleVar();
 	ImGui::PopStyleVar();
 	ImGui::PopStyleColor();
-}
+		}
 #endif
 
 //--------------------------------------------------------------
@@ -4993,71 +4994,38 @@ void ofxColorManager::gui_Demo()
 				myDEMO_Svg.reset();
 			}
 			ImGui::PopItemWidth();
+			}
 		}
-	}
 	ofxImGui::EndWindow(mainSettings);
-}
+	}
 
 //--------------------------------------------------------------
 void ofxColorManager::setupGui()
 {
 	// using Daan fork
+
 	ImGuiConfigFlags flags;
 	flags = ImGuiConfigFlags_DockingEnable;
-	//flags |= ImGuiDockNodeFlags_NoCloseButton;
-	//flags |= ImGuiDockNodeFlags_NoResizeX;
-	//flags |= ImGuiDockNodeFlags_NoResizeY;
-	//flags |= ImGuiDockNodeFlags_NoResize;
-	//flags |= ImGuiDockNodeFlags_NoTabBar;
-	//flags |= ImGuiDockNodeFlags_AutoHideTabBar;
-	//flags |= ImGuiConfigFlags_ViewportsEnable;
-
-	//-
-
-	//TODO:
-	//trying to hide close button
-	{
-		//ImGuiDockNode* Node = ImGui::DockBuilderGetNode(DockID);
-		//Node->LocalFlags |= ImGuiDockNodeFlags_NoWindowMenuButton | ImGuiDockNodeFlags_NoCloseButton;
-
-		////https://github.com/ocornut/imgui/issues/3633
-		////https://github.com/ocornut/imgui/issues/3521
-		//ImGuiID old_id = ImGui::GetID("Palette");
-		//ImGuiDockNode* Node = ImGui::DockBuilderGetNode(old_id);
-		//Node->LocalFlags |= ImGuiDockNodeFlags_NoWindowMenuButton | ImGuiDockNodeFlags_NoCloseButton;
-	}
+	flags |= ImGuiConfigFlags_ViewportsEnable;
 
 	//--
 
-	//TODO:
-	//ImGuiWindowClass window_class;
-	//window_class.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_NoTabBar;
-	//ImGui::SetNextWindowClass(window_class);
-
-	//-
-
-	//ImGuiDockNode* Node = ImGui::DockBuilderGetNode(0);
-	//Node->LocalFlags |= ImGuiDockNodeFlags_NoWindowMenuButton | ImGuiDockNodeFlags_NoCloseButton;
-
-	//--
+	// setup
 
 	bool bMouse = false;//false to auto show on window
 	gui.setup(nullptr, true, flags, true, bMouse);
 
 	// io
+
 	auto &io = ImGui::GetIO();
 	io.ConfigDockingWithShift = true;
 	io.ConfigInputTextCursorBlink = true;
 
-	//io.ConfigWindowsResizeFromEdges = false;//?
-
 	//--
 
 	// fonts
-#ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
-	//auto normalCharRanges = io.Fonts->GetGlyphRangesDefault();
 
-	//-
+#ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
 
 	//size = 11.f;
 	//"telegrama_render.otf";
@@ -5067,32 +5035,6 @@ void ofxColorManager::setupGui()
 
 	fontSizeBigParam.set("Font Big Size", 100, 20, 200);
 	//fontBigName = "Kazesawa-Extrabold.ttf";
-
-	//-
-
-	//TODO:
-	//trying to make font shadow
-	//std::string _path = "assets/fonts/";//assets folder
-	//customFont = gui.addFont(_path + fontName, fontSizeParam, nullptr, normalCharRanges);
-	//customFontBig = gui.addFont(_path + fontBigName, fontSizeBigParam, nullptr, normalCharRanges);
-	//
-	//io.FontDefault = customFont;
-	// Create shadow at offset
-	//io.Fonts->TexGlyphShadowOffset = ImVec2(2, 3);
-	//ImVec2 offset = ImGui::GetIO().Fonts->TexGlyphShadowOffset;
-	//for (int y = ((fabs(offset.y) - offset.y) / 2); y < height - ((fabs(offset.y) + offset.y) / 2); y++)
-	//{
-	//	for (int x = ((fabs(offset.x) - offset.x) / 2); x < width - ((fabs(offset.x) + offset.x) / 2); x++)
-	//	{
-	//		unsigned int current_index = ((x * 4) + (width * 4 * y));
-	//		unsigned int write_shadow_index = (((x + offset.x) * 4) + (width * 4 * (y + offset.y)));
-	//		unsigned char current_pixel = pixels[current_index + 3];
-	//		unsigned char current_pixel_shadow = pixels[write_shadow_index + 3];
-	//		// Only write shadow pixels into empty areas
-	//		if (current_pixel != 0 && current_pixel_shadow == 0)
-	//			pixels_shadow[write_shadow_index + 2] = pixels[current_index + 3];
-	//	}
-	//}
 #endif
 
 	//--
@@ -5116,12 +5058,6 @@ void ofxColorManager::setupGui()
 #ifdef MODE_LOCK_DOCKING
 	flagsWindows = ImGuiWindowFlags_NoMove;
 #endif
-	//not working
-	//flagsWindows |= ImGuiWindowFlags_NoTitleBar;
-	//flagsWindows |= ImGuiWindowFlags_NoCollapse;
-	//flagsWindows |= ImGuiWindowFlags_NoResize;
-	//flagsWindows |= ImGuiWindowFlags_NoDecoration;
-	////flagsWindows |= ImGuiWindowFlags_NoBackground;
 
 	//-
 
@@ -5162,7 +5098,7 @@ bool ofxColorManager::draw_Gui()
 			flagsDock |= ImGuiDockNodeFlags_NoCloseButton;
 			//flagsDock |= ImGuiDockNodeFlags_NoTabBar;
 			//flagsDock |= ImGuiDockNodeFlags_NoWindowMenuButton;
-			//flagsDock |= ImGuiDockNodeFlags_Nomove;
+			//flagsDock |= ImGuiDockNodeFlags_NoMove__;
 		}
 		ImGuiID dockNodeID = ImGui::DockSpaceOverViewport(NULL, flagsDock);
 		ImGui::PopStyleColor();
@@ -6058,6 +5994,27 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	//}
 
 	// layout
+	else if (name == Lock_DockingLayout.getName())
+	{
+		if (!Lock_DockingLayout)
+		{
+			flagsWindows = ImGuiWindowFlags_None;
+		}
+		else
+		{
+			//flagsWindows = ImGuiWindowFlags_NoMove;
+			//flagsWindows |= ImGuiWindowFlags_NoResize;
+			//flagsWindows |= ImGuiWindowFlags_NoTitleBar;
+			//flagsWindows |= ImGuiWindowFlags_NoCollapse;
+			//flagsWindows |= ImGuiWindowFlags_NoDecoration;
+			//flagsWindows |= ImGuiWindowFlags_NoBackground;
+			//flagsWindows |= ImGuiDockNodeFlags_AutoHideTabBar;
+			//flagsWindows |= ImGuiDockNodeFlags_NoTabBar;
+			//flagsWindows |= ImGuiDockNodeFlags_NoCloseButton;
+		}
+	}
+
+	// layout
 	else if (name == bResponsive_Panels.getName())
 	{
 		if (bResponsive_Panels)
@@ -6101,7 +6058,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 	//--
 
-	// advanced toggleM
+	// advanced
 	else if (name == SHOW_Advanced.getName())
 	{
 		colorQuantizer.SHOW_AdvancedLayout = SHOW_Advanced;
@@ -6109,22 +6066,25 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 		if (SHOW_Advanced)
 		{
-			flagsWindows = ImGuiWindowFlags_None;
+			//flagsWindows = ImGuiWindowFlags_None;
+
+			//// workflow
+			////if (!SHOW_MainMenuBar) SHOW_MainMenuBar = true;
 		}
 		else
 		{
-			// all window panels
-#ifdef MODE_LOCK_DOCKING
-			flagsWindows = ImGuiWindowFlags_NoMove;
-#endif
-			//flagsWindows |= ImGuiWindowFlags_NoResize;
-			//flagsWindows |= ImGuiWindowFlags_NoTitleBar;
-			//flagsWindows |= ImGuiWindowFlags_NoCollapse;
-			//flagsWindows |= ImGuiWindowFlags_NoDecoration;
-			//flagsWindows |= ImGuiWindowFlags_NoBackground;
+			//			// all window panels
+			//#ifdef MODE_LOCK_DOCKING
+			//			flagsWindows = ImGuiWindowFlags_NoMove;
+			//#endif
+			//			//flagsWindows |= ImGuiWindowFlags_NoResize;
+			//			//flagsWindows |= ImGuiWindowFlags_NoTitleBar;
+			//			//flagsWindows |= ImGuiWindowFlags_NoCollapse;
+			//			//flagsWindows |= ImGuiWindowFlags_NoDecoration;
+			//			//flagsWindows |= ImGuiWindowFlags_NoBackground;
 
-			// workflow
-			//if (SHOW_MainMenuBar) SHOW_MainMenuBar = false;
+						// workflow
+						//if (SHOW_MainMenuBar) SHOW_MainMenuBar = false;
 			if (SHOW_EditTheme) SHOW_EditTheme = false;
 		}
 
@@ -8914,6 +8874,20 @@ void ofxColorManager::gui_MenuBar()
 			{
 				SHOW_MainMenuBar = pref;
 			}
+
+			bool bFull = true;
+			if (ofGetWindowMode() == OF_WINDOW) bFull = false;
+			if (ImGui::MenuItem("Full Screen", NULL, &bFull))
+			{
+				ofSetFullscreen(bFull);
+
+				int offset = 20;
+				if (!bFull && ofGetWindowPositionY() < offset) {
+					glm::vec2 p{ ofGetWindowPositionX(), ofGetWindowPositionY() };
+					ofSetWindowPosition(p.x, offset);
+				}
+			}
+
 			ImGui::MenuItem("About", NULL, &SHOW_About);
 
 			ImGui::EndMenu();

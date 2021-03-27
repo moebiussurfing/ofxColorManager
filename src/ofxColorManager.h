@@ -1047,7 +1047,7 @@ private:
 	//----
 
 private:
-	ofParameter<bool> SHOW_MainMenuBar{ "Show Menu Bar", false };
+	ofParameter<bool> SHOW_MainMenuBar{ "Show Menu Bar", true };
 	bool SHOW_About = false;
 	void gui_MenuBar();
 	void gui_About(bool* p_open);
