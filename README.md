@@ -95,6 +95,7 @@ void ofApp::draw()
 * [ofxColorClient](https://github.com/moebiussurfing/ofxColorClient)
 * [ofxImGui](https://github.com/Daandelange/ofxImGui/tree/jvcleave)  [ Fork from @Daandelange Thanks **Daan**! ]
 * [ofxSurfingHelpers](https://github.com/moebiussurfing/ofxSurfingHelpers)  
+* [ofxScaleDragRect](https://github.com/moebiussurfing/ofxScaleDragRect)
 * [ofxIO](https://github.com/bakercp/ofxIO)
 * ofxNetwork  [ **OF** ]
 * ofxPoco  [ **OF** ]
@@ -102,12 +103,13 @@ void ofApp::draw()
 * ofxOpenCv  [ **OF** ]
 * ofxXmlSettings [ **OF** ]
 * [ofxSCENE-SVG](https://github.com/moebiussurfing/ofxSCENE-SVG)  [ Only for the example ]
-* [ofxScaleDragRect](https://github.com/moebiussurfing/ofxScaleDragRect)
+* [ofxWindowApp](https://github.com/moebiussurfing/ofxWindowApp)  [ Only for the example ]
 
 Above addons already packed into ```OF_ADDON/libs```. No need to add them manually with the ```OF Project Generator```:  
 * [ofxColorQuantizerHelper](https://github.com/moebiussurfing/ofxColorQuantizerHelper)
 * [ofxColorsBrowser](https://github.com/moebiussurfing/ofxColorsBrowser)
 * [ofxColourLoversHelper](https://github.com/moebiussurfing/ofxColourLoversHelper)  
+* [ofxMouseRuler2](https://github.com/moebiussurfing/ofxMouseRuler2)  
 
 *Thanks a lot to all these ofxAddons coders. Look into each folder for authoring credits, original forks, and license info.*  
 
