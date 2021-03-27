@@ -17,10 +17,6 @@ public:
 
 	void setup();
 
-#ifdef USE_OFX_WINDOWAPP
-	ofxWindowApp windowApp;
-#endif
-
 	//--
 	
 	// colors
@@ -29,4 +25,10 @@ public:
 	ofColor colorPick;
 
 	ofxColorManager colorManager;
+
+	//--
+
+#ifdef USE_OFX_WINDOWAPP
+	ofxWindowApp windowApp;
+#endif
 };

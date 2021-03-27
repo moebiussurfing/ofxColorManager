@@ -1,12 +1,12 @@
 {
     "ofxColorManager": {
-        "App_Layout": "0",
+        "App_Layout": "3",
         "DEMO": {
             "Alpha_1": "0.681",
             "Alpha_Spheres": "0.839",
             "Auto_Trig": "0",
             "Enable_DEMO_Bubbles": "0",
-            "Enable_DEMO_Spheres": "1",
+            "Enable_DEMO_Spheres": "0",
             "Frequency": "0.319",
             "Speed": "0.899",
             "Zoom": "0.196"
@@ -15,11 +15,11 @@
         "Engines": {
             "Amnt_Colors_Thy": "6",
             "Analogue_Spread": "0.213",
-            "Color_1": "0.929412, 0.913726, 0.984314, 1",
-            "Color_2": "0.0470588, 0.0352941, 0.117647, 1",
+            "Color_1": "0.901961, 0, 0.345098, 1",
+            "Color_2": "0.639216, 0.478431, 0.541176, 1",
             "Last_Range_Index": "1",
-            "Last_Theory_Index": "8",
-            "Preset_Index": "49",
+            "Last_Theory_Index": "11",
+            "Preset_Index": "31",
             "SCENE": "1"
         },
         "ExportColors": {
@@ -35,7 +35,7 @@
             "Columns_Max": "10",
             "Mode_Cards": "0",
             "Mode_Paging": "1",
-            "Page": "8",
+            "Page": "7",
             "Responsive_Fit": "1",
             "Responsive_Grid": "0",
             "Rows_Amnt": "20",
@@ -57,7 +57,7 @@
             "EXPORT": "0",
             "GRADIENT": "0",
             "GUI_MAIN": "1",
-            "KIT": "1",
+            "KIT": "0",
             "LIBRARY": "0",
             "LOVERS": "0",
             "PALETTE": "1",
@@ -65,15 +65,15 @@
             "PICKER": "1",
             "PICTURE": "0",
             "PRESETS": "1",
-            "RANGE": "1",
-            "Show_Main_Panel": "1",
+            "RANGE": "0",
+            "Show_Main_Panel": "0",
             "Show_Mini_Palette": "0",
             "THEORY": "0"
         },
         "PICKER": {
             "BRG": "0",
             "B_Power": "1",
-            "COLOR": "0.929412, 0.913726, 0.984314, 1",
+            "COLOR": "0.901961, 0, 0.345098, 1",
             "HUE": "1",
             "H_Power": "1",
             "SAT": "0",

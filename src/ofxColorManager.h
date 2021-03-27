@@ -8,6 +8,9 @@
 
 TODO:
 
++ editor: sort flip + random h / 2 
++ layout manager 4x4+1 buttons grid responsive
+	save show toggles too. a lite ofxPresetsManager?
 + export Adobe ASE
 + add tween transitions to presets
 + undo engine
