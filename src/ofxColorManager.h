@@ -275,6 +275,8 @@ private:
 	ofParameter<bool> SHOW_LayoutsManager{ "EDIT LAYOUTS", false };
 	ofParameter<bool> SHOW_PanelEngines{ "ENGINES", true };
 	//shows advanced panels to tweak layout or workflow behaviour
+	
+	ofParameter<bool> Lock_DockingLayout{ "Lock Docking", true };
 
 	ofParameter<bool> auto_pilot{ "Play Slide-Show", false };
 	ofParameter<float> auto_pilot_Duration{ "Time", 1, 0.1, 5 };
