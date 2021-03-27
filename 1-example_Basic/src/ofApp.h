@@ -1,34 +1,27 @@
 #pragma once
 #include "ofMain.h"
 
+// window manager
+#define USE_OFX_WINDOWAPP // comment to exclude this non required addon
+#ifdef USE_OFX_WINDOWAPP
+#include "ofxWindowApp.h"
+#endif
+
 #include "ofxColorManager.h"
 
-#include "ofxGui.h"
-
-class ofApp: public ofBaseApp{
+class ofApp : public ofBaseApp {
 
 public:
-    void setup();
-	void draw();
-    void keyPressed(int key);
 
-    ofxColorManager colorManager;
-	
-	//--
+	void setup();
 
-    // local colors
-	// auto-updated as targets
-	// registered to the addon colors
-    vector<ofColor> palette;
-    ofColor colorPick;
-    ofColor colorBg;
-	std::string name;
+	// colors
+	vector<ofColor> palette;
+	ofColor colorPick;
 
-	//--
+	ofxColorManager colorManager;
 
-	// test scene
-	ofxPanel gui;
-	bool bGui = false;
-	ofParameter<bool> bDraw_ofApp{ "Debug", false };
-	void draw_TEST_ofApp();
+#ifdef USE_OFX_WINDOWAPP
+	ofxWindowApp windowApp;
+#endif
 };

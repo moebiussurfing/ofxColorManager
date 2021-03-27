@@ -1,5 +1,6 @@
 {
     "ofxColorManager": {
+        "App_Layout": "0",
         "DEMO": {
             "Alpha_1": "0.681",
             "Alpha_Spheres": "0.839",
@@ -10,14 +11,15 @@
             "Speed": "0.899",
             "Zoom": "0.196"
         },
+        "EDIT_LAYOUTS": "0",
         "Engines": {
-            "Amnt_Colors_Thy": "9",
+            "Amnt_Colors_Thy": "6",
             "Analogue_Spread": "0.213",
-            "Color_1": "0.0196078, 0.65098, 0.431373, 1",
-            "Color_2": "0.960784, 0.235294, 0.396078, 1",
-            "Last_Range_Index": "3",
+            "Color_1": "0, 0.619608, 0.376471, 1",
+            "Color_2": "1, 0.380392, 0.623529, 1",
+            "Last_Range_Index": "1",
             "Last_Theory_Index": "9",
-            "Preset_Index": "15",
+            "Preset_Index": "16",
             "SCENE": "1"
         },
         "ExportColors": {
@@ -29,12 +31,11 @@
         },
         "Font_Big_Size": "50",
         "Font_Size": "14",
-        "LAYOUTS": "1",
         "LIBRARY": {
             "Columns_Max": "10",
             "Mode_Cards": "0",
             "Mode_Paging": "1",
-            "Page": "10",
+            "Page": "5",
             "Responsive_Fit": "1",
             "Responsive_Grid": "0",
             "Rows_Amnt": "20",
@@ -57,21 +58,22 @@
             "GRADIENT": "0",
             "GUI_MAIN": "1",
             "KIT": "1",
-            "LIBRARY": "1",
+            "LIBRARY": "0",
             "LOVERS": "0",
-            "MINI": "0",
             "PALETTE": "1",
             "PANELS": "1",
             "PICKER": "1",
             "PICTURE": "0",
             "PRESETS": "1",
             "RANGE": "0",
+            "Show_Main_Panel": "1",
+            "Show_Mini_Palette": "0",
             "THEORY": "1"
         },
         "PICKER": {
             "BRG": "0",
             "B_Power": "1",
-            "COLOR": "0.0196078, 0.65098, 0.431373, 1",
+            "COLOR": "0, 0.619608, 0.376471, 1",
             "HUE": "1",
             "H_Power": "1",
             "SAT": "0",

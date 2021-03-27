@@ -14,6 +14,9 @@ TODO:
 + fix demo1 camera and add tweening random jumps
 + check theory picker if calls too much callbacks
 + plugins for UE4 / Unity3D / Processing ?
++ ofxNative. open system file browser. open browser
++ gloabl sat/bright editor for editor palette
+
 
 BUGS:
 
@@ -21,6 +24,7 @@ BUGS:
 + fix text input boxes when docking mode. to avoid floating text input box
 + TCP port number switch, some problems on reconnect bc threading not implemented. should use some sync addon or OSC.
 + ImGui pickers hangs flickering sometimes bc max width
++ there's a bug when loaging presets from colour lovers with rare chars. we should erase all chars like / * - \ 
 
 */
 
@@ -30,25 +34,32 @@ BUGS:
 // some preprocessor directives
 // mainly for debug purposes only
 
-#define USE_OFX_WINDOWAPP// window manager
 #define USE_DEBUG_LAYOUT // includes mouse ruler to help layout design
 //#define USE_SVG_MASK // TODO: ofxScene-SVG using masked background. 
 
 //--
+
+#define MAX_PALETTE_COLORS 20
+#define LINK_TCP_MASTER_CLIENT
+#define INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
 
 // modules
 // can't be disabled now..
 #define USE_COLOR_LOVERS
 #define USE_IMAGE_QUANTIZER
 #define USE_OFX_COLOR_BROWSER
-#define LINK_TCP_MASTER_CLIENT
-#define MAX_PALETTE_COLORS 20
+
+// NOTE: all color theory stuff it's badly spreaded a bit..
+// bc I am using some different addons combined..
+// this should be improved, and it's a kind of drawback now.
+#define NUM_COLOR_THEORY_TYPES_G1 8
+#define NUM_COLOR_THEORY_TYPES_G2 7
+#define NUM_TYPES_RANGES 12
 
 // layout constants
-#define INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
+#define COLOR_STRIP_COLOR_HEIGHT 40
 #define BUTTON_BIG_HEIGHT 50
 #define BUTTON_COLOR_SIZE 40
-#define COLOR_STRIP_COLOR_HEIGHT 30
 #define PANEL_WIDGETS_WIDTH 200
 #define PANEL_WIDGETS_HEIGHT 500
 
@@ -69,12 +80,8 @@ BUGS:
 //#define USE_OFX_GUI
 ////#define SHOW_THEM_EDITOR //TODO: show ImGui editor for debug. do not stores or load presets. linked to USE_MINIMAL_GUI
 
+
 //----------
-
-
-#ifdef USE_OFX_WINDOWAPP
-#include "ofxWindowApp.h"
-#endif
 
 #ifdef LINK_TCP_MASTER_CLIENT
 #include "ofxNetwork.h"
@@ -134,15 +141,6 @@ using namespace ofxSurfingHelpers;
 
 //--
 
-// NOTE: all color theory stuff it's badly spreaded a bit..
-// bc I am using some different addons combined..
-// this should be improved, and it's a kind of drawback now.
-#define NUM_COLOR_THEORY_TYPES_G1 8
-#define NUM_COLOR_THEORY_TYPES_G2 7
-#define NUM_TYPES_RANGES 12
-
-//--
-
 // gui internal/debug ofxGui
 #ifdef USE_OFX_GUI
 #include "ofxGui.h"
@@ -168,12 +166,6 @@ using namespace ImGui_PalettesPicker;
 
 class ofxColorManager : public ofBaseApp
 {
-
-	//TODO:
-public:
-	const char* ini_to_load = NULL;
-	const char* ini_to_save = NULL;
-
 	//-
 
 public:
@@ -216,13 +208,6 @@ private:
 	//--
 
 private:
-#ifdef USE_OFX_WINDOWAPP
-	ofxWindowApp windowApp;
-#endif
-
-	//--
-
-private:
 	float dt;
 	float fps;
 
@@ -238,7 +223,7 @@ private:
 	std::string host = "127.0.0.1";//localhost
 	void updateLink();
 	void setupLink();
-	void drawLink(int x = 20, int y = 20);
+	void draw_Link(int x = 20, int y = 20);
 #endif
 
 	//--
@@ -283,8 +268,8 @@ private:
 private:
 	ofParameter<bool> SHOW_Name{ "Show Extra Preset Name", false };
 	ofParameter<bool> SHOW_Advanced{ "ADVANCED", false };
-	ofParameter<bool> SHOW_MainPanel;
-	ofParameter<bool> SHOW_Layouts{ "LAYOUTS", false };
+	ofParameter<bool> SHOW_Panels;
+	ofParameter<bool> SHOW_LayoutsManager{ "EDIT LAYOUTS", false };
 	ofParameter<bool> SHOW_PanelEngines{ "ENGINES", true };
 	//shows advanced panels to tweak layout or workflow behaviour
 
@@ -312,48 +297,8 @@ private:
 
 public:
 
-	//--------------------------------------------------------------
-	void presetNext() {
-		if (last_Index_Preset < files.size() - 1)
-		{
-			last_Index_Preset++;
-		}
-		else if (last_Index_Preset >= files.size() - 1) {//cycle
-			last_Index_Preset = 0;
-		}
-
-		if (last_Index_Preset < files.size() && files.size() > 0)
-		{
-			PRESET_Name = files_Names[last_Index_Preset];
-			ofLogNotice(__FUNCTION__) << "PRESET_Name: [" + ofToString(last_Index_Preset) + "] " << PRESET_Name;
-
-			preset_Load(PRESET_Name);
-		}
-
-		if (!AutoScroll) AutoScroll = true;
-	}
-
-	//--------------------------------------------------------------
-	void presetPrevious() {
-		if (last_Index_Preset > 0)
-		{
-			last_Index_Preset--;
-		}
-		else
-		{
-			if (last_Index_Preset == 0) last_Index_Preset = files.size() - 1;
-		}
-
-		if (last_Index_Preset < files.size() && files.size() > 0)
-		{
-			PRESET_Name = files_Names[last_Index_Preset];
-			ofLogNotice(__FUNCTION__) << "PRESET_Name: [" + ofToString(last_Index_Preset) + "] " << PRESET_Name;
-
-			preset_Load(PRESET_Name);
-		}
-
-		if (!AutoScroll) AutoScroll = true;
-	}
+	void preset_Next();
+	void preset_Previous();
 
 public:
 
@@ -385,7 +330,7 @@ private:
 	ofParameter<bool> SHOW_Picker;
 	ofParameter<bool> SHOW_Library;
 	ofParameter<bool> SHOW_Range;
-	ofParameter<bool> SHOW_UserPaletteFloating;
+	ofParameter<bool> SHOW_Palette;
 	ofParameter<bool> SHOW_Editor;
 	ofParameter<bool> SHOW_Theory;
 	ofParameter<bool> SHOW_Quantizer;
@@ -399,7 +344,7 @@ private:
 
 private:
 	// app modes
-	ofParameter<int> AppMode;
+	ofParameter<int> AppMode;// not being much used now..
 	ofParameter<std::string> AppMode_name;
 #define NUM_APP_MODES 5
 
@@ -411,7 +356,25 @@ private:
 
 	//--
 
+	// ImGui layouts engine
+private:
+	const char* ini_to_load = NULL;
+	const char* ini_to_save = NULL;
+	enum AppLayouts
+	{
+		APP_DEFAULT = 0,
+		APP_PRESETS,
+		APP_ENGINES,
+		APP_MINIMAL,
+	};
+	void setAppLayout(AppLayouts mode);
+	ofParameter<int> appLayoutIndex{ "App Layout", 0, 0, 3 };
+	//int appLayoutIndex = -1;
+
+	//--
+
 	// settings file paths
+
 private:
 	std::string path_Global;
 	std::string path_Kits;
@@ -428,6 +391,7 @@ private:
 	//--
 
 	// colors library layout
+
 private:
 	ofParameter<bool> lib_Responsive_ModeGrid;
 	ofParameter<bool> lib_Responsive_ModeFit;
@@ -454,6 +418,7 @@ private:
 
 	// current selectors states on user session
 
+private:
 	ofParameter<int> last_Index_Theory_PickPalette;
 	ofParameter<int> last_Index_Theory{ "Last Theory Index", 0, 0,
 		NUM_COLOR_THEORY_TYPES_G1 + NUM_COLOR_THEORY_TYPES_G2 - 1 };//selected theory algorithm
@@ -624,7 +589,7 @@ private:
 
 	//-	
 
-	ImVec4 borderLineColor = ImVec4(0, 0, 0, 0.7);
+	ImVec4 borderLineColor = ImVec4(0, 0, 0, 0.65);// for selected color buttons, toggles and blinking 
 	float borderLineWidth = 1.0f;
 	float labelPadding = 0.0;//label buttons
 
@@ -638,6 +603,7 @@ private:
 	//-
 
 	// colour lovers
+
 #ifdef USE_COLOR_LOVERS
 private:
 	ofxColourLoversHelper colourLoversHelper;
@@ -670,9 +636,10 @@ public:
 
 	//----
 
-	// pointers backs 
+	// pointers back 
 	// to call refresh and link addons 
 	// (quantizer+lovers) with addon palette/color
+
 private:
 	std::string myPalette_Name_BACK = "";
 	ofColor myColor_BACK;
@@ -682,24 +649,22 @@ private:
 
 	//----
 
-public:
-
 	// API 
 
 	// pointers back to autoupdate our app.
 	// ofApp project local variables, registered
 	// must be initialized before setup
 
+public:
 	void setLinkName(std::string &s);
-	std::string *name_TARGET = NULL;
-
 	void setLinkColorPick(ofColor &c);
-	ofColor *color_TARGET = NULL;//backwards pointer to ofApp picker color
-
 	void setLinkColorBg(ofColor &c);
-	ofColor *colorBg_TARGET = NULL;//backwards pointer to ofApp background color
-
 	void setLinkPalette(vector<ofColor> &p);
+
+private:
+	std::string *name_TARGET = NULL;
+	ofColor *color_TARGET = NULL;//backwards pointer to ofApp picker color
+	ofColor *colorBg_TARGET = NULL;//backwards pointer to ofApp background color
 	vector<ofColor> *palette_TARGET = NULL;//backwards pointer to ofApp palette
 
 private:
@@ -719,7 +684,7 @@ public:
 	std::string getPaletteName();
 	ofColor getColor(int index = -1);
 
-	//get color from gradient at prc
+	// get color from gradient at prc
 	ofColor getColorAtPercent(float control)
 	{
 		gradientEngine.getColorAtPercent(control);
@@ -812,15 +777,10 @@ private:
 	ImFont* customFontBig = nullptr;
 	ImGuiStyle *style = nullptr;
 	ImGuiWindowFlags flagsWindows;
-	//float fontBigSize;
-	//float fontSize;
 	ofParameter<int> fontSizeBigParam;
 	ofParameter<int> fontSizeParam;
 	std::string fontName;
 	std::string fontBigName;
-
-	//ofParameter<int> offsetx{ "Offset x", 0, -100, 100 };
-	//ofParameter<int> offsety{ "Offset y", -1, -100, 100 };
 
 	// mouse or key locker
 	bool mouseLockedByGui;
@@ -835,31 +795,33 @@ private:
 	void setupGui();
 	bool draw_Gui();
 
-	// ImGui panels
 	void gui_Picker();
 	void gui_Library();
 	void gui_Theory();
 	void gui_Range();
-	void gui_MainPanel();
-	void gui_Engines();
+	void gui_Panels();
+	void gui_EnginesPanel();
 	void gui_Demo();
 	void gui_Export();
 	void gui_Gradient();
 	void gui_Presets();
-#ifdef MODE_TEXT_INPUT_WORKAROUND
-	void gui_InputText();
-#endif
 	void gui_Kit();
 	void gui_Palette();
 	void gui_Editor();
+	void gui_LayoutsManager();
+	void gui_LayoutsPanel();
+
+#ifdef MODE_TEXT_INPUT_WORKAROUND
+	void gui_InputText();
+#endif
 
 #ifdef MODE_BACKGROUND
 	void gui_Background();
 #endif
+
 #ifndef USE_MINIMAL_GUI
 	void gui_Advanced();
 #endif
-	void gui_Layouts();
 
 	//--
 
@@ -889,7 +851,7 @@ private:
 	void refresh_EnginesFromPalette();
 	void refresh_ColorPickedFromEngines();
 
-	// main color
+	// main picker color
 	ofParameter<ofFloatColor> color_Picked;
 
 	//--
@@ -922,7 +884,7 @@ private:
 	//--
 
 	//TODO: required?
-	//TODO: pointer color to get click from button class
+	//TODO: pointer color to get click from button class ?
 	// color clicked comes from theory palette colors
 	ofFloatColor color_Clicked2;
 	ofFloatColor color_Clicked2_PRE;
@@ -995,7 +957,7 @@ private:
 	// demos
 	void setupDemos();
 	void updateDemos();
-	void drawDemos();
+	void draw_Demos();
 
 private:
 	ofParameter<bool> DEMO1_Enable{ "Enable DEMO Bubbles", false };
@@ -1039,7 +1001,7 @@ private:
 	PresetPalette PRESET_Temp;
 
 private:
-	//default name 
+	// default name 
 	std::string PRESET_Name = "_emptyPreset";
 	std::string PRESET_Name_Gradient = "_";
 
@@ -1063,7 +1025,6 @@ private:
 	////handle text input focus to disable key commands..
 	//bool focus_1;
 	//int has_focus = 0;
-	//char tab[128];
 
 	//--
 
@@ -1095,11 +1056,12 @@ private:
 	ofFbo fboBig;//fullscreen fbo
 	float wAboutDemo = 250;
 	float tweenD = 1;
-	void refresh_DemoFbo();
+	void refresh_DemoFboAbout();
 	void draw_DemoFbo();
 
 	//----
 
+	//TODO:
 	// extra ImGui methods
 
 	//TODO:
@@ -1145,4 +1107,46 @@ private:
 			ImGui::EndTooltip();
 		}
 	}
+
+
+	////TODO:
+	////
+	//// toggle exclusive selector fron index int
+	//// check other widgets
+	////--------------------------------------------------------------
+	//inline bool AddSelectors(ofParameter<int>& index, vector<std::string> names, float w = -1, float h = -1)
+	//{
+	//	const int sz = index.getMax();
+	//	static vector<bool> toggles;
+	//	toggles.resize(sz);
+	//	for (int i = 0; i < sz; i++)
+	//	{
+	//		if (i == index.get()) toggles[i] = true;
+	//		else toggles[i] = false;
+	//	}
+
+	//	float _spcx = ImGui::GetStyle().ItemSpacing.x;
+	//	float _spcy = ImGui::GetStyle().ItemSpacing.y;
+	//	float _w100 = ImGui::GetContentRegionAvail().x;
+	//	float _h100 = ImGui::GetContentRegionAvail().y;
+	//	float _w99 = _w100 - _spcx;
+	//	float _w50 = _w99 / 2;
+	//	float _h = BUTTON_BIG_HEIGHT / 2;
+	//	
+	//	ImVec2 bb{100, 20};
+
+	//	for (int i = 0; i < sz; i++)
+	//	{
+	//		//ImGui::Checkbox(names[i].c_str(), &toggles[i]);
+	//	}
+
+	//}
+
+	ofParameter<bool> b0{ "DEFAULT", false };
+	ofParameter<bool> b1{ "PRESETS", false };
+	ofParameter<bool> b2{ "ENGINES", false };
+	ofParameter<bool> b3{ "MINIMAL", false };
+	void Changed_LayoutPanels(ofAbstractParameter &e);
+	ofParameterGroup params_LayoutSPanel{ "LAYOUTS PANEL" };
+
 };

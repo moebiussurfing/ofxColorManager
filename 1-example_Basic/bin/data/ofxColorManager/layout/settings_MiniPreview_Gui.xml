@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <interactiveRect>
 	<path>ofxColorManager/layout/</path>
-	<x>565</x>
-	<y>867</y>
-	<width>224</width>
+	<x>1095</x>
+	<y>292</y>
+	<width>413</width>
 	<height>148</height>
 	<nombre>_MiniPreview_Gui</nombre>
 	<isEditing>1</isEditing>
