@@ -182,9 +182,10 @@ void ofxColourLoversHelper::drawImGuiMain()
 			ImGui::PopItemWidth();
 			ImGui::PopStyleColor();
 
-			ImGui::PushItemWidth(-65);
-			ImGui::SliderInt("Amnt Max", &amountResults, 10, 200);
-			ImGui::PopItemWidth();
+			//hide. not required
+			//ImGui::PushItemWidth(-65);
+			//ImGui::SliderInt("Amnt Max", &amountResults, 10, 100);
+			//ImGui::PopItemWidth();
 
 			//----
 

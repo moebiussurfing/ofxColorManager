@@ -1,7 +1,9 @@
 #include "ofApp.h"
 
 // hide console
+#ifndef USE_DEBUG_LAYOUT
 #pragma comment(linker, "/SUBSYSTEM:windows /ENTRY:mainCRTStartup")
+#endif
 
 int main(){
 

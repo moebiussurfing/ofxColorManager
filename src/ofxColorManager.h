@@ -8,9 +8,7 @@
 
 TODO:
 
-+ editor: sort flip + random h / 2 
-+ layout manager 4x4+1 buttons grid responsive
-	save show toggles too. a lite ofxPresetsManager?
++ layout manager. save show toggles too. a lite ofxPresetsManager?
 + export Adobe ASE
 + add tween transitions to presets
 + undo engine
@@ -37,17 +35,28 @@ BUGS:
 // some preprocessor directives
 // mainly for debug purposes only
 
-#define USE_DEBUG_LAYOUT // includes mouse ruler to help layout design
+#define USE_DEBUG_LAYOUT // includes mouse ruler to help layout design. show app console wubdiw
+#define USE_VIEWPORTS// allow out-of-OF-window
+#define MAX_PALETTE_COLORS 20
 //#define USE_SVG_MASK // TODO: ofxScene-SVG using masked background. 
 
 //--
 
-#define MAX_PALETTE_COLORS 20
+// layout dimensions constants
+#define COLOR_STRIP_COLOR_HEIGHT 40
+#define BUTTON_BIG_HEIGHT 50
+#define BUTTON_COLOR_SIZE 40
+#define PANEL_WIDGETS_WIDTH 200
+#define PANEL_WIDGETS_HEIGHT 500
+
+//----------
+
+// NOTE: can't be disabled now..
 #define LINK_TCP_MASTER_CLIENT
 #define INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
 
 // modules
-// can't be disabled now..
+// NOTE: can't be disabled now..
 #define USE_COLOR_LOVERS
 #define USE_IMAGE_QUANTIZER
 #define USE_OFX_COLOR_BROWSER
@@ -58,13 +67,6 @@ BUGS:
 #define NUM_COLOR_THEORY_TYPES_G1 8
 #define NUM_COLOR_THEORY_TYPES_G2 7
 #define NUM_TYPES_RANGES 12
-
-// layout constants
-#define COLOR_STRIP_COLOR_HEIGHT 40
-#define BUTTON_BIG_HEIGHT 50
-#define BUTTON_COLOR_SIZE 40
-#define PANEL_WIDGETS_WIDTH 200
-#define PANEL_WIDGETS_HEIGHT 500
 
 // comment for advanced mode. uncomment for simple user mode.
 // hide some widgets for layout customization to minimize elements: keys, layout customize and theme editor
@@ -83,8 +85,7 @@ BUGS:
 //#define USE_OFX_GUI
 ////#define SHOW_THEM_EDITOR //TODO: show ImGui editor for debug. do not stores or load presets. linked to USE_MINIMAL_GUI
 
-
-//----------
+//----
 
 #ifdef LINK_TCP_MASTER_CLIENT
 #include "ofxNetwork.h"
@@ -151,14 +152,14 @@ using namespace ofxSurfingHelpers;
 
 #include "ofxImGui.h"
 #include "imgui_internal.h" // <-- example uses some imgui internals...
-#include "tools/imgui_stdlib.h" // <-- string helpers
+//#include "tools/imgui_stdlib.h" // <-- string helpers
 
 #include "ImGui_PalettesPicker.h"
 using namespace ImGui_PalettesPicker;
 
 #include "GradientEngine.h"
 
-//TODO: for a posible future custom multitouch user GUI
+//TODO: for a posible future custom multitouch user GUI without ImGui
 #ifdef USE_RECTANGLE_INTERFACES
 #include "ofxInterface.h"
 #include "interface/ButtonPaletteSelector.h"
@@ -187,7 +188,7 @@ public:
 
 	//-
 
-	//OF callbacks
+	// OF callbacks
 public:
 	void keyPressed(ofKeyEventArgs &eventArgs);
 	void keyReleased(ofKeyEventArgs &eventArgs);
@@ -219,11 +220,11 @@ private:
 
 #ifdef LINK_TCP_MASTER_CLIENT
 private:
+	std::string host = "127.0.0.1";//hardcoded. can't be change on runtime
+	int port = 66666;//localhost. hardcoded. can't be change on runtime
 	ofxTCPServer TCP;
 	vector <std::string> storeText;
 	uint64_t lastCheckLink;
-	int port = 66666;
-	std::string host = "127.0.0.1";//localhost
 	void updateLink();
 	void setupLink();
 	void draw_Link(int x = 20, int y = 20);
@@ -272,7 +273,8 @@ private:
 	ofParameter<bool> SHOW_Name{ "Show Extra Preset Name", false };
 	ofParameter<bool> SHOW_Advanced{ "ADVANCED", false };
 	ofParameter<bool> SHOW_Panels;
-	ofParameter<bool> SHOW_LayoutsManager{ "EDIT LAYOUTS", false };
+	ofParameter<bool> SHOW_LayoutsAdvanced{ "LAYOUTS ADVANCED", false };
+	ofParameter<bool> SHOW_Layouts{ "LAYOUTS", false };
 	ofParameter<bool> SHOW_PanelEngines{ "ENGINES", true };
 	//shows advanced panels to tweak layout or workflow behaviour
 	
@@ -371,10 +373,11 @@ private:
 		APP_PRESETS,
 		APP_ENGINES,
 		APP_MINIMAL,
+		APP_USER,
+		APP_MODE_SIZE
 	};
 	void setAppLayout(AppLayouts mode);
-	ofParameter<int> appLayoutIndex{ "App Layout", 0, 0, 3 };
-	//int appLayoutIndex = -1;
+	ofParameter<int> appLayoutIndex{ "App Layout", 0, 0, APP_MODE_SIZE - 1 };
 
 	//--
 
@@ -813,7 +816,7 @@ private:
 	void gui_Kit();
 	void gui_Palette();
 	void gui_Editor();
-	void gui_LayoutsManager();
+	void gui_LayoutsAdvanced();
 	void gui_LayoutsPanel();
 
 #ifdef MODE_TEXT_INPUT_WORKAROUND
@@ -1047,7 +1050,7 @@ private:
 	//----
 
 private:
-	ofParameter<bool> SHOW_MainMenuBar{ "Show Menu Bar", true };
+	ofParameter<bool> SHOW_MenuBar{ "Show Menu Bar", true };
 	bool SHOW_About = false;
 	void gui_MenuBar();
 	void gui_About(bool* p_open);
@@ -1151,6 +1154,7 @@ private:
 	ofParameter<bool> b1{ "PRESETS", false };
 	ofParameter<bool> b2{ "ENGINES", false };
 	ofParameter<bool> b3{ "MINIMAL", false };
+	ofParameter<bool> b4{ "USER", false };
 	void Changed_LayoutPanels(ofAbstractParameter &e);
 	ofParameterGroup params_LayoutSPanel{ "LAYOUTS PANEL" };
 
