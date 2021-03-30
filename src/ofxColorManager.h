@@ -35,7 +35,7 @@ BUGS:
 // some preprocessor directives
 // mainly for debug purposes only
 
-#define USE_DEBUG_LAYOUT // includes mouse ruler to help layout design. show app console wubdiw
+#define USE_DEBUG_LAYOUT // includes mouse ruler to help layout design. show app console window
 #define USE_VIEWPORTS// allow out-of-OF-window
 #define MAX_PALETTE_COLORS 20
 //#define USE_SVG_MASK // TODO: ofxScene-SVG using masked background. 

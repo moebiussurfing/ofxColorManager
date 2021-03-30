@@ -1,6 +1,6 @@
 # ofxColorManager
 
-This **openFrameworks** add-on is a **kit of Engines and Tools** to design and organize color palettes for your scenes.  
+This **openFrameworks** add-on is a **bundle of Tools and Engines** to design and organize color palettes for your scenes.  
 
 ## Screenshot
 ![image](/readme_images/Capture.JPG?raw=true "image")
@@ -92,7 +92,7 @@ void ofApp::draw()
 ```
 
 ## Dependencies
-Clone these add-ons and include into ```OF Project Generator``` to allow compile your projects or the examples:
+Clone these add-ons and include into the **OF Project Generator** to allow compile your projects or the examples:
 * [ofxColorClient](https://github.com/moebiussurfing/ofxColorClient)
 * [ofxImGui](https://github.com/Daandelange/ofxImGui/tree/jvcleave)  [ Fork from @Daandelange Thanks **Daan**! ]
 * [ofxSurfingHelpers](https://github.com/moebiussurfing/ofxSurfingHelpers)  
@@ -106,7 +106,7 @@ Clone these add-ons and include into ```OF Project Generator``` to allow compile
 * [ofxSCENE-SVG](https://github.com/moebiussurfing/ofxSCENE-SVG)  [ Only for the example ]
 * [ofxWindowApp](https://github.com/moebiussurfing/ofxWindowApp)  [ Only for the example ]
 
-Above add-ons already packed into ```OF_ADDON/libs```. No need to add them manually with the ```OF Project Generator```:  
+Above add-ons already packed into **OF_ADDON/libs**. No need to add them manually with the **OF Project Generator**:  
 * [ofxColorQuantizerHelper](https://github.com/moebiussurfing/ofxColorQuantizerHelper)
 * [ofxColorsBrowser](https://github.com/moebiussurfing/ofxColorsBrowser)
 * [ofxColourLoversHelper](https://github.com/moebiussurfing/ofxColourLoversHelper)  

@@ -8,17 +8,17 @@
             "Enable_DEMO_Bubbles": "0",
             "Enable_DEMO_Spheres": "0",
             "Frequency": "0.319",
-            "Speed": "0.899",
-            "Zoom": "0.196"
+            "Speed": "0.952",
+            "Zoom": "0.541"
         },
         "Engines": {
             "Amnt_Colors_Thy": "7",
             "Analogue_Spread": "0.213",
-            "Color_1": "0.168627, 0.0117647, 0.631373, 1",
-            "Color_2": "0.831373, 0.988235, 0.368627, 1",
+            "Color_1": "0.341176, 0.294118, 0.694118, 1",
+            "Color_2": "0, 0, 0, 1",
             "Last_Range_Index": "3",
-            "Last_Theory_Index": "9",
-            "Preset_Index": "49",
+            "Last_Theory_Index": "6",
+            "Preset_Index": "55",
             "SCENE": "1"
         },
         "ExportColors": {
@@ -65,15 +65,15 @@
             "PICKER": "1",
             "PICTURE": "0",
             "PRESETS": "1",
-            "RANGE": "0",
+            "RANGE": "1",
             "Show_Main_Panel": "1",
             "Show_Mini_Palette": "0",
-            "THEORY": "1"
+            "THEORY": "0"
         },
         "PICKER": {
             "BRG": "0",
             "B_Power": "1",
-            "COLOR": "0.168627, 0.0117647, 0.631373, 1",
+            "COLOR": "0.341176, 0.294118, 0.694118, 1",
             "HUE": "1",
             "H_Power": "1",
             "SAT": "0",

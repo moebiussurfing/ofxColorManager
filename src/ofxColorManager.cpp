@@ -301,7 +301,7 @@ ofxColorManager::ofxColorManager()
 	helpInfo += "SPACE         > PRESET\n";
 	helpInfo += "Left|Right   <> PRESET\n";
 	helpInfo += "    +Ctrl    <> SHIFT COLORS\n";
-	helpInfo += "\n";
+	//helpInfo += "\n";
 	helpInfo += "   -|+       AMOUNT COLORS\n";
 	helpInfo += "\n";
 
@@ -9043,7 +9043,8 @@ void ofxColorManager::gui_About(bool* p_open)
 	ImGui::Dummy(ImVec2(0.0f, 2.0f));
 	ImGui::Text("Author:");
 	ImGui::Text("moebiusSurfing  ( ManuMolina )");
-	ImGui::Text("Barcelona / Buenos Aires.  2019 - 2021");
+	ImGui::Text("Barcelona / Buenos Aires.");
+	ImGui::Text("2019 - 2021");
 	ImGui::Dummy(ImVec2(0.0f, 2.0f));
 	ImGui::Text("GitHub:");
 	ImGui::Text("https://github.com/moebiussurfing");
@@ -9056,9 +9057,9 @@ void ofxColorManager::gui_About(bool* p_open)
 	ImGui::Text("community, coders and contributors of");
 	ImGui::Text("included libraries and addons.");
 	ImGui::Dummy(ImVec2(0.0f, 2.0f));
-	//ImGui::Text("MIT License");
+	ImGui::Text("MIT License");
+	ImGui::Dummy(ImVec2(0, 4));
 	//ImGui::Text("Peace");
-	//ImGui::Dummy(ImVec2(0, 4));
 
 	draw_DemoFbo();
 	ImGui::Text("[ Scene sketch by junkiyoshi.com. Thanks ]");
