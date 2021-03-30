@@ -276,7 +276,7 @@ ofxColorManager::ofxColorManager()
 	//--
 
 	helpInfo = "";
-	helpInfo += "           HELP\n\n\n";
+	helpInfo += "           HELP\n\n";
 	helpInfo += "\n";
 
 	helpInfo += "H            HELP\n";
