@@ -3430,7 +3430,7 @@ void ofxColorManager::gui_LayoutsPanel()
 	static bool auto_resize = false;
 
 	ImGuiWindowFlags flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
-	flags |= flagsWindows;
+	//flags |= flagsWindows;
 
 	//blink when a new preset is editing
 	float freq = 0.15;//speed freq
@@ -3594,7 +3594,7 @@ void ofxColorManager::gui_LayoutsAdvanced()
 	static bool auto_resize = true;
 
 	ImGuiWindowFlags flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
-	flags |= flagsWindows;
+	//flags |= flagsWindows;
 
 	bool bMin = false;//hide load buttons to simplify
 	float max = (bMin ? 150 : 175);
@@ -5127,9 +5127,9 @@ void ofxColorManager::setupGui()
 	mainSettings = ofxImGui::Settings();
 
 	// for all window panels
-#ifdef MODE_LOCK_DOCKING
+//#ifdef MODE_LOCK_DOCKING
 	flagsWindows = ImGuiWindowFlags_NoMove;
-#endif
+//#endif
 
 	//-
 
@@ -6083,7 +6083,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		}
 		else
 		{
-			//flagsWindows = ImGuiWindowFlags_NoMove;
+			flagsWindows = ImGuiWindowFlags_NoMove;
 			//flagsWindows |= ImGuiWindowFlags_NoResize;
 			//flagsWindows |= ImGuiWindowFlags_NoTitleBar;
 			//flagsWindows |= ImGuiWindowFlags_NoCollapse;
@@ -9035,6 +9035,8 @@ void ofxColorManager::gui_About(bool* p_open)
 		ImGui::End();
 		return;
 	}
+	
+	draw_DemoFbo();
 
 	//ImGui::Image(bg_tex_id, ImGui::GetContentRegionAvail());
 
@@ -9061,7 +9063,7 @@ void ofxColorManager::gui_About(bool* p_open)
 	ImGui::Dummy(ImVec2(0, 4));
 	//ImGui::Text("Peace");
 
-	draw_DemoFbo();
+	//draw_DemoFbo();
 	ImGui::Text("[ Scene sketch by junkiyoshi.com. Thanks ]");
 
 	ImGui::End();
