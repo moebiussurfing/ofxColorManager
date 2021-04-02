@@ -722,7 +722,12 @@ void ofxColourLoversHelper::gui_Main()
 		////ImGui::Text(s.c_str());
 
 		// name
-		if (bSearch) ImGui::Text(lastPaletteName.get().c_str());
+		if (bSearch)
+		{
+			ImGui::Text("SEARCH:");
+			ImGui::Text(lastSearch_Str.c_str());
+			ImGui::Text(lastPaletteName.get().c_str());
+		}
 
 		//-
 
@@ -1595,6 +1600,8 @@ void ofxColourLoversHelper::update()
 	{
 		bUpdateSearchFlag = false;
 
+		//lastSearch_Str = "SEARCH";
+
 		build_Gui_Lab();
 
 		if (bSearching) bSearching = false;
@@ -1781,7 +1788,6 @@ void ofxColourLoversHelper::Changed_Gui(ofxUIEventArgs &e)
 }
 #endif
 
-
 // sends back pointers color/palette/name and mark gui selected..
 //--------------------------------------------------------------
 void ofxColourLoversHelper::refreshPalette()
@@ -1882,7 +1888,7 @@ void ofxColourLoversHelper::refreshPalette()
 				btn->setDrawOutline(false);
 			}
 		}
-}
+	}
 #endif
 }
 

@@ -106,7 +106,6 @@ void ofxColorManager::build_Palette_SortFlip()
 
 	// workflow
 	refresh_ColorPickedFromEngines();
-
 }
 
 //--------------------------------------------------------------
@@ -1387,11 +1386,11 @@ void ofxColorManager::draw(ofEventArgs & args)
 			_cBg = color_BackGround.get();
 		}
 #endif
-		// using gradient
-		if (!myDEMO_Svg.DEMO2_Enable || (myDEMO_Svg.DEMO2_Enable && myDEMO_Svg.fileIndex == 0))
+		// using picked color gradient 
+		if (!myDEMO_Svg.DEMO2_BgWhite || (myDEMO_Svg.DEMO2_Enable && myDEMO_Svg.fileIndex == 0))
+		//if (!myDEMO_Svg.DEMO2_Enable || (myDEMO_Svg.DEMO2_Enable && myDEMO_Svg.fileIndex == 0))
 		{
 			_cBg = gradientEngine.getColorPicked();
-			//nike demo has white bg
 		}
 
 		ofClear(_cBg);
@@ -3250,7 +3249,7 @@ void ofxColorManager::gui_Picker()
 			//ImGui::PopID();
 			ImGui::PushID(i++);
 			if (ofxImGui::AddParameter(color_BRG)) {}
-			ImGui::PopID();
+			ImGui::PopID();// ?? only once ?
 
 			ImGui::PopItemWidth();
 		}
@@ -5059,9 +5058,9 @@ void ofxColorManager::gui_Demo()
 			ofxImGui::AddParameter(myDEMO_Svg.blendModeName);
 			ofxImGui::AddStepper(myDEMO_Svg.fileIndex);
 			ofxImGui::AddParameter(myDEMO_Svg.fileIndexName);
-
 #ifdef USE_SVG_MASK
 			ofxImGui::AddParameter(myDEMO_Svg.enable_Mask);
+			ofxImGui::AddParameter(myDEMO_Svg.DEMO2_BgWhite);
 #endif		
 			ofxImGui::AddParameter(myDEMO_Svg.keys);
 			if (ImGui::Button("Reset")) {
@@ -5119,6 +5118,7 @@ void ofxColorManager::setupGui()
 	// theme
 #ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
 	ofxSurfingHelpers::ImGui_ThemeMoebiusSurfing();
+
 	//ofxSurfingHelpers::ImGui_ThemeModernDark();
 	//ImGui::StyleColorsDark();
 #endif
@@ -8768,6 +8768,7 @@ void ofxColorManager::setupDemos()
 	//-
 
 	// DEMO 2 svg
+
 	myDEMO_Svg.setLinkPalette(palette);
 	myDEMO_Svg.setVisible(false);
 #ifndef USE_SVG_MASK
@@ -8998,10 +8999,9 @@ void ofxColorManager::gui_About(bool* p_open)
 		ImGui::End();
 		return;
 	}
-	
-	draw_DemoFbo();
-
 	//ImGui::Image(bg_tex_id, ImGui::GetContentRegionAvail());
+	
+	//draw_DemoFbo();
 
 	ImGui::Text("ofxColorManager v1.0");
 	ImGui::Separator();
@@ -9024,9 +9024,8 @@ void ofxColorManager::gui_About(bool* p_open)
 	ImGui::Dummy(ImVec2(0.0f, 2.0f));
 	ImGui::Text("MIT License");
 	ImGui::Dummy(ImVec2(0, 4));
-	//ImGui::Text("Peace");
 
-	//draw_DemoFbo();
+	draw_DemoFbo();
 	ImGui::Text("[ Scene sketch by junkiyoshi.com. Thanks ]");
 
 	ImGui::End();

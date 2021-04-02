@@ -23,7 +23,7 @@ TODO:
 
 BUGS:
 
-+ colour lovers search hangs sometimes. error -1? breakes browser indexes
++ colour lovers search crashes sometimes. error -1? 
 + fix text input boxes when docking mode. to avoid floating text input box
 + TCP port number switch, some problems on reconnect bc threading not implemented. should use some sync addon or OSC.
 + ImGui pickers hangs flickering sometimes bc max width
@@ -41,7 +41,7 @@ BUGS:
 #define USE_DEBUG_LAYOUT // includes mouse ruler to help layout design. show app console window
 #define USE_VIEWPORTS// allow out-of-OF-window
 #define MAX_PALETTE_COLORS 20
-//#define USE_SVG_MASK // TODO: ofxScene-SVG using masked background. 
+#define USE_SVG_MASK // TODO: ofxScene-SVG using masked B&W background. 
 
 //--
 
