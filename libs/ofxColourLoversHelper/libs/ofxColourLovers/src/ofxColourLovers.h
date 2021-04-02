@@ -19,7 +19,7 @@
 
 #include "ColourLoveEvent.h"
 
- //http://www.colourlovers.com/api
+//http://www.colourlovers.com/api
 
 #define CL_url "http://www.colourlovers.com/api/palettes/top/?showPaletteWidths=1"
 //http://www.colourlovers.com/api/palettes/top/?lover=andreasborg&showPaletteWidths=1
@@ -251,6 +251,7 @@ private:
 	}
 
 	static void parsePalettes(ofxXmlSettings &palettes, ColourLoveEvent &palette) {
+		ofLogNotice(__FUNCTION__);
 
 		palettes.pushTag("palettes");
 		int numPalettes = palettes.getNumTags("palette");

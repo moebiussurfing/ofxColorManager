@@ -6,6 +6,7 @@
 
 /*
 
+
 TODO:
 
 + layout manager. save show toggles too. a lite ofxPresetsManager?
@@ -17,6 +18,7 @@ TODO:
 + plugins for UE4 / Unity3D / Processing ?
 + ofxNative. open system file browser. open browser
 + gloabl sat/bright editor for editor palette
++ add cosine/shift gradients engine https://github.com/soufianekhiat/DearWidgets
 
 
 BUGS:
@@ -26,6 +28,7 @@ BUGS:
 + TCP port number switch, some problems on reconnect bc threading not implemented. should use some sync addon or OSC.
 + ImGui pickers hangs flickering sometimes bc max width
 + there's a bug when loaging presets from colour lovers with rare chars. we should erase all chars like / * - \ 
+
 
 */
 
@@ -72,8 +75,7 @@ BUGS:
 // hide some widgets for layout customization to minimize elements: keys, layout customize and theme editor
 //#define USE_MINIMAL_GUI 
 
-//#define MODE_LOCK_DOCKING // disable move panels
-#define MODE_TEXT_INPUT_WORKAROUND// independent panel to solve ImGui docking textinput bugs
+#define MODE_TEXT_INPUT_WORKAROUND// independent floating panel to solve ImGui docking textinput bugs
 
 // extra
 //#define MODE_BACKGROUND //TODO: show bg color (gradient picker engine) on mode no background

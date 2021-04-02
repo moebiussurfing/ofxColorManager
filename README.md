@@ -150,6 +150,7 @@ The **JSON** file format of a palette preset it's simple. This is an example of 
 + Export Adobe ASE. _(?)_
 + Tween transitions to presets.
 + Undo engine.
++ Improve Gradient Engine adding cosine/shifting algorithms. Add an example and improve gradient exposing. 
 
 ## Author
 An addon by **@moebiusSurfing**  

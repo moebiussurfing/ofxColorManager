@@ -3240,14 +3240,18 @@ void ofxColorManager::gui_Picker()
 		if (ImGui::CollapsingHeader("HSB", ImGuiWindowFlags_NoCollapse))
 		{
 			ImGui::PushItemWidth(-25);
+
 			int i = 0;
 			ImGui::PushID(i++);//avoid repeat names and flicking bug
 			if (ofxImGui::AddParameter(color_HUE)) {}
+			//ImGui::PopID();
 			ImGui::PushID(i++);
 			if (ofxImGui::AddParameter(color_SAT)) {}
+			//ImGui::PopID();
 			ImGui::PushID(i++);
 			if (ofxImGui::AddParameter(color_BRG)) {}
 			ImGui::PopID();
+
 			ImGui::PopItemWidth();
 		}
 
@@ -3719,6 +3723,7 @@ void ofxColorManager::gui_LayoutsAdvanced()
 
 		if (ImGui::CollapsingHeader("EXTRA", ImGuiWindowFlags_None))
 		{
+			ofxSurfingHelpers::AddBigToggle(Lock_DockingLayout, _w100, _h);
 			ofxSurfingHelpers::AddBigToggle(SHOW_Panels, _w100, _h);
 			ofxSurfingHelpers::AddBigToggle(SHOW_Advanced, _w100, _h);
 			//ofxSurfingHelpers::AddBigToggle(SHOW_LayoutsAdvanced, _w100, _h);
@@ -5127,9 +5132,7 @@ void ofxColorManager::setupGui()
 	mainSettings = ofxImGui::Settings();
 
 	// for all window panels
-//#ifdef MODE_LOCK_DOCKING
 	flagsWindows = ImGuiWindowFlags_NoMove;
-//#endif
 
 	//-
 
@@ -6154,18 +6157,8 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		}
 		else
 		{
-			//			// all window panels
-			//#ifdef MODE_LOCK_DOCKING
-			//			flagsWindows = ImGuiWindowFlags_NoMove;
-			//#endif
-			//			//flagsWindows |= ImGuiWindowFlags_NoResize;
-			//			//flagsWindows |= ImGuiWindowFlags_NoTitleBar;
-			//			//flagsWindows |= ImGuiWindowFlags_NoCollapse;
-			//			//flagsWindows |= ImGuiWindowFlags_NoDecoration;
-			//			//flagsWindows |= ImGuiWindowFlags_NoBackground;
-
-						// workflow
-						//if (SHOW_MenuBar) SHOW_MenuBar = false;
+			// workflow
+			//if (SHOW_MenuBar) SHOW_MenuBar = false;
 			if (SHOW_EditTheme) SHOW_EditTheme = false;
 		}
 
@@ -8998,37 +8991,7 @@ void ofxColorManager::gui_About(bool* p_open)
 	//flags = ImGuiWindowFlags_None;
 
 	//TODO:
-	// draw texture inside backgroundg
-
-	//ImGuiIO& io = ImGui::GetIO();
-	//// Set the window position
-	//ImGui::SetNextWindowPos(ImVec2(0, 0), 0, ImVec2(0, 0));
-	//// Set the size of the window
-	//ImGui::SetNextWindowSize(ImVec2(io.DisplaySize.x, io.DisplaySize.y));
-	//// Set the window to be transparent
-	//ImGui::SetNextWindowBgAlpha(0);
-
-	//// Texture ID
-	//static ImTextureID bg_tex_id = 0;
-	//if (!bg_tex_id)
-	//{
-	//	// Here you use opencv to load the picture. Of course you can also use other ways to load the picture
-	//	// loadTexture is a custom function used to load image characters as textures. If you do n’t know how to load textures, you can use Baidu.
-	//	bg_tex_id = (GLuint *)fbo.getTexture(0).getTextureData().textureID;
-	//}
-
-	//ImGui::Begin("background", NULL, ImGuiWindowFlags_NoMove |
-	//	ImGuiWindowFlags_NoTitleBar |
-	//	ImGuiWindowFlags_NoBringToFrontOnFocus |
-	//	ImGuiWindowFlags_NoInputs |
-	//	ImGuiWindowFlags_NoCollapse |
-	//	ImGuiWindowFlags_NoResize |
-	//	ImGuiWindowFlags_NoScrollbar);
-
-	//// Set the padding of the window to 0 to fill the window with the picture control
-	//ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
-	//// Set the window to no border
-	//ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0);
+	// draw texture inside transparent backgroundg
 
 	if (!ImGui::Begin("About", p_open, flags))
 	{
@@ -9070,72 +9033,6 @@ void ofxColorManager::gui_About(bool* p_open)
 
 	//ImGui::PopStyleVar(2);
 }
-
-//#include <algorithm>
-//#define V ImVec2
-//#define R(u,v,r) {float U=u;u=cos(r)*u-sin(r)*v;v=sin(r)*U+cos(r)*v;}
-//#define S(T) 1.f/(1+exp(-(T)))*IM_PI*2
-//#define B(T) sin((T)*3)*exp(-(T))
-//int W = 11;
-//unsigned c[] = { 0xD9000080,0x750A2B18,0xDC2A2A17,0x0200025D,0x5AB1E800,0x26EAB555,0x01800100 };
-//struct T { float x, y, z; int i; bool operator<(T&o) { return z > o.z; } };
-//void FX(ImDrawList *d, V a, V b, V s, ImVec4 m, float t) {
-//	float L = fmod(t, 6) * 10; T v[221];
-//	for (int n = 3; n < 224; n++) {
-//		int i = n - 3;
-//		float x = i % 17 * W - 8.5*W, y = i / 17 * W - 6.5*W, z = 0, D = sqrt(x*x + y * y) / 32,
-//			X = S(L - 4 - D) + cos(t / 3) / 4, Y = S(L - 12 - D) + cos(t / 7) / 4, Z = S(L - 20 - D) + cos(t / 2) / 4;
-//		R(x, y, Z)R(y, z, X)R(x, z, Y)
-//			z -= L - D > 28 ? B((L - 28 - D) / 2) * 50 : 0;
-//		z = c[n / 32] & 1 << n % 32 ? z / 100 + 1 : 0;
-//		v[i] = { a.x + s.x*.5f + x / z,a.y + s.y*.5f + y / z,z,i };
-//	}
-//	std::sort(v, &v[221]);
-//	for (int i = 0; i < 221; i++)
-//		if (v[i].z != 0)
-//			d->AddCircleFilled(V(v[i].x, v[i].y), W*.8 / v[i].z, ImColor(v[i].i > 102 ? 0.f : 1.f, v[i].i < 102 ? 0.f : 1.f, 3.f - v[i].z*2.5f, 1.f));
-//}
-
-//TODO:
-//crash
-//--------------------------------------------------------------
-void ofxColorManager::doRandomizeColorLibrary(bool bPageOnly)
-{
-	//if (bPageOnly == true)
-	//{
-	//	int n = ofRandom(0, lib_Page_NumColors);
-	//	n = ofClamp(n, 0, lib_Page_NumColors - 1);
-	//	n = n + lib_Page_NumColors * lib_Page_Index;
-	//	last_ColorPicked_Lib = n;
-	//	last_Lib_Index = n;
-	//	// color name
-	//	if (n < palette_Lib_Names.size())
-	//	{
-	//		last_Lib_NameColor = palette_Lib_Names[n];
-	//	}
-	//	color_Picked = ofColor(palette_Lib_Cols[n]);
-	//	// go to page
-	//	int pag = n / lib_Page_NumColors;
-	//	if (lib_Page_Index != pag) lib_Page_Index = pag;
-	//}
-	//else
-	//{
-	//	doRandomizeColorLibrary();
-	//	int n = ofRandom(0, lib_TotalColors);
-	//	n = ofClamp(n, 0, lib_TotalColors - 1);
-	//	last_ColorPicked_Lib = n;
-	//	last_Lib_Index = n;
-	//	// color name
-	//	if (n < palette_Lib_Names.size())
-	//	{
-	//		last_Lib_NameColor = palette_Lib_Names[n];
-	//	}
-	//	color_Picked = ofColor(palette_Lib_Cols[n]);
-	//	// go to page
-	//	int pag = n / lib_Page_NumColors;
-	//	if (lib_Page_Index != pag) lib_Page_Index = pag;
-	//}
-};
 
 //--------------------------------------------------------------
 void ofxColorManager::setAppLayout(AppLayouts mode)
@@ -9312,4 +9209,72 @@ void ofxColorManager::preset_Previous() {
 	}
 
 	if (!AutoScroll) AutoScroll = true;
+}
+
+//TODO:
+//GL scene test
+//#include <algorithm>
+//#define V ImVec2
+//#define R(u,v,r) {float U=u;u=cos(r)*u-sin(r)*v;v=sin(r)*U+cos(r)*v;}
+//#define S(T) 1.f/(1+exp(-(T)))*IM_PI*2
+//#define B(T) sin((T)*3)*exp(-(T))
+//int W = 11;
+//unsigned c[] = { 0xD9000080,0x750A2B18,0xDC2A2A17,0x0200025D,0x5AB1E800,0x26EAB555,0x01800100 };
+//struct T { float x, y, z; int i; bool operator<(T&o) { return z > o.z; } };
+//void FX(ImDrawList *d, V a, V b, V s, ImVec4 m, float t) {
+//	float L = fmod(t, 6) * 10; T v[221];
+//	for (int n = 3; n < 224; n++) {
+//		int i = n - 3;
+//		float x = i % 17 * W - 8.5*W, y = i / 17 * W - 6.5*W, z = 0, D = sqrt(x*x + y * y) / 32,
+//			X = S(L - 4 - D) + cos(t / 3) / 4, Y = S(L - 12 - D) + cos(t / 7) / 4, Z = S(L - 20 - D) + cos(t / 2) / 4;
+//		R(x, y, Z)R(y, z, X)R(x, z, Y)
+//			z -= L - D > 28 ? B((L - 28 - D) / 2) * 50 : 0;
+//		z = c[n / 32] & 1 << n % 32 ? z / 100 + 1 : 0;
+//		v[i] = { a.x + s.x*.5f + x / z,a.y + s.y*.5f + y / z,z,i };
+//	}
+//	std::sort(v, &v[221]);
+//	for (int i = 0; i < 221; i++)
+//		if (v[i].z != 0)
+//			d->AddCircleFilled(V(v[i].x, v[i].y), W*.8 / v[i].z, ImColor(v[i].i > 102 ? 0.f : 1.f, v[i].i < 102 ? 0.f : 1.f, 3.f - v[i].z*2.5f, 1.f));
+//}
+
+//TODO:
+//crash
+//--------------------------------------------------------------
+void ofxColorManager::doRandomizeColorLibrary(bool bPageOnly)
+{
+	//if (bPageOnly == true)
+	//{
+	//	int n = ofRandom(0, lib_Page_NumColors);
+	//	n = ofClamp(n, 0, lib_Page_NumColors - 1);
+	//	n = n + lib_Page_NumColors * lib_Page_Index;
+	//	last_ColorPicked_Lib = n;
+	//	last_Lib_Index = n;
+	//	// color name
+	//	if (n < palette_Lib_Names.size())
+	//	{
+	//		last_Lib_NameColor = palette_Lib_Names[n];
+	//	}
+	//	color_Picked = ofColor(palette_Lib_Cols[n]);
+	//	// go to page
+	//	int pag = n / lib_Page_NumColors;
+	//	if (lib_Page_Index != pag) lib_Page_Index = pag;
+	//}
+	//else
+	//{
+	//	doRandomizeColorLibrary();
+	//	int n = ofRandom(0, lib_TotalColors);
+	//	n = ofClamp(n, 0, lib_TotalColors - 1);
+	//	last_ColorPicked_Lib = n;
+	//	last_Lib_Index = n;
+	//	// color name
+	//	if (n < palette_Lib_Names.size())
+	//	{
+	//		last_Lib_NameColor = palette_Lib_Names[n];
+	//	}
+	//	color_Picked = ofColor(palette_Lib_Cols[n]);
+	//	// go to page
+	//	int pag = n / lib_Page_NumColors;
+	//	if (lib_Page_Index != pag) lib_Page_Index = pag;
+	//}
 }
