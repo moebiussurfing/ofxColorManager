@@ -145,8 +145,8 @@ The **JSON** file format of a palette preset it's simple. This is an example of 
 
 ## Notes / TODO
 + Create an App using all the power but more user-friendly and a very simplified GUI.
-+ Processing / Unity3D / UE4 clients plugins. _(?)_
   * The main original destination of this addon is to complement customized apps, more than make an alternative to "Adobe" color managers or other solutions on the market.
+  * Processing / Unity3D / UE4 clients plugins. _(?)_
 + Export Adobe ASE. _(?)_
 + Tween transitions to presets.
 + Undo engine.
