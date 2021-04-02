@@ -83,7 +83,7 @@ private:
 #endif
 	void gui_Search();
 	void gui_Main();
-	void gui_BrowseKit();
+	void gui_Kit();
 	ofxImGui::Settings mainSettings;
 #endif
 

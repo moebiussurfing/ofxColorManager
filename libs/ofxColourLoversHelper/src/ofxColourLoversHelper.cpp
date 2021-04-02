@@ -661,6 +661,7 @@ void ofxColourLoversHelper::gui_Main()
 			ImGui::Dummy(ImVec2(0, 5));
 
 			//if (!bSearch /*&& bFavorites*/)//TODO: showing wrong, the favs names not the serach list (?) 
+			if (!bSearch)
 			{
 				if (palettes.size() != 0)
 				{
@@ -856,7 +857,7 @@ void ofxColourLoversHelper::gui_Main()
 }
 
 //--------------------------------------------------------------
-void ofxColourLoversHelper::gui_BrowseKit()
+void ofxColourLoversHelper::gui_Kit()
 {
 	// palette rows with all color boxes
 	if (SHOW_BrowserPalettes)
@@ -1628,7 +1629,7 @@ bool ofxColourLoversHelper::draw()
 
 		gui_Search();
 		gui_Main();
-		gui_BrowseKit();
+		gui_Kit();
 
 #ifndef USE_OFX_IM_GUI_EXTERNAL
 		gui_ImGui.end();
