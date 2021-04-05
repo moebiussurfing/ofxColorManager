@@ -1013,9 +1013,9 @@ void ofxColorManager::startup()
 
 	//--
 
-#ifdef LINK_TCP_MASTER_CLIENT
+//#ifdef LINK_TCP_MASTER_CLIENT_OF
 	setupLink();
-#endif
+//#endif
 
 	//-
 
@@ -1102,9 +1102,9 @@ void ofxColorManager::update(ofEventArgs & args)
 
 	//--
 
-#ifdef LINK_TCP_MASTER_CLIENT
+//#ifdef LINK_TCP_MASTER_CLIENT_OF
 	updateLink();
-#endif
+//#endif
 
 	//--
 
@@ -1532,6 +1532,10 @@ void ofxColorManager::exit()
 
 	ofRemoveListener(ofEvents().mouseDragged, this, &ofxColorManager::mouseDragged);
 	ofRemoveListener(ofEvents().mouseScrolled, this, &ofxColorManager::mouseScrolled);
+
+#ifdef LINK_TCP_MASTER_CLIENT_KU
+	TCP_Sender.close();
+#endif
 }
 
 //----
@@ -8508,21 +8512,27 @@ void ofxColorManager::exportPalette()
 		//add bundle json too
 		//j = PRESET_Temp.getJson();
 		//j = load(path_FileExport + "_Bundled"
-#ifdef LINK_TCP_MASTER_CLIENT
 		std::stringstream ss;
 		ss << j;
 		//ss << "[/TCP]";
 
 		ofLogNotice(__FUNCTION__) << "LINK: " + ss.str();
 
-		TCP.sendToAll(ss.str());//send to all clients
+#ifdef LINK_TCP_MASTER_CLIENT_OF
+		TCP_Sender.sendToAll(ss.str());//send to all clients
 		//for (int i = 0; i < TCP.getLastID(); i++)//many clients can be connected 
 		//{
 		//	//TCP.send(i, ss.str());
 		//}
+#endif
+
+#ifdef LINK_TCP_MASTER_CLIENT_KU
+		TCP_Sender.clearBuffer();
+		TCP_Sender.putString(ss.str());
+		TCP_Sender.send();
+#endif
 
 		storeText.push_back(ss.str() + "\n");
-#endif
 	}
 
 	//--
@@ -8605,7 +8615,9 @@ void ofxColorManager::loadPresetFile()
 	}
 }
 
-#ifdef LINK_TCP_MASTER_CLIENT
+//--
+
+#ifdef LINK_TCP_MASTER_CLIENT_OF
 //--------------------------------------------------------------
 void ofxColorManager::setupLink() {
 
@@ -8617,7 +8629,7 @@ void ofxColorManager::setupLink() {
 	//settings.reuse = true;
 	//settings.messageDelimiter = "\n";
 
-	TCP.setup(settings);
+	TCP_Sender.setup(settings);
 
 	// optionally set the delimiter to something else.  
 	//The delimiter in the client and the server have to be the same, default being [/TCP]
@@ -8633,11 +8645,11 @@ void ofxColorManager::updateLink() {
 	uint64_t now = ofGetElapsedTimeMillis();
 	if (now - lastCheckLink >= 4000)
 	{
-		for (int i = 0; i < TCP.getLastID(); i++)
+		for (int i = 0; i < TCP_Sender.getLastID(); i++)
 		{
-			if (!TCP.isClientConnected(i)) continue;
+			if (!TCP_Sender.isClientConnected(i)) continue;
 
-			ofLogVerbose(__FUNCTION__) << "Connected on port: " + ofToString(TCP.getClientPort(i));
+			ofLogVerbose(__FUNCTION__) << "Connected on port: " + ofToString(TCP_Sender.getClientPort(i));
 
 			//TCP.send(i, "hello client - you are connected on port - " + ofToString(TCP.getClientPort(i)));
 		}
@@ -8648,16 +8660,16 @@ void ofxColorManager::updateLink() {
 //--------------------------------------------------------------
 void ofxColorManager::draw_Link(int x, int y)
 {
-	std::string ss = "TCP SERVER\n\port: " + ofToString(TCP.getPort()) + "\n";
+	std::string ss = "TCP SERVER\n\port: " + ofToString(TCP_Sender.getPort()) + "\n";
 
 	// for each connected client lets get the data being sent and lets print it to the screen
-	for (unsigned int i = 0; i < (unsigned int)TCP.getLastID(); i++) {
+	for (unsigned int i = 0; i < (unsigned int)TCP_Sender.getLastID(); i++) {
 
-		if (!TCP.isClientConnected(i))continue;
+		if (!TCP_Sender.isClientConnected(i))continue;
 
 		// get the ip and port of the client
-		std::string port = ofToString(TCP.getClientPort(i));
-		std::string ip = TCP.getClientIP(i);
+		std::string port = ofToString(TCP_Sender.getClientPort(i));
+		std::string ip = TCP_Sender.getClientIP(i);
 		std::string info = "client " + ofToString(i) + " " + ip + ":" + port;
 
 		// if we don't have a string allocated yet
@@ -8674,7 +8686,7 @@ void ofxColorManager::draw_Link(int x, int y)
 		do
 		{
 			str = tmp;
-			tmp = TCP.receive(i);
+			tmp = TCP_Sender.receive(i);
 		} while (tmp != "");
 
 		// if there was a message set it to the corresponding client
@@ -8695,6 +8707,90 @@ void ofxColorManager::draw_Link(int x, int y)
 }
 #endif
 
+//--
+
+#ifdef LINK_TCP_MASTER_CLIENT_KU
+//--------------------------------------------------------------
+void ofxColorManager::setupLink() {
+
+	TCP_Sender.setup(host, port, 1024);
+	//TCP_Sender.setup("localhost", port, 1024);
+
+	// optionally set the delimiter to something else.  
+	//The delimiter in the client and the server have to be the same, default being [/TCP]
+	//TCP.setMessageDelimiter("\n");
+	lastCheckLink = 0;
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::updateLink() {
+
+	//// for each client lets send them a message letting them know what port they are connected on
+	//// we throttle the message sending frequency to once every 100ms
+	//uint64_t now = ofGetElapsedTimeMillis();
+	//if (now - lastCheckLink >= 4000)
+	//{
+	//	for (int i = 0; i < TCP_Sender.getLastID(); i++)
+	//	{
+	//		if (!TCP_Sender.isClientConnected(i)) continue;
+
+	//		ofLogVerbose(__FUNCTION__) << "Connected on port: " + ofToString(TCP_Sender.getClientPort(i));
+
+	//		//TCP.send(i, "hello client - you are connected on port - " + ofToString(TCP.getClientPort(i)));
+	//	}
+	//	lastCheckLink = now;
+	//}
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::draw_Link(int x, int y)
+{
+	//std::string ss = "TCP SERVER\n\port: " + ofToString(TCP_Sender.getPort()) + "\n";
+
+	//// for each connected client lets get the data being sent and lets print it to the screen
+	//for (unsigned int i = 0; i < (unsigned int)TCP_Sender.getLastID(); i++) {
+
+	//	if (!TCP_Sender.isClientConnected(i))continue;
+
+	//	// get the ip and port of the client
+	//	std::string port = ofToString(TCP_Sender.getClientPort(i));
+	//	std::string ip = TCP_Sender.getClientIP(i);
+	//	std::string info = "client " + ofToString(i) + " " + ip + ":" + port;
+
+	//	// if we don't have a string allocated yet
+	//	// lets create one
+	//	if (i >= storeText.size())
+	//	{
+	//		storeText.push_back(std::string());
+	//	}
+
+	//	// receive all the available messages, separated by \n
+	//	// and keep only the last one
+	//	std::string str;
+	//	std::string tmp;
+	//	do
+	//	{
+	//		str = tmp;
+	//		tmp = TCP_Sender.receive(i);
+	//	} while (tmp != "");
+
+	//	// if there was a message set it to the corresponding client
+	//	if (str.length() > 0)
+	//	{
+	//		storeText[i] = str;
+	//	}
+
+	//	//// draw the info text and the received text bellow it
+	//	//ofDrawBitmapString(info, xPos, yPos);
+	//	//ofDrawBitmapString(storeText[i], 25, yPos + 20);
+
+	//	ss += info;
+	//	ss += storeText[i];
+	//}
+
+	//ofxSurfingHelpers::drawTextBoxed(font, ss, x, y);
+}
+#endif
 //--------------------------------------------------------------
 void ofxColorManager::doRandomizeColorPicker()
 {

@@ -39,7 +39,7 @@ BUGS:
 // mainly for debug purposes only
 
 #define USE_DEBUG_LAYOUT // includes mouse ruler to help layout design. show app console window
-#define USE_VIEWPORTS// allow out-of-OF-window
+#define USE_VIEWPORTS // allow out-of-OF-window
 #define MAX_PALETTE_COLORS 20
 #define USE_SVG_MASK // TODO: ofxScene-SVG using masked B&W background. 
 
@@ -55,7 +55,11 @@ BUGS:
 //----------
 
 // NOTE: can't be disabled now..
-#define LINK_TCP_MASTER_CLIENT
+// tcp modes: enable only one of the two modes
+#define LINK_TCP_MASTER_CLIENT_OF
+//#define LINK_TCP_MASTER_CLIENT_KU
+
+//--
 #define INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
 
 // modules
@@ -89,9 +93,16 @@ BUGS:
 
 //----
 
-#ifdef LINK_TCP_MASTER_CLIENT
+// tcp link
+
+#ifdef LINK_TCP_MASTER_CLIENT_OF
 #include "ofxNetwork.h"
 #endif
+
+#ifdef LINK_TCP_MASTER_CLIENT_KU
+#include "ofxKuNetwork.h"
+#endif
+
 // note that threading is not implemented. so ofxColorClient hangs some seconds when connecting retries. 
 // after some tries TCP toggle is auto disabled.
 // you must enable TCP toggle manually again.
@@ -191,6 +202,7 @@ public:
 	//-
 
 	// OF callbacks
+
 public:
 	void keyPressed(ofKeyEventArgs &eventArgs);
 	void keyReleased(ofKeyEventArgs &eventArgs);
@@ -214,23 +226,35 @@ private:
 	//--
 
 private:
-	float dt;
+	float dt;//for preview speeds only..
 	float fps;
 
 private:
 	bool SHOW_EditTheme = false;
 
-#ifdef LINK_TCP_MASTER_CLIENT
+	//--
+
+	// TCP LINK
+
 private:
 	std::string host = "127.0.0.1";//hardcoded. can't be change on runtime
 	int port = 66666;//localhost. hardcoded. can't be change on runtime
-	ofxTCPServer TCP;
+	//ofParameter<std::string> host{ "Host", "127.0.0.1" };
+	//ofParameter<int> port{ "Port", 66666, 0, 99999 };
+
+#ifdef LINK_TCP_MASTER_CLIENT_OF
+	ofxTCPServer TCP_Sender;
+#endif
+
+#ifdef LINK_TCP_MASTER_CLIENT_KU
+	ofxKuNetworkTcpClient TCP_Sender;
+#endif
+
 	vector <std::string> storeText;
 	uint64_t lastCheckLink;
 	void updateLink();
 	void setupLink();
 	void draw_Link(int x = 20, int y = 20);
-#endif
 
 	//--
 
