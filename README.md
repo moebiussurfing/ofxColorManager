@@ -58,7 +58,7 @@ Use the add-on inside your Render **OF_App** when you want to use all the bundle
 ( _Requires all the dependencies._ )  
 
 #### 2. **Two Apps Linked**:  
-All the Tools, but with a more handy setup: using two separated apps.  
+**Two separated apps**: All the Engines and Tools, but with a more handy setup.  
 Links a **MASTER OF_App** (with the **ofxColorManager**) to your **CLIENT OF_App** (with the **ofxColorClient**).  
 
 #### 3. **Minimal Standalone**:
