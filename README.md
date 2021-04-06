@@ -48,7 +48,7 @@ This **openFrameworks** add-on is a **bundle of Tools and Engines** to create an
   * Exposes the gradient and an available extra pickable color.
   * Tweackeable by curves for spread distribution.
   
-## Modes
+## Three Modes
 
 #### 1. **Powered Standalone**:  
 Use the add-on inside your **OF_App** when you want to use all the Tools bundled.  
@@ -80,16 +80,16 @@ _( More performant in most scenarios and using fewer dependencies than in the ot
 
 Pre-compiled versions for fast testing or to have an Apps with for the most common uses.  
 
-### 1. **PALETTO v1.0b** 
-Master App  
-Ready to use *Windows* / *macOS* App.  
+### 1. **PALETTO v1.0rc** 
+**Master App**  
+Ready to use executable *Windows* / *macOS* App.  
 The main original destination of this App is to be a complement to customized apps, more than to be an alternative to "Adobe" color managers or other designer solutions on the market.  
 ( Based on _1-example_Basic_ from **ofxColorManager** )  
 
-### 2. **TEST_ColoredScene**
-Client App  
-Ready to use **Windows** / **macOS** App.  
-(Usable Standalone or Linked to **MASTER App**.)  
+### 2. **TEST_COLORED_Scene**
+**Client App**  
+Ready to use executable **Windows** / **macOS** App.  
+Works Standalone or Linked to a **MASTER App** (like Paletto)  
 ( Based on _3-example_Scenes_ from **ofxColorClient** )  
 
 <br/>
