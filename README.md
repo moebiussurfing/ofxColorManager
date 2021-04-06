@@ -18,9 +18,12 @@ This **openFrameworks** add-on is a **bundle of Tools and Engines** to create an
 ## Engines:  
   1. **10+** Algorithmic **Theory Schemes** from a base color.  
   *Complementary, Compound, Monochrome, Analogous, Triad...*  
+
   2. **10+** **Range Spaces** between two colors.  
   *RGB, LAB, CMYK, XYZ...*  
+ 
   3. [**Colour Lovers API**](https://www.colourlovers.com/) to search keywords online, handle favorites, and history search.
+ 
   4. **Extract** the dominant colors **from image files**.  
   *Sorting by Dominance, Hue, Saturation or Brightness*.
 
@@ -178,11 +181,11 @@ Based on _1-example_Basic_ from **ofxColorManager**
 Based on _3-example_Scenes_ from **ofxColorClient**  
 
 ## 1. PALETTO (**MASTER App**)
-Ready to use *Windows* / *macOS* Apps.  
+Ready to use *Windows* / *macOS* App.  
 The main original destination of this addon is to be a complement to customized apps, more than to be an alternative to "Adobe" color managers or other designer solutions on the market.
 
 ## 2. **CLIENT App**
-Ready to use **Windows** / **macOS** Apps.  
+Ready to use **Windows** / **macOS** App.  
 (Usable Standalone or Linked to **MASTER App**.)
 
 ## **HOW-TO / GUIDE**: 
