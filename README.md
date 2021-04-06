@@ -91,10 +91,10 @@ Ready to use **Windows** / **macOS** App.
   <summary>HowTo / Guide</summary>
   <p>
 
-1. Open the **MASTER App** alone to browse palettes and explore the *GUI*.
+1. Open the **MASTER App** alone to create, manage and browse palettes. Explore the *GUI*.
 2. Open the **CLIENT App** alone and browse the bundled kit of presets files.
 3. To play on **Linking Mode**:  
-  Open both **MASTER** and **CLIENT** Apps, and start browsing presets on **MASTER** App, and look how **CLIENT** App is updating on realtime in parallel.
+  Open both **MASTER** and **CLIENT** Apps, and start creating and browsing presets on **MASTER** App, and look how **CLIENT** App is linked and coloring your scene.
 
 * NOTES / HELP
   * When **TCP Linking**, you should open the **Master App** at first. Sometimes you need to toggle _Off/On_ the **TCP Link** toggle. 
