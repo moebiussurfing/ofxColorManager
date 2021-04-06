@@ -3,7 +3,7 @@
 This **openFrameworks** add-on is a **bundle of Tools and Engines** to create and organize color palettes for your scenes.  
 
 ## Screenshot
-![image](/readme_images/Capture.JPG?raw=true "image")
+![image](/doc/readme_images/Capture.JPG?raw=true "image")
 
 ## Videos
 
