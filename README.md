@@ -182,7 +182,10 @@ The main original destination of this addon is to be a complement to customized 
 Ready to use **Windows** / **macOS** App.  
 (Usable Standalone or Linked to **MASTER App**.)
 
-## How-To / Guide 
+<details>
+  <summary>How-To / Guide</summary>
+  <p>
+
 1. Open the **MASTER App** alone to browse palettes and explore the *GUI*.
 2. Open the **CLIENT App** alone and browse the bundled kit of presets files.
 3. To play on **Linking Mode**:  
@@ -190,6 +193,8 @@ Ready to use **Windows** / **macOS** App.
 
 ## NOTES / HELP
 * When **TCP Linking**, you should open the **Master App** at first. Sometimes you need to toggle _Off/On_ the **TCP Link** toggle. 
+  </p>
+</details>
 
 ## Tested Systems
   - **Windows 10** / **VS 2017** / **OF ~0.11**
@@ -197,7 +202,7 @@ Ready to use **Windows** / **macOS** App.
 
 ## Author
 An addon by **@moebiusSurfing**  
-*( ManuMolina ) 2019-2021*
+*( ManuMolina ) 2019-2021*  
 [Twitter](https://twitter.com/moebiussurfing/)  
 [Instagram](https://www.instagram.com/moebiussurfing/)  
 [YouTube](https://www.youtube.com/channel/UCzUw96_wjmNxyIoFXf84hQg)  
