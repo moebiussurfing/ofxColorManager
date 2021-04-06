@@ -189,7 +189,7 @@ Ready to use **Windows** / **macOS** App.
 * When **TCP Linking**, you should open the **Master App** at first. Sometimes you need to toggle _Off/On_ the **TCP Link** toggle. 
 
 <details>
-  <summary>## IDEAS / TODO</summary>
+  <summary>**IDEAS / TODO**</summary>
   <p>
 
 + Global Saturation / Brightness modifiers to all the palette colors. _(?)_  
