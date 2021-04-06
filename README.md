@@ -162,7 +162,7 @@ Based on _1-example_Basic_ from **ofxColorManager**
 **CLIENT App**:  
 Based on _3-example_Scenes_ from **ofxColorClient**  
 
-## 1. PALETTO (**MASTER App**)
+## 1. **PALETTO** (MASTER App)
 Ready to use *Windows* / *macOS* App.  
 The main original destination of this addon is to be a complement to customized apps, more than to be an alternative to "Adobe" color managers or other designer solutions on the market.
 
