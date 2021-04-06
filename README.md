@@ -81,14 +81,14 @@ _( More performant in most scenarios and using fewer dependencies than in the ot
   <summary>Usage</summary>
   <p>
 
-### ofApp.h
+**ofApp.h**
 ```.cpp
 #include "ofxColorManager.h"
 
 ofxColorManager colorManager;
 vector<ofColor> palette;
 \```
-### ofApp.cpp
+**ofApp.cpp**
 ```.cpp
 void ofApp::setup()
 {
@@ -168,11 +168,8 @@ The **JSON** file format of a palette preset it's simple. This is an example of 
 
 Pre-compiled versions for fast testing or to have an Apps with for the most common uses.  
 
-**MASTER App**:  
-Based on _1-example_Basic_ from **ofxColorManager**  
-
-**CLIENT App**:  
-Based on _3-example_Scenes_ from **ofxColorClient**  
+**MASTER App**: Based on _1-example_Basic_ from **ofxColorManager**  
+**CLIENT App**: Based on _3-example_Scenes_ from **ofxColorClient**  
 
 ### 1. **PALETTO** (MASTER App)
 Ready to use *Windows* / *macOS* App.  
