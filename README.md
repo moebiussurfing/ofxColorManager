@@ -65,6 +65,7 @@ Just use your **ofxColorManager** compatible palette presets files.
 _( More performant in most scenarios and using fewer dependencies than in the other two modes that require **ofxColorManager**. )_
 
 <br>
+
 ## ofxColorClient: The Player add-on 
   * A Lightweight version of the add-on just to use your **Presets Kit**. 
   * Bundled with a minimal set of tools: Kit browser, palette and gradient previews, and tweened transitions.  
@@ -72,6 +73,7 @@ _( More performant in most scenarios and using fewer dependencies than in the ot
   * Works too in the **Standalone Mode** to browse and use your kit with preset files.
 
 <br>
+
 ## Ready-To-Use Binaries
 
 Pre-compiled versions for fast testing or to have an Apps with for the most common uses.  
@@ -88,6 +90,7 @@ Ready to use **Windows** / **macOS** App.
 (Usable Standalone or Linked to **MASTER App**.)
 
 <br>
+
 ## Extra Info
 
 <details>
@@ -230,6 +233,7 @@ The **JSON** file format of a palette preset it's simple. This is an example of 
 </details>
 
 <br>
+
 ## Author
 An addon by **@moebiusSurfing**  
 *( ManuMolina ) 2019-2021*  
