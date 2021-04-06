@@ -146,8 +146,11 @@ void ofApp::setup()
 void ofApp::draw()
 {
   /*
-  Use the colors. 
+  
+  Use the colors accessing to
+  vector<ofColor> palette 
   Nothing more!
+  
   */
 }
 ```
