@@ -164,12 +164,12 @@ The **JSON** file format of a palette preset it's simple. This is an example of 
   </p>
 </details>
 
-# Ready-To-Use Binaries
+## Ready-To-Use Binaries
 
 Pre-compiled versions for fast testing or to have an Apps with for the most common uses.  
 
-**MASTER App**: Based on _1-example_Basic_ from **ofxColorManager**  
-**CLIENT App**: Based on _3-example_Scenes_ from **ofxColorClient**  
+**MASTER App** ( Based on _1-example_Basic_ from **ofxColorManager** )  
+**CLIENT App** ( Based on _3-example_Scenes_ from **ofxColorClient** )  
 
 ### 1. **PALETTO** (MASTER App)
 Ready to use *Windows* / *macOS* App.  
