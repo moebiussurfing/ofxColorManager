@@ -57,23 +57,23 @@ Requires all the **ofxColorManager** dependencies.
 
 #### 2. **Two Apps Linked**:  
 Allows all the Tools, but with a more handy setup: using two separated apps.  
-Link the **ofxColorManager** container **MASTER OF_App** to your **CLIENT OF_App** with the **ofxColorClient** add-on inside.  
+Links a **MASTER OF_App** (with the **ofxColorManager**) to your **CLIENT OF_App** (with the **ofxColorClient**).  
 
 #### 3. **Minimal Standalone**:
-The more **Lightweight** Mode, that allows you to use your local preset files.  
-Using the **ofxColorClient add-on** only, without all the Engines and Tools.  
-Just use your **ofxColorManager** compatible palette presets files.  
+The more **Lightweight** Mode. Only using the **ofxColorClient add-on**, allows to use your local preset files.  
+But without all the Engines and Tools.  
+Just as a player for your **ofxColorManager** palette presets files on your Scene Renderer.  
 
-_( More performant in most scenarios and using fewer dependencies than in the other two modes that require **ofxColorManager**. )_
+_( Obviously, this is the more performant Mode in most scenarios. Using fewer dependencies than in the other two modes, that require **ofxColorManager**. )_
 
 <br/>
 
 ## ofxColorClient: The Player add-on 
-  * A Lightweight version of the add-on just to use your **Presets Kit**. 
-  * Bundled with a minimal set of tools: Kit browser, palette and gradient previews, and tweened transitions.  
-  * To work linked to a another **OF_App** (**MASTER**) using the **ofxColorManger** addon, but inside a minimal version into your own **OF_App** (**CLIENT**). 
+  * A Lightweight version of the add-on just to use your **Presets Kit** files. 
+  * Bundled with a minimal set of tools: Kit browser, palette and gradient previews, and tweakeable tweened transitions.  
   * Works too in the **Standalone Mode** to browse and use your kit with preset files.
-
+  * Also included into **ofxColorManager**. 
+  
 <br/>
 
 ## Ready-To-Use Binaries
@@ -84,13 +84,15 @@ Pre-compiled versions for fast testing or to have an Apps with for the most comm
 **Master App**  
 Ready to use executable *Windows* / *macOS* App.  
 The main original destination of this App is to be a complement to customized apps, more than to be an alternative to "Adobe" color managers or other designer solutions on the market.  
-( Based on _1-example_Basic_ from **ofxColorManager** )  
+( _Based on _1-example_Basic_ from **ofxColorManager**_ )  
+Download Link.  
 
 ### 2. **TEST_COLORED_Scene**
 **Client App**  
 Ready to use executable **Windows** / **macOS** App.  
 Works Standalone or Linked to a **MASTER App** (like Paletto)  
-( Based on _3-example_Scenes_ from **ofxColorClient** )  
+( _Based on _3-example_Scenes_ from **ofxColorClient**_ )  
+Download Link.  
 
 <br/>
 
@@ -210,6 +212,15 @@ The **JSON** file format of a palette preset it's simple. This is an example of 
 </details>
 
 <details>
+  <summary>Tested Systems</summary>
+  <p>
+
+  - **Windows 10** / **VS 2017** / **OF ~0.11**
+  - **macOS**. **High Sierra** / **Xcode9** & **Xcode10** / **OF ~0.11**
+  </p>
+</details>
+
+<details>
   <summary>IDEAS / TODO</summary>
   <p>
 
@@ -223,15 +234,6 @@ The **JSON** file format of a palette preset it's simple. This is an example of 
   + Add an example and improve gradient exposing and background tool. 
   + [ofxCosineGradient](https://github.com/rystylee/ofxCosineGradient)
   + [DearWidgets](https://github.com/soufianekhiat/DearWidgets)
-  </p>
-</details>
-
-<details>
-  <summary>Tested Systems</summary>
-  <p>
-
-  - **Windows 10** / **VS 2017** / **OF ~0.11**
-  - **macOS**. **High Sierra** / **Xcode9** & **Xcode10** / **OF ~0.11**
   </p>
 </details>
 
