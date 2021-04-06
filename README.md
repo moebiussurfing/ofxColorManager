@@ -179,6 +179,7 @@ Ready to use **Windows** / **macOS** App.
 
 <details>
   <summary>IDEAS / TODO</summary>
+  <p>
 + Global Saturation / Brightness modifiers to all the palette colors. _(?)_  
 + Create an App using all the power but more user-friendly and a very simplified GUI. _(?)_
   + Export Adobe .ASE, .ACO, ...etc _(?)_
@@ -189,6 +190,7 @@ Ready to use **Windows** / **macOS** App.
   + Add an example and improve gradient exposing and background tool. 
   + [ofxCosineGradient](https://github.com/rystylee/ofxCosineGradient)
   + [DearWidgets](https://github.com/soufianekhiat/DearWidgets)
+  </p>
 </details>
 
 ## Tested Systems
