@@ -57,6 +57,7 @@ Link the **ofxColorManager** container **MASTER OF_App** to your **CLIENT OF_App
 The more **Lightweight** Mode, that allows you to use your local preset files.  
 Using the **ofxColorClient add-on** only, without all the Engines and Tools.  
 Just use your **ofxColorManager** compatible palette presets files.  
+
 _( More performant in most scenarios and using fewer dependencies than in the other two modes that require **ofxColorManager**. )_
  
 ## ofxColorClient: The Player add-on 
@@ -168,12 +169,12 @@ The **JSON** file format of a palette preset it's simple. This is an example of 
 
 ## Binaries
 
-Pre-compiled versions for fast testing or to have an ready to use app with the most common use.  
+Pre-compiled versions for fast testing or to have an ready to use Apps with the most common use.  
 
-**MASTER APP**:  
+**MASTER App**:  
 Based on _1-example_Basic_ from **ofxColorManager**  
 
-**CLIENT APP**: 
+**CLIENT App**:  
 Based on _3-example_Scenes_ from **ofxColorClient**  
 
 ## 1. PALETTO (**MASTER App**)
@@ -182,7 +183,7 @@ The main original destination of this addon is to be a complement to customized 
 
 ## 2. **CLIENT App**
 Ready to use **Windows** / **macOS** Apps.  
-Usable Standalone or Linked to **MASTER App**.
+(Usable Standalone or Linked to **MASTER App**.)
 
 ## **HOW-TO / GUIDE**: 
 1. Open the **MASTER App** alone to browse palettes and explore the *GUI*.
