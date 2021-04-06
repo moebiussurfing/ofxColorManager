@@ -77,7 +77,9 @@ _( More performant in most scenarios and using fewer dependencies than in the ot
 * **Pantone** library with **2000+ colors**.
 * Kit exporter of all **JSON** preset files to your project data path. (Can be used on the Standalone Client App.)
 
-## Usage
+<details>
+  <summary>Usage</summary>
+  <p>
 
 ### ofApp.h
 ```.cpp
@@ -100,6 +102,8 @@ void ofApp::draw()
   // Nothing more!
 }
 ```
+  </p>
+</details>
 
 <details>
   <summary>Dependencies</summary>
@@ -127,7 +131,6 @@ Above add-ons already packed into **OF_ADDON/libs**. No need to add them manuall
 * [ofxMouseRuler2](https://github.com/moebiussurfing/ofxMouseRuler2)  
 
 *Thanks a lot to all these ofxAddons coders. Look into each folder for authoring credits, original forks, and license info.*  
-
   </p>
 </details>
 
@@ -161,9 +164,9 @@ The **JSON** file format of a palette preset it's simple. This is an example of 
   </p>
 </details>
 
-# Binaries
+# Ready-To-Use Binaries
 
-Pre-compiled versions for fast testing or to have an ready to use Apps with the most common use.  
+Pre-compiled versions for fast testing or to have an Apps with for the most common uses.  
 
 **MASTER App**:  
 Based on _1-example_Basic_ from **ofxColorManager**  
@@ -195,8 +198,12 @@ Ready to use **Windows** / **macOS** App.
 ## Author
 An addon by **@moebiusSurfing**  
 *( ManuMolina ) 2019-2021*
-[@twitter](https://twitter.com/moebiussurfing/)
-[@twitter](https://www.instagram.com/moebiussurfing/)
+[Twitter](https://twitter.com/moebiussurfing/)  
+[Instagram](https://www.instagram.com/moebiussurfing/)  
+[YouTube](https://www.youtube.com/channel/UCzUw96_wjmNxyIoFXf84hQg)  
+
+## License
+[**MIT License**](https://github.com/moebiussurfing/ofxColorManager/blob/b29c56f7b0e374b6a6fe2406e45fbfaaf2726112/LICENSE)
 
 <details>
   <summary>IDEAS / TODO</summary>
@@ -214,6 +221,3 @@ An addon by **@moebiusSurfing**
   + [DearWidgets](https://github.com/soufianekhiat/DearWidgets)
   </p>
 </details>
-
-## License
-[**MIT License**](https://github.com/moebiussurfing/ofxColorManager/blob/b29c56f7b0e374b6a6fe2406e45fbfaaf2726112/LICENSE)
