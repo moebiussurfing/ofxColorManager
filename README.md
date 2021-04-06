@@ -129,14 +129,14 @@ Download Link.
   <p>
 
 **ofApp.h**
-```.cpp
+```.c++
 #include "ofxColorManager.h"
 
 ofxColorManager colorManager;
 vector<ofColor> palette;
 ```
 **ofApp.cpp**
-```.cpp
+```.c++
 void ofApp::setup()
 {
   colorManager.setLinkPalette(palette); // subscribe local palette
@@ -145,8 +145,10 @@ void ofApp::setup()
 
 void ofApp::draw()
 {
-  // Use the colors. 
-  // Nothing more!
+  /*
+  Use the colors. 
+  Nothing more!
+  */
 }
 ```
   </p>
