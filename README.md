@@ -87,7 +87,7 @@ _( More performant in most scenarios and using fewer dependencies than in the ot
 
 ofxColorManager colorManager;
 vector<ofColor> palette;
-\```
+```
 **ofApp.cpp**
 ```.cpp
 void ofApp::setup()
@@ -101,7 +101,7 @@ void ofApp::draw()
   // Use the colors. 
   // Nothing more!
 }
-\```
+```
   </p>
 </details>
 
