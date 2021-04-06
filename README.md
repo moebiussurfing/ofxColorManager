@@ -14,7 +14,8 @@ This **openFrameworks** add-on is a **bundle of Tools and Engines** to create an
 **ofxColorClient**:  
 
 [![VIDEO](http://img.youtube.com/vi/oSvGwpbWEuc/0.jpg)](http://www.youtube.com/watch?v=oSvGwpbWEuc "VIDEO")
-<br><br/>
+
+<br/>
 ## Engines  
 
   1. **10+** Algorithmic **Theory Schemes** from a base color.  
@@ -64,16 +65,14 @@ Just use your **ofxColorManager** compatible palette presets files.
 
 _( More performant in most scenarios and using fewer dependencies than in the other two modes that require **ofxColorManager**. )_
 
-<br>
-
+<br/>
 ## ofxColorClient: The Player add-on 
   * A Lightweight version of the add-on just to use your **Presets Kit**. 
   * Bundled with a minimal set of tools: Kit browser, palette and gradient previews, and tweened transitions.  
   * To work linked to a another **OF_App** (**MASTER**) using the **ofxColorManger** addon, but inside a minimal version into your own **OF_App** (**CLIENT**). 
   * Works too in the **Standalone Mode** to browse and use your kit with preset files.
 
-<br>
-
+<br/>
 ## Ready-To-Use Binaries
 
 Pre-compiled versions for fast testing or to have an Apps with for the most common uses.  
@@ -89,8 +88,7 @@ The main original destination of this addon is to be a complement to customized 
 Ready to use **Windows** / **macOS** App.  
 (Usable Standalone or Linked to **MASTER App**.)
 
-<br>
-
+<br/>
 ## Extra Info
 
 <details>
@@ -232,8 +230,7 @@ The **JSON** file format of a palette preset it's simple. This is an example of 
   </p>
 </details>
 
-<br>
-
+<br/>
 ## Author
 An addon by **@moebiusSurfing**  
 *( ManuMolina ) 2019-2021*  
