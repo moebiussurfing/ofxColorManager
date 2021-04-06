@@ -6112,6 +6112,10 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		{
 			setupLink();
 		}
+		else
+		{
+			TCP_Sender.close();
+		}
 	}
 #endif
 

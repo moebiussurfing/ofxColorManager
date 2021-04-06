@@ -70,6 +70,35 @@ _( More performant in most scenarios and using fewer dependencies than in the ot
   * To work linked to a another **OF_App** (**MASTER**) using the **ofxColorManger** addon, but inside a minimal version into your own **OF_App** (**CLIENT**). 
   * Works too in the **Standalone Mode** to browse and use your kit with preset files.
 
+## Ready-To-Use Binaries
+
+Pre-compiled versions for fast testing or to have an Apps with for the most common uses.  
+
+**MASTER App** ( Based on _1-example_Basic_ from **ofxColorManager** )  
+**CLIENT App** ( Based on _3-example_Scenes_ from **ofxColorClient** )  
+
+### 1. **PALETTO v1.0** (Master App)
+Ready to use *Windows* / *macOS* App.  
+The main original destination of this addon is to be a complement to customized apps, more than to be an alternative to "Adobe" color managers or other designer solutions on the market.
+
+### 2. **CLIENT App**
+Ready to use **Windows** / **macOS** App.  
+(Usable Standalone or Linked to **MASTER App**.)
+
+<details>
+  <summary>HowTo / Guide</summary>
+  <p>
+
+1. Open the **MASTER App** alone to browse palettes and explore the *GUI*.
+2. Open the **CLIENT App** alone and browse the bundled kit of presets files.
+3. To play on **Linking Mode**:  
+  Open both **MASTER** and **CLIENT** Apps, and start browsing presets on **MASTER** App, and look how **CLIENT** App is updating on realtime in parallel.
+
+* NOTES / HELP
+  * When **TCP Linking**, you should open the **Master App** at first. Sometimes you need to toggle _Off/On_ the **TCP Link** toggle. 
+  </p>
+</details>
+
 <details>
   <summary>Other Features</summary>
   <p>
@@ -183,35 +212,6 @@ The **JSON** file format of a palette preset it's simple. This is an example of 
   + Add an example and improve gradient exposing and background tool. 
   + [ofxCosineGradient](https://github.com/rystylee/ofxCosineGradient)
   + [DearWidgets](https://github.com/soufianekhiat/DearWidgets)
-  </p>
-</details>
-
-## Ready-To-Use Binaries
-
-Pre-compiled versions for fast testing or to have an Apps with for the most common uses.  
-
-**MASTER App** ( Based on _1-example_Basic_ from **ofxColorManager** )  
-**CLIENT App** ( Based on _3-example_Scenes_ from **ofxColorClient** )  
-
-### 1. **PALETTO v1.0** (Master App)
-Ready to use *Windows* / *macOS* App.  
-The main original destination of this addon is to be a complement to customized apps, more than to be an alternative to "Adobe" color managers or other designer solutions on the market.
-
-### 2. **CLIENT App**
-Ready to use **Windows** / **macOS** App.  
-(Usable Standalone or Linked to **MASTER App**.)
-
-<details>
-  <summary>HowTo / Guide</summary>
-  <p>
-
-1. Open the **MASTER App** alone to browse palettes and explore the *GUI*.
-2. Open the **CLIENT App** alone and browse the bundled kit of presets files.
-3. To play on **Linking Mode**:  
-  Open both **MASTER** and **CLIENT** Apps, and start browsing presets on **MASTER** App, and look how **CLIENT** App is updating on realtime in parallel.
-
-* NOTES / HELP
-  * When **TCP Linking**, you should open the **Master App** at first. Sometimes you need to toggle _Off/On_ the **TCP Link** toggle. 
   </p>
 </details>
 
