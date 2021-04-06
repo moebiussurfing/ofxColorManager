@@ -68,10 +68,9 @@ _( More performant in most scenarios and using fewer dependencies than in the ot
 ## Other Features
 * **Demo Scenes** for fast palette preview. Colored SVG and bubble scenes.
 * **ImGui** based GUI. Docked and customizable with layouts presets management.
-* **Linkable** with antoher app using **ofxColorClient** trough TCP or Watching files.
 * Hue wheel and rectangle **Color Pickers** with **HSV** sliders and clipboard copy/paste codes.
 * **Pantone** library with **2000+ colors**.
-* Kit exporter of all **JSON** preset files to your project data path.
+* Kit exporter of all **JSON** preset files to your project data path. (Can be used on the Standalone Client App.)
 
 ## Usage
 
@@ -86,7 +85,7 @@ vector<ofColor> palette;
 ```.cpp
 void ofApp::setup()
 {
-  colorManager.setLinkPalette(palette); // subscribe palette
+  colorManager.setLinkPalette(palette); // subscribe local palette
   colorManager.setup();
 }
 
