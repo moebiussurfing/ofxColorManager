@@ -217,9 +217,14 @@ The **JSON** file format of a palette preset it's simple. This is an example of 
   </p>
 </details>
 
-## Tested Systems
+<details>
+  <summary>Tested Systems</summary>
+  <p>
+
   - **Windows 10** / **VS 2017** / **OF ~0.11**
   - **macOS**. **High Sierra** / **Xcode9** & **Xcode10** / **OF ~0.11**
+  </p>
+</details>
 
 ## Author
 An addon by **@moebiusSurfing**  
