@@ -80,12 +80,14 @@ _( More performant in most scenarios and using fewer dependencies than in the ot
 
 Pre-compiled versions for fast testing or to have an Apps with for the most common uses.  
 
-### 1. **PALETTO v1.0** (Master App)
+### 1. **PALETTO v1.0b** 
+Master App  
 Ready to use *Windows* / *macOS* App.  
 The main original destination of this App is to be a complement to customized apps, more than to be an alternative to "Adobe" color managers or other designer solutions on the market.  
 ( Based on _1-example_Basic_ from **ofxColorManager** )  
 
-### 2. **TEST_ColoredScene** (Client App)
+### 2. **TEST_ColoredScene**
+Client App  
 Ready to use **Windows** / **macOS** App.  
 (Usable Standalone or Linked to **MASTER App**.)  
 ( Based on _3-example_Scenes_ from **ofxColorClient** )  
