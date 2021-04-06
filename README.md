@@ -152,7 +152,7 @@ The **JSON** file format of a palette preset it's simple. This is an example of 
 
 -----------------------------
 
-## Binaries
+# Binaries
 
 Pre-compiled versions for fast testing or to have an ready to use Apps with the most common use.  
 
