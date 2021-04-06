@@ -73,6 +73,7 @@ _( More performant in most scenarios and using fewer dependencies than in the ot
 <details>
   <summary>Other Features</summary>
   <p>
+  	
 * **Demo Scenes** for fast palette preview. Colored SVG and bubble scenes.
 * **ImGui** based GUI. Docked and customizable with layouts presets management.
 * Hue wheel and rectangle **Color Pickers** with **HSV** sliders and clipboard copy/paste codes.
