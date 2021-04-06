@@ -1,11 +1,12 @@
 # ofxColorManager
 
-This **openFrameworks** add-on is a **bundle of Tools and Engines** to design and organize color palettes for your scenes.  
+This **openFrameworks** add-on is a **bundle of Tools and Engines** to create and organize color palettes for your scenes.  
 
 ## Screenshot
 ![image](/readme_images/Capture.JPG?raw=true "image")
 
 ## Videos
+
 **ofxColorManager**:  
 
 [![VIDEO](http://img.youtube.com/vi/oSvGwpbWEuc/0.jpg)](http://www.youtube.com/watch?v=oSvGwpbWEuc "VIDEO")
@@ -24,13 +25,17 @@ This **openFrameworks** add-on is a **bundle of Tools and Engines** to design an
   *Sorting by Dominance, Hue, Saturation or Brightness*.
 
 ## Tools  
+
 * **Editor**: 
-  * Organize the colors.
+  * Organize the palette colors.
   * Edit using the color pickers and the Pantone colors library.
+
 * **Kit of Presets Manager**: 
   * Receive palettes from all the engines and save presets. 
   * Name, modify, delete or duplicate presets from your kit.
   * Preview all your kit of preset on a scrollable clickable panel.
+  * Your user kit is ready to use on the ofxColorClient player.
+
 * **Gradient Designer**:
   * Auto-generates a gradient from each palette.
   * Exposes an available extra pickable color.
@@ -52,7 +57,7 @@ Using the **ofxColorClient add-on** only, without all the Engines and Tools.
 Just use your **ofxColorManager** compatible palette presets files.  
 _( More performant in most scenarios and using fewer dependencies than in the other two modes that require **ofxColorManager**. )_
  
-## ofxColorClient: The player addon 
+## ofxColorClient: The Player add-on 
   * A Lightweight version of the add-on just to use your **Presets Kit**. 
   * Bundled with a minimal set of tools: Kit browser, palette and gradient previews, and tweened transitions.  
   * To work linked to a another **OF_App** (**MASTER**) using the **ofxColorManger** addon, but inside a minimal version into your own **OF_App** (**CLIENT**). 
@@ -98,6 +103,7 @@ Clone these add-ons and include into the **OF Project Generator** to allow compi
 * [ofxSurfingHelpers](https://github.com/moebiussurfing/ofxSurfingHelpers)  
 * [ofxScaleDragRect](https://github.com/moebiussurfing/ofxScaleDragRect)
 * [ofxIO](https://github.com/bakercp/ofxIO)
+* [ofxKuNetwork](https://github.com/moebiussurfing/ofxKuNetwork)  [ Fork from @kuflex ]
 * ofxNetwork  [ **OF** ]
 * ofxPoco  [ **OF** ]
 * ofxGui  [ **OF** ]
@@ -115,7 +121,7 @@ Above add-ons already packed into **OF_ADDON/libs**. No need to add them manuall
 *Thanks a lot to all these ofxAddons coders. Look into each folder for authoring credits, original forks, and license info.*  
 
 ## File format
-The **JSON** file format of a palette preset it's simple. This is an example of a 3 colors palette file content:
+The **JSON** file format of a palette preset it's simple. This is an example of a _3 colors palette_ file content:
 ```.json
 [
     {
@@ -143,18 +149,49 @@ The **JSON** file format of a palette preset it's simple. This is an example of 
 - **Windows 10** / **VS 2017** / **OF ~0.11**
 - **macOS**. **High Sierra** / **Xcode9** & **Xcode10** / **OF ~0.11**
 
-## Notes / TODO
-+ Create an App using all the power but more user-friendly and a very simplified GUI.
-  * The main original destination of this addon is to complement customized apps, more than make an alternative to "Adobe" color managers or other solutions on the market.
-  * Processing / Unity3D / UE4 clients plugins. _(?)_
-+ Export Adobe ASE. _(?)_
-+ Tween transitions to presets.
-+ Undo engine.
-+ Improve Gradient Engine adding cosine/shifting algorithms. Add an example and improve gradient exposing. 
+## NOTES / HELP
+* When **TCP Linking**, you should open master app at first. Sometimes you need to toggle Off/On the **TCP Link** toggle. 
+
+## IDEAS / TODO
++ Global Saturation / Brightness modifiers to all the palette colors. _(?)_  
++ Create an App using all the power but more user-friendly and a very simplified GUI. _(?)_
+  + Export Adobe .ASE, .ACO, ...etc _(?)_
++ Think about other creative code tools client/add-on: *Processing* / *Unity3D* / *UE4* clients plug-ins. _(?)_
++ Tween transitions to presets also on master app. _(?)_
++ Undo engine. _(?)_
++ Improve Gradient Engine adding cosine/shifting algorithms. 
+  + Add an example and improve gradient exposing and background tool. 
+  + [ofxCosineGradient](https://github.com/rystylee/ofxCosineGradient)
+  + [DearWidgets](https://github.com/soufianekhiat/DearWidgets)
+
+-----------------------------
+
+## Binaries
+
+Pre-compiled versions for fast testing or to have an ready to use app with the most common use.
+**Master App**: based on _1-example_Basic_ from **ofxColorManager**
+**Client App**: based on _3-example_Scenes_ from **ofxColorClient**
+
+## 1. PALETTO APP
+**Master App**
+
+Ready to use Windows / macOS app.
+The main original destination of this addon is to be a complement to customized apps, more than to be an alternative to "Adobe" color managers or other designer solutions on the market.
+
+## 2. **Client App**
+Ready to use **Windows** / **macOS** App.
+
+**HOW-TO / GUIDE**: 
+1. Open the **Master App** alone to browse palettes and explore the *GUI*.
+2. Open the **Client App** alone and browse the bundled kit of presets files.
+3. To play on **Linking Mode**: 
+  Open both **Master** and **Client** Apps, and start browsing presets on **Master** App, and look how **Client** App is updating on realtime in parallel.
+
+-----------------------------
 
 ## Author
 An addon by **@moebiusSurfing**  
 *( ManuMolina ) 2019-2021*
 
 ## License
-*MIT License*
+[**MIT License**](https://github.com/moebiussurfing/ofxColorManager/blob/b29c56f7b0e374b6a6fe2406e45fbfaaf2726112/LICENSE)

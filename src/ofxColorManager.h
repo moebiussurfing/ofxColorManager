@@ -56,8 +56,8 @@ BUGS:
 
 // NOTE: can't be disabled now..
 // tcp modes: enable only one of the two modes
-#define LINK_TCP_MASTER_CLIENT_OF
-//#define LINK_TCP_MASTER_CLIENT_KU
+//#define LINK_TCP_MASTER_CLIENT_OF
+#define LINK_TCP_MASTER_CLIENT_KU
 
 //--
 

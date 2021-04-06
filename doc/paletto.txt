@@ -1,0 +1,92 @@
+Paletto is a managent tool for color palettes.
+It's a bundle of Tools and Engines to design and organize color palettes for your creative code scenes.
+It is coded on C++ using openFrameworks and it's based on my ofxColorManager add-on.
+Do not export presets for designing tools like Adobe Photoshop, Adobe Illustrator, Sketch or [similar].
+Instead, [por el contrario]
+The main purpose of this app is to be linked with other custom apps for creative coding like Processing or Unity 3D or Unreal 4 incluso.
+For the momment there's only one client add-on, and is obviously for openFrameworks.
+If you want to use your json files in your custom app, and you are not using openFrameworks, you can code your json files reader classes by yourself.
+Depending on user interest or myself, future versions will have add-ons for Unreal or other tools or will export .ase formats for Adobe maybe too.
+
+* Engines
+To create a Palette:
+
+1. 10+ Algorithmic Theory Schemes from a base color.
+  Complementary, Compound, Monochrome, Analogous, Triad...
+2. 10+ Range Spaces between two colors.
+  RGB, LAB, CMYK, XYZ...
+3. Colour Lovers API to search keywords online, handle favorites, and history search.
+4. Extract the dominant colors from image files.
+  Sorting by Dominance, Hue, Saturation or Brightness.
+
+* Tools
+Management of Palettes
+
+Editor:
+  Organize the Palette colors
+  Edit using the color pickers and the Pantone colors library.
+
+Kit of Presets Manager:
+  Receive palettes from all the engines and save presets.
+  Name, modify, delete or duplicate presets from your kit.
+  Preview all your kit of preset on a scrollable clickable panel.
+
+Gradient Designer:
+  Auto-generates a gradient from each palette.
+  Exposes an available extra pickable color.
+
+
+Other Features
+
+    Demo Scenes for fast palette preview. Colored SVG and bubble scenes.
+    ImGui based GUI. Docked and customizable.
+    Linkable with antoher app using ofxColorClient trough TCP or Watching files.
+    Hue wheel and rectangle Color Pickers with HSV sliders and clipboard copy/paste codes.
+    Pantone library with 2000+ colors.
+    Manage: Edit, add, remove, sort, shift, and drag your palette colors.
+    Kit exporter of all JSON preset files to your project data path.
+
+
+File format
+
+The JSON file format of a palette preset it's simple. This is an example of a 3 colors palette file content:
+
+[
+    {
+        "a": 255,
+        "b": 206,
+        "g": 69,
+        "r": 4
+    },
+    {
+        "a": 255,
+        "b": 165,
+        "g": 103,
+        "r": 3
+    },
+    {
+        "a": 255,
+        "b": 125,
+        "g": 137,
+        "r": 3
+    }
+]
+
+
+Notes / TODO
+
+    Create an App using all the power but more user-friendly and a very simplified GUI.
+        The main original destination of this addon is to complement customized apps, more than make an alternative to "Adobe" color managers or other solutions on the market.
+        Processing / Unity3D / UE4 clients plugins. (?)
+    Export Adobe ASE. (?)
+    Tween transitions to presets.
+    Undo engine.
+    Improve Gradient Engine adding cosine/shifting algorithms. Add an example and improve gradient exposing.
+
+Author
+
+An addon by @moebiusSurfing
+( ManuMolina ) 2019-2021
+License
+
+MIT License

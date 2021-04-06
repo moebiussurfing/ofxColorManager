@@ -968,6 +968,7 @@ void ofxColorManager::setup()
 	params_control.add(Lock_DockingLayout);
 	params_control.add(SHOW_Layouts);
 	params_control.add(SHOW_LayoutsAdvanced);
+	params_control.add(bExportByTCP);
 
 	ofAddListener(params_control.parameterChangedE(), this, &ofxColorManager::Changed_Controls);
 
@@ -1015,9 +1016,9 @@ void ofxColorManager::startup()
 
 //#ifdef LINK_TCP_MASTER_CLIENT_OF
 	setupLink();
-//#endif
+	//#endif
 
-	//-
+		//-
 
 	PRESET_Temp.setLinkPalette(palette);
 
@@ -1104,11 +1105,11 @@ void ofxColorManager::update(ofEventArgs & args)
 
 //#ifdef LINK_TCP_MASTER_CLIENT_OF
 	updateLink();
-//#endif
+	//#endif
 
-	//--
+		//--
 
-	// auto pilot: browse presets
+		// auto pilot: browse presets
 
 	if (auto_pilot && (ofGetElapsedTimeMillis() - auto_pilot_timer > auto_pilot_Duration * 1000))
 	{
@@ -1388,7 +1389,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 #endif
 		// using picked color gradient 
 		if (!myDEMO_Svg.DEMO2_BgWhite || (myDEMO_Svg.DEMO2_Enable && myDEMO_Svg.fileIndex == 0))
-		//if (!myDEMO_Svg.DEMO2_Enable || (myDEMO_Svg.DEMO2_Enable && myDEMO_Svg.fileIndex == 0))
+			//if (!myDEMO_Svg.DEMO2_Enable || (myDEMO_Svg.DEMO2_Enable && myDEMO_Svg.fileIndex == 0))
 		{
 			_cBg = gradientEngine.getColorPicked();
 		}
@@ -1398,6 +1399,24 @@ void ofxColorManager::draw(ofEventArgs & args)
 		//--
 
 		draw_Demos();
+
+		//--
+
+		// about window
+
+		if (SHOW_About)
+		{
+			fboBig.begin();
+			ofClear(gradientEngine.getColorPicked());
+
+			//if (DEMO1_Enable) myDEMO_Bubbles.draw(DEMO_Alpha);
+			//if (DEMO5_Enable) myDEMO_Spheres.draw(DEMO5_Alpha);
+			//myDEMO_Bubbles.draw(DEMO_Alpha);
+			myDEMO_Spheres.draw();
+
+			fboBig.end();
+		}
+		//if (DEMO1_Enable) fboBig.draw(0, 0, ofGetWidth(), ofGetHeight());
 
 		//--
 
@@ -3489,7 +3508,7 @@ void ofxColorManager::gui_LayoutsPanel()
 		ofxSurfingHelpers::AddBigToggle(b2, _w, _h); ImGui::SameLine();
 		ofxSurfingHelpers::AddBigToggle(b3, _w, _h); if (!bbox) ImGui::SameLine();
 		ofxSurfingHelpers::AddBigToggle(b4, _w, _h); ImGui::SameLine();
-		
+
 		ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.5f, 0.0f, 0.0f, a));
 		ImGui::PushID("##saveLayout");
 		if (ImGui::Button("SAVE", ImVec2(_w, _h)))
@@ -3764,7 +3783,7 @@ void ofxColorManager::gui_Panels()
 		float _w100 = ImGui::GetContentRegionAvail().x;
 		float _w99 = _w100;// -_spcx;
 
-		float _h = _h100 / 2 - _spcy ;
+		float _h = _h100 / 2 - _spcy;
 		//float _h = BUTTON_BIG_HEIGHT;
 
 		//layout
@@ -6081,6 +6100,23 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		}
 	}
 
+	//-
+
+#ifdef LINK_TCP_MASTER_CLIENT_KU
+
+	// tcp link
+	else if (name == bExportByTCP.getName())
+	{
+		//reconnect
+		if (bExportByTCP)
+		{
+			setupLink();
+		}
+	}
+#endif
+
+	//-
+
 	// layout
 	else if (name == Lock_DockingLayout.getName())
 	{
@@ -6656,7 +6692,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	//{
 	//	if (bLock_palette) bAuto_Build_Palette = false;
 	//}
-}
+	}
 
 //--------------------------------------------------------------
 void ofxColorManager::Changed_Range(ofAbstractParameter &e)
@@ -8527,9 +8563,11 @@ void ofxColorManager::exportPalette()
 #endif
 
 #ifdef LINK_TCP_MASTER_CLIENT_KU
-		TCP_Sender.clearBuffer();
-		TCP_Sender.putString(ss.str());
-		TCP_Sender.send();
+		if (TCP_Sender.connected()) {
+			TCP_Sender.clearBuffer();
+			TCP_Sender.putString(ss.str());
+			TCP_Sender.send();
+		}
 #endif
 
 		storeText.push_back(ss.str() + "\n");
@@ -8701,7 +8739,7 @@ void ofxColorManager::draw_Link(int x, int y)
 
 		ss += info;
 		ss += storeText[i];
-	}
+}
 
 	ofxSurfingHelpers::drawTextBoxed(font, ss, x, y);
 }
@@ -8713,17 +8751,19 @@ void ofxColorManager::draw_Link(int x, int y)
 //--------------------------------------------------------------
 void ofxColorManager::setupLink() {
 
+	TCP_Sender.close();
 	TCP_Sender.setup(host, port, 1024);
-	//TCP_Sender.setup("localhost", port, 1024);
 
 	// optionally set the delimiter to something else.  
 	//The delimiter in the client and the server have to be the same, default being [/TCP]
 	//TCP.setMessageDelimiter("\n");
-	lastCheckLink = 0;
+	//lastCheckLink = 0;
 }
 
 //--------------------------------------------------------------
 void ofxColorManager::updateLink() {
+	//TODO:
+	//add reconnect engine
 
 	//// for each client lets send them a message letting them know what port they are connected on
 	//// we throttle the message sending frequency to once every 100ms
@@ -8733,9 +8773,7 @@ void ofxColorManager::updateLink() {
 	//	for (int i = 0; i < TCP_Sender.getLastID(); i++)
 	//	{
 	//		if (!TCP_Sender.isClientConnected(i)) continue;
-
 	//		ofLogVerbose(__FUNCTION__) << "Connected on port: " + ofToString(TCP_Sender.getClientPort(i));
-
 	//		//TCP.send(i, "hello client - you are connected on port - " + ofToString(TCP.getClientPort(i)));
 	//	}
 	//	lastCheckLink = now;
@@ -8746,24 +8784,19 @@ void ofxColorManager::updateLink() {
 void ofxColorManager::draw_Link(int x, int y)
 {
 	//std::string ss = "TCP SERVER\n\port: " + ofToString(TCP_Sender.getPort()) + "\n";
-
 	//// for each connected client lets get the data being sent and lets print it to the screen
 	//for (unsigned int i = 0; i < (unsigned int)TCP_Sender.getLastID(); i++) {
-
 	//	if (!TCP_Sender.isClientConnected(i))continue;
-
 	//	// get the ip and port of the client
 	//	std::string port = ofToString(TCP_Sender.getClientPort(i));
 	//	std::string ip = TCP_Sender.getClientIP(i);
 	//	std::string info = "client " + ofToString(i) + " " + ip + ":" + port;
-
 	//	// if we don't have a string allocated yet
 	//	// lets create one
 	//	if (i >= storeText.size())
 	//	{
 	//		storeText.push_back(std::string());
 	//	}
-
 	//	// receive all the available messages, separated by \n
 	//	// and keep only the last one
 	//	std::string str;
@@ -8773,24 +8806,21 @@ void ofxColorManager::draw_Link(int x, int y)
 	//		str = tmp;
 	//		tmp = TCP_Sender.receive(i);
 	//	} while (tmp != "");
-
 	//	// if there was a message set it to the corresponding client
 	//	if (str.length() > 0)
 	//	{
 	//		storeText[i] = str;
 	//	}
-
 	//	//// draw the info text and the received text bellow it
 	//	//ofDrawBitmapString(info, xPos, yPos);
 	//	//ofDrawBitmapString(storeText[i], 25, yPos + 20);
-
 	//	ss += info;
 	//	ss += storeText[i];
 	//}
-
 	//ofxSurfingHelpers::drawTextBoxed(font, ss, x, y);
 }
 #endif
+
 //--------------------------------------------------------------
 void ofxColorManager::doRandomizeColorPicker()
 {
@@ -8847,7 +8877,7 @@ void ofxColorManager::doRandomizeColorPicker()
 //--------------------------------------------------------------
 void ofxColorManager::setupDemos()
 {
-	// DEMO 1
+	// DEMO Bubbles
 
 	myDEMO_Bubbles.setup();
 	myDEMO_Bubbles.setPalette(palette);
@@ -8855,7 +8885,7 @@ void ofxColorManager::setupDemos()
 
 	//--
 
-	// DEMO 5
+	// DEMO Spheres
 
 	myDEMO_Spheres.setup();
 	myDEMO_Spheres.setPalette(palette);
@@ -8863,7 +8893,7 @@ void ofxColorManager::setupDemos()
 
 	//-
 
-	// DEMO 2 svg
+	// DEMO Svg
 
 	myDEMO_Svg.setLinkPalette(palette);
 	myDEMO_Svg.setVisible(false);
@@ -8875,7 +8905,7 @@ void ofxColorManager::setupDemos()
 //--------------------------------------------------------------
 void ofxColorManager::updateDemos()
 {
-	// DEMO1
+	// DEMO Bubbles
 	if (DEMO1_Enable || SHOW_About)
 	{
 		myDEMO_Bubbles.update();
@@ -8888,46 +8918,26 @@ void ofxColorManager::updateDemos()
 		}
 	}
 
-	// DEMO5
+	// DEMO Spheres
 	if (DEMO5_Enable || SHOW_About) myDEMO_Spheres.update();
 }
 
 //--------------------------------------------------------------
 void ofxColorManager::draw_Demos()
 {
-	// DEMO1
+	// DEMO Bubbles
 	// bubbles
 	if (DEMO1_Enable) myDEMO_Bubbles.draw(DEMO_Alpha);
 
 	//-
 
-	// DEMO2
-	// svg
+	// DEMO Svg
 	myDEMO_Svg.draw();
 
 	//-
 
-	// DEMO5
-	// spheres
+	// DEMO Spheres
 	if (DEMO5_Enable) myDEMO_Spheres.draw();
-
-	//-
-
-	//about window demos
-	if (SHOW_About)
-	{
-		fboBig.begin();
-		ofClear(gradientEngine.getColorPicked());
-
-		//if (DEMO1_Enable) myDEMO_Bubbles.draw(DEMO_Alpha);
-		//if (DEMO5_Enable) myDEMO_Spheres.draw(DEMO5_Alpha);
-		//myDEMO_Bubbles.draw(DEMO_Alpha);
-		myDEMO_Spheres.draw();
-
-		fboBig.end();
-	}
-	//if (DEMO1_Enable) fboBig.draw(0, 0, ofGetWidth(), ofGetHeight());
-
 }
 
 //--------------------------------------------------------------
@@ -9096,7 +9106,7 @@ void ofxColorManager::gui_About(bool* p_open)
 		return;
 	}
 	//ImGui::Image(bg_tex_id, ImGui::GetContentRegionAvail());
-	
+
 	//draw_DemoFbo();
 
 	ImGui::Text("ofxColorManager v1.0");
