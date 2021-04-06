@@ -101,7 +101,10 @@ void ofApp::draw()
 }
 ```
 
-## Dependencies
+<details>
+  <summary>Dependencies</summary>
+  <p>
+
 Clone these add-ons and include into the **OF Project Generator** to allow compile your projects or the examples:
 * [ofxColorClient](https://github.com/moebiussurfing/ofxColorClient)
 * [ofxImGui](https://github.com/Daandelange/ofxImGui/tree/jvcleave)  [ Fork from @Daandelange Thanks **Daan**! ]
@@ -125,7 +128,13 @@ Above add-ons already packed into **OF_ADDON/libs**. No need to add them manuall
 
 *Thanks a lot to all these ofxAddons coders. Look into each folder for authoring credits, original forks, and license info.*  
 
-## File format
+  </p>
+</details>
+
+<details>
+  <summary>File format</summary>
+  <p>
+
 The **JSON** file format of a palette preset it's simple. This is an example of a _3 colors palette_ file content:
 ```.json
 [
@@ -149,6 +158,8 @@ The **JSON** file format of a palette preset it's simple. This is an example of 
     }
 ]
 ```
+  </p>
+</details>
 
 # Binaries
 
@@ -192,7 +203,7 @@ Ready to use **Windows** / **macOS** App.
   + [ofxCosineGradient](https://github.com/rystylee/ofxCosineGradient)
   + [DearWidgets](https://github.com/soufianekhiat/DearWidgets)
   </p>
-  
+
 </details>
 
 ## Tested Systems
