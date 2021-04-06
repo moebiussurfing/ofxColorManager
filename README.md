@@ -87,7 +87,7 @@ _( More performant in most scenarios and using fewer dependencies than in the ot
 
 ofxColorManager colorManager;
 vector<ofColor> palette;
-```
+\```
 ### ofApp.cpp
 ```.cpp
 void ofApp::setup()
@@ -101,7 +101,7 @@ void ofApp::draw()
   // Use the colors. 
   // Nothing more!
 }
-```
+\```
   </p>
 </details>
 
@@ -135,7 +135,7 @@ Above add-ons already packed into **OF_ADDON/libs**. No need to add them manuall
 </details>
 
 <details>
-  <summary>File format</summary>
+  <summary>Preset File format</summary>
   <p>
 
 The **JSON** file format of a palette preset it's simple. This is an example of a _3 colors palette_ file content:
@@ -183,7 +183,7 @@ Ready to use **Windows** / **macOS** App.
 (Usable Standalone or Linked to **MASTER App**.)
 
 <details>
-  <summary>How-To / Guide</summary>
+  <summary>HowTo / Guide</summary>
   <p>
 
 1. Open the **MASTER App** alone to browse palettes and explore the *GUI*.
@@ -191,8 +191,8 @@ Ready to use **Windows** / **macOS** App.
 3. To play on **Linking Mode**:  
   Open both **MASTER** and **CLIENT** Apps, and start browsing presets on **MASTER** App, and look how **CLIENT** App is updating on realtime in parallel.
 
-## NOTES / HELP
-* When **TCP Linking**, you should open the **Master App** at first. Sometimes you need to toggle _Off/On_ the **TCP Link** toggle. 
+* NOTES / HELP
+  * When **TCP Linking**, you should open the **Master App** at first. Sometimes you need to toggle _Off/On_ the **TCP Link** toggle. 
   </p>
 </details>
 
