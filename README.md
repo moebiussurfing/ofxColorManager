@@ -85,6 +85,8 @@ The main original destination of this addon is to be a complement to customized 
 Ready to use **Windows** / **macOS** App.  
 (Usable Standalone or Linked to **MASTER App**.)
 
+<br>
+
 ## Extra Info
 
 <details>
