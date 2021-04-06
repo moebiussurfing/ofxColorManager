@@ -14,6 +14,7 @@ This **openFrameworks** add-on is a **bundle of Tools and Engines** to create an
 **ofxColorClient**:  
 
 [![VIDEO](http://img.youtube.com/vi/oSvGwpbWEuc/0.jpg)](http://www.youtube.com/watch?v=oSvGwpbWEuc "VIDEO")
+
 <br/>
 
 ## Engines  
@@ -64,6 +65,7 @@ Using the **ofxColorClient add-on** only, without all the Engines and Tools.
 Just use your **ofxColorManager** compatible palette presets files.  
 
 _( More performant in most scenarios and using fewer dependencies than in the other two modes that require **ofxColorManager**. )_
+
 <br/>
 
 ## ofxColorClient: The Player add-on 
@@ -71,6 +73,7 @@ _( More performant in most scenarios and using fewer dependencies than in the ot
   * Bundled with a minimal set of tools: Kit browser, palette and gradient previews, and tweened transitions.  
   * To work linked to a another **OF_App** (**MASTER**) using the **ofxColorManger** addon, but inside a minimal version into your own **OF_App** (**CLIENT**). 
   * Works too in the **Standalone Mode** to browse and use your kit with preset files.
+
 <br/>
 
 ## Ready-To-Use Binaries
@@ -87,6 +90,7 @@ The main original destination of this addon is to be a complement to customized 
 ### 2. **CLIENT App**
 Ready to use **Windows** / **macOS** App.  
 (Usable Standalone or Linked to **MASTER App**.)
+
 <br/>
 
 ## Extra Info
@@ -229,6 +233,7 @@ The **JSON** file format of a palette preset it's simple. This is an example of 
   - **macOS**. **High Sierra** / **Xcode9** & **Xcode10** / **OF ~0.11**
   </p>
 </details>
+
 <br/>
 
 ## Author
