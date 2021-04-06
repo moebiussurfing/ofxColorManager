@@ -27,8 +27,9 @@ This **openFrameworks** add-on is a **bundle of Tools and Engines** to create an
 ## Tools  
 
 * **Editor**: 
-  * Organize the palette colors.
+  * Organize the palette colors received from the Engines.
   * Edit using the color pickers and the Pantone colors library.
+  * Add, remove, sort, shift, and drag your palette colors. 
 
 * **Kit of Presets Manager**: 
   * Receive palettes from all the engines and save presets. 
@@ -37,9 +38,10 @@ This **openFrameworks** add-on is a **bundle of Tools and Engines** to create an
   * Your user kit is ready to use on the ofxColorClient player.
 
 * **Gradient Designer**:
-  * Auto-generates a gradient from each palette.
-  * Exposes an available extra pickable color.
-
+  * Auto-generates the gradient for each palette.
+  * Exposes the gradient and an available extra pickable color.
+  * Tweackeable by curves for spread distribution.
+  
 ## Modes
 
 #### 1. **Powered Standalone Mode**:  
@@ -65,11 +67,10 @@ _( More performant in most scenarios and using fewer dependencies than in the ot
 
 ## Other Features
 * **Demo Scenes** for fast palette preview. Colored SVG and bubble scenes.
-* **ImGui** based GUI. Docked and customizable.
+* **ImGui** based GUI. Docked and customizable with layouts presets management.
 * **Linkable** with antoher app using **ofxColorClient** trough TCP or Watching files.
 * Hue wheel and rectangle **Color Pickers** with **HSV** sliders and clipboard copy/paste codes.
 * **Pantone** library with **2000+ colors**.
-* Manage: Edit, add, remove, sort, shift, and drag your palette colors. 
 * Kit exporter of all **JSON** preset files to your project data path.
 
 ## Usage
@@ -168,20 +169,19 @@ The **JSON** file format of a palette preset it's simple. This is an example of 
 
 ## Binaries
 
-Pre-compiled versions for fast testing or to have an ready to use app with the most common use.
-**Master App**: based on _1-example_Basic_ from **ofxColorManager**
-**Client App**: based on _3-example_Scenes_ from **ofxColorClient**
+Pre-compiled versions for fast testing or to have an ready to use app with the most common use.  
+**Master App**: based on _1-example_Basic_ from **ofxColorManager**  
+**Client App**: based on _3-example_Scenes_ from **ofxColorClient**  
 
-## 1. PALETTO APP
-**Master App**
-
-Ready to use Windows / macOS app.
+## 1. PALETTO (**Master App**)
+Ready to use *Windows* / *macOS* Apps.  
 The main original destination of this addon is to be a complement to customized apps, more than to be an alternative to "Adobe" color managers or other designer solutions on the market.
 
-## 2. **Client App**
-Ready to use **Windows** / **macOS** App.
+## 2. **CLIENT App**
+Ready to use **Windows** / **macOS** Apps.  
+Usable Standalone or Linked to **Master App**.
 
-**HOW-TO / GUIDE**: 
+## **HOW-TO / GUIDE**: 
 1. Open the **Master App** alone to browse palettes and explore the *GUI*.
 2. Open the **Client App** alone and browse the bundled kit of presets files.
 3. To play on **Linking Mode**: 
