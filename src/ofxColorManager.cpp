@@ -658,7 +658,7 @@ void ofxColorManager::setup()
 	SHOW_Range.set("RANGE", true);
 	SHOW_Engines.set("PANELS", true);
 	SHOW_Panels.set("Show Main Panel", true);
-	SHOW_Export.set("EXPORT", true);
+	SHOW_LinkExport.set("LINK", true);
 	SHOW_Demos.set("DEMO", false);
 
 	//bAutoResizePalette.set("AutoResize", false);
@@ -820,7 +820,7 @@ void ofxColorManager::setup()
 	params_Panels.add(SHOW_Theory);
 	params_Panels.add(SHOW_Engines);
 	params_Panels.add(SHOW_Panels);
-	params_Panels.add(SHOW_Export);
+	params_Panels.add(SHOW_LinkExport);
 	params_Panels.add(SHOW_Demos);
 	params_Panels.add(SHOW_Quantizer);
 	params_Panels.add(SHOW_ColourLovers);
@@ -932,7 +932,7 @@ void ofxColorManager::setup()
 	// panels
 	params_control.add(SHOW_Engines);
 	params_control.add(SHOW_Panels);
-	params_control.add(SHOW_Export);
+	params_control.add(SHOW_LinkExport);
 	params_control.add(SHOW_Demos);
 	params_control.add(SHOW_BrowserColors);
 	params_control.add(SHOW_Presets);
@@ -2697,6 +2697,7 @@ void ofxColorManager::gui_Library()
 		//--
 
 		// advanced
+
 #ifdef USE_EXTRA_LIBRARIES
 		if (ImGui::CollapsingHeader("Advanced"))
 #endif
@@ -2756,6 +2757,7 @@ void ofxColorManager::gui_Library()
 			//--
 
 			// libraries
+
 #ifdef USE_EXTRA_LIBRARIES
 
 			if (ImGui::CollapsingHeader("Library"))
@@ -2777,13 +2779,13 @@ void ofxColorManager::gui_Library()
 
 		//--
 
-		// arrow buttons
+		// 1. arrow buttons
 
 		if (bPagerized)
 		{
 			ImGui::PushButtonRepeat(true);
 
-			// prev
+			// 1.1 prev
 			if (ImGui::ArrowButton("##left", ImGuiDir_Left))
 			{
 				if (lib_Page_Index > 0)
@@ -2794,7 +2796,7 @@ void ofxColorManager::gui_Library()
 
 			ImGui::SameLine(0, _spc);
 
-			// next
+			// 1.2 next
 			if (ImGui::ArrowButton("##right", ImGuiDir_Right))
 			{
 				if (lib_Page_Index < lib_Page_Max)
@@ -2807,10 +2809,10 @@ void ofxColorManager::gui_Library()
 
 			//-
 
-			// page slider
+			// 2. page slider
 
 			ImGui::SameLine();
-			ImGui::PushItemWidth(-35);
+			ImGui::PushItemWidth(-40);
 			ofxImGui::AddParameter(lib_Page_Index);//page slider selector
 			ImGui::PopItemWidth();
 
@@ -3018,7 +3020,7 @@ void ofxColorManager::gui_Export()
 
 	//--
 
-	if (ofxImGui::BeginWindow("Live Export", mainSettings, flagsw))
+	if (ofxImGui::BeginWindow("Link", mainSettings, flagsw))
 	{
 		float _h = BUTTON_BIG_HEIGHT;
 		float _spc = ImGui::GetStyle().ItemSpacing.x;
@@ -3028,7 +3030,7 @@ void ofxColorManager::gui_Export()
 
 		//--
 
-		//if (ImGui::CollapsingHeader("Live Export"))
+		//if (ImGui::CollapsingHeader("Link"))
 		{
 			//ImGui::PushItemWidth(ImGui::GetWindowContentRegionWidth());
 			if (ImGui::Button("EXPORT PRESET", ImVec2(_w100, _h)))
@@ -3813,7 +3815,7 @@ void ofxColorManager::gui_Panels()
 		ofxSurfingHelpers::AddBigToggle(SHOW_PanelEngines, _w, _h); ImGui::SameLine();
 		ofxSurfingHelpers::AddBigToggle(gradientEngine.SHOW_Gradient, _w, _h); ImGui::SameLine();
 		//ofxSurfingHelpers::AddBigToggle(SHOW_MINI_Preview, _w, _h);//ImGui::SameLine();
-		ofxSurfingHelpers::AddBigToggle(SHOW_Export, _w, _h); ImGui::SameLine();
+		ofxSurfingHelpers::AddBigToggle(SHOW_LinkExport, _w, _h); ImGui::SameLine();
 		ofxSurfingHelpers::AddBigToggle(SHOW_Demos, _w, _h); ImGui::SameLine();
 		ofxSurfingHelpers::AddBigToggle(SHOW_Layouts, _w, _h);
 
@@ -5242,7 +5244,7 @@ bool ofxColorManager::draw_Gui()
 #endif
 				if (SHOW_Quantizer) colorQuantizer.draw_Gui();
 			}
-			if (SHOW_Export) gui_Export();
+			if (SHOW_LinkExport) gui_Export();
 			if (SHOW_Demos) gui_Demo();
 #ifndef USE_MINIMAL_GUI
 			if (SHOW_Advanced) gui_Advanced();
@@ -7521,7 +7523,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			}
 			else if (key == OF_KEY_F10)//export
 			{
-				SHOW_Export = !SHOW_Export;
+				SHOW_LinkExport = !SHOW_LinkExport;
 			}
 			//else if (key == OF_KEY_F9)//mini
 			//{
@@ -9170,7 +9172,7 @@ void ofxColorManager::setAppLayout(AppLayouts mode)
 		SHOW_Demos = false;
 		gradientEngine.SHOW_Gradient = false;
 		SHOW_MINI_Preview = false;
-		SHOW_Export = false;
+		SHOW_LinkExport = false;
 		SHOW_Advanced = false;
 		SHOW_MenuBar = true;
 		break;
@@ -9195,7 +9197,7 @@ void ofxColorManager::setAppLayout(AppLayouts mode)
 		SHOW_Demos = false;
 		gradientEngine.SHOW_Gradient = false;
 		SHOW_MINI_Preview = false;
-		SHOW_Export = false;
+		SHOW_LinkExport = false;
 		SHOW_Advanced = false;
 		SHOW_MenuBar = false;
 		break;
@@ -9220,7 +9222,7 @@ void ofxColorManager::setAppLayout(AppLayouts mode)
 		SHOW_Demos = false;
 		gradientEngine.SHOW_Gradient = false;
 		SHOW_MINI_Preview = false;
-		SHOW_Export = false;
+		SHOW_LinkExport = false;
 		SHOW_Advanced = false;
 		SHOW_MenuBar = false;
 		break;
@@ -9245,7 +9247,7 @@ void ofxColorManager::setAppLayout(AppLayouts mode)
 		SHOW_Demos = false;
 		gradientEngine.SHOW_Gradient = false;
 		SHOW_MINI_Preview = false;
-		SHOW_Export = false;
+		SHOW_LinkExport = false;
 		SHOW_Advanced = false;
 		SHOW_MenuBar = false;
 		break;
@@ -9270,7 +9272,7 @@ void ofxColorManager::setAppLayout(AppLayouts mode)
 		SHOW_Demos = false;
 		gradientEngine.SHOW_Gradient = false;
 		SHOW_MINI_Preview = false;
-		SHOW_Export = false;
+		SHOW_LinkExport = false;
 		SHOW_Advanced = false;
 		SHOW_MenuBar = false;
 		break;

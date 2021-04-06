@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <interactiveRect>
 	<path>ofxColorManager/layout/</path>
-	<x>238</x>
-	<y>868</y>
+	<x>357</x>
+	<y>853</y>
 	<width>413</width>
 	<height>148</height>
 	<nombre>_MiniPreview_Gui</nombre>

@@ -9,6 +9,7 @@
 
 TODO:
 
++ fix after save new, stay reload last saved.
 + layout manager. save show toggles too. a lite ofxPresetsManager?
 + export Adobe ASE
 + add tween transitions to presets
@@ -357,7 +358,7 @@ private:
 	ofParameter<bool> SHOW_BrowserColors;
 	ofParameter<bool> SHOW_debugText;
 	ofParameter<bool> SHOW_Engines;
-	ofParameter<bool> SHOW_Export;
+	ofParameter<bool> SHOW_LinkExport;
 	ofParameter<bool> SHOW_Presets;
 	ofParameter<bool> SHOW_Kit;
 	ofParameter<bool> SHOW_Demos;
