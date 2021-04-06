@@ -48,16 +48,16 @@ This **openFrameworks** add-on is a **bundle of Tools and Engines** to create an
   
 ## Modes
 
-#### 1. **Powered Standalone Mode**:  
+#### 1. **Powered Standalone**:  
 Use the add-on inside your **OF_App** when you want to use all the Tools bundled.  
 All into one single app: _Color Manager + Scene Renderer_.  
 Requires all the **ofxColorManager** dependencies.  
 
-#### 2. **Two Apps Linked Mode**:  
+#### 2. **Two Apps Linked**:  
 Allows all the Tools, but with a more handy setup: using two separated apps.  
 Link the **ofxColorManager** container **MASTER OF_App** to your **CLIENT OF_App** with the **ofxColorClient** add-on inside.  
 
-#### 3. **Minimal Standalone Mode**:
+#### 3. **Minimal Standalone**:
 The more **Lightweight** Mode, that allows you to use your local preset files.  
 Using the **ofxColorClient add-on** only, without all the Engines and Tools.  
 Just use your **ofxColorManager** compatible palette presets files.  
@@ -150,8 +150,6 @@ The **JSON** file format of a palette preset it's simple. This is an example of 
 ]
 ```
 
------------------------------
-
 # Binaries
 
 Pre-compiled versions for fast testing or to have an ready to use Apps with the most common use.  
@@ -162,25 +160,19 @@ Based on _1-example_Basic_ from **ofxColorManager**
 **CLIENT App**:  
 Based on _3-example_Scenes_ from **ofxColorClient**  
 
-## 1. **PALETTO** (MASTER App)
+### 1. **PALETTO** (MASTER App)
 Ready to use *Windows* / *macOS* App.  
 The main original destination of this addon is to be a complement to customized apps, more than to be an alternative to "Adobe" color managers or other designer solutions on the market.
 
-## 2. **CLIENT App**
+### 2. **CLIENT App**
 Ready to use **Windows** / **macOS** App.  
 (Usable Standalone or Linked to **MASTER App**.)
 
-## **HOW-TO / GUIDE**: 
+## How-To / Guide 
 1. Open the **MASTER App** alone to browse palettes and explore the *GUI*.
 2. Open the **CLIENT App** alone and browse the bundled kit of presets files.
 3. To play on **Linking Mode**:  
   Open both **MASTER** and **CLIENT** Apps, and start browsing presets on **MASTER** App, and look how **CLIENT** App is updating on realtime in parallel.
-
------------------------------
-
-## Tested Systems
-  - **Windows 10** / **VS 2017** / **OF ~0.11**
-  - **macOS**. **High Sierra** / **Xcode9** & **Xcode10** / **OF ~0.11**
 
 ## NOTES / HELP
 * When **TCP Linking**, you should open the **Master App** at first. Sometimes you need to toggle _Off/On_ the **TCP Link** toggle. 
@@ -196,6 +188,10 @@ Ready to use **Windows** / **macOS** App.
   + Add an example and improve gradient exposing and background tool. 
   + [ofxCosineGradient](https://github.com/rystylee/ofxCosineGradient)
   + [DearWidgets](https://github.com/soufianekhiat/DearWidgets)
+
+## Tested Systems
+  - **Windows 10** / **VS 2017** / **OF ~0.11**
+  - **macOS**. **High Sierra** / **Xcode9** & **Xcode10** / **OF ~0.11**
 
 ## Author
 An addon by **@moebiusSurfing**  
