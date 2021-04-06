@@ -188,6 +188,16 @@ Ready to use **Windows** / **macOS** App.
 ## NOTES / HELP
 * When **TCP Linking**, you should open the **Master App** at first. Sometimes you need to toggle _Off/On_ the **TCP Link** toggle. 
 
+## Tested Systems
+  - **Windows 10** / **VS 2017** / **OF ~0.11**
+  - **macOS**. **High Sierra** / **Xcode9** & **Xcode10** / **OF ~0.11**
+
+## Author
+An addon by **@moebiusSurfing**  
+*( ManuMolina ) 2019-2021*
+[@twitter](https://twitter.com/moebiussurfing/)
+[@twitter](https://www.instagram.com/moebiussurfing/)
+
 <details>
   <summary>IDEAS / TODO</summary>
   <p>
@@ -205,28 +215,5 @@ Ready to use **Windows** / **macOS** App.
   </p>
 </details>
 
-## Tested Systems
-  - **Windows 10** / **VS 2017** / **OF ~0.11**
-  - **macOS**. **High Sierra** / **Xcode9** & **Xcode10** / **OF ~0.11**
-
-## Author
-An addon by **@moebiusSurfing**  
-*( ManuMolina ) 2019-2021*
-
 ## License
 [**MIT License**](https://github.com/moebiussurfing/ofxColorManager/blob/b29c56f7b0e374b6a6fe2406e45fbfaaf2726112/LICENSE)
-
-Of that continues to link the article anonymously modern art freud inferred. Eventually primitive brothel scene with a distinction. The Enlightenment criticized from the history.
-
-<details>
-<summary>
-<a class="btnfire small stroke"><em class="fas fa-chevron-circle-down"></em>&nbsp;&nbsp;Show all details</a>    
-</summary>
-This text is used as a placeholder or a tk note. Words that will follow won't make any sense and this is fine. At the moment, the goal is to build a structure for our site.
-
-Cheers!
-[Pascal](https://twitter.com/askpascalandy/)
-
-</details>
-
-**From understanding** of the day worked either through 1912 analytic. And criticised Vasari's cult of a broader term that the date. He the periods of the 20th century Henri Matisse and other young artists
