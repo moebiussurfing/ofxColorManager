@@ -146,11 +146,11 @@ The **JSON** file format of a palette preset it's simple. This is an example of 
 ```
 
 ## Tested systems
-- **Windows 10** / **VS 2017** / **OF ~0.11**
-- **macOS**. **High Sierra** / **Xcode9** & **Xcode10** / **OF ~0.11**
+  - **Windows 10** / **VS 2017** / **OF ~0.11**
+  - **macOS**. **High Sierra** / **Xcode9** & **Xcode10** / **OF ~0.11**
 
 ## NOTES / HELP
-* When **TCP Linking**, you should open master app at first. Sometimes you need to toggle Off/On the **TCP Link** toggle. 
+* When **TCP Linking**, you should open the **Master App** at first. Sometimes you need to toggle _Off/On_ the **TCP Link** toggle. 
 
 ## IDEAS / TODO
 + Global Saturation / Brightness modifiers to all the palette colors. _(?)_  
@@ -169,22 +169,26 @@ The **JSON** file format of a palette preset it's simple. This is an example of 
 ## Binaries
 
 Pre-compiled versions for fast testing or to have an ready to use app with the most common use.  
-**Master App**: based on _1-example_Basic_ from **ofxColorManager**  
-**Client App**: based on _3-example_Scenes_ from **ofxColorClient**  
 
-## 1. PALETTO (**Master App**)
+**MASTER APP**:  
+Based on _1-example_Basic_ from **ofxColorManager**  
+
+**CLIENT APP**: 
+Based on _3-example_Scenes_ from **ofxColorClient**  
+
+## 1. PALETTO (**MASTER App**)
 Ready to use *Windows* / *macOS* Apps.  
 The main original destination of this addon is to be a complement to customized apps, more than to be an alternative to "Adobe" color managers or other designer solutions on the market.
 
 ## 2. **CLIENT App**
 Ready to use **Windows** / **macOS** Apps.  
-Usable Standalone or Linked to **Master App**.
+Usable Standalone or Linked to **MASTER App**.
 
 ## **HOW-TO / GUIDE**: 
-1. Open the **Master App** alone to browse palettes and explore the *GUI*.
-2. Open the **Client App** alone and browse the bundled kit of presets files.
-3. To play on **Linking Mode**: 
-  Open both **Master** and **Client** Apps, and start browsing presets on **Master** App, and look how **Client** App is updating on realtime in parallel.
+1. Open the **MASTER App** alone to browse palettes and explore the *GUI*.
+2. Open the **CLIENT App** alone and browse the bundled kit of presets files.
+3. To play on **Linking Mode**:  
+  Open both **MASTER** and **CLIENT** Apps, and start browsing presets on **MASTER** App, and look how **CLIENT** App is updating on realtime in parallel.
 
 -----------------------------
 
