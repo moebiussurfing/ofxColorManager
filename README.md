@@ -70,12 +70,16 @@ _( More performant in most scenarios and using fewer dependencies than in the ot
   * To work linked to a another **OF_App** (**MASTER**) using the **ofxColorManger** addon, but inside a minimal version into your own **OF_App** (**CLIENT**). 
   * Works too in the **Standalone Mode** to browse and use your kit with preset files.
 
-## Other Features
+<details>
+  <summary>Other Features</summary>
+  <p>
 * **Demo Scenes** for fast palette preview. Colored SVG and bubble scenes.
 * **ImGui** based GUI. Docked and customizable with layouts presets management.
 * Hue wheel and rectangle **Color Pickers** with **HSV** sliders and clipboard copy/paste codes.
 * **Pantone** library with **2000+ colors**.
 * Kit exporter of all **JSON** preset files to your project data path. (Can be used on the Standalone Client App.)
+  </p>
+</details>
 
 <details>
   <summary>Usage</summary>
@@ -164,6 +168,23 @@ The **JSON** file format of a palette preset it's simple. This is an example of 
   </p>
 </details>
 
+<details>
+  <summary>IDEAS / TODO</summary>
+  <p>
+
++ Global Saturation / Brightness modifiers to all the palette colors. _(?)_  
++ Create an App using all the power but more user-friendly and a very simplified GUI. _(?)_
+  + Export Adobe .ASE, .ACO, ...etc _(?)_
++ Think about other creative code tools client/add-on: *Processing* / *Unity3D* / *UE4* clients plug-ins. _(?)_
++ Tween transitions to presets also on master app. _(?)_
++ Undo engine. _(?)_
++ Improve Gradient Engine adding cosine/shifting algorithms. 
+  + Add an example and improve gradient exposing and background tool. 
+  + [ofxCosineGradient](https://github.com/rystylee/ofxCosineGradient)
+  + [DearWidgets](https://github.com/soufianekhiat/DearWidgets)
+  </p>
+</details>
+
 ## Ready-To-Use Binaries
 
 Pre-compiled versions for fast testing or to have an Apps with for the most common uses.  
@@ -200,26 +221,9 @@ Ready to use **Windows** / **macOS** App.
 ## Author
 An addon by **@moebiusSurfing**  
 *( ManuMolina ) 2019-2021*  
+
 [Twitter](https://twitter.com/moebiussurfing/)  
 [Instagram](https://www.instagram.com/moebiussurfing/)  
 [YouTube](https://www.youtube.com/channel/UCzUw96_wjmNxyIoFXf84hQg)  
 
-## License
 [**MIT License**](https://github.com/moebiussurfing/ofxColorManager/blob/b29c56f7b0e374b6a6fe2406e45fbfaaf2726112/LICENSE)
-
-<details>
-  <summary>IDEAS / TODO</summary>
-  <p>
-
-+ Global Saturation / Brightness modifiers to all the palette colors. _(?)_  
-+ Create an App using all the power but more user-friendly and a very simplified GUI. _(?)_
-  + Export Adobe .ASE, .ACO, ...etc _(?)_
-+ Think about other creative code tools client/add-on: *Processing* / *Unity3D* / *UE4* clients plug-ins. _(?)_
-+ Tween transitions to presets also on master app. _(?)_
-+ Undo engine. _(?)_
-+ Improve Gradient Engine adding cosine/shifting algorithms. 
-  + Add an example and improve gradient exposing and background tool. 
-  + [ofxCosineGradient](https://github.com/rystylee/ofxCosineGradient)
-  + [DearWidgets](https://github.com/soufianekhiat/DearWidgets)
-  </p>
-</details>
