@@ -15,7 +15,7 @@ This **openFrameworks** add-on is a **bundle of Tools and Engines** to create an
 
 [![VIDEO](http://img.youtube.com/vi/oSvGwpbWEuc/0.jpg)](http://www.youtube.com/watch?v=oSvGwpbWEuc "VIDEO")
 
-## Engines:  
+## Engines  
 
   1. **10+** Algorithmic **Theory Schemes** from a base color.  
   *Complementary, Compound, Monochrome, Analogous, Triad...*  
@@ -150,25 +150,6 @@ The **JSON** file format of a palette preset it's simple. This is an example of 
 ]
 ```
 
-## Tested systems
-  - **Windows 10** / **VS 2017** / **OF ~0.11**
-  - **macOS**. **High Sierra** / **Xcode9** & **Xcode10** / **OF ~0.11**
-
-## NOTES / HELP
-* When **TCP Linking**, you should open the **Master App** at first. Sometimes you need to toggle _Off/On_ the **TCP Link** toggle. 
-
-## IDEAS / TODO
-+ Global Saturation / Brightness modifiers to all the palette colors. _(?)_  
-+ Create an App using all the power but more user-friendly and a very simplified GUI. _(?)_
-  + Export Adobe .ASE, .ACO, ...etc _(?)_
-+ Think about other creative code tools client/add-on: *Processing* / *Unity3D* / *UE4* clients plug-ins. _(?)_
-+ Tween transitions to presets also on master app. _(?)_
-+ Undo engine. _(?)_
-+ Improve Gradient Engine adding cosine/shifting algorithms. 
-  + Add an example and improve gradient exposing and background tool. 
-  + [ofxCosineGradient](https://github.com/rystylee/ofxCosineGradient)
-  + [DearWidgets](https://github.com/soufianekhiat/DearWidgets)
-
 -----------------------------
 
 ## Binaries
@@ -196,6 +177,25 @@ Ready to use **Windows** / **macOS** App.
   Open both **MASTER** and **CLIENT** Apps, and start browsing presets on **MASTER** App, and look how **CLIENT** App is updating on realtime in parallel.
 
 -----------------------------
+
+## Tested Systems
+  - **Windows 10** / **VS 2017** / **OF ~0.11**
+  - **macOS**. **High Sierra** / **Xcode9** & **Xcode10** / **OF ~0.11**
+
+## NOTES / HELP
+* When **TCP Linking**, you should open the **Master App** at first. Sometimes you need to toggle _Off/On_ the **TCP Link** toggle. 
+
+## IDEAS / TODO
++ Global Saturation / Brightness modifiers to all the palette colors. _(?)_  
++ Create an App using all the power but more user-friendly and a very simplified GUI. _(?)_
+  + Export Adobe .ASE, .ACO, ...etc _(?)_
++ Think about other creative code tools client/add-on: *Processing* / *Unity3D* / *UE4* clients plug-ins. _(?)_
++ Tween transitions to presets also on master app. _(?)_
++ Undo engine. _(?)_
++ Improve Gradient Engine adding cosine/shifting algorithms. 
+  + Add an example and improve gradient exposing and background tool. 
+  + [ofxCosineGradient](https://github.com/rystylee/ofxCosineGradient)
+  + [DearWidgets](https://github.com/soufianekhiat/DearWidgets)
 
 ## Author
 An addon by **@moebiusSurfing**  
