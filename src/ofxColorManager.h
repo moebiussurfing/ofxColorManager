@@ -48,8 +48,8 @@ BUGS:
 
 // layout dimensions constants
 #define COLOR_STRIP_COLOR_HEIGHT 40
-#define BUTTON_BIG_HEIGHT 50
 #define BUTTON_COLOR_SIZE 40
+#define BUTTON_BIG_HEIGHT 50
 #define PANEL_WIDGETS_WIDTH 200
 #define PANEL_WIDGETS_HEIGHT 500
 

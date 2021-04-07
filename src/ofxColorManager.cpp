@@ -1283,11 +1283,8 @@ void ofxColorManager::draw_PresetName()
 	ofPushStyle();
 
 	//blink when a new preset is editing
-	float freq = 0.2f;//speed freq
-	float min = 0.5f;
-	float max = 1.0f;
 	float a;
-	if (MODE_NewPreset) a = ofMap(glm::sin(freq * ofGetFrameNum()), -1.f, 1.f, min, max);
+	if (MODE_NewPreset) a = ofxSurfingHelpers::getFadeBlink();
 	else a = 1.0f;
 
 	//-
@@ -1431,7 +1428,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 			// info
 			if (SHOW_Name) draw_PresetName();
 		}
-	}
+		}
 
 	//--
 
@@ -1509,7 +1506,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 		}
 		ofPopMatrix();
 	}
-}
+	}
 
 //--------------------------------------------------------------
 ofxColorManager::~ofxColorManager()
@@ -2002,10 +1999,7 @@ void ofxColorManager::gui_Editor()
 	flagsw |= flagsWindows;
 
 	//blink when a new preset is editing
-	float freq = 0.15;//speed freq
-	float min = 0.20;
-	float max = 0.80;
-	float a = ofMap(glm::sin(freq * ofGetFrameNum()), -1, 1, min, max);
+	float a = ofxSurfingHelpers::getFadeBlink();
 
 	//--
 
@@ -2608,10 +2602,7 @@ void ofxColorManager::gui_Library()
 	//--
 
 	//blink when a new preset is editing
-	float freq = 0.15;//speed freq
-	float min = 0.20;
-	float max = 0.80;
-	float a = ofMap(glm::sin(freq * ofGetFrameNum()), -1, 1, min, max);
+	float a = ofxSurfingHelpers::getFadeBlink();
 
 	// color and line ofr selected widgets
 	ImVec4 borderLineColor2 = ImVec4(0, 0, 0, a);
@@ -2714,7 +2705,7 @@ void ofxColorManager::gui_Library()
 						ofxImGui::AddParameter(lib_Responsive_ModeGrid);
 						ImGui::InputInt(sizeLibColBox.getName().c_str(), (int*)&sizeLibColBox.get(), 1, 5);
 						ofxImGui::AddParameter(bPagerized);
-					}
+				}
 
 					//-
 
@@ -2747,8 +2738,8 @@ void ofxColorManager::gui_Library()
 					lib_NumRows = ofClamp(lib_NumRows, 1, 100);
 
 					ImGui::PopItemWidth();
-				}
 			}
+		}
 
 			//--
 
@@ -2817,7 +2808,7 @@ void ofxColorManager::gui_Library()
 			ImGui::PopItemWidth();
 
 			lib_Page_Index = ofClamp(lib_Page_Index.get(), 0, lib_Page_Index.getMax());
-		}
+			}
 
 		//-
 
@@ -3127,9 +3118,9 @@ void ofxColorManager::gui_Export()
 				}
 
 				ImGui::Checkbox("Auto-Resize", &auto_resize);
-			}
 		}
 	}
+}
 	ofxImGui::EndWindow(mainSettings);
 
 	ImGui::PopStyleVar();
@@ -3461,10 +3452,7 @@ void ofxColorManager::gui_LayoutsPanel()
 	//flags |= flagsWindows;
 
 	//blink when a new preset is editing
-	float freq = 0.15;//speed freq
-	float min = 0.20;
-	float max = 0.80;
-	float a = ofMap(glm::sin(freq * ofGetFrameNum()), -1, 1, min, max);
+	float a = ofxSurfingHelpers::getFadeBlink();
 
 	//--
 
@@ -4283,10 +4271,7 @@ void ofxColorManager::gui_Kit()
 	flags |= flagsWindows;
 
 	//blink when a new preset is editing
-	float freq = 0.15;//speed freq
-	float min = 0.20;
-	float max = 0.80;
-	float a = ofMap(glm::sin(freq * ofGetFrameNum()), -1, 1, min, max);
+	float a = ofxSurfingHelpers::getFadeBlink();
 
 	//----
 
@@ -4371,11 +4356,8 @@ void ofxColorManager::gui_InputText()
 	ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.0);
 
 	//blink when a new preset is editing
-	float freq = 0.2f;//speed freq
-	float min = 0.5f;
-	float max = 1.0f;
 	float a;
-	if (MODE_NewPreset) a = ofMap(glm::sin(freq * ofGetFrameNum()), -1.f, 1.f, min, max);
+	if (MODE_NewPreset) a = ofxSurfingHelpers::getFadeBlink();
 	else a = 1.0f;
 
 	//--
@@ -4528,10 +4510,7 @@ void ofxColorManager::gui_Presets()
 	flags |= flagsWindows;
 
 	//blink when a new preset is editing
-	float freq = 0.15;//speed freq
-	float min = 0.20;
-	float max = 0.80;
-	float a = ofMap(glm::sin(freq * ofGetFrameNum()), -1, 1, min, max);
+	float a = ofxSurfingHelpers::getFadeBlink();
 
 	if (!auto_resize) ImGui::SetWindowSize(ImVec2(ww, hh));//not doing nothing?
 
@@ -4890,12 +4869,12 @@ void ofxColorManager::gui_Presets()
 		//ImGui::Dummy(ImVec2(0.0f, 2.0f));
 		//if (SHOW_Kit) ofxImGui::AddParameter(AutoScroll);
 		//ImGui::Checkbox("Auto-Resize", &auto_resize);
-	}
+		}
 
 	ofxImGui::EndWindow(mainSettings);
 
 	ImGui::PopStyleVar();
-}
+	}
 
 //--------------------------------------------------------------
 void ofxColorManager::gui_Gradient()
@@ -6698,7 +6677,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	//{
 	//	if (bLock_palette) bAuto_Build_Palette = false;
 	//}
-	}
+		}
 
 //--------------------------------------------------------------
 void ofxColorManager::Changed_Range(ofAbstractParameter &e)
@@ -8745,7 +8724,7 @@ void ofxColorManager::draw_Link(int x, int y)
 
 		ss += info;
 		ss += storeText[i];
-}
+	}
 
 	ofxSurfingHelpers::drawTextBoxed(font, ss, x, y);
 }
@@ -8784,7 +8763,7 @@ void ofxColorManager::updateLink() {
 	//	}
 	//	lastCheckLink = now;
 	//}
-}
+	}
 
 //--------------------------------------------------------------
 void ofxColorManager::draw_Link(int x, int y)
@@ -9115,7 +9094,7 @@ void ofxColorManager::gui_About(bool* p_open)
 
 	//draw_DemoFbo();
 
-	ImGui::Text("ofxColorManager v1.0");
+	ImGui::Text("ofxColorManager v1.0rc");
 	ImGui::Separator();
 	ImGui::Dummy(ImVec2(0.0f, 2.0f));
 	ImGui::Text("Author:");
@@ -9132,7 +9111,7 @@ void ofxColorManager::gui_About(bool* p_open)
 	ImGui::Dummy(ImVec2(0, 4));
 	ImGui::Text("Thanks to all the openFrameworks");
 	ImGui::Text("community, coders and contributors of");
-	ImGui::Text("included libraries and addons.");
+	ImGui::Text("included libraries and add-ons.");
 	ImGui::Dummy(ImVec2(0.0f, 2.0f));
 	ImGui::Text("MIT License");
 	ImGui::Dummy(ImVec2(0, 4));
