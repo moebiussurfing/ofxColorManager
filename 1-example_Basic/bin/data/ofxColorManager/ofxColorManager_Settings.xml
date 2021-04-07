@@ -1,6 +1,6 @@
 {
     "ofxColorManager": {
-        "App_Layout": "0",
+        "App_Layout": "1",
         "DEMO": {
             "Alpha_1": "0.681",
             "Alpha_Spheres": "0.839",
@@ -14,11 +14,11 @@
         "Engines": {
             "Amnt_Colors_Thy": "7",
             "Analogue_Spread": "0.213",
-            "Color_1": "0.313726, 0.529412, 0.811765, 1",
-            "Color_2": "0.380392, 0.909804, 0.34902, 1",
-            "Last_Range_Index": "1",
-            "Last_Theory_Index": "6",
-            "Preset_Index": "3",
+            "Color_1": "0.352941, 0, 0.290196, 1",
+            "Color_2": "0.6, 0.0705882, 0.223529, 1",
+            "Last_Range_Index": "3",
+            "Last_Theory_Index": "13",
+            "Preset_Index": "8",
             "SCENE": "1"
         },
         "ExportColors": {
@@ -35,7 +35,7 @@
             "Columns_Max": "10",
             "Mode_Cards": "0",
             "Mode_Paging": "1",
-            "Page": "11",
+            "Page": "4",
             "Responsive_Fit": "1",
             "Responsive_Grid": "0",
             "Rows_Amnt": "20",
@@ -53,7 +53,7 @@
         "PANELS": {
             "AutoScroll": "1",
             "DEMO": "0",
-            "EDITOR": "1",
+            "EDITOR": "0",
             "GRADIENT": "0",
             "GUI_MAIN": "1",
             "KIT": "1",
@@ -62,23 +62,23 @@
             "LOVERS": "0",
             "PALETTE": "1",
             "PANELS": "1",
-            "PICKER": "1",
+            "PICKER": "0",
             "PICTURE": "0",
             "PRESETS": "1",
             "RANGE": "0",
-            "Show_Main_Panel": "1",
+            "Show_Main_Panel": "0",
             "Show_Mini_Palette": "0",
-            "THEORY": "1"
+            "THEORY": "0"
         },
         "PICKER": {
             "BRG": "0",
             "B_Power": "1",
-            "COLOR": "0.313726, 0.529412, 0.811765, 1",
+            "COLOR": "0.352941, 0, 0.290196, 1",
             "HUE": "1",
             "H_Power": "1",
             "SAT": "0",
             "S_Power": "1"
         },
-        "Show_Menu_Bar": "1"
+        "Show_Menu_Bar": "0"
     }
 }

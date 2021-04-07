@@ -2,8 +2,8 @@
 
 #include "ofMain.h"
 
+// optional 
 // window manager
-// comment to exclude. optional 
 #define USE_OFX_WINDOWAPP
 
 #ifdef USE_OFX_WINDOWAPP

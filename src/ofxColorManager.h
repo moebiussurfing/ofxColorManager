@@ -41,9 +41,18 @@ BUGS:
 
 #define MAKE_RELEASE_VERSION // disables console and other stuff, for final release version
 
+#ifdef MAKE_RELEASE_VERSION 
+#define APP_RELEASE_NAME "PALETTO v1.0rc"
+//#define APP_RELEASE_NAME "PALETTO v1.0"
+#else
+#define APP_RELEASE_NAME "ofxColorManager"
+#endif
+
 #ifndef MAKE_RELEASE_VERSION 
 #define USE_DEBUG_LAYOUT // includes mouse ruler to help layout design. show app console window
 #endif
+
+//--
 
 #define USE_VIEWPORTS // allow out-of-OF-window
 #define MAX_PALETTE_COLORS 20

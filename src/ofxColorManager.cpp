@@ -229,6 +229,18 @@ void ofxColorManager::build_Palette_Preset()
 //--------------------------------------------------------------
 ofxColorManager::ofxColorManager()
 {
+	// log
+#ifdef MAKE_RELEASE_VERSION 
+	ofSetLogLevel(OF_LOG_SILENT);
+	ofSetLogLevel("ofApp", OF_LOG_SILENT);
+	ofSetLogLevel("ofxColorManager", OF_LOG_SILENT);
+	ofSetLogLevel("ofxColorClient", OF_LOG_SILENT);
+#else
+	ofSetLogLevel("ofxColorManager", OF_LOG_NOTICE);
+#endif
+
+	//--
+
 	ofAddListener(ofEvents().update, this, &ofxColorManager::update);
 	ofAddListener(ofEvents().draw, this, &ofxColorManager::draw, OF_EVENT_ORDER_BEFORE_APP);
 
@@ -286,42 +298,37 @@ ofxColorManager::ofxColorManager()
 
 	helpInfo += "         LAYOUTS\n";
 	helpInfo += "\n";
-	helpInfo += "TAB          > \n";
+	helpInfo += "TAB          >>\n";
 	helpInfo += "F1           DEFAULT\n";
 	helpInfo += "F2           PRESETS\n";
 	helpInfo += "F3           ENGINES\n";
 	helpInfo += "F4           MINIMAL\n";
 	helpInfo += "F5           USER\n";
-
 	if(SHOW_Advanced) helpInfo += "SHIFT        DOCK EDIT\n";
-	
 	helpInfo += "\n\n";
 
 	helpInfo += "         ACTIONS\n";
 	helpInfo += "\n";
-
-	helpInfo += "SPACE         > PRESET\n";
+	helpInfo += "SPACE        >> PRESET\n";
 	helpInfo += "Left|Right   <> PRESET\n";
-	helpInfo += "    +Ctrl    <> SHIFT COLORS\n";
-	//helpInfo += "\n";
-	helpInfo += "   -|+       AMOUNT COLORS\n";
+	helpInfo += "+Ctrl        <> SHIFT COLORS\n";
 	helpInfo += "\n";
 
+	helpInfo += "-|+          AMOUNT COLORS\n";
+	if (SHOW_Advanced) helpInfo += "\n";
 	helpInfo += "RETURN       RANDOM\n";
-	if (SHOW_Advanced) helpInfo += "  +Ctrl      RANDOM+\n";
-	helpInfo += "\n";
-
+	if (SHOW_Advanced) helpInfo += "+Ctrl        RANDOM+\n";
+	if (SHOW_Advanced) helpInfo += "\n";
 	helpInfo += "BACKSPACE    AUX\n";
 	if (SHOW_Advanced) helpInfo += "  +Ctrl      AUX+\n";
-	helpInfo += "\n";
-
+	if(SHOW_Advanced) helpInfo += "\n";
 	helpInfo += "Arrows       LIBRARY COLORS\n";
-	helpInfo += "  +Ctrl      LIBRARY PAGE\n";
+	helpInfo += "+Ctrl        LIBRARY PAGE\n";
 	helpInfo += "\n\n";
 
 	helpInfo += "         ENGINES\n";
 	helpInfo += "\n";
-	helpInfo += "TAB+Ctrl     > \n";
+	helpInfo += "TAB+Ctrl     >>\n";
 	helpInfo += "             THEORY\n";
 	helpInfo += "             RANGE\n";
 	helpInfo += "             LOVERS\n";
@@ -329,6 +336,7 @@ ofxColorManager::ofxColorManager()
 	helpInfo += "\n";
 	helpInfo += "Down|Up      ENGINE TYPES\n";
 	helpInfo += "\n\n";
+
 	if (SHOW_Advanced) {
 		helpInfo += "         PANELS\n";
 		helpInfo += "\n";
@@ -360,8 +368,6 @@ void ofxColorManager::setup()
 	ofLogNotice(__FUNCTION__) << endl << endl << "----------------- SETUP -----------------" << endl;
 
 	setupRange();
-
-	//ofSetLogLevel("ofxColorManager", OF_LOG_NOTICE);
 
 #ifdef USE_SUPER_LOG
 	std::string fileLoggingDirectory = "logs";
@@ -7202,7 +7208,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 					bLast_Index_Theory = true;
 				}
 
-				if (key == OF_KEY_DOWN && !mod_CONTROL || (key == ' ' && SHOW_Presets))
+				else if (key == OF_KEY_DOWN && !mod_CONTROL || (key == ' ' && !SHOW_Presets))
 				{
 					if (last_Index_Theory_PickPalette == last_Index_Theory_PickPalette.getMax())//cycle 
 					{
@@ -7262,7 +7268,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 					bLast_Index_Range = true;
 				}
-				else if (key == OF_KEY_DOWN && !mod_CONTROL)
+
+				else if ((key == OF_KEY_DOWN && !mod_CONTROL) || (key == ' ' && !SHOW_Presets))
 				{
 					if (last_Index_Range >= NUM_TYPES_RANGES - 1) last_Index_Range = 0;
 					else last_Index_Range++;
@@ -7313,6 +7320,20 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				}
 			}
 		}
+
+		//--
+
+		// quantizer
+
+		if (SHOW_Quantizer && !SHOW_Presets && key == ' ' && !mod_CONTROL)
+			colorQuantizer.loadNext();
+
+		//--
+
+		// colour lover
+
+		if (SHOW_ColourLovers && !SHOW_Presets && key == ' ' && !mod_CONTROL)
+			colourLoversHelper.nextPalette();
 
 		//-----
 
@@ -7572,7 +7593,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 		// layouts
 
-		else //  !mod_CONTROL
+		else //!mod_CONTROL
 		{
 			switch (key)
 			{
@@ -7588,8 +7609,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//----
 
 		//TODO:
-		//// undo color
-
+		//// undo engine
 		//if (key == 'z')
 		//{
 		//	color_Undo.undo();
@@ -9131,31 +9151,30 @@ void ofxColorManager::gui_About(bool* p_open)
 	//ImGui::Image(bg_tex_id, ImGui::GetContentRegionAvail());
 
 	//draw_DemoFbo();
+	ImGui::Text(APP_RELEASE_NAME);
 
-	ImGui::Text("ofxColorManager v1.0rc");
-	ImGui::Separator();
-	ImGui::Dummy(ImVec2(0.0f, 2.0f));
+	//ImGui::Separator();
+	ImGui::Dummy(ImVec2(0.0f, 10.0f));
 	ImGui::Text("Author:");
 	ImGui::Text("moebiusSurfing  ( ManuMolina )");
 	ImGui::Text("Barcelona / Buenos Aires.");
 	ImGui::Text("2019 - 2021");
-	ImGui::Dummy(ImVec2(0.0f, 2.0f));
+	ImGui::Dummy(ImVec2(0.0f, 5.0f));
 	ImGui::Text("GitHub:");
 	ImGui::Text("https://github.com/moebiussurfing");
-	ImGui::Dummy(ImVec2(0.0f, 2.0f));
+	ImGui::Dummy(ImVec2(0.0f, 5.0f));
 	ImGui::Text("Email:");
 	ImGui::Text("moebiusSurfing@gmail.com");
-
-	ImGui::Dummy(ImVec2(0, 4));
+	ImGui::Dummy(ImVec2(0, 10.f));
 	ImGui::Text("Thanks to all the openFrameworks");
 	ImGui::Text("community, coders and contributors of");
 	ImGui::Text("included libraries and add-ons.");
-	ImGui::Dummy(ImVec2(0.0f, 2.0f));
+	ImGui::Dummy(ImVec2(0.0f, 10.0f));
 	ImGui::Text("MIT License");
-	ImGui::Dummy(ImVec2(0, 4));
+	ImGui::Dummy(ImVec2(0, 10.0f));
 
 	draw_DemoFbo();
-	ImGui::Text("[ Scene sketch by junkiyoshi.com. Thanks ]");
+	ImGui::Text("Sketch by junkiyoshi.com. Thanks!");
 
 	ImGui::End();
 
@@ -9165,18 +9184,15 @@ void ofxColorManager::gui_About(bool* p_open)
 //--------------------------------------------------------------
 void ofxColorManager::setAppLayout(AppLayouts mode)
 {
-#ifdef MAKE_RELEASE_VERSION 
-	std::string _label = "PALETTO v1.0rc";
-#else
-	std::string _label = "ofxColorManager > ";
-#endif
+	std::string _label = APP_RELEASE_NAME;
+	_label += "  -  ";
 
 	switch (mode)
 	{
 	case ofxColorManager::APP_DEFAULT:
 		if (!b0) b0 = true;
 		b1 = b2 = b3 = b4 = false;
-		ofSetWindowTitle(_label + "DEFAULT");
+		ofSetWindowTitle(_label + "DEFAULT" + " | F1");
 		ini_to_load = "imgui_DEAULT.ini";
 		//appLayoutIndex = 0;
 		SHOW_Panels = true;
@@ -9202,7 +9218,7 @@ void ofxColorManager::setAppLayout(AppLayouts mode)
 	case ofxColorManager::APP_PRESETS:
 		if (!b1) b1 = true;
 		b0 = b2 = b3 = b4 = false;
-		ofSetWindowTitle(_label + "PRESETS");
+		ofSetWindowTitle(_label + "PRESETS" + " | F2");
 		ini_to_load = "imgui_PRESETS.ini";
 		//appLayoutIndex = 1;
 		SHOW_Panels = false;
@@ -9227,7 +9243,7 @@ void ofxColorManager::setAppLayout(AppLayouts mode)
 	case ofxColorManager::APP_ENGINES:
 		if (!b2) b2 = true;
 		b0 = b1 = b3 = b4 = false;
-		ofSetWindowTitle(_label + "ENGINES");
+		ofSetWindowTitle(_label + "ENGINES" + " | F3");
 		ini_to_load = "imgui_ENGINES.ini";
 		//appLayoutIndex = 2;
 		SHOW_Panels = false;
@@ -9252,7 +9268,7 @@ void ofxColorManager::setAppLayout(AppLayouts mode)
 	case ofxColorManager::APP_MINIMAL:
 		if (!b3) b3 = true;
 		b0 = b1 = b2 = b4 = false;
-		ofSetWindowTitle(_label + "MINIMAL");
+		ofSetWindowTitle(_label + "MINIMAL" + " | F4 ");
 		ini_to_load = "imgui_MINIMAL.ini";
 		//appLayoutIndex = 3;
 		SHOW_Panels = false;
@@ -9277,7 +9293,7 @@ void ofxColorManager::setAppLayout(AppLayouts mode)
 	case ofxColorManager::APP_USER:
 		if (!b4) b4 = true;
 		b0 = b1 = b2 = b3 = false;
-		ofSetWindowTitle(_label + "USER");
+		ofSetWindowTitle(_label + "USER" + " | F5");
 		ini_to_load = "imgui_USER.ini";
 		//appLayoutIndex = 4;
 		SHOW_Panels = false;
