@@ -73,8 +73,9 @@ Fewer dependencies. Included some minimal edit tools.
 <br/>
 
 ## ofxColorClient: The Player add-on 
-  * A Lightweight version of the add-on just to use your **Presets Kit** files. 
-  * Bundled with a minimal set of tools: Kit browser, palette and gradient previews, and tweakeable tweened transitions.  
+  * A Lightweight version of the add-on just to use your **Presets Kit**
+  * A minimal set of tools: 
+  Kit browser, palette and gradient previews, and tweakeable tweened transitions.  
   * Works too in the **Standalone Mode** to browse and use your kit with preset files.
   * Also included into **ofxColorManager**. 
   
@@ -87,13 +88,15 @@ Ready to use pre-compiled versions for fast testing, or to have executable apps 
 
 ### 1. **PALETTO v1.0rc** 
 **Master App**  
-Works Standalone or Linked to a **CLIENT App** ( _SceneTEST_COLORiZED_ )  
+Works Standalone or Linked to a **CLIENT App**  
+( _SceneTEST_COLORiZED_ )  
 ( _Based on _1-example_Basic_ from **ofxColorManager**_ )  
 [Download Link](https://moebiussurfing.itch.io/ofxcolormanager)  
 
 ### 2. **SceneTEST_COLORiZED**
 **Client App**  
-Works Standalone or Linked to a **MASTER App** ( _Paletto v1.0_ )  
+Works Standalone or Linked to a **MASTER App**  
+( _Paletto v1.0_ )  
 ( _Based on _3-example_Scenes_ from **ofxColorClient**_ )  
 [Download Link](https://moebiussurfing.itch.io/ofxcolormanager)  
 
@@ -199,7 +202,8 @@ Above add-ons already packed into **OF_ADDON/libs**. No need to add them manuall
   <summary>Preset File format</summary>
   <p>
 
-The **JSON** file format of a palette preset it's simple. This is an example of a _3 colors palette_ file content:
+The **JSON** file format of a palette preset quite simple.  
+This is an example of a _3 colors palette_ file content:
 ```.json
 [
     {
@@ -257,10 +261,10 @@ The **JSON** file format of a palette preset it's simple. This is an example of 
 An addon by **@moebiusSurfing**  
 *( ManuMolina ) 2019-2021*  
 
+## Follow
 [Twitter](https://twitter.com/moebiussurfing/)  
 [Instagram](https://www.instagram.com/moebiussurfing/)  
 [YouTube](https://www.youtube.com/channel/UCzUw96_wjmNxyIoFXf84hQg)  
 
 ## License
-
 [**MIT License**](https://github.com/moebiussurfing/ofxColorManager/blob/b29c56f7b0e374b6a6fe2406e45fbfaaf2726112/LICENSE)
