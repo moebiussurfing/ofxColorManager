@@ -84,12 +84,13 @@ Ready to use pre-compiled versions for fast testing, or to have executable the A
 
 ### 1. **PALETTO v1.0rc** 
 **Master App**  
+Works Standalone to create preset files or Linked to a **CLIENT App** (like _SceneTEST_COLORiZED_)  
 ( _Based on _1-example_Basic_ from **ofxColorManager**_ )  
 [Download Link](https://moebiussurfing.itch.io/ofxcolormanager)  
 
 ### 2. **SceneTEST_COLORiZED**
 **Client App**  
-Works Standalone or Linked to a **MASTER App** (like Paletto)  
+Works Standalone or Linked to a **MASTER App** (like _Paletto v1.0_)  
 ( _Based on _3-example_Scenes_ from **ofxColorClient**_ )  
 [Download Link](https://moebiussurfing.itch.io/ofxcolormanager)  
 
