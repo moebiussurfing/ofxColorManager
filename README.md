@@ -79,21 +79,19 @@ Fewer dependencies. Included some minimal edit tools.
 
 ## Ready-To-Use Binaries
 
-Pre-compiled versions for fast testing or to have an Apps with for the most common uses.  
+Ready to use pre-compiled versions for fast testing, or to have executable the Apps with for the most common uses.  
+*Windows* / *macOS*
 
 ### 1. **PALETTO v1.0rc** 
 **Master App**  
-Ready to use executable *Windows* / *macOS* App.  
-The main original destination of this App is to be a complement to customized apps, more than to be an alternative to "Adobe" color managers or other designer solutions on the market.  
 ( _Based on _1-example_Basic_ from **ofxColorManager**_ )  
-Download Link.  
+[Download Link](https://moebiussurfing.itch.io/ofxcolormanager)  
 
-### 2. **TEST_COLORED_Scene**
+### 2. **SceneTEST_COLORiZED**
 **Client App**  
-Ready to use executable **Windows** / **macOS** App.  
 Works Standalone or Linked to a **MASTER App** (like Paletto)  
 ( _Based on _3-example_Scenes_ from **ofxColorClient**_ )  
-Download Link.  
+[Download Link](https://moebiussurfing.itch.io/ofxcolormanager)  
 
 <br/>
 

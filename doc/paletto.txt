@@ -1,9 +1,13 @@
 Paletto is a managent tool for color palettes.
+
 It's a bundle of Tools and Engines to design and organize color palettes for your creative code scenes.
 It is coded on C++ using openFrameworks and it's based on my ofxColorManager add-on.
 Do not export presets for designing tools like Adobe Photoshop, Adobe Illustrator, Sketch or [similar].
 Instead, [por el contrario]
+
+The main original destination of this App is to be a complement to customized apps, more than to be an alternative to "Adobe" color managers or other designer solutions on the market.  
 The main purpose of this app is to be linked with other custom apps for creative coding like Processing or Unity 3D or Unreal 4 incluso.
+
 For the momment there's only one client add-on, and is obviously for openFrameworks.
 If you want to use your json files in your custom app, and you are not using openFrameworks, you can code your json files reader classes by yourself.
 Depending on user interest or myself, future versions will have add-ons for Unreal or other tools or will export .ase formats for Adobe maybe too.
