@@ -9185,7 +9185,7 @@ void ofxColorManager::gui_About(bool* p_open)
 void ofxColorManager::setAppLayout(AppLayouts mode)
 {
 	std::string _label = APP_RELEASE_NAME;
-	_label += "     ";
+	_label += "         ";
 
 	switch (mode)
 	{

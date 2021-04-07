@@ -14,11 +14,11 @@
         "Engines": {
             "Amnt_Colors_Thy": "7",
             "Analogue_Spread": "0.213",
-            "Color_1": "0.960784, 0.235294, 0.396078, 1",
-            "Color_2": "0.0196078, 0.65098, 0.431373, 1",
+            "Color_1": "0.0980392, 0.141176, 0.227451, 1",
+            "Color_2": "0.223529, 0.368627, 0.572549, 1",
             "Last_Range_Index": "3",
-            "Last_Theory_Index": "3",
-            "Preset_Index": "14",
+            "Last_Theory_Index": "6",
+            "Preset_Index": "12",
             "SCENE": "1"
         },
         "ExportColors": {
@@ -51,7 +51,7 @@
             "Size_Plt": "25"
         },
         "PANELS": {
-            "AutoScroll": "0",
+            "AutoScroll": "1",
             "DEMO": "0",
             "EDITOR": "1",
             "GRADIENT": "0",
@@ -73,7 +73,7 @@
         "PICKER": {
             "BRG": "0",
             "B_Power": "1",
-            "COLOR": "0.960784, 0.235294, 0.396078, 1",
+            "COLOR": "0.0980392, 0.141176, 0.227451, 1",
             "HUE": "1",
             "H_Power": "1",
             "SAT": "0",
