@@ -193,6 +193,7 @@ Above add-ons already packed into **OF_ADDON/libs**. No need to add them manuall
 * [ofxColorsBrowser](https://github.com/moebiussurfing/ofxColorsBrowser)
 * [ofxColourLoversHelper](https://github.com/moebiussurfing/ofxColourLoversHelper)  
 * [ofxMouseRuler2](https://github.com/moebiussurfing/ofxMouseRuler2)  
+add theorycolors,,,, addons. otra pestaña para estos  ...  
 
 *Thanks a lot to all these ofxAddons coders. Look into each folder for authoring credits, original forks, and license info.*  
   </p>
