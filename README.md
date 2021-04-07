@@ -64,7 +64,8 @@ All the Engines and Tools, but with a more handy setup.
 Links a **MASTER OF_App** (with the **ofxColorManager**) to your **CLIENT OF_App** (with the **ofxColorClient**).  
 
 #### 3. **Minimal Standalone**:
-**One single app**: The more **Lightweight** Mode into your _Scene Render app_.  
+**One single app**:  
+The more **Lightweight** Mode into your _Scene Render app_.  
 Only using the **ofxColorClient add-on** to browse and use your palette preset files.  
 Just as a player but without all the Engines and Tools.  
 Fewer dependencies. Included some minimal edit tools.  
