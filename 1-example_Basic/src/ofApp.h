@@ -3,14 +3,16 @@
 #include "ofMain.h"
 
 // window manager
-#define USE_OFX_WINDOWAPP // comment to exclude. addon non required 
+// comment to exclude. optional 
+#define USE_OFX_WINDOWAPP
+
 #ifdef USE_OFX_WINDOWAPP
 #include "ofxWindowApp.h"
 #endif
 
 #include "ofxColorManager.h"
 
-class ofApp : public ofBaseApp 
+class ofApp : public ofBaseApp
 {
 
 public:
@@ -18,7 +20,7 @@ public:
 	void setup();
 
 	//--
-	
+
 	// colors
 
 	vector<ofColor> palette;

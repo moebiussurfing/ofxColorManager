@@ -1428,7 +1428,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 			// info
 			if (SHOW_Name) draw_PresetName();
 		}
-		}
+	}
 
 	//--
 
@@ -1506,7 +1506,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 		}
 		ofPopMatrix();
 	}
-	}
+}
 
 //--------------------------------------------------------------
 ofxColorManager::~ofxColorManager()
@@ -2705,7 +2705,7 @@ void ofxColorManager::gui_Library()
 						ofxImGui::AddParameter(lib_Responsive_ModeGrid);
 						ImGui::InputInt(sizeLibColBox.getName().c_str(), (int*)&sizeLibColBox.get(), 1, 5);
 						ofxImGui::AddParameter(bPagerized);
-				}
+					}
 
 					//-
 
@@ -2738,8 +2738,8 @@ void ofxColorManager::gui_Library()
 					lib_NumRows = ofClamp(lib_NumRows, 1, 100);
 
 					ImGui::PopItemWidth();
+				}
 			}
-		}
 
 			//--
 
@@ -2808,7 +2808,7 @@ void ofxColorManager::gui_Library()
 			ImGui::PopItemWidth();
 
 			lib_Page_Index = ofClamp(lib_Page_Index.get(), 0, lib_Page_Index.getMax());
-			}
+		}
 
 		//-
 
@@ -3118,9 +3118,9 @@ void ofxColorManager::gui_Export()
 				}
 
 				ImGui::Checkbox("Auto-Resize", &auto_resize);
+			}
 		}
 	}
-}
 	ofxImGui::EndWindow(mainSettings);
 
 	ImGui::PopStyleVar();
@@ -3411,10 +3411,12 @@ void ofxColorManager::gui_Advanced()
 			ImGui::Dummy(ImVec2(0.0f, 2.0f));
 			ImGui::Checkbox("Edit Theme", &SHOW_EditTheme);
 			ofxImGui::AddParameter(Lock_DockingLayout);
+#ifdef USE_DEBUG_LAYOUT 
 			if (ImGui::Button("Mouse Ruler"))
 			{
 				mouseRuler.toggleVisibility();
 			}
+#endif
 		}
 
 		//ImGui::Dummy(ImVec2(0.0f, 2.0f));
@@ -4530,7 +4532,7 @@ void ofxColorManager::gui_Presets()
 
 		//----
 
-		// scrollable list
+		// 1. scrollable list
 
 		if (!files_Names.empty())
 		{
@@ -4545,9 +4547,8 @@ void ofxColorManager::gui_Presets()
 				if (_i < files_Names.size())
 				{
 					last_Index_Preset = _i;
-					PRESET_Name = files_Names[last_Index_Preset];
-					ofLogNotice(__FUNCTION__) << "PRESET_Name: " << PRESET_Name;
 
+					PRESET_Name = files_Names[last_Index_Preset];
 					preset_Load(PRESET_Name);
 				}
 
@@ -4563,10 +4564,11 @@ void ofxColorManager::gui_Presets()
 
 		int counter = last_Index_Preset.get();
 
-		// index preset / total
-		int numPalettes = files_Names.size() - 1;
+		// 2. index preset / total
+		
+		int _sz = files_Names.size() - 1;
 
-		ImGui::Text("%d/%d", counter, numPalettes);
+		ImGui::Text("%d/%d", counter, _sz);
 
 		//----
 
@@ -4594,9 +4596,10 @@ void ofxColorManager::gui_Presets()
 
 		//----
 
-		// new preset 
+		// 3. new preset 
 
 		// manual toggle
+
 		if (ofxSurfingHelpers::AddBigToggle(MODE_NewPreset, _w100, _h))
 		{
 			if (name_TARGET != nullptr) textInput_New = name_TARGET[0];
@@ -4650,9 +4653,13 @@ void ofxColorManager::gui_Presets()
 #endif
 			//--
 
+			// 4. save new
+
 			ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.5f, 0.0f, 0.0f, a));
 			if (ImGui::Button("SAVE NEW", ImVec2(_w100, _h * 2)))
 			{
+				ofLogNotice(__FUNCTION__) << "SAVE NEW: " << textInput_New;
+				
 				//NOTE: preset filename must to not include any extra '.' char
 				//clean all extra '.' chars
 				ofStringReplace(textInput_New, ".", "");
@@ -4664,10 +4671,12 @@ void ofxColorManager::gui_Presets()
 					ofLogNotice(__FUNCTION__) << "textInput_New: " << textInput_New;
 
 					preset_Save(textInput_New);
-					preset_RefreshFiles();
+					preset_RefreshFiles(false);
 
 					//--
 
+					// workflow
+					//go to ne index after adding a new preset
 					refresh_FilesSorting(textInput_New);
 				}
 				else ofLogError(__FUNCTION__) << "Empty name on textInput !";
@@ -4692,7 +4701,7 @@ void ofxColorManager::gui_Presets()
 
 				//save/update
 				preset_Save(PRESET_Name);
-				preset_RefreshFiles();
+				preset_RefreshFiles(false);
 			}
 			ImGui::PopStyleColor();
 		}
@@ -4720,7 +4729,7 @@ void ofxColorManager::gui_Presets()
 
 				//save/update
 				preset_Save(PRESET_Name);
-				preset_RefreshFiles();
+				preset_RefreshFiles(false);
 			}
 
 			//----
@@ -4751,7 +4760,7 @@ void ofxColorManager::gui_Presets()
 					if (ImGui::Button("OK", ImVec2(120, 0))) {
 						ofLogNotice(__FUNCTION__) << "DELETE";
 						files[last_Index_Preset].remove();
-						preset_RefreshFiles();
+						preset_RefreshFiles(bool);
 
 						ImGui::CloseCurrentPopup();
 					}
@@ -4781,7 +4790,7 @@ void ofxColorManager::gui_Presets()
 				textInput_New = PRESET_Name + "_";
 
 				preset_Save(textInput_New);
-				preset_RefreshFiles();
+				preset_RefreshFiles(false);
 
 				//--
 
@@ -4869,12 +4878,12 @@ void ofxColorManager::gui_Presets()
 		//ImGui::Dummy(ImVec2(0.0f, 2.0f));
 		//if (SHOW_Kit) ofxImGui::AddParameter(AutoScroll);
 		//ImGui::Checkbox("Auto-Resize", &auto_resize);
-		}
+	}
 
 	ofxImGui::EndWindow(mainSettings);
 
 	ImGui::PopStyleVar();
-	}
+}
 
 //--------------------------------------------------------------
 void ofxColorManager::gui_Gradient()
@@ -6301,7 +6310,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	else if (name == bModePalettePreset.getName())
 	{
 		bModeBundlePreset = !bModePalettePreset;
-	}
+}
 #endif
 
 	//----
@@ -7024,7 +7033,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		{
 			mouseRuler.toggleVisibility();
 			//myDEMO_Bubbles.toggleMouseCamera();
-		}
+	}
 #endif
 		// TEST
 		else if (key == 'T')
@@ -7580,7 +7589,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//}
 		////    else if()
 		////        color_Undo.clearRedo();
-	}
+}
 }
 
 //--------------------------------------------------------------
@@ -7694,6 +7703,10 @@ void ofxColorManager::removeMouseListeners()
 //--------------------------------------------------------------
 void ofxColorManager::refresh_FilesSorting(std::string name)
 {
+	ofLogNotice(__FUNCTION__) << "----------------- SORTING FILES-----------------";
+	ofLogNotice(__FUNCTION__) << "Search Iindex for file:";
+	ofLogNotice(__FUNCTION__) << name;
+
 	// workflow
 
 	//go to ne index after adding a new preset
@@ -7703,19 +7716,19 @@ void ofxColorManager::refresh_FilesSorting(std::string name)
 	//locate new position of old (saved) preset
 	int ii = -1;
 
-	for (size_t i = 0; i < files.size() && ii == -1; i++)
+	for (int i = 0; i < files.size() && ii == -1; i++)
 	{
-		std::string n = files_Names[i];
-		//std::string n = files[i].getBaseName();
+		std::string _name = files_Names[i];
+		//std::string _name = files[i].getBaseName();
 
-		ofLogNotice(__FUNCTION__) << files_Names[i];
+		ofLogNotice(__FUNCTION__) << i << " " << files_Names[i];
 
-		if (n == name)
+		if (_name == name)//found file index of the preset
 		{
-			ii = int(i);
-			ofLogNotice(__FUNCTION__) << "Found " << files_Names[i] << " at " << i << " index";
+			ii = i;
+			ofLogNotice(__FUNCTION__) << "Found " << _name << " at index " << i << " !";
 
-			continue;
+			//continue;
 		}
 	}
 
@@ -7728,19 +7741,24 @@ void ofxColorManager::refresh_FilesSorting(std::string name)
 	}
 	else//not found
 	{
+		ofLogError(__FUNCTION__) << name << " filename not Found !";
+
 		last_Index_Preset = 0;
 		//load first preset by default if not found the same name
 	}
 
+	//load
 	PRESET_Name = files_Names[last_Index_Preset];
-	//ofLogNotice(__FUNCTION__) << PRESET_Name;
 	preset_Load(PRESET_Name);
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::preset_RefreshFiles()
+bool ofxColorManager::preset_RefreshFiles(bool bForeLoadFirst)
 {
-	ofLogNotice(__FUNCTION__);
+	ofLogNotice(__FUNCTION__) << "----------------- REFRESH FILES-----------------";
+
+	bool b = false;//returns true if amount files changed.
+	//bc sometimes we couild b overwritting a file
 
 	//-
 
@@ -7762,6 +7780,8 @@ void ofxColorManager::preset_RefreshFiles()
 	//path_Name_ExportColor = "ofxColorManager";
 
 	//-
+	
+	int _sz = files.size();
 
 	// clear files and filenames vectors
 	files.clear();
@@ -7774,7 +7794,7 @@ void ofxColorManager::preset_RefreshFiles()
 	{
 		files_Names.push_back(files[i].getBaseName());
 
-		ofLogNotice(__FUNCTION__) << files_Names[i];
+		ofLogNotice(__FUNCTION__)<< i << " " << files_Names[i];
 	}
 
 	last_Index_Preset.setMax(files.size() - 1);
@@ -7785,25 +7805,25 @@ void ofxColorManager::preset_RefreshFiles()
 	// workflow
 
 	//TODO:
-	//void to go to 1st...
-
-	// 1. load same position preset
-	// if preset is deleted goes to nextone..
-	// should check names because sorting changes..
-	if (files_Names.size() > 0)
+	//void to go to 1st presets...
+	if (bForeLoadFirst)
 	{
-		if (last_Index_Preset > files_Names.size() - 1) last_Index_Preset = files_Names.size() - 1;
+		// 1. load same position preset
+		// if preset is deleted goes to nextone..
+		// should check names because sorting changes..
+		if (files_Names.size() > 0)
+		{
+			if (last_Index_Preset > files_Names.size() - 1) last_Index_Preset = files_Names.size() - 1;
 
-		//else if (last_Index_Preset > files_Names.size() - 1)
+			//else if (last_Index_Preset > files_Names.size() - 1)
 
-		PRESET_Name = files_Names[last_Index_Preset];
-		ofLogNotice(__FUNCTION__) << PRESET_Name;
-
-		preset_Load(PRESET_Name);
-	}
-	else
-	{
-		ofLogError(__FUNCTION__) << "FILE PRESET NOT FOUND!";
+			PRESET_Name = files_Names[last_Index_Preset];
+			preset_Load(PRESET_Name);
+		}
+		else
+		{
+			ofLogError(__FUNCTION__) << "FILE PRESET NOT FOUND!";
+		}
 	}
 
 	//// 2. always goes to 1st preset 0
@@ -7834,13 +7854,18 @@ void ofxColorManager::preset_RefreshFiles()
 			ofLogNotice(__FUNCTION__) << c << " : " << ofToString(kit[i].palette[c]);
 		}
 	}
+
+	//-
+
+	if (_sz != files.size()) b = true;
+	return b;
 }
 
 //--------------------------------------------------------------
 void ofxColorManager::preset_Load(std::string p, bool absolutePath)
 {
 	ofLogNotice(__FUNCTION__) << "----------------- PRESET LOAD -----------------";
-	ofLogNotice(__FUNCTION__) << p;
+	ofLogNotice(__FUNCTION__) << "PRESET_Name: " << PRESET_Name;
 
 	//--
 
@@ -8441,7 +8466,7 @@ void ofxColorManager::exportKit()
 	ofLogNotice(__FUNCTION__) << "----------------- EXPORT KIT -----------------";
 
 	// refresh
-	preset_RefreshFiles();
+	preset_RefreshFiles(false);
 	std::string str = "Select the Export Path for the Kit preset files.\n";
 	str += "Typically you should set something like:\n";
 	str += "YOUR_OF_CLIENT_APP/bin/data/ofxColorManager/kits/presets\n";
@@ -8763,7 +8788,7 @@ void ofxColorManager::updateLink() {
 	//	}
 	//	lastCheckLink = now;
 	//}
-	}
+}
 
 //--------------------------------------------------------------
 void ofxColorManager::draw_Link(int x, int y)

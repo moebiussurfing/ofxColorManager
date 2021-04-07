@@ -39,7 +39,12 @@ BUGS:
 // some preprocessor directives
 // mainly for debug purposes only
 
+#define MAKE_RELEASE_VERSION // disables console and other stuff, for final release version
+
+#ifndef MAKE_RELEASE_VERSION 
 #define USE_DEBUG_LAYOUT // includes mouse ruler to help layout design. show app console window
+#endif
+
 #define USE_VIEWPORTS // allow out-of-OF-window
 #define MAX_PALETTE_COLORS 20
 #define USE_SVG_MASK // TODO: ofxScene-SVG using masked B&W background. 
@@ -1066,7 +1071,7 @@ private:
 
 	// preset files
 
-	void preset_RefreshFiles();//read folder files
+	bool preset_RefreshFiles(bool bForeLoadFirst = true);//read folder files
 	void refresh_FilesSorting(std::string name);//after saving new preset, refresh files and select the just saved preset
 	std::vector<std::string> files_Names;
 	std::vector<ofFile> files;
