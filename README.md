@@ -1,6 +1,6 @@
 # ofxColorManager
 
-This **openFrameworks** add-on is a **bundle of Tools and Engines** to create and organize color palettes for your scenes.  
+This **openFrameworks** add-on is a **bundle of Tools and Engines** to create and organize **Color Palettes** for your scenes.  
 
 ## Screenshot
 ![image](/doc/readme_images/Capture.JPG?raw=true "image")
@@ -53,12 +53,14 @@ _Send palettes to the editor._
 ## Three Modes
 
 #### 1. **Powered Standalone**:  
-**One single app**: _Color Manager + Scene Renderer_.  
+**One single app**:  
+_Color Manager + Scene Renderer_.  
 Use the add-on inside your Render **OF_App** when you want to use all the bundled Tools.  
 ( _Requires all the dependencies._ )  
 
 #### 2. **Two Apps Linked**:  
-**Two separated apps**: All the Engines and Tools, but with a more handy setup.  
+**Two separated apps**:  
+All the Engines and Tools, but with a more handy setup.  
 Links a **MASTER OF_App** (with the **ofxColorManager**) to your **CLIENT OF_App** (with the **ofxColorClient**).  
 
 #### 3. **Minimal Standalone**:
@@ -79,7 +81,7 @@ Fewer dependencies. Included some minimal edit tools.
 
 ## Ready-To-Use Binaries
 
-Ready to use pre-compiled versions for fast testing, or to have executable the Apps with for the most common uses.  
+Ready to use pre-compiled versions for fast testing, or to have executable apps with for the most common uses/learning.  
 *Windows* / *macOS*
 
 ### 1. **PALETTO v1.0rc** 
@@ -109,10 +111,12 @@ Works Standalone or Linked to a **MASTER App** ( _Paletto v1.0_ )
 2. Open the **CLIENT App** alone and browse the bundled kit of presets files.  
 
 3. To play on **Linking Mode**:  
-  Open both **MASTER** and **CLIENT** Apps, and start creating and browsing presets on **MASTER** App, and look how **CLIENT** App is linked and coloring your scene.  
+  Open both **MASTER** and **CLIENT** Apps, and start creating and browsing presets on **MASTER** App,  
+  and look how **CLIENT** App is linked and coloring your scene.  
 
 * NOTES / HELP
-  * When **TCP Linking**, you should open the **Master App** at first. Sometimes you need to toggle _Off/On_ the **TCP Link** toggle. 
+  * When **TCP Linking**, you should open the **Master App** at first.  
+  * Sometimes you need to toggle _Off/On_ the **TCP Link** toggle. 
   </p>
 </details>
 
