@@ -105,7 +105,9 @@ Works Standalone or Linked to a **MASTER App** ( _Paletto v1.0_ )
 **THREE DIFFERENT WORKFLOWS**
 
 1. Open the **MASTER App** alone to create, manage and browse palettes. Explore the *GUI*.  
+
 2. Open the **CLIENT App** alone and browse the bundled kit of presets files.  
+
 3. To play on **Linking Mode**:  
   Open both **MASTER** and **CLIENT** Apps, and start creating and browsing presets on **MASTER** App, and look how **CLIENT** App is linked and coloring your scene.  
 
