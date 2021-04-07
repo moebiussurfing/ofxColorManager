@@ -339,6 +339,7 @@ public:
 
 	void preset_Next();
 	void preset_Previous();
+	void preset_RandomIndex();
 
 public:
 

@@ -292,7 +292,9 @@ ofxColorManager::ofxColorManager()
 	helpInfo += "F3           ENGINES\n";
 	helpInfo += "F4           MINIMAL\n";
 	helpInfo += "F5           USER\n";
-	helpInfo += "SHIFT        DOCK EDIT\n";
+
+	if(SHOW_Advanced) helpInfo += "SHIFT        DOCK EDIT\n";
+	
 	helpInfo += "\n\n";
 
 	helpInfo += "         ACTIONS\n";
@@ -305,12 +307,12 @@ ofxColorManager::ofxColorManager()
 	helpInfo += "   -|+       AMOUNT COLORS\n";
 	helpInfo += "\n";
 
-	helpInfo += "RETURN       RANDOM 1\n";
-	helpInfo += "  +Ctrl      RANDOM 2\n";
+	helpInfo += "RETURN       RANDOM\n";
+	if (SHOW_Advanced) helpInfo += "  +Ctrl      RANDOM+\n";
 	helpInfo += "\n";
 
-	helpInfo += "BACKSPACE    AUX 1\n";
-	helpInfo += "  +Ctrl      AUX 2\n";
+	helpInfo += "BACKSPACE    AUX\n";
+	if (SHOW_Advanced) helpInfo += "  +Ctrl      AUX+\n";
 	helpInfo += "\n";
 
 	helpInfo += "Arrows       LIBRARY COLORS\n";
@@ -327,22 +329,23 @@ ofxColorManager::ofxColorManager()
 	helpInfo += "\n";
 	helpInfo += "Down|Up      ENGINE TYPES\n";
 	helpInfo += "\n\n";
-
-	helpInfo += "         PANELS\n";
-	helpInfo += "\n";
-	helpInfo += "Ctrl+\n";
-	helpInfo += "F1           PALETTE\n";
-	helpInfo += "F2           PRESETS\n";
-	helpInfo += "F3           KIT\n";
-	helpInfo += "F4           EDITOR\n";
-	helpInfo += "F5           PICKER\n";
-	helpInfo += "F6           LIBRARY\n";
-	helpInfo += "F7           GRADIENT\n";
-	helpInfo += "F8           DEMO\n";
-	helpInfo += "F9           LAYOUTS\n";
-	helpInfo += "F10          EXPORT\n";
-	helpInfo += "F11          ADVANCED\n";
-	helpInfo += "\n\n";
+	if (SHOW_Advanced) {
+		helpInfo += "         PANELS\n";
+		helpInfo += "\n";
+		helpInfo += "Ctrl+\n";
+		helpInfo += "F1           PALETTE\n";
+		helpInfo += "F2           PRESETS\n";
+		helpInfo += "F3           KIT\n";
+		helpInfo += "F4           EDITOR\n";
+		helpInfo += "F5           PICKER\n";
+		helpInfo += "F6           LIBRARY\n";
+		helpInfo += "F7           GRADIENT\n";
+		helpInfo += "F8           DEMO\n";
+		helpInfo += "F9           LAYOUTS\n";
+		helpInfo += "F10          EXPORT\n";
+		helpInfo += "F11          ADVANCED\n";
+		helpInfo += "\n\n";
+	}
 
 	//helpInfo += "TEST\n";		 
 	//helpInfo += "D              DEMO SCENE\n";
@@ -6977,13 +6980,19 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 				return;
 			}
 
+			//select a preset by random
+			else if ((key == OF_KEY_RETURN && !mod_CONTROL))
+			{
+				preset_RandomIndex();
+				return;
+			}
+
 			// shift
 			else if (key == OF_KEY_LEFT && mod_CONTROL)
 			{
 				build_Palette_SortShift(true);
 				return;
 			}
-
 			else if ((key == OF_KEY_RIGHT || key == ' ') && mod_CONTROL)
 			{
 				build_Palette_SortShift();
@@ -7193,7 +7202,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 					bLast_Index_Theory = true;
 				}
 
-				if (key == OF_KEY_DOWN && !mod_CONTROL)
+				if (key == OF_KEY_DOWN && !mod_CONTROL || (key == ' ' && SHOW_Presets))
 				{
 					if (last_Index_Theory_PickPalette == last_Index_Theory_PickPalette.getMax())//cycle 
 					{
@@ -9156,7 +9165,11 @@ void ofxColorManager::gui_About(bool* p_open)
 //--------------------------------------------------------------
 void ofxColorManager::setAppLayout(AppLayouts mode)
 {
+#ifdef MAKE_RELEASE_VERSION 
+	std::string _label = "PALETTO v1.0rc";
+#else
 	std::string _label = "ofxColorManager > ";
+#endif
 
 	switch (mode)
 	{
@@ -9168,7 +9181,8 @@ void ofxColorManager::setAppLayout(AppLayouts mode)
 		//appLayoutIndex = 0;
 		SHOW_Panels = true;
 		SHOW_PanelEngines = true;
-		SHOW_Theory = true;
+		//SHOW_Theory = true;
+		SHOW_Theory.setWithoutEventNotifications(true);
 		SHOW_Range = false;
 		SHOW_ColourLovers = false;
 		SHOW_Quantizer = false;
@@ -9285,6 +9299,23 @@ void ofxColorManager::setAppLayout(AppLayouts mode)
 		SHOW_MenuBar = false;
 		break;
 	}
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::preset_RandomIndex() {
+
+	int i = ofRandom(last_Index_Preset.getMin(), last_Index_Preset.getMax());
+	last_Index_Preset = i;
+
+	if (last_Index_Preset < files.size() && files.size() > 0)
+	{
+		PRESET_Name = files_Names[last_Index_Preset];
+		ofLogNotice(__FUNCTION__) << "PRESET_Name: [" + ofToString(last_Index_Preset) + "] " << PRESET_Name;
+
+		preset_Load(PRESET_Name);
+	}
+
+	if (!AutoScroll) AutoScroll = true;
 }
 
 //--------------------------------------------------------------
