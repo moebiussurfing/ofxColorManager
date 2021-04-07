@@ -292,6 +292,7 @@ ofxColorManager::ofxColorManager()
 	helpInfo += "F3           ENGINES\n";
 	helpInfo += "F4           MINIMAL\n";
 	helpInfo += "F5           USER\n";
+	helpInfo += "SHIFT        DOCK EDIT\n";
 	helpInfo += "\n\n";
 
 	helpInfo += "         ACTIONS\n";
@@ -2220,24 +2221,27 @@ void ofxColorManager::gui_Editor()
 			ImGui::Dummy(ImVec2(0.0f, 2.0f));
 			{
 				// sort shift
-				if (ImGui::Button("< SHIFT", ImVec2(_w50, BUTTON_BIG_HEIGHT)))
+				if (ImGui::Button("< SHIFT", ImVec2(_w50, _h)))
 				{
 					build_Palette_SortShift(true);
 				}
 				ImGui::SameLine();
-				if (ImGui::Button("SHIFT >", ImVec2(_w50, BUTTON_BIG_HEIGHT)))
+				if (ImGui::Button("SHIFT >", ImVec2(_w50, _h)))
 				{
 					build_Palette_SortShift();
 				}
 				// sort flip
-				if (ofxSurfingHelpers::AddSmallButton(bFlipUserPalette, _w100, BUTTON_BIG_HEIGHT / 2)) {}
+				if (ofxSurfingHelpers::AddSmallButton(bFlipUserPalette, _w100, _h / 2)) {}
 				//ImGui::SameLine();
 
 				// sort random
-				if (ImGui::Button("SORT RANDOM", ImVec2(_w100, BUTTON_BIG_HEIGHT / 2)))
+				if (ImGui::Button("SORT RANDOM", ImVec2(_w100, _h / 2)))
 				{
 					build_Palette_SortRandom();
 				}
+
+				ImGui::Dummy(ImVec2(0.0f, 2.0f));
+				ofxSurfingHelpers::AddBigToggle(SHOW_Picker, _w100, _h/2);
 			}
 
 			//--
@@ -3395,8 +3399,7 @@ void ofxColorManager::gui_Advanced()
 
 		//--
 
-		//ImGui::Text("PANELS");
-		if (ImGui::CollapsingHeader("PANELS", ImGuiWindowFlags_NoCollapse))
+		if (ImGui::CollapsingHeader("PANELS", ImGuiWindowFlags_None))
 		{
 			ofxImGui::AddParameter(SHOW_Advanced);
 			ofxImGui::AddParameter(SHOW_Layouts);
@@ -3463,7 +3466,6 @@ void ofxColorManager::gui_LayoutsPanel()
 	if (ofxImGui::BeginWindow("LAYOUTS", mainSettings, flags))
 	{
 		const int NUM_WIDGETS = APP_MODE_SIZE + 2;
-		//const int NUM_WIDGETS = APP_MODE_SIZE + 1;
 
 		float _spcx = ImGui::GetStyle().ItemSpacing.x;
 		float _spcy = ImGui::GetStyle().ItemSpacing.y;
@@ -3485,7 +3487,8 @@ void ofxColorManager::gui_LayoutsPanel()
 		if (bbox)// squared (three + 1/2 rows)
 		{
 			_w = _w99 / 2;
-			float _units = 3.5f;
+			float _units = 4.f;
+			//float _units = 3.5f;
 			_h = _h99 / _units - _spcy;
 		}
 		else// panoramic (one row)
@@ -3521,13 +3524,14 @@ void ofxColorManager::gui_LayoutsPanel()
 		{
 			ImGui::SameLine();
 		}
-
-		else if (bbox)
+		else if (bbox)//boxes multi row
 		{
 			_w = _w100;
 			_h = _h / 2;
 		}
+
 		ofxSurfingHelpers::AddBigToggle(SHOW_LayoutsAdvanced, _w, _h);
+		if (bbox) ofxSurfingHelpers::AddBigToggle(Lock_DockingLayout, _w, _h);
 	}
 	ofxImGui::EndWindow(mainSettings);
 
@@ -3620,7 +3624,7 @@ void ofxColorManager::gui_LayoutsAdvanced()
 	//----
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(max, 200));
-	if (ofxImGui::BeginWindow("LAYOUTS ADVANCED", mainSettings, flags))
+	if (ofxImGui::BeginWindow("LAYOUTS ", mainSettings, flags))
 	{
 		float _spcx = ImGui::GetStyle().ItemSpacing.x;
 		float _spcy = ImGui::GetStyle().ItemSpacing.y;
@@ -4760,7 +4764,7 @@ void ofxColorManager::gui_Presets()
 					if (ImGui::Button("OK", ImVec2(120, 0))) {
 						ofLogNotice(__FUNCTION__) << "DELETE";
 						files[last_Index_Preset].remove();
-						preset_RefreshFiles(bool);
+						preset_RefreshFiles(false);
 
 						ImGui::CloseCurrentPopup();
 					}

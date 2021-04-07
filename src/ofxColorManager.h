@@ -306,7 +306,7 @@ private:
 	ofParameter<bool> SHOW_Name{ "Show Extra Preset Name", false };
 	ofParameter<bool> SHOW_Advanced{ "ADVANCED", false };
 	ofParameter<bool> SHOW_Panels;
-	ofParameter<bool> SHOW_LayoutsAdvanced{ "LAYOUTS ADVANCED", false };
+	ofParameter<bool> SHOW_LayoutsAdvanced{ "LAYOUTS ", false };
 	ofParameter<bool> SHOW_Layouts{ "LAYOUTS", false };
 	ofParameter<bool> SHOW_PanelEngines{ "ENGINES", true };
 	//shows advanced panels to tweak layout or workflow behaviour

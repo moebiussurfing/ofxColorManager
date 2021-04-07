@@ -531,7 +531,7 @@ void ofxColourLoversHelper::gui_Main()
 			//ImGui::Dummy(ImVec2(0, 2));
 
 			ImGui::PushItemWidth(-40);
-			ImGui::SliderInt("Amnt Max", &amountResults, 25, 100);
+			ImGui::SliderInt("Amnt Max", &amountResults, 25, MAX_SEARCH_RESULTS);
 			ImGui::PopItemWidth();
 		}
 		else open_popup = false;
@@ -724,8 +724,8 @@ void ofxColourLoversHelper::gui_Main()
 		// name
 		if (bSearch)
 		{
-			ImGui::Text("SEARCH:");
-			ImGui::Text(lastSearch_Str.c_str());
+			std::string s = "SEARCH KEYWORD: " + lastSearch_Str;
+			ImGui::Text(s.c_str());
 			ImGui::Text(lastPaletteName.get().c_str());
 		}
 

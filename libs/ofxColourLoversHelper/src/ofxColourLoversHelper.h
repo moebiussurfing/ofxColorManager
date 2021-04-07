@@ -26,6 +26,7 @@
 //#define BUTTON_SLIM_HEIGHT 14
 //
 #define USE_FLOATING_SEARCH_WINDOW_WORAROUND
+#define MAX_SEARCH_RESULTS 100
 
 //----
 
@@ -203,7 +204,7 @@ private:
 
 	ofColor lastColor_clicked;
 
-	int amountResults = 100;
+	int amountResults = (int)MAX_SEARCH_RESULTS;
 
 	//-
 
