@@ -724,7 +724,7 @@ void ofxColourLoversHelper::gui_Main()
 		// name
 		if (bSearch)
 		{
-			std::string s = "SEARCH KEYWORD: " + lastSearch_Str;
+			std::string s = "SEARCH:      " + lastSearch_Str;
 			ImGui::Text(s.c_str());
 			ImGui::Text(lastPaletteName.get().c_str());
 		}

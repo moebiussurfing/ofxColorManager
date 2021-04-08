@@ -287,7 +287,9 @@ ofxColorManager::ofxColorManager()
 	//--
 
 	helpInfo = "";
-	helpInfo += "           HELP\n\n";
+	helpInfo += "      HELP KEY COMMANDS\n\n";
+	//helpInfo += "           HELP\n\n";
+	helpInfo += "\n";
 	helpInfo += "\n";
 
 	helpInfo += "H            HELP\n";
@@ -2230,6 +2232,7 @@ void ofxColorManager::gui_Editor()
 			ImGui::Dummy(ImVec2(0.0f, 2.0f));
 			{
 				// sort shift
+
 				if (ImGui::Button("< SHIFT", ImVec2(_w50, _h)))
 				{
 					build_Palette_SortShift(true);
@@ -2239,15 +2242,45 @@ void ofxColorManager::gui_Editor()
 				{
 					build_Palette_SortShift();
 				}
+
 				// sort flip
+
 				if (ofxSurfingHelpers::AddSmallButton(bFlipUserPalette, _w100, _h / 2)) {}
 				//ImGui::SameLine();
 
 				// sort random
+
 				if (ImGui::Button("SORT RANDOM", ImVec2(_w100, _h / 2)))
 				{
 					build_Palette_SortRandom();
 				}
+
+				//--
+
+				// coolors.co
+
+				ImGui::Dummy(ImVec2(0.0f, 2.0f));
+
+				// https://coolors.co/3d5a80-98c1d9-e0fbfc-ee6c4d-293241
+
+				if (ImGui::CollapsingHeader("COOLORS.CO", ImGuiWindowFlags_None))
+				{
+					if (ImGui::Button("PASTE", ImVec2(_w50, _h * 0.5)))
+					{
+						ofLogNotice(__FUNCTION__) << "IMPORT URL COOLORS";
+						doImportPaletteCoolors(ofGetClipboardString());
+					}
+
+					ImGui::SameLine();
+
+					if (ImGui::Button("COPY", ImVec2(_w50, _h * 0.5)))
+					{
+						ofLogNotice(__FUNCTION__) << "EXPORT URL COOLORS";
+						doExportPaletteCoolors();
+					}
+				}
+
+				// show picker
 
 				ImGui::Dummy(ImVec2(0.0f, 2.0f));
 				ofxSurfingHelpers::AddBigToggle(SHOW_Picker, _w100, _h / 2);
@@ -4870,29 +4903,6 @@ void ofxColorManager::gui_Presets()
 
 			//--
 
-			ImGui::Dummy(ImVec2(0.0f, 2.0f));
-
-			// https://coolors.co/3d5a80-98c1d9-e0fbfc-ee6c4d-293241
-
-			if (ImGui::CollapsingHeader("COOLORS.CO URL", ImGuiWindowFlags_None))
-			{
-				if (ImGui::Button("PASTE", ImVec2(_w50, _h * 0.5)))
-				{
-					ofLogNotice(__FUNCTION__) << "IMPORT URL COOLORS";
-					doImportPaletteCoolors(ofGetClipboardString());
-				}
-				
-				ImGui::SameLine();
-				
-				if (ImGui::Button("COPY", ImVec2(_w50, _h * 0.5)))
-				{
-					ofLogNotice(__FUNCTION__) << "EXPORT URL COOLORS";
-					doExportPaletteCoolors();
-				}
-			}
-
-			//--
-
 			// workflow
 			
 			ImGui::Dummy(ImVec2(0.0f, 2.0f));
@@ -4910,7 +4920,7 @@ void ofxColorManager::gui_Presets()
 
 		//----
 
-		ImGui::Dummy(ImVec2(0.0f, 2.0f));
+		//ImGui::Dummy(ImVec2(0.0f, 2.0f));
 		ofxSurfingHelpers::AddBigToggle(SHOW_Kit, _w100, _h / 2);
 
 		//ImGui::Dummy(ImVec2(0.0f, 2.0f));
@@ -5126,14 +5136,15 @@ void ofxColorManager::gui_Demo()
 //--------------------------------------------------------------
 void ofxColorManager::setupGui()
 {
-	// using Daan fork
+	// using Daan ImGui fork
 
 	ImGuiConfigFlags flags;
 	flags = ImGuiConfigFlags_DockingEnable;
 
-#ifdef USE_VIEWPORTS// allow out-of-OF-window
-	flags |= ImGuiConfigFlags_ViewportsEnable;
-#endif
+// allow out-of-OF-window
+//#ifdef USE_VIEWPORTS
+//	flags |= ImGuiConfigFlags_ViewportsEnable;
+//#endif
 
 	//--
 
@@ -5145,8 +5156,9 @@ void ofxColorManager::setupGui()
 	// io
 
 	auto &io = ImGui::GetIO();
+
 	io.ConfigDockingWithShift = true;
-	io.ConfigInputTextCursorBlink = true;
+	//io.ConfigInputTextCursorBlink = true;
 
 	//--
 
@@ -5215,7 +5227,7 @@ bool ofxColorManager::draw_Gui()
 		// b. Lockable settings 
 
 		// Fixes imgui to expected behaviour. Otherwise add in ImGui::DockSpace() [±line 14505] : if (flags & ImGuiDockNodeFlags_PassthruCentralNode) window_flags |= ImGuiWindowFlags_NoBackground;
-		ImGui::PushStyleColor(ImGuiCol_ChildBg, IM_COL32(0, 0, 0, 0));
+		//ImGui::PushStyleColor(ImGuiCol_ChildBg, IM_COL32(0, 0, 0, 0));
 		ImGuiDockNodeFlags flagsDock;
 		flagsDock = ImGuiDockNodeFlags_PassthruCentralNode;
 		if (Lock_DockingLayout)
@@ -5227,7 +5239,7 @@ bool ofxColorManager::draw_Gui()
 			//flagsDock |= ImGuiDockNodeFlags_NoMove__;
 		}
 		ImGuiID dockNodeID = ImGui::DockSpaceOverViewport(NULL, flagsDock);
-		ImGui::PopStyleColor();
+		//ImGui::PopStyleColor();
 
 		//----
 
@@ -9499,7 +9511,7 @@ void ofxColorManager::doImportPaletteCoolors(std::string url)
 	ofLogNotice(__FUNCTION__) << "----------------- IMPORT COOLORS -----------------" << endl;
 	ofLogNotice(__FUNCTION__) << url;
 
-	static int i = 0;
+	//static int i = 0;
 
 	// browse into https://coolors.co/palettes/trending
 	// select palette > export > url
@@ -9520,7 +9532,10 @@ void ofxColorManager::doImportPaletteCoolors(std::string url)
 
 	// workflow
 	if (!MODE_NewPreset) MODE_NewPreset = true;
-	textInput_New = "coolors_" + ofToString(++i);
+	textInput_New = "coolors_";
+	textInput_New += ofGetTimestampString();
+	//textInput_New += "_";
+	//textInput_New += ofToString(++i);
 }
 
 //--------------------------------------------------------------
