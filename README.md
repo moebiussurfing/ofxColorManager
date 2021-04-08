@@ -19,13 +19,13 @@ This **openFrameworks** add-on is a **bundle of Tools and Engines** to create an
 
 ## Engines  
 
-_Send palettes to the editor._  
+_Send palettes to the Editor._  
 
   1. **10+** Algorithmic **Theory Schemes** from a base color.  
-  *Complementary, Compound, Monochrome, Analogous, Triad...*  
+  *Analogous, Compound, Flipped Compound, Monochrome, Tetrad, Triad, Complementary, Split and Flipped.*  
 
   2. **10+** **Range Spaces** between two colors.  
-  *RGB, LAB, CMYK, XYZ...*  
+  *RGB, HSL, HSV, HSB, LUV, LAB, HLAB, LCH, CMY, CMYK, YXY, and XYZ.*  
  
   3. [**Colour Lovers API**](https://www.colourlovers.com/) to search keywords online, handle favorites, and history search.
  
@@ -33,6 +33,8 @@ _Send palettes to the editor._
   *Sorting by Dominance, Hue, Saturation or Brightness*.
 
 ## Tools  
+
+_Palettes ​Management._
 
 * **Editor**: 
   * Receive from the Engines and organize the palette colors.
@@ -91,7 +93,7 @@ Works Standalone or Linked to a **CLIENT App** ( _SceneTEST_COLORiZED_ )
 ( _Based on _1-example_Basic_ from **ofxColorManager**_ )  
 [Download Link](https://moebiussurfing.itch.io/ofxcolormanager)  
 
-### 2. **SceneTEST_COLORiZED**
+### 2. **SceneTEST_COLORiZED v1.0**
 **Client App**  
 Works Standalone or Linked to a **MASTER App** ( _Paletto v1.0_ )  
 ( _Based on _3-example_Scenes_ from **ofxColorClient**_ )  
@@ -167,7 +169,7 @@ void ofApp::draw()
 </details>
 
 <details>
-  <summary>Dependencies</summary>
+  <summary>Required Dependencies</summary>
   <p>
 
 Clone these add-ons and include into the **OF Project Generator** to allow compile your projects or the examples:
@@ -184,8 +186,14 @@ Clone these add-ons and include into the **OF Project Generator** to allow compi
 * ofxXmlSettings [ **OF** ]
 * [ofxSCENE-SVG](https://github.com/moebiussurfing/ofxSCENE-SVG)  [ Only for the example ]
 * [ofxWindowApp](https://github.com/moebiussurfing/ofxWindowApp)  [ Only for the example ]
+  </p>
+</details>
 
-Above add-ons already packed into **OF_ADDON/libs**. No need to add them manually with the **OF Project Generator**:  
+<details>
+  <summary>Included Dependencies</summary>
+  <p>
+
+The above add-ons already packed into **OF_ADDON/libs**. No need to add them manually with the **OF Project Generator**:  
 * [ofxColorQuantizerHelper](https://github.com/moebiussurfing/ofxColorQuantizerHelper)
 * [ofxColorsBrowser](https://github.com/moebiussurfing/ofxColorsBrowser)
 * [ofxColourLoversHelper](https://github.com/moebiussurfing/ofxColourLoversHelper)  
