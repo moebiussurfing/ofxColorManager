@@ -55,22 +55,21 @@ _Palettes ​Management._
 ## Three Modes
 
 #### 1. **Powered Standalone**:  
-**One single app**:  
-_Color Manager + Scene Renderer_.  
-Use the add-on inside your Render **OF_App** when you want to use all the bundled Tools.  
+**One Single app**:  
+Use the add-on inside your _Scene Render App_ when you want to use all the bundled Tools.  
 ( _Requires all the dependencies._ )  
 
-#### 2. **Dual Linked**:  
+#### 2. **Minimal Standalone**:
+**One single App**:  
+A **Lightweight** Mode into your _Scene Render App_.  
+Only using the **ofxColorClient** add-on. (Without the bigger **ofxColorManager**)  
+Just as a player or palettes browser, but without all the Engines and Tools.  
+Only included some minimal edit tools. Fewer dependencies.  
+
+#### 3. **Dual Linked**:  
 **Two Apps**:  
 All the Engines and Tools, but with a more handy setup.  
 Links a **MASTER OF_App** (with the **ofxColorManager**) to your **CLIENT OF_App** (with the **ofxColorClient**).  
-
-#### 3. **Minimal Standalone**:
-**One single App**:  
-The more **Lightweight** Mode into your _Scene Render app_.  
-Only using the **ofxColorClient add-on** to browse and use your palette preset files.  
-Just as a player but without all the Engines and Tools.  
-Fewer dependencies. Included some minimal edit tools.  
  
 <br/>
 
@@ -146,7 +145,7 @@ Works Standalone or Linked to a **MASTER App** ( _Paletto v1.0_ )
 #include "ofxColorManager.h"
 
 ofxColorManager colorManager;
-vector<ofColor> palette;
+vector<ofColor> palette; // colors to use
 ```
 **ofApp.cpp**
 ```.c++
@@ -160,8 +159,7 @@ void ofApp::draw()
 {
   /*
   
-  Use the colors accessing to
-  vector<ofColor> palette 
+  Use the colors
   Nothing more!
   
   */
