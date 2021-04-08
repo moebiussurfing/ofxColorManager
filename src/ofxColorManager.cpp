@@ -9159,9 +9159,17 @@ void ofxColorManager::gui_MenuBar()
 		if (ImGui::BeginMenu("Help"))
 		{
 			static bool pref = ENABLE_HelpInfo.get();
-			if (ImGui::MenuItem("Help", NULL, &pref))
+			if (ImGui::MenuItem("Key Commands", NULL, &pref))
 			{
 				ENABLE_HelpInfo = pref;
+			}
+			if(ImGui::MenuItem("GitHub", NULL)) {
+				std::string url = "https://github.com/moebiussurfing/ofxColorManager";
+				ofLaunchBrowser(url);
+			}
+			if(ImGui::MenuItem("itch.io", NULL)) {
+				std::string url = "https://moebiussurfing.itch.io/paletto";
+				ofLaunchBrowser(url);
 			}
 			ImGui::MenuItem("About", NULL, &SHOW_About);
 
@@ -9224,8 +9232,9 @@ void ofxColorManager::gui_About(bool* p_open)
 void ofxColorManager::setAppLayout(AppLayouts mode)
 {
 	std::string _label = APP_RELEASE_NAME;
-	_label += "         ";
-
+	_label += "       ";//spacing
+	//_label += "                   ";//spacing
+	
 	switch (mode)
 	{
 	case ofxColorManager::APP_DEFAULT:
