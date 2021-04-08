@@ -60,13 +60,13 @@ _Color Manager + Scene Renderer_.
 Use the add-on inside your Render **OF_App** when you want to use all the bundled Tools.  
 ( _Requires all the dependencies._ )  
 
-#### 2. **Two Apps Linked**:  
-**Two separated apps**:  
+#### 2. **Dual Linked**:  
+**Two Apps**:  
 All the Engines and Tools, but with a more handy setup.  
 Links a **MASTER OF_App** (with the **ofxColorManager**) to your **CLIENT OF_App** (with the **ofxColorClient**).  
 
 #### 3. **Minimal Standalone**:
-**One single app**:  
+**One single App**:  
 The more **Lightweight** Mode into your _Scene Render app_.  
 Only using the **ofxColorClient add-on** to browse and use your palette preset files.  
 Just as a player but without all the Engines and Tools.  
