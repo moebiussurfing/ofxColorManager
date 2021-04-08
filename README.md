@@ -21,10 +21,10 @@ This **openFrameworks** add-on is a **bundle of Tools and Engines** to create an
 
 _Send palettes to the Editor._  
 
-  1. **10+** Algorithmic **Theory Schemes** from a base color.  
+  1. Algorithmic **Theory Schemes** from a base color.  
   *Analogous, Compound, Flipped Compound, Monochrome, Tetrad, Triad, Complementary, Split and Flipped.*  
 
-  2. **10+** **Range Spaces** between two colors.  
+  2. **Range Spaces** between two colors.  
   *RGB, HSL, HSV, HSB, LUV, LAB, HLAB, LCH, CMY, CMYK, YXY, and XYZ.*  
  
   3. [**Colour Lovers API**](https://www.colourlovers.com/) to search keywords online, handle favorites, and history search.
