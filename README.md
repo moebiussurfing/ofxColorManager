@@ -39,7 +39,8 @@ _Palettes ​Management._
 * **Editor**: 
   * Receive from the Engines and organize the palette colors.
   * Edit using the color pickers and the _Pantone_ colors library.
-  * Add, remove, sort, shift, and drag colors. 
+  * Add, remove, sort, shift, and drag colors.
+  * [Coolors.co](https://coolors.co/palettes/trending) URL import/export.
 
 * **Kit of Presets Manager**: 
   * Receive palettes, name and save to presets kit. 
