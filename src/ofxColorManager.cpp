@@ -304,7 +304,7 @@ ofxColorManager::ofxColorManager()
 	helpInfo += "F3           ENGINES\n";
 	helpInfo += "F4           MINIMAL\n";
 	helpInfo += "F5           USER\n";
-	if(SHOW_Advanced) helpInfo += "SHIFT        DOCK EDIT\n";
+	if (SHOW_Advanced) helpInfo += "SHIFT        DOCK EDIT\n";
 	helpInfo += "\n\n";
 
 	helpInfo += "         ACTIONS\n";
@@ -321,7 +321,7 @@ ofxColorManager::ofxColorManager()
 	if (SHOW_Advanced) helpInfo += "\n";
 	helpInfo += "BACKSPACE    AUX\n";
 	if (SHOW_Advanced) helpInfo += "  +Ctrl      AUX+\n";
-	if(SHOW_Advanced) helpInfo += "\n";
+	if (SHOW_Advanced) helpInfo += "\n";
 	helpInfo += "Arrows       LIBRARY COLORS\n";
 	helpInfo += "+Ctrl        LIBRARY PAGE\n";
 	helpInfo += "\n\n";
@@ -1121,7 +1121,7 @@ void ofxColorManager::update(ofEventArgs & args)
 
 		// auto pilot: browse presets
 
-	if (auto_pilot && (ofGetElapsedTimeMillis() - auto_pilot_timer > auto_pilot_Duration * 1000))
+	if (bPlaySlideShow && (ofGetElapsedTimeMillis() - auto_pilot_timer > auto_pilot_Duration * 1000))
 	{
 		auto_pilot_timer = ofGetElapsedTimeMillis();
 		{
@@ -2250,7 +2250,7 @@ void ofxColorManager::gui_Editor()
 				}
 
 				ImGui::Dummy(ImVec2(0.0f, 2.0f));
-				ofxSurfingHelpers::AddBigToggle(SHOW_Picker, _w100, _h/2);
+				ofxSurfingHelpers::AddBigToggle(SHOW_Picker, _w100, _h / 2);
 			}
 
 			//--
@@ -4578,7 +4578,7 @@ void ofxColorManager::gui_Presets()
 		int counter = last_Index_Preset.get();
 
 		// 2. index preset / total
-		
+
 		int _sz = files_Names.size() - 1;
 
 		ImGui::Text("%d/%d", counter, _sz);
@@ -4672,7 +4672,7 @@ void ofxColorManager::gui_Presets()
 			if (ImGui::Button("SAVE NEW", ImVec2(_w100, _h * 2)))
 			{
 				ofLogNotice(__FUNCTION__) << "SAVE NEW: " << textInput_New;
-				
+
 				//NOTE: preset filename must to not include any extra '.' char
 				//clean all extra '.' chars
 				ofStringReplace(textInput_New, ".", "");
@@ -4870,16 +4870,41 @@ void ofxColorManager::gui_Presets()
 
 			//--
 
+			ImGui::Dummy(ImVec2(0.0f, 2.0f));
+
+			// https://coolors.co/3d5a80-98c1d9-e0fbfc-ee6c4d-293241
+
+			if (ImGui::CollapsingHeader("COOLORS.CO URL", ImGuiWindowFlags_None))
+			{
+				if (ImGui::Button("PASTE", ImVec2(_w50, _h * 0.5)))
+				{
+					ofLogNotice(__FUNCTION__) << "IMPORT URL COOLORS";
+					doImportPaletteCoolors(ofGetClipboardString());
+				}
+				
+				ImGui::SameLine();
+				
+				if (ImGui::Button("COPY", ImVec2(_w50, _h * 0.5)))
+				{
+					ofLogNotice(__FUNCTION__) << "EXPORT URL COOLORS";
+					doExportPaletteCoolors();
+				}
+			}
+
+			//--
+
 			// workflow
+			
+			ImGui::Dummy(ImVec2(0.0f, 2.0f));
 
 			// palette colors mini preview
 			// auto browse presets. to testing and auto export
 			ImGui::PushItemWidth(_w99);
-			if (ofxImGui::AddParameter(auto_pilot)) {}
+			if (ofxImGui::AddParameter(bPlaySlideShow)) {}
 			ImGui::PopItemWidth();
 
 			ImGui::PushItemWidth(-35);
-			if (auto_pilot) ofxImGui::AddParameter(auto_pilot_Duration);
+			if (bPlaySlideShow) ofxImGui::AddParameter(auto_pilot_Duration);
 			ImGui::PopItemWidth();
 		}
 
@@ -6323,7 +6348,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	else if (name == bModePalettePreset.getName())
 	{
 		bModeBundlePreset = !bModePalettePreset;
-}
+	}
 #endif
 
 	//----
@@ -6699,7 +6724,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	//{
 	//	if (bLock_palette) bAuto_Build_Palette = false;
 	//}
-		}
+}
 
 //--------------------------------------------------------------
 void ofxColorManager::Changed_Range(ofAbstractParameter &e)
@@ -7052,7 +7077,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		{
 			mouseRuler.toggleVisibility();
 			//myDEMO_Bubbles.toggleMouseCamera();
-	}
+		}
 #endif
 		// TEST
 		else if (key == 'T')
@@ -7622,7 +7647,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//}
 		////    else if()
 		////        color_Undo.clearRedo();
-}
+	}
 }
 
 //--------------------------------------------------------------
@@ -7813,7 +7838,7 @@ bool ofxColorManager::preset_RefreshFiles(bool bForeLoadFirst)
 	//path_Name_ExportColor = "ofxColorManager";
 
 	//-
-	
+
 	int _sz = files.size();
 
 	// clear files and filenames vectors
@@ -7827,7 +7852,7 @@ bool ofxColorManager::preset_RefreshFiles(bool bForeLoadFirst)
 	{
 		files_Names.push_back(files[i].getBaseName());
 
-		ofLogNotice(__FUNCTION__)<< i << " " << files_Names[i];
+		ofLogNotice(__FUNCTION__) << i << " " << files_Names[i];
 	}
 
 	last_Index_Preset.setMax(files.size() - 1);
@@ -9076,17 +9101,31 @@ void ofxColorManager::gui_MenuBar()
 			ImGui::EndMenu();
 		}
 
-		//if (ImGui::BeginMenu("Edit"))
-		//{
-		//	//TODO:
-		//	//add other types
-		//	if (ImGui::MenuItem("Copy HEX Color", "")) { 
-		//		//TODO: convert
-		//		const char* text = ofToString(color_Picked.get().getHex()).c_str();
-		//		ImGui::SetClipboardText(text);
-		//	};
-		//	ImGui::EndMenu();
-		//}
+		if (ImGui::BeginMenu("Edit"))
+		{
+			// coolors.com import export
+			//https://coolors.co/f53c65-470229-05a66e
+
+			if (ImGui::MenuItem("Import from Coolors", "paste url")) {
+
+				doImportPaletteCoolors(ofGetClipboardString());
+			}
+
+			if (ImGui::MenuItem("Export to Coolors", "copy url")) {
+
+				doExportPaletteCoolors();
+			}
+
+			////TODO:
+			////add other types
+			//if (ImGui::MenuItem("Copy HEX Color", "")) { 
+			//	//TODO: convert
+			//	const char* text = ofToString(color_Picked.get().getHex()).c_str();
+			//	ImGui::SetClipboardText(text);
+			//};
+
+			ImGui::EndMenu();
+		}
 
 		if (ImGui::BeginMenu("View"))
 		{
@@ -9443,4 +9482,63 @@ void ofxColorManager::doRandomizeColorLibrary(bool bPageOnly)
 	//	int pag = n / lib_Page_NumColors;
 	//	if (lib_Page_Index != pag) lib_Page_Index = pag;
 	//}
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::doImportPaletteCoolors(std::string url)
+{
+	ofLogNotice(__FUNCTION__) << "----------------- IMPORT COOLORS -----------------" << endl;
+	ofLogNotice(__FUNCTION__) << url;
+
+	static int i = 0;
+
+	// browse into https://coolors.co/palettes/trending
+	// select palette > export > url
+	// https://coolors.co/3d5a80-98c1d9-e0fbfc-ee6c4d-293241
+	// https://coolors.co/f4f1de-e07a5f-3d405b-81b29a-f2cc8f
+
+	ofStringReplace(url, "https://coolors.co/", "");
+	auto ss = ofSplitString(url, "-");
+
+	palette_Clear();
+
+	for (auto hex : ss) {
+		ofLogNotice(__FUNCTION__) << hex;
+		ofColor col;
+		hexToColor(col, hex);
+		palette_AddColor(col);
+	}
+
+	// workflow
+	if (!MODE_NewPreset) MODE_NewPreset = true;
+	textInput_New = "coolors_" + ofToString(++i);
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::doExportPaletteCoolors()
+{
+	ofLogNotice(__FUNCTION__) << "----------------- EXPORT COOLORS -----------------" << endl;
+	
+	std::string url = "https://coolors.co/";
+
+	for (int i = 0; i < palette.size(); i++)
+	{
+		ofColor c = palette[i];
+		std::string hex = hexToWeb(c);
+		ofLogNotice(__FUNCTION__) << i << " : " << hex;
+
+		//remove #
+		ofStringReplace(hex, "#", "");
+
+		url += hex;
+		if (i < palette.size() - 1) url += "-";
+	}
+
+	ofSetClipboardString(url);
+	//https://coolors.co/f53c65-470229-05a66e
+
+	ofLogNotice(__FUNCTION__) << url;
+
+	// workflow
+	ofLaunchBrowser(url);
 }

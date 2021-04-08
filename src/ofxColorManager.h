@@ -322,7 +322,7 @@ private:
 	
 	ofParameter<bool> Lock_DockingLayout{ "Lock Docking", true };
 
-	ofParameter<bool> auto_pilot{ "Play Slide-Show", false };
+	ofParameter<bool> bPlaySlideShow{ "Play Slide-Show", false };
 	ofParameter<float> auto_pilot_Duration{ "Time", 1, 0.1, 5 };
 	int auto_pilot_timer;
 
@@ -548,6 +548,12 @@ private:
 
 	void loadPresetFile();
 	void savePresetFile();
+	
+	//--
+
+	// import from https://coolors.co
+	void doImportPaletteCoolors(std::string url);
+	void doExportPaletteCoolors();
 
 	//--
 
@@ -1201,4 +1207,12 @@ private:
 	void Changed_LayoutPanels(ofAbstractParameter &e);
 	ofParameterGroup params_LayoutSPanel{ "LAYOUTS PANEL" };
 
+	//--
+
+	// color utils
+
+	//from colourLovers
+	static string hexToWeb(ofColor col) {
+		return "#" + ofToHex(col.r) + ofToHex(col.g) + ofToHex(col.b);
+	}
 };

@@ -128,7 +128,8 @@ Works Standalone or Linked to a **MASTER App** : **_Paletto v1.0_**
 <details>
   <summary>Other Features</summary>
   <p>
-  	
+
+* Import and export [Coolors.co](https://coolors.co/palettes/trending) url format using clipboard copy/paste.   	
 * **Demo Scenes** for fast palette preview. Colored SVG and bubble scenes.
 * **ImGui** based GUI. Docked and customizable with layouts presets management.
 * Hue wheel and rectangle **Color Pickers** with **HSV** sliders and clipboard copy/paste codes.

@@ -1,6 +1,6 @@
 {
     "ofxColorManager": {
-        "App_Layout": "4",
+        "App_Layout": "0",
         "DEMO": {
             "Alpha_1": "0.681",
             "Alpha_Spheres": "0.839",
@@ -14,11 +14,11 @@
         "Engines": {
             "Amnt_Colors_Thy": "7",
             "Analogue_Spread": "0.213",
-            "Color_1": "0.0980392, 0.141176, 0.227451, 1",
-            "Color_2": "0.223529, 0.368627, 0.572549, 1",
+            "Color_1": "0.0470588, 0.32549, 0.137255, 1",
+            "Color_2": "0.72549, 0.239216, 0.0392157, 1",
             "Last_Range_Index": "3",
             "Last_Theory_Index": "6",
-            "Preset_Index": "12",
+            "Preset_Index": "27",
             "SCENE": "1"
         },
         "ExportColors": {
@@ -51,12 +51,12 @@
             "Size_Plt": "25"
         },
         "PANELS": {
-            "AutoScroll": "1",
+            "AutoScroll": "0",
             "DEMO": "0",
-            "EDITOR": "1",
+            "EDITOR": "0",
             "GRADIENT": "0",
             "GUI_MAIN": "1",
-            "KIT": "0",
+            "KIT": "1",
             "LIBRARY": "0",
             "LINK": "0",
             "LOVERS": "0",
@@ -66,19 +66,19 @@
             "PICTURE": "0",
             "PRESETS": "1",
             "RANGE": "0",
-            "Show_Main_Panel": "0",
+            "Show_Main_Panel": "1",
             "Show_Mini_Palette": "0",
-            "THEORY": "0"
+            "THEORY": "1"
         },
         "PICKER": {
             "BRG": "0",
             "B_Power": "1",
-            "COLOR": "0.0980392, 0.141176, 0.227451, 1",
+            "COLOR": "0.0470588, 0.32549, 0.137255, 1",
             "HUE": "1",
             "H_Power": "1",
             "SAT": "0",
             "S_Power": "1"
         },
-        "Show_Menu_Bar": "0"
+        "Show_Menu_Bar": "1"
     }
 }
