@@ -75,11 +75,12 @@ Fewer dependencies. Included some minimal edit tools.
 <br/>
 
 ## ofxColorClient: The Player add-on 
-  * A Lightweight version of the add-on just to use your **Presets Kit**
+  * Also included into **ofxColorManager**. 
+  * A Lightweight version of the add-on.
+  * Works in the **Standalone Mode** too. 
+  * Browse and use your **Presets Kit** files.
   * A minimal set of tools: 
   Kit browser, palette and gradient previews, and tweakeable tweened transitions.  
-  * Works too in the **Standalone Mode** to browse and use your kit with preset files.
-  * Also included into **ofxColorManager**. 
   
 <br/>
 
@@ -196,7 +197,8 @@ Clone these add-ons and include into the **OF Project Generator** to allow compi
   <summary>Included Dependencies</summary>
   <p>
 
-The above add-ons already packed into **OF_ADDON/libs**. No need to add them manually with the **OF Project Generator**:  
+The above add-ons already packed somewhere into **OF_ADDON/libs**.  
+No need to add them manually with the **OF Project Generator**:  
 * [ofxColorQuantizerHelper](https://github.com/moebiussurfing/ofxColorQuantizerHelper)
 * [ofxColorsBrowser](https://github.com/moebiussurfing/ofxColorsBrowser)
 * [ofxColourLoversHelper](https://github.com/moebiussurfing/ofxColourLoversHelper)  
