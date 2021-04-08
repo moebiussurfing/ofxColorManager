@@ -177,7 +177,7 @@ void ofApp::draw()
 
 Clone these add-ons and include into the **OF Project Generator** to allow compile your projects or the examples:
 * [ofxColorClient](https://github.com/moebiussurfing/ofxColorClient)
-* [ofxImGui](https://github.com/Daandelange/ofxImGui/tree/jvcleave)  [ Fork from @Daandelange Thanks **Daan**! ]
+* [ofxImGui](https://github.com/Daandelange/ofxImGui/tree/jvcleave)  [ Fork from @Daandelange. Thanks **Daan**! ]
 * [ofxSurfingHelpers](https://github.com/moebiussurfing/ofxSurfingHelpers)  
 * [ofxScaleDragRect](https://github.com/moebiussurfing/ofxScaleDragRect)
 * [ofxIO](https://github.com/bakercp/ofxIO)
@@ -201,7 +201,20 @@ The above add-ons already packed into **OF_ADDON/libs**. No need to add them man
 * [ofxColorsBrowser](https://github.com/moebiussurfing/ofxColorsBrowser)
 * [ofxColourLoversHelper](https://github.com/moebiussurfing/ofxColourLoversHelper)  
 * [ofxMouseRuler2](https://github.com/moebiussurfing/ofxMouseRuler2)  
-add theorycolors,,,, addons. otra pestaña para estos  ...  
+* [ofxCameraSaveLoad](https://github.com/roymacdonald/ofxCameraSaveLoad)  
+* [ofxColorMorph](https://github.com/makobouzu/ofxColorMorph)  
+* [ofxColorPalette](https://github.com/aspeteRakete/ofxColorPalette)  
+* [ofxColorTheory](https://github.com/kasparsj/ofxColorTheory)  
+* [ofxColourLovers](https://github.com/borg/ofxColourLovers)  
+* [ofxHttpUtils](https://github.com/arturoc/ofxHttpUtils)  
+* [ofxSimpleTimer](https://github.com/HeliosInteractive/ofxSimpleTimer)  
+
+For **ofxColorClient**:  
+* [ofxAnimatable](https://github.com/armadillu/ofxAnimatable)  
+* [ofxColorGradient](https://github.com/armadillu/ofxColorGradient)  
+* [ofxCurvesTool](https://github.com/kylemcdonald/ofxCurvesTool)  
+* [ofxSerializer](https://github.com/bakercp/ofxSerializer)  
+* [ofxSimpleSlider](https://github.com/danomatika/ofxPd/blob/master/pitchShifter/src/ofxSimpleSlider.h)  
 
 *Thanks a lot to all these ofxAddons coders. Look into each folder for authoring credits, original forks, and license info.*  
   </p>
