@@ -284,9 +284,12 @@ An addon by **@moebiusSurfing**
 *( ManuMolina ) 2019-2021*  
 
 ## Follow
-[Twitter](https://twitter.com/moebiussurfing/)  
-[Instagram](https://www.instagram.com/moebiussurfing/)  
-[YouTube](https://www.youtube.com/channel/UCzUw96_wjmNxyIoFXf84hQg)  
+[Twitter](https://twitter.com/moebiusSurfing/)  
+[Instagram](https://www.instagram.com/moebiusSurfing/)  
+[YouTube](https://www.youtube.com/moebiusSurfing)  
+[email](mailto:moebiusSurfing@gmail.com)
+
+<br/>
 
 ## License
 [**MIT License**](https://github.com/moebiussurfing/ofxColorManager/blob/b29c56f7b0e374b6a6fe2406e45fbfaaf2726112/LICENSE)
