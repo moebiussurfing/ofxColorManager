@@ -62,7 +62,8 @@ Use the add-on inside your _Scene Render App_ when you want to use all the bundl
 #### 2. **Minimal Standalone**:
 **One single App**:  
 A **Lightweight** Mode into your _Scene Render App_.  
-Only using the **ofxColorClient** add-on. (Without the bigger **ofxColorManager**)  
+Only using the **ofxColorClient** add-on.  
+( Without the bigger **ofxColorManager** )  
 Just as a player or palettes browser, but without all the Engines and Tools.  
 Only included some minimal edit tools. Fewer dependencies.  
 
