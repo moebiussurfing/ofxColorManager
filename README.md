@@ -91,15 +91,13 @@ Ready to use pre-compiled versions for fast testing, or to have executable apps 
 
 ### 1. **PALETTO v1.0rc** 
 **Master App**  
-Works Standalone or Linked to a **CLIENT App**  
-( _SceneTEST_COLORiZED_ )  
+Works Standalone or Linked to a **CLIENT App** ( _SceneTEST_COLORiZED_ )  
 ( _Based on _1-example_Basic_ from **ofxColorManager**_ )  
 [Download Link](https://moebiussurfing.itch.io/ofxcolormanager)  
 
 ### 2. **SceneTEST_COLORiZED v1.0**
 **Client App**  
-Works Standalone or Linked to a **MASTER App**  
-( _Paletto v1.0_ )  
+Works Standalone or Linked to a **MASTER App** ( _Paletto v1.0_ )  
 ( _Based on _3-example_Scenes_ from **ofxColorClient**_ )  
 [Download Link](https://moebiussurfing.itch.io/ofxcolormanager)  
 
@@ -285,11 +283,11 @@ This is an example of a _3 colors palette_ file content:
 An addon by **@moebiusSurfing**  
 *( ManuMolina ) 2019-2021*  
 
-## Follow
+## Contact / Follow
 [Twitter](https://twitter.com/moebiusSurfing/)  
 [Instagram](https://www.instagram.com/moebiusSurfing/)  
 [YouTube](https://www.youtube.com/moebiusSurfing)  
-[email](mailto:moebiusSurfing@gmail.com)
+[Email](mailto:moebiusSurfing@gmail.com)
 
 <br/>
 
