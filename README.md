@@ -305,4 +305,33 @@ An addon by **@moebiusSurfing**
 ## License
 [**MIT License**](https://github.com/moebiussurfing/ofxColorManager/blob/b29c56f7b0e374b6a6fe2406e45fbfaaf2726112/LICENSE)
 
-<iframe frameborder="0" src="https://itch.io/embed/955466?bg_color=000000&amp;fg_color=c9c9c9&amp;link_color=8842f2&amp;border_color=383838" width="552" height="167"><a href="https://moebiussurfing.itch.io/paletto">​  Paletto v1.0rc by moebiussurfing</a></iframe>
+<div align="left">
+<!--
+<img src="./banner.gif">
+-->
+<img src="https://github.com/moebiussurfing/ofxColorManager/blob/develop/docs/itch.io/Paletto_Thumbnail.png">
+</div>
+
+<br/>
+<br/>
+
+<h1>📫 Contact / Follow</h1>
+
+<p>
+<strong> 
+  <em>
+moebiusSurfing, 2021
+  </em>
+<br/>
+( ManuMolina )
+
+</strong>
+</p>
+
+<p>
+<a href="https://twitter.com/moebiusSurfing/" rel="nofollow">Twitter</a> | 
+<a href="https://www.youtube.com/moebiusSurfing" rel="nofollow">YouTube</a> | 
+<a href="https://www.instagram.com/moebiusSurfing/" rel="nofollow">Instagram</a> | 
+<a href="https://github.com/moebiussurfing" target="_blank">GitHub</a> | 
+<a href="mailto:moebiussurfing@gmail.com" target="_blank">Email</a>
+</p>
