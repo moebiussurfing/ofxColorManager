@@ -91,9 +91,8 @@ void ofxColourLoversHelper::gui_Search()
 {
 	if (MODE_Search)
 	{
-		float ww, hh;
-		ww = PANEL_WIDGETS_WIDTH;
-		hh = PANEL_WIDGETS_WIDTH/2;
+		float ww= PANEL_WIDGETS_WIDTH;
+		float hh = PANEL_WIDGETS_WIDTH/3;
 
 		ImGuiWindowFlags flags = auto_resize1 ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
 		if (!auto_resize1) ImGui::SetWindowSize(ImVec2(ww, hh));
@@ -102,7 +101,7 @@ void ofxColourLoversHelper::gui_Search()
 
 		//--
 
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, PANEL_WIDGETS_HEIGHT));
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(ww, hh));
 
 		//----
 
@@ -270,156 +269,6 @@ void ofxColourLoversHelper::gui_Main()
 	//--
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, PANEL_WIDGETS_HEIGHT));
-
-	//----
-
-//	// 1. search panel
-//
-//	//static bool open_popup = false;
-//	//open_popup = MODE_Search;
-//
-//	if (MODE_Search)
-//	{
-//		static bool auto_resize2 = true;
-//		ImGuiWindowFlags flagsw2;
-//		flagsw2 = auto_resize2 ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
-//
-//		//flagsw2 |= flagsWindows;
-//		//flagsw2 |= ImGuiWindowFlags_NoTitleBar;
-//		//flagsw2 |= ImGuiWindowFlags_NoBackground;
-//		//flagsw2 |= ImGuiWindowFlags_NoDecoration;
-//
-//		if (ofxImGui::BeginWindow("COLOUR-LOVERS QUERY", mainSettings, flagsw2))
-//		{
-//			float _h = BUTTON_BIG_HEIGHT;
-//			float _hb = _h * 0.5;
-//			float _w100 = ImGui::GetContentRegionAvail().x;
-//
-//			ImGui::PushItemWidth(-1);
-//
-//			// search
-//			ImGui::Text("Type Keyword:");
-//
-//			char tab1[32];
-//			strncpy(tab1, textInput_temp1.c_str(), sizeof(tab1));
-//			tab1[sizeof(tab1) - 1] = 0;
-//
-//			//if (ImGui::InputText("", tab1, IM_ARRAYSIZE(tab1)), ImGuiInputTextFlags_EnterReturnsTrue))
-//			if (ImGui::InputText("", tab1, IM_ARRAYSIZE(tab1)))
-//			{
-//				textInput_temp1 = ofToString(tab1);
-//				ofLogNotice(__FUNCTION__) << "input: " << textInput_temp1;
-//
-//				if (textInput_temp1 != textInput_temp1_PRE)
-//				{
-//					textInput_temp1_PRE = textInput_temp1;
-//				}
-//			}
-//
-//			ImGui::PopItemWidth();
-//
-//			//--
-//
-//			//TODO:
-//			//to disable all other key commands
-//			bool b = bTextInputActive;
-//			bTextInputActive = ImGui::IsItemActive();
-//			//changed
-//			if (bTextInputActive != b) ofLogNotice(__FUNCTION__) << "TextInput : " << (bTextInputActive ? "ACTIVE" : "DISABLED");
-//
-//			//--
-//
-//			//blink when a new preset is editing
-//			float freq = 0.15;//speed freq
-//			float min = 0.20;
-//			float max = 0.80;
-//			float a = ofMap(glm::sin(freq * ofGetFrameNum()), -1, 1, min, max);
-//			ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.5f, 0.0f, 0.0f, a));
-//
-//			ImGui::PushItemWidth(-1);
-//
-//			if (ImGui::Button("SEARCH", ImVec2(_w100, _hb * 2)))
-//			{
-//				ofLogNotice(__FUNCTION__) << "searchPalettes: " << textInput_temp1_PRE;
-//
-//				bSearching = true;
-//				bSearch = true;
-//
-//				ofxColourLovers::searchPalettes(textInput_temp1_PRE, amountResults);
-//				//receiver callback will be called when colour lovers server replies to the quaery search 
-//
-//				lastSearch_Str = textInput_temp1_PRE;
-//
-//				//workflow
-//				//close search floating window
-//				//MODE_Search = false;//close
-//			}
-//
-//			ImGui::PopItemWidth();
-//
-//			ImGui::PopStyleColor();
-//
-//			//hide. not required
-//			//ImGui::PushItemWidth(-65);
-//			//ImGui::SliderInt("Amnt Max", &amountResults, 10, 100);
-//			//ImGui::PopItemWidth();
-//
-//			// spinner
-//			if (bSearching) ImGui::Text("Searching  %c", "|/-\\"[(int)(ImGui::GetTime() / 0.07f) & 3]);
-//
-//			//----
-//
-//			//hide to debug and simplify
-//			//#define EXTEND_SEARCH
-//#ifdef EXTEND_SEARCH
-//			//lover
-//			ImGui::Text("Lover Id:");
-//			std::string textInput_temp2 = "";
-//
-//			char tab2[32];
-//			strncpy(tab2, textInput_temp2.c_str(), sizeof(tab2));
-//			tab2[sizeof(tab2) - 1] = 0;
-//
-//			if (ImGui::InputText("", tab2, IM_ARRAYSIZE(tab2)))
-//			{
-//				ofLogNotice(__FUNCTION__) << "InputText:" << ofToString(tab2);
-//				textInput_temp2 = ofToString(tab2);
-//				ofLogNotice(__FUNCTION__) << "textInput_temp2:" << textInput_temp2;
-//
-//				lastSearch_Str = textInput_temp2;
-//				std::string s = textInput_temp2;
-//				ofStringReplace(s, " ", "%20");
-//				ofxColourLovers::getTopPalettesForLover(s, amountResults);
-//			}
-//
-//			//-
-//
-//			// palette
-//			ImGui::Text("Palette Id:");
-//			std::string textInput_temp3 = "";
-//
-//			char tab3[32];
-//			strncpy(tab3, textInput_temp3.c_str(), sizeof(tab3));
-//			tab3[sizeof(tab3) - 1] = 0;
-//
-//			if (ImGui::InputText("", tab3, IM_ARRAYSIZE(tab3)))
-//			{
-//				ofLogNotice(__FUNCTION__) << "InputText:" << ofToString(tab3);
-//				textInput_temp3 = ofToString(tab3);
-//				ofLogNotice(__FUNCTION__) << "textInput_temp2:" << textInput_temp3;
-//
-//				lastSearch_Str = textInput_temp3;
-//				ofxColourLovers::getPalette(lastSearch_Str);
-//		}
-//#endif
-//			//ImGui::Dummy(ImVec2(0, 2));
-//			//ImGui::PushItemWidth(-40);
-//			//ImGui::SliderInt("Amnt Max", &amountResults, 25, 100);
-//			//ImGui::PopItemWidth();
-//
-//	}
-//		ofxImGui::EndWindow(mainSettings);
-//}
 
 	//----
 
@@ -661,6 +510,7 @@ void ofxColourLoversHelper::gui_Main()
 			ImGui::Dummy(ImVec2(0, 5));
 
 			//if (!bSearch /*&& bFavorites*/)//TODO: showing wrong, the favs names not the serach list (?) 
+
 			if (!bSearch)
 			{
 				if (palettes.size() != 0)
@@ -780,15 +630,16 @@ void ofxColourLoversHelper::gui_Main()
 			ImGuiColorEditFlags_NoPicker |
 			ImGuiColorEditFlags_NoTooltip;
 
-		//macOS
-		if (palettes.size() > 0) {
+		// macOS
+		if (palettes.size() > 0) 
+		{
 			vector<ofColor> p = palettes[currPalette].colours;
-			//        const auto p = palettes[currPalette].colours;
-			//         auto p = palettes[currPalette].colours;
+			//const auto p = palettes[currPalette].colours;
+			//auto p = palettes[currPalette].colours;
 
-					//myPalette_BACK
+			//myPalette_BACK
 
-					// fit width
+			// fit width
 			float wb = (_w100 / (int)p.size());// -_spc;
 			float hb = BUTTON_BIG_HEIGHT;
 
@@ -805,6 +656,7 @@ void ofxColourLoversHelper::gui_Main()
 				ImGui::PopID();
 			}
 		}
+
 		//-
 
 		if (ImGui::Button("Randomize", ImVec2(_w100, 2 * _hb)))

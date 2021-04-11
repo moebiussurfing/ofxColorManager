@@ -286,88 +286,7 @@ ofxColorManager::ofxColorManager()
 
 	//--
 
-	helpInfo = "";
-	helpInfo += "      HELP KEY COMMANDS\n\n";
-	//helpInfo += "           HELP\n\n";
-	helpInfo += "\n";
-	helpInfo += "\n";
-
-	helpInfo += "H            HELP\n";
-	helpInfo += "G            GUI\n";
-	helpInfo += "F            FULL SCREEN\n";
-	helpInfo += "Ctrl+L       UNLOCK DOCK\n";
-	helpInfo += "A            ABOUT\n";
-	helpInfo += "\n\n";
-
-	helpInfo += "         LAYOUTS\n";
-	helpInfo += "\n";
-	helpInfo += "TAB          >>\n";
-	helpInfo += "F1           DEFAULT\n";
-	helpInfo += "F2           PRESETS\n";
-	helpInfo += "F3           ENGINES\n";
-	helpInfo += "F4           MINIMAL\n";
-	helpInfo += "F5           USER\n";
-	if (SHOW_Advanced) helpInfo += "SHIFT        DOCK EDIT\n";
-	helpInfo += "\n\n";
-
-	helpInfo += "         ACTIONS\n";
-	helpInfo += "\n";
-	helpInfo += "SPACE        >> PRESET\n";
-	helpInfo += "Left|Right   <> PRESET\n";
-	helpInfo += "+Ctrl        <> SHIFT COLORS\n";
-	helpInfo += "\n";
-
-	helpInfo += "-|+          AMOUNT COLORS\n";
-	if (SHOW_Advanced) helpInfo += "\n";
-	helpInfo += "RETURN       RANDOM\n";
-	if (SHOW_Advanced) helpInfo += "+Ctrl        RANDOM+\n";
-	if (SHOW_Advanced) helpInfo += "\n";
-	helpInfo += "BACKSPACE    AUX\n";
-	if (SHOW_Advanced) helpInfo += "  +Ctrl      AUX+\n";
-	if (SHOW_Advanced) helpInfo += "\n";
-	helpInfo += "Arrows       LIBRARY COLORS\n";
-	helpInfo += "+Ctrl        LIBRARY PAGE\n";
-	helpInfo += "\n\n";
-
-	helpInfo += "         ENGINES\n";
-	helpInfo += "\n";
-	helpInfo += "TAB+Ctrl     >>\n";
-	helpInfo += "             THEORY\n";
-	helpInfo += "             RANGE\n";
-	helpInfo += "             LOVERS\n";
-	helpInfo += "             PICTURE\n";
-	helpInfo += "\n";
-	helpInfo += "Down|Up      ENGINE TYPES\n";
-	helpInfo += "\n\n";
-
-
-	if (SHOW_Advanced) {
-		helpInfo += "         PANELS\n";
-		helpInfo += "\n";
-		helpInfo += "Ctrl+\n";
-		helpInfo += "F1           PALETTE\n";
-		helpInfo += "F2           PRESETS\n";
-		helpInfo += "F3           KIT\n";
-		helpInfo += "F4           EDITOR\n";
-		helpInfo += "F5           PICKER\n";
-		helpInfo += "F6           LIBRARY\n";
-		helpInfo += "F7           GRADIENT\n";
-		helpInfo += "F8           DEMO\n";
-		helpInfo += "F9           LAYOUTS\n";
-		helpInfo += "F10          EXPORT\n";
-		helpInfo += "F11          ADVANCED\n";
-		helpInfo += "\n\n";
-	}
-	else
-	{
-		helpInfo += "[ more keys on ADVANCED Mode ]\n";
-	}
-
-	//helpInfo += "TEST\n";		 
-	//helpInfo += "D              DEMO SCENE\n";
-	//helpInfo += "T              GRADIENT TEST\n";
-	//helpInfo += "m              MINI PREVIEW\n";
-	//helpInfo += "M              DEBUG MOUSE RULER\n";
+	buildHelpInfo();
 }
 
 //--------------------------------------------------------------
@@ -1080,7 +999,6 @@ void ofxColorManager::startup()
 	//--
 
 	// splash screen
-	//splash.setup();
 	splash.setup("../../../docs/itch.io/Paletto_Banner.png");
 
 	//--
@@ -1393,13 +1311,6 @@ void ofxColorManager::draw_PresetName()
 //--------------------------------------------------------------
 void ofxColorManager::draw(ofEventArgs & args)
 {
-	//// splash screen
-
-	////splash.draw();
-	//if (splash.draw()) return;
-
-	////--
-
 	if (SHOW_Scene)
 	{
 		// background
@@ -1541,8 +1452,6 @@ void ofxColorManager::draw(ofEventArgs & args)
 	// splash screen
 
 	splash.draw();
-	//if (splash.draw()) return;
-
 }
 
 //--------------------------------------------------------------
@@ -2290,7 +2199,7 @@ void ofxColorManager::gui_Editor()
 
 				if (ImGui::CollapsingHeader("COOLORS.CO", ImGuiWindowFlags_None))
 				{
-					if (ImGui::Button("PASTE", ImVec2(_w50, _h * 0.5)))
+					if (ImGui::Button("PASTE / IMPORT", ImVec2(_w50, _h * 0.5)))
 					{
 						ofLogNotice(__FUNCTION__) << "IMPORT URL COOLORS";
 						doImportPaletteCoolors(ofGetClipboardString());
@@ -2298,7 +2207,7 @@ void ofxColorManager::gui_Editor()
 
 					ImGui::SameLine();
 
-					if (ImGui::Button("COPY", ImVec2(_w50, _h * 0.5)))
+					if (ImGui::Button("COPY / EXPORT", ImVec2(_w50, _h * 0.5)))
 					{
 						ofLogNotice(__FUNCTION__) << "EXPORT URL COOLORS";
 						doExportPaletteCoolors();
@@ -3118,18 +3027,18 @@ void ofxColorManager::gui_LinkExport()
 			ImGui::Dummy(ImVec2(0.0f, 2.0f));
 
 			// coolors.com import export
-			if (ImGui::CollapsingHeader("Coolors.co"))
+			if (ImGui::CollapsingHeader("COOLORS.CO"))
 			{
 				//ImGui::Text("Coolors.co");
 				//https://coolors.co/f53c65-470229-05a66e
 
-				if (ImGui::Button("Import/Paste", ImVec2(_w50, _h))) {
+				if (ImGui::Button("PASTE / IMPORT", ImVec2(_w50, _h))) {
 
 					doImportPaletteCoolors(ofGetClipboardString());
 				}
 				ImGui::SameLine();
 
-				if (ImGui::Button("Export/Copy", ImVec2(_w50, _h))) {
+				if (ImGui::Button("COPY / EXPORT", ImVec2(_w50, _h))) {
 
 					doExportPaletteCoolors();
 				}
@@ -3909,19 +3818,21 @@ void ofxColorManager::gui_Panels()
 
 		//-
 
-#ifdef LINK_TCP_MASTER_CLIENT_KU
 		float a;
-		bool b = TCP_Sender.connected() && TCP_Sender.enabled() && bExportByTCP;
+		bool b;
+#ifdef LINK_TCP_MASTER_CLIENT_KU
+		b = TCP_Sender.connected() && TCP_Sender.enabled() && bExportByTCP;
+#endif
+#ifdef LINK_TCP_MASTER_CLIENT_OF
+		b = TCP_Sender.isConnected() && bExportByTCP;
+#endif
 		if (b) a = ofxSurfingHelpers::getFadeBlink();
 		else a = 1.0f;
 		if (b) ImGui::PushStyleColor(ImGuiCol_Border, (ImVec4)ImColor::HSV(0.5f, 0.0f, 1.0f, a));
-#endif
 
 		ofxSurfingHelpers::AddBigToggle(SHOW_LinkExport, _w, _h, false); ImGui::SameLine();
 
-#ifdef LINK_TCP_MASTER_CLIENT_KU
 		if (b) ImGui::PopStyleColor();
-#endif
 
 		//-
 
@@ -4472,7 +4383,10 @@ void ofxColorManager::gui_InputText()
 
 	//-
 
-	ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0, 0, 0, 0.05));// make it transparent
+	// make it transparent
+	ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0, 0, 0, 0.1));
+	//ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0, 0, 0, 0.05));
+
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(_ww, _hh));
 	ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.0);
 
@@ -4489,6 +4403,7 @@ void ofxColorManager::gui_InputText()
 		THEME_NIGHT
 	};
 	THEME_COLORS _THEME;
+
 	//select one
 	if (myDEMO_Svg.DEMO2_Enable) _THEME = THEME_DAY;//this demo has white bg
 	else _THEME = THEME_NIGHT;
@@ -4613,6 +4528,7 @@ void ofxColorManager::gui_InputText()
 
 	ImGui::PopStyleVar();
 	ImGui::PopStyleVar();
+
 	ImGui::PopStyleColor();
 }
 #endif
@@ -6213,6 +6129,18 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		}
 	}
 
+	// link workflow
+	else if (name == SHOW_LinkExport.getName())
+	{
+		if (SHOW_LinkExport)
+
+			// workflow
+			if (!bExportByTCP)
+			{
+				bExportByTCP = true;
+			}
+	}
+
 	//-
 
 #ifdef LINK_TCP_MASTER_CLIENT_KU
@@ -6224,7 +6152,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		if (bExportByTCP)
 		{
 			setupLink();
-		}
+}
 		else
 		{
 			//auto srv = TCP_Sender.TCPServerRef();
@@ -6323,8 +6251,11 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			if (SHOW_EditTheme) SHOW_EditTheme = false;
 		}
 
-		////wf
+		//// workflow
 		//if (!SHOW_MenuBar) SHOW_MenuBar = true;
+
+		// workflow
+		buildHelpInfo();
 	}
 
 	// layout
@@ -7807,8 +7738,6 @@ void ofxColorManager::mousePressed(ofMouseEventArgs &eventArgs)
 		}
 	}
 	if (DEMO5_Enable || SHOW_About) myDEMO_Spheres.start();
-
-	if (splash.isSplashing()) splash.stop();
 }
 
 //--------------------------------------------------------------
@@ -8991,7 +8920,7 @@ void ofxColorManager::draw_Link(int x, int y)
 	//	ss += storeText[i];
 	//}
 	//ofxSurfingHelpers::drawTextBoxed(font, ss, x, y);
-}
+	}
 #endif
 
 //--------------------------------------------------------------
@@ -9045,6 +8974,94 @@ void ofxColorManager::doRandomizeColorPicker()
 			times++;
 		}
 	}
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::buildHelpInfo()
+{
+
+	helpInfo = "";
+	helpInfo += "      HELP KEY COMMANDS\n\n";
+	//helpInfo += "           HELP\n\n";
+	helpInfo += "\n";
+	helpInfo += "\n";
+
+	helpInfo += "H            HELP\n";
+	helpInfo += "G            GUI\n";
+	helpInfo += "F            FULL SCREEN\n";
+	helpInfo += "L            UNLOCK DOCK\n";
+	helpInfo += "A            ABOUT\n";
+	helpInfo += "\n\n";
+
+	helpInfo += "         LAYOUTS\n";
+	helpInfo += "\n";
+	helpInfo += "TAB          >>\n";
+	helpInfo += "F1           DEFAULT\n";
+	helpInfo += "F2           PRESETS\n";
+	helpInfo += "F3           ENGINES\n";
+	helpInfo += "F4           MINIMAL\n";
+	helpInfo += "F5           USER\n";
+	if (SHOW_Advanced) helpInfo += "SHIFT        DOCK EDIT\n";
+	helpInfo += "\n\n";
+
+	helpInfo += "         ACTIONS\n";
+	helpInfo += "\n";
+	helpInfo += "SPACE        >> PRESET\n";
+	helpInfo += "Left|Right   <> PRESET\n";
+	helpInfo += "+Ctrl        <> SHIFT COLORS\n";
+	helpInfo += "\n";
+
+	helpInfo += "-|+          AMOUNT COLORS\n";
+	if (SHOW_Advanced) helpInfo += "\n";
+	helpInfo += "RETURN       RANDOM\n";
+	if (SHOW_Advanced) helpInfo += "+Ctrl        RANDOM+\n";
+	if (SHOW_Advanced) helpInfo += "\n";
+	helpInfo += "BACKSPACE    AUX\n";
+	if (SHOW_Advanced) helpInfo += "  +Ctrl      AUX+\n";
+	if (SHOW_Advanced) helpInfo += "\n";
+	helpInfo += "Arrows       LIBRARY COLORS\n";
+	helpInfo += "+Ctrl        LIBRARY PAGE\n";
+	helpInfo += "\n\n";
+
+	helpInfo += "         ENGINES\n";
+	helpInfo += "\n";
+	helpInfo += "TAB+Ctrl     >>\n";
+	helpInfo += "             THEORY\n";
+	helpInfo += "             RANGE\n";
+	helpInfo += "             LOVERS\n";
+	helpInfo += "             PICTURE\n";
+	helpInfo += "\n";
+	helpInfo += "Down|Up      ENGINE TYPES\n";
+	helpInfo += "\n\n";
+
+	if (SHOW_Advanced)
+	{
+		helpInfo += "         PANELS\n";
+		helpInfo += "\n";
+		helpInfo += "Ctrl+\n";
+		helpInfo += "F1           PALETTE\n";
+		helpInfo += "F2           PRESETS\n";
+		helpInfo += "F3           KIT\n";
+		helpInfo += "F4           EDITOR\n";
+		helpInfo += "F5           PICKER\n";
+		helpInfo += "F6           LIBRARY\n";
+		helpInfo += "F7           GRADIENT\n";
+		helpInfo += "F8           DEMO\n";
+		helpInfo += "F9           LAYOUTS\n";
+		helpInfo += "F10          EXPORT\n";
+		helpInfo += "F11          ADVANCED\n";
+		helpInfo += "\n\n";
+	}
+	else
+	{
+		helpInfo += "[ more keys on ADVANCED Mode ]\n";
+	}
+
+	//helpInfo += "TEST\n";		 
+	//helpInfo += "D              DEMO SCENE\n";
+	//helpInfo += "T              GRADIENT TEST\n";
+	//helpInfo += "m              MINI PREVIEW\n";
+	//helpInfo += "M              DEBUG MOUSE RULER\n";
 }
 
 //--------------------------------------------------------------
@@ -9603,6 +9620,13 @@ void ofxColorManager::doImportPaletteCoolors(std::string url)
 {
 	ofLogNotice(__FUNCTION__) << "----------------- IMPORT COOLORS -----------------" << endl;
 	ofLogNotice(__FUNCTION__) << url;
+
+	//avoid exception
+	if (!ofIsStringInString(url, "https://coolors.co/"))
+	{
+		ofLogError(__FUNCTION__) << "Wrong url format! " << url;
+		return;
+	}
 
 	//static int i = 0;
 

@@ -9,17 +9,17 @@
 
 TODO:
 
-+ fix after save new, stay reload last saved.
++ alert when saving a preset with an already located filename. ask to overwrite
 + layout manager. save show toggles too. a lite ofxPresetsManager?
 + export Adobe ASE
 + add tween transitions to presets
 + undo engine
++ global sat / bright editor for editor palette
 + fix demo1 camera and add tweening random jumps
++ add cosine/shift gradients engine https://github.com/soufianekhiat/DearWidgets
 + check theory picker if calls too much callbacks
 + plugins for UE4 / Unity3D / Processing ?
-+ ofxNative. open system file browser. open browser
-+ gloabl sat/bright editor for editor palette
-+ add cosine/shift gradients engine https://github.com/soufianekhiat/DearWidgets
++ ofxNative ?
 
 
 BUGS:
@@ -28,7 +28,6 @@ BUGS:
 + fix text input boxes when docking mode. to avoid floating text input box
 + TCP port number switch, some problems on reconnect bc threading not implemented. should use some sync addon or OSC.
 + ImGui pickers hangs flickering sometimes bc max width
-+ there's a bug when loaging presets from colour lovers with rare chars. we should erase all chars like / * - \ 
 
 
 */
@@ -39,7 +38,16 @@ BUGS:
 // some preprocessor directives
 // mainly for debug purposes only
 
-#define MAKE_RELEASE_VERSION // disables console and other stuff, for final release version. name to Paletto v1.0
+//#define MAKE_RELEASE_VERSION // disables console and other stuff, for final release version. name to Paletto v1.0
+
+//--
+
+// NOTE: can't be disabled now..
+// tcp modes: enable only one of the two modes
+#define LINK_TCP_MASTER_CLIENT_OF
+//#define LINK_TCP_MASTER_CLIENT_KU
+
+//--
 
 #ifdef MAKE_RELEASE_VERSION 
 //#define APP_RELEASE_NAME "PALETTO v1.0rc"
@@ -64,17 +72,10 @@ BUGS:
 #define COLOR_STRIP_COLOR_HEIGHT 40
 #define BUTTON_COLOR_SIZE 40
 #define BUTTON_BIG_HEIGHT 50
-#define PANEL_WIDGETS_WIDTH 200
+#define PANEL_WIDGETS_WIDTH 250
 #define PANEL_WIDGETS_HEIGHT 500
 
 //----------
-
-// NOTE: can't be disabled now..
-// tcp modes: enable only one of the two modes
-//#define LINK_TCP_MASTER_CLIENT_OF
-#define LINK_TCP_MASTER_CLIENT_KU
-
-//--
 
 #define INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
 
@@ -1219,5 +1220,7 @@ private:
 	}
 
 	SplashScreen splash;
+
+	void buildHelpInfo();
 
 };
