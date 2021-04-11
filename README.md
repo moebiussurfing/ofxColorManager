@@ -294,16 +294,24 @@ This is an example of a _3 colors palette_ file content:
 An addon by **@moebiusSurfing**  
 *( ManuMolina ) 2019-2021*  
 
-## Contact / Follow
-[Twitter](https://twitter.com/moebiusSurfing/)  
-[Instagram](https://www.instagram.com/moebiusSurfing/)  
-[YouTube](https://www.youtube.com/moebiusSurfing)  
-[Email](mailto:moebiusSurfing@gmail.com)
+<br/>
+
+<h1>📫 Contact / Follow</h1>
+
+<p>
+<a href="https://twitter.com/moebiusSurfing/" rel="nofollow">Twitter</a> | 
+<a href="https://www.youtube.com/moebiusSurfing" rel="nofollow">YouTube</a> | 
+<a href="https://www.instagram.com/moebiusSurfing/" rel="nofollow">Instagram</a> | 
+<a href="https://github.com/moebiussurfing" target="_blank">GitHub</a> | 
+<a href="mailto:moebiussurfing@gmail.com" target="_blank">Email</a>
+</p>
 
 <br/>
 
 ## License
 [**MIT License**](https://github.com/moebiussurfing/ofxColorManager/blob/b29c56f7b0e374b6a6fe2406e45fbfaaf2726112/LICENSE)
+
+<br/>
 
 ### 🔭 Comming Soon...
 
@@ -317,25 +325,3 @@ An addon by **@moebiusSurfing**
 </div>
 
 <br/>
-<br/>
-
-<h1>📫 Contact / Follow</h1>
-
-<p>
-<strong> 
-  <em>
-moebiusSurfing, 2021
-  </em>
-<br/>
-( ManuMolina )
-
-</strong>
-</p>
-
-<p>
-<a href="https://twitter.com/moebiusSurfing/" rel="nofollow">Twitter</a> | 
-<a href="https://www.youtube.com/moebiusSurfing" rel="nofollow">YouTube</a> | 
-<a href="https://www.instagram.com/moebiusSurfing/" rel="nofollow">Instagram</a> | 
-<a href="https://github.com/moebiussurfing" target="_blank">GitHub</a> | 
-<a href="mailto:moebiussurfing@gmail.com" target="_blank">Email</a>
-</p>
