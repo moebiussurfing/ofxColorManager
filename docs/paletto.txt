@@ -1,0 +1,90 @@
+Paletto is a Color Managent tool to create palettes.
+
+It's a bundle of Tools and Engines to design and organize color palettes presets for your creative code scenes.
+
+It is coded on C++ using openFrameworks, and it's based on my opensourced ofxColorManager add-on.
+
+DISCLAIMER:
+
+For the momment, the app DO NOT export palettes for design tools like Adobe Photoshop/Illustrator, Sketch or similar. Is not intended to be an alternative to the online Adobe color manager or other standalone or web-based "classic" designer solutions.  
+
+Instead of this:
+
+The main purpose of this app, is to be paired linked with other custom Creative Coding Apps. Usually done with frameworks like openFrameworks itself, Processing, Unity3D or UnrealEngine between others.
+
+For the momment there's only one client add-on, obviously for openFrameworks.
+
+If you want to use your Paletto JSON preset files in your custom App (without using openFrameworks):
+
+1. Faster way is that you code your own JSON reader classes by yourself.
+
+2. Longer way would be to make a plug-in/add-on for your framework by yourself.
+This is not specially difficult. Paletto can be linked using a simple TCP packets or watching changes on a TEMP JSON file to hot-reload the currently edited preset.
+
+Depending on users interest or myself future requeriments, next updates could maybe have plug-ins for other tools or will export other formats for Adobe (.ase) or similar.
+
+* Engines
+
+Send palettes to the editor.
+
+    10+ Algorithmic Theory Schemes from a base color.
+
+    Complementary, Compound, Monochrome, Analogous, Triad...
+
+    10+ Range Spaces between two colors.
+
+    RGB, LAB, CMYK, XYZ...
+
+    Colour Lovers API to search keywords online, handle favorites, and history search.
+
+    Extract the dominant colors from image files.
+
+    Sorting by Dominance, Hue, Saturation or Brightness.
+
+* Tools
+
+Management of Palettes
+
+    Editor:
+
+        Receive from the Engines and organize the palette colors.
+
+        Edit using the color pickers and the Pantone colors library.
+
+        Add, remove, sort, shift, and drag colors.
+
+    Kit of Presets Manager:
+
+        Receive palettes, name and save to presets kit.
+
+        Tweak, delete or duplicate presets from your kit.
+
+        Fast preview all your presets on a scrollable clickable panel.
+
+        Your user kit is ready to use (also in other apps using the ofxColorClient player.)
+
+    Gradient Designer:
+
+        Auto-generates a gradient for each palette.
+
+        Exposes the all the gradient and another extra pickable color.
+
+        Tweackeable curve to deform spread distribution.
+
+Other Features
+
+    Demo Scenes for fast palette preview. Colored SVG and bubble scenes.
+
+    ImGui based GUI. Docked and customizable with layouts management.
+
+    Hue wheel and rectangle Color Pickers with HSV sliders and clipboard copy/paste codes.
+
+    Pantone library with 2000+ colors.
+
+    Kit exporter of all JSON preset files to your project data path. (Also to be used on a Standalone player/Client app.)
+
+Author:
+
+Coded by @moebiusSurfing
+
+( ManuMolina ) 2019-2021

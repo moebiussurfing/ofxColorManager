@@ -3851,7 +3851,25 @@ void ofxColorManager::gui_Panels()
 		ofxSurfingHelpers::AddBigToggle(SHOW_PanelEngines, _w, _h); ImGui::SameLine();
 		ofxSurfingHelpers::AddBigToggle(gradientEngine.SHOW_Gradient, _w, _h); ImGui::SameLine();
 		//ofxSurfingHelpers::AddBigToggle(SHOW_MINI_Preview, _w, _h);//ImGui::SameLine();
-		ofxSurfingHelpers::AddBigToggle(SHOW_LinkExport, _w, _h); ImGui::SameLine();
+		
+		//-
+
+#ifdef LINK_TCP_MASTER_CLIENT_KU
+		float a;
+		bool b = TCP_Sender.connected() && TCP_Sender.enabled() && bExportByTCP;
+		if (b) a = ofxSurfingHelpers::getFadeBlink();
+		else a = 1.0f;
+		if(b) ImGui::PushStyleColor(ImGuiCol_Border, (ImVec4)ImColor::HSV(0.5f, 0.0f, 1.0f, a));
+#endif
+
+		ofxSurfingHelpers::AddBigToggle(SHOW_LinkExport, _w, _h, false); ImGui::SameLine();
+
+#ifdef LINK_TCP_MASTER_CLIENT_KU
+		if (b) ImGui::PopStyleColor();
+#endif
+
+		//-
+
 		ofxSurfingHelpers::AddBigToggle(SHOW_Demos, _w, _h); ImGui::SameLine();
 		ofxSurfingHelpers::AddBigToggle(SHOW_Layouts, _w, _h);
 
@@ -6154,6 +6172,10 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		}
 		else
 		{
+			//auto srv = TCP_Sender.TCPServerRef();
+			//srv.
+
+			//is not closing..
 			TCP_Sender.close();
 		}
 	}
@@ -9118,12 +9140,12 @@ void ofxColorManager::gui_MenuBar()
 			// coolors.com import export
 			//https://coolors.co/f53c65-470229-05a66e
 
-			if (ImGui::MenuItem("Import from Coolors", "paste url")) {
+			if (ImGui::MenuItem("Import from Coolors.co", "paste url")) {
 
 				doImportPaletteCoolors(ofGetClipboardString());
 			}
 
-			if (ImGui::MenuItem("Export to Coolors", "copy url")) {
+			if (ImGui::MenuItem("Export to Coolors.co", "copy url")) {
 
 				doExportPaletteCoolors();
 			}

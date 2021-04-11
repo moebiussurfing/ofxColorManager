@@ -207,6 +207,7 @@ No need to add them manually with the **OF Project Generator**:
 * [ofxColorPalette](https://github.com/aspeteRakete/ofxColorPalette)  
 * [ofxColorTheory](https://github.com/kasparsj/ofxColorTheory)  
 * [ofxColourLovers](https://github.com/borg/ofxColourLovers)  
+* [ofxColorQuantizer](https://github.com/mantissa/ofxColorQuantizer)  
 * [ofxHttpUtils](https://github.com/arturoc/ofxHttpUtils)  
 * [ofxSimpleTimer](https://github.com/HeliosInteractive/ofxSimpleTimer)  
 
@@ -217,7 +218,16 @@ For **ofxColorClient**:
 * [ofxSerializer](https://github.com/bakercp/ofxSerializer)  
 * [ofxSimpleSlider](https://github.com/danomatika/ofxPd/blob/master/pitchShifter/src/ofxSimpleSlider.h)  
 
-*Thanks a lot to all these ofxAddons coders. Look into each folder for authoring credits, original forks, and license info.*  
+*Thanks a lot to all these ofxAddons coders. Look into each folder for authoring CREDITS, original forks, and license info.*  
+  </p>
+</details>
+
+<details>
+  <summary>CREDITS</summary>
+  <p>
+
+*List of GitHub names of all coders of used ofxAddons:*  
+@jvcleave, @Daandelange, @roymacdonald, @bakercp, @kuflex, @borg, @mantissa, @makobouzu, @aspeteRakete, @kasparsj, @arturoc, @HeliosInteractive, @frauzufall, @armadillu, @kylemcdonald.
   </p>
 </details>
 

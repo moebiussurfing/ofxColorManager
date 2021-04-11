@@ -39,11 +39,11 @@ BUGS:
 // some preprocessor directives
 // mainly for debug purposes only
 
-#define MAKE_RELEASE_VERSION // disables console and other stuff, for final release version
+#define MAKE_RELEASE_VERSION // disables console and other stuff, for final release version. name to Paletto v1.0
 
 #ifdef MAKE_RELEASE_VERSION 
-#define APP_RELEASE_NAME "PALETTO v1.0rc"
-//#define APP_RELEASE_NAME "PALETTO v1.0"
+//#define APP_RELEASE_NAME "PALETTO v1.0rc"
+#define APP_RELEASE_NAME "PALETTO v1.0"
 #else
 #define APP_RELEASE_NAME "ofxColorManager"
 #endif
@@ -110,7 +110,7 @@ BUGS:
 //----
 
 // tcp link
-
+// only one of the two
 #ifdef LINK_TCP_MASTER_CLIENT_OF
 #include "ofxNetwork.h"
 #endif
@@ -127,7 +127,7 @@ BUGS:
 
 #include "presets/PresetPalette.h"
 
-// demo scenes
+// demo scenes 
 #include "demo/DEMO_Scene.h"
 #include "demo/DEMO_SceneSpheres.h"
 #include "ofxSCENE-SVG.h"
@@ -320,7 +320,7 @@ private:
 	ofParameter<bool> SHOW_PanelEngines{ "ENGINES", true };
 	//shows advanced panels to tweak layout or workflow behaviour
 	
-	ofParameter<bool> Lock_DockingLayout{ "Lock Docking", true };
+	ofParameter<bool> Lock_DockingLayout{ "LOCK DOCK", true };
 
 	ofParameter<bool> bPlaySlideShow{ "Play Slide-Show", false };
 	ofParameter<float> auto_pilot_Duration{ "Time", 1, 0.1, 5 };

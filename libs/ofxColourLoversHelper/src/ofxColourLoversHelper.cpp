@@ -93,7 +93,7 @@ void ofxColourLoversHelper::gui_Search()
 	{
 		float ww, hh;
 		ww = PANEL_WIDGETS_WIDTH;
-		hh = PANEL_WIDGETS_HEIGHT;
+		hh = PANEL_WIDGETS_WIDTH/2;
 
 		ImGuiWindowFlags flags = auto_resize1 ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
 		if (!auto_resize1) ImGui::SetWindowSize(ImVec2(ww, hh));
