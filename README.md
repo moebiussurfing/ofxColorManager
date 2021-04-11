@@ -305,6 +305,10 @@ An addon by **@moebiusSurfing**
 ## License
 [**MIT License**](https://github.com/moebiussurfing/ofxColorManager/blob/b29c56f7b0e374b6a6fe2406e45fbfaaf2726112/LICENSE)
 
+### 🔭 Comming Soon...
+
+<br/>
+
 <div align="left">
 <!--
 <img src="./banner.gif">
