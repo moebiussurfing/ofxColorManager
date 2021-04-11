@@ -130,12 +130,12 @@ Works Standalone or Linked to a **MASTER App** : **_Paletto v1.0_**
   <summary>Other Features</summary>
   <p>
 
-* Import and export [Coolors.co](https://coolors.co/palettes/trending) URL format using clipboard copy/paste.  	
-* **Demo Scenes** for fast palette preview. Colored SVG and bubble scenes.
-* **ImGui** based GUI. Docked and customizable with layouts presets management.
-* Hue wheel and rectangle **Color Pickers** with **HSV** sliders and clipboard copy/paste codes.
-* **Pantone** library with **2000+ colors**.
-* Kit exporter of all **JSON** preset files to your project data path. (Can be used on the Standalone Client App.)
+  * Import and export [Coolors.co](https://coolors.co/palettes/trending) URL format using clipboard copy/paste.  	
+  * **Demo Scenes** for fast palette preview. Colored SVG with blending and Bubble scenes.
+  * **ImGui** based GUI. Docked and customizable with layouts presets management.
+  * Hue wheel and rectangle **Color Pickers** with **HSV** sliders and clipboard copy/paste codes.
+  * **Pantone** library with **2000+ colors**.
+  * Kit exporter of all **JSON** preset files to your project data path. (Can be used on the Standalone Client App.)
   </p>
 </details>
 

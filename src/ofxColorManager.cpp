@@ -1080,7 +1080,8 @@ void ofxColorManager::startup()
 	//--
 
 	// splash screen
-	splash.setup();
+	//splash.setup();
+	splash.setup("../../../docs/itch.io/Paletto_Banner.png");
 
 	//--
 }
@@ -1410,7 +1411,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 		if (background_Draw_ENABLE)
 		{
 			_cBg = color_BackGround.get();
-	}
+		}
 #endif
 		// using picked color gradient 
 		if (!myDEMO_Svg.DEMO2_BgWhite || (myDEMO_Svg.DEMO2_Enable && myDEMO_Svg.fileIndex == 0))
@@ -1456,7 +1457,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 			// info
 			if (SHOW_Name) draw_PresetName();
 		}
-}
+	}
 
 	//--
 
@@ -2834,9 +2835,9 @@ void ofxColorManager::gui_Library()
 				ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
 				ofxImGui::AddParameter(colorBrowser.ENABLE_keys);
-		}
+			}
 #endif
-	}
+		}
 
 		//--
 
@@ -3057,7 +3058,7 @@ void ofxColorManager::gui_Library()
 		{
 			refresh_FromPicked();
 		}
-}
+	}
 
 	ofxImGui::EndWindow(mainSettings);
 
@@ -3219,8 +3220,8 @@ void ofxColorManager::gui_LinkExport()
 
 				ImGui::Checkbox("Auto-Resize", &auto_resize);
 			}
+		}
 	}
-}
 	ofxImGui::EndWindow(mainSettings);
 
 	ImGui::PopStyleVar();
@@ -3538,11 +3539,11 @@ void ofxColorManager::gui_Advanced()
 			ofxImGui::AddParameter(ENABLE_keys);
 			ImGui::Checkbox("Locked Keys", &bBlockKeys);
 		}
-		}
+	}
 	ofxImGui::EndWindow(mainSettings);
 
 	ImGui::PopStyleVar();
-	}
+}
 #endif
 //--------------------------------------------------------------
 void ofxColorManager::gui_LayoutsPanel()
@@ -4374,12 +4375,12 @@ void ofxColorManager::gui_Background()
 			//TODO: 
 			//? should update only when changed
 			if (bChanged) color_BackGround = color;
-				}
-			}
+		}
+	}
 	ofxImGui::EndWindow(mainSettings);
 
 	ImGui::PopStyleVar();
-		}
+}
 #endif
 //--------------------------------------------------------------
 void ofxColorManager::gui_Kit()
@@ -4595,12 +4596,12 @@ void ofxColorManager::gui_InputText()
 					//--
 
 					refresh_FilesSorting(textInput_New);
-		}
+				}
 				else ofLogError(__FUNCTION__) << "Empty name on textInput !";
-	}
+			}
 			ImGui::PopStyleColor();
 #endif
-}
+		}
 
 		ImGui::Dummy(ImVec2(0.0f, 5.0f));
 	}
@@ -4800,7 +4801,7 @@ void ofxColorManager::gui_Presets()
 				else ofLogError(__FUNCTION__) << "Empty name on textInput !";
 			}
 			ImGui::PopStyleColor();
-	}
+		}
 		else
 		{
 			ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.5f, 0.0f, 0.0f, a));
@@ -4998,7 +4999,7 @@ void ofxColorManager::gui_Presets()
 		//ImGui::Dummy(ImVec2(0.0f, 2.0f));
 		//if (SHOW_Kit) ofxImGui::AddParameter(AutoScroll);
 		//ImGui::Checkbox("Auto-Resize", &auto_resize);
-}
+	}
 
 	ofxImGui::EndWindow(mainSettings);
 
@@ -7127,6 +7128,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 		//--
 
+		// general key commands
+
 		if (false) {}
 
 		// help
@@ -7136,7 +7139,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		}
 
 		// about
-		else if ((key == 'a') /*&& mod_CONTROL*/)
+		else if ((key == 'a' && !mod_CONTROL && !mod_ALT) /*&& mod_CONTROL*/)
 		{
 			SHOW_About = !SHOW_About;
 		}
@@ -7151,18 +7154,19 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		}
 
 		// advanced Ctrl+Alt+a
-		else if (key == 'a' && mod_CONTROL&& mod_ALT)
+		else if (key == 'a' && mod_CONTROL && mod_ALT)
 		{
 			SHOW_Advanced = !SHOW_Advanced;
 		}
 
-		if (key == 'A')// splash
+		// splash
+		if (key == 'A')
 		{
 			splash.start();
 		}
 
 		// unlock dock Ctrl+Alt+a
-		else if ((key == 'L' || key == 'l') && mod_CONTROL && !mod_ALT)
+		else if ((key == 'L'))// || key == 'l') && mod_CONTROL && !mod_ALT)
 		{
 			Lock_DockingLayout = !Lock_DockingLayout;
 		}
@@ -7700,7 +7704,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 //				SHOW_Advanced = false;
 //			}
 
-			else if (key == OF_KEY_F11 && !mod_CONTROL)//
+			else if (key == OF_KEY_F11)//
 			{
 				SHOW_Advanced = !SHOW_Advanced;
 			}
@@ -7803,6 +7807,8 @@ void ofxColorManager::mousePressed(ofMouseEventArgs &eventArgs)
 		}
 	}
 	if (DEMO5_Enable || SHOW_About) myDEMO_Spheres.start();
+
+	if (splash.isSplashing()) splash.stop();
 }
 
 //--------------------------------------------------------------
@@ -9623,6 +9629,9 @@ void ofxColorManager::doImportPaletteCoolors(std::string url)
 	textInput_New += ofGetTimestampString();
 	//textInput_New += "_";
 	//textInput_New += ofToString(++i);
+
+	// link
+	exportPalette();
 }
 
 //--------------------------------------------------------------
@@ -9652,4 +9661,7 @@ void ofxColorManager::doExportPaletteCoolors()
 
 	// workflow
 	ofLaunchBrowser(url);
+
+	// link
+	exportPalette();
 }
