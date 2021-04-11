@@ -223,15 +223,6 @@ For **ofxColorClient**:
 </details>
 
 <details>
-  <summary>CREDITS</summary>
-  <p>
-
-*List of GitHub names of all coders of used ofxAddons:*  
-@jvcleave, @Daandelange, @roymacdonald, @bakercp, @kuflex, @borg, @mantissa, @makobouzu, @aspeteRakete, @kasparsj, @arturoc, @HeliosInteractive, @frauzufall, @armadillu, @kylemcdonald, @golanlevin.
-  </p>
-</details>
-
-<details>
   <summary>Preset File format</summary>
   <p>
 
@@ -285,6 +276,15 @@ This is an example of a _3 colors palette_ file content:
   + Add an example and improve gradient exposing and background tool. 
   + [ofxCosineGradient](https://github.com/rystylee/ofxCosineGradient)
   + [DearWidgets](https://github.com/soufianekhiat/DearWidgets)
+  </p>
+</details>
+
+<details>
+  <summary>Credits</summary>
+  <p>
+
+*List of GitHub names of all coders of used ofxAddons:*  
+@jvcleave, @Daandelange, @roymacdonald, @bakercp, @kuflex, @borg, @mantissa, @makobouzu, @aspeteRakete, @kasparsj, @arturoc, @HeliosInteractive, @frauzufall, @armadillu, @kylemcdonald, @golanlevin.
   </p>
 </details>
 
