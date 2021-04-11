@@ -227,7 +227,7 @@ For **ofxColorClient**:
   <p>
 
 *List of GitHub names of all coders of used ofxAddons:*  
-@jvcleave, @Daandelange, @roymacdonald, @bakercp, @kuflex, @borg, @mantissa, @makobouzu, @aspeteRakete, @kasparsj, @arturoc, @HeliosInteractive, @frauzufall, @armadillu, @kylemcdonald.
+@jvcleave, @Daandelange, @roymacdonald, @bakercp, @kuflex, @borg, @mantissa, @makobouzu, @aspeteRakete, @kasparsj, @arturoc, @HeliosInteractive, @frauzufall, @armadillu, @kylemcdonald, @golanlevin.
   </p>
 </details>
 
