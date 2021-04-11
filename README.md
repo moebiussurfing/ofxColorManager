@@ -304,3 +304,5 @@ An addon by **@moebiusSurfing**
 
 ## License
 [**MIT License**](https://github.com/moebiussurfing/ofxColorManager/blob/b29c56f7b0e374b6a6fe2406e45fbfaaf2726112/LICENSE)
+
+<iframe frameborder="0" src="https://itch.io/embed/955466?bg_color=000000&amp;fg_color=c9c9c9&amp;link_color=8842f2&amp;border_color=383838" width="552" height="167"><a href="https://moebiussurfing.itch.io/paletto">​  Paletto v1.0rc by moebiussurfing</a></iframe>
