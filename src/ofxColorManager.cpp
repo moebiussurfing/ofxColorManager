@@ -295,6 +295,7 @@ ofxColorManager::ofxColorManager()
 	helpInfo += "H            HELP\n";
 	helpInfo += "G            GUI\n";
 	helpInfo += "F            FULL SCREEN\n";
+	helpInfo += "Ctrl+L       UNLOCK DOCK\n";
 	helpInfo += "A            ABOUT\n";
 	helpInfo += "\n\n";
 
@@ -339,6 +340,7 @@ ofxColorManager::ofxColorManager()
 	helpInfo += "Down|Up      ENGINE TYPES\n";
 	helpInfo += "\n\n";
 
+
 	if (SHOW_Advanced) {
 		helpInfo += "         PANELS\n";
 		helpInfo += "\n";
@@ -355,6 +357,10 @@ ofxColorManager::ofxColorManager()
 		helpInfo += "F10          EXPORT\n";
 		helpInfo += "F11          ADVANCED\n";
 		helpInfo += "\n\n";
+	}
+	else
+	{
+		helpInfo += "[ more keys on ADVANCED Mode ]\n";
 	}
 
 	//helpInfo += "TEST\n";		 
@@ -1073,7 +1079,10 @@ void ofxColorManager::startup()
 
 	//--
 
+	// splash screen
+	splash.setup();
 
+	//--
 }
 
 //--------------------------------------------------------------
@@ -1383,6 +1392,13 @@ void ofxColorManager::draw_PresetName()
 //--------------------------------------------------------------
 void ofxColorManager::draw(ofEventArgs & args)
 {
+	//// splash screen
+
+	////splash.draw();
+	//if (splash.draw()) return;
+
+	////--
+
 	if (SHOW_Scene)
 	{
 		// background
@@ -1394,7 +1410,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 		if (background_Draw_ENABLE)
 		{
 			_cBg = color_BackGround.get();
-		}
+	}
 #endif
 		// using picked color gradient 
 		if (!myDEMO_Svg.DEMO2_BgWhite || (myDEMO_Svg.DEMO2_Enable && myDEMO_Svg.fileIndex == 0))
@@ -1440,7 +1456,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 			// info
 			if (SHOW_Name) draw_PresetName();
 		}
-	}
+}
 
 	//--
 
@@ -1518,6 +1534,14 @@ void ofxColorManager::draw(ofEventArgs & args)
 		}
 		ofPopMatrix();
 	}
+
+	//--
+
+	// splash screen
+
+	splash.draw();
+	//if (splash.draw()) return;
+
 }
 
 //--------------------------------------------------------------
@@ -2810,9 +2834,9 @@ void ofxColorManager::gui_Library()
 				ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
 				ofxImGui::AddParameter(colorBrowser.ENABLE_keys);
-			}
-#endif
 		}
+#endif
+	}
 
 		//--
 
@@ -3033,7 +3057,7 @@ void ofxColorManager::gui_Library()
 		{
 			refresh_FromPicked();
 		}
-	}
+}
 
 	ofxImGui::EndWindow(mainSettings);
 
@@ -3087,6 +3111,32 @@ void ofxColorManager::gui_LinkExport()
 			ofxSurfingHelpers::AddBigToggle(bExportByFile, _w50, _h / 2); ImGui::SameLine();
 			ofxSurfingHelpers::AddBigToggle(bExportByTCP, _w50, _h / 2);
 			//ofxImGui::AddParameter(bAutoExportPreset);
+
+			//-
+
+			ImGui::Dummy(ImVec2(0.0f, 2.0f));
+
+			// coolors.com import export
+			if (ImGui::CollapsingHeader("Coolors.co"))
+			{
+				//ImGui::Text("Coolors.co");
+				//https://coolors.co/f53c65-470229-05a66e
+
+				if (ImGui::Button("Import/Paste", ImVec2(_w50, _h))) {
+
+					doImportPaletteCoolors(ofGetClipboardString());
+				}
+				ImGui::SameLine();
+
+				if (ImGui::Button("Export/Copy", ImVec2(_w50, _h))) {
+
+					doExportPaletteCoolors();
+				}
+			}
+
+			//-
+
+			ImGui::Dummy(ImVec2(0.0f, 2.0f));
 
 			if (ImGui::CollapsingHeader("Advanced"))
 			{
@@ -3167,30 +3217,10 @@ void ofxColorManager::gui_LinkExport()
 
 				ImGui::Dummy(ImVec2(0.0f, 2.0f));
 
-				// coolors.com import export
-
-				ImGui::Text("Coolors.co");
-				//https://coolors.co/f53c65-470229-05a66e
-
-				if (ImGui::Button("Import/Paste", ImVec2(_w50, _h))) {
-
-					doImportPaletteCoolors(ofGetClipboardString());
-				}
-				ImGui::SameLine();
-
-				if (ImGui::Button("Export/Copy", ImVec2(_w50, _h))) {
-
-					doExportPaletteCoolors();
-				}
-
-				//-
-
-				ImGui::Dummy(ImVec2(0.0f, 2.0f));
-
 				ImGui::Checkbox("Auto-Resize", &auto_resize);
 			}
-		}
 	}
+}
 	ofxImGui::EndWindow(mainSettings);
 
 	ImGui::PopStyleVar();
@@ -3508,11 +3538,11 @@ void ofxColorManager::gui_Advanced()
 			ofxImGui::AddParameter(ENABLE_keys);
 			ImGui::Checkbox("Locked Keys", &bBlockKeys);
 		}
-	}
+		}
 	ofxImGui::EndWindow(mainSettings);
 
 	ImGui::PopStyleVar();
-}
+	}
 #endif
 //--------------------------------------------------------------
 void ofxColorManager::gui_LayoutsPanel()
@@ -4344,12 +4374,12 @@ void ofxColorManager::gui_Background()
 			//TODO: 
 			//? should update only when changed
 			if (bChanged) color_BackGround = color;
-		}
-	}
+				}
+			}
 	ofxImGui::EndWindow(mainSettings);
 
 	ImGui::PopStyleVar();
-}
+		}
 #endif
 //--------------------------------------------------------------
 void ofxColorManager::gui_Kit()
@@ -4565,15 +4595,15 @@ void ofxColorManager::gui_InputText()
 					//--
 
 					refresh_FilesSorting(textInput_New);
-				}
+		}
 				else ofLogError(__FUNCTION__) << "Empty name on textInput !";
-			}
+	}
 			ImGui::PopStyleColor();
 #endif
-			}
+}
 
 		ImGui::Dummy(ImVec2(0.0f, 5.0f));
-		}
+	}
 	ofxImGui::EndWindow(mainSettings);
 
 #ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
@@ -4583,7 +4613,7 @@ void ofxColorManager::gui_InputText()
 	ImGui::PopStyleVar();
 	ImGui::PopStyleVar();
 	ImGui::PopStyleColor();
-	}
+}
 #endif
 
 //--------------------------------------------------------------
@@ -6385,7 +6415,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		{
 			colorBg_TARGET->set(color_BackGround.get());
 		}
-}
+	}
 
 	//----
 
@@ -7106,7 +7136,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		}
 
 		// about
-		else if ((key == 'a' || key == 'A') /*&& mod_CONTROL*/)
+		else if ((key == 'a') /*&& mod_CONTROL*/)
 		{
 			SHOW_About = !SHOW_About;
 		}
@@ -7124,6 +7154,17 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		else if (key == 'a' && mod_CONTROL&& mod_ALT)
 		{
 			SHOW_Advanced = !SHOW_Advanced;
+		}
+
+		if (key == 'A')// splash
+		{
+			splash.start();
+		}
+
+		// unlock dock Ctrl+Alt+a
+		else if ((key == 'L' || key == 'l') && mod_CONTROL && !mod_ALT)
+		{
+			Lock_DockingLayout = !Lock_DockingLayout;
 		}
 
 		//----
@@ -7975,7 +8016,7 @@ bool ofxColorManager::preset_RefreshFiles(bool bForeLoadFirst)
 
 	if (_sz != files.size()) b = true;
 	return b;
-	}
+}
 
 //--------------------------------------------------------------
 void ofxColorManager::preset_Load(std::string p, bool absolutePath)
@@ -8700,7 +8741,7 @@ void ofxColorManager::exportPalette()
 	}
 
 	//--
-	}
+}
 
 //--------------------------------------------------------------
 void ofxColorManager::savePresetFile()

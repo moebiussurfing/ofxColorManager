@@ -195,6 +195,8 @@ using namespace ImGui_PalettesPicker;
 #include "interface/ButtonExample.h"
 #endif
 
+#include "SplashScreen.h"
+
 //----
 
 class ofxColorManager : public ofBaseApp
@@ -1215,4 +1217,7 @@ private:
 	static string hexToWeb(ofColor col) {
 		return "#" + ofToHex(col.r) + ofToHex(col.g) + ofToHex(col.b);
 	}
+
+	SplashScreen splash;
+
 };
