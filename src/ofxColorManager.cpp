@@ -3041,7 +3041,7 @@ void ofxColorManager::gui_Library()
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::gui_Export()
+void ofxColorManager::gui_LinkExport()
 {
 	static bool auto_resize = true;
 	float ww, hh;
@@ -3057,7 +3057,7 @@ void ofxColorManager::gui_Export()
 
 	//--
 
-	if (ofxImGui::BeginWindow("Link", mainSettings, flagsw))
+	if (ofxImGui::BeginWindow("LINK", mainSettings, flagsw))
 	{
 		float _h = BUTTON_BIG_HEIGHT;
 		float _spc = ImGui::GetStyle().ItemSpacing.x;
@@ -3162,6 +3162,30 @@ void ofxColorManager::gui_Export()
 				{
 					exportKit();
 				}
+
+				//-
+
+				ImGui::Dummy(ImVec2(0.0f, 2.0f));
+
+				// coolors.com import export
+
+				ImGui::Text("Coolors.co");
+				//https://coolors.co/f53c65-470229-05a66e
+
+				if (ImGui::Button("Import/Paste", ImVec2(_w50, _h))) {
+
+					doImportPaletteCoolors(ofGetClipboardString());
+				}
+				ImGui::SameLine();
+
+				if (ImGui::Button("Export/Copy", ImVec2(_w50, _h))) {
+
+					doExportPaletteCoolors();
+				}
+
+				//-
+
+				ImGui::Dummy(ImVec2(0.0f, 2.0f));
 
 				ImGui::Checkbox("Auto-Resize", &auto_resize);
 			}
@@ -3851,7 +3875,7 @@ void ofxColorManager::gui_Panels()
 		ofxSurfingHelpers::AddBigToggle(SHOW_PanelEngines, _w, _h); ImGui::SameLine();
 		ofxSurfingHelpers::AddBigToggle(gradientEngine.SHOW_Gradient, _w, _h); ImGui::SameLine();
 		//ofxSurfingHelpers::AddBigToggle(SHOW_MINI_Preview, _w, _h);//ImGui::SameLine();
-		
+
 		//-
 
 #ifdef LINK_TCP_MASTER_CLIENT_KU
@@ -3859,7 +3883,7 @@ void ofxColorManager::gui_Panels()
 		bool b = TCP_Sender.connected() && TCP_Sender.enabled() && bExportByTCP;
 		if (b) a = ofxSurfingHelpers::getFadeBlink();
 		else a = 1.0f;
-		if(b) ImGui::PushStyleColor(ImGuiCol_Border, (ImVec4)ImColor::HSV(0.5f, 0.0f, 1.0f, a));
+		if (b) ImGui::PushStyleColor(ImGuiCol_Border, (ImVec4)ImColor::HSV(0.5f, 0.0f, 1.0f, a));
 #endif
 
 		ofxSurfingHelpers::AddBigToggle(SHOW_LinkExport, _w, _h, false); ImGui::SameLine();
@@ -4546,10 +4570,10 @@ void ofxColorManager::gui_InputText()
 			}
 			ImGui::PopStyleColor();
 #endif
-		}
+			}
 
 		ImGui::Dummy(ImVec2(0.0f, 5.0f));
-	}
+		}
 	ofxImGui::EndWindow(mainSettings);
 
 #ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
@@ -4559,7 +4583,7 @@ void ofxColorManager::gui_InputText()
 	ImGui::PopStyleVar();
 	ImGui::PopStyleVar();
 	ImGui::PopStyleColor();
-}
+	}
 #endif
 
 //--------------------------------------------------------------
@@ -4746,7 +4770,7 @@ void ofxColorManager::gui_Presets()
 				else ofLogError(__FUNCTION__) << "Empty name on textInput !";
 			}
 			ImGui::PopStyleColor();
-		}
+	}
 		else
 		{
 			ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.5f, 0.0f, 0.0f, a));
@@ -4922,7 +4946,7 @@ void ofxColorManager::gui_Presets()
 			//--
 
 			// workflow
-			
+
 			ImGui::Dummy(ImVec2(0.0f, 2.0f));
 
 			// palette colors mini preview
@@ -4944,7 +4968,7 @@ void ofxColorManager::gui_Presets()
 		//ImGui::Dummy(ImVec2(0.0f, 2.0f));
 		//if (SHOW_Kit) ofxImGui::AddParameter(AutoScroll);
 		//ImGui::Checkbox("Auto-Resize", &auto_resize);
-	}
+}
 
 	ofxImGui::EndWindow(mainSettings);
 
@@ -5159,14 +5183,14 @@ void ofxColorManager::setupGui()
 	ImGuiConfigFlags flags;
 	flags = ImGuiConfigFlags_DockingEnable;
 
-// allow out-of-OF-window
-//#ifdef USE_VIEWPORTS
-//	flags |= ImGuiConfigFlags_ViewportsEnable;
-//#endif
+	// allow out-of-OF-window
+	//#ifdef USE_VIEWPORTS
+	//	flags |= ImGuiConfigFlags_ViewportsEnable;
+	//#endif
 
-	//--
+		//--
 
-	// setup
+		// setup
 
 	bool bMouse = false;//false to auto show on window workflow
 	gui.setup(nullptr, true, flags, true, bMouse);
@@ -5300,7 +5324,7 @@ bool ofxColorManager::draw_Gui()
 #endif
 				if (SHOW_Quantizer) colorQuantizer.draw_Gui();
 			}
-			if (SHOW_LinkExport) gui_Export();
+			if (SHOW_LinkExport) gui_LinkExport();
 			if (SHOW_Demos) gui_Demo();
 #ifndef USE_MINIMAL_GUI
 			if (SHOW_Advanced) gui_Advanced();
@@ -6361,7 +6385,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		{
 			colorBg_TARGET->set(color_BackGround.get());
 		}
-	}
+}
 
 	//----
 
@@ -7951,7 +7975,7 @@ bool ofxColorManager::preset_RefreshFiles(bool bForeLoadFirst)
 
 	if (_sz != files.size()) b = true;
 	return b;
-}
+	}
 
 //--------------------------------------------------------------
 void ofxColorManager::preset_Load(std::string p, bool absolutePath)
@@ -8676,7 +8700,7 @@ void ofxColorManager::exportPalette()
 	}
 
 	//--
-}
+	}
 
 //--------------------------------------------------------------
 void ofxColorManager::savePresetFile()
@@ -9197,11 +9221,11 @@ void ofxColorManager::gui_MenuBar()
 			{
 				ENABLE_HelpInfo = pref;
 			}
-			if(ImGui::MenuItem("GitHub", NULL)) {
+			if (ImGui::MenuItem("GitHub", NULL)) {
 				std::string url = "https://github.com/moebiussurfing/ofxColorManager";
 				ofLaunchBrowser(url);
 			}
-			if(ImGui::MenuItem("itch.io", NULL)) {
+			if (ImGui::MenuItem("itch.io", NULL)) {
 				std::string url = "https://moebiussurfing.itch.io/paletto";
 				ofLaunchBrowser(url);
 			}
@@ -9268,7 +9292,7 @@ void ofxColorManager::setAppLayout(AppLayouts mode)
 	std::string _label = APP_RELEASE_NAME;
 	_label += "       ";//spacing
 	//_label += "                   ";//spacing
-	
+
 	switch (mode)
 	{
 	case ofxColorManager::APP_DEFAULT:
@@ -9564,7 +9588,7 @@ void ofxColorManager::doImportPaletteCoolors(std::string url)
 void ofxColorManager::doExportPaletteCoolors()
 {
 	ofLogNotice(__FUNCTION__) << "----------------- EXPORT COOLORS -----------------" << endl;
-	
+
 	std::string url = "https://coolors.co/";
 
 	for (int i = 0; i < palette.size(); i++)

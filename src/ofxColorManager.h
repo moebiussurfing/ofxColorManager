@@ -859,7 +859,7 @@ private:
 	void gui_Panels();
 	void gui_EnginesPanel();
 	void gui_Demo();
-	void gui_Export();
+	void gui_LinkExport();
 	void gui_Gradient();
 	void gui_Presets();
 	void gui_Kit();
