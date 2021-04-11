@@ -296,9 +296,12 @@ An addon by **@moebiusSurfing**
 
 <br/>
 
+## License
+[**MIT License**](https://github.com/moebiussurfing/ofxColorManager/blob/b29c56f7b0e374b6a6fe2406e45fbfaaf2726112/LICENSE)
+
+<br/>
+
 <h1>📫 Contact / Follow</h1>
-
-
 
 <p>
 <a href="https://twitter.com/moebiusSurfing/" rel="nofollow">Twitter</a> | 
@@ -310,13 +313,6 @@ An addon by **@moebiusSurfing**
 
 <br/>
 
-## License
-[**MIT License**](https://github.com/moebiussurfing/ofxColorManager/blob/b29c56f7b0e374b6a6fe2406e45fbfaaf2726112/LICENSE)
-
-<br/>
-
-
-
 ### 🔭 Comming Soon...
 
 <br/>
@@ -327,5 +323,3 @@ An addon by **@moebiusSurfing**
 -->
 <img src="https://github.com/moebiussurfing/ofxColorManager/blob/develop/docs/itch.io/Paletto_Thumbnail.png">
 </div>
-
-<br/>
