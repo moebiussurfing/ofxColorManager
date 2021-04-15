@@ -360,6 +360,9 @@ public:
 
 public:
 	void dragEvent(ofDragInfo &eventArgs);
+	void addImage(std::string path);
+	void refresh_FilesSorting(std::string name);//after saving new preset, refresh files and select the just saved preset
+
 	void addDragListeners();
 	void removeDragListeners();
 

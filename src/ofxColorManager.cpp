@@ -229,6 +229,9 @@ void ofxColorManager::build_Palette_Preset()
 //--------------------------------------------------------------
 ofxColorManager::ofxColorManager()
 {
+	//TODO: trouble with drag event image files to extract
+	ofRestoreWorkingDirectoryToDefault();
+
 	// log
 #ifdef MAKE_RELEASE_VERSION 
 	ofSetLogLevel(OF_LOG_SILENT);
@@ -243,6 +246,7 @@ ofxColorManager::ofxColorManager()
 
 	ofAddListener(ofEvents().update, this, &ofxColorManager::update);
 	ofAddListener(ofEvents().draw, this, &ofxColorManager::draw, OF_EVENT_ORDER_BEFORE_APP);
+	//ofAddListener(ofEvents().fileDragEvent, this, &ofxColorManager::dragEvent);//? error
 
 	//-
 
@@ -594,7 +598,7 @@ void ofxColorManager::setup()
 	SHOW_Library.set("LIBRARY", false);
 	SHOW_Range.set("RANGE", true);
 	SHOW_Engines.set("PANELS", true);
-	SHOW_Panels.set("Show Main Panel", true);
+	SHOW_Panels.set("SHOW MAIN PANEL", true);
 	SHOW_LinkExport.set("LINK", true);
 	SHOW_Demos.set("DEMO", false);
 
@@ -951,11 +955,9 @@ void ofxColorManager::startup()
 
 	//--
 
-//#ifdef LINK_TCP_MASTER_CLIENT_OF
 	setupLink();
-	//#endif
 
-		//-
+	//-
 
 	PRESET_Temp.setLinkPalette(palette);
 
@@ -999,7 +1001,8 @@ void ofxColorManager::startup()
 	//--
 
 	// splash screen
-	splash.setup("../../../docs/itch.io/Paletto_Banner.png");
+	//splash.setup("../../../docs/itch.io/Paletto_Banner.png");
+	splash.setup("assets/images/Paletto_Banner.png");
 
 	//--
 }
@@ -1043,13 +1046,11 @@ void ofxColorManager::update(ofEventArgs & args)
 
 	//--
 
-//#ifdef LINK_TCP_MASTER_CLIENT_OF
 	updateLink();
-	//#endif
 
-		//--
+	//--
 
-		// auto pilot: browse presets
+	// auto pilot: browse presets
 
 	if (bPlaySlideShow && (ofGetElapsedTimeMillis() - auto_pilot_timer > auto_pilot_Duration * 1000))
 	{
@@ -1488,6 +1489,7 @@ void ofxColorManager::exit()
 
 	ofRemoveListener(ofEvents().update, this, &ofxColorManager::update);
 	ofRemoveListener(ofEvents().draw, this, &ofxColorManager::draw);
+	//ofRemoveListener(ofEvents().fileDragEvent, this, &ofxColorManager::dragEvent);
 
 	removeKeysListeners();
 	removeMouseListeners();
@@ -1935,9 +1937,8 @@ void ofxColorManager::gui_Editor()
 {
 	static bool auto_resize = true;
 
-	float ww, hh;
-	ww = PANEL_WIDGETS_WIDTH;
-	hh = PANEL_WIDGETS_HEIGHT;
+	float ww = PANEL_WIDGETS_WIDTH;
+	float hh = PANEL_WIDGETS_HEIGHT;
 	ImGui::SetWindowSize(ImVec2(ww, hh));
 
 	ImGuiWindowFlags flagsw;
@@ -3230,8 +3231,9 @@ void ofxColorManager::gui_Picker()
 
 			if (!default_wheel) _flagw = ImGuiTreeNodeFlags_DefaultOpen;
 			else _flagw = ImGuiTreeNodeFlags_None;
+			
+			//if (ImGui::CollapsingHeader("SQUARE", _flagw))
 			if (ImGui::TreeNodeEx("SQUARE", _flagw))
-				//if (ImGui::CollapsingHeader("SQUARE", _flagw))
 			{
 				_flags =
 					ImGuiColorEditFlags_NoSmallPreview |
@@ -3345,6 +3347,7 @@ void ofxColorManager::gui_Picker()
 
 	ImGui::PopStyleVar();
 }
+
 //--------------------------------------------------------------
 void ofxColorManager::gui_EnginesPanel()
 {
@@ -3630,6 +3633,7 @@ void ofxColorManager::gui_LayoutsAdvanced()
 	//----
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(max, 200));
+
 	if (ofxImGui::BeginWindow("LAYOUTS ", mainSettings, flags))
 	{
 		float _spcx = ImGui::GetStyle().ItemSpacing.x;
@@ -3749,6 +3753,7 @@ void ofxColorManager::gui_LayoutsAdvanced()
 		{
 			ofxSurfingHelpers::AddBigToggle(Lock_DockingLayout, _w100, _h);
 			ofxSurfingHelpers::AddBigToggle(SHOW_Panels, _w100, _h);
+			ofxSurfingHelpers::AddBigToggle(SHOW_Engines, _w100, _h);
 			ofxSurfingHelpers::AddBigToggle(SHOW_Advanced, _w100, _h);
 			//ofxSurfingHelpers::AddBigToggle(SHOW_LayoutsAdvanced, _w100, _h);
 
@@ -3757,6 +3762,7 @@ void ofxColorManager::gui_LayoutsAdvanced()
 	}
 
 	ofxImGui::EndWindow(mainSettings);
+
 	ImGui::PopStyleVar();
 }
 
@@ -3824,7 +3830,7 @@ void ofxColorManager::gui_Panels()
 		b = TCP_Sender.connected() && TCP_Sender.enabled() && bExportByTCP;
 #endif
 #ifdef LINK_TCP_MASTER_CLIENT_OF
-		b = TCP_Sender.isConnected() && bExportByTCP;
+		b = TCP_Sender.isConnected() && bExportByTCP && (TCP_Sender.getNumClients() > 0);
 #endif
 		if (b) a = ofxSurfingHelpers::getFadeBlink();
 		else a = 1.0f;
@@ -5135,9 +5141,9 @@ void ofxColorManager::setupGui()
 	//	flags |= ImGuiConfigFlags_ViewportsEnable;
 	//#endif
 
-		//--
+	//--
 
-		// setup
+	// setup
 
 	bool bMouse = false;//false to auto show on window workflow
 	gui.setup(nullptr, true, flags, true, bMouse);
@@ -5590,7 +5596,7 @@ void ofxColorManager::setupTheory_G1()
 {
 	ofLogNotice(__FUNCTION__);
 
-	numColors_Engines.set("Amnt Colors Thy", 8, 2, MAX_PALETTE_COLORS);
+	numColors_Engines.set("Amount Colors", 8, 2, MAX_PALETTE_COLORS);
 	numColors_Engines.setSerializable(true);
 
 	//--
@@ -6152,7 +6158,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		if (bExportByTCP)
 		{
 			setupLink();
-}
+		}
 		else
 		{
 			//auto srv = TCP_Sender.TCPServerRef();
@@ -7663,6 +7669,11 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			case OF_KEY_F5: appLayoutIndex = APP_USER; break;
 			default: break;
 			}
+
+			if (key == OF_KEY_F9)//panel
+			{
+				SHOW_Layouts = !SHOW_Layouts;
+			}
 		}
 
 		//----
@@ -8434,7 +8445,7 @@ void ofxColorManager::setupRange()
 	bAuto_Color2_FromPicker_Range.set("Auto Pick C2", false);
 	bGetPalette_From_Range.set("To User Palette", false);
 
-	numColors_Range.set("Amnt Colors Rng", (int)MAX_PALETTE_COLORS, 3, (int)MAX_PALETTE_COLORS);
+	numColors_Range.set("Amount Colors ", (int)MAX_PALETTE_COLORS, 3, (int)MAX_PALETTE_COLORS);
 	numColors_Range.setSerializable(false);
 
 	params_Ranges.setName("Params Ranges");
@@ -8514,6 +8525,35 @@ void ofxColorManager::generate_Range(ofColor col1, ofColor col2) {
 }
 
 //----
+
+//--------------------------------------------------------------
+void ofxColorManager::setImage()
+{
+	ofLogNotice(__FUNCTION__) << "----------------- SET IMAGE -----------------";
+
+	//Open the Open File Dialog
+	std::string str = "Select image file ";
+	str += "to extract dominant colors ";
+	str += "and create Palette\n";
+
+	ofFileDialogResult openFileResult = ofSystemLoadDialog(str, false);
+
+	//Check if the user opened a file
+	if (openFileResult.bSuccess)
+	{
+		string path = openFileResult.getPath();
+		colorQuantizer.addImage(path);
+
+		ofLogNotice(__FUNCTION__) << "Image file to extract: " << path;
+
+		//wf
+		SHOW_Quantizer = true;
+	}
+	else
+	{
+		ofLogNotice(__FUNCTION__) << "User hit cancel";
+	}
+}
 
 //--------------------------------------------------------------
 void ofxColorManager::setPathPresetWatch()
@@ -8669,11 +8709,11 @@ void ofxColorManager::exportPalette()
 			TCP_Sender.clearBuffer();
 			TCP_Sender.putString(ss.str());
 			TCP_Sender.send();
-		}
+	}
 #endif
 
 		storeText.push_back(ss.str() + "\n");
-	}
+}
 
 	//--
 }
@@ -9001,6 +9041,7 @@ void ofxColorManager::buildHelpInfo()
 	helpInfo += "F3           ENGINES\n";
 	helpInfo += "F4           MINIMAL\n";
 	helpInfo += "F5           USER\n";
+	helpInfo += "F9           LAYOUTS\n";
 	if (SHOW_Advanced) helpInfo += "SHIFT        DOCK EDIT\n";
 	helpInfo += "\n\n";
 
@@ -9215,6 +9256,8 @@ void ofxColorManager::gui_MenuBar()
 			if (ImGui::MenuItem("Export Kit", "")) { exportKit(); }
 			if (ImGui::MenuItem("Load Preset File", "")) { loadPresetFile(); }
 			if (ImGui::MenuItem("Save Preset File", "")) { savePresetFile(); }
+			
+			if (ImGui::MenuItem("Open Image to extract", "")) { setImage(); }
 
 			ImGui::Separator();
 
@@ -9365,6 +9408,7 @@ void ofxColorManager::setAppLayout(AppLayouts mode)
 		ofSetWindowTitle(_label + "DEFAULT" + " | F1");
 		ini_to_load = "imgui_DEAULT.ini";
 		//appLayoutIndex = 0;
+		SHOW_Palette = true;
 		SHOW_Panels = true;
 		SHOW_PanelEngines = true;
 		//SHOW_Theory = true;
@@ -9391,6 +9435,7 @@ void ofxColorManager::setAppLayout(AppLayouts mode)
 		ofSetWindowTitle(_label + "PRESETS" + " | F2");
 		ini_to_load = "imgui_PRESETS.ini";
 		//appLayoutIndex = 1;
+		SHOW_Palette = true;
 		SHOW_Panels = false;
 		SHOW_PanelEngines = false;
 		SHOW_Theory = false;
@@ -9416,6 +9461,7 @@ void ofxColorManager::setAppLayout(AppLayouts mode)
 		ofSetWindowTitle(_label + "ENGINES" + " | F3");
 		ini_to_load = "imgui_ENGINES.ini";
 		//appLayoutIndex = 2;
+		SHOW_Palette = true;
 		SHOW_Panels = false;
 		SHOW_PanelEngines = true;
 		SHOW_Theory = true;
@@ -9441,6 +9487,7 @@ void ofxColorManager::setAppLayout(AppLayouts mode)
 		ofSetWindowTitle(_label + "MINIMAL" + " | F4 ");
 		ini_to_load = "imgui_MINIMAL.ini";
 		//appLayoutIndex = 3;
+		SHOW_Palette = true;
 		SHOW_Panels = false;
 		SHOW_PanelEngines = false;
 		SHOW_Theory = false;
@@ -9466,6 +9513,7 @@ void ofxColorManager::setAppLayout(AppLayouts mode)
 		ofSetWindowTitle(_label + "USER" + " | F5");
 		ini_to_load = "imgui_USER.ini";
 		//appLayoutIndex = 4;
+		SHOW_Palette = true;
 		SHOW_Panels = false;
 		SHOW_PanelEngines = false;
 		SHOW_Theory = false;

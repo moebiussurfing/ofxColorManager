@@ -96,7 +96,7 @@ Works Standalone or Linked to a **CLIENT App** : **_SceneTEST_COLORiZED_**
 ( _Based on _1-example_Basic_ from **ofxColorManager**_ )  
 [Download Link](https://moebiussurfing.itch.io/ofxcolormanager)  
 
-### 2. **SceneTEST_COLORiZED v1.0**
+### 2. **Scene_COLORiZED v1.0**
 **Client App**  
 Works Standalone or Linked to a **MASTER App** : **_Paletto v1.0_**  
 ( _Based on _3-example_Scenes_ from **ofxColorClient**_ )  

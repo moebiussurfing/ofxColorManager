@@ -33,4 +33,6 @@ public:
 #ifdef USE_OFX_WINDOWAPP
 	ofxWindowApp windowApp;
 #endif
+
+	//void dragEvent(ofDragInfo dragInfo);
 };

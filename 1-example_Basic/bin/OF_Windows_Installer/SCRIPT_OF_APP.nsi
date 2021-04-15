@@ -14,8 +14,11 @@
 ; Define the name of the product.
 ; In this case it's the same name for the produt title than the .exe file:
 ; /bin/Paletto.exe is my copied and renamed file after the binary compilation.
-!define PRODUCT "Paletto"
 
+!define PRODUCT_TITLE "Paletto"
+!define PRODUCT_FOLDER "Paletto"
+!define PRODUCT_FILE "Paletto"
+!define DEVELOPER_NAME "Moebius Surfing" # to make a main folder to install inside. then we can group all our apps into one container folder.
 
 ;--------------------------------
 ;Include Modern UI
@@ -37,14 +40,12 @@
 !define MUI_FINISHPAGE_NOAUTOCLOSE
 
 ; run the installed program at finish
-!define MUI_FINISHPAGE_RUN ${PRODUCT}.exe
-;!define MUI_FINISHPAGE_RUN Paletto.exe
-;!define MUI_FINISHPAGE_RUN_TEXT enjoy!
+!define MUI_FINISHPAGE_RUN "$INSTDIR\\${PRODUCT_FILE}.exe"
+!define MUI_FINISHPAGE_RUN_TEXT "Open ${PRODUCT_TITLE} now!" 
 
 ; for printing on last window of installation process:
-
-!define MUI_FINISHPAGE_SHOWREADME README.md
-;!define MUI_FINISHPAGE_SHOWREADME_TEXT text
+!define MUI_FINISHPAGE_SHOWREADME "$INSTDIR\README.md"
+!define MUI_FINISHPAGE_SHOWREADME_TEXT "Open README file" 
 
 ; CUSTOMIZE: set your account links
 !define MUI_FINISHPAGE_LINK Twitter:@moebiussurfing
@@ -65,20 +66,18 @@ Unicode true
 ; Define optional URL that will be opened after the installation was successful
 # here we link to visual studio c++ redistributable required for OF apps
 !define AFTER_INSTALLATION_URL "https://support.microsoft.com/en-us/topic/the-latest-supported-visual-c-downloads-2647da03-1eea-4433-9aff-95f26a218cc0"
-;!define AFTER_INSTALLATION_URL "https://github.com/moebiussurfing/ofxColorManager"
 ;!define AFTER_INSTALLATION_URL "https://moebiussurfing.itch.io/paletto"
 
 ; Define the main name of the installer
-Name "${PRODUCT}"
+Name "${PRODUCT_TITLE}"
 
 ; Define the directory where the installer should be saved and the setup filename 
-;OutFile "output\${PRODUCT}_Setup.exe"
-OutFile "${PRODUCT}_Setup.exe" # here is on the root path, next to this .nsi script file.
+OutFile "${PRODUCT_FILE}_Setup.exe" # here is on the root path, next to this .nsi script file.
 
 ; Define the default installation folder (Windows ProgramFiles example)
 ;NOTE: i don't know why it selects by default the Program Files (x86) folder.. not the x64 Program Files
 ; more info here: https://stackoverflow.com/questions/9087538/is-programfiles-a-constant-declared-in-nsis-or-is-it-the-environment-variable-r/44380394#44380394
-InstallDir "$PROGRAMFILES\${PRODUCT}"
+InstallDir "$PROGRAMFILES\${DEVELOPER_NAME}\${PRODUCT_FOLDER}" # this will be invoked using $INSTDIR
 
 ; Define an optional directory for program files that change (Windows AppData example)
 ;!define INSTDIR_DATA "$PROGRAMFILES\${PRODUCT}\\data\"
@@ -91,7 +90,7 @@ ShowInstDetails "show"
 ShowUninstDetails "show"
 
 ; Get installation folder from registry if available
-InstallDirRegKey HKLM "Software\${PRODUCT}" ""
+InstallDirRegKey HKLM "Software\${PRODUCT_TITLE}" ""
 
 
 ;--------------------------------
@@ -111,7 +110,7 @@ InstallDirRegKey HKLM "Software\${PRODUCT}" ""
 !define MUI_UNICON "resources\example_icon_uninstaller.ico" # for the later created UnInstaller
 
 ; CUSTOMIZE: update these files in your photo editor if you like.
-; notice that must bmp format, not jpg or png are supported.
+; notice that must bmp format, neither jpg or png are supported.
 
 ; Use optional a custom picture for the 'Welcome' and 'Finish' page:
 !define MUI_HEADERIMAGE_RIGHT
@@ -140,7 +139,7 @@ Function .onInit
 ;--------------------------------
 ;1. Banner
 ; Banner::show "Paletto v1.0"
-Banner::show "${PRODUCT} v1.0"
+Banner::show "${PRODUCT_TITLE} v1.0"
 ; CUSTOMIZE: you can tweak the intro banners with your app version or whatever..
 
 Banner::getWindow
@@ -154,7 +153,7 @@ again:
 GetDlgItem $2 $1 1030
 
 ; CUSTOMIZE: you can tweak the intro banners with your app version or whatever..
-SendMessage $2 ${WM_SETTEXT} 0 "STR:moebiusSurfing 2021"
+SendMessage $2 ${WM_SETTEXT} 0 "STR:${DEVELOPER_NAME}, 2021"
 
 again2:
   IntOp $0 $0 + 1
@@ -229,50 +228,59 @@ Section "Main App" SecMain
 SectionIn RO # Just means if in component mode this is locked
 
 ;Set output path to the installation directory.
+;Here will be copied the below "marked" files
 SetOutPath $INSTDIR
 
-;OpenFrameworks
+
+;OpenFrameworks exe and dll files
+;--------------------------------
+
 ;Put the following file in the SetOutPath
-;File "..\Paletto.exe" # set your app exe name here!
-File "..\${PRODUCT}.exe" # set your app exe name here! (Notice that in this case I use the same name for the product and for the exe file)
+File "..\${PRODUCT_FILE}.exe" # set your app exe name here! (Notice that in this case I use the same name for the product and for the exe file)
 File "..\*.dll" # usually all the OF's required dll's
-;
-;Optional:
+
+;Optional files:
 File "..\*.ini" # my ImGui.ini files out of bin/data. (they are on /bin)
 File "..\..\..\README.md" # my readme
 
-;OpenFrameworks /data/ files 
+
+;OpenFrameworks OF_APP/bin/data/ files 
+;-------------------------------------
+
 ;default location. close to the exe! 
 SetOutPath "$INSTDIR\\data" # that's the typical OF scenario!
 File /r "..\data\*.*" # recursive access to all the folders and files! 
 
 ;Store installation folder in registry
-WriteRegStr HKLM "Software\${PRODUCT}" "" $INSTDIR
+WriteRegStr HKLM "Software\${PRODUCT_TITLE}" "" $INSTDIR
 
 ;Registry information for add/remove programs
-WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT}" "DisplayName" "${PRODUCT}"
-WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT}" "UninstallString" '"$INSTDIR\${PRODUCT}_uninstall.exe"'
-WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT}" "NoModify" 1
-WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT}" "NoRepair" 1
+WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_TITLE}" "DisplayName" "${PRODUCT_TITLE}"
+WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_TITLE}" "UninstallString" '"$INSTDIR\${PRODUCT_FILE}_uninstall.exe"'
+WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_TITLE}" "NoModify" 1
+WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_TITLE}" "NoRepair" 1
+
+
+;Start Menu
+;----------
 
 ;Create optional start menu shortcut for uninstaller and Main component
-CreateDirectory "$SMPROGRAMS\${PRODUCT}"
-CreateShortCut "$SMPROGRAMS\${PRODUCT}\Uninstall ${PRODUCT}.lnk" "$INSTDIR\${PRODUCT}_Uninstaller.exe" "" "$INSTDIR\${PRODUCT}_Uninstaller.exe" 0
+CreateDirectory "$SMPROGRAMS\${DEVELOPER_NAME}\${PRODUCT_FOLDER}"
+CreateShortCut "$SMPROGRAMS\${DEVELOPER_NAME}\${PRODUCT_FOLDER}\Uninstall ${PRODUCT_TITLE}.lnk" "$INSTDIR\${PRODUCT_TITLE}_Uninstaller.exe" "" "$INSTDIR\${PRODUCT_TITLE}_Uninstaller.exe" 0
 
 ;main shorcut
-CreateShortCut "$SMPROGRAMS\${PRODUCT}\${PRODUCT}.lnk" "$INSTDIR\${PRODUCT}.exe" "" "$INSTDIR\${PRODUCT}.exe" 0
-; CreateShortCut "$SMPROGRAMS\${PRODUCT}\Paletto.lnk" "$INSTDIR\Paletto.exe" "" "$INSTDIR\Paletto.exe" 0
+CreateShortCut "$SMPROGRAMS\${DEVELOPER_NAME}\${PRODUCT_FOLDER}\${PRODUCT_FILE}.lnk" "$INSTDIR\${PRODUCT_FILE}.exe" "" "$INSTDIR\${PRODUCT_FILE}.exe" 0
 
 ;README
-CreateShortCut "$SMPROGRAMS\${PRODUCT}\README.lnk" "$INSTDIR\README.md" "" "$INSTDIR\README.md" 0
+CreateShortCut "$SMPROGRAMS\${DEVELOPER_NAME}\${PRODUCT_FOLDER}\README.lnk" "$INSTDIR\README.md" "" "$INSTDIR\README.md" 0
 
 ;Create uninstaller
-WriteUninstaller "${PRODUCT}_Uninstaller.exe"
+WriteUninstaller "${PRODUCT_TITLE}_Uninstaller.exe"
 
 SectionEnd
 
-;----
 
+;--------
 #optional
 ;uncomment all the SecTwo sections and define the files to copy
 ;Section "Extra color palettes files" SecTwo
@@ -302,7 +310,7 @@ LangString DESC_SecMain ${LANG_ENGLISH} "Main Program and Data files. Adds a use
 ;Assign language strings to sections
 !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
 !insertmacro MUI_DESCRIPTION_TEXT ${SecMain} $(DESC_SecMain)
-;!insertmacro MUI_DESCRIPTION_TEXT ${SecTwo} $(DESC_SecTwo) # optional item
+;!insertmacro MUI_DESCRIPTION_TEXT ${SecTwo} $(DESC_SecTwo) # optional items that you can tick to enable or not
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 
@@ -312,8 +320,8 @@ LangString DESC_SecMain ${LANG_ENGLISH} "Main Program and Data files. Adds a use
 Section "Uninstall"
 
 ;Remove all registry keys
-DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT}"
-DeleteRegKey HKLM "Software\${PRODUCT}"
+DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_TITLE}"
+DeleteRegKey HKLM "Software\${PRODUCT_TITLE}"
 
 ;Delete the installation directory + all files in it
 ;Add 'RMDir /r "$INSTDIR\folder\*.*"' for every folder you have added additionaly
@@ -325,8 +333,8 @@ RMDir "$INSTDIR"
 ;RMDir "${INSTDIR_DATA}"
 
 ;Delete Start Menu Shortcuts
-Delete "$SMPROGRAMS\${PRODUCT}\*.*"
-RmDir  "$SMPROGRAMS\${PRODUCT}"
+Delete "$SMPROGRAMS\${DEVELOPER_NAME}\${PRODUCT_FOLDER}\*.*"
+RmDir  "$SMPROGRAMS\${DEVELOPER_NAME}\${PRODUCT_FOLDER}"
 
 SectionEnd
 
@@ -338,7 +346,6 @@ Function .onInstSuccess
 
 ;Open 'Thank you for installing' site or something else
 ;Download extra required files or open a YouTube link or even open the currently instaled app.
-
 ExecShell "open" "microsoft-edge:${AFTER_INSTALLATION_URL}"
 
 ; windows redistributable: 

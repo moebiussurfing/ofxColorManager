@@ -22,3 +22,8 @@ void ofApp::setup()
 
 	colorManager.setup();
 }
+
+////--------------------------------------------------------------
+//void ofApp::dragEvent(ofDragInfo info) {
+//	colorManager.dragEvent(info);
+//}

@@ -12,10 +12,10 @@
             "Zoom": "0.541"
         },
         "Engines": {
-            "Amnt_Colors_Thy": "6",
+            "Amount_Colors": "6",
             "Analogue_Spread": "0.402",
-            "Color_1": "0.301961, 0.0980392, 0.301961, 1",
-            "Color_2": "0, 0.392157, 0.4, 1",
+            "Color_1": "0.858824, 0.603922, 0.4, 1",
+            "Color_2": "0.831373, 0.341176, 0.368627, 1",
             "Last_Range_Index": "0",
             "Last_Theory_Index": "9",
             "Preset_Index": "17",
@@ -35,7 +35,7 @@
             "Columns_Max": "10",
             "Mode_Cards": "0",
             "Mode_Paging": "1",
-            "Page": "11",
+            "Page": "8",
             "Responsive_Fit": "1",
             "Responsive_Grid": "0",
             "Rows_Amnt": "20",
@@ -51,7 +51,7 @@
             "Size_Plt": "25"
         },
         "PANELS": {
-            "AutoScroll": "1",
+            "AutoScroll": "0",
             "DEMO": "0",
             "EDITOR": "1",
             "GRADIENT": "0",
@@ -63,17 +63,17 @@
             "PALETTE": "1",
             "PANELS": "1",
             "PICKER": "1",
-            "PICTURE": "0",
+            "PICTURE": "1",
             "PRESETS": "1",
             "RANGE": "0",
-            "Show_Main_Panel": "1",
+            "SHOW_MAIN_PANEL": "1",
             "Show_Mini_Palette": "0",
-            "THEORY": "1"
+            "THEORY": "0"
         },
         "PICKER": {
             "BRG": "0",
             "B_Power": "1",
-            "COLOR": "0.589957, 0, 1, 1",
+            "COLOR": "0.576471, 0.447059, 0.352941, 1",
             "HUE": "1",
             "H_Power": "1",
             "SAT": "0",

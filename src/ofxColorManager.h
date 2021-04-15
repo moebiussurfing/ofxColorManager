@@ -38,7 +38,7 @@ BUGS:
 // some preprocessor directives
 // mainly for debug purposes only
 
-//#define MAKE_RELEASE_VERSION // disables console and other stuff, for final release version. name to Paletto v1.0
+#define MAKE_RELEASE_VERSION // disables console and other stuff, for final release version. name to Paletto v1.0
 
 //--
 
@@ -50,8 +50,8 @@ BUGS:
 //--
 
 #ifdef MAKE_RELEASE_VERSION 
-//#define APP_RELEASE_NAME "PALETTO v1.0rc"
 #define APP_RELEASE_NAME "PALETTO v1.0"
+//#define APP_RELEASE_NAME "PALETTO v1.0rc"
 #else
 #define APP_RELEASE_NAME "ofxColorManager"
 #endif
@@ -217,6 +217,7 @@ public:
 	void exit();
 	void windowResized(int w, int h);
 	void dragEvent(ofDragInfo dragInfo);
+	void setImage();
 
 	//-
 

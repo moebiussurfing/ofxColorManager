@@ -125,7 +125,7 @@ void ofxColorQuantizerHelper::draw_Gui()
 
 		//----
 
-		// scrollable list
+		// 1. scrollable list
 
 		if (!imageNames.empty())
 		{
@@ -305,7 +305,7 @@ void ofxColorQuantizerHelper::draw_Gui()
 		//ImGui::Text(currentImage_name.get().c_str());
 
 		ofxSurfingHelpers::AddBigButton(bReBuild, _w100, _h);
-		if (ImGui::Button("REFRESH FILES", ImVec2(_w100, _h/2))) 
+		if (ImGui::Button("REFRESH FILES", ImVec2(_w100, _h / 2)))
 		{
 			// workflow
 			//to allow add more files on runtime
@@ -313,7 +313,7 @@ void ofxColorQuantizerHelper::draw_Gui()
 			refresh_Files();
 			currentImage = currentImage_PRE;
 			build();
-		
+
 		}
 
 		ImGui::Dummy(ImVec2(0, 5));
@@ -398,7 +398,7 @@ void ofxColorQuantizerHelper::draw_Gui()
 	ofxImGui::EndWindow(mainSettings);
 
 	ImGui::PopStyleVar();
-		}
+}
 #endif
 
 //----
@@ -512,7 +512,6 @@ void ofxColorQuantizerHelper::refresh_Files()
 
 		imageNames.push_back(dir.getName(i));
 	}
-
 	currentImage.setMax(dir.size() - 1);
 
 	//--
@@ -541,6 +540,69 @@ void ofxColorQuantizerHelper::refresh_Files()
 	//for (int i = 0; i < dirThumbs.size(); i++) {
 	//	textureSourceID[i] = gui_ImGui.loadTexture(textureSource[i], dirThumbs.getPath(i));
 	//}
+}
+//--------------------------------------------------------------
+void ofxColorQuantizerHelper::refresh_FilesSorting(std::string name)
+{
+	ofLogNotice(__FUNCTION__) << "----------------- SORTING FILES-----------------";
+	ofLogNotice(__FUNCTION__) << "Search Iindex for file:";
+	ofLogNotice(__FUNCTION__) << name;
+
+	// load dragged images folder
+	ofLogNotice(__FUNCTION__) << "list files " << pathFolerDrag;
+
+	dir.listDir(pathFolerDrag);
+	dir.allowExt("jpg");
+	dir.allowExt("png");
+	dir.allowExt("JPG");
+	dir.allowExt("PNG");
+	dir.sort();
+
+	// log files on folder
+	imageNames.clear();
+	for (int i = 0; i < dir.size(); i++)
+	{
+		ofLogNotice(__FUNCTION__) << "file " << "[" << ofToString(i) << "] " << dir.getName(i);
+
+		imageNames.push_back(dir.getName(i));
+	}
+	currentImage.setMax(dir.size() - 1);
+
+	//go to ne index after adding a new preset
+	ofLogNotice(__FUNCTION__) << "Rearrenge index file";
+
+	//locate new position of old (saved) preset
+	int ii = -1;
+
+	for (int i = 0; i < dir.size() && ii == -1; i++)
+	{
+		std::string _name = dir.getName(i);
+
+		ofLogNotice(__FUNCTION__) << i << " " << imageNames[i];
+
+		if (_name == name)//found file index of the preset
+		{
+			ii = i;
+			ofLogNotice(__FUNCTION__) << "Found " << _name << " at index " << i << " !";
+
+			continue;
+		}
+	}
+
+	//reload the same preset at newer index
+	if (ii != -1)//found the name
+	{
+		currentImage = ii;
+
+		//load
+		imageName = dir.getName(currentImage);
+		imageName_path = dir.getPath(currentImage);
+		buildFromImageFile(imageName_path, numColors);
+	}
+	else//not found
+	{
+		ofLogError(__FUNCTION__) << name << " filename not Found !";
+	}
 }
 
 //--------------------------------------------------------------
@@ -1600,4 +1662,29 @@ void ofxColorQuantizerHelper::setColor_BACK_Refresh(bool &b)
 void ofxColorQuantizerHelper::setPalette_BACK_Name(std::string &n)
 {
 	myPalette_Name_BACK = &n;
+}
+
+//--------------------------------------------------------------
+void ofxColorQuantizerHelper::addImage(std::string path)
+{
+	ofLogNotice(__FUNCTION__);
+
+	ofFile file(path);
+
+	auto strs = ofSplitString(path, "\\");// Windows
+	//auto strs = ofSplitString(path, "/");// macOS ?
+
+	ofLogNotice(__FUNCTION__) << "route: " << ofToString(strs);
+
+	std::string fileName = strs[strs.size() - 1];//last string
+	ofLogNotice(__FUNCTION__) << "fileName: " << ofToString(fileName);
+
+	//-
+
+	// copy file into images folder
+
+	ofxSurfingHelpers::CheckFolder(pathFolerDrag);
+	file.copyTo(ofToDataPath(pathFolerDrag + fileName));
+
+	refresh_FilesSorting(fileName);
 }
