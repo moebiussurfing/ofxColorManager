@@ -414,6 +414,9 @@ private:
 private:
 	const char* ini_to_load = NULL;
 	const char* ini_to_save = NULL;
+	std::string ini_to_load_Str;
+	std::string ini_to_save_Str;
+
 	enum AppLayouts
 	{
 		APP_DEFAULT = 0,
@@ -432,6 +435,7 @@ private:
 
 private:
 	std::string path_Global;
+	std::string path_ImGui;
 	std::string path_Kits;
 	std::string path_FileExport;
 	std::string path_AppState;

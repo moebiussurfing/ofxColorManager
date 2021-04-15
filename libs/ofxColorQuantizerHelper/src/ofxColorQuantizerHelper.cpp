@@ -1540,6 +1540,7 @@ void ofxColorQuantizerHelper::dragEvent(ofDragInfo &eventArgs)
 {
 	auto info = eventArgs;
 	ofLogNotice(__FUNCTION__);
+	std::string fileName = "-1";
 
 	if (info.files.size() > 0)
 	{
@@ -1583,16 +1584,21 @@ void ofxColorQuantizerHelper::dragEvent(ofDragInfo &eventArgs)
 
 		//-
 
-		//workflow
+		////workflow
 
-		// refresh dir
-		refresh_Files();
+		//// refresh dir
+		//refresh_Files();
+
+		////-
+
+		//// create palette from last file
+		//imageName_path = info.files[info.files.size() - 1];
+		////buildFromImageFile(imageName_path, numColors);
 
 		//-
 
-		// create palette from last file
-		imageName_path = info.files[info.files.size() - 1];
-		buildFromImageFile(imageName_path, numColors);
+		// workflow
+		if (fileName != "-1") refresh_FilesSorting(fileName);
 	}
 }
 

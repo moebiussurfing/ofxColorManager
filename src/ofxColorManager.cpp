@@ -268,6 +268,11 @@ ofxColorManager::ofxColorManager()
 	ofxSurfingHelpers::CheckFolder(path_Global);
 	path_AppState = path_Global + "ofxColorManager_Settings.xml";
 
+	path_ImGui = "ImGui/";
+	ofxSurfingHelpers::CheckFolder(path_ImGui);
+	path_ImGui = ofToDataPath(path_ImGui, true);
+	//path_ImGui = getAbsolutePath(path_ImGui, true);
+
 	//// gradient
 	//path_Layout = path_Global + "layout/";
 	//ofxSurfingHelpers::CheckFolder(path_Layout);
@@ -3231,7 +3236,7 @@ void ofxColorManager::gui_Picker()
 
 			if (!default_wheel) _flagw = ImGuiTreeNodeFlags_DefaultOpen;
 			else _flagw = ImGuiTreeNodeFlags_None;
-			
+
 			//if (ImGui::CollapsingHeader("SQUARE", _flagw))
 			if (ImGui::TreeNodeEx("SQUARE", _flagw))
 			{
@@ -3268,16 +3273,21 @@ void ofxColorManager::gui_Picker()
 		{
 			ImGui::PushItemWidth(-25);
 
-			int i = 0;
-			ImGui::PushID(i++);//avoid repeat names and flicking bug
 			if (ofxImGui::AddParameter(color_HUE)) {}
-			//ImGui::PopID();
-			ImGui::PushID(i++);
 			if (ofxImGui::AddParameter(color_SAT)) {}
-			//ImGui::PopID();
-			ImGui::PushID(i++);
 			if (ofxImGui::AddParameter(color_BRG)) {}
-			ImGui::PopID();// ?? only once ?
+
+			//this seems crashing on debug mode
+			//int i = 0;
+			//ImGui::PushID(i++);//avoid repeat names and flicking bug
+			//if (ofxImGui::AddParameter(color_HUE)) {}
+			////ImGui::PopID();
+			//ImGui::PushID(i++);
+			//if (ofxImGui::AddParameter(color_SAT)) {}
+			////ImGui::PopID();
+			//ImGui::PushID(i++);
+			//if (ofxImGui::AddParameter(color_BRG)) {}
+			//ImGui::PopID();// ?? only once ?
 
 			ImGui::PopItemWidth();
 		}
@@ -3519,12 +3529,15 @@ void ofxColorManager::gui_LayoutsPanel()
 		{
 			switch (appLayoutIndex)
 			{
-			case APP_DEFAULT: ini_to_save = "imgui_DEAULT.ini"; break;
-			case APP_PRESETS: ini_to_save = "imgui_PRESETS.ini"; break;
-			case APP_ENGINES: ini_to_save = "imgui_ENGINES.ini"; break;
-			case APP_MINIMAL: ini_to_save = "imgui_MINIMAL.ini"; break;
-			case APP_USER: ini_to_save = "imgui_USER.ini"; break;
+			case APP_DEFAULT: ini_to_save_Str = path_ImGui + "imgui_DEAULT.ini"; break;
+			case APP_PRESETS: ini_to_save_Str = path_ImGui + "imgui_PRESETS.ini"; break;
+			case APP_ENGINES: ini_to_save_Str = path_ImGui + "imgui_ENGINES.ini"; break;
+			case APP_MINIMAL: ini_to_save_Str = path_ImGui + "imgui_MINIMAL.ini"; break;
+			case APP_USER: ini_to_save_Str = path_ImGui + "imgui_USER.ini"; break;
+			default:break;
 			}
+
+			ini_to_save = ini_to_save_Str.c_str();
 		}
 		ImGui::PopID();
 		ImGui::PopStyleColor();
@@ -3676,7 +3689,8 @@ void ofxColorManager::gui_LayoutsAdvanced()
 		ImGui::PushID(i++);
 		if (ImGui::Button("Save", bb))
 		{
-			ini_to_save = "imgui_DEAULT.ini";
+			ini_to_save_Str = path_ImGui + "imgui_DEAULT.ini";
+			ini_to_save = ini_to_save_Str.c_str();
 		}
 
 		ImGui::Text("Presets");
@@ -3692,7 +3706,8 @@ void ofxColorManager::gui_LayoutsAdvanced()
 		ImGui::PushID(i++);
 		if (ImGui::Button("Save", bb))
 		{
-			ini_to_save = "imgui_PRESETS.ini";
+			ini_to_save_Str = path_ImGui + "imgui_PRESETS.ini";
+			ini_to_save = ini_to_save_Str.c_str();
 		}
 
 		ImGui::Text("Engines");
@@ -3708,7 +3723,8 @@ void ofxColorManager::gui_LayoutsAdvanced()
 		ImGui::PushID(i++);
 		if (ImGui::Button("Save", bb))
 		{
-			ini_to_save = "imgui_ENGINES.ini";
+			ini_to_save_Str = path_ImGui + "imgui_ENGINES.ini";
+			ini_to_save = ini_to_save_Str.c_str();
 		}
 
 		ImGui::Text("Minimal");
@@ -3724,7 +3740,8 @@ void ofxColorManager::gui_LayoutsAdvanced()
 		ImGui::PushID(i++);
 		if (ImGui::Button("Save", bb))
 		{
-			ini_to_save = "imgui_MINIMAL.ini";
+			ini_to_save_Str = path_ImGui + "imgui_MINIMAL.ini";
+			ini_to_save = ini_to_save_Str.c_str();
 		}
 
 		ImGui::Text("User");
@@ -3740,7 +3757,8 @@ void ofxColorManager::gui_LayoutsAdvanced()
 		ImGui::PushID(i++);
 		if (ImGui::Button("Save", bb))
 		{
-			ini_to_save = "imgui_USER.ini";
+			ini_to_save_Str = path_ImGui + "imgui_USER.ini";
+			ini_to_save = ini_to_save_Str.c_str();
 		}
 
 		ImGui::PopID();
@@ -4519,13 +4537,13 @@ void ofxColorManager::gui_InputText()
 					refresh_FilesSorting(textInput_New);
 				}
 				else ofLogError(__FUNCTION__) << "Empty name on textInput !";
-			}
+		}
 			ImGui::PopStyleColor();
 #endif
-		}
+	}
 
 		ImGui::Dummy(ImVec2(0.0f, 5.0f));
-	}
+}
 	ofxImGui::EndWindow(mainSettings);
 
 #ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
@@ -4723,7 +4741,7 @@ void ofxColorManager::gui_Presets()
 				else ofLogError(__FUNCTION__) << "Empty name on textInput !";
 			}
 			ImGui::PopStyleColor();
-		}
+	}
 		else
 		{
 			ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.5f, 0.0f, 0.0f, a));
@@ -4921,7 +4939,7 @@ void ofxColorManager::gui_Presets()
 		//ImGui::Dummy(ImVec2(0.0f, 2.0f));
 		//if (SHOW_Kit) ofxImGui::AddParameter(AutoScroll);
 		//ImGui::Checkbox("Auto-Resize", &auto_resize);
-	}
+}
 
 	ofxImGui::EndWindow(mainSettings);
 
@@ -6166,7 +6184,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 			//is not closing..
 			TCP_Sender.close();
-		}
+}
 	}
 #endif
 
@@ -7117,7 +7135,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		{
 			mouseRuler.toggleVisibility();
 			//myDEMO_Bubbles.toggleMouseCamera();
-		}
+	}
 #endif
 		// TEST
 		else if (key == 'T')
@@ -7692,7 +7710,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//}
 		////    else if()
 		////        color_Undo.clearRedo();
-	}
+}
 }
 
 //--------------------------------------------------------------
@@ -8960,7 +8978,7 @@ void ofxColorManager::draw_Link(int x, int y)
 	//	ss += storeText[i];
 	//}
 	//ofxSurfingHelpers::drawTextBoxed(font, ss, x, y);
-	}
+}
 #endif
 
 //--------------------------------------------------------------
@@ -9256,7 +9274,7 @@ void ofxColorManager::gui_MenuBar()
 			if (ImGui::MenuItem("Export Kit", "")) { exportKit(); }
 			if (ImGui::MenuItem("Load Preset File", "")) { loadPresetFile(); }
 			if (ImGui::MenuItem("Save Preset File", "")) { savePresetFile(); }
-			
+
 			if (ImGui::MenuItem("Open Image to extract", "")) { setImage(); }
 
 			ImGui::Separator();
@@ -9406,7 +9424,9 @@ void ofxColorManager::setAppLayout(AppLayouts mode)
 		if (!b0) b0 = true;
 		b1 = b2 = b3 = b4 = false;
 		ofSetWindowTitle(_label + "DEFAULT" + " | F1");
-		ini_to_load = "imgui_DEAULT.ini";
+		//ini_to_load = "imgui_DEAULT.ini";
+		ini_to_load_Str = path_ImGui + "imgui_DEAULT.ini";
+		ini_to_load = ini_to_load_Str.c_str();
 		//appLayoutIndex = 0;
 		SHOW_Palette = true;
 		SHOW_Panels = true;
@@ -9433,7 +9453,9 @@ void ofxColorManager::setAppLayout(AppLayouts mode)
 		if (!b1) b1 = true;
 		b0 = b2 = b3 = b4 = false;
 		ofSetWindowTitle(_label + "PRESETS" + " | F2");
-		ini_to_load = "imgui_PRESETS.ini";
+		//ini_to_load = "imgui_PRESETS.ini";
+		ini_to_load_Str = path_ImGui + "imgui_PRESETS.ini";
+		ini_to_load = ini_to_load_Str.c_str();
 		//appLayoutIndex = 1;
 		SHOW_Palette = true;
 		SHOW_Panels = false;
@@ -9459,7 +9481,9 @@ void ofxColorManager::setAppLayout(AppLayouts mode)
 		if (!b2) b2 = true;
 		b0 = b1 = b3 = b4 = false;
 		ofSetWindowTitle(_label + "ENGINES" + " | F3");
-		ini_to_load = "imgui_ENGINES.ini";
+		//ini_to_load = "imgui_ENGINES.ini";
+		ini_to_load_Str = path_ImGui + "imgui_ENGINES.ini";
+		ini_to_load = ini_to_load_Str.c_str();
 		//appLayoutIndex = 2;
 		SHOW_Palette = true;
 		SHOW_Panels = false;
@@ -9485,7 +9509,9 @@ void ofxColorManager::setAppLayout(AppLayouts mode)
 		if (!b3) b3 = true;
 		b0 = b1 = b2 = b4 = false;
 		ofSetWindowTitle(_label + "MINIMAL" + " | F4 ");
-		ini_to_load = "imgui_MINIMAL.ini";
+		//ini_to_load = "imgui_MINIMAL.ini";
+		ini_to_load_Str = path_ImGui + "imgui_MINIMAL.ini";
+		ini_to_load = ini_to_load_Str.c_str();
 		//appLayoutIndex = 3;
 		SHOW_Palette = true;
 		SHOW_Panels = false;
@@ -9511,7 +9537,9 @@ void ofxColorManager::setAppLayout(AppLayouts mode)
 		if (!b4) b4 = true;
 		b0 = b1 = b2 = b3 = false;
 		ofSetWindowTitle(_label + "USER" + " | F5");
-		ini_to_load = "imgui_USER.ini";
+		//ini_to_load = "imgui_USER.ini";
+		ini_to_load_Str = path_ImGui + "imgui_USER.ini";
+		ini_to_load = ini_to_load_Str.c_str();
 		//appLayoutIndex = 4;
 		SHOW_Palette = true;
 		SHOW_Panels = false;
