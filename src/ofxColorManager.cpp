@@ -1527,7 +1527,7 @@ void ofxColorManager::gui_Theory()
 	const float butlabelw = 140;// width label text
 
 	//offset
-	float _offset = 20;//to include extra slider for analog
+	float _offset = 23;//to include extra slider for analog
 
 	int ii = 0;
 

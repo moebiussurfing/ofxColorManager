@@ -12,13 +12,13 @@
             "Zoom": "0.541"
         },
         "Engines": {
-            "Amount_Colors": "6",
+            "Amount_Colors": "7",
             "Analogue_Spread": "0.402",
-            "Color_1": "0.0901961, 0.0431373, 0.192157, 1",
-            "Color_2": "0.819608, 0.141176, 0, 1",
+            "Color_1": "0.882353, 0.721569, 0.847059, 1",
+            "Color_2": "0.384314, 0.262745, 0.494118, 1",
             "Last_Range_Index": "0",
-            "Last_Theory_Index": "3",
-            "Preset_Index": "24",
+            "Last_Theory_Index": "8",
+            "Preset_Index": "46",
             "SCENE": "1"
         },
         "ExportColors": {
@@ -35,7 +35,7 @@
             "Columns_Max": "10",
             "Mode_Cards": "0",
             "Mode_Paging": "1",
-            "Page": "8",
+            "Page": "11",
             "Responsive_Fit": "1",
             "Responsive_Grid": "0",
             "Rows_Amnt": "20",
@@ -73,10 +73,10 @@
         "PICKER": {
             "BRG": "0",
             "B_Power": "1",
-            "COLOR": "0.0901961, 0.0431373, 0.192157, 1",
+            "COLOR": "0.384314, 0.262745, 0.494118, 1",
             "HUE": "1",
             "H_Power": "0.53",
-            "SAT": "1",
+            "SAT": "0",
             "S_Power": "0.51"
         },
         "Show_Menu_Bar": "1"
