@@ -134,6 +134,11 @@ void ofxColorManager::build_Palette_Engine()
 	else if (SHOW_ColourLovers)
 	{
 		_name = myPalette_Name_BACK;
+		
+		//clean rare chars from name
+		ofStringReplace(_name, "/", "");
+		ofStringReplace(_name, "\\", "");
+
 		palette_FromColourLovers();
 		bNew = true;
 	}
@@ -336,12 +341,12 @@ void ofxColorManager::setup()
 	std::string strFont;
 	std::string _p = "assets/fonts/";
 
+	strFont = _p + "Kazesawa-Extrabold.ttf";
 	//strFont = _p + "Ruda-Bold.ttf";
 	//strFont = _p + "GTAmerica-ExtendedBlack.ttf";
 	//strFont = _p + "GTAmerica-ExpandedBold.ttf";
 	//strFont = _p + "telegrama_render.otf";
 	//strFont = _p + "PragmataProB_0822.ttf";
-	strFont = _p + "Kazesawa-Extrabold.ttf";
 
 	int _szbig = 50;
 	fontBig.load(strFont, _szbig);
@@ -1032,6 +1037,7 @@ void ofxColorManager::update(ofEventArgs & args)
 
 	//--
 
+	// text input blocker
 	if (!SHOW_ColourLovers) bBlockKeys = !(ENABLE_keys && !bTextInputActive);
 	else bBlockKeys = !(ENABLE_keys && !bTextInputActive && !bCheckMouseOverTextInputLovers);
 
@@ -1197,7 +1203,6 @@ void ofxColorManager::update(ofEventArgs & args)
 		color_BACK_PRE = color_BACK;
 
 		ofLogNotice(__FUNCTION__) << ">  color_BACK ! ";
-		//ofLogNotice(__FUNCTION__) << "Changed color_BACK pointer";
 
 		color_Picked.set(color_BACK);
 	}
@@ -1527,7 +1532,7 @@ void ofxColorManager::gui_Theory()
 	const float butlabelw = 140;// width label text
 
 	//offset
-	float _offset = 23;//to include extra slider for analog
+	float _offset = 23;//extra height to include extra slider for analog
 
 	int ii = 0;
 

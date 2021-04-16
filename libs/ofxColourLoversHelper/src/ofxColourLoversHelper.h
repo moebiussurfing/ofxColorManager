@@ -13,12 +13,12 @@
 // 
 // and uncomment this line only if you want to handle the ImGui instance 
 // out of-the-addon, ie: into ofApp instead:
-#define USE_OFX_IM_GUI_EXTERNAL
+//#define USE_OFX_IM_GUI_EXTERNAL //-> comment required to enable the one only / local ImGui
 //
 // (Gui 2 outdated but should work)
 //#define USE_OFX_UI
 //
-#define PANEL_WIDGETS_WIDTH 250
+#define PANEL_WIDGETS_WIDTH 250//this is overwritted by ofxSurfingHelpers..
 #define PANEL_WIDGETS_HEIGHT 100
 #define BUTTON_BIG_HEIGHT 50
 #define BUTTON_BIG_HEIGHT2 35
@@ -205,6 +205,7 @@ private:
 	ofColor lastColor_clicked;
 
 	int amountResults = (int)MAX_SEARCH_RESULTS;
+	//ofParameter<int> amountResults{ "Amount Results", MAX_SEARCH_RESULTS, 10, 300 };
 
 	//-
 

@@ -246,7 +246,6 @@ void ofxColourLoversHelper::gui_Search()
 			//ImGui::PushItemWidth(-40);
 			//ImGui::SliderInt("Amnt Max", &amountResults, 25, 100);
 			//ImGui::PopItemWidth();
-
 		}
 		ofxImGui::EndWindow(mainSettings);
 
@@ -257,9 +256,9 @@ void ofxColourLoversHelper::gui_Search()
 //--------------------------------------------------------------
 void ofxColourLoversHelper::gui_Main()
 {
-	float ww, hh;
-	ww = PANEL_WIDGETS_WIDTH;
-	hh = PANEL_WIDGETS_HEIGHT;
+	float ww = 200;
+	//float ww = PANEL_WIDGETS_WIDTH;
+	float hh = PANEL_WIDGETS_HEIGHT;
 
 	ImGuiWindowFlags flags = auto_resize1 ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
 	if (!auto_resize1) ImGui::SetWindowSize(ImVec2(ww, hh));
@@ -268,7 +267,8 @@ void ofxColourLoversHelper::gui_Main()
 
 	//--
 
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, PANEL_WIDGETS_HEIGHT));
+	//crash?
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(ww, hh/2));
 
 	//----
 
@@ -639,21 +639,28 @@ void ofxColourLoversHelper::gui_Main()
 
 			//myPalette_BACK
 
-			// fit width
-			float wb = (_w100 / (int)p.size());// -_spc;
-			float hb = BUTTON_BIG_HEIGHT;
-
-			for (int n = 0; n < p.size(); n++)
+			if (p.size() > 0)
 			{
-				ImGui::PushID(n);
-
 				// fit width
-				if (n != 0) ImGui::SameLine(0, 0);
+				float wb = (_w100 / (int)p.size());// -_spc;
+				float hb = BUTTON_BIG_HEIGHT;
 
-				// box colors
-				if (ImGui::ColorButton("##paletteLover", p[n], colorEdiFlags, ImVec2(wb, hb))) {}
+				for (int n = 0; n < p.size(); n++)
+				{
+					ImGui::PushID(n);
 
-				ImGui::PopID();
+					// fit width
+					if (n != 0) ImGui::SameLine(0, 0);
+
+					// box colors
+					if (ImGui::ColorButton("##paletteLover", p[n], colorEdiFlags, ImVec2(wb, hb))) {}
+
+					ImGui::PopID();
+				}
+			}
+			else
+			{
+				ofLogWarning(__FUNCTION__) << "empty palette!";
 			}
 		}
 
@@ -670,7 +677,12 @@ void ofxColourLoversHelper::gui_Main()
 		}
 
 		//-
-
+		
+		// I prefer to control this toggle on a main app
+		// but we can include it on standalone mode
+#ifndef USE_OFX_IM_GUI_EXTERNAL
+		ofxSurfingHelpers::AddBigToggle(SHOW_AdvancedLayout, _w100, _h/2); 
+#endif
 		if (SHOW_AdvancedLayout)
 		{
 			if (ImGui::CollapsingHeader("Advanced"))
@@ -679,6 +691,8 @@ void ofxColourLoversHelper::gui_Main()
 				_w99 = _w100 - _spc;
 				_w50 = _w100 / 2;// -_spc;
 
+					//if (ofxImGui::AddParameter(amountResults)) 
+					//{}
 				ofxImGui::AddParameter(MODE_PickPalette_BACK);
 				ofxImGui::AddParameter(MODE_PickColor_BACK);
 				ofxImGui::AddParameter(ENABLER_Keys);
@@ -695,8 +709,7 @@ void ofxColourLoversHelper::gui_Main()
 						}
 					}
 					if (ofxImGui::AddParameter(MODE_Slim))
-					{
-					}
+					{}
 
 					// layout
 					ImGui::Checkbox("Focus", &bfocus);
@@ -723,11 +736,11 @@ void ofxColourLoversHelper::gui_Kit()
 
 		mainSettings = ofxImGui::Settings();
 
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, PANEL_WIDGETS_HEIGHT));
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, PANEL_WIDGETS_HEIGHT/2));
 
 		if (ofxImGui::BeginWindow("LOVER PALETTES", mainSettings, flags))
 		{
-			float _spc2 = 2;//spacing between palettes 
+			float _spc2 = 2;// spacing between palettes 
 
 			////label: favorites or history
 			//std::string ss = lastSearch_Str;
@@ -784,7 +797,7 @@ void ofxColourLoversHelper::gui_Kit()
 
 			//--
 
-			for (int i = 0; i < palettes.size(); i++)
+			for (size_t p = 0; p < palettes.size(); p++)
 			{
 				// group border
 				//auto pos1 = ImGui::GetCursorScreenPos();
@@ -795,14 +808,13 @@ void ofxColourLoversHelper::gui_Kit()
 				ImGui::Dummy(ImVec2(0, _spc2));
 
 				// autoscroll
-				if (i == currPalette) if (AutoScroll) ImGui::SetScrollHereY(0.0f); // 0.0f:top, 0.5f:center, 1.0f:bottom
+				if (p == currPalette) if (AutoScroll) ImGui::SetScrollHereY(0.0f); // 0.0f:top, 0.5f:center, 1.0f:bottom
 
 				// 2. label tittle
-				std::string _name = palettes[i].title;
+				std::string _name = palettes[p].title;
 
 				ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 2));
 				ImGui::Text(_name.c_str());
-
 				ImGui::PopStyleVar();
 
 				//-
@@ -820,9 +832,9 @@ void ofxColourLoversHelper::gui_Kit()
 
 				// 3. colors in each palette
 
-				int _sizeP = palettes[i].colours.size();
+				int _sizeP = palettes[p].colours.size();
 
-				for (int c = 0; c < _sizeP; c++)
+				for (size_t c = 0; c < _sizeP; c++)
 				{
 					if (c != 0) ImGui::SameLine(0, 0);
 
@@ -834,13 +846,12 @@ void ofxColourLoversHelper::gui_Kit()
 					if (MODE_FixedSize)
 					{
 						// same size for each color
-						_wwB = (_w / _sizeP) - _spc;
+						_wwB = (_w / _sizeP);
 					}
 					else
 					{
 						// different sizes with original colourLover Palettes
-						_wwB = (palettes[i].colorWidths[c] * _w);
-						//_wwB = (palettes[i].colorWidths[c] * _w) - _spc;
+						_wwB = (palettes[p].colorWidths[c] * _w);
 					}
 
 					//-
@@ -862,7 +873,7 @@ void ofxColourLoversHelper::gui_Kit()
 
 					//-
 
-					std::string name = ("CL_" + ofToString(i) + "_" + ofToString(c));
+					std::string name = "CL_" + ofToString(p) + "_" + ofToString(c);
 
 					//-
 
@@ -870,19 +881,21 @@ void ofxColourLoversHelper::gui_Kit()
 					bool bDrawBorder = false;
 					float _scale = 1.0f;
 
-					if (i == indexExt_PRE)
+					if (p == indexExt_PRE)
 					{
-						if (btween) {
+						if (btween) 
+						{
 							if (bfocus) _scale = ofMap(alpha, 1, 0, 1.75f, 1.0f, true);
 						}
-						else {
+						else 
+						{
 							if (bfocus) _scale = 1.0f;
 						}
 
 						_hhB = _hb * _scale;
 					}
 
-					else if (i == currPalette)// highlight selected
+					else if (p == currPalette)// highlight selected
 					{
 						bDrawBorder = true;
 
@@ -890,14 +903,17 @@ void ofxColourLoversHelper::gui_Kit()
 						//{
 						//	_scale = 0.45f;
 						//}
-						//else {
+						//else 
+						//{
 						//	_scale = 1.0f;
 						//}
 
-						if (btween) {
+						if (btween)
+						{
 							if (bfocus) _scale = ofMap(alpha, 1, 0, 1.75f, 1.0f, true);
 						}
-						else {
+						else
+						{
 							if (bfocus) _scale = 1.75f;
 						}
 
@@ -927,7 +943,8 @@ void ofxColourLoversHelper::gui_Kit()
 
 					//ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, 1.0);
 
-					if (ImGui::ColorButton(name.c_str(), palettes[i].colours[c], _flags, ImVec2(_wwB, _hhB)))
+					const ImVec4 col = palettes[p].colours[c];
+					if (ImGui::ColorButton(name.c_str(), col, _flags, ImVec2(_wwB, _hhB)))
 					{
 						//-
 
@@ -1025,7 +1042,6 @@ void ofxColourLoversHelper::gui_Kit()
 		ImGui::PopStyleVar();
 	}
 }
-
 #endif
 
 //--------------------------------------------------------------
@@ -1037,13 +1053,18 @@ void ofxColourLoversHelper::setup()
 #ifdef USE_OFX_IM_GUI
 	ofxSurfingHelpers::ImGui_FontCustom();
 
-	gui_ImGui.setup();
+	ImGuiConfigFlags flags;
+	flags = ImGuiConfigFlags_DockingEnable;
+
+	//daan fork
+	bool bMouse = false;//false to auto show on window workflow
+	gui_ImGui.setup(nullptr, true, flags, true, bMouse);
+
+	//gui_ImGui.setup();
 	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	ImGui::GetIO().MouseDrawCursor = false;
 	ImGui::GetIO().ConfigWindowsResizeFromEdges = true;
-
-	////daan
-	//gui_ImGui.setup(nullptr, ImGuiConfigFlags_DockingEnable, true, true);
+	ImGui::GetIO().ConfigDockingWithShift = true;
 
 	ofxSurfingHelpers::ImGui_ThemeMoebiusSurfing();
 #endif
@@ -1163,13 +1184,14 @@ void ofxColourLoversHelper::setup()
 	params.add(bFavorites);
 	params.add(bHistory);
 	params.add(bSearch);
+	//params.add(amountResults);
 
 	//bFavorites.setSerializable(false);
 	//bHistory.setSerializable(false);
 
 	//ofxSurfingHelpers::loadGroup(params, path_AppSettings);
 
-	//----
+	//--------
 
 	// startup
 
@@ -1183,10 +1205,9 @@ void ofxColourLoversHelper::setup()
 
 	//-
 
-
 	//--------------------------------------------------------------
 	listener_bFavorites = bFavorites.newListener([this](bool &b) {
-		ofLogNotice("ofxColorManager > bFavorites: ") << b;
+		ofLogNotice("ofxColourLovers > bFavorites: ") << b;
 
 		//bHistory = !bFavorites;
 
@@ -1201,7 +1222,7 @@ void ofxColourLoversHelper::setup()
 
 	//--------------------------------------------------------------
 	listener_bHistory = bHistory.newListener([this](bool &b) {
-		ofLogNotice("ofxColorManager > bHistory: ") << b;
+		ofLogNotice("ofxColourLovers > bHistory: ") << b;
 
 		//bFavorites = !bHistory;
 
@@ -1216,7 +1237,7 @@ void ofxColourLoversHelper::setup()
 
 	//--------------------------------------------------------------
 	listener_bSearch = bSearch.newListener([this](bool &b) {
-		ofLogNotice("ofxColorManager > bSearch: ") << b;
+		ofLogNotice("ofxColourLovers > bSearch: ") << b;
 
 		if (bSearch)
 		{
@@ -1256,7 +1277,6 @@ void ofxColourLoversHelper::setup()
 	//TODO:
 	bFavorites = true;
 }
-
 
 //--------------------------------------------------------------
 void ofxColourLoversHelper::setup(glm::vec2 _position, glm::vec2 _size)
@@ -1463,7 +1483,7 @@ void ofxColourLoversHelper::update()
 			//TODO:
 			//BUG: names
 			pNames.clear();
-			for (int i = 0; i < _files.numFiles(); i++)
+			for (int i = 0; i < _files.numFiles() && i < palettes.size(); i++)
 			{
 				ColourLovePalette cp = palettes[i];
 				pNames.push_back(cp.title);
