@@ -29,6 +29,7 @@ _Send palettes to the Editor._
 <!--
 <img src="./banner.gif">
 -->
+![Alt Text](https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif)
 <img src="https://i.imgur.com/FJ5kHe7.gif">
 </div>
   ![image](https://i.imgur.com/FJ5kHe7.gif?raw=true "image")
