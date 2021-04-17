@@ -25,22 +25,11 @@ _Send palettes to the Editor._
 
   1. Algorithmic **Theory Schemes** from a base color.  
   *Analogous, Compound, Flipped Compound, Monochrome, Tetrad, Triad, Complementary, Split and Flipped.*  
+![image](https://i.imgur.com/ZeHeIkN.gif?raw=true "image")
+![image](https://i.imgur.com/ZeHeIkN.gif)
 
-<img src="https://i.imgur.com/FJ5kHe7.gif" width="400" height="400" />
-
-  <div align="center">
-<!--
-<img src="./banner.gif">
--->
-![Alt Text](https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif)
-<img src="https://i.imgur.com/FJ5kHe7.gif">
-</div>
-<img src="https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif" width="40" height="40" />
-  ![image](https://i.imgur.com/FJ5kHe7.gif?raw=true "image")
-<p><img src="https://i.imgur.com/FJ5kHe7.gif"></p>
   2. **Range Spaces** between two colors.  
   *RGB, HSL, HSV, HSB, LUV, LAB, HLAB, LCH, CMY, CMYK, YXY, and XYZ.*  
-<p><img src="https://i.imgur.com/r6uNtO6.gif"></p>
 
   3. [**Colour Lovers API**](https://www.colourlovers.com/) to search keywords online, handle favorites, and history search.
  
