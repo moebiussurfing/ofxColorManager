@@ -25,6 +25,9 @@ _Send palettes to the Editor._
 
   1. Algorithmic **Theory Schemes** from a base color.  
   *Analogous, Compound, Flipped Compound, Monochrome, Tetrad, Triad, Complementary, Split and Flipped.*  
+
+<img src="https://i.imgur.com/FJ5kHe7.gif" width="400" height="400" />
+
   <div align="center">
 <!--
 <img src="./banner.gif">
