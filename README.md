@@ -32,6 +32,7 @@ _Send palettes to the Editor._
 ![Alt Text](https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif)
 <img src="https://i.imgur.com/FJ5kHe7.gif">
 </div>
+<img src="https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif" width="40" height="40" />
   ![image](https://i.imgur.com/FJ5kHe7.gif?raw=true "image")
 <p><img src="https://i.imgur.com/FJ5kHe7.gif"></p>
   2. **Range Spaces** between two colors.  
