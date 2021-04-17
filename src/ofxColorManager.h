@@ -24,6 +24,7 @@ TODO:
 
 BUGS:
 
++ colour lovers search with no results must stop spinner 
 + colour lovers search crashes sometimes. error -1? 
 + fix text input boxes when docking mode. to avoid floating text input box
 + TCP port number switch, some problems on reconnect bc threading not implemented. should use some sync addon or OSC.

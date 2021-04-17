@@ -1,13 +1,13 @@
 {
     "ofxColourLoversHelper": {
-        "AutoScroll": "1",
-        "Enable_Keys": "1",
-        "FAVORITES": "0",
+        "AutoScroll": "0",
+        "Enable_Keys": "0",
+        "FAVORITES": "1",
         "Fixed_Width": "0",
         "HISTORY": "0",
         "Pick_Color": "1",
         "Pick_Palette": "1",
-        "SEARCH": "1",
+        "SEARCH": "0",
         "Show_Palettes": "1",
         "Slim": "1",
         "_MenuTabPick": "FAVORITES"

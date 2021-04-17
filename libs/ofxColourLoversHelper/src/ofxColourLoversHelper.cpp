@@ -134,8 +134,12 @@ void ofxColourLoversHelper::gui_Search()
 			strncpy(tab1, textInput_temp1.c_str(), sizeof(tab1));
 			tab1[sizeof(tab1) - 1] = 0;
 
-			//if (ImGui::InputText("", tab1, IM_ARRAYSIZE(tab1)), ImGuiInputTextFlags_EnterReturnsTrue))
-			if (ImGui::InputText("", tab1, IM_ARRAYSIZE(tab1)))
+			//make uppercase
+			ImGuiInputTextFlags _flagsInput = ImGuiInputTextFlags_None;
+			_flagsInput += ImGuiInputTextFlags_CharsUppercase;
+			//_flagsInput += ImGuiInputTextFlags_EnterReturnsTrue;
+
+			if (ImGui::InputText("", tab1, IM_ARRAYSIZE(tab1), _flagsInput))
 			{
 				textInput_temp1 = ofToString(tab1);
 				ofLogNotice(__FUNCTION__) << "input: " << textInput_temp1;
@@ -1319,6 +1323,8 @@ void ofxColourLoversHelper::Changed_ColourLovers(ColourLoveEvent &e)
 	if ((e.palettes.size() <= 0))
 	{
 		ofLogError(__FUNCTION__) << "Size is 0! Return";
+
+		if (bSearching) bSearching = false;//disable spinner
 		return;
 	}
 

@@ -138,6 +138,8 @@ void ofxColorManager::build_Palette_Engine()
 		//clean rare chars from name
 		ofStringReplace(_name, "/", "");
 		ofStringReplace(_name, "\\", "");
+		//ofStringReplace(_name, "-", "");
+		ofStringReplace(_name, "*", "");
 
 		palette_FromColourLovers();
 		bNew = true;
@@ -1459,8 +1461,18 @@ void ofxColorManager::draw(ofEventArgs & args)
 	}
 
 	//--
+	
+	//TODO: 
+	//BUG:
+	//disabled autodraw here but not working and draws in front
+	//if gui.setup(..) is called in another ImGui instance 
+	//like in this case the ImGui from ofxColourLovers
+	//if (!splash.isSplashing())
+	//gui.draw();
+	
+	//--
 
-	// splash screen
+	// splash screen (in front gui)
 
 	splash.draw();
 }
@@ -4481,6 +4493,7 @@ void ofxColorManager::gui_InputText()
 				ImGui::PushStyleColor(ImGuiCol_Text, c1);
 				ImGui::PushItemWidth(-1);
 
+				//if (ImGui::InputText("", tab, IM_ARRAYSIZE(tab), ImGuiInputTextFlags_CharsUppercase))
 				if (ImGui::InputText("", tab, IM_ARRAYSIZE(tab)))
 				{
 					textInput_New = ofToString(tab);
@@ -5159,7 +5172,7 @@ void ofxColorManager::setupGui()
 	ImGuiConfigFlags flags;
 	flags = ImGuiConfigFlags_DockingEnable;
 
-	// allow out-of-OF-window
+	// allow move panels out-of-OF-window
 	//#ifdef USE_VIEWPORTS
 	//	flags |= ImGuiConfigFlags_ViewportsEnable;
 	//#endif
@@ -5169,12 +5182,11 @@ void ofxColorManager::setupGui()
 	// setup
 
 	bool bMouse = false;//false to auto show on window workflow
-	gui.setup(nullptr, true, flags, true, bMouse);
+	bool bAutoDraw = true;
+	gui.setup(nullptr, bAutoDraw, flags, true, bMouse);
 
 	// io
-
 	auto &io = ImGui::GetIO();
-
 	io.ConfigDockingWithShift = true;
 	//io.ConfigInputTextCursorBlink = true;
 
@@ -5212,7 +5224,7 @@ void ofxColorManager::setupGui()
 
 	mainSettings = ofxImGui::Settings();
 
-	// for all window panels
+	// for all window panels. lock
 	flagsWindows = ImGuiWindowFlags_NoMove;
 
 	//-

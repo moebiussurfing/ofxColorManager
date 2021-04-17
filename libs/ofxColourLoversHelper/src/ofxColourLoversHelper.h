@@ -13,7 +13,7 @@
 // 
 // and uncomment this line only if you want to handle the ImGui instance 
 // out of-the-addon, ie: into ofApp instead:
-//#define USE_OFX_IM_GUI_EXTERNAL //-> comment required to enable the one only / local ImGui
+#define USE_OFX_IM_GUI_EXTERNAL //-> comment required to enable 'the one only / local ImGui'
 //
 // (Gui 2 outdated but should work)
 //#define USE_OFX_UI
