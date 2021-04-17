@@ -5171,7 +5171,7 @@ void ofxColorManager::setupGui()
 
 	ImGuiConfigFlags flags;
 	flags = ImGuiConfigFlags_DockingEnable;
-
+	
 	// allow move panels out-of-OF-window
 	//#ifdef USE_VIEWPORTS
 	//	flags |= ImGuiConfigFlags_ViewportsEnable;
