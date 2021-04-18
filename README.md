@@ -107,8 +107,7 @@ Works Standalone or Linked to a **CLIENT App** : **_SceneTEST_COLORiZED_**
 **Download**:  
 [![name](./docs/itch.io/sources/Paletto.png | width=100)](https://moebiussurfing.itch.io/paletto)
 [](https://gyazo.com/eb5c5741b6a9a16c692170a41a49c858.png | width=100)
-<img src="https://your-image-url.type" width="100" height="100">
-![test image size](./docs/itch.io/sources/Paletto.png){:height="10%" width="10%"}
+<img src="/docs/itch.io/Paletto.ico" width="48">
 
 ### 2. **Scene_COLORiZED v1.0**
 **Client App**  
