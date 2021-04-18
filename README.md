@@ -333,5 +333,5 @@ An addon by **@moebiusSurfing**
 <!--
 <img src="./banner.gif">
 -->
-<img src="https://github.com/moebiussurfing/ofxColorManager/blob/develop/docs/itch.io/Paletto_Thumbnail.png">
+<img src="https://github.com/moebiussurfing/ofxColorManager/blob/develop/docs/itch.io/Paletto_Thumbnail.png" align="left" height="50%" width="50%" >>
 </div>
