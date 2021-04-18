@@ -105,7 +105,7 @@ Ready to use pre-compiled versions for fast testing, or to have executable apps 
 Works Standalone or Linked to a **CLIENT App** : **_SceneTEST_COLORiZED_**  
 ( _Based on _1-example_Basic_ from **ofxColorManager**_ )  
 **Download**:  
-<a href="https://moebiussurfing.itch.io/paletto" target="_blank"><img src="/docs/itch.io/Paletto.ico" align="left" height="96" width="96" ></a>  
+<a href="https://moebiussurfing.itch.io/paletto"><img src="/docs/itch.io/Paletto.ico" align="left" height="96" width="96" ></a>  
 <br/>
 <br/>
 
@@ -114,7 +114,7 @@ Works Standalone or Linked to a **CLIENT App** : **_SceneTEST_COLORiZED_**
 Works Standalone or Linked to a **MASTER App** : **_Paletto v1.0_**  
 ( _Based on _3-example_Scenes_ from **ofxColorClient**_ )  
 **Download**:  
-<a href="https://moebiussurfing.itch.io/paletto" target="_blank"><img src="/docs/itch.io/Scene_COLORiZED.ico" align="left" height="96" width="96" ></a>  
+<a href="https://moebiussurfing.itch.io/paletto"><img src="/docs/itch.io/Scene_COLORiZED.ico" align="left" height="96" width="96" ></a>  
 <br/>
 
 <br/>
