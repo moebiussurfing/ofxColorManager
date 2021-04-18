@@ -25,18 +25,18 @@ _Send palettes to the Editor._
 
   1. Algorithmic **Theory Schemes** from a base color.  
   *Analogous, Compound, Flipped Compound, Monochrome, Tetrad, Triad, Complementary, Split and Flipped.*  
-![Alt Text](https://media.giphy.com/media/AbfmncgOsqcNqtPxup/giphy.gif)
+![GIF](https://media.giphy.com/media/AbfmncgOsqcNqtPxup/giphy.gif)
 
   2. **Range Spaces** between two colors.  
   *RGB, HSL, HSV, HSB, LUV, LAB, HLAB, LCH, CMY, CMYK, YXY, and XYZ.*  
-![Alt Text](https://i.imgur.com/N5QhPUe.gif)
+![GIF](https://media.giphy.com/media/mOTlQQ5ILnmnTVrLpE/giphy.gif)
 
-  3. [**Colour Lovers API**](https://www.colourlovers.com/) to search keywords online, handle favorites, and history search.
- ![Alt Text](https://i.imgur.com/t0G8pGb.gif)
+  3. [**Colour Lovers API**](https://www.colourlovers.com/) to search keywords online, handle favorites, and history search.  
+ ![GIF](https://media.giphy.com/media/L07R0ixmQrAvh9zfui/giphy.gif)
 
   4. **Extract** the dominant colors **from image files**.  
-  *Sorting by Dominance, Hue, Saturation or Brightness*.
-![Alt Text](https://i.imgur.com/JgUb23S.gif)
+  *Sorting by Dominance, Hue, Saturation or Brightness*.  
+![GIF](https://media.giphy.com/media/jMgk4fCbaeJG5pqjtv/giphy.gif)
 
 ## Tools  
 
