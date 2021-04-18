@@ -105,9 +105,8 @@ Ready to use pre-compiled versions for fast testing, or to have executable apps 
 Works Standalone or Linked to a **CLIENT App** : **_SceneTEST_COLORiZED_**  
 ( _Based on _1-example_Basic_ from **ofxColorManager**_ )  
 **Download**:  
-[![name](./docs/itch.io/sources/Paletto.png | width=100)](https://moebiussurfing.itch.io/paletto)
-[](https://gyazo.com/eb5c5741b6a9a16c692170a41a49c858.png | width=100)
-<img src="/docs/itch.io/Paletto.ico" width="48">
+[![name](./docs/itch.io/sources/Paletto.png)](https://moebiussurfing.itch.io/paletto)
+<img src="/docs/itch.io/Paletto.ico" width="100">
 
 ### 2. **Scene_COLORiZED v1.0**
 **Client App**  
