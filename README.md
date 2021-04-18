@@ -25,7 +25,7 @@ _Send palettes to the Editor._
 
   1. Algorithmic **Theory Schemes** from a base color.  
   *Analogous, Compound, Flipped Compound, Monochrome, Tetrad, Triad, Complementary, Split and Flipped.*  
-![Alt Text](https://i.imgur.com/ZeHeIkN.gif)
+![Alt Text](https://media.giphy.com/media/AbfmncgOsqcNqtPxup/giphy.gif)
 
   2. **Range Spaces** between two colors.  
   *RGB, HSL, HSV, HSB, LUV, LAB, HLAB, LCH, CMY, CMYK, YXY, and XYZ.*  
