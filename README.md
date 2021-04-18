@@ -1,6 +1,7 @@
 # ofxColorManager
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-![Stage: pre-release](https://img.shields.io/badge/-alpha-red)
+![Stage: beta](https://img.shields.io/badge/-alpha-red)
+![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/moebiussurfing/ofxColorManager)
 
 This **openFrameworks** add-on is a **bundle of Tools and Engines** to create and organize **Color Palettes** for your scenes.  
 
