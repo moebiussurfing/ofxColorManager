@@ -104,6 +104,7 @@ Ready to use pre-compiled versions for fast testing, or to have executable apps 
 **Master App**  
 Works Standalone or Linked to a **CLIENT App** : **_SceneTEST_COLORiZED_**  
 ( _Based on _1-example_Basic_ from **ofxColorManager**_ )  
+<br/>
 **Download**:  
 <a href="https://moebiussurfing.itch.io/paletto"><img src="/docs/itch.io/Paletto.ico" align="left" height="96" width="96" ></a>  
 <br/><br/><br/>
@@ -112,6 +113,7 @@ Works Standalone or Linked to a **CLIENT App** : **_SceneTEST_COLORiZED_**
 **Client App**  
 Works Standalone or Linked to a **MASTER App** : **_Paletto v1.0_**  
 ( _Based on _3-example_Scenes_ from **ofxColorClient**_ )  
+<br/>
 **Download**:  
 <a href="https://moebiussurfing.itch.io/paletto"><img src="/docs/itch.io/Scene_COLORiZED.ico" align="left" height="96" width="96" ></a>  
 <br/><br/><br/><br/>
@@ -333,5 +335,5 @@ An addon by **@moebiusSurfing**
 <!--
 <img src="./banner.gif">
 -->
-<img src="https://github.com/moebiussurfing/ofxColorManager/blob/develop/docs/itch.io/Paletto_Thumbnail.png" align="center" height="25%" width="25%">
+<img src="https://github.com/moebiussurfing/ofxColorManager/blob/develop/docs/itch.io/Paletto_Thumbnail.png" align="center" height="40%" width="40%">
 </div>
