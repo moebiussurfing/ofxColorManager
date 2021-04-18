@@ -5,7 +5,7 @@
 This **openFrameworks** add-on is a **bundle of Tools and Engines** to create and organize **Color Palettes** for your scenes.  
 
 ## Screenshot
-![image](/doc/readme_images/Layout_Default_01.PNG)
+![image](/docs/readme_images/Layout_Default_01.PNG)
 
 ## Videos
 
