@@ -541,6 +541,7 @@ void ofxColorQuantizerHelper::refresh_Files()
 	//	textureSourceID[i] = gui_ImGui.loadTexture(textureSource[i], dirThumbs.getPath(i));
 	//}
 }
+
 //--------------------------------------------------------------
 void ofxColorQuantizerHelper::refresh_FilesSorting(std::string name)
 {

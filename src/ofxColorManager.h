@@ -75,6 +75,7 @@ BUGS:
 #define BUTTON_BIG_HEIGHT 50
 #define PANEL_WIDGETS_WIDTH 250
 #define PANEL_WIDGETS_HEIGHT 500
+//#define MODAL_WIDTH 60.0f
 
 //----------
 
@@ -171,6 +172,7 @@ using namespace ofxColorTheory;
 
 #include "ofxSerializer.h"
 #include "ofxSurfingHelpers.h"
+#include "ofxSurfing_Files.h"
 #include "ofxSurfing_ImGui.h"
 using namespace ofxSurfingHelpers;
 
@@ -259,7 +261,8 @@ private:
 
 private:
 	std::string host = "127.0.0.1";//hardcoded. can't be change on runtime
-	int port = 66666;//localhost. hardcoded. can't be change on runtime
+	int port = 10666;//localhost. hardcoded. can't be change on runtime
+	//_port.set("port", 6448, 1000, 50000);
 	//ofParameter<std::string> host{ "Host", "127.0.0.1" };
 	//ofParameter<int> port{ "Port", 66666, 0, 99999 };
 
@@ -1102,7 +1105,7 @@ private:
 	std::vector<ofFile> files;
 	vector<vector<ofColor>> palettesKit;
 	vector<PresetData> kit;
-
+	bool bAlertFileOverWrite = false;
 	std::string textInput_temp = "type name";
 
 	//----

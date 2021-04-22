@@ -1,6 +1,6 @@
 {
     "ofxColorManager": {
-        "App_Layout": "0",
+        "App_Layout": "1",
         "DEMO": {
             "Alpha_1": "0.681",
             "Alpha_Spheres": "0.839",
@@ -14,11 +14,11 @@
         "Engines": {
             "Amount_Colors": "7",
             "Analogue_Spread": "0.402",
-            "Color_1": "0.211765, 0.0941177, 0.756863, 1",
-            "Color_2": "0.0117647, 0.0196078, 0.0352941, 1",
+            "Color_1": "0.0156863, 0.4, 0.784314, 1",
+            "Color_2": "0.592157, 0.615686, 0.67451, 1",
             "Last_Range_Index": "0",
-            "Last_Theory_Index": "8",
-            "Preset_Index": "2",
+            "Last_Theory_Index": "3",
+            "Preset_Index": "21",
             "SCENE": "1"
         },
         "ExportColors": {
@@ -28,7 +28,7 @@
             "LINK_TCP": "1",
             "Path__bin_data": "1"
         },
-        "Font_Big_Size": "50",
+        "Font_Big_Size": "27",
         "Font_Size": "14",
         "LAYOUTS": "1",
         "LIBRARY": {
@@ -53,7 +53,7 @@
         "PANELS": {
             "AutoScroll": "1",
             "DEMO": "0",
-            "EDITOR": "1",
+            "EDITOR": "0",
             "GRADIENT": "0",
             "GUI_MAIN": "1",
             "KIT": "1",
@@ -62,23 +62,23 @@
             "LOVERS": "0",
             "PALETTE": "1",
             "PANELS": "1",
-            "PICKER": "1",
+            "PICKER": "0",
             "PICTURE": "0",
             "PRESETS": "1",
             "RANGE": "0",
-            "SHOW_MAIN_PANEL": "1",
+            "SHOW_MAIN_PANEL": "0",
             "Show_Mini_Palette": "0",
-            "THEORY": "1"
+            "THEORY": "0"
         },
         "PICKER": {
             "BRG": "0",
             "B_Power": "1",
-            "COLOR": "0.211765, 0.0941177, 0.756863, 1",
+            "COLOR": "0.0156863, 0.4, 0.784314, 1",
             "HUE": "1",
             "H_Power": "0.53",
             "SAT": "0",
             "S_Power": "0.51"
         },
-        "Show_Menu_Bar": "1"
+        "Show_Menu_Bar": "0"
     }
 }

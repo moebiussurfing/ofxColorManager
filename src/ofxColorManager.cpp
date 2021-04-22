@@ -134,7 +134,7 @@ void ofxColorManager::build_Palette_Engine()
 	else if (SHOW_ColourLovers)
 	{
 		_name = myPalette_Name_BACK;
-		
+
 		//clean rare chars from name
 		ofStringReplace(_name, "/", "");
 		ofStringReplace(_name, "\\", "");
@@ -1461,7 +1461,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 	}
 
 	//--
-	
+
 	//TODO: 
 	//BUG:
 	//disabled autodraw here but not working and draws in front
@@ -1469,7 +1469,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 	//like in this case the ImGui from ofxColourLovers
 	//if (!splash.isSplashing())
 	//gui.draw();
-	
+
 	//--
 
 	// splash screen (in front gui)
@@ -3010,7 +3010,7 @@ void ofxColorManager::gui_LinkExport()
 	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
 	flagsw |= flagsWindows;
 
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, PANEL_WIDGETS_HEIGHT));
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(ww, hh));
 
 	//--
 
@@ -4555,13 +4555,13 @@ void ofxColorManager::gui_InputText()
 					refresh_FilesSorting(textInput_New);
 				}
 				else ofLogError(__FUNCTION__) << "Empty name on textInput !";
-		}
+			}
 			ImGui::PopStyleColor();
 #endif
-	}
+		}
 
 		ImGui::Dummy(ImVec2(0.0f, 5.0f));
-}
+	}
 	ofxImGui::EndWindow(mainSettings);
 
 #ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
@@ -4747,8 +4747,56 @@ void ofxColorManager::gui_Presets()
 				{
 					ofLogNotice(__FUNCTION__) << "textInput_New: " << textInput_New;
 
-					preset_Save(textInput_New);
-					preset_RefreshFiles(false);
+					//--
+
+					//TODO:
+					//not working
+
+					// check overwrite
+
+					string _pathfile = path_Presets + textInput_New + ".json";
+					bAlertFileOverWrite = ofxSurfingHelpers::ofxKuFileExists(_pathfile);
+					ofLogNotice(__FUNCTION__) << "File " << _pathfile << " " << (bAlertFileOverWrite ? "FOUND" : "NOT FOUND");
+					bool bSkipSave = false;
+
+					if (bAlertFileOverWrite) ImGui::OpenPopup("OVERWRITE");
+
+					if (ImGui::BeginPopupModal("OVERWRITE", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+					{
+						ImGui::Text("Current Preset will be deleted.\nThis operation cannot be undone!\n\n");
+						ImGui::Separator();
+
+						if (ImGui::Button("OK", ImVec2(_w50, 0)))
+						{
+							ofLogNotice(__FUNCTION__) << "OVERWRITE";
+							bSkipSave = false;
+							bAlertFileOverWrite = false;
+
+							ImGui::CloseCurrentPopup();
+						}
+
+						ImGui::SetItemDefaultFocus();
+						ImGui::SameLine();
+
+						if (ImGui::Button("CANCEL", ImVec2(_w50, 0)))
+						{
+							ofLogNotice(__FUNCTION__) << "CANCEL";
+							bSkipSave = true;
+							bAlertFileOverWrite = false;
+
+							ImGui::CloseCurrentPopup();
+						}
+
+						ImGui::EndPopup();
+					}
+
+					//--
+
+					if (!bSkipSave)
+					{
+						preset_Save(textInput_New);
+						preset_RefreshFiles(false);
+					}
 
 					//--
 
@@ -4759,7 +4807,7 @@ void ofxColorManager::gui_Presets()
 				else ofLogError(__FUNCTION__) << "Empty name on textInput !";
 			}
 			ImGui::PopStyleColor();
-	}
+		}
 		else
 		{
 			ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.5f, 0.0f, 0.0f, a));
@@ -4823,6 +4871,7 @@ void ofxColorManager::gui_Presets()
 			//ImGui::SameLine();
 
 			if (ImGui::Button("DELETE", ImVec2(_w50, _h * 0.5))) ImGui::OpenPopup("DELETE?");
+
 			if (ImGui::BeginPopupModal("DELETE?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
 			{
 				ImGui::Text("Current Preset will be deleted.\nThis operation cannot be undone!\n\n");
@@ -4834,7 +4883,8 @@ void ofxColorManager::gui_Presets()
 				ImGui::PopStyleVar();
 
 				if (!dont_ask_me_next_time) {
-					if (ImGui::Button("OK", ImVec2(120, 0))) {
+					if (ImGui::Button("OK", ImVec2(_w50, 0))) 
+					{
 						ofLogNotice(__FUNCTION__) << "DELETE";
 						files[last_Index_Preset].remove();
 						preset_RefreshFiles(false);
@@ -4843,7 +4893,7 @@ void ofxColorManager::gui_Presets()
 					}
 					ImGui::SetItemDefaultFocus();
 					ImGui::SameLine();
-					if (ImGui::Button("CANCEL", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
+					if (ImGui::Button("CANCEL", ImVec2(_w50, 0))) { ImGui::CloseCurrentPopup(); }
 				}
 				else {
 					ofLogNotice(__FUNCTION__) << "DELETE";
@@ -4889,7 +4939,7 @@ void ofxColorManager::gui_Presets()
 
 				if (!dont_ask_me_next_time)
 				{
-					if (ImGui::Button("OK", ImVec2(120, 0)))
+					if (ImGui::Button("OK", ImVec2(_w50, 0)))
 					{
 						ofLogNotice(__FUNCTION__) << "EXPORT";
 						//path_Folder_ExportColor_Custom = ;
@@ -4901,9 +4951,9 @@ void ofxColorManager::gui_Presets()
 
 					ImGui::SetItemDefaultFocus();
 					ImGui::SameLine();
-					if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
+					if (ImGui::Button("Cancel", ImVec2(_w50, 0))) { ImGui::CloseCurrentPopup(); }
 
-					if (ImGui::Button("SET PATH", ImVec2(120, 0)))
+					if (ImGui::Button("SET PATH", ImVec2(_w100, 0)))
 					{
 						ofLogNotice(__FUNCTION__) << "SET EXPORT PATH";
 						ImGui::Text("Pick export path..\n\n");
@@ -4957,7 +5007,7 @@ void ofxColorManager::gui_Presets()
 		//ImGui::Dummy(ImVec2(0.0f, 2.0f));
 		//if (SHOW_Kit) ofxImGui::AddParameter(AutoScroll);
 		//ImGui::Checkbox("Auto-Resize", &auto_resize);
-}
+	}
 
 	ofxImGui::EndWindow(mainSettings);
 
@@ -5171,7 +5221,7 @@ void ofxColorManager::setupGui()
 
 	ImGuiConfigFlags flags;
 	flags = ImGuiConfigFlags_DockingEnable;
-	
+
 	// allow move panels out-of-OF-window
 	//#ifdef USE_VIEWPORTS
 	//	flags |= ImGuiConfigFlags_ViewportsEnable;
@@ -5183,7 +5233,8 @@ void ofxColorManager::setupGui()
 
 	bool bMouse = false;//false to auto show on window workflow
 	bool bAutoDraw = true;
-	gui.setup(nullptr, bAutoDraw, flags, true, bMouse);
+	bool bRestore = true;
+	gui.setup(nullptr, bAutoDraw, flags, bRestore, bMouse);
 
 	// io
 	auto &io = ImGui::GetIO();
@@ -5311,7 +5362,7 @@ bool ofxColorManager::draw_Gui()
 				}
 #endif
 				if (SHOW_Quantizer) colorQuantizer.draw_Gui();
-			}
+		}
 			if (SHOW_LinkExport) gui_LinkExport();
 			if (SHOW_Demos) gui_Demo();
 #ifndef USE_MINIMAL_GUI
@@ -5322,7 +5373,7 @@ bool ofxColorManager::draw_Gui()
 
 			if (gradientEngine.SHOW_Gradient) gui_Gradient();
 			//if (SHOW_Gradient) gui_Gradient();
-		}
+	}
 
 		//--
 
@@ -5357,7 +5408,7 @@ bool ofxColorManager::draw_Gui()
 		if (SHOW_About) { gui_About(&SHOW_About); }
 
 		//--
-	}
+}
 	gui.end();
 
 	//----
@@ -6201,7 +6252,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 			//is not closing..
 			TCP_Sender.close();
-}
+		}
 	}
 #endif
 
@@ -7152,7 +7203,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		{
 			mouseRuler.toggleVisibility();
 			//myDEMO_Bubbles.toggleMouseCamera();
-	}
+		}
 #endif
 		// TEST
 		else if (key == 'T')
@@ -7727,8 +7778,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//}
 		////    else if()
 		////        color_Undo.clearRedo();
-}
-}
+		}
+	}
 
 //--------------------------------------------------------------
 void ofxColorManager::keyReleased(ofKeyEventArgs &eventArgs)
@@ -8744,14 +8795,14 @@ void ofxColorManager::exportPalette()
 			TCP_Sender.clearBuffer();
 			TCP_Sender.putString(ss.str());
 			TCP_Sender.send();
-	}
+		}
 #endif
 
 		storeText.push_back(ss.str() + "\n");
-}
+		}
 
 	//--
-}
+	}
 
 //--------------------------------------------------------------
 void ofxColorManager::savePresetFile()
