@@ -1,6 +1,6 @@
 {
     "ofxColorManager": {
-        "App_Layout": "1",
+        "App_Layout": "0",
         "DEMO": {
             "Alpha_1": "0.681",
             "Alpha_Spheres": "0.839",
@@ -51,9 +51,9 @@
             "Size_Plt": "25"
         },
         "PANELS": {
-            "AutoScroll": "1",
+            "AutoScroll": "0",
             "DEMO": "0",
-            "EDITOR": "0",
+            "EDITOR": "1",
             "GRADIENT": "0",
             "GUI_MAIN": "1",
             "KIT": "1",
@@ -62,13 +62,13 @@
             "LOVERS": "0",
             "PALETTE": "1",
             "PANELS": "1",
-            "PICKER": "0",
+            "PICKER": "1",
             "PICTURE": "0",
             "PRESETS": "1",
             "RANGE": "0",
-            "SHOW_MAIN_PANEL": "0",
+            "SHOW_MAIN_PANEL": "1",
             "Show_Mini_Palette": "0",
-            "THEORY": "0"
+            "THEORY": "1"
         },
         "PICKER": {
             "BRG": "0",
@@ -79,6 +79,6 @@
             "SAT": "0",
             "S_Power": "0.51"
         },
-        "Show_Menu_Bar": "0"
+        "Show_Menu_Bar": "1"
     }
 }

@@ -4763,7 +4763,7 @@ void ofxColorManager::gui_Presets()
 
 					if (ImGui::BeginPopupModal("OVERWRITE", NULL, ImGuiWindowFlags_AlwaysAutoResize))
 					{
-						ImGui::Text("Current Preset will be deleted.\nThis operation cannot be undone!\n\n");
+						ImGui::Text("Current Preset will be overwritten.\nThis operation cannot be undone!\n\n");
 						ImGui::Separator();
 
 						if (ImGui::Button("OK", ImVec2(_w50, 0)))
@@ -4893,6 +4893,7 @@ void ofxColorManager::gui_Presets()
 					}
 					ImGui::SetItemDefaultFocus();
 					ImGui::SameLine();
+
 					if (ImGui::Button("CANCEL", ImVec2(_w50, 0))) { ImGui::CloseCurrentPopup(); }
 				}
 				else {
@@ -9832,4 +9833,11 @@ void ofxColorManager::doExportPaletteCoolors()
 
 	// link
 	exportPalette();
+
+	//----
+
+#ifdef USE_ASE_MODULE
+	//TODO:
+	createAse();
+#endif
 }

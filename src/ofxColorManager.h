@@ -3,6 +3,13 @@
 
 #include "ofMain.h"
 
+//TODO:
+//ASE exporter
+//#define USE_ASE_MODULE
+#ifdef USE_ASE_MODULE
+#include "ase_common.h"
+#include "ase_writer.h"
+#endif
 
 /*
 
@@ -10,6 +17,7 @@
 TODO:
 
 + alert when saving a preset with an already located filename. ask to overwrite
+
 + layout manager. save show toggles too. a lite ofxPresetsManager?
 + export Adobe ASE
 + add tween transitions to presets
@@ -24,8 +32,8 @@ TODO:
 
 BUGS:
 
-+ colour lovers search with no results must stop spinner 
-+ colour lovers search crashes sometimes. error -1? 
++ colour lovers search with no results must stop spinner
++ colour lovers search crashes sometimes. error -1?
 + fix text input boxes when docking mode. to avoid floating text input box
 + TCP port number switch, some problems on reconnect bc threading not implemented. should use some sync addon or OSC.
 + ImGui pickers hangs flickering sometimes bc max width
@@ -327,7 +335,7 @@ private:
 	ofParameter<bool> SHOW_Layouts{ "LAYOUTS", false };
 	ofParameter<bool> SHOW_PanelEngines{ "ENGINES", true };
 	//shows advanced panels to tweak layout or workflow behaviour
-	
+
 	ofParameter<bool> Lock_DockingLayout{ "LOCK DOCK", true };
 
 	ofParameter<bool> bPlaySlideShow{ "Play Slide-Show", false };
@@ -560,7 +568,7 @@ private:
 
 	void loadPresetFile();
 	void savePresetFile();
-	
+
 	//--
 
 	// import from https://coolors.co
@@ -1232,4 +1240,62 @@ private:
 
 	void buildHelpInfo();
 
+	//---
+
+	//TODO:
+	// ASE
+
+#ifdef USE_ASE_MODULE
+
+	void createAse() {
+		ofLogNotice(__FUNCTION__) << "----------------- EXPORT ASE -----------------" << endl;
+
+		ASE_COLORTYPE _ASE_COLORTYPE = ASE_COLORTYPE_RGB;
+
+		float _col0[4] = { 1,0,0,1 };
+		ASE_COLOR _ASE_COLOR0;
+		_ASE_COLOR0.name = "myColor0";
+		_ASE_COLOR0.type = ASE_COLORTYPE_RGB;
+		_ASE_COLOR0.col[0] = _col0[0];
+		_ASE_COLOR0.col[1] = _col0[1];
+		_ASE_COLOR0.col[2] = _col0[2];
+
+		float _col1[4] = { 0,1,0,1 };
+		ASE_COLOR _ASE_COLOR1;
+		_ASE_COLOR1.name = "myColor1";
+		_ASE_COLOR1.type = ASE_COLORTYPE_RGB;
+		_ASE_COLOR1.col[0] = _col1[0];
+		_ASE_COLOR1.col[1] = _col1[1];
+		_ASE_COLOR1.col[2] = _col1[2];
+
+		float _col2[4] = { 0,0,1,1 };
+		ASE_COLOR _ASE_COLOR2;
+		_ASE_COLOR2.name = "myColor2";
+		_ASE_COLOR2.type = ASE_COLORTYPE_RGB;
+		_ASE_COLOR2.col[0] = _col2[0];
+		_ASE_COLOR2.col[1] = _col2[1];
+		_ASE_COLOR2.col[2] = _col2[2];
+
+		ASE_COLOR myColors[3];
+
+		ASE_GROUP _ASE_GROUP;
+		_ASE_GROUP.numColors = 3;
+		_ASE_GROUP.name = "myGroup";
+		_ASE_GROUP.colors = &_ASE_COLOR0;
+
+		ASE_FILE _ASE_FILE;
+		_ASE_FILE.numGroups = 1;
+		_ASE_FILE.version[0] = 1;
+		_ASE_FILE.version[1] = 1;
+		_ASE_FILE.groups = &_ASE_GROUP;
+
+		ASE_ERRORTYPE error;
+		FILE *f;// = fopen(ofToDataPath("myASE"));
+
+		//error = ase_writeAseFile(&_ASE_FILE, f);
+		//ase_writeAseFile(ASE_FILE *ase, FILE *f);
+		//https://github.com/JamesHovet/ofxASE
+	}
+
+#endif
 };
