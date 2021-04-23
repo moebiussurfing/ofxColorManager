@@ -2168,6 +2168,132 @@ void ofxColorManager::gui_Editor()
 
 			//----
 
+			//TODO:
+			//add here to for using when presets panel is hidden
+			// new preset 
+			// manual toggle
+			if (!SHOW_Presets)
+			{
+				float _hh = _h / 2;//smaller
+
+				if (ofxSurfingHelpers::AddBigToggle(MODE_NewPreset, _w100, _hh))
+				{
+					if (name_TARGET != nullptr) textInput_New = name_TARGET[0];
+					if (textInput_New == "") textInput_New = "type name";
+				}
+
+				if (MODE_NewPreset.get())
+				{
+					// 4. save new
+
+					ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.5f, 0.0f, 0.0f, a));
+					if (ImGui::Button("SAVE NEW", ImVec2(_w100, _hh * 2)))
+					{
+						ofLogNotice(__FUNCTION__) << "SAVE NEW: " << textInput_New;
+
+						//NOTE: preset filename must to not include any extra '.' char
+						//clean all extra '.' chars
+						ofStringReplace(textInput_New, ".", "");
+
+						//has_focus = 0;
+						MODE_NewPreset = false;
+						MODE_ReadyToUpdate = true;
+
+						if (textInput_New != "")
+						{
+							ofLogNotice(__FUNCTION__) << "textInput_New: " << textInput_New;
+
+							//--
+
+							//TODO:
+							//not working
+
+							// check overwrite
+
+							string _pathfile = path_Presets + textInput_New + ".json";
+							bAlertFileOverWrite = ofxSurfingHelpers::ofxKuFileExists(_pathfile);
+							ofLogNotice(__FUNCTION__) << "File " << _pathfile << " " << (bAlertFileOverWrite ? "FOUND" : "NOT FOUND");
+							bool bSkipSave = false;
+
+							if (bAlertFileOverWrite) ImGui::OpenPopup("OVERWRITE");
+
+							if (ImGui::BeginPopupModal("OVERWRITE", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+							{
+								ImGui::Text("Current Preset will be overwritten.\nThis operation cannot be undone!\n\n");
+								ImGui::Separator();
+
+								if (ImGui::Button("OK", ImVec2(_w50, 0)))
+								{
+									ofLogNotice(__FUNCTION__) << "OVERWRITE";
+									bSkipSave = false;
+									bAlertFileOverWrite = false;
+
+									ImGui::CloseCurrentPopup();
+								}
+
+								ImGui::SetItemDefaultFocus();
+								ImGui::SameLine();
+
+								if (ImGui::Button("CANCEL", ImVec2(_w50, 0)))
+								{
+									ofLogNotice(__FUNCTION__) << "CANCEL";
+									bSkipSave = true;
+									bAlertFileOverWrite = false;
+
+									ImGui::CloseCurrentPopup();
+								}
+
+								ImGui::EndPopup();
+							}
+
+							//--
+
+							if (!bSkipSave)
+							{
+								preset_Save(textInput_New);
+								preset_RefreshFiles(false);
+							}
+
+							//--
+
+							// workflow
+							//go to ne index after adding a new preset
+							refresh_FilesSorting(textInput_New);
+						}
+						else ofLogError(__FUNCTION__) << "Empty name on textInput !";
+					}
+					ImGui::PopStyleColor();
+				}
+				else
+				{
+					if (MODE_ReadyToUpdate)
+					{
+						ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.5f, 0.0f, 0.0f, a));
+
+						if (ImGui::Button("UPDATE", ImVec2(_w100, _hh)))
+						{
+							//TODO:
+							//should re load by same name and get what position on vector
+							//is to reload current preset number
+							//textInput_temp = ofToString(tab2);
+							//ofLogNotice(__FUNCTION__) << "textInput_temp:" << textInput_temp;
+
+							//PRESET_Name = textInput_temp;
+							textInput_New = PRESET_Name;
+
+							ofLogNotice(__FUNCTION__) << "UPDATE : " << PRESET_Name;
+
+							//save/update
+							preset_Save(PRESET_Name);
+							preset_RefreshFiles(false);
+						}
+						ImGui::PopStyleColor();
+					}
+				}
+			}
+
+			//----
+
 			// 2. edit
 
 			//TODO:
@@ -3286,7 +3412,7 @@ void ofxColorManager::gui_Picker()
 
 			//if (ImGui::CollapsingHeader("SQUARE", _flagw))//flickering bug..
 			if (ImGui::TreeNodeEx("SQUARE", _flagw))
-			//if (ImGui::TreeNode("SQUARE"))
+				//if (ImGui::TreeNode("SQUARE"))
 			{
 				_flags =
 					ImGuiColorEditFlags_NoSmallPreview |
@@ -3701,117 +3827,124 @@ void ofxColorManager::gui_LayoutsAdvanced()
 
 		//----
 
-		std::string str;
-		switch (appLayoutIndex)
+		ofxSurfingHelpers::AddBigToggle(bAutoSave_Layout, _w100, _h);
+		ofxSurfingHelpers::AddBigToggle(Lock_DockingLayout, _w100, _h);
+		ofxSurfingHelpers::AddBigToggle(SHOW_Panels, _w100, _h);
+
+		//----
+
+		// label current layout
+		//std::string str;
+		//switch (appLayoutIndex)
+		//{
+		//case APP_DEFAULT: str = "DEFAULT"; break;
+		//case APP_PRESETS: str = "PRESETS"; break;
+		//case APP_ENGINES: str = "ENGINES"; break;
+		//case APP_MINIMAL: str = "MINIMAL"; break;
+		//case APP_USER: str = "USER"; break;
+		//}
+		//ImGui::Text(str.c_str());
+
+		//ImGui::Dummy(ImVec2(0.0f, 2.0f));
+
+		if (ImGui::CollapsingHeader("TOOLS", ImGuiWindowFlags_None))
 		{
-		case APP_DEFAULT: str = "DEFAULT"; break;
-		case APP_PRESETS: str = "PRESETS"; break;
-		case APP_ENGINES: str = "ENGINES"; break;
-		case APP_MINIMAL: str = "MINIMAL"; break;
-		case APP_USER: str = "USER"; break;
-		}
-		ImGui::Text(str.c_str());
+			ImVec2 bb{ (bMin ? _w100 : _w50), _h };
 
-		ImGui::Dummy(ImVec2(0.0f, 2.0f));
-
-		ImVec2 bb{ (bMin ? _w100 : _w50), _h };
-
-		ImGui::Text("Default");
-		if (!bMin)
-		{
-			ImGui::PushID(i++);
-			if (ImGui::Button("Load", bb))
+			ImGui::Text("Default");
+			if (!bMin)
 			{
-				appLayoutIndex = APP_DEFAULT;
+				ImGui::PushID(i++);
+				if (ImGui::Button("Load", bb))
+				{
+					appLayoutIndex = APP_DEFAULT;
+				}
+				ImGui::SameLine();
 			}
-			ImGui::SameLine();
-		}
-		ImGui::PushID(i++);
-		if (ImGui::Button("Save", bb))
-		{
-			ini_to_save_Str = path_ImGui + "imgui_DEAULT.ini";
-			ini_to_save = ini_to_save_Str.c_str();
-		}
-
-		ImGui::Text("Presets");
-		if (!bMin)
-		{
 			ImGui::PushID(i++);
-			if (ImGui::Button("Load", bb))
+			if (ImGui::Button("Save", bb))
 			{
-				appLayoutIndex = APP_PRESETS;
+				ini_to_save_Str = path_ImGui + "imgui_DEAULT.ini";
+				ini_to_save = ini_to_save_Str.c_str();
 			}
-			ImGui::SameLine();
-		}
-		ImGui::PushID(i++);
-		if (ImGui::Button("Save", bb))
-		{
-			ini_to_save_Str = path_ImGui + "imgui_PRESETS.ini";
-			ini_to_save = ini_to_save_Str.c_str();
-		}
 
-		ImGui::Text("Engines");
-		if (!bMin)
-		{
+			ImGui::Text("Presets");
+			if (!bMin)
+			{
+				ImGui::PushID(i++);
+				if (ImGui::Button("Load", bb))
+				{
+					appLayoutIndex = APP_PRESETS;
+				}
+				ImGui::SameLine();
+			}
 			ImGui::PushID(i++);
-			if (ImGui::Button("Load", bb))
+			if (ImGui::Button("Save", bb))
 			{
-				appLayoutIndex = APP_ENGINES;
+				ini_to_save_Str = path_ImGui + "imgui_PRESETS.ini";
+				ini_to_save = ini_to_save_Str.c_str();
 			}
-			ImGui::SameLine();
-		}
-		ImGui::PushID(i++);
-		if (ImGui::Button("Save", bb))
-		{
-			ini_to_save_Str = path_ImGui + "imgui_ENGINES.ini";
-			ini_to_save = ini_to_save_Str.c_str();
-		}
 
-		ImGui::Text("Minimal");
-		if (!bMin)
-		{
+			ImGui::Text("Engines");
+			if (!bMin)
+			{
+				ImGui::PushID(i++);
+				if (ImGui::Button("Load", bb))
+				{
+					appLayoutIndex = APP_ENGINES;
+				}
+				ImGui::SameLine();
+			}
 			ImGui::PushID(i++);
-			if (ImGui::Button("Load", bb))
+			if (ImGui::Button("Save", bb))
 			{
-				appLayoutIndex = APP_MINIMAL;
+				ini_to_save_Str = path_ImGui + "imgui_ENGINES.ini";
+				ini_to_save = ini_to_save_Str.c_str();
 			}
-			ImGui::SameLine();
-		}
-		ImGui::PushID(i++);
-		if (ImGui::Button("Save", bb))
-		{
-			ini_to_save_Str = path_ImGui + "imgui_MINIMAL.ini";
-			ini_to_save = ini_to_save_Str.c_str();
-		}
 
-		ImGui::Text("User");
-		if (!bMin)
-		{
+			ImGui::Text("Minimal");
+			if (!bMin)
+			{
+				ImGui::PushID(i++);
+				if (ImGui::Button("Load", bb))
+				{
+					appLayoutIndex = APP_MINIMAL;
+				}
+				ImGui::SameLine();
+			}
 			ImGui::PushID(i++);
-			if (ImGui::Button("Load", bb))
+			if (ImGui::Button("Save", bb))
 			{
-				appLayoutIndex = APP_USER;
+				ini_to_save_Str = path_ImGui + "imgui_MINIMAL.ini";
+				ini_to_save = ini_to_save_Str.c_str();
 			}
-			ImGui::SameLine();
-		}
-		ImGui::PushID(i++);
-		if (ImGui::Button("Save", bb))
-		{
-			ini_to_save_Str = path_ImGui + "imgui_USER.ini";
-			ini_to_save = ini_to_save_Str.c_str();
-		}
 
-		ImGui::PopID();
+			ImGui::Text("User");
+			if (!bMin)
+			{
+				ImGui::PushID(i++);
+				if (ImGui::Button("Load", bb))
+				{
+					appLayoutIndex = APP_USER;
+				}
+				ImGui::SameLine();
+			}
+			ImGui::PushID(i++);
+			if (ImGui::Button("Save", bb))
+			{
+				ini_to_save_Str = path_ImGui + "imgui_USER.ini";
+				ini_to_save = ini_to_save_Str.c_str();
+			}
 
+			ImGui::PopID();
+		}
+		
 		//--
 
-		ImGui::Dummy(ImVec2(0.0f, 2.0f));
+		//ImGui::Dummy(ImVec2(0.0f, 2.0f));
 
 		if (ImGui::CollapsingHeader("EXTRA", ImGuiWindowFlags_None))
 		{
-			ofxSurfingHelpers::AddBigToggle(bAutoSave_Layout, _w100, _h);
-			ofxSurfingHelpers::AddBigToggle(Lock_DockingLayout, _w100, _h);
-			ofxSurfingHelpers::AddBigToggle(SHOW_Panels, _w100, _h);
 			ofxSurfingHelpers::AddBigToggle(SHOW_Engines, _w100, _h);
 			ofxSurfingHelpers::AddBigToggle(SHOW_MenuBar, _w100, _h);
 			ofxSurfingHelpers::AddBigToggle(SHOW_Advanced, _w100, _h);
@@ -4653,7 +4786,7 @@ void ofxColorManager::gui_Presets()
 					PRESET_Name = files_Names[last_Index_Preset];
 					preset_Load(PRESET_Name);
 				}
-				
+
 				// workflow
 				if (MODE_NewPreset) MODE_NewPreset = false;
 				MODE_ReadyToUpdate = true;
@@ -4836,8 +4969,8 @@ void ofxColorManager::gui_Presets()
 				else ofLogError(__FUNCTION__) << "Empty name on textInput !";
 			}
 			ImGui::PopStyleColor();
-		}
-		else 
+	}
+		else
 		{
 			if (MODE_ReadyToUpdate)
 			{
@@ -4916,7 +5049,7 @@ void ofxColorManager::gui_Presets()
 				ImGui::PopStyleVar();
 
 				if (!dont_ask_me_next_time) {
-					if (ImGui::Button("OK", ImVec2(_w50, 0))) 
+					if (ImGui::Button("OK", ImVec2(_w50, 0)))
 					{
 						ofLogNotice(__FUNCTION__) << "DELETE";
 						files[last_Index_Preset].remove();
@@ -5041,7 +5174,7 @@ void ofxColorManager::gui_Presets()
 		//ImGui::Dummy(ImVec2(0.0f, 2.0f));
 		//if (SHOW_Kit) ofxImGui::AddParameter(AutoScroll);
 		//ImGui::Checkbox("Auto-Resize", &auto_resize);
-	}
+}
 
 	ofxImGui::EndWindow(mainSettings);
 
@@ -5397,7 +5530,7 @@ bool ofxColorManager::draw_Gui()
 				}
 #endif
 				if (SHOW_Quantizer) colorQuantizer.draw_Gui();
-		}
+			}
 			if (SHOW_LinkExport) gui_LinkExport();
 			if (SHOW_Demos) gui_Demo();
 #ifndef USE_MINIMAL_GUI
@@ -5408,7 +5541,7 @@ bool ofxColorManager::draw_Gui()
 
 			if (gradientEngine.SHOW_Gradient) gui_Gradient();
 			//if (SHOW_Gradient) gui_Gradient();
-	}
+		}
 
 		//--
 
@@ -5443,7 +5576,7 @@ bool ofxColorManager::draw_Gui()
 		if (SHOW_About) { gui_About(&SHOW_About); }
 
 		//--
-}
+	}
 	gui.end();
 
 	//----
@@ -6288,7 +6421,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			//is not closing..
 			TCP_Sender.close();
 		}
-	}
+}
 #endif
 
 	//-
@@ -7252,7 +7385,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		{
 			mouseRuler.toggleVisibility();
 			//myDEMO_Bubbles.toggleMouseCamera();
-		}
+	}
 #endif
 		// TEST
 		else if (key == 'T')
@@ -7827,7 +7960,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//}
 		////    else if()
 		////        color_Undo.clearRedo();
-		}
+}
 	}
 
 //--------------------------------------------------------------
@@ -8845,14 +8978,14 @@ void ofxColorManager::exportPalette()
 			TCP_Sender.clearBuffer();
 			TCP_Sender.putString(ss.str());
 			TCP_Sender.send();
-		}
+	}
 #endif
 
 		storeText.push_back(ss.str() + "\n");
-		}
+}
 
 	//--
-	}
+}
 
 //--------------------------------------------------------------
 void ofxColorManager::savePresetFile()
