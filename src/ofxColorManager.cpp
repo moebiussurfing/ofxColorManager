@@ -588,7 +588,7 @@ void ofxColorManager::setup()
 	// panels
 
 	SHOW_ALL_GUI.setName("GUI MAIN");
-	SHOW_MINI_Preview.setName("Show Mini Palette");
+	SHOW_MINI_Preview.setName("SHOW MINI PALETTE");
 	SHOW_Palette.setName("PALETTE");
 	SHOW_Editor.setName("EDITOR");
 	SHOW_Theory.setName("THEORY");
@@ -1566,7 +1566,7 @@ void ofxColorManager::gui_Theory()
 	ImGui::SetWindowSize(ImVec2(ww, hh));
 
 	ImGuiWindowFlags flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
-	flags |= flagsWindows;
+	flags |= flagsWindowsLocked;
 
 	const float butlabelw = 140;// width label text
 
@@ -1992,7 +1992,7 @@ void ofxColorManager::gui_Editor()
 
 	ImGuiWindowFlags flagsw;
 	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
-	flagsw |= flagsWindows;
+	flagsw |= flagsWindowsLocked;
 
 	//blink when a new preset is editing
 	float a = ofxSurfingHelpers::getFadeBlink();
@@ -2338,7 +2338,7 @@ void ofxColorManager::gui_Palette()
 
 	ImGuiWindowFlags flagsw;
 	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None | ImGuiWindowFlags_NoScrollbar;
-	flagsw |= flagsWindows;
+	flagsw |= flagsWindowsLocked;
 
 	//-
 
@@ -2627,7 +2627,7 @@ void ofxColorManager::gui_Library()
 
 	ImGuiWindowFlags flagsw;
 	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
-	flagsw |= flagsWindows;
+	flagsw |= flagsWindowsLocked;
 
 	//--
 
@@ -3035,7 +3035,7 @@ void ofxColorManager::gui_LinkExport()
 
 	ImGuiWindowFlags flagsw;
 	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
-	flagsw |= flagsWindows;
+	flagsw |= flagsWindowsLocked;
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(ww, hh));
 
@@ -3197,7 +3197,7 @@ void ofxColorManager::gui_Picker()
 	ImGui::SetWindowSize(ImVec2(ww, hh));
 
 	ImGuiWindowFlags flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
-	flagsw |= flagsWindows;
+	flagsw |= flagsWindowsLocked;
 
 	//--
 
@@ -3412,7 +3412,7 @@ void ofxColorManager::gui_EnginesPanel()
 	static bool auto_resize = false;
 
 	ImGuiWindowFlags flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
-	flags |= flagsWindows;
+	flags |= flagsWindowsLocked;
 
 	//--
 
@@ -3450,7 +3450,7 @@ void ofxColorManager::gui_Advanced()
 
 	ImGuiWindowFlags flags;
 	flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
-	flags |= flagsWindows;
+	flags |= flagsWindowsLocked;
 
 	//----
 
@@ -3473,7 +3473,7 @@ void ofxColorManager::gui_Advanced()
 			ofxImGui::AddParameter(SHOW_Panels);
 			ofxImGui::AddParameter(SHOW_MINI_Preview);
 			ofxImGui::AddParameter(SHOW_MenuBar);
-			ImGui::Checkbox("Show About", &SHOW_About);
+			ImGui::Checkbox("SHOW ABOUT", &SHOW_About);
 		}
 
 		if (ImGui::CollapsingHeader("THEME", ImGuiWindowFlags_None))
@@ -3521,7 +3521,8 @@ void ofxColorManager::gui_LayoutsPanel()
 	static bool auto_resize = false;
 
 	ImGuiWindowFlags flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
-	//flags |= flagsWindows;
+	flags |= ImGuiWindowFlags_NoSavedSettings;//exclude from restore layouts
+	//flags |= flagsWindowsLocked;
 
 	//blink when a new preset is editing
 	float a = ofxSurfingHelpers::getFadeBlink();
@@ -3676,7 +3677,8 @@ void ofxColorManager::gui_LayoutsAdvanced()
 	static bool auto_resize = true;
 
 	ImGuiWindowFlags flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
-	//flags |= flagsWindows;
+	flags |= ImGuiWindowFlags_NoSavedSettings;//exclude from restore layouts
+	//flags |= flagsWindowsLocked;
 
 	bool bMin = false;//hide load buttons to simplify
 	float max = (bMin ? 150 : 175);
@@ -3807,10 +3809,11 @@ void ofxColorManager::gui_LayoutsAdvanced()
 
 		if (ImGui::CollapsingHeader("EXTRA", ImGuiWindowFlags_None))
 		{
-			ofxSurfingHelpers::AddBigToggle(Lock_DockingLayout, _w100, _h);
 			ofxSurfingHelpers::AddBigToggle(bAutoSave_Layout, _w100, _h);
+			ofxSurfingHelpers::AddBigToggle(Lock_DockingLayout, _w100, _h);
 			ofxSurfingHelpers::AddBigToggle(SHOW_Panels, _w100, _h);
 			ofxSurfingHelpers::AddBigToggle(SHOW_Engines, _w100, _h);
+			ofxSurfingHelpers::AddBigToggle(SHOW_MenuBar, _w100, _h);
 			ofxSurfingHelpers::AddBigToggle(SHOW_Advanced, _w100, _h);
 			//ofxSurfingHelpers::AddBigToggle(SHOW_LayoutsAdvanced, _w100, _h);
 
@@ -3829,7 +3832,7 @@ void ofxColorManager::gui_Panels()
 	static bool auto_resize = false;
 
 	ImGuiWindowFlags flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
-	flags |= flagsWindows;
+	flags |= flagsWindowsLocked;
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(500, PANEL_WIDGETS_HEIGHT));
 
@@ -3924,7 +3927,7 @@ void ofxColorManager::gui_Range()
 	ImGui::SetWindowSize(ImVec2(ww, hh));
 
 	ImGuiWindowFlags flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
-	flags |= flagsWindows;
+	flags |= flagsWindowsLocked;
 
 	//--
 
@@ -4363,7 +4366,7 @@ void ofxColorManager::gui_Kit()
 
 	ImGuiWindowFlags flags;
 	flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
-	flags |= flagsWindows;
+	flags |= flagsWindowsLocked;
 
 	//blink when a new preset is editing
 	float a = ofxSurfingHelpers::getFadeBlink();
@@ -4437,7 +4440,7 @@ void ofxColorManager::gui_InputText()
 	ImGuiWindowFlags flagsw;
 	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
 
-	//flagsw |= flagsWindows;
+	//flagsw |= flagsWindowsLocked;
 	flagsw |= ImGuiWindowFlags_NoTitleBar;
 	flagsw |= ImGuiWindowFlags_NoBackground;
 	flagsw |= ImGuiWindowFlags_NoDecoration;
@@ -4608,7 +4611,7 @@ void ofxColorManager::gui_Presets()
 
 	ImGuiWindowFlags flags;
 	flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
-	flags |= flagsWindows;
+	flags |= flagsWindowsLocked;
 
 	//blink when a new preset is editing
 	float a = ofxSurfingHelpers::getFadeBlink();
@@ -5052,7 +5055,7 @@ void ofxColorManager::gui_Gradient()
 
 	ImGuiWindowFlags flagsw;
 	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
-	flagsw |= flagsWindows;
+	flagsw |= flagsWindowsLocked;
 
 	//--
 
@@ -5156,7 +5159,7 @@ void ofxColorManager::gui_Demo()
 
 	ImGuiWindowFlags flagsw;
 	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
-	flagsw |= flagsWindows;
+	flagsw |= flagsWindowsLocked;
 
 	//-
 
@@ -5307,7 +5310,7 @@ void ofxColorManager::setupGui()
 	mainSettings = ofxImGui::Settings();
 
 	// for all window panels. lock
-	flagsWindows = ImGuiWindowFlags_NoMove;
+	flagsWindowsLocked = ImGuiWindowFlags_NoMove;
 
 	//-
 
@@ -6295,19 +6298,19 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	{
 		if (!Lock_DockingLayout)
 		{
-			flagsWindows = ImGuiWindowFlags_None;
+			flagsWindowsLocked = ImGuiWindowFlags_None;
 		}
 		else
 		{
-			flagsWindows = ImGuiWindowFlags_NoMove;
-			//flagsWindows |= ImGuiWindowFlags_NoResize;
-			//flagsWindows |= ImGuiWindowFlags_NoTitleBar;
-			//flagsWindows |= ImGuiWindowFlags_NoCollapse;
-			//flagsWindows |= ImGuiWindowFlags_NoDecoration;
-			//flagsWindows |= ImGuiWindowFlags_NoBackground;
-			//flagsWindows |= ImGuiDockNodeFlags_AutoHideTabBar;
-			//flagsWindows |= ImGuiDockNodeFlags_NoTabBar;
-			//flagsWindows |= ImGuiDockNodeFlags_NoCloseButton;
+			flagsWindowsLocked = ImGuiWindowFlags_NoMove;
+			//flagsWindowsLocked |= ImGuiWindowFlags_NoResize;
+			//flagsWindowsLocked |= ImGuiWindowFlags_NoTitleBar;
+			//flagsWindowsLocked |= ImGuiWindowFlags_NoCollapse;
+			//flagsWindowsLocked |= ImGuiWindowFlags_NoDecoration;
+			//flagsWindowsLocked |= ImGuiWindowFlags_NoBackground;
+			//flagsWindowsLocked |= ImGuiDockNodeFlags_AutoHideTabBar;
+			//flagsWindowsLocked |= ImGuiDockNodeFlags_NoTabBar;
+			//flagsWindowsLocked |= ImGuiDockNodeFlags_NoCloseButton;
 		}
 	}
 
@@ -6377,7 +6380,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 		if (SHOW_Advanced)
 		{
-			//flagsWindows = ImGuiWindowFlags_None;
+			//flagsWindowsLocked = ImGuiWindowFlags_None;
 
 			//// workflow
 			////if (!SHOW_MenuBar) SHOW_MenuBar = true;
@@ -9577,12 +9580,13 @@ void ofxColorManager::loadAppLayout(AppLayouts mode)
 			SHOW_Picker = true;
 			//SHOW_Kit = true;
 			//SHOW_Library = false;
-			SHOW_Demos = false;
-			gradientEngine.SHOW_Gradient = false;
-			SHOW_MINI_Preview = false;
-			SHOW_LinkExport = false;
-			SHOW_Advanced = false;
-			SHOW_MenuBar = true;
+			//SHOW_Demos = false;
+			//gradientEngine.SHOW_Gradient = false;
+			//SHOW_MINI_Preview = false;
+			//SHOW_LinkExport = false;
+			//SHOW_Advanced = false;
+			//SHOW_MenuBar = true;
+			Lock_DockingLayout = true;
 		}
 		break;
 
@@ -9607,12 +9611,13 @@ void ofxColorManager::loadAppLayout(AppLayouts mode)
 			SHOW_Picker = false;
 			//SHOW_Kit = true;
 			//SHOW_Library = false;
-			SHOW_Demos = false;
-			gradientEngine.SHOW_Gradient = false;
-			SHOW_MINI_Preview = false;
-			SHOW_LinkExport = false;
-			SHOW_Advanced = false;
-			SHOW_MenuBar = false;
+			//SHOW_Demos = false;
+			//gradientEngine.SHOW_Gradient = false;
+			//SHOW_MINI_Preview = false;
+			//SHOW_LinkExport = false;
+			//SHOW_Advanced = false;
+			//SHOW_MenuBar = false;
+			Lock_DockingLayout = true;
 		}
 		break;
 
@@ -9637,12 +9642,13 @@ void ofxColorManager::loadAppLayout(AppLayouts mode)
 			SHOW_Picker = true;
 			//SHOW_Kit = false;
 			//SHOW_Library = false;
-			SHOW_Demos = false;
-			gradientEngine.SHOW_Gradient = false;
-			SHOW_MINI_Preview = false;
-			SHOW_LinkExport = false;
-			SHOW_Advanced = false;
-			SHOW_MenuBar = false;
+			//SHOW_Demos = false;
+			//gradientEngine.SHOW_Gradient = false;
+			//SHOW_MINI_Preview = false;
+			//SHOW_LinkExport = false;
+			//SHOW_Advanced = false;
+			//SHOW_MenuBar = false;
+			Lock_DockingLayout = true;
 		}
 		break;
 
@@ -9674,6 +9680,7 @@ void ofxColorManager::loadAppLayout(AppLayouts mode)
 		//	SHOW_Advanced = false;
 		//	SHOW_MenuBar = false;
 		//}
+		Lock_DockingLayout = false;
 		break;
 
 	case ofxColorManager::APP_USER:
@@ -9704,6 +9711,7 @@ void ofxColorManager::loadAppLayout(AppLayouts mode)
 		//	SHOW_Advanced = false;
 		//	SHOW_MenuBar = false;
 		//}
+		Lock_DockingLayout = false;
 		break;
 	}
 }

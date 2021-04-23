@@ -857,7 +857,7 @@ private:
 	ImFont* customFont = nullptr;
 	ImFont* customFontBig = nullptr;
 	ImGuiStyle *style = nullptr;
-	ImGuiWindowFlags flagsWindows;
+	ImGuiWindowFlags flagsWindowsLocked;
 	ofParameter<int> fontSizeBigParam;
 	ofParameter<int> fontSizeParam;
 	std::string fontName;
@@ -1125,7 +1125,7 @@ private:
 	//----
 
 private:
-	ofParameter<bool> SHOW_MenuBar{ "Show Menu Bar", true };
+	ofParameter<bool> SHOW_MenuBar{ "SHOW MENU BAR", true };
 	bool SHOW_About = false;
 	void gui_MenuBar();
 	void gui_About(bool* p_open);
