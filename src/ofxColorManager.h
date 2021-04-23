@@ -337,6 +337,7 @@ private:
 	//shows advanced panels to tweak layout or workflow behaviour
 
 	ofParameter<bool> Lock_DockingLayout{ "LOCK DOCK", true };
+	ofParameter<bool> bAutoSave_Layout{ "AUTO SAVE LAYOUT", false };
 
 	ofParameter<bool> bPlaySlideShow{ "Play Slide-Show", false };
 	ofParameter<float> auto_pilot_Duration{ "Time", 1, 0.1, 5 };
@@ -438,8 +439,10 @@ private:
 		APP_USER,
 		APP_MODE_SIZE
 	};
-	void setAppLayout(AppLayouts mode);
+	void loadAppLayout(AppLayouts mode);
+	void saveAppLayout(AppLayouts mode);
 	ofParameter<int> appLayoutIndex{ "App Layout", 0, 0, APP_MODE_SIZE - 1 };
+	int appLayoutIndex_PRE = -1;
 
 	//--
 
@@ -1095,6 +1098,8 @@ private:
 
 	// new preset state mode
 	ofParameter<bool> MODE_NewPreset{ "NEW PRESET", false };
+	
+	bool MODE_ReadyToUpdate = false;//when a preset is loaded will allow update/overwrite save
 
 	std::string textInput_New = "name..";
 

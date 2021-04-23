@@ -159,7 +159,10 @@ void ofxColorManager::build_Palette_Engine()
 
 	//if (SHOW_Presets)
 	{
-		if (!MODE_NewPreset && bNew) MODE_NewPreset = true;
+		// workflow
+		//if (!MODE_NewPreset && bNew) MODE_NewPreset = true;
+		MODE_ReadyToUpdate = false;
+
 		textInput_New = _name;
 	}
 
@@ -919,6 +922,7 @@ void ofxColorManager::setup()
 	params_control.add(fontSizeBigParam);
 	params_control.add(appLayoutIndex);
 	params_control.add(Lock_DockingLayout);
+	params_control.add(bAutoSave_Layout);
 	params_control.add(SHOW_Layouts);
 	params_control.add(SHOW_LayoutsAdvanced);
 	params_control.add(bExportByTCP);
@@ -1031,6 +1035,7 @@ void ofxColorManager::update(ofEventArgs & args)
 		ImGui::LoadIniSettingsFromDisk(ini_to_load);
 		ini_to_load = NULL;
 	}
+
 	if (ini_to_save)
 	{
 		ImGui::SaveIniSettingsToDisk(ini_to_save);
@@ -3544,17 +3549,7 @@ void ofxColorManager::gui_LayoutsPanel()
 		ImGui::PushID("##saveLayout");
 		if (ImGui::Button("SAVE", ImVec2(_w, _h)))
 		{
-			switch (appLayoutIndex)
-			{
-			case APP_DEFAULT: ini_to_save_Str = path_ImGui + "imgui_DEAULT.ini"; break;
-			case APP_PRESETS: ini_to_save_Str = path_ImGui + "imgui_PRESETS.ini"; break;
-			case APP_ENGINES: ini_to_save_Str = path_ImGui + "imgui_ENGINES.ini"; break;
-			case APP_MINIMAL: ini_to_save_Str = path_ImGui + "imgui_MINIMAL.ini"; break;
-			case APP_USER: ini_to_save_Str = path_ImGui + "imgui_USER.ini"; break;
-			default:break;
-			}
-
-			ini_to_save = ini_to_save_Str.c_str();
+			saveAppLayout(AppLayouts(appLayoutIndex.get()));
 		}
 		ImGui::PopID();
 		ImGui::PopStyleColor();
@@ -3787,6 +3782,7 @@ void ofxColorManager::gui_LayoutsAdvanced()
 		if (ImGui::CollapsingHeader("EXTRA", ImGuiWindowFlags_None))
 		{
 			ofxSurfingHelpers::AddBigToggle(Lock_DockingLayout, _w100, _h);
+			ofxSurfingHelpers::AddBigToggle(bAutoSave_Layout, _w100, _h);
 			ofxSurfingHelpers::AddBigToggle(SHOW_Panels, _w100, _h);
 			ofxSurfingHelpers::AddBigToggle(SHOW_Engines, _w100, _h);
 			ofxSurfingHelpers::AddBigToggle(SHOW_Advanced, _w100, _h);
@@ -4628,8 +4624,10 @@ void ofxColorManager::gui_Presets()
 					PRESET_Name = files_Names[last_Index_Preset];
 					preset_Load(PRESET_Name);
 				}
-
+				
+				// workflow
 				if (MODE_NewPreset) MODE_NewPreset = false;
+				MODE_ReadyToUpdate = true;
 			}
 
 			ImGui::PopItemWidth();
@@ -4743,6 +4741,8 @@ void ofxColorManager::gui_Presets()
 
 				//has_focus = 0;
 				MODE_NewPreset = false;
+				MODE_ReadyToUpdate = true;
+
 				if (textInput_New != "")
 				{
 					ofLogNotice(__FUNCTION__) << "textInput_New: " << textInput_New;
@@ -4808,27 +4808,31 @@ void ofxColorManager::gui_Presets()
 			}
 			ImGui::PopStyleColor();
 		}
-		else
+		else 
 		{
-			ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.5f, 0.0f, 0.0f, a));
-			if (ImGui::Button("UPDATE", ImVec2(_w100, _h)))
+			if (MODE_ReadyToUpdate)
 			{
-				//TODO:
-				//should re load by same name and get what position on vector
-				//is to reload current preset number
-				//textInput_temp = ofToString(tab2);
-				//ofLogNotice(__FUNCTION__) << "textInput_temp:" << textInput_temp;
+				ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.5f, 0.0f, 0.0f, a));
 
-				//PRESET_Name = textInput_temp;
-				textInput_New = PRESET_Name;
+				if (ImGui::Button("UPDATE", ImVec2(_w100, _h)))
+				{
+					//TODO:
+					//should re load by same name and get what position on vector
+					//is to reload current preset number
+					//textInput_temp = ofToString(tab2);
+					//ofLogNotice(__FUNCTION__) << "textInput_temp:" << textInput_temp;
 
-				ofLogNotice(__FUNCTION__) << "UPDATE : " << PRESET_Name;
+					//PRESET_Name = textInput_temp;
+					textInput_New = PRESET_Name;
 
-				//save/update
-				preset_Save(PRESET_Name);
-				preset_RefreshFiles(false);
+					ofLogNotice(__FUNCTION__) << "UPDATE : " << PRESET_Name;
+
+					//save/update
+					preset_Save(PRESET_Name);
+					preset_RefreshFiles(false);
+				}
+				ImGui::PopStyleColor();
 			}
-			ImGui::PopStyleColor();
 		}
 
 		//----
@@ -5338,7 +5342,8 @@ bool ofxColorManager::draw_Gui()
 			if (SHOW_Editor) gui_Editor();
 			if (SHOW_Presets) gui_Presets();
 #ifdef MODE_TEXT_INPUT_WORKAROUND
-			gui_InputText();
+			if (MODE_NewPreset)//hide text input
+				gui_InputText();
 			//if (SHOW_Presets /*&& MODE_NewPreset*/) gui_InputText();
 #endif
 			if (SHOW_Kit) gui_Kit();
@@ -6293,7 +6298,21 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	else if (name == appLayoutIndex.getName())
 	{
 		appLayoutIndex = ofClamp(appLayoutIndex.get(), appLayoutIndex.getMin(), appLayoutIndex.getMax());
-		setAppLayout(AppLayouts(appLayoutIndex.get()));
+		if (appLayoutIndex != appLayoutIndex_PRE) //changed
+		{
+			if (bAutoSave_Layout) {
+				//force to ensure save bc upda chainned
+				saveAppLayout(AppLayouts(appLayoutIndex_PRE));
+				if (ini_to_save)
+				{
+					ImGui::SaveIniSettingsToDisk(ini_to_save);
+					ini_to_save = NULL;
+				}
+			}
+
+			appLayoutIndex_PRE = appLayoutIndex;
+			loadAppLayout(AppLayouts(appLayoutIndex.get()));
+		}
 	}
 
 	// font preset name size
@@ -7297,8 +7316,8 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			if (appLayoutIndex > appLayoutIndex.getMin()) appLayoutIndex--;
 			else if (appLayoutIndex == appLayoutIndex.getMin()) appLayoutIndex = appLayoutIndex.getMax();
 
-			//if (appLayoutIndex < 3) setAppLayout(AppLayouts(appLayoutIndex + 1));
-			//else if (appLayoutIndex == 3) setAppLayout(AppLayouts(0));
+			//if (appLayoutIndex < 3) loadAppLayout(AppLayouts(appLayoutIndex + 1));
+			//else if (appLayoutIndex == 3) loadAppLayout(AppLayouts(0));
 		}
 
 		//-----
@@ -8121,6 +8140,7 @@ void ofxColorManager::preset_Load(std::string p, bool absolutePath)
 
 	// new preset
 	if (MODE_NewPreset) MODE_NewPreset = false;
+	MODE_ReadyToUpdate = true;
 
 	// load first color
 	if (palette.size() > 0) color_Picked = ofFloatColor(palette[0]);
@@ -8871,9 +8891,10 @@ void ofxColorManager::loadPresetFile()
 
 		preset_Load(_path, true);
 
-		// workflow
 		// new preset
-		if (!MODE_NewPreset) MODE_NewPreset = true;
+		// workflow
+		//if (!MODE_NewPreset) MODE_NewPreset = true;
+		MODE_ReadyToUpdate = true;
 		textInput_New = _name;
 	}
 	else
@@ -9481,7 +9502,24 @@ void ofxColorManager::gui_About(bool* p_open)
 }
 
 //--------------------------------------------------------------
-void ofxColorManager::setAppLayout(AppLayouts mode)
+void ofxColorManager::saveAppLayout(AppLayouts mode)
+{
+	//switch (appLayoutIndex)
+	switch (mode)
+	{
+	case APP_DEFAULT: ini_to_save_Str = path_ImGui + "imgui_DEAULT.ini"; break;
+	case APP_PRESETS: ini_to_save_Str = path_ImGui + "imgui_PRESETS.ini"; break;
+	case APP_ENGINES: ini_to_save_Str = path_ImGui + "imgui_ENGINES.ini"; break;
+	case APP_MINIMAL: ini_to_save_Str = path_ImGui + "imgui_MINIMAL.ini"; break;
+	case APP_USER: ini_to_save_Str = path_ImGui + "imgui_USER.ini"; break;
+	default:break;
+	}
+
+	ini_to_save = ini_to_save_Str.c_str();
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::loadAppLayout(AppLayouts mode)
 {
 	std::string _label = APP_RELEASE_NAME;
 	_label += "       ";//spacing
@@ -9534,7 +9572,7 @@ void ofxColorManager::setAppLayout(AppLayouts mode)
 		SHOW_ColourLovers = false;
 		SHOW_Quantizer = false;
 		SHOW_Presets = true;
-		SHOW_Kit = true;
+		//SHOW_Kit = true;
 		SHOW_Editor = false;
 		SHOW_Picker = false;
 		SHOW_Library = false;
@@ -9793,7 +9831,8 @@ void ofxColorManager::doImportPaletteCoolors(std::string url)
 	}
 
 	// workflow
-	if (!MODE_NewPreset) MODE_NewPreset = true;
+	//if (!MODE_NewPreset) MODE_NewPreset = true;
+
 	textInput_New = "coolors_";
 	textInput_New += ofGetTimestampString();
 	//textInput_New += "_";
