@@ -612,7 +612,7 @@ void ofxColorManager::setup()
 	SHOW_Picker.set("PICKER", true);
 	SHOW_Library.set("LIBRARY", false);
 	SHOW_Range.set("RANGE", true);
-	SHOW_Engines.set("PANELS", true);
+	SHOW_Engines.set("ENGINES", true);
 	SHOW_Panels.set("SHOW MAIN PANEL", true);
 	SHOW_LinkExport.set("LINK", true);
 	SHOW_Demos.set("DEMO", false);
@@ -3811,7 +3811,7 @@ void ofxColorManager::gui_LayoutsAdvanced()
 
 	//----
 
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(max, 200));
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(max, 100));
 
 	if (ofxImGui::BeginWindow("LAYOUTS ", mainSettings, flags))
 	{
