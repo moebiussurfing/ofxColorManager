@@ -1230,6 +1230,7 @@ private:
 	ofParameter<bool> b2{ "ENGINES", false };
 	ofParameter<bool> b3{ "MINIMAL", false };
 	ofParameter<bool> b4{ "USER", false };
+
 	void Changed_LayoutPanels(ofAbstractParameter &e);
 	ofParameterGroup params_LayoutSPanel{ "LAYOUTS PANEL" };
 

@@ -9432,7 +9432,7 @@ void ofxColorManager::gui_MenuBar()
 		if (ImGui::BeginMenu("View"))
 		{
 			static bool pref = SHOW_MenuBar.get();
-			if (ImGui::MenuItem("Show Menu Bar", NULL, &pref))
+			if (ImGui::MenuItem("Show Menu Bar (This!)", NULL, &pref))
 			{
 				SHOW_MenuBar = pref;
 			}
