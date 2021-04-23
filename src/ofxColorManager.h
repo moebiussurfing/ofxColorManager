@@ -338,6 +338,7 @@ private:
 
 	ofParameter<bool> Lock_DockingLayout{ "LOCK DOCK", true };
 	ofParameter<bool> bAutoSave_Layout{ "AUTO SAVE LAYOUT", false };
+	ofParameterGroup params_LayoutPanelsState{ "LayoutPanels" };
 
 	ofParameter<bool> bPlaySlideShow{ "Play Slide-Show", false };
 	ofParameter<float> auto_pilot_Duration{ "Time", 1, 0.1, 5 };

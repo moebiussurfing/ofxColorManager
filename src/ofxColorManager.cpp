@@ -931,6 +931,26 @@ void ofxColorManager::setup()
 
 	refresh_DemoFboAbout();
 
+	//layouts
+	params_LayoutPanelsState.add(SHOW_Palette);
+	params_LayoutPanelsState.add(SHOW_Panels);
+	params_LayoutPanelsState.add(SHOW_PanelEngines);
+	params_LayoutPanelsState.add(SHOW_Theory);
+	params_LayoutPanelsState.add(SHOW_Range);
+	params_LayoutPanelsState.add(SHOW_ColourLovers);
+	params_LayoutPanelsState.add(SHOW_Quantizer);
+	params_LayoutPanelsState.add(SHOW_Presets);
+	params_LayoutPanelsState.add(SHOW_Kit);
+	params_LayoutPanelsState.add(SHOW_Editor);
+	params_LayoutPanelsState.add(SHOW_Picker);
+	params_LayoutPanelsState.add(SHOW_Library);
+	params_LayoutPanelsState.add(SHOW_Demos);
+	params_LayoutPanelsState.add(gradientEngine.SHOW_Gradient);
+	params_LayoutPanelsState.add(SHOW_MINI_Preview);
+	params_LayoutPanelsState.add(SHOW_LinkExport);
+	params_LayoutPanelsState.add(SHOW_Advanced);
+	params_LayoutPanelsState.add(SHOW_MenuBar);
+
 	//------------------------------------------------
 
 	// startup
@@ -1040,6 +1060,8 @@ void ofxColorManager::update(ofEventArgs & args)
 	{
 		ImGui::SaveIniSettingsToDisk(ini_to_save);
 		ini_to_save = NULL;
+
+		ofxSurfingHelpers::saveGroup(params_LayoutPanelsState, ini_to_save_Str + ".json");
 	}
 
 	//--
@@ -3179,7 +3201,7 @@ void ofxColorManager::gui_Picker()
 
 	//--
 
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, PANEL_WIDGETS_HEIGHT));
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(ww, hh));
 
 	if (ofxImGui::BeginWindow("PICKER", mainSettings, flagsw))
 	{
@@ -3216,6 +3238,7 @@ void ofxColorManager::gui_Picker()
 			_w100 = ImGui::GetContentRegionAvail().x;
 			_w99 = _w100;
 
+			float __spacing = 10;
 			//--
 
 			// 1. color picker
@@ -3223,8 +3246,10 @@ void ofxColorManager::gui_Picker()
 			if (default_wheel) _flagw = ImGuiTreeNodeFlags_DefaultOpen;
 			else _flagw = ImGuiTreeNodeFlags_None;
 
-			//if (ImGui::CollapsingHeader("WHEEL", _flagw))
-			if (ImGui::TreeNodeEx("WHEEL", _flagw))
+			//if (ImGui::CollapsingHeader("WHEEL", _flagw))//flicks bug..
+			//if (ImGui::TreeNodeEx("WHEEL", _flagw))
+			//ImGui::TreeNodeBehaviorIsOpen(ImGuiTreeNodeFlags_None);
+			if (ImGui::TreeNode("WHEEL"))
 			{
 				// 1.1 circled
 				_flags =
@@ -3240,8 +3265,8 @@ void ofxColorManager::gui_Picker()
 
 				//-
 
-				ImGui::PushItemWidth(-5);
-				if (ImGui::ColorPicker4("##PickerWheel", (float *)&cTmp, _flags))
+				ImGui::PushItemWidth(-__spacing);
+				if (ImGui::ColorPicker4("##PickerWheel01", (float *)&cTmp, _flags))
 				{
 					ofLogNotice(__FUNCTION__) << "Wheel Picker : moved";
 
@@ -3259,8 +3284,9 @@ void ofxColorManager::gui_Picker()
 			if (!default_wheel) _flagw = ImGuiTreeNodeFlags_DefaultOpen;
 			else _flagw = ImGuiTreeNodeFlags_None;
 
-			//if (ImGui::CollapsingHeader("SQUARE", _flagw))
+			//if (ImGui::CollapsingHeader("SQUARE", _flagw))//flickering bug..
 			if (ImGui::TreeNodeEx("SQUARE", _flagw))
+			//if (ImGui::TreeNode("SQUARE"))
 			{
 				_flags =
 					ImGuiColorEditFlags_NoSmallPreview |
@@ -3274,8 +3300,8 @@ void ofxColorManager::gui_Picker()
 					ImGuiColorEditFlags_NoAlpha |
 					ImGuiColorEditFlags_PickerHueBar;
 
-				ImGui::PushItemWidth(-5);
-				if (ImGui::ColorPicker4("##PickerSquare", (float *)&cTmp, _flags))
+				ImGui::PushItemWidth(-__spacing);
+				if (ImGui::ColorPicker4("##PickerSquare01", (float *)&cTmp, _flags))
 				{
 					ofLogNotice(__FUNCTION__) << "Square Picker : moved";
 
@@ -6301,7 +6327,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		if (appLayoutIndex != appLayoutIndex_PRE) //changed
 		{
 			if (bAutoSave_Layout) {
-				//force to ensure save bc upda chainned
+				//force to ensure save bc update chain load and save below
 				saveAppLayout(AppLayouts(appLayoutIndex_PRE));
 				if (ini_to_save)
 				{
@@ -9516,14 +9542,17 @@ void ofxColorManager::saveAppLayout(AppLayouts mode)
 	}
 
 	ini_to_save = ini_to_save_Str.c_str();
+
+	ofxSurfingHelpers::saveGroup(params_LayoutPanelsState, ini_to_save_Str + ".json");
 }
 
 //--------------------------------------------------------------
 void ofxColorManager::loadAppLayout(AppLayouts mode)
 {
-	std::string _label = APP_RELEASE_NAME;
+	std::string _label = APP_RELEASE_NAME;// Paletto v1.0
 	_label += "       ";//spacing
-	//_label += "                   ";//spacing
+
+	bool bEnableHardcode = true;
 
 	switch (mode)
 	{
@@ -9531,141 +9560,150 @@ void ofxColorManager::loadAppLayout(AppLayouts mode)
 		if (!b0) b0 = true;
 		b1 = b2 = b3 = b4 = false;
 		ofSetWindowTitle(_label + "DEFAULT" + " | F1");
-		//ini_to_load = "imgui_DEAULT.ini";
 		ini_to_load_Str = path_ImGui + "imgui_DEAULT.ini";
 		ini_to_load = ini_to_load_Str.c_str();
-		//appLayoutIndex = 0;
-		SHOW_Palette = true;
-		SHOW_Panels = true;
-		SHOW_PanelEngines = true;
-		//SHOW_Theory = true;
-		SHOW_Theory.setWithoutEventNotifications(true);
-		SHOW_Range = false;
-		SHOW_ColourLovers = false;
-		SHOW_Quantizer = false;
-		SHOW_Presets = true;
-		SHOW_Kit = true;
-		SHOW_Editor = true;
-		SHOW_Picker = true;
-		SHOW_Library = false;
-		SHOW_Demos = false;
-		gradientEngine.SHOW_Gradient = false;
-		SHOW_MINI_Preview = false;
-		SHOW_LinkExport = false;
-		SHOW_Advanced = false;
-		SHOW_MenuBar = true;
+		ofxSurfingHelpers::loadGroup(params_LayoutPanelsState, ini_to_load_Str + ".json");
+		//hardcoded forced
+		if (bEnableHardcode) {
+			SHOW_Palette = true;
+			SHOW_Panels = true;
+			SHOW_PanelEngines = true;
+			SHOW_Theory.setWithoutEventNotifications(true);
+			SHOW_Range = false;
+			SHOW_ColourLovers = false;
+			SHOW_Quantizer = false;
+			SHOW_Presets = true;
+			SHOW_Editor = true;
+			SHOW_Picker = true;
+			//SHOW_Kit = true;
+			//SHOW_Library = false;
+			SHOW_Demos = false;
+			gradientEngine.SHOW_Gradient = false;
+			SHOW_MINI_Preview = false;
+			SHOW_LinkExport = false;
+			SHOW_Advanced = false;
+			SHOW_MenuBar = true;
+		}
 		break;
 
 	case ofxColorManager::APP_PRESETS:
 		if (!b1) b1 = true;
 		b0 = b2 = b3 = b4 = false;
 		ofSetWindowTitle(_label + "PRESETS" + " | F2");
-		//ini_to_load = "imgui_PRESETS.ini";
 		ini_to_load_Str = path_ImGui + "imgui_PRESETS.ini";
 		ini_to_load = ini_to_load_Str.c_str();
-		//appLayoutIndex = 1;
-		SHOW_Palette = true;
-		SHOW_Panels = false;
-		SHOW_PanelEngines = false;
-		SHOW_Theory = false;
-		SHOW_Range = false;
-		SHOW_ColourLovers = false;
-		SHOW_Quantizer = false;
-		SHOW_Presets = true;
-		//SHOW_Kit = true;
-		SHOW_Editor = false;
-		SHOW_Picker = false;
-		SHOW_Library = false;
-		SHOW_Demos = false;
-		gradientEngine.SHOW_Gradient = false;
-		SHOW_MINI_Preview = false;
-		SHOW_LinkExport = false;
-		SHOW_Advanced = false;
-		SHOW_MenuBar = false;
+		ofxSurfingHelpers::loadGroup(params_LayoutPanelsState, ini_to_load_Str + ".json");
+		//hardcoded forced
+		if (bEnableHardcode) {
+			SHOW_Palette = true;
+			SHOW_Panels = false;
+			SHOW_PanelEngines = false;
+			SHOW_Theory = false;
+			SHOW_Range = false;
+			SHOW_ColourLovers = false;
+			SHOW_Quantizer = false;
+			SHOW_Presets = true;
+			SHOW_Editor = false;
+			SHOW_Picker = false;
+			//SHOW_Kit = true;
+			//SHOW_Library = false;
+			SHOW_Demos = false;
+			gradientEngine.SHOW_Gradient = false;
+			SHOW_MINI_Preview = false;
+			SHOW_LinkExport = false;
+			SHOW_Advanced = false;
+			SHOW_MenuBar = false;
+		}
 		break;
 
 	case ofxColorManager::APP_ENGINES:
 		if (!b2) b2 = true;
 		b0 = b1 = b3 = b4 = false;
 		ofSetWindowTitle(_label + "ENGINES" + " | F3");
-		//ini_to_load = "imgui_ENGINES.ini";
 		ini_to_load_Str = path_ImGui + "imgui_ENGINES.ini";
 		ini_to_load = ini_to_load_Str.c_str();
-		//appLayoutIndex = 2;
-		SHOW_Palette = true;
-		SHOW_Panels = false;
-		SHOW_PanelEngines = true;
-		SHOW_Theory = true;
-		SHOW_Range = false;
-		SHOW_ColourLovers = false;
-		SHOW_Quantizer = false;
-		SHOW_Presets = false;
-		SHOW_Kit = false;
-		SHOW_Editor = true;
-		SHOW_Picker = true;
-		SHOW_Library = false;
-		SHOW_Demos = false;
-		gradientEngine.SHOW_Gradient = false;
-		SHOW_MINI_Preview = false;
-		SHOW_LinkExport = false;
-		SHOW_Advanced = false;
-		SHOW_MenuBar = false;
+		ofxSurfingHelpers::loadGroup(params_LayoutPanelsState, ini_to_load_Str + ".json");
+		//hardcoded forced
+		if (bEnableHardcode) {
+			SHOW_Palette = true;
+			SHOW_Panels = false;
+			SHOW_PanelEngines = true;
+			SHOW_Theory = true;
+			SHOW_Range = false;
+			SHOW_ColourLovers = false;
+			SHOW_Quantizer = false;
+			SHOW_Presets = false;
+			SHOW_Editor = true;
+			SHOW_Picker = true;
+			//SHOW_Kit = false;
+			//SHOW_Library = false;
+			SHOW_Demos = false;
+			gradientEngine.SHOW_Gradient = false;
+			SHOW_MINI_Preview = false;
+			SHOW_LinkExport = false;
+			SHOW_Advanced = false;
+			SHOW_MenuBar = false;
+		}
 		break;
 
 	case ofxColorManager::APP_MINIMAL:
 		if (!b3) b3 = true;
 		b0 = b1 = b2 = b4 = false;
 		ofSetWindowTitle(_label + "MINIMAL" + " | F4 ");
-		//ini_to_load = "imgui_MINIMAL.ini";
 		ini_to_load_Str = path_ImGui + "imgui_MINIMAL.ini";
 		ini_to_load = ini_to_load_Str.c_str();
-		//appLayoutIndex = 3;
-		SHOW_Palette = true;
-		SHOW_Panels = false;
-		SHOW_PanelEngines = false;
-		SHOW_Theory = false;
-		SHOW_Range = false;
-		SHOW_ColourLovers = false;
-		SHOW_Quantizer = false;
-		SHOW_Presets = true;
-		SHOW_Kit = false;
-		SHOW_Editor = true;
-		SHOW_Picker = true;
-		SHOW_Library = false;
-		SHOW_Demos = false;
-		gradientEngine.SHOW_Gradient = false;
-		SHOW_MINI_Preview = false;
-		SHOW_LinkExport = false;
-		SHOW_Advanced = false;
-		SHOW_MenuBar = false;
+		ofxSurfingHelpers::loadGroup(params_LayoutPanelsState, ini_to_load_Str + ".json");
+		//hardcoded forced
+		//if (bEnableHardcode) {
+		//	SHOW_Palette = true;
+		//	SHOW_Panels = false;
+		//	SHOW_PanelEngines = false;
+		//	SHOW_Theory = false;
+		//	SHOW_Range = false;
+		//	SHOW_ColourLovers = false;
+		//	SHOW_Quantizer = false;
+		//	SHOW_Presets = true;
+		//	SHOW_Kit = false;
+		//	SHOW_Editor = true;
+		//	SHOW_Picker = true;
+		//	SHOW_Library = false;
+		//	SHOW_Demos = false;
+		//	gradientEngine.SHOW_Gradient = false;
+		//	SHOW_MINI_Preview = false;
+		//	SHOW_LinkExport = false;
+		//	SHOW_Advanced = false;
+		//	SHOW_MenuBar = false;
+		//}
 		break;
 
 	case ofxColorManager::APP_USER:
 		if (!b4) b4 = true;
 		b0 = b1 = b2 = b3 = false;
 		ofSetWindowTitle(_label + "USER" + " | F5");
-		//ini_to_load = "imgui_USER.ini";
 		ini_to_load_Str = path_ImGui + "imgui_USER.ini";
 		ini_to_load = ini_to_load_Str.c_str();
-		//appLayoutIndex = 4;
-		SHOW_Palette = true;
-		SHOW_Panels = false;
-		SHOW_PanelEngines = false;
-		SHOW_Theory = false;
-		SHOW_Range = false;
-		SHOW_ColourLovers = false;
-		SHOW_Quantizer = false;
-		SHOW_Presets = true;
-		SHOW_Kit = false;
-		SHOW_Editor = true;
-		SHOW_Picker = true;
-		SHOW_Library = false;
-		SHOW_Demos = false;
-		gradientEngine.SHOW_Gradient = false;
-		SHOW_MINI_Preview = false;
-		SHOW_LinkExport = false;
-		SHOW_Advanced = false;
-		SHOW_MenuBar = false;
+		ofxSurfingHelpers::loadGroup(params_LayoutPanelsState, ini_to_load_Str + ".json");
+		//hardcoded forced
+		//if (bEnableHardcode) {
+		//	SHOW_Palette = true;
+		//	SHOW_Panels = false;
+		//	SHOW_PanelEngines = false;
+		//	SHOW_Theory = false;
+		//	SHOW_Range = false;
+		//	SHOW_ColourLovers = false;
+		//	SHOW_Quantizer = false;
+		//	SHOW_Presets = true;
+		//	SHOW_Kit = false;
+		//	SHOW_Editor = true;
+		//	SHOW_Picker = true;
+		//	SHOW_Library = false;
+		//	SHOW_Demos = false;
+		//	gradientEngine.SHOW_Gradient = false;
+		//	SHOW_MINI_Preview = false;
+		//	SHOW_LinkExport = false;
+		//	SHOW_Advanced = false;
+		//	SHOW_MenuBar = false;
+		//}
 		break;
 	}
 }

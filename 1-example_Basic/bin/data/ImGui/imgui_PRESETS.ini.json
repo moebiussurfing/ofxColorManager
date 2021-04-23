@@ -1,0 +1,21 @@
+{
+    "LayoutPanels": {
+        "DEMO": "0",
+        "EDITOR": "1",
+        "ENGINES": "1",
+        "GRADIENT": "0",
+        "KIT": "1",
+        "LIBRARY": "0",
+        "LINK": "0",
+        "LOVERS": "0",
+        "PALETTE": "1",
+        "PICKER": "1",
+        "PICTURE": "0",
+        "PRESETS": "1",
+        "RANGE": "0",
+        "SHOW_MAIN_PANEL": "1",
+        "Show_Menu_Bar": "1",
+        "Show_Mini_Palette": "0",
+        "THEORY": "1"
+    }
+}
