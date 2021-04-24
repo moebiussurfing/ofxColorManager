@@ -13,7 +13,8 @@ void DEMO_SceneSpheres::setup() {
 	//-
 
 	// a.
-	cam.reset();
+	resetCamera();
+	//cam.reset();
 	ofxLoadCamera(cam, path + _name);//not working
 
 	//// b.

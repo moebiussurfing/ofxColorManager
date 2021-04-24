@@ -1,8 +1,8 @@
 {
     "ofxSCENE-SVG": {
-        "Alpha": "1",
+        "Alpha": "0.5",
         "Bg_White": "0",
-        "Blend_Type": "1",
+        "Blend_Type": "4",
         "Edit_DEMO_Svg": "0",
         "Enable_DEMO_Svg": "0",
         "Enable_Keys": "1",

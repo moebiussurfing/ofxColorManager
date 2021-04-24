@@ -11,9 +11,9 @@ class DEMO_Scene {
 
 private:
 	std::string _name = "DEMO_Bubbles_Cam";
-
+	
 public:
-	~DEMO_Scene() 
+	~DEMO_Scene()
 	{
 		ofLogNotice(__FUNCTION__);
 		ofxSaveCamera(cam, path + _name);
@@ -21,6 +21,9 @@ public:
 	DEMO_Scene()
 	{
 		ofLogNotice(__FUNCTION__);
+		//fix init
+		setEnableMouseCamera(true);
+		resetCamera();
 	}
 
 	//-
@@ -64,15 +67,19 @@ public:
 
 	void resetCamera() {
 		cam.reset();
+		cam.setupPerspective();
+		//float d = cam.getDistance();
+		//cam.setDistance( d * 0.8);
+		cam.setDistance(500);
 	}
 
 	void setEnableMouseCamera(bool b) {
 		ofLogNotice(__FUNCTION__);
 		if (b) {
 			cam.enableMouseInput();
-			cam.enableMouseMiddleButton();
-			//cam.enableInertia();
-			//cam.setenableInertia();
+			//cam.enableMouseMiddleButton();
+			////cam.enableInertia();
+			////cam.setenableInertia();
 		}
 		else {
 			cam.disableMouseInput();
@@ -89,9 +96,19 @@ public:
 		else cam.disableMouseInput();
 	}
 
+public:
+	void save() {
+		ofLogNotice(__FUNCTION__);
+		ofxSaveCamera(cam, path + _name);
+	};
+	void load() {
+		ofLogNotice(__FUNCTION__);
+		ofxLoadCamera(cam, path + _name);
+	};
+
 private:
-	
-	string path = "ofxColorManager/demo/";
+
+	string path = "ofxColorManager/demo/";//TODO: hardcoded..
 	ofEasyCam cam;
 	vector<ofColor> *palette;
 

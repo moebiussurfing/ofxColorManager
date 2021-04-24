@@ -45,10 +45,16 @@ public:
 		ofLogNotice(__FUNCTION__);
 		palette = &_palette;
 	}
-
+	void save() {
+		ofxSaveCamera(cam, path + _name);
+	}
+	void load() {
+		ofxLoadCamera(cam, path + _name);
+	}
 	void resetCamera() {
 		cam.reset();
 		cam.setDistance(750);
+		ofxSaveCamera(cam, path + _name);
 	}
 
 	void setEnableMouseCamera(bool b) {

@@ -297,7 +297,7 @@ private:
 private:
 	PreviewPaletteMini miniPreview;
 
-	DEMO_Svg myDEMO_Svg;
+	DEMO_Svg DEMO3_Svg;
 
 	//TODO:
 	shared_ptr<ColorWheelScheme> _scheme;
@@ -657,8 +657,8 @@ private:
 
 	// DEMO
 private:
-	DEMO_Scene myDEMO_Bubbles;
-	DEMO_SceneSpheres myDEMO_Spheres;
+	DEMO_Scene DEMO1_Bubbles;
+	DEMO_SceneSpheres DEMO2_Spheres;
 
 	//--
 
@@ -864,7 +864,7 @@ private:
 
 	// mouse or key locker
 	bool mouseLockedByGui;
-	bool mouseOverGui_PRE;
+	bool mouseLockedByGui_PRE;
 	bool bCheckMouseOverTextInput = true;//flag to return mouse over any gui panel or over text input only!
 	bool bCheckMouseOverTextInputLovers = true;//flag to return mouse over any gui panel or over text input only!
 	bool bLockAllKeysByGui;
@@ -1041,15 +1041,15 @@ private:
 
 private:
 	ofParameter<bool> DEMO1_Enable{ "Enable DEMO Bubbles", false };
-	ofParameter<bool> DEMO_Auto{ "Auto Trig", false };
-	ofParameter<bool> DEMO_Cam{ "Edit Camera Bubbles", false };
-	ofParameter<float> DEMO_Timer{ "Frequency", 0.5, 0, 1 };
-	ofParameter<float> DEMO_Alpha{ "Alpha 1", 0.8, 0, 1 };
+	ofParameter<bool> DEMO1_Auto{ "Auto Trig", false };
+	ofParameter<bool> DEMO1_Cam{ "Edit Camera Bubbles", false };
+	ofParameter<float> DEMO1_Timer{ "Frequency", 0.5, 0, 1 };
+	ofParameter<float> DEMO1_Alpha{ "Alpha 1", 0.8, 0, 1 };
 	int Demo_Timer = 0;
 	int Demo_Timer_Max = 15000;
 	bool bTEST_pause = false;
 
-	ofParameter<bool> DEMO5_Enable{ "Enable DEMO Spheres", false };
+	ofParameter<bool> DEMO2_Enable{ "Enable DEMO Spheres", false };
 
 	//--
 

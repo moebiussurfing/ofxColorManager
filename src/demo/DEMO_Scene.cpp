@@ -21,9 +21,9 @@ void DEMO_Scene::setup() {
 	// DEMO 2
 
 	ofxLoadCamera(cam, path + _name);
-	cam.reset();
+	//cam.reset();
 
-	cam.disableMouseInput();
+	//cam.disableMouseInput();
 	//cam.enableOrtho();
 }
 
