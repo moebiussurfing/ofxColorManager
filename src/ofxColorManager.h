@@ -16,18 +16,17 @@
 
 TODO:
 
-+ alert when saving a preset with an already located filename. ask to overwrite
++ fix: alert when saving a preset with an already located filename. ask to overwrite
++ startup init layout by code, not .ini
 
-+ layout manager. save show toggles too. a lite ofxPresetsManager?
 + export Adobe ASE
-+ add tween transitions to presets
 + undo engine
 + global sat / bright editor for editor palette
 + fix demo1 camera and add tweening random jumps
++ add tween transitions to presets ??
 + add cosine/shift gradients engine https://github.com/soufianekhiat/DearWidgets
 + check theory picker if calls too much callbacks
 + plugins for UE4 / Unity3D / Processing ?
-+ ofxNative ?
 
 
 BUGS:
@@ -336,8 +335,8 @@ private:
 	ofParameter<bool> SHOW_PanelEngines{ "ENGINES", true };
 	//shows advanced panels to tweak layout or workflow behaviour
 
-	ofParameter<bool> Lock_DockingLayout{ "LOCK DOCK", true };
-	ofParameter<bool> bAutoSave_Layout{ "AUTO SAVE LAYOUT", false };
+	ofParameter<bool> Lock_DockingLayout{ "LOCK", false };
+	ofParameter<bool> bAutoSave_Layout{ "AUTO SAVE LAYOUT", true };
 	ofParameterGroup params_LayoutPanelsState{ "LayoutPanels" };
 
 	ofParameter<bool> bPlaySlideShow{ "Play Slide-Show", false };

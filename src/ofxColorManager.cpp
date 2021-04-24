@@ -480,9 +480,9 @@ void ofxColorManager::setup()
 
 	color_Picked.set("COLOR", ofFloatColor::red);
 
-	color_HUE.set("H", 0, 0, 255);
-	color_SAT.set("S", 0, 0, 255);
-	color_BRG.set("V", 0, 0, 255);
+	color_HUE.set("Hue", 0, 0, 255);
+	color_SAT.set("Sat", 0, 0, 255);
+	color_BRG.set("Value", 0, 0, 255);
 
 	params_color.setName("COLOR");
 	params_color.add(color_HUE);
@@ -950,6 +950,8 @@ void ofxColorManager::setup()
 	params_LayoutPanelsState.add(SHOW_LinkExport);
 	params_LayoutPanelsState.add(SHOW_Advanced);
 	params_LayoutPanelsState.add(SHOW_MenuBar);
+	params_LayoutPanelsState.add(Lock_DockingLayout);
+
 
 	//------------------------------------------------
 
@@ -5444,6 +5446,7 @@ void ofxColorManager::setupGui()
 
 	// for all window panels. lock
 	flagsWindowsLocked = ImGuiWindowFlags_NoMove;
+	Lock_DockingLayout = Lock_DockingLayout;//refresh callback
 
 	//-
 
@@ -7371,7 +7374,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		}
 
 		// unlock dock Ctrl+Alt+a
-		else if ((key == 'L'))// || key == 'l') && mod_CONTROL && !mod_ALT)
+		else if ((key == 'L' || key == 'l')) //&& mod_CONTROL && !mod_ALT)
 		{
 			Lock_DockingLayout = !Lock_DockingLayout;
 		}
@@ -9719,7 +9722,7 @@ void ofxColorManager::loadAppLayout(AppLayouts mode)
 			//SHOW_LinkExport = false;
 			//SHOW_Advanced = false;
 			//SHOW_MenuBar = true;
-			Lock_DockingLayout = true;
+			//Lock_DockingLayout = true;
 		}
 		break;
 
@@ -9750,7 +9753,7 @@ void ofxColorManager::loadAppLayout(AppLayouts mode)
 			//SHOW_LinkExport = false;
 			//SHOW_Advanced = false;
 			//SHOW_MenuBar = false;
-			Lock_DockingLayout = true;
+			//Lock_DockingLayout = true;
 		}
 		break;
 
@@ -9781,7 +9784,7 @@ void ofxColorManager::loadAppLayout(AppLayouts mode)
 			//SHOW_LinkExport = false;
 			//SHOW_Advanced = false;
 			//SHOW_MenuBar = false;
-			Lock_DockingLayout = true;
+			//Lock_DockingLayout = true;
 		}
 		break;
 
@@ -9813,7 +9816,7 @@ void ofxColorManager::loadAppLayout(AppLayouts mode)
 		//	SHOW_Advanced = false;
 		//	SHOW_MenuBar = false;
 		//}
-		Lock_DockingLayout = false;
+		//Lock_DockingLayout = false;
 		break;
 
 	case ofxColorManager::APP_USER:
@@ -9844,7 +9847,7 @@ void ofxColorManager::loadAppLayout(AppLayouts mode)
 		//	SHOW_Advanced = false;
 		//	SHOW_MenuBar = false;
 		//}
-		Lock_DockingLayout = false;
+		//Lock_DockingLayout = false;
 		break;
 	}
 }
