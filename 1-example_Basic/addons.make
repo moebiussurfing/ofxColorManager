@@ -4,7 +4,6 @@ ofxGui
 ofxImGui
 ofxPoco
 ofxIO
-ofxKuNetwork
 ofxNetwork
 ofxOpenCv
 ofxScaleDragRect
