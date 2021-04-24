@@ -16,8 +16,7 @@
 
 TODO:
 
-+ store layout panels positions by OF. link both panels
-+ startup must recall: preset, layout index etc
++ add color pictures browser to quantizer (copy from litSphere)
 + fix: alert when saving a preset with an already located filename. ask to overwrite
 + startup init layout by code, not .ini. check windows positions by code to responsive other elemnts
 
@@ -33,6 +32,7 @@ TODO:
 
 BUGS:
 
++ keys disables sometimes
 + colour lovers search with no results must stop spinner
 + colour lovers search crashes sometimes. error -1?
 + fix text input boxes when docking mode. to avoid floating text input box
@@ -86,6 +86,7 @@ BUGS:
 #define PANEL_WIDGETS_HEIGHT 500
 //#define MODAL_WIDTH 60.0f
 #define MAX_PICKER_WIDTH 200
+#define LAYOUT_WINDOW_WIDTH 150
 
 //----------
 
@@ -339,13 +340,13 @@ private:
 	//shows advanced panels to tweak layout or workflow behaviour
 
 	ofParameter<bool> Lock_DockingLayout{ "LOCK", false };
-	ofParameter<bool> bAutoSave_Layout{ "AUTO SAVE LAYOUT", true };
+	ofParameter<bool> bAutoSave_Layout{ "AUTO SAVE", true };
 	ofParameterGroup params_LayoutPanelsState{ "LayoutPanels" };
 
 	ofParameter<bool> bPlaySlideShow{ "Play Slide-Show", false };
 	ofParameter<float> auto_pilot_Duration{ "Time", 1, 0.1, 5 };
 	int auto_pilot_timer;
-
+	
 	//--
 
 	ofParameter<bool> SHOW_ImGui{ "ImGui", true };
@@ -503,6 +504,7 @@ private:
 	ofParameter<int> last_Index_ColorPalette{ "Selected", 0, 0, 0 };//selected color on palette on editing
 	ofParameter<int> last_Index_Preset{ "Preset Index", 0, 0, 0 };//selected preset
 	int last_Lib_Index = -1;//last library picked color
+	void resetLibraryLayout();
 
 	bool bLast_Index_Theory = true;
 	bool bLast_Index_Range = true;
@@ -892,7 +894,16 @@ private:
 	void gui_Palette();
 	void gui_Editor();
 	void gui_LayoutsAdvanced();
-	void gui_LayoutsPanel();
+	void gui_LayoutsPresets();
+
+	//standalone window not handled by .ini layout
+	//but for the app settings
+	float widthGuiLayout;
+	ofParameter<glm::vec2> positionGuiLayout{ "Gui Layout Position",
+	glm::vec2(ofGetWidth() / 2,ofGetHeight() / 2),//center
+		glm::vec2(0,0),
+		glm::vec2(ofGetWidth(), ofGetHeight())
+	};
 
 #ifdef MODE_TEXT_INPUT_WORKAROUND
 	void gui_InputText();
@@ -1127,7 +1138,7 @@ private:
 	//----
 
 private:
-	ofParameter<bool> SHOW_MenuBar{ "SHOW MENU BAR", false };
+	ofParameter<bool> SHOW_MenuBar{ "MENU BAR", false };
 	bool SHOW_About = false;
 	void gui_MenuBar();
 	void gui_About(bool* p_open);
