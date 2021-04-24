@@ -1,8 +1,8 @@
 {
     "LayoutPanels": {
         "DEMO": "0",
-        "EDITOR": "0",
-        "ENGINES": "0",
+        "EDITOR": "1",
+        "ENGINES": "1",
         "GRADIENT": "0",
         "KIT": "0",
         "LIBRARY": "0",
@@ -14,9 +14,9 @@
         "PICTURE": "0",
         "PRESETS": "0",
         "RANGE": "0",
-        "SHOW_MAIN_PANEL": "0",
+        "SHOW_MAIN_PANEL": "1",
         "SHOW_MENU_BAR": "0",
         "SHOW_MINI_PALETTE": "0",
-        "THEORY": "0"
+        "THEORY": "1"
     }
 }

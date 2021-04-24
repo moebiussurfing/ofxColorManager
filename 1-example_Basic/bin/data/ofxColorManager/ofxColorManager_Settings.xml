@@ -1,24 +1,24 @@
 {
     "ofxColorManager": {
-        "App_Layout": "0",
+        "App_Layout": "2",
         "DEMO": {
-            "Alpha_1": "0.8",
-            "Alpha_Spheres": "0.545",
+            "Alpha_1": "0.7",
+            "Alpha_Spheres": "0.8",
             "Auto_Trig": "0",
             "Enable_DEMO_Bubbles": "0",
-            "Enable_DEMO_Spheres": "1",
-            "Frequency": "0.182",
+            "Enable_DEMO_Spheres": "0",
+            "Frequency": "0.2",
             "Speed": "0.5",
             "Zoom": "0.5"
         },
         "Engines": {
             "Amount_Colors": "20",
             "Analogue_Spread": "0.2",
-            "Color_1": "0.6, 0.698039, 0.556863, 1",
-            "Color_2": "0.203922, 0.203922, 0.266667, 1",
+            "Color_1": "0.00784314, 0.470588, 0.423529, 1",
+            "Color_2": "0.737255, 0.545098, 0.423529, 1",
             "Last_Range_Index": "0",
             "Last_Theory_Index": "0",
-            "Preset_Index": "0",
+            "Preset_Index": "47",
             "SCENE": "1"
         },
         "ExportColors": {
@@ -30,7 +30,7 @@
         },
         "Font_Big_Size": "100",
         "Font_Size": "14",
-        "LAYOUTS": "0",
+        "LAYOUTS": "1",
         "LIBRARY": {
             "Columns_Max": "7",
             "Mode_Cards": "0",
@@ -52,8 +52,8 @@
         },
         "PANELS": {
             "AutoScroll": "1",
-            "DEMO": "1",
-            "EDITOR": "0",
+            "DEMO": "0",
+            "EDITOR": "1",
             "ENGINES": "1",
             "GRADIENT": "0",
             "GUI_MAIN": "1",
@@ -68,11 +68,11 @@
             "RANGE": "0",
             "SHOW_MAIN_PANEL": "1",
             "SHOW_MINI_PALETTE": "0",
-            "THEORY": "0"
+            "THEORY": "1"
         },
         "PICKER": {
             "BRG": "1",
-            "COLOR": "0.6, 0.698039, 0.556863, 1",
+            "COLOR": "0.00784314, 0.470588, 0.423529, 1",
             "HUE": "1",
             "H_Pow": "0.25",
             "SAT": "1",

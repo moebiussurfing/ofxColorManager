@@ -16,15 +16,17 @@
 
 TODO:
 
++ store layout panels positions by OF. link both panels
++ startup must recall: preset, layout index etc
 + fix: alert when saving a preset with an already located filename. ask to overwrite
-+ startup init layout by code, not .ini
++ startup init layout by code, not .ini. check windows positions by code to responsive other elemnts
 
++ global sat / bright editor for editor palette
 + export Adobe ASE
 + undo engine
-+ global sat / bright editor for editor palette
-+ fix demo1 camera and add tweening random jumps
 + add tween transitions to presets ??
 + add cosine/shift gradients engine https://github.com/soufianekhiat/DearWidgets
+
 + check theory picker if calls too much callbacks
 + plugins for UE4 / Unity3D / Processing ?
 
@@ -83,6 +85,7 @@ BUGS:
 #define PANEL_WIDGETS_WIDTH 250
 #define PANEL_WIDGETS_HEIGHT 500
 //#define MODAL_WIDTH 60.0f
+#define MAX_PICKER_WIDTH 200
 
 //----------
 

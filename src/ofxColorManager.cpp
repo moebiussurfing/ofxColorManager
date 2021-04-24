@@ -1604,12 +1604,14 @@ void ofxColorManager::gui_Theory()
 	{
 		ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
+		//TODO:
 		float _h = float(COLOR_STRIP_COLOR_HEIGHT);
 		float _spcx = ImGui::GetStyle().ItemInnerSpacing.x;
 		float _spcy = ImGui::GetStyle().ItemInnerSpacing.y;
 		float _w100 = ImGui::GetContentRegionAvail().x;
 		float _w99 = _w100;// -_spcx;
 		float _w50 = MAX(150, _w99 / 2);
+		float _w49 = _w50 - 2;
 		float _h100;
 		float _hSz2;
 
@@ -1671,7 +1673,10 @@ void ofxColorManager::gui_Theory()
 				ImGuiColorEditFlags_PickerHueBar;
 			//ImGuiColorEditFlags_PickerHueWheel;
 
-			ImGui::PushItemWidth(_w50);
+			float _www;
+			if (_w100 >= MAX_PICKER_WIDTH) _www = MAX_PICKER_WIDTH;
+			else if (_w100 < MAX_PICKER_WIDTH) _www = MIN(_w49, PANEL_WIDGETS_WIDTH);
+			ImGui::PushItemWidth(_www);
 
 			if (ImGui::ColorPicker4("##cPickerTheory", (float *)&tmpRef, _flags))
 			{
@@ -3841,7 +3846,7 @@ void ofxColorManager::gui_LayoutsAdvanced()
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(max, 100));
 
-	if (ofxImGui::BeginWindow("LAYOUTS ", mainSettings, flags))
+	if (ofxImGui::BeginWindow("LAYOUTS ADVANCED", mainSettings, flags))
 	{
 		float _spcx = ImGui::GetStyle().ItemSpacing.x;
 		float _spcy = ImGui::GetStyle().ItemSpacing.y;
@@ -3855,9 +3860,9 @@ void ofxColorManager::gui_LayoutsAdvanced()
 
 		//----
 
+		ofxSurfingHelpers::AddBigToggle(SHOW_Panels, _w100, _h);
 		ofxSurfingHelpers::AddBigToggle(bAutoSave_Layout, _w100, _h);
 		ofxSurfingHelpers::AddBigToggle(Lock_DockingLayout, _w100, _h);
-		ofxSurfingHelpers::AddBigToggle(SHOW_Panels, _w100, _h);
 
 		//----
 
@@ -4127,10 +4132,11 @@ void ofxColorManager::gui_Range()
 		float _hSz = int(BUTTON_COLOR_SIZE) * scale_ColRange.get();//color boxes
 		float _hSz2;
 
+		//TODO:
 		float _spcx = ImGui::GetStyle().ItemInnerSpacing.x;
 		float _w100 = ImGui::GetContentRegionAvail().x;
 		float _w99 = _w100;//-_spc;
-		float _w50 = _w99 / 2 - 6;
+		float _w50 = _w99 / 2 - 6;//?
 		float _w49 = _w50 - 2;
 
 		float _szLabel = 70;//width label text
@@ -4202,10 +4208,16 @@ void ofxColorManager::gui_Range()
 				int i = 0;
 
 				// picker c1
+				
 				ImGui::Columns(2);
-				ImGui::PushItemWidth(-1);
+				//ImGui::PushItemWidth(-1);//too big sometimes
 				//ImGui::PushItemWidth(-25);
-				//ImGui::PushItemWidth(MIN(_w49, PANEL_WIDGETS_WIDTH));
+
+				float _www;
+				if (_w100 >= MAX_PICKER_WIDTH) _www = MAX_PICKER_WIDTH;
+				else if (_w100 < MAX_PICKER_WIDTH) _www = MIN(_w49, PANEL_WIDGETS_WIDTH);
+				ImGui::PushItemWidth(_www);
+
 				ImGui::PushID(i++);//avoid repeat names and flicking bug
 				if (ImGui::ColorPicker3("##cPicker001", (float *)&_c1, _flags))
 				{
@@ -4213,15 +4225,19 @@ void ofxColorManager::gui_Range()
 					color_1_Range.set(_c1);
 					bChanged = true;
 				}
+
 				ImGui::PopItemWidth();
 				ImGui::NextColumn();
 
 				//----
 
 				// picker c2
-				ImGui::PushItemWidth(-1);
-				//ImGui::PushItemWidth(-25);
-				//ImGui::PushItemWidth(MIN(_w49, PANEL_WIDGETS_WIDTH));
+
+				////float _www;
+				//if (_w100 >= MAX_PICKER_WIDTH) _www = MAX_PICKER_WIDTH;
+				//else if (_w100 < MAX_PICKER_WIDTH) _www = MIN(_w49, PANEL_WIDGETS_WIDTH);
+				ImGui::PushItemWidth(_www);
+
 				ImGui::PushID(i++);
 				if (ImGui::ColorPicker3("##cPicker002", (float *)&_c2, _flags))
 				{
@@ -5385,7 +5401,7 @@ void ofxColorManager::gui_Demo()
 			}
 			ImGui::PopItemWidth();
 			
-			if (ImGui::Button("Reset Camera", ImVec2(_w100, _h))) {
+			if (ImGui::Button("Reset", ImVec2(_w100, _h))) {
 				DEMO1_Bubbles.setEnableMouseCamera(DEMO1_Cam);
 				DEMO1_Bubbles.resetCamera();
 				DEMO1_Alpha = 0.7;
@@ -5424,7 +5440,7 @@ void ofxColorManager::gui_Demo()
 			}
 			ImGui::PopItemWidth();
 
-			if (ImGui::Button("Reset Camera", ImVec2(_w100, _h))) {
+			if (ImGui::Button("Reset", ImVec2(_w100, _h))) {
 				DEMO2_Spheres.resetCamera();
 				DEMO2_Spheres.DEMO5_Alpha = 0.8;
 				DEMO2_Spheres.DEMO5_Zoom = 0.5;
@@ -8114,13 +8130,16 @@ void ofxColorManager::mousePressed(ofMouseEventArgs &eventArgs)
 
 	// DEMO
 
-	if (/*SHOW_About &&*/ !mouseLockedByGui)
+	//TODO:
+	//mouseLockedByGui_PRE not working..
+
+	if (/*SHOW_About &&*/ !mouseLockedByGui_PRE)
 	{
 		if (DEMO1_Enable)
 		{
 			//wf
 			//disable mouse on auto mode
-			//if (!DEMO1_Auto)
+			if (!DEMO1_Auto)
 			{
 				//second mouse button cleans DEMO
 				if (button == 2) DEMO1_Bubbles.clear();

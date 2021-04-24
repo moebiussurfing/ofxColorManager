@@ -1,6 +1,6 @@
 {
     "LayoutPanels": {
-        "DEMO": "0",
+        "DEMO": "1",
         "EDITOR": "0",
         "ENGINES": "0",
         "GRADIENT": "0",
@@ -9,12 +9,12 @@
         "LINK": "0",
         "LOCK": "0",
         "LOVERS": "0",
-        "PALETTE": "0",
+        "PALETTE": "1",
         "PICKER": "0",
         "PICTURE": "0",
-        "PRESETS": "0",
+        "PRESETS": "1",
         "RANGE": "0",
-        "SHOW_MAIN_PANEL": "0",
+        "SHOW_MAIN_PANEL": "1",
         "SHOW_MENU_BAR": "0",
         "SHOW_MINI_PALETTE": "0",
         "THEORY": "0"
