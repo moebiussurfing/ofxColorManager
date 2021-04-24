@@ -1,6 +1,6 @@
 {
     "ofxColourLoversHelper": {
-        "AutoScroll": "0",
+        "AutoScroll": "1",
         "Enable_Keys": "0",
         "FAVORITES": "1",
         "Fixed_Width": "0",
@@ -9,7 +9,7 @@
         "Pick_Palette": "1",
         "SEARCH": "0",
         "Show_Palettes": "1",
-        "Slim": "1",
+        "Slim": "0",
         "_MenuTabPick": "FAVORITES"
     }
 }

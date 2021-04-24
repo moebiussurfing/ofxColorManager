@@ -590,10 +590,12 @@ void ofxColorManager::setup()
 	SHOW_ALL_GUI.setName("GUI MAIN");
 	SHOW_MINI_Preview.setName("SHOW MINI PALETTE");
 	SHOW_Palette.setName("PALETTE");
+	SHOW_Palette = false;
 	SHOW_Editor.setName("EDITOR");
 	SHOW_Theory.setName("THEORY");
 	SHOW_debugText.setName("SHOW debug");
 	SHOW_Quantizer.setName("PICTURE");
+	SHOW_Quantizer = false;
 
 	//-
 
@@ -601,20 +603,20 @@ void ofxColorManager::setup()
 	SHOW_BrowserColors.setSerializable(false);
 
 	SHOW_ColourLovers_searcher.set("SHOW COLOUR LOVERS SEARCH", true);
-	SHOW_ColourLovers.set("LOVERS", true);
+	SHOW_ColourLovers.set("LOVERS", false);
 
-	SHOW_Presets.set("PRESETS", true);
-	SHOW_Kit.set("KIT", true);
+	SHOW_Presets.set("PRESETS", false);
+	SHOW_Kit.set("KIT", false);
 	AutoScroll.set("AutoScroll", true);
 #ifdef MODE_BACKGROUND
 	SHOW_BackGround.set("BACKGROUND", true);
 #endif
-	SHOW_Picker.set("PICKER", true);
+	SHOW_Picker.set("PICKER", false);
 	SHOW_Library.set("LIBRARY", false);
-	SHOW_Range.set("RANGE", true);
-	SHOW_Engines.set("ENGINES", true);
+	SHOW_Range.set("RANGE", false);
+	SHOW_Engines.set("ENGINES", false);
 	SHOW_Panels.set("SHOW MAIN PANEL", true);
-	SHOW_LinkExport.set("LINK", true);
+	SHOW_LinkExport.set("LINK", false);
 	SHOW_Demos.set("DEMO", false);
 
 	//bAutoResizePalette.set("AutoResize", false);
@@ -4775,7 +4777,8 @@ void ofxColorManager::gui_Presets()
 		{
 			int _i = last_Index_Preset;
 
-			ImGui::PushItemWidth(_w99);
+			ImGui::PushItemWidth(-20);
+			//ImGui::PushItemWidth(_w99);
 
 			if (ofxImGui::VectorCombo(" ", &_i, files_Names))
 			{
@@ -5445,8 +5448,9 @@ void ofxColorManager::setupGui()
 	mainSettings = ofxImGui::Settings();
 
 	// for all window panels. lock
-	flagsWindowsLocked = ImGuiWindowFlags_NoMove;
-	Lock_DockingLayout = Lock_DockingLayout;//refresh callback
+	//TODO:
+	//flagsWindowsLocked = ImGuiWindowFlags_NoMove;
+	//Lock_DockingLayout = Lock_DockingLayout;//refresh callback
 
 	//-
 
