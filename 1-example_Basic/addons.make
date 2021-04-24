@@ -8,6 +8,7 @@ ofxNetwork
 ofxOpenCv
 ofxScaleDragRect
 ofxSCENE-SVG
+ofxSimpleSlider
 ofxSurfingHelpers
 ofxSvg
 ofxWindowApp
