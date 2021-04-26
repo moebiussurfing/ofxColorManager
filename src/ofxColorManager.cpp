@@ -5462,8 +5462,7 @@ void ofxColorManager::gui_Demo()
 			ofxSurfingHelpers::AddBigToggle(DEMO1_Enable, _w100, _h*2);
 			if (DEMO1_Enable)
 			{
-				ImGui::PushItemWidth(_w33);
-				//ImGui::PushItemWidth(-50);
+				ImGui::PushItemWidth(_w33);//ImGui::PushItemWidth(-50);
 				ofxImGui::AddParameter(DEMO1_Alpha);
 				ofxImGui::AddParameter(DEMO1_Auto);
 				ofxImGui::AddParameter(DEMO1_Timer);
