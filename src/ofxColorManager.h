@@ -16,16 +16,21 @@
 
 TODO:
 
-+ add color pictures browser to quantizer (copy from litSphere)
-+ fix: alert when saving a preset with an already located filename. ask to overwrite
-+ startup init layout by code, not .ini. check windows positions by code to responsive other elemnts
+++ fix disabled keys sometimes bc ImGui over Gui?
+++ improve gradient gui/groups
+++ fix lock move docking windows workflow
+++ pin position preset name to inner rectangle
+++ add color pictures browser to quantizer (copy from litSphere)
+++ fix: alert when saving a preset with an already located filename. ask to overwrite
 
 + global sat / bright editor for editor palette
++ startup init layout by code, not .ini. check windows positions by code to responsive other elemnts
++ add extra theory spread params like analogous
+
 + export Adobe ASE
 + undo engine
-+ add tween transitions to presets ??
++ add tween transitions to presets ?
 + add cosine/shift gradients engine https://github.com/soufianekhiat/DearWidgets
-
 + check theory picker if calls too much callbacks
 + plugins for UE4 / Unity3D / Processing ?
 

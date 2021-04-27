@@ -6,7 +6,7 @@
             "Alpha_Spheres": "0.776",
             "Auto_Trig": "1",
             "Enable_DEMO_Bubbles": "1",
-            "Enable_DEMO_Spheres": "1",
+            "Enable_DEMO_Spheres": "0",
             "Frequency": "0",
             "Speed": "0.5",
             "Zoom": "0.5"
@@ -14,23 +14,23 @@
         "Engines": {
             "Amount_Colors": "7",
             "Analogue_Spread": "0.308",
-            "Color_1": "0.968628, 0.933333, 0.811765, 1",
-            "Color_2": "0.898039, 0.227451, 0.0745098, 1",
+            "Color_1": "0.780392, 0.505882, 0, 1",
+            "Color_2": "0.0666667, 0.0352941, 0.380392, 1",
             "Last_Range_Index": "11",
             "Last_Theory_Index": "1",
-            "Preset_Index": "45",
+            "Preset_Index": "33",
             "SCENE": "1"
         },
         "ExportColors": {
-            "Auto_Export": "0",
-            "ExportPath": "",
+            "Auto_Export": "1",
+            "ExportPath": "F:\\openFrameworks\\addons\\ofxColorClient\\3-example_Scenes\\bin\\data\\ofxColorManager\\",
             "LINK_FILE": "0",
             "LINK_TCP": "1",
-            "Path__bin_data": "1"
+            "Path__bin_data": "0"
         },
         "Font_Big_Size": "100",
         "Font_Size": "14",
-        "Gui_Layout_Position": "607, 737",
+        "Gui_Layout_Position": "630, 335",
         "LAYOUTS": "1",
         "LIBRARY": {
             "Columns_Max": "7",
@@ -74,7 +74,7 @@
         },
         "PICKER": {
             "BRG": "0",
-            "COLOR": "0.968628, 0.933333, 0.811765, 1",
+            "COLOR": "0.329412, 0.184314, 0.133333, 1",
             "HUE": "1",
             "H_Pow": "0.865",
             "SAT": "0",
