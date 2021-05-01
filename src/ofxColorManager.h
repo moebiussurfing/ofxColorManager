@@ -79,7 +79,7 @@ BUGS:
 
 #define USE_VIEWPORTS // allow out-of-OF-window
 #define MAX_PALETTE_COLORS 20
-#define USE_SVG_MASK // TODO: ofxScene-SVG using masked B&W background. 
+//#define USE_SVG_MASK // TODO: ofxScene-SVG using masked B&W background. 
 
 //--
 

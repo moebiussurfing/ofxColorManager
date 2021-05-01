@@ -1383,8 +1383,10 @@ void ofxColorManager::draw(ofEventArgs & args)
 		}
 #endif
 		// using picked color gradient 
+#ifdef USE_SVG_MASK
 		if (!DEMO3_Svg.DEMO2_BgWhite || (DEMO3_Svg.DEMO3_Enable && DEMO3_Svg.fileIndex == 0))
-			//if (!DEMO3_Svg.DEMO3_Enable || (DEMO3_Svg.DEMO3_Enable && DEMO3_Svg.fileIndex == 0))
+#endif
+		//if (!DEMO3_Svg.DEMO3_Enable || (DEMO3_Svg.DEMO3_Enable && DEMO3_Svg.fileIndex == 0))
 		{
 			_cBg = gradientEngine.getColorPicked();
 		}
@@ -4748,7 +4750,7 @@ void ofxColorManager::gui_InputText()
 	THEME_COLORS _THEME;
 
 	//select one
-	if (DEMO3_Svg.DEMO3_Enable) _THEME = THEME_DAY;//this demo has white bg
+	if (DEMO3_Svg.bEnable) _THEME = THEME_DAY;//this demo has white bg
 	else _THEME = THEME_NIGHT;
 
 	//--
@@ -5550,13 +5552,13 @@ void ofxColorManager::gui_Demo()
 		if (ImGui::CollapsingHeader("DEMO 3", ImGuiWindowFlags_None))
 		{
 			// svg demo
-			ofxSurfingHelpers::AddBigToggle(DEMO3_Svg.DEMO3_Enable, _w100, _h * 2);
-			if (DEMO3_Svg.DEMO3_Enable)
+			ofxSurfingHelpers::AddBigToggle(DEMO3_Svg.bEnable, _w100, _h * 2);
+			if (DEMO3_Svg.bEnable)
 			{
 				ImGui::PushItemWidth(_w33);
-				ofxImGui::AddParameter(DEMO3_Svg.DEMO2_Edit);
-				if (DEMO3_Svg.DEMO2_Edit) ofxImGui::AddParameter(DEMO3_Svg.DEMO2_Scale);
-				ofxImGui::AddParameter(DEMO3_Svg.DEMO2_Alpha);
+				ofxImGui::AddParameter(DEMO3_Svg.bEdit);
+				if (DEMO3_Svg.bEdit) ofxImGui::AddParameter(DEMO3_Svg.scaleSvg);
+				ofxImGui::AddParameter(DEMO3_Svg.alphaSvg);
 				ofxImGui::AddStepper(DEMO3_Svg.blendMode);
 				ofxImGui::AddParameter(DEMO3_Svg.blendModeName);
 				ofxImGui::AddStepper(DEMO3_Svg.fileIndex);
@@ -5565,7 +5567,7 @@ void ofxColorManager::gui_Demo()
 				ofxImGui::AddParameter(DEMO3_Svg.enable_Mask);
 				ofxImGui::AddParameter(DEMO3_Svg.DEMO2_BgWhite);
 #endif		
-				ofxImGui::AddParameter(DEMO3_Svg.keys);
+				ofxImGui::AddParameter(DEMO3_Svg.bKeys);
 				ImGui::PopItemWidth();
 
 				if (ImGui::Button("Reset", ImVec2(_w100, _h))) {
@@ -7206,7 +7208,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		DEMO1_Cam = false;
 		DEMO1_Bubbles.setEnableMouseCamera(DEMO1_Cam);
 
-		if (!SHOW_Demos) DEMO3_Svg.DEMO2_Edit = false;
+		if (!SHOW_Demos) DEMO3_Svg.bEdit = false;
 
 		// svg
 		DEMO3_Svg.setEnableKeys(SHOW_Demos);
@@ -9639,7 +9641,8 @@ void ofxColorManager::setupDemos()
 
 	DEMO3_Svg.setLinkPalette(palette);
 	DEMO3_Svg.setVisible(false);
-#ifndef USE_SVG_MASK
+#ifdef USE_SVG_MASK
+//#ifndef USE_SVG_MASK
 	DEMO3_Svg.enable_Mask = false;
 #endif	
 }

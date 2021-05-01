@@ -1,0 +1,16 @@
+ofxColorClient
+ofxColorManager
+ofxGui
+ofxImGui
+ofxPoco
+ofxIO
+ofxNetwork
+ofxOpenCv
+ofxScaleDragRect
+ofxSCENE-SVG
+ofxSimpleSlider
+ofxSurfingHelpers
+ofxSurfingSplashScreen
+ofxSvg
+ofxWindowApp
+ofxXmlSettings
