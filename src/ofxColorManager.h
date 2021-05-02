@@ -71,9 +71,9 @@ BUGS:
 #define APP_RELEASE_NAME "ofxColorManager"
 #endif
 
-#ifndef MAKE_RELEASE_VERSION 
+//#ifndef MAKE_RELEASE_VERSION 
 #define USE_DEBUG_LAYOUT // includes mouse ruler to help layout design. show app console window
-#endif
+//#endif
 
 //--
 
@@ -351,7 +351,7 @@ private:
 	ofParameter<bool> bPlaySlideShow{ "Play Slide-Show", false };
 	ofParameter<float> auto_pilot_Duration{ "Time", 1, 0.1, 5 };
 	int auto_pilot_timer;
-	
+
 	//--
 
 	ofParameter<bool> SHOW_ImGui{ "ImGui", true };
@@ -1117,7 +1117,7 @@ private:
 
 	// new preset state mode
 	ofParameter<bool> MODE_NewPreset{ "NEW PRESET", false };
-	
+
 	bool MODE_ReadyToUpdate = false;//when a preset is loaded will allow update/overwrite save
 
 	std::string textInput_New = "name..";
@@ -1265,10 +1265,15 @@ private:
 
 	void buildHelpInfo();
 
+	ofRectangle rectangle_Central_MAX;
+	ofRectangle rectangle_Central;
+	ofRectangle rectangle_Central_Scaled;
+	ofParameter<bool> bDebugRectCentral{ "Rectangle Central", false };
+
 	//---
 
-	//TODO:
-	// ASE
+//TODO:
+// ASE
 
 #ifdef USE_ASE_MODULE
 
@@ -1320,7 +1325,7 @@ private:
 		//error = ase_writeAseFile(&_ASE_FILE, f);
 		//ase_writeAseFile(ASE_FILE *ase, FILE *f);
 		//https://github.com/JamesHovet/ofxASE
-	}
+}
 
 #endif
 };

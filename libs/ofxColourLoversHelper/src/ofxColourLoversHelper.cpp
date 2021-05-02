@@ -601,7 +601,7 @@ void ofxColourLoversHelper::gui_Main()
 
 		ImGui::PushButtonRepeat(true);
 		{
-			if (ImGui::Button("Previous", ImVec2(_w50, _hb * 2)))
+			if (ImGui::Button("<", ImVec2(_w50, _hb * 2)))
 			{
 				prevPalette();
 
@@ -613,7 +613,7 @@ void ofxColourLoversHelper::gui_Main()
 
 			ImGui::SameLine();
 
-			if (ImGui::Button("Next", ImVec2(_w50, _hb * 2)))
+			if (ImGui::Button(">", ImVec2(_w50, _hb * 2)))
 			{
 				nextPalette();
 

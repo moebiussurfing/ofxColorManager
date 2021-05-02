@@ -31,7 +31,7 @@ public:
 public:
 	void setup();
 	void update();
-	void draw(float alpha = 1.0f);
+	void draw(ofRectangle viewport, float alpha = 1.0f);
 
 	void clear() {
 		ofLogNotice(__FUNCTION__);

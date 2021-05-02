@@ -312,6 +312,8 @@ ofxColorManager::ofxColorManager()
 //--------------------------------------------------------------
 void ofxColorManager::setup()
 {
+	ENABLE_keys.setSerializable(false);
+
 	ofLogNotice(__FUNCTION__) << endl << endl << "----------------- SETUP -----------------" << endl;
 
 	setupRange();
@@ -627,7 +629,7 @@ void ofxColorManager::setup()
 	bModeBundlePreset.set("Mode Bundle", false);
 	bModePalettePreset.set("Mode Palette", false);
 #endif
-	bAutoExportPreset.set("Auto Export", false);
+	bAutoExportPreset.set("Auto Export", true);
 	bExportByTCP.set("LINK TCP", false);
 	bExportByFile.set("LINK FILE", false);
 	bExportPreset_DefaultPath.set("Path /bin/data", true);
@@ -939,7 +941,6 @@ void ofxColorManager::setup()
 
 	// included params on layouts manager
 	params_LayoutPanelsState.add(SHOW_Palette);
-	params_LayoutPanelsState.add(SHOW_Panels);
 	params_LayoutPanelsState.add(SHOW_PanelEngines);
 	params_LayoutPanelsState.add(SHOW_Theory);
 	params_LayoutPanelsState.add(SHOW_Range);
@@ -956,6 +957,9 @@ void ofxColorManager::setup()
 	params_LayoutPanelsState.add(SHOW_Advanced);
 	params_LayoutPanelsState.add(SHOW_MenuBar);
 	params_LayoutPanelsState.add(gradientEngine.SHOW_CurveEditor);
+
+	//exclude. shared by all the layout presets
+	//params_LayoutPanelsState.add(SHOW_Panels);
 	//params_LayoutPanelsState.add(Lock_DockingLayout);
 
 
@@ -1084,9 +1088,14 @@ void ofxColorManager::update(ofEventArgs & args)
 
 	//--
 
-	// text input blocker
-	if (!SHOW_ColourLovers) bBlockKeys = !(ENABLE_keys && !bTextInputActive);
-	else bBlockKeys = !(ENABLE_keys && !bTextInputActive && !bCheckMouseOverTextInputLovers);
+	//TODO:
+	//BUG:
+	bBlockKeys = false;
+	//sometime keys are locked disabled..
+
+	//// text input blocker
+	//if (!SHOW_ColourLovers) bBlockKeys = !(ENABLE_keys && !bTextInputActive);
+	//else bBlockKeys = !(ENABLE_keys && !bTextInputActive && !bCheckMouseOverTextInputLovers);
 
 	//--
 
@@ -1386,7 +1395,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 #ifdef USE_SVG_MASK
 		if (!DEMO3_Svg.DEMO2_BgWhite || (DEMO3_Svg.DEMO3_Enable && DEMO3_Svg.fileIndex == 0))
 #endif
-		//if (!DEMO3_Svg.DEMO3_Enable || (DEMO3_Svg.DEMO3_Enable && DEMO3_Svg.fileIndex == 0))
+			//if (!DEMO3_Svg.DEMO3_Enable || (DEMO3_Svg.DEMO3_Enable && DEMO3_Svg.fileIndex == 0))
 		{
 			_cBg = gradientEngine.getColorPicked();
 		}
@@ -1405,12 +1414,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 		{
 			fboBig.begin();
 			ofClear(gradientEngine.getColorPicked());
-
-			//if (DEMO1_Enable) DEMO1_Bubbles.draw(DEMO1_Alpha);
-			//if (DEMO2_Enable) DEMO2_Spheres.draw(DEMO5_Alpha);
-			//DEMO1_Bubbles.draw(DEMO1_Alpha);
-			DEMO2_Spheres.draw();
-
+			DEMO2_Spheres.draw(ofGetWindowRect());
 			fboBig.end();
 		}
 		//if (DEMO1_Enable) fboBig.draw(0, 0, ofGetWidth(), ofGetHeight());
@@ -1454,34 +1458,39 @@ void ofxColorManager::draw(ofEventArgs & args)
 		{
 			mouseLockedByGui = draw_Gui();
 
-			if (mouseLockedByGui != mouseLockedByGui_PRE)// changed
-			{
-				mouseLockedByGui_PRE = mouseLockedByGui;
-				if (mouseLockedByGui)
-				{
-					ENABLE_keys = false;
-				}
-				else
-				{
-					ENABLE_keys = true;
-				}
+			//TODO:
+			//BUG:
+			bBlockKeys = false;
+			//sometime keys are locked disabled..
 
-				//ofLogVerbose(__FUNCTION__) << "mouseLockedByGui: " << (mouseLockedByGui ? " IN" : " OUT");
-				ofLogNotice(__FUNCTION__) << "mouseLockedByGui: " << (mouseLockedByGui ? " IN" : " OUT");
+			//if (mouseLockedByGui != mouseLockedByGui_PRE)// changed
+			//{
+			//	mouseLockedByGui_PRE = mouseLockedByGui;
+			//	if (mouseLockedByGui)
+			//	{
+			//		ENABLE_keys = false;
+			//	}
+			//	else
+			//	{
+			//		ENABLE_keys = true;
+			//	}
 
-				//--
+			//	//ofLogVerbose(__FUNCTION__) << "mouseLockedByGui: " << (mouseLockedByGui ? " IN" : " OUT");
+			//	ofLogNotice(__FUNCTION__) << "mouseLockedByGui: " << (mouseLockedByGui ? " IN" : " OUT");
 
-				//TODO:
-				// lovers
-				bool b = false;
-				if (SHOW_ColourLovers) {
-					b = !mouseLockedByGui;
-				}
-				else {
-					b = false;
-				}
-				colourLoversHelper.setEnableKeys(b);
-			}
+			//	//--
+
+			//	//TODO:
+			//	// lovers
+			//	bool b = false;
+			//	if (SHOW_ColourLovers) {
+			//		b = !mouseLockedByGui;
+			//	}
+			//	else {
+			//		b = false;
+			//	}
+			//	colourLoversHelper.setEnableKeys(b);
+			//}
 		}
 	}
 
@@ -3381,7 +3390,7 @@ void ofxColorManager::gui_Picker()
 		float _spc = ImGui::GetStyle().ItemSpacing.x;
 		float _w100 = ImGui::GetContentRegionAvail().x;
 		float _w99 = _w100;
-		float _w50 = _w99 / 2;
+		float _w50 = _w99 / 2 - _spc;
 
 		//--
 
@@ -3404,6 +3413,10 @@ void ofxColorManager::gui_Picker()
 
 		if (ImGui::CollapsingHeader("COLOR PICKERS", ImGuiWindowFlags_NoCollapse))
 		{
+			//TODO:
+			//ImGui::SetItemDefaultFocus();
+			//ImGui::SetWindowFocus();
+
 			ImGuiColorEditFlags _flagw;
 			ImGuiColorEditFlags _flags;
 
@@ -3491,8 +3504,8 @@ void ofxColorManager::gui_Picker()
 
 		if (ImGui::CollapsingHeader("HSB", ImGuiWindowFlags_NoCollapse))
 		{
-			ImGui::PushItemWidth(170);
-			//ImGui::PushItemWidth(-40);
+			//ImGui::PushItemWidth(170);
+			ImGui::PushItemWidth(-40);
 
 			if (ofxImGui::AddParameter(color_HUE)) {}
 			if (ofxImGui::AddParameter(color_SAT)) {}
@@ -3531,8 +3544,8 @@ void ofxColorManager::gui_Picker()
 			{ if (ofxImGui::AddParameter(bColor_BRG)) {} }
 			//ImGui::PopItemWidth();
 
-			ImGui::PushItemWidth(170);
-			//ImGui::PushItemWidth(-60);
+			//ImGui::PushItemWidth(170);
+			ImGui::PushItemWidth(-80);
 
 			if (bColor_HUE)
 				if (ofxImGui::AddParameter(color_HUE_Power))
@@ -3687,6 +3700,9 @@ void ofxColorManager::gui_Advanced()
 		{
 			ofxImGui::AddParameter(ENABLE_keys);
 			ImGui::Checkbox("Locked Keys", &bBlockKeys);
+			ImGui::Checkbox("Locked All", &bLockAllKeysByGui);
+			ImGui::Checkbox("Locked Mouse", &mouseLockedByGui);
+			ofxImGui::AddParameter(bDebugRectCentral);
 		}
 	}
 	ofxImGui::EndWindow(mainSettings);
@@ -4096,7 +4112,7 @@ void ofxColorManager::gui_Panels()
 	ImGuiWindowFlags flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
 	flags |= flagsWindowsLocked;
 
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(500, PANEL_WIDGETS_HEIGHT));
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(625, PANEL_WIDGETS_HEIGHT));
 
 	//----
 
@@ -4707,6 +4723,11 @@ void ofxColorManager::gui_InputText()
 	// a. fit size to text width
 	float _ww = _wt.x + 130;
 	float _hh = fontSizeBigParam + _spc;
+	ImGui::SetNextWindowSize(ImVec2(_ww, _hh));
+
+	// force fit text input window to free space
+	glm::vec2 p = rectangle_Central_MAX.getTopLeft() + glm::vec2(0, 0);
+	ImGui::SetNextWindowPos(ImVec2(p.x, p.y), ImGuiCond_Always);
 
 	//-
 
@@ -4724,7 +4745,6 @@ void ofxColorManager::gui_InputText()
 	flagsw |= ImGuiWindowFlags_NoBackground;
 	flagsw |= ImGuiWindowFlags_NoDecoration;
 
-	ImGui::SetNextWindowSize(ImVec2(_ww, _hh));
 
 	//-
 
@@ -4960,7 +4980,7 @@ void ofxColorManager::gui_Presets()
 
 		ImGui::PushButtonRepeat(true);
 
-		if (ImGui::Button("Previous", ImVec2(_w50, _h)))
+		if (ImGui::Button("<", ImVec2(_w50, _h)))
 		{
 			preset_Previous();
 		}
@@ -4969,7 +4989,7 @@ void ofxColorManager::gui_Presets()
 
 		ImGui::SameLine();
 
-		if (ImGui::Button("Next", ImVec2(_w50, _h)))
+		if (ImGui::Button(">", ImVec2(_w50, _h)))
 		{
 			preset_Next();
 		}
@@ -5450,6 +5470,8 @@ void ofxColorManager::gui_Demo()
 
 	//-
 
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(ww, hh));
+
 	if (ofxImGui::BeginWindow("DEMO", mainSettings, flagsw))
 	{
 		float _spcx = ImGui::GetStyle().ItemSpacing.x;
@@ -5457,45 +5479,49 @@ void ofxColorManager::gui_Demo()
 		float _w100 = ImGui::GetContentRegionAvail().x;
 		float _h100 = ImGui::GetContentRegionAvail().y;
 		float _w99 = _w100 - _spcx;
+		//float _w50 = _w100 / 2 - _spcx;
 		float _w50 = _w99 / 2;
 		float _w33 = _w99 / 3 - _spcx / 3;
 		float _h = BUTTON_BIG_HEIGHT / 2;
 
+		float _pad = -80;
+		//float _pad = _w33;
 		//--
 
 		// DEMO 1
 
-		if (ImGui::CollapsingHeader("DEMO 1", ImGuiWindowFlags_None))
-		{
-			//demo bubbles
-			ofxSurfingHelpers::AddBigToggle(DEMO1_Enable, _w100, _h * 2);
-			if (DEMO1_Enable)
+		//demo bubbles
+		ofxSurfingHelpers::AddBigToggle(DEMO1_Enable, _w100, _h * 2);
+		if (DEMO1_Enable)
+			if (ImGui::CollapsingHeader("DEMO 1", ImGuiWindowFlags_None))
 			{
-				ImGui::PushItemWidth(_w33);//ImGui::PushItemWidth(-50);
-				ofxImGui::AddParameter(DEMO1_Alpha);
-				ofxImGui::AddParameter(DEMO1_Auto);
-				ofxImGui::AddParameter(DEMO1_Timer);
-				if (ofxImGui::AddParameter(DEMO1_Cam))
+				if (DEMO1_Enable)
 				{
-					DEMO1_Bubbles.setEnableMouseCamera(DEMO1_Cam);
-				}
-				ImGui::PopItemWidth();
+					ImGui::PushItemWidth(_pad);
+					ofxImGui::AddParameter(DEMO1_Alpha);
+					ofxImGui::AddParameter(DEMO1_Auto);
+					ofxImGui::AddParameter(DEMO1_Timer);
+					if (ofxImGui::AddParameter(DEMO1_Cam))
+					{
+						DEMO1_Bubbles.setEnableMouseCamera(DEMO1_Cam);
+					}
+					ImGui::PopItemWidth();
 
-				if (ImGui::Button("Reset", ImVec2(_w100, _h))) {
-					DEMO1_Bubbles.setEnableMouseCamera(DEMO1_Cam);
-					DEMO1_Bubbles.resetCamera();
-					DEMO1_Alpha = 0.7;
-					DEMO1_Timer = 0.2;
-				}
-				if (ImGui::Button("Load", ImVec2(_w50, _h))) {
-					DEMO1_Bubbles.load();
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("Save", ImVec2(_w50, _h))) {
-					DEMO1_Bubbles.save();
+					if (ImGui::Button("Reset", ImVec2(_w100, _h))) {
+						DEMO1_Bubbles.setEnableMouseCamera(DEMO1_Cam);
+						DEMO1_Bubbles.resetCamera();
+						DEMO1_Alpha = 0.7;
+						DEMO1_Timer = 0.2;
+					}
+					if (ImGui::Button("Load", ImVec2(_w50, _h))) {
+						DEMO1_Bubbles.load();
+					}
+					ImGui::SameLine();
+					if (ImGui::Button("Save", ImVec2(_w50, _h))) {
+						DEMO1_Bubbles.save();
+					}
 				}
 			}
-		}
 
 		//-
 
@@ -5507,37 +5533,39 @@ void ofxColorManager::gui_Demo()
 
 		// DEMO 2
 
-		if (ImGui::CollapsingHeader("DEMO 2", ImGuiWindowFlags_None))
-		{
-			// demo spheres
-			ofxSurfingHelpers::AddBigToggle(DEMO2_Enable, _w100, _h * 2);
-			if (DEMO2_Enable)
+		// demo spheres
+		ofxSurfingHelpers::AddBigToggle(DEMO2_Enable, _w100, _h * 2);
+		if (DEMO2_Enable)
+			if (ImGui::CollapsingHeader("DEMO 2", ImGuiWindowFlags_None))
 			{
-				ImGui::PushItemWidth(_w33);
-				ofxImGui::AddParameter(DEMO2_Spheres.DEMO5_Alpha);
-				ofxImGui::AddParameter(DEMO2_Spheres.DEMO5_Zoom);
-				ofxImGui::AddParameter(DEMO2_Spheres.DEMO5_Speed);
-				if (ofxImGui::AddParameter(DEMO2_Spheres.DEMO5_Cam))
+				if (DEMO2_Enable)
 				{
-					DEMO2_Spheres.setEnableMouseCamera(DEMO2_Spheres.DEMO5_Cam);
-				}
-				ImGui::PopItemWidth();
+					_pad = -100;
+					ImGui::PushItemWidth(_pad);
+					ofxImGui::AddParameter(DEMO2_Spheres.DEMO5_Alpha);
+					ofxImGui::AddParameter(DEMO2_Spheres.DEMO5_Zoom);
+					ofxImGui::AddParameter(DEMO2_Spheres.DEMO5_Speed);
+					if (ofxImGui::AddParameter(DEMO2_Spheres.DEMO5_Cam))
+					{
+						DEMO2_Spheres.setEnableMouseCamera(DEMO2_Spheres.DEMO5_Cam);
+					}
+					ImGui::PopItemWidth();
 
-				if (ImGui::Button("Reset", ImVec2(_w100, _h))) {
-					DEMO2_Spheres.resetCamera();
-					DEMO2_Spheres.DEMO5_Alpha = 0.8;
-					DEMO2_Spheres.DEMO5_Zoom = 0.5;
-					DEMO2_Spheres.DEMO5_Speed = 0.5;
-				}
-				if (ImGui::Button("Load", ImVec2(_w50, _h))) {
-					DEMO2_Spheres.load();
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("Save", ImVec2(_w50, _h))) {
-					DEMO2_Spheres.save();
+					if (ImGui::Button("Reset", ImVec2(_w100, _h))) {
+						DEMO2_Spheres.resetCamera();
+						DEMO2_Spheres.DEMO5_Alpha = 0.8;
+						DEMO2_Spheres.DEMO5_Zoom = 0.5;
+						DEMO2_Spheres.DEMO5_Speed = 0.5;
+					}
+					if (ImGui::Button("Load", ImVec2(_w50, _h))) {
+						DEMO2_Spheres.load();
+					}
+					ImGui::SameLine();
+					if (ImGui::Button("Save", ImVec2(_w50, _h))) {
+						DEMO2_Spheres.save();
+					}
 				}
 			}
-		}
 
 		//-
 
@@ -5549,41 +5577,47 @@ void ofxColorManager::gui_Demo()
 
 		// DEMO 3
 
-		if (ImGui::CollapsingHeader("DEMO 3", ImGuiWindowFlags_None))
-		{
-			// svg demo
-			ofxSurfingHelpers::AddBigToggle(DEMO3_Svg.bEnable, _w100, _h * 2);
-			if (DEMO3_Svg.bEnable)
+		// svg demo
+		ofxSurfingHelpers::AddBigToggle(DEMO3_Svg.bEnable, _w99, _h * 2);
+		if (DEMO3_Svg.bEnable)
+			if (ImGui::CollapsingHeader("DEMO 3", ImGuiWindowFlags_None))
 			{
-				ImGui::PushItemWidth(_w33);
-				ofxImGui::AddParameter(DEMO3_Svg.bEdit);
-				if (DEMO3_Svg.bEdit) ofxImGui::AddParameter(DEMO3_Svg.scaleSvg);
-				ofxImGui::AddParameter(DEMO3_Svg.alphaSvg);
-				ofxImGui::AddStepper(DEMO3_Svg.blendMode);
-				ofxImGui::AddParameter(DEMO3_Svg.blendModeName);
-				ofxImGui::AddStepper(DEMO3_Svg.fileIndex);
-				ofxImGui::AddParameter(DEMO3_Svg.fileIndexName);
-#ifdef USE_SVG_MASK
-				ofxImGui::AddParameter(DEMO3_Svg.enable_Mask);
-				ofxImGui::AddParameter(DEMO3_Svg.DEMO2_BgWhite);
-#endif		
-				ofxImGui::AddParameter(DEMO3_Svg.bKeys);
-				ImGui::PopItemWidth();
+				if (DEMO3_Svg.bEnable)
+				{
+					//ImGui::PushItemWidth(-80);
+					ImGui::PushItemWidth(_pad);
 
-				if (ImGui::Button("Reset", ImVec2(_w100, _h))) {
-					DEMO3_Svg.reset();
-				}
-				if (ImGui::Button("Load", ImVec2(_w50, _h))) {
-					DEMO3_Svg.load();
-				}
-				ImGui::SameLine();
-				if (ImGui::Button("Save", ImVec2(_w50, _h))) {
-					DEMO3_Svg.save();
+					ofxImGui::AddParameter(DEMO3_Svg.bEdit);
+					if (DEMO3_Svg.bEdit) ofxImGui::AddParameter(DEMO3_Svg.scaleSvg);
+					ofxImGui::AddParameter(DEMO3_Svg.alphaSvg);
+					ofxImGui::AddStepper(DEMO3_Svg.blendMode);
+					ofxImGui::AddParameter(DEMO3_Svg.blendModeName);
+					ofxImGui::AddStepper(DEMO3_Svg.fileIndex);
+					ofxImGui::AddParameter(DEMO3_Svg.fileIndexName);
+#ifdef USE_SVG_MASK
+					ofxImGui::AddParameter(DEMO3_Svg.enable_Mask);
+					ofxImGui::AddParameter(DEMO3_Svg.DEMO2_BgWhite);
+#endif		
+					ofxImGui::AddParameter(DEMO3_Svg.bKeys);
+
+					ImGui::PopItemWidth();
+
+					if (ImGui::Button("Reset", ImVec2(_w99, _h))) {
+						DEMO3_Svg.reset();
+					}
+					if (ImGui::Button("Load", ImVec2(_w50, _h))) {
+						DEMO3_Svg.load();
+					}
+					ImGui::SameLine();
+					if (ImGui::Button("Save", ImVec2(_w50, _h))) {
+						DEMO3_Svg.save();
+					}
 				}
 			}
-		}
 	}
 	ofxImGui::EndWindow(mainSettings);
+
+	ImGui::PopStyleVar();
 }
 
 //--------------------------------------------------------------
@@ -5695,6 +5729,61 @@ bool ofxColorManager::draw_Gui()
 		}
 		ImGuiID dockNodeID = ImGui::DockSpaceOverViewport(NULL, flagsDock);
 		//ImGui::PopStyleColor();
+
+		//----
+
+		//check free space
+		//TODO:
+		ImGuiDockNode* dockNode = ImGui::DockBuilderGetNode(dockNodeID);
+		if (dockNode) {
+			ImGuiDockNode* centralNode = ImGui::DockBuilderGetCentralNode(dockNodeID);
+			// Verifies if the central node is empty (visible empty space for oF)
+			if (centralNode && centralNode->IsEmpty())
+			{
+				ImRect availableSpace = centralNode->Rect();
+				//availableSpace.Max = availableSpace.Min + ImGui::GetContentRegionAvail();
+				//ImGui::GetForegroundDrawList()->AddRect(availableSpace.GetTL() + ImVec2(8, 8), availableSpace.GetBR() - ImVec2(8, 8), IM_COL32(255, 50, 50, 255));
+
+				ImVec2 viewCenter = availableSpace.GetCenter();
+				// Depending on the viewports flag, the XY is either absolute or relative to the oF window.
+				if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable) viewCenter = viewCenter - ImVec2(ofGetWindowPositionX(), ofGetWindowPositionY());
+
+				int pad = 6;
+				float ww = availableSpace.GetSize().x - pad;
+				float hh = availableSpace.GetSize().y - pad;
+				rectangle_Central_MAX = ofRectangle(viewCenter.x, viewCenter.y, ww, hh);
+
+				bool bDebug = bDebugRectCentral;
+				if (bDebug) {
+					ofPushStyle();
+					ofSetRectMode(OF_RECTMODE_CENTER);
+					int g = 0;
+					//int g = 255 * ofxSurfingHelpers::Bounce(0.5);
+					int a = 255.f * ofMap(ofxSurfingHelpers::Bounce(1), 0.0f, 1.0f, 0.2f, 1.0f, true);
+					ofColor c = ofColor(g, a);
+					ofSetColor(c);
+					ofNoFill();
+					ofSetLineWidth(1);
+					ofDrawRectangle(rectangle_Central_MAX);
+					ofSetRectMode(OF_RECTMODE_CORNER);
+					ofPopStyle();
+				}
+				// move to left corner mode
+				rectangle_Central_MAX.translate(-ww / 2, -hh / 2);
+
+				//-
+
+				// fit exact rectangle to borders and scaled to fit
+				rectangle_Central = DEMO3_Svg.getRect();
+				rectangle_Central.scaleTo(rectangle_Central_MAX, OF_ASPECT_RATIO_KEEP, OF_ALIGN_HORZ_CENTER, OF_ALIGN_VERT_CENTER);
+
+				// rescaled rectangle a bit
+				float _scale = 0.75;
+				rectangle_Central_Scaled = rectangle_Central;
+				rectangle_Central_Scaled.scaleFromCenter(_scale, _scale);
+				DEMO3_Svg.setRect(rectangle_Central_Scaled);
+			}
+		}
 
 		//----
 
@@ -6629,7 +6718,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 			//is not closing..
 			TCP_Sender.close();
-		}
+}
 	}
 #endif
 
@@ -7600,7 +7689,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		{
 			mouseRuler.toggleVisibility();
 			//DEMO1_Bubbles.toggleMouseCamera();
-		}
+	}
 #endif
 		// TEST
 		else if (key == 'T')
@@ -8187,7 +8276,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//}
 		////    else if()
 		////        color_Undo.clearRedo();
-	}
+}
 }
 
 //--------------------------------------------------------------
@@ -9212,11 +9301,11 @@ void ofxColorManager::exportPalette()
 			TCP_Sender.clearBuffer();
 			TCP_Sender.putString(ss.str());
 			TCP_Sender.send();
-		}
+	}
 #endif
 
 		storeText.push_back(ss.str() + "\n");
-	}
+}
 
 	//--
 }
@@ -9642,7 +9731,7 @@ void ofxColorManager::setupDemos()
 	DEMO3_Svg.setLinkPalette(palette);
 	DEMO3_Svg.setVisible(false);
 #ifdef USE_SVG_MASK
-//#ifndef USE_SVG_MASK
+	//#ifndef USE_SVG_MASK
 	DEMO3_Svg.enable_Mask = false;
 #endif	
 }
@@ -9670,19 +9759,26 @@ void ofxColorManager::updateDemos()
 //--------------------------------------------------------------
 void ofxColorManager::draw_Demos()
 {
-	// DEMO Bubbles
-	// bubbles
-	if (DEMO1_Enable) DEMO1_Bubbles.draw(DEMO1_Alpha);
+	glm::vec3 offset = ofGetCurrentViewport().getCenter() - rectangle_Central_MAX.getCenter();
+
+	// DEMO Svg
+	DEMO3_Svg.draw();//is centered to free space
 
 	//-
 
-	// DEMO Svg
-	DEMO3_Svg.draw();
+	// DEMO Bubbles
+	if (DEMO1_Enable)
+	{
+		DEMO1_Bubbles.draw(rectangle_Central_MAX, DEMO1_Alpha);
+	}
 
 	//-
 
 	// DEMO Spheres
-	if (DEMO2_Enable) DEMO2_Spheres.draw();
+	if (DEMO2_Enable)
+	{
+		DEMO2_Spheres.draw(rectangle_Central_MAX);
+	}
 }
 
 //--------------------------------------------------------------
@@ -9900,7 +9996,7 @@ void ofxColorManager::gui_About(bool* p_open)
 	ImGui::Dummy(ImVec2(0, 10.0f));
 
 	draw_DemoFbo();
-	ImGui::Text("Sketch by junkiyoshi.com. Thanks!");
+	ImGui::Text("Demo Sketches by junkiyoshi.com. Thanks!");
 
 	ImGui::End();
 
@@ -9953,7 +10049,7 @@ void ofxColorManager::loadAppLayout(AppLayouts mode)
 	case ofxColorManager::APP_DEFAULT:
 		if (!b0) b0 = true;
 		b1 = b2 = b3 = b4 = false;
-		ofSetWindowTitle(_label + " F1 | " + "DEFAULT");
+		ofSetWindowTitle(_label + " F1  " + "DEFAULT");
 		ini_to_load_Str = path_ImGui + "imgui_DEFAULT.ini";
 		ini_to_load = ini_to_load_Str.c_str();
 		ofxSurfingHelpers::loadGroup(params_LayoutPanelsState, ini_to_load_Str + ".json");
@@ -9984,7 +10080,7 @@ void ofxColorManager::loadAppLayout(AppLayouts mode)
 	case ofxColorManager::APP_PRESETS:
 		if (!b1) b1 = true;
 		b0 = b2 = b3 = b4 = false;
-		ofSetWindowTitle(_label + " F2 | " + "PRESETS");
+		ofSetWindowTitle(_label + " F2  " + "PRESETS");
 		ini_to_load_Str = path_ImGui + "imgui_PRESETS.ini";
 		ini_to_load = ini_to_load_Str.c_str();
 		ofxSurfingHelpers::loadGroup(params_LayoutPanelsState, ini_to_load_Str + ".json");
@@ -10015,7 +10111,7 @@ void ofxColorManager::loadAppLayout(AppLayouts mode)
 	case ofxColorManager::APP_ENGINES:
 		if (!b2) b2 = true;
 		b0 = b1 = b3 = b4 = false;
-		ofSetWindowTitle(_label + " F3 | " + "ENGINES");
+		ofSetWindowTitle(_label + " F3  " + "ENGINES");
 		ini_to_load_Str = path_ImGui + "imgui_ENGINES.ini";
 		ini_to_load = ini_to_load_Str.c_str();
 		ofxSurfingHelpers::loadGroup(params_LayoutPanelsState, ini_to_load_Str + ".json");
@@ -10046,7 +10142,7 @@ void ofxColorManager::loadAppLayout(AppLayouts mode)
 	case ofxColorManager::APP_MINIMAL:
 		if (!b3) b3 = true;
 		b0 = b1 = b2 = b4 = false;
-		ofSetWindowTitle(_label + " F4 | " + "MINIMAL");
+		ofSetWindowTitle(_label + " F4  " + "MINIMAL");
 		ini_to_load_Str = path_ImGui + "imgui_MINIMAL.ini";
 		ini_to_load = ini_to_load_Str.c_str();
 		ofxSurfingHelpers::loadGroup(params_LayoutPanelsState, ini_to_load_Str + ".json");
@@ -10077,7 +10173,7 @@ void ofxColorManager::loadAppLayout(AppLayouts mode)
 	case ofxColorManager::APP_USER:
 		if (!b4) b4 = true;
 		b0 = b1 = b2 = b3 = false;
-		ofSetWindowTitle(_label + " F5 | " + "USER");
+		ofSetWindowTitle(_label + " F5  " + "USER");
 		ini_to_load_Str = path_ImGui + "imgui_USER.ini";
 		ini_to_load = ini_to_load_Str.c_str();
 		ofxSurfingHelpers::loadGroup(params_LayoutPanelsState, ini_to_load_Str + ".json");

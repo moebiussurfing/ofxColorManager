@@ -36,7 +36,8 @@ public:
 public:
 	void setup();
 	void update();
-	void draw();
+	void draw(ofRectangle viewport);
+	//void draw();
 	//void draw(float _alpha = 1.0f);
 
 

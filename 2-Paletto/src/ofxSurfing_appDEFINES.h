@@ -11,5 +11,14 @@
 
 #define MAKE_RELEASE_VERSION
 
+
+#define GUI_LOCK_BORDERS_PAD 20
+
+#ifdef MAKE_RELEASE_VERSION 
+#define APP_RELEASE_NAME "SceneCOLORiZED"
+#else
+#define APP_RELEASE_NAME "ofxColorClient"
+#endif
+
 //
 //---------

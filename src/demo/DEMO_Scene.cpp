@@ -112,7 +112,7 @@ void DEMO_Scene::update() {
 }
 
 //--------------------------------------------------------------
-void DEMO_Scene::draw(float alpha)
+void DEMO_Scene::draw(ofRectangle viewport, float alpha)
 {
 	{
 		// DEMO 1 - CIRCLES
@@ -121,13 +121,15 @@ void DEMO_Scene::draw(float alpha)
 		{
 			ofPushMatrix();
 			ofPushStyle();
-			ofTranslate(ofGetWidth() * 0.5, ofGetHeight() * 0.5);
+			ofTranslate(viewport.getCenter());
+			//ofTranslate(ofGetWidth() * 0.5, ofGetHeight() * 0.5);
 
 			for (int i = 0; i < locations.size(); i++) {
 				ofSetColor(colors[i], 255 * alpha);
 				float radius = 1.5 * (2 * PI * glm::length(this->locations[i])) / 360 * 20;
 				ofDrawCircle(this->locations[i], radius);
 			}
+
 			ofPopStyle();
 			ofPopMatrix();
 		}
@@ -138,7 +140,7 @@ void DEMO_Scene::draw(float alpha)
 
 		if (ENABLE_DEMO2 && (*palette).size() != 0)
 		{
-			cam.begin();
+			cam.begin(viewport);
 
 			ofPushMatrix();
 			ofPushStyle();

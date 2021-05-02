@@ -171,14 +171,14 @@ void ofxColorQuantizerHelper::draw_Gui()
 
 		//ImGui::Dummy(ImVec2(0, 5));
 
-		if (ImGui::Button("Previous", ImVec2(_w50, _h)))
+		if (ImGui::Button("<", ImVec2(_w50, _h)))
 		{
 			loadPrev();
 		}
 
 		ImGui::SameLine();
 
-		if (ImGui::Button("Next", ImVec2(_w50, _h)))
+		if (ImGui::Button(">", ImVec2(_w50, _h)))
 		{
 			loadNext();
 		}

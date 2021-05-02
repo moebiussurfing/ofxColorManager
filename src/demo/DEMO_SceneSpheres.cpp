@@ -162,7 +162,7 @@ void DEMO_SceneSpheres::update() {
 }
 
 //--------------------------------------------------------------
-void DEMO_SceneSpheres::draw()
+void DEMO_SceneSpheres::draw(ofRectangle viewport)
 {
 #define Z_MIN 1.25//zoom
 #define Z_MAX 50.0
@@ -170,7 +170,7 @@ void DEMO_SceneSpheres::draw()
 #define T_MAX 240
 #define ZTW_MAX 1.2
 
-	this->cam.begin();
+	this->cam.begin(viewport);
 	{
 		float w = ofGetWidth();
 		float h = ofGetHeight();
