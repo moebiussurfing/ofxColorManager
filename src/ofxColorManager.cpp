@@ -1627,14 +1627,17 @@ void ofxColorManager::gui_Theory()
 		ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
 		//TODO:
-		float _h = float(COLOR_STRIP_COLOR_HEIGHT);
-		float _spcx = ImGui::GetStyle().ItemInnerSpacing.x;
-		float _spcy = ImGui::GetStyle().ItemInnerSpacing.y;
-		float _w100 = ImGui::GetContentRegionAvail().x;
-		float _w99 = _w100;// -_spcx;
-		float _w50 = MAX(150, _w99 / 2);
-		float _w49 = _w50 - 2;
+		float _spcx;
+		float _spcy;
+		float _w100;
 		float _h100;
+		float _w99;
+		float _w50;
+		float _h;
+		ofxSurfingHelpers::refreshWidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _h);
+
+		float _w49 = _w50 - 2;
+		//float _h100;
 		float _hSz2;
 
 		// box size
@@ -2053,11 +2056,14 @@ void ofxColorManager::gui_Editor()
 
 	if (ofxImGui::BeginWindow("EDITOR", mainSettings, flagsw))
 	{
-		float _h = BUTTON_BIG_HEIGHT;
-		float _spc = ImGui::GetStyle().ItemSpacing.x;
-		float _w100 = ImGui::GetContentRegionAvail().x;
-		float _w99 = _w100 - _spc;
-		float _w50 = _w99 / 2;
+	float _spcx;
+	float _spcy;
+	float _w100;
+	float _h100;
+	float _w99;
+	float _w50;
+	float _h;
+	ofxSurfingHelpers::refreshWidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _h);
 
 		ImGuiColorEditFlags _flags = ImGuiColorEditFlags_None;
 
@@ -2823,11 +2829,15 @@ void ofxColorManager::gui_Library()
 
 		//--
 
-		float _spc = ImGui::GetStyle().ItemInnerSpacing.x;
-		float _w100 = ImGui::GetContentRegionAvail().x;
-		float _w99 = ImGui::GetContentRegionAvail().x - _spc;
-		float _h = ImGui::GetContentRegionAvail().y - _spc;
-		float _w50 = _w100 / 2 - _spc;
+	float _spcx;
+	float _spcy;
+	float _w100;
+	float _h100;
+	float _w99;
+	float _w50;
+	float _h;
+	ofxSurfingHelpers::refreshWidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _h);
+
 		float _w33 = -80;
 
 		int _colsSize;
@@ -2996,7 +3006,7 @@ void ofxColorManager::gui_Library()
 				}
 			}
 
-			ImGui::SameLine(0, _spc);
+			ImGui::SameLine(0, _spcy);
 
 			// 1.2 next
 			if (ImGui::ArrowButton("##right", ImGuiDir_Right))
@@ -3057,8 +3067,8 @@ void ofxColorManager::gui_Library()
 
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
 
-		_w100 = ImGui::GetContentRegionAvail().x - _spc;
-		_h = ImGui::GetContentRegionAvail().y - _spc;
+		_w100 = ImGui::GetContentRegionAvail().x - _spcx;
+		_h = ImGui::GetContentRegionAvail().y - _spcy;
 
 		ImVec2 _bb;
 
@@ -3224,11 +3234,14 @@ void ofxColorManager::gui_LinkExport()
 
 	if (ofxImGui::BeginWindow("LINK", mainSettings, flagsw))
 	{
-		float _h = BUTTON_BIG_HEIGHT;
-		float _spc = ImGui::GetStyle().ItemSpacing.x;
-		float _w100 = ImGui::GetContentRegionAvail().x;
-		float _w99 = _w100 - _spc;
-		float _w50 = _w99 / 2;
+	float _spcx;
+	float _spcy;
+	float _w100;
+	float _h100;
+	float _w99;
+	float _w50;
+	float _h;
+	ofxSurfingHelpers::refreshWidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _h);
 
 		//--
 
@@ -3386,11 +3399,14 @@ void ofxColorManager::gui_Picker()
 
 	if (ofxImGui::BeginWindow("PICKER", mainSettings, flagsw))
 	{
-		float _h = BUTTON_BIG_HEIGHT;
-		float _spc = ImGui::GetStyle().ItemSpacing.x;
-		float _w100 = ImGui::GetContentRegionAvail().x;
-		float _w99 = _w100;
-		float _w50 = _w99 / 2 - _spc;
+	float _spcx;
+	float _spcy;
+	float _w100;
+	float _h100;
+	float _w99;
+	float _w50;
+	float _h;
+	ofxSurfingHelpers::refreshWidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _h);
 
 		//--
 
@@ -3613,14 +3629,15 @@ void ofxColorManager::gui_EnginesPanel()
 	{
 		const int NUM_WIDGETS = 4;
 
-		float _spcx = ImGui::GetStyle().ItemSpacing.x;
-		float _spcy = ImGui::GetStyle().ItemSpacing.y;
-		float _w100 = ImGui::GetContentRegionAvail().x;
-		float _h100 = ImGui::GetContentRegionAvail().y;
-		float _h = BUTTON_BIG_HEIGHT;
-		//float _h = _h100 - _spcy;
-		float _w99 = _w100;// -_spcx;
-		float _w50 = _w99 / 2;
+		float _spcx;
+		float _spcy;
+		float _w100;
+		float _h100;
+		float _w99;
+		float _w50;
+		float _h;
+		ofxSurfingHelpers::refreshWidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _h);
+
 		float _w = _w100 / NUM_WIDGETS - _spcx;
 
 		ofxSurfingHelpers::AddBigToggle(SHOW_Theory, _w, _h); ImGui::SameLine();
@@ -3649,11 +3666,14 @@ void ofxColorManager::gui_Advanced()
 
 	if (ofxImGui::BeginWindow("ADVANCED", mainSettings, flags))
 	{
-		float _w100 = ImGui::GetContentRegionAvail().x;
-		float _spcx = ImGui::GetStyle().ItemSpacing.x;
-		float _w33 = -75;
-		float _w50 = _w100 / 2 - _spcx;
-		float _h = BUTTON_BIG_HEIGHT / 2;
+		float _spcx;
+		float _spcy;
+		float _w100;
+		float _h100;
+		float _w99;
+		float _w50;
+		float _h;
+		ofxSurfingHelpers::refreshWidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _h);
 
 		//--
 
@@ -3755,6 +3775,7 @@ void ofxColorManager::gui_LayoutsPresets()
 
 		const int NUM_WIDGETS = APP_MODE_SIZE + 4;
 
+
 		float _spcx = ImGui::GetStyle().ItemSpacing.x;
 		float _spcy = ImGui::GetStyle().ItemSpacing.y;
 		float _w100 = ImGui::GetContentRegionAvail().x;
@@ -3762,6 +3783,8 @@ void ofxColorManager::gui_LayoutsPresets()
 		float _w99 = _w100 - _spcx;
 		float _h99 = _h100 - _spcy;
 		float _w50 = _w99 / 2;
+	
+	//float _h99 = _h100 - _spcy;
 
 		// buttons size
 		float _w;
@@ -3933,13 +3956,14 @@ void ofxColorManager::gui_LayoutsAdvanced()
 
 	if (ofxImGui::BeginWindow("LAYOUTS", mainSettings, flags))
 	{
-		float _spcx = ImGui::GetStyle().ItemSpacing.x;
-		float _spcy = ImGui::GetStyle().ItemSpacing.y;
-		float _w100 = ImGui::GetContentRegionAvail().x;
-		float _h100 = ImGui::GetContentRegionAvail().y;
-		float _w99 = _w100 - _spcx;
-		float _w50 = _w99 / 2;
-		float _h = BUTTON_BIG_HEIGHT / 2;
+	float _spcx;
+	float _spcy;
+	float _w100;
+	float _h100;
+	float _w99;
+	float _w50;
+	float _h;
+	ofxSurfingHelpers::refreshWidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _h);
 
 		int i = 0;
 
@@ -4212,15 +4236,20 @@ void ofxColorManager::gui_Range()
 
 	if (ofxImGui::BeginWindow("RANGE", mainSettings, flags))
 	{
-		float _h = float(COLOR_STRIP_COLOR_HEIGHT);
+		//float _h = float(COLOR_STRIP_COLOR_HEIGHT);
 		float _hSz = int(BUTTON_COLOR_SIZE) * scale_ColRange.get();//color boxes
 		float _hSz2;
 
 		//TODO:
-		float _spcx = ImGui::GetStyle().ItemInnerSpacing.x;
-		float _w100 = ImGui::GetContentRegionAvail().x;
-		float _w99 = _w100;//-_spc;
-		float _w50 = _w99 / 2 - 6;//?
+	float _spcx;
+	float _spcy;
+	float _w100;
+	float _h100;
+	float _w99;
+	float _w50;
+	float _h;
+	ofxSurfingHelpers::refreshWidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _h);
+
 		float _w49 = _w50 - 2;
 
 		float _szLabel = 70;//width label text
@@ -4923,11 +4952,14 @@ void ofxColorManager::gui_Presets()
 
 	if (ofxImGui::BeginWindow("PRESETS", mainSettings, flags))
 	{
-		float _h = BUTTON_BIG_HEIGHT;
-		float _spc = ImGui::GetStyle().ItemSpacing.x;
-		float _w100 = ImGui::GetContentRegionAvail().x - 2;// -_spc;
-		float _w99 = _w100 - _spc;
-		float _w50 = _w99 / 2;
+	float _spcx;
+	float _spcy;
+	float _w100;
+	float _h100;
+	float _w99;
+	float _w50;
+	float _h;
+	ofxSurfingHelpers::refreshWidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _h);
 
 		ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
@@ -5361,12 +5393,14 @@ void ofxColorManager::gui_Gradient()
 
 	if (ofxImGui::BeginWindow("GRADIENT", mainSettings, flagsw))
 	{
-		float _h = BUTTON_BIG_HEIGHT;
-		float _spc = ImGui::GetStyle().ItemSpacing.x;
-		float _w100 = ImGui::GetContentRegionAvail().x;
-		float _w99 = _w100 - _spc;
-		float _w50 = _w99 / 2;
-
+	float _spcx;
+	float _spcy;
+	float _w100;
+	float _h100;
+	float _w99;
+	float _w50;
+	float _h;
+	ofxSurfingHelpers::refreshWidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _h);
 		//-
 
 		//TODO:
@@ -5474,15 +5508,16 @@ void ofxColorManager::gui_Demo()
 
 	if (ofxImGui::BeginWindow("DEMO", mainSettings, flagsw))
 	{
-		float _spcx = ImGui::GetStyle().ItemSpacing.x;
-		float _spcy = ImGui::GetStyle().ItemSpacing.y;
-		float _w100 = ImGui::GetContentRegionAvail().x;
-		float _h100 = ImGui::GetContentRegionAvail().y;
-		float _w99 = _w100 - _spcx;
-		//float _w50 = _w100 / 2 - _spcx;
-		float _w50 = _w99 / 2;
+		float _spcx;
+		float _spcy;
+		float _w100;
+		float _h100;
+		float _w99;
+		float _w50;
+		float _h;
+		ofxSurfingHelpers::refreshWidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _h);
+
 		float _w33 = _w99 / 3 - _spcx / 3;
-		float _h = BUTTON_BIG_HEIGHT / 2;
 
 		float _pad = -80;
 		//float _pad = _w33;
