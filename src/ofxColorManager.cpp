@@ -78,7 +78,7 @@ void ofxColorManager::build_Palette_SortFlip()
 
 	std::reverse(palette.begin(), palette.end());
 
-	gradientEngine.buildFrom_TARGET();
+	gradientEngine.build_From_TARGET();
 
 	//----
 
@@ -483,9 +483,9 @@ void ofxColorManager::setup()
 
 	color_Picked.set("COLOR", ofFloatColor::red);
 
-	color_HUE.set("H", 0, 0, 255);
-	color_SAT.set("S", 0, 0, 255);
-	color_BRG.set("V", 0, 0, 255);
+	color_HUE.set("Hue", 0, 0, 255);
+	color_SAT.set("Sat", 0, 0, 255);
+	color_BRG.set("Brg", 0, 0, 255);
 
 	params_color.setName("COLOR");
 	params_color.add(color_HUE);
@@ -630,8 +630,8 @@ void ofxColorManager::setup()
 	bModePalettePreset.set("Mode Palette", false);
 #endif
 	bAutoExportPreset.set("Auto Export", true);
-	bExportByTCP.set("LINK TCP", false);
-	bExportByFile.set("LINK FILE", false);
+	bExportByTCP.set("TCP", false);
+	bExportByFile.set("FILE", false);
 	bExportPreset_DefaultPath.set("Path /bin/data", true);
 	path_Folder_ExportColor_Custom.set("ExportPath", "");
 
@@ -863,7 +863,8 @@ void ofxColorManager::setup()
 	params_AppState.add(appLayoutIndex);
 	params_AppState.add(SHOW_MenuBar);
 	params_AppState.add(positionGuiLayout);
-
+	params_AppState.add(bAutoHide_Name);
+	
 	//params_AppState.add(SHOW_Advanced);
 	SHOW_Advanced.setSerializable(false);
 
@@ -920,7 +921,7 @@ void ofxColorManager::setup()
 	params_control.add(bFitLayout);
 	params_control.add(SHOW_Advanced);
 	params_control.add(SHOW_MenuBar);
-	params_control.add(SHOW_Name);
+	//params_control.add(SHOW_Name);
 
 #ifndef USE_SIMPLE_PRESET_PALETTE	
 	params_control.add(bModeBundlePreset);
@@ -956,6 +957,7 @@ void ofxColorManager::setup()
 	params_LayoutPanelsState.add(SHOW_LinkExport);
 	params_LayoutPanelsState.add(SHOW_Advanced);
 	params_LayoutPanelsState.add(SHOW_MenuBar);
+	//params_LayoutPanelsState.add(bAutoHide_Name);
 	params_LayoutPanelsState.add(gradientEngine.SHOW_CurveEditor);
 
 	//exclude. shared by all the layout presets
@@ -1089,13 +1091,17 @@ void ofxColorManager::update(ofEventArgs & args)
 	//--
 
 	//TODO:
+	bBlockedKeys = bTextInputActive || bCheckMouseOverTextInputLovers;//text inputs
+	//bBlockedKeys |= 
+
+	//TODO:
 	//BUG:
-	bBlockKeys = false;
+	//bBlockedKeys = false;
 	//sometime keys are locked disabled..
 
 	//// text input blocker
-	//if (!SHOW_ColourLovers) bBlockKeys = !(ENABLE_keys && !bTextInputActive);
-	//else bBlockKeys = !(ENABLE_keys && !bTextInputActive && !bCheckMouseOverTextInputLovers);
+	//if (!SHOW_ColourLovers) bBlockedKeys = !(ENABLE_keys && !bTextInputActive);
+	//else bBlockedKeys = !(ENABLE_keys && !bTextInputActive && !bCheckMouseOverTextInputLovers);
 
 	//--
 
@@ -1283,97 +1289,97 @@ void ofxColorManager::refresh_Libs()
 	last_ColorPicked_Lib = 0;
 }
 
-//--------------------------------------------------------------
-void ofxColorManager::draw_PresetName()
-{
-	//ofPushMatrix();
-	ofPushStyle();
-
-	//blink when a new preset is editing
-	float a;
-	if (MODE_NewPreset) a = ofxSurfingHelpers::getFadeBlink();
-	else a = 1.0f;
-
-	//-
-
-	float sp = 2;//shadow
-
-	int padh = 0;
-	int pady;
-	int x;
-	int y;
-	int h;
-
-	std::string str = "";
-	if (name_TARGET != nullptr) name_TARGET[0];
-
-	//get text width
-	float _w0 = ofxSurfingHelpers::getWidthBBtextBoxed(fontBig, str);
-
-	//--
-
-	//// a. top
-	//pady = 150;//with upper palette
-	////pady = 20;
-	//y = pady + fontBig.getSize();
-	//h = padh;
-	//y += h;
-	//x = ofGetWidth() * 0.5 - _w0 * 0.5;
-
-	//// b. bottom
-	//pady = 0;
-	//y = ofGetWindowHeight() - pady - fontBig.getSize();
-	//h = padh;
-	//y += h;
-	//x = ofGetWidth() * 0.5 - _w0 * 0.5;
-
-	// c. locked to svg demo
-	x = DEMO3_Svg.getPositionTittle().x;
-	y = DEMO3_Svg.getPositionTittle().y;
-	pady = fontBig.getSize() / 2;
-	y -= pady;
-	x -= _w0 * 0.5;//center
-
-	//--
-
-	enum THEME_COLORS
-	{
-		THEME_DAY = 0,
-		THEME_NIGHT
-
-	};
-
-	THEME_COLORS _THEME = THEME_DAY;
-	//THEME_COLORS _THEME_SCHEME = THEME_NIGHT;
-
-	//-
-
-	// label tittle
-
-	int _alpha = 200;
-	ofColor c0, c1;//shadow and letter colors
-
-	if (_THEME == THEME_NIGHT)
-	{
-		c0.set(0, _alpha * a * 0.9);
-		c1.set(240, _alpha * a);
-	}
-	else if (_THEME == THEME_DAY)
-	{
-		c0.set(164, _alpha * a);
-		c1.set(0, _alpha * a * 0.9);
-	}
-
-	ofSetColor(c0);
-	fontBig.drawString(str, x + sp, y + sp);
-	ofSetColor(c1);
-	fontBig.drawString(str, x, y);
-
-	//-
-
-	ofPopStyle();
-	//ofPopMatrix();
-}
+////--------------------------------------------------------------
+//void ofxColorManager::draw_PresetName()
+//{
+//	//ofPushMatrix();
+//	ofPushStyle();
+//
+//	//blink when a new preset is editing
+//	float a;
+//	if (MODE_NewPreset) a = ofxSurfingHelpers::getFadeBlink();
+//	else a = 1.0f;
+//
+//	//-
+//
+//	float sp = 2;//shadow
+//
+//	int padh = 0;
+//	int pady;
+//	int x;
+//	int y;
+//	int h;
+//
+//	std::string str = "";
+//	if (name_TARGET != nullptr) name_TARGET[0];
+//
+//	//get text width
+//	float _w0 = ofxSurfingHelpers::getWidthBBtextBoxed(fontBig, str);
+//
+//	//--
+//
+//	//// a. top
+//	//pady = 150;//with upper palette
+//	////pady = 20;
+//	//y = pady + fontBig.getSize();
+//	//h = padh;
+//	//y += h;
+//	//x = ofGetWidth() * 0.5 - _w0 * 0.5;
+//
+//	//// b. bottom
+//	//pady = 0;
+//	//y = ofGetWindowHeight() - pady - fontBig.getSize();
+//	//h = padh;
+//	//y += h;
+//	//x = ofGetWidth() * 0.5 - _w0 * 0.5;
+//
+//	// c. locked to svg demo
+//	x = DEMO3_Svg.getPositionTittle().x;
+//	y = DEMO3_Svg.getPositionTittle().y;
+//	pady = fontBig.getSize() / 2;
+//	y -= pady;
+//	x -= _w0 * 0.5;//center
+//
+//	//--
+//
+//	enum THEME_COLORS
+//	{
+//		THEME_DAY = 0,
+//		THEME_NIGHT
+//
+//	};
+//
+//	THEME_COLORS _THEME = THEME_DAY;
+//	//THEME_COLORS _THEME_SCHEME = THEME_NIGHT;
+//
+//	//-
+//
+//	// label tittle
+//
+//	int _alpha = 200;
+//	ofColor c0, c1;//shadow and letter colors
+//
+//	if (_THEME == THEME_NIGHT)
+//	{
+//		c0.set(0, _alpha * a * 0.9);
+//		c1.set(240, _alpha * a);
+//	}
+//	else if (_THEME == THEME_DAY)
+//	{
+//		c0.set(164, _alpha * a);
+//		c1.set(0, _alpha * a * 0.9);
+//	}
+//
+//	ofSetColor(c0);
+//	fontBig.drawString(str, x + sp, y + sp);
+//	ofSetColor(c1);
+//	fontBig.drawString(str, x, y);
+//
+//	//-
+//
+//	ofPopStyle();
+//	//ofPopMatrix();
+//}
 
 //--------------------------------------------------------------
 void ofxColorManager::draw(ofEventArgs & args)
@@ -1429,8 +1435,8 @@ void ofxColorManager::draw(ofEventArgs & args)
 #endif
 			//--
 
-			// info
-			if (SHOW_Name) draw_PresetName();
+			//// info
+			//if (SHOW_Name) draw_PresetName();
 		}
 	}
 
@@ -1458,9 +1464,11 @@ void ofxColorManager::draw(ofEventArgs & args)
 		{
 			mouseLockedByGui = draw_Gui();
 
+
+
 			//TODO:
 			//BUG:
-			bBlockKeys = false;
+			//bBlockedKeys = false;
 			//sometime keys are locked disabled..
 
 			//if (mouseLockedByGui != mouseLockedByGui_PRE)// changed
@@ -1633,8 +1641,10 @@ void ofxColorManager::gui_Theory()
 		float _h100;
 		float _w99;
 		float _w50;
+		float _w33;
+		float _w25;
 		float _h;
-		ofxSurfingHelpers::refreshWidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _h);
+		ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 
 		float _w49 = _w50 - 2;
 		//float _h100;
@@ -2056,14 +2066,16 @@ void ofxColorManager::gui_Editor()
 
 	if (ofxImGui::BeginWindow("EDITOR", mainSettings, flagsw))
 	{
-	float _spcx;
-	float _spcy;
-	float _w100;
-	float _h100;
-	float _w99;
-	float _w50;
-	float _h;
-	ofxSurfingHelpers::refreshWidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _h);
+		float _spcx;
+		float _spcy;
+		float _w100;
+		float _h100;
+		float _w99;
+		float _w50;
+		float _w33;
+		float _w25;
+		float _h;
+		ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 
 		ImGuiColorEditFlags _flags = ImGuiColorEditFlags_None;
 
@@ -2198,7 +2210,7 @@ void ofxColorManager::gui_Editor()
 							// update all palette (Curve)
 							ofLogNotice(__FUNCTION__) << "DONE Dragged";
 
-							gradientEngine.buildFrom_TARGET();
+							gradientEngine.build_From_TARGET();
 
 							// workflow
 							bFlag_refresh_EnginesFromPalette = true;
@@ -2431,7 +2443,9 @@ void ofxColorManager::gui_Editor()
 
 				if (ImGui::CollapsingHeader("COOLORS.CO", ImGuiWindowFlags_None))
 				{
-					if (ImGui::Button("PASTE / IMPORT", ImVec2(_w50, _h * 0.5)))
+					ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+
+					if (ImGui::Button("PASTE / IMPORT", ImVec2(_w50, _h / 2)))
 					{
 						ofLogNotice(__FUNCTION__) << "IMPORT URL COOLORS";
 						doImportPaletteCoolors(ofGetClipboardString());
@@ -2447,6 +2461,7 @@ void ofxColorManager::gui_Editor()
 				}
 
 				// show picker
+				ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 
 				ImGui::Dummy(ImVec2(0.0f, 2.0f));
 				ofxSurfingHelpers::AddBigToggle(SHOW_Picker, _w100, _h / 2);
@@ -2475,6 +2490,8 @@ void ofxColorManager::gui_Editor()
 				{
 					if (ImGui::CollapsingHeader("Layout"))
 					{
+						ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+
 						ofxImGui::AddParameter(bFitLayout);
 						if (!bFitLayout) {
 							ofxImGui::AddParameter(bResponsive_Panels);
@@ -2754,7 +2771,7 @@ void ofxColorManager::gui_Palette()
 					// update all pallete (Curve)
 					ofLogNotice(__FUNCTION__) << "DONE Dragged";
 
-					gradientEngine.buildFrom_TARGET();
+					gradientEngine.build_From_TARGET();
 
 					// workflow
 					bFlag_refresh_EnginesFromPalette = true;
@@ -2829,16 +2846,16 @@ void ofxColorManager::gui_Library()
 
 		//--
 
-	float _spcx;
-	float _spcy;
-	float _w100;
-	float _h100;
-	float _w99;
-	float _w50;
-	float _h;
-	ofxSurfingHelpers::refreshWidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _h);
-
-		float _w33 = -80;
+		float _spcx;
+		float _spcy;
+		float _w100;
+		float _h100;
+		float _w99;
+		float _w50;
+		float _w33;
+		float _w25;
+		float _h;
+		ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 
 		int _colsSize;
 		if (lib_CardsMode) _colsSize = lib_RowSize;
@@ -3234,14 +3251,16 @@ void ofxColorManager::gui_LinkExport()
 
 	if (ofxImGui::BeginWindow("LINK", mainSettings, flagsw))
 	{
-	float _spcx;
-	float _spcy;
-	float _w100;
-	float _h100;
-	float _w99;
-	float _w50;
-	float _h;
-	ofxSurfingHelpers::refreshWidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _h);
+		float _spcx;
+		float _spcy;
+		float _w100;
+		float _h100;
+		float _w99;
+		float _w50;
+		float _w33;
+		float _w25;
+		float _h;
+		ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 
 		//--
 
@@ -3262,9 +3281,34 @@ void ofxColorManager::gui_LinkExport()
 
 			ImGui::Dummy(ImVec2(0.0f, 2.0f));
 			//ImGui::Text("LINK:");
-			ofxSurfingHelpers::AddBigToggle(bExportByFile, _w50, _h / 2); ImGui::SameLine();
-			ofxSurfingHelpers::AddBigToggle(bExportByTCP, _w50, _h / 2);
-			//ofxImGui::AddParameter(bAutoExportPreset);
+
+			//--
+
+			// tcp and file
+			// blink borders
+
+			float a;
+			bool b;
+
+			b = bExportByTCP.get();
+			if (b) a = ofxSurfingHelpers::getFadeBlink();
+			else a = 1.0f;
+			if (b) ImGui::PushStyleColor(ImGuiCol_Border, (ImVec4)ImColor::HSV(0.5f, 0.0f, 1.0f, a));
+			ofxSurfingHelpers::AddBigToggle(bExportByTCP, _w100, _h, false); /*ImGui::SameLine();*/
+			if (b) ImGui::PopStyleColor();
+
+			b = bExportByFile.get();
+			if (b) a = ofxSurfingHelpers::getFadeBlink();
+			else a = 1.0f;
+			if (b) ImGui::PushStyleColor(ImGuiCol_Border, (ImVec4)ImColor::HSV(0.5f, 0.0f, 1.0f, a));
+			ofxSurfingHelpers::AddBigToggle(bExportByFile, _w100, _h, false);
+			if (b) ImGui::PopStyleColor();
+
+			//--
+
+			//ofxSurfingHelpers::AddBigToggle(bExportByFile, _w50, _h / 2); ImGui::SameLine();
+			//ofxSurfingHelpers::AddBigToggle(bExportByTCP, _w50, _h / 2);
+			////ofxImGui::AddParameter(bAutoExportPreset);
 
 			//-
 
@@ -3399,14 +3443,16 @@ void ofxColorManager::gui_Picker()
 
 	if (ofxImGui::BeginWindow("PICKER", mainSettings, flagsw))
 	{
-	float _spcx;
-	float _spcy;
-	float _w100;
-	float _h100;
-	float _w99;
-	float _w50;
-	float _h;
-	ofxSurfingHelpers::refreshWidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _h);
+		float _spcx;
+		float _spcy;
+		float _w100;
+		float _h100;
+		float _w99;
+		float _w50;
+		float _w33;
+		float _w25;
+		float _h;
+		ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 
 		//--
 
@@ -3423,7 +3469,7 @@ void ofxColorManager::gui_Picker()
 
 		ImGuiColorEditFlags _flags = ImGuiColorEditFlags_NoOptions | ImGuiColorEditFlags_NoTooltip;
 
-		ImGui::ColorButton("##PickerBox", *(ImVec4 *)&cTmp, _flags, ImVec2(_w99, COLOR_STRIP_COLOR_HEIGHT));
+		ImGui::ColorButton("##cPreview", *(ImVec4 *)&cTmp, _flags, ImVec2(_w100, COLOR_STRIP_COLOR_HEIGHT));
 
 		//-
 
@@ -3436,22 +3482,22 @@ void ofxColorManager::gui_Picker()
 			ImGuiColorEditFlags _flagw;
 			ImGuiColorEditFlags _flags;
 
-			_w100 = ImGui::GetContentRegionAvail().x;
-			_w99 = _w100;
+			float __spacing = 5;
 
-			float __spacing = 10;
 			//--
+
+			ImGui::Indent();
 
 			// 1. color picker
 
 			if (default_wheel) _flagw = ImGuiTreeNodeFlags_DefaultOpen;
 			else _flagw = ImGuiTreeNodeFlags_None;
+			_flagw |= ImGuiTreeNodeFlags_Framed;
 
-			//if (ImGui::CollapsingHeader("WHEEL", _flagw))//flicks bug..
-			//if (ImGui::TreeNodeEx("WHEEL", _flagw))
-			//ImGui::TreeNodeBehaviorIsOpen(ImGuiTreeNodeFlags_None);
-			if (ImGui::TreeNode("WHEEL"))
+			if (ImGui::TreeNodeEx("WHEEL", _flagw))
 			{
+				ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+
 				// 1.1 circled
 				_flags =
 					ImGuiColorEditFlags_NoSmallPreview |
@@ -3484,11 +3530,13 @@ void ofxColorManager::gui_Picker()
 
 			if (!default_wheel) _flagw = ImGuiTreeNodeFlags_DefaultOpen;
 			else _flagw = ImGuiTreeNodeFlags_None;
+			_flagw |= ImGuiTreeNodeFlags_Framed;
 
-			//if (ImGui::CollapsingHeader("SQUARE", _flagw))//flickering bug..
+			//flickering bug..
 			if (ImGui::TreeNodeEx("SQUARE", _flagw))
-				//if (ImGui::TreeNode("SQUARE"))
 			{
+				ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+
 				_flags =
 					ImGuiColorEditFlags_NoSmallPreview |
 					ImGuiColorEditFlags_NoTooltip |
@@ -3512,16 +3560,21 @@ void ofxColorManager::gui_Picker()
 
 				ImGui::TreePop();
 			}
+
+			ImGui::Unindent();
 		}
 
 		//----
 
 		// 2. HSB
-
-		if (ImGui::CollapsingHeader("HSB", ImGuiWindowFlags_NoCollapse))
+		bool bOpen = false;
+		ImGuiColorEditFlags _flagw = (bOpen ? ImGuiWindowFlags_NoCollapse : ImGuiWindowFlags_None);
+		if (ImGui::CollapsingHeader("HSB", _flagw))
 		{
-			//ImGui::PushItemWidth(170);
-			ImGui::PushItemWidth(-40);
+			//TODO:
+			//flickering bug..
+			ImGui::PushID(1);
+			ImGui::PushItemWidth(-35);
 
 			if (ofxImGui::AddParameter(color_HUE)) {}
 			if (ofxImGui::AddParameter(color_SAT)) {}
@@ -3542,13 +3595,16 @@ void ofxColorManager::gui_Picker()
 			//ImGui::PopID();// ?? only once ?
 
 			ImGui::PopItemWidth();
+			ImGui::PopID();
 		}
 
 		//--
 
 		if (ImGui::CollapsingHeader("Randomizer"))
 		{
-			if (bColor_HUE || bColor_SAT || bColor_BRG) ofxSurfingHelpers::AddBigButton(bRandomColor, _w99, _h);
+			ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+
+			if (bColor_HUE || bColor_SAT || bColor_BRG) ofxSurfingHelpers::AddBigButton(bRandomColor, _w100, _h);
 
 			if (bColor_HUE) color_HUE_0 = color_HUE;
 			if (bColor_SAT) color_SAT_0 = color_SAT;
@@ -3635,8 +3691,10 @@ void ofxColorManager::gui_EnginesPanel()
 		float _h100;
 		float _w99;
 		float _w50;
+		float _w33;
+		float _w25;
 		float _h;
-		ofxSurfingHelpers::refreshWidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _h);
+		ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 
 		float _w = _w100 / NUM_WIDGETS - _spcx;
 
@@ -3672,8 +3730,10 @@ void ofxColorManager::gui_Advanced()
 		float _h100;
 		float _w99;
 		float _w50;
+		float _w33;
+		float _w25;
 		float _h;
-		ofxSurfingHelpers::refreshWidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _h);
+		ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 
 		//--
 
@@ -3681,6 +3741,7 @@ void ofxColorManager::gui_Advanced()
 		{
 			ofxImGui::AddParameter(SHOW_Advanced);
 			ofxImGui::AddParameter(SHOW_Layouts);
+			ofxImGui::AddParameter(bForceLayoutPosition);
 			ofxImGui::AddParameter(SHOW_Panels);
 			ofxImGui::AddParameter(SHOW_MINI_Preview);
 			ofxImGui::AddParameter(SHOW_MenuBar);
@@ -3693,7 +3754,7 @@ void ofxColorManager::gui_Advanced()
 			ImGui::Checkbox("Edit Theme", &SHOW_EditTheme);
 			ofxImGui::AddParameter(Lock_DockingLayout);
 #ifdef USE_DEBUG_LAYOUT 
-			if (ImGui::Button("Mouse Ruler"))
+			if (ImGui::Button("Mouse Ruler", ImVec2(_w100, _h / 2)))
 			{
 				mouseRuler.toggleVisibility();
 			}
@@ -3705,9 +3766,10 @@ void ofxColorManager::gui_Advanced()
 		//ImGui::Text("PRESET NAME");
 		if (ImGui::CollapsingHeader("PRESET NAME", ImGuiWindowFlags_None))
 		{
-			ofxImGui::AddParameter(SHOW_Name);
+			//ofxImGui::AddParameter(SHOW_Name);
+			ofxImGui::AddParameter(bAutoHide_Name);
 
-			ImGui::PushItemWidth(110);
+			ImGui::PushItemWidth(85);
 			ofxImGui::AddStepper(fontSizeParam);
 			ofxImGui::AddStepper(fontSizeBigParam);
 			ImGui::PopItemWidth();
@@ -3719,10 +3781,23 @@ void ofxColorManager::gui_Advanced()
 		if (ImGui::CollapsingHeader("DEBUG", ImGuiWindowFlags_None))
 		{
 			ofxImGui::AddParameter(ENABLE_keys);
-			ImGui::Checkbox("Locked Keys", &bBlockKeys);
-			ImGui::Checkbox("Locked All", &bLockAllKeysByGui);
-			ImGui::Checkbox("Locked Mouse", &mouseLockedByGui);
 			ofxImGui::AddParameter(bDebugRectCentral);
+
+			bool bOpen = true;
+			ImGuiColorEditFlags _flagw = (bOpen ? ImGuiTreeNodeFlags_DefaultOpen : ImGuiTreeNodeFlags_None);
+			_flagw |= ImGuiTreeNodeFlags_Framed;
+
+			if (ImGui::TreeNodeEx("LOCK KEYCOMMANDS", _flagw))
+			{
+				ImGui::Checkbox("Blocked Keys", &bBlockedKeys);
+				ImGui::Checkbox("Locked All", &bLockAllKeysByGui);
+				ImGui::Checkbox("Locked Mouse", &mouseLockedByGui);
+				ImGui::Checkbox("Text Input Lovers", &bCheckMouseOverTextInputLovers);
+				ImGui::Checkbox("Text Input", &bTextInputActive);
+				//ImGui::Checkbox("Locked Mouse2", &bLockMouseByImGui);
+
+				ImGui::TreePop();
+			}
 		}
 	}
 	ofxImGui::EndWindow(mainSettings);
@@ -3730,6 +3805,7 @@ void ofxColorManager::gui_Advanced()
 	ImGui::PopStyleVar();
 }
 #endif
+
 //--------------------------------------------------------------
 void ofxColorManager::gui_LayoutsPresets()
 {
@@ -3744,7 +3820,7 @@ void ofxColorManager::gui_LayoutsPresets()
 	float a = ofxSurfingHelpers::getFadeBlink();
 
 	//----
-
+	
 	// center
 	//is excluded from .ini
 	float xw, yw, ww, hw;
@@ -3752,10 +3828,21 @@ void ofxColorManager::gui_LayoutsPresets()
 	hw = CURRENT_WINDOW_MIN_HEIGHT;
 	//xw = ofGetWidth() / 2 - ww / 2;
 	//yw = ofGetHeight() / 2 - hw / 2;
-	xw = positionGuiLayout.get().x;
-	yw = positionGuiLayout.get().y;
-	ImGui::SetNextWindowPos(ofVec2f(xw, yw), ImGuiCond_Once);
-	ImGui::SetNextWindowSize(ofVec2f(ww, hw), ImGuiCond_Once);
+	ImGuiCond flag;
+	if (bForceLayoutPosition) {
+		glm::vec2 p = rectangle_Central_MAX.getTopLeft() + glm::vec2(0, 0);
+		xw = p.x;
+		yw = p.y;
+		flag = ImGuiCond_Always;
+	}
+	else {
+		xw = positionGuiLayout.get().x;
+		yw = positionGuiLayout.get().y;
+		flag = ImGuiCond_Once;
+	}
+
+	ImGui::SetNextWindowPos(ofVec2f(xw, yw), flag);
+	ImGui::SetNextWindowSize(ofVec2f(ww, hw), flag);
 
 	//----
 
@@ -3775,7 +3862,6 @@ void ofxColorManager::gui_LayoutsPresets()
 
 		const int NUM_WIDGETS = APP_MODE_SIZE + 4;
 
-
 		float _spcx = ImGui::GetStyle().ItemSpacing.x;
 		float _spcy = ImGui::GetStyle().ItemSpacing.y;
 		float _w100 = ImGui::GetContentRegionAvail().x;
@@ -3783,10 +3869,10 @@ void ofxColorManager::gui_LayoutsPresets()
 		float _w99 = _w100 - _spcx;
 		float _h99 = _h100 - _spcy;
 		float _w50 = _w99 / 2;
-	
-	//float _h99 = _h100 - _spcy;
 
-		// buttons size
+		//float _h99 = _h100 - _spcy;
+
+			// buttons size
 		float _w;
 		float _h;
 
@@ -3956,15 +4042,17 @@ void ofxColorManager::gui_LayoutsAdvanced()
 
 	if (ofxImGui::BeginWindow("LAYOUTS", mainSettings, flags))
 	{
-	float _spcx;
-	float _spcy;
-	float _w100;
-	float _h100;
-	float _w99;
-	float _w50;
-	float _h;
-	ofxSurfingHelpers::refreshWidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _h);
-
+		float _spcx;
+		float _spcy;
+		float _w100;
+		float _h100;
+		float _w99;
+		float _w50;
+		float _w33;
+		float _w25;
+		float _h;
+		ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+		_h = _h / 2;
 		int i = 0;
 
 		//----
@@ -4186,6 +4274,7 @@ void ofxColorManager::gui_Panels()
 
 		//-
 
+		// link blink
 		float a;
 		bool b;
 #ifdef LINK_TCP_MASTER_CLIENT_KU
@@ -4241,14 +4330,16 @@ void ofxColorManager::gui_Range()
 		float _hSz2;
 
 		//TODO:
-	float _spcx;
-	float _spcy;
-	float _w100;
-	float _h100;
-	float _w99;
-	float _w50;
-	float _h;
-	ofxSurfingHelpers::refreshWidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _h);
+		float _spcx;
+		float _spcy;
+		float _w100;
+		float _h100;
+		float _w99;
+		float _w50;
+		float _w33;
+		float _w25;
+		float _h;
+		ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 
 		float _w49 = _w50 - 2;
 
@@ -4738,7 +4829,7 @@ void ofxColorManager::gui_Kit()
 
 #ifdef MODE_TEXT_INPUT_WORKAROUND
 //--------------------------------------------------------------
-void ofxColorManager::gui_InputText()
+void ofxColorManager::gui_TextInput()
 {
 	static bool auto_resize = false;
 
@@ -4755,7 +4846,9 @@ void ofxColorManager::gui_InputText()
 	ImGui::SetNextWindowSize(ImVec2(_ww, _hh));
 
 	// force fit text input window to free space
-	glm::vec2 p = rectangle_Central_MAX.getTopLeft() + glm::vec2(0, 0);
+	//glm::vec2 p = rectangle_Central_MAX.getTopLeft() + glm::vec2(0, -8);//upper left
+	glm::vec2 p = rectangle_Central_MAX.getTopLeft() +
+		glm::vec2(rectangle_Central_MAX.getWidth() / 2 - _ww / 2, -8);//centered
 	ImGui::SetNextWindowPos(ImVec2(p.x, p.y), ImGuiCond_Always);
 
 	//-
@@ -4908,13 +5001,13 @@ void ofxColorManager::gui_InputText()
 					refresh_FilesSorting(textInput_New);
 				}
 				else ofLogError(__FUNCTION__) << "Empty name on textInput !";
-			}
+		}
 			ImGui::PopStyleColor();
 #endif
-		}
+	}
 
 		ImGui::Dummy(ImVec2(0.0f, 5.0f));
-	}
+}
 	ofxImGui::EndWindow(mainSettings);
 
 #ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
@@ -4952,14 +5045,16 @@ void ofxColorManager::gui_Presets()
 
 	if (ofxImGui::BeginWindow("PRESETS", mainSettings, flags))
 	{
-	float _spcx;
-	float _spcy;
-	float _w100;
-	float _h100;
-	float _w99;
-	float _w50;
-	float _h;
-	ofxSurfingHelpers::refreshWidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _h);
+		float _spcx;
+		float _spcy;
+		float _w100;
+		float _h100;
+		float _w99;
+		float _w50;
+		float _w33;
+		float _w25;
+		float _h;
+		ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 
 		ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
@@ -4971,7 +5066,8 @@ void ofxColorManager::gui_Presets()
 		{
 			int _i = last_Index_Preset;
 
-			ImGui::PushItemWidth(-20);
+			ImGui::PushItemWidth(-10);
+			//ImGui::PushItemWidth(-20);
 			//ImGui::PushItemWidth(_w99);
 
 			if (ofxImGui::VectorCombo(" ", &_i, files_Names))
@@ -5168,7 +5264,7 @@ void ofxColorManager::gui_Presets()
 				else ofLogError(__FUNCTION__) << "Empty name on textInput !";
 			}
 			ImGui::PopStyleColor();
-		}
+	}
 		else
 		{
 			if (MODE_ReadyToUpdate)
@@ -5362,6 +5458,8 @@ void ofxColorManager::gui_Presets()
 
 			ImGui::PushItemWidth(-35);
 			if (bPlaySlideShow) ofxImGui::AddParameter(auto_pilot_Duration);
+			ofxImGui::AddParameter(bAutoHide_Name);
+
 			ImGui::PopItemWidth();
 		}
 
@@ -5373,7 +5471,7 @@ void ofxColorManager::gui_Presets()
 		//ImGui::Dummy(ImVec2(0.0f, 2.0f));
 		//if (SHOW_Kit) ofxImGui::AddParameter(AutoScroll);
 		//ImGui::Checkbox("Auto-Resize", &auto_resize);
-	}
+}
 
 	ofxImGui::EndWindow(mainSettings);
 
@@ -5393,14 +5491,17 @@ void ofxColorManager::gui_Gradient()
 
 	if (ofxImGui::BeginWindow("GRADIENT", mainSettings, flagsw))
 	{
-	float _spcx;
-	float _spcy;
-	float _w100;
-	float _h100;
-	float _w99;
-	float _w50;
-	float _h;
-	ofxSurfingHelpers::refreshWidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _h);
+		float _spcx;
+		float _spcy;
+		float _w100;
+		float _h100;
+		float _w99;
+		float _w50;
+		float _w33;
+		float _w25;
+		float _h;
+		ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+
 		//-
 
 		//TODO:
@@ -5417,7 +5518,7 @@ void ofxColorManager::gui_Gradient()
 			//TODO:
 			// get and draw the widgets to draw inside ImGui
 			//if (bDEMO3) colorClient.drawGradientToolWidgets();
-			gradientEngine.drawGradientTool_ImGui_Widgets();
+			gradientEngine.draw_GradientTool_ImGui_Widgets();
 
 			//---
 
@@ -5514,10 +5615,10 @@ void ofxColorManager::gui_Demo()
 		float _h100;
 		float _w99;
 		float _w50;
+		float _w33;
+		float _w25;
 		float _h;
-		ofxSurfingHelpers::refreshWidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _h);
-
-		float _w33 = _w99 / 3 - _spcx / 3;
+		ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 
 		float _pad = -80;
 		//float _pad = _w33;
@@ -5526,7 +5627,7 @@ void ofxColorManager::gui_Demo()
 		// DEMO 1
 
 		//demo bubbles
-		ofxSurfingHelpers::AddBigToggle(DEMO1_Enable, _w100, _h * 2);
+		ofxSurfingHelpers::AddBigToggle(DEMO1_Enable, _w100, _h);
 		if (DEMO1_Enable)
 			if (ImGui::CollapsingHeader("DEMO 1", ImGuiWindowFlags_None))
 			{
@@ -5569,7 +5670,7 @@ void ofxColorManager::gui_Demo()
 		// DEMO 2
 
 		// demo spheres
-		ofxSurfingHelpers::AddBigToggle(DEMO2_Enable, _w100, _h * 2);
+		ofxSurfingHelpers::AddBigToggle(DEMO2_Enable, _w100, _h);
 		if (DEMO2_Enable)
 			if (ImGui::CollapsingHeader("DEMO 2", ImGuiWindowFlags_None))
 			{
@@ -5613,7 +5714,7 @@ void ofxColorManager::gui_Demo()
 		// DEMO 3
 
 		// svg demo
-		ofxSurfingHelpers::AddBigToggle(DEMO3_Svg.bEnable, _w99, _h * 2);
+		ofxSurfingHelpers::AddBigToggle(DEMO3_Svg.bEnable, _w99, _h);
 		if (DEMO3_Svg.bEnable)
 			if (ImGui::CollapsingHeader("DEMO 3", ImGuiWindowFlags_None))
 			{
@@ -5729,8 +5830,11 @@ void ofxColorManager::setupGui()
 //--------------------------------------------------------------
 bool ofxColorManager::draw_Gui()
 {
+	//bLockMouseByImGui = false;
+
 	gui.begin();
 	{
+
 		//----
 
 		if (SHOW_MenuBar)
@@ -5783,13 +5887,14 @@ bool ofxColorManager::draw_Gui()
 				// Depending on the viewports flag, the XY is either absolute or relative to the oF window.
 				if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable) viewCenter = viewCenter - ImVec2(ofGetWindowPositionX(), ofGetWindowPositionY());
 
-				int pad = 6;
+				int pad = 0;
 				float ww = availableSpace.GetSize().x - pad;
 				float hh = availableSpace.GetSize().y - pad;
 				rectangle_Central_MAX = ofRectangle(viewCenter.x, viewCenter.y, ww, hh);
 
 				bool bDebug = bDebugRectCentral;
 				if (bDebug) {
+					int _wl = 5;
 					ofPushStyle();
 					ofSetRectMode(OF_RECTMODE_CENTER);
 					int g = 0;
@@ -5798,7 +5903,7 @@ bool ofxColorManager::draw_Gui()
 					ofColor c = ofColor(g, a);
 					ofSetColor(c);
 					ofNoFill();
-					ofSetLineWidth(1);
+					ofSetLineWidth(_wl);
 					ofDrawRectangle(rectangle_Central_MAX);
 					ofSetRectMode(OF_RECTMODE_CORNER);
 					ofPopStyle();
@@ -5835,9 +5940,10 @@ bool ofxColorManager::draw_Gui()
 			if (SHOW_Editor) gui_Editor();
 			if (SHOW_Presets) gui_Presets();
 #ifdef MODE_TEXT_INPUT_WORKAROUND
-			if (MODE_NewPreset)//hide text input
-				gui_InputText();
-			//if (SHOW_Presets /*&& MODE_NewPreset*/) gui_InputText();
+			if ((MODE_NewPreset && bAutoHide_Name) || !bAutoHide_Name)//hide text input
+			//if (MODE_NewPreset)//hide text input
+			//if (SHOW_Presets /*&& MODE_NewPreset*/) gui_TextInput();
+				gui_TextInput();
 #endif
 			if (SHOW_Kit) gui_Kit();
 			if (SHOW_Picker) gui_Picker();
@@ -5908,13 +6014,20 @@ bool ofxColorManager::draw_Gui()
 
 		if (SHOW_About) { gui_About(&SHOW_About); }
 
+
+		//----
+
+		// keyboard disabler
+
+		////snippet
+		////mouse lockers
+		//bLockMouseByImGui = bLockMouseByImGui | ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow);
+		//bLockMouseByImGui = bLockMouseByImGui | ImGui::IsWindowHovered(ImGuiHoveredFlags_RootAndChildWindows);
+		//bLockMouseByImGui = bLockMouseByImGui | ImGui::IsWindowHovered(ImGuiHoveredFlags_AllowWhenBlockedByActiveItem);
+
 		//--
 	}
 	gui.end();
-
-	//----
-
-	// keyboard disabler
 
 	//// two different modes:
 
@@ -5935,6 +6048,7 @@ bool ofxColorManager::draw_Gui()
 	//-
 
 	bLockAllKeysByGui =
+		//bLockMouseByImGui &&
 		ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow) &&
 		bTextInputActive &&
 		bCheckMouseOverTextInputLovers;
@@ -6754,7 +6868,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			//is not closing..
 			TCP_Sender.close();
 }
-	}
+}
 #endif
 
 	//-
@@ -7357,7 +7471,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	//{
 	//	if (bLock_palette) bAuto_Build_Palette = false;
 	//}
-}
+	}
 
 //--------------------------------------------------------------
 void ofxColorManager::Changed_Range(ofAbstractParameter &e)
@@ -7606,10 +7720,10 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 	bool bDebug = true;
 	if (bDebug)
 	{
-		if (!ENABLE_keys || bBlockKeys) {
+		if (!ENABLE_keys || bBlockedKeys) {
 			ofLogError(__FUNCTION__) << "Key commands are disabled!";
 			ofLogError(__FUNCTION__) << "ENABLE_keys: " << (ENABLE_keys ? "TRUE" : "FALSE");
-			ofLogError(__FUNCTION__) << "bBlockKeys : " << (bBlockKeys ? "TRUE" : "FALSE");
+			ofLogError(__FUNCTION__) << "bBlockedKeys : " << (bBlockedKeys ? "TRUE" : "FALSE");
 		}
 		else
 			ofLogNotice(__FUNCTION__)
@@ -7622,7 +7736,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 
 	if (key == 'K') ENABLE_keys = !ENABLE_keys;
 
-	if (ENABLE_keys && !bBlockKeys)
+	if (ENABLE_keys && !bBlockedKeys)
 	{
 		//----
 
@@ -7724,7 +7838,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		{
 			mouseRuler.toggleVisibility();
 			//DEMO1_Bubbles.toggleMouseCamera();
-	}
+		}
 #endif
 		// TEST
 		else if (key == 'T')
@@ -8311,7 +8425,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		//}
 		////    else if()
 		////        color_Undo.clearRedo();
-}
+	}
 }
 
 //--------------------------------------------------------------
@@ -8322,7 +8436,6 @@ void ofxColorManager::keyReleased(ofKeyEventArgs &eventArgs)
 //--------------------------------------------------------------
 void ofxColorManager::windowResized(int w, int h)
 {
-
 }
 
 //--------------------------------------------------------------

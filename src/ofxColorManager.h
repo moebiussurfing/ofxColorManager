@@ -37,6 +37,7 @@ TODO:
 
 BUGS:
 
++ first palette on kit browser do not fades border on first
 + keys disables sometimes
 + colour lovers search with no results must stop spinner
 + colour lovers search crashes sometimes. error -1?
@@ -260,7 +261,7 @@ private:
 	//--
 
 private:
-	void draw_PresetName();
+	//void draw_PresetName();
 
 	//--
 
@@ -336,7 +337,9 @@ private:
 	//--
 
 private:
-	ofParameter<bool> SHOW_Name{ "Show Extra Preset Name", false };
+	ofParameter<bool> bAutoHide_Name{ "AutoHide Name", true };
+
+	ofParameter<bool> SHOW_Name{ "Show Extra Name", false };
 	ofParameter<bool> SHOW_Advanced{ "ADVANCED", false };
 	ofParameter<bool> SHOW_Panels;
 	ofParameter<bool> SHOW_LayoutsAdvanced{ "LAYOUTS ", false };
@@ -353,6 +356,7 @@ private:
 	int auto_pilot_timer;
 
 	//--
+	ofParameter<bool> bForceLayoutPosition{ "Layou AutoPosition", true };
 
 	ofParameter<bool> SHOW_ImGui{ "ImGui", true };
 
@@ -878,7 +882,8 @@ private:
 	bool bCheckMouseOverTextInput = true;//flag to return mouse over any gui panel or over text input only!
 	bool bCheckMouseOverTextInputLovers = true;//flag to return mouse over any gui panel or over text input only!
 	bool bLockAllKeysByGui;
-	bool bBlockKeys;
+	bool bBlockedKeys;
+	//bool bLockMouseByImGui = false;
 
 	bool guiVisible;
 
@@ -911,7 +916,7 @@ private:
 	};
 
 #ifdef MODE_TEXT_INPUT_WORKAROUND
-	void gui_InputText();
+	void gui_TextInput();
 #endif
 
 #ifdef MODE_BACKGROUND
@@ -1059,7 +1064,7 @@ private:
 	void draw_Demos();
 
 private:
-	ofParameter<bool> DEMO1_Enable{ "Enable DEMO Bubbles", false };
+	ofParameter<bool> DEMO1_Enable{ "DEMO1 Bubbles", false };
 	ofParameter<bool> DEMO1_Auto{ "Auto Trig", false };
 	ofParameter<bool> DEMO1_Cam{ "Edit Camera Bubbles", false };
 	ofParameter<float> DEMO1_Timer{ "Frequency", 0.5, 0, 1 };
@@ -1068,7 +1073,7 @@ private:
 	int Demo_Timer_Max = 15000;
 	bool bTEST_pause = false;
 
-	ofParameter<bool> DEMO2_Enable{ "Enable DEMO Spheres", false };
+	ofParameter<bool> DEMO2_Enable{ "DEMO2 Spheres", false };
 
 	//--
 

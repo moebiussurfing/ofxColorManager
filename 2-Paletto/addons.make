@@ -8,6 +8,7 @@ ofxColorManager
 ofxImGui
 ofxIO
 ofxMouseRuler
+ofxMSAInteractiveObject
 ofxPoco
 ofxScaleDragRect
 ofxSCENE-SVG

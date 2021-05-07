@@ -1,12 +1,12 @@
 {
     "ofxColorManager": {
-        "App_Layout": "3",
+        "App_Layout": "1",
         "DEMO": {
             "Alpha_1": "0.7",
             "Alpha_Spheres": "0.8",
             "Auto_Trig": "1",
-            "Enable_DEMO_Bubbles": "1",
-            "Enable_DEMO_Spheres": "1",
+            "DEMO1_Bubbles": "1",
+            "DEMO2_Spheres": "1",
             "Frequency": "0.2",
             "Speed": "0.5",
             "Zoom": "0.5"
@@ -14,23 +14,23 @@
         "Engines": {
             "Amount_Colors": "20",
             "Analogue_Spread": "0.2",
-            "Color_1": "0.0901961, 0.0431373, 0.192157, 1",
-            "Color_2": "0.819608, 0.141176, 0, 1",
+            "Color_1": "0.686275, 0.501961, 0.67451, 1",
+            "Color_2": "0.27451, 0.286275, 0.180392, 1",
             "Last_Range_Index": "0",
             "Last_Theory_Index": "9",
-            "Preset_Index": "2",
+            "Preset_Index": "1",
             "SCENE": "1"
         },
         "ExportColors": {
             "Auto_Export": "1",
             "ExportPath": "",
-            "LINK_FILE": "0",
-            "LINK_TCP": "1",
-            "Path__bin_data": "1"
+            "FILE": "0",
+            "Path__bin_data": "1",
+            "TCP": "1"
         },
         "Font_Big_Size": "100",
         "Font_Size": "14",
-        "Gui_Layout_Position": "501, 676",
+        "Gui_Layout_Position": "417, 252",
         "LAYOUTS": "1",
         "LIBRARY": {
             "Columns_Max": "7",
@@ -55,15 +55,15 @@
         "PANELS": {
             "AutoScroll": "1",
             "DEMO": "0",
-            "EDITOR": "1",
+            "EDITOR": "0",
             "ENGINES": "1",
             "GRADIENT_TOOL": "0",
             "GUI_MAIN": "1",
-            "KIT": "0",
+            "KIT": "1",
             "LIBRARY": "0",
-            "LINK": "0",
+            "LINK": "1",
             "LOVERS": "0",
-            "PALETTE": "0",
+            "PALETTE": "1",
             "PANELS": "1",
             "PICKER": "0",
             "PICTURE": "0",
@@ -74,7 +74,7 @@
         },
         "PICKER": {
             "BRG": "1",
-            "COLOR": "0.0901961, 0.0431373, 0.192157, 1",
+            "COLOR": "0.686275, 0.501961, 0.67451, 1",
             "HUE": "1",
             "H_Pow": "0.25",
             "SAT": "1",
