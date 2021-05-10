@@ -17,9 +17,7 @@
 TODO:
 
 ++ fix disabled keys sometimes bc ImGui over Gui?
-++ improve gradient gui/groups
 ++ fix lock move docking windows workflow
-++ pin position preset name to inner rectangle
 ++ add color pictures browser to quantizer (copy from litSphere)
 ++ fix: alert when saving a preset with an already located filename. ask to overwrite
 
@@ -845,6 +843,7 @@ private:
 	//ofxColorPalette::ColorChannel mode;
 
 	ofParameter<float> analogSpread;
+	ofParameter<float> triadSpread;
 
 	////TODO:
 	////global modificators to be aplyied to all the palette
@@ -879,8 +878,8 @@ private:
 	// mouse or key locker
 	bool mouseLockedByGui;
 	bool mouseLockedByGui_PRE;
-	bool bCheckMouseOverTextInput = true;//flag to return mouse over any gui panel or over text input only!
-	bool bCheckMouseOverTextInputLovers = true;//flag to return mouse over any gui panel or over text input only!
+	bool bCheckMouseOverTextInput = false;//flag to return mouse over any gui panel or over text input only!
+	bool bCheckMouseOverTextInputLovers = false;//flag to return mouse over any gui panel or over text input only!
 	bool bLockAllKeysByGui;
 	bool bBlockedKeys;
 	//bool bLockMouseByImGui = false;

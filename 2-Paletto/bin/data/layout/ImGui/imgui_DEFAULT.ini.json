@@ -1,7 +1,6 @@
 {
     "LayoutPanels": {
-        "AutoHide_Name": "1",
-        "DEMO": "1",
+        "DEMO": "0",
         "EDITOR": "1",
         "ENGINES": "0",
         "GRADIENT_TOOL": "0",

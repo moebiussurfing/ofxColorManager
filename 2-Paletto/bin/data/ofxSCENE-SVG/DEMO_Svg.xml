@@ -4,14 +4,14 @@
         "Blend_Type": "4",
         "Box": {
             "Rectangle": {
-                "Height": "676",
-                "Position_x": "449",
-                "Position_y": "238",
-                "Width": "1039"
+                "Height": "736",
+                "Position_x": "390",
+                "Position_y": "157",
+                "Width": "1133"
             },
-            "Scale": "1.01562"
+            "Scale": "1.10645"
         },
-        "DEMO3_Enable_Svg": "0",
+        "DEMO3_Enable_Svg": "1",
         "Enable_Keys": "0",
         "SVG_File": "1"
     }

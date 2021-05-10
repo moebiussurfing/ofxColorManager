@@ -330,7 +330,6 @@ void ofxColorManager::setup()
 
 	//-
 
-	// gui layout
 	// library
 	sizeLibColBox.set("Size Lib", 25, 10, 100);
 	lib_Responsive_ModeGrid.set("Responsive Grid", false);
@@ -341,7 +340,7 @@ void ofxColorManager::setup()
 	bResponsive_Panels.set("Responsive", false);
 
 	bFitLayout.set("Fit", true);
-
+	
 	//-
 
 	// display text for extra preset name
@@ -520,6 +519,7 @@ void ofxColorManager::setup()
 	numColors_Theory_G2.set("Amnt Colors Alg", 6, 2, MAX_PALETTE_COLORS);
 	numColors_Theory_G2.setSerializable(false);
 	analogSpread.set("Analogue Spread", 0.2, 0, 1);
+	triadSpread.set("Triad Spread", 0.083, 0, 1);
 
 	//bLock_palette.set("Lock Palettes", false);
 	//bRandomPalette.set("RANDOM PALETTE", false);
@@ -528,6 +528,7 @@ void ofxColorManager::setup()
 	params_Theory.add(numColors_Theory_G2);
 	params_Theory.add(bAuto_Build_Palette);
 	params_Theory.add(analogSpread);
+	params_Theory.add(triadSpread);
 	//params_Theory.add(MODE_TweakSatBrg);
 	//params_Theory.add(bLock_palette);
 	//params_Theory.add(bRandomPalette);
@@ -755,6 +756,7 @@ void ofxColorManager::setup()
 	//params_engines.add(numColors_Range);
 	//params_engines.add(numColors_Theory_G2);
 	params_engines.add(analogSpread);
+	params_engines.add(triadSpread);
 	params_AppState.add(params_engines);
 
 	// export colors
@@ -1065,6 +1067,8 @@ void ofxColorManager::startup()
 	//loadAppLayout(AppLayouts(appLayoutIndex.get()));
 	//ImGui::LoadIniSettingsFromDisk(ini_to_load);//force here befor update
 	//ini_to_load = NULL;
+
+	resetLibraryLayout();
 }
 
 //--------------------------------------------------------------
@@ -1287,6 +1291,10 @@ void ofxColorManager::refresh_Libs()
 
 	lib_Page_Index = 0;
 	last_ColorPicked_Lib = 0;
+
+	//--
+
+	resetLibraryLayout();
 }
 
 ////--------------------------------------------------------------
@@ -1622,7 +1630,8 @@ void ofxColorManager::gui_Theory()
 	const float butlabelw = 140;// width label text
 
 	//offset
-	float _offset = 23;//extra height to include extra slider for analog
+	float _offset = 35;//extra height to include extra slider for analog
+	//float _offset = 23;//extra height to include extra slider for analog
 
 	int ii = 0;
 
@@ -2031,6 +2040,7 @@ void ofxColorManager::gui_Theory()
 
 		// analog has an extra tweak
 		if (last_Index_Theory == 12) ofxImGui::AddParameter(analogSpread);
+		if (last_Index_Theory == 14) ofxImGui::AddParameter(triadSpread);
 
 		//----
 
@@ -2445,7 +2455,7 @@ void ofxColorManager::gui_Editor()
 				{
 					ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 
-					if (ImGui::Button("PASTE / IMPORT", ImVec2(_w50, _h / 2)))
+					if (ImGui::Button("IMPORT", ImVec2(_w50, _h / 2)))
 					{
 						ofLogNotice(__FUNCTION__) << "IMPORT URL COOLORS";
 						doImportPaletteCoolors(ofGetClipboardString());
@@ -2453,7 +2463,7 @@ void ofxColorManager::gui_Editor()
 
 					ImGui::SameLine();
 
-					if (ImGui::Button("COPY / EXPORT", ImVec2(_w50, _h * 0.5)))
+					if (ImGui::Button("EXPORT", ImVec2(_w50, _h * 0.5)))
 					{
 						ofLogNotice(__FUNCTION__) << "EXPORT URL COOLORS";
 						doExportPaletteCoolors();
@@ -3830,7 +3840,7 @@ void ofxColorManager::gui_LayoutsPresets()
 	//yw = ofGetHeight() / 2 - hw / 2;
 	ImGuiCond flag;
 	if (bForceLayoutPosition) {
-		glm::vec2 p = rectangle_Central_MAX.getTopLeft() + glm::vec2(0, 0);
+		glm::vec2 p = rectangle_Central_MAX.getTopLeft() + glm::vec2(-1, -1);
 		xw = p.x;
 		yw = p.y;
 		flag = ImGuiCond_Always;
@@ -3872,7 +3882,7 @@ void ofxColorManager::gui_LayoutsPresets()
 
 		//float _h99 = _h100 - _spcy;
 
-			// buttons size
+		// buttons size
 		float _w;
 		float _h;
 
@@ -5894,7 +5904,7 @@ bool ofxColorManager::draw_Gui()
 
 				bool bDebug = bDebugRectCentral;
 				if (bDebug) {
-					int _wl = 5;
+					int _wl = 1;
 					ofPushStyle();
 					ofSetRectMode(OF_RECTMODE_CENTER);
 					int g = 0;
@@ -5913,15 +5923,20 @@ bool ofxColorManager::draw_Gui()
 
 				//-
 
-				// fit exact rectangle to borders and scaled to fit
-				rectangle_Central = DEMO3_Svg.getRect();
-				rectangle_Central.scaleTo(rectangle_Central_MAX, OF_ASPECT_RATIO_KEEP, OF_ALIGN_HORZ_CENTER, OF_ALIGN_VERT_CENTER);
+				static ofRectangle rectangle_Central_MAX_PRE;
+				if (rectangle_Central_MAX_PRE != rectangle_Central_MAX) {//update when canges..
+					rectangle_Central_MAX_PRE = rectangle_Central_MAX;
+					
+					// fit exact rectangle to borders and scaled to fit
+					rectangle_Central = DEMO3_Svg.getRect();
+					rectangle_Central.scaleTo(rectangle_Central_MAX, OF_ASPECT_RATIO_KEEP, OF_ALIGN_HORZ_CENTER, OF_ALIGN_VERT_CENTER);
 
-				// rescaled rectangle a bit
-				float _scale = 0.75;
-				rectangle_Central_Scaled = rectangle_Central;
-				rectangle_Central_Scaled.scaleFromCenter(_scale, _scale);
-				DEMO3_Svg.setRect(rectangle_Central_Scaled);
+					// rescaled rectangle a bit
+					float _scale = 0.7f;
+					rectangle_Central_Scaled = rectangle_Central;
+					rectangle_Central_Scaled.scaleFromCenter(_scale, _scale);
+					DEMO3_Svg.setRect(rectangle_Central_Scaled);
+				}
 			}
 		}
 
@@ -6236,7 +6251,8 @@ void ofxColorManager::refresh_Theory_G2()
 	complement.generateComplementary(ofxColorPalette::SATURATION, numColors_Theory_G2);
 	complementBrightness.generateComplementary(ofxColorPalette::BRIGHTNESS, numColors_Theory_G2);
 	triad.generateTriad();
-	complementTriad.generateComplementaryTriad();
+	complementTriad.generateComplementaryTriad(triadSpread);
+	//complementTriad.generateComplementaryTriad();
 	//complementTriad.generateComplementaryTriad(analogSpread);
 	monochrome.generateMonoChromatic(ofxColorPalette::SATURATION, numColors_Theory_G2);
 	monochromeBrightness.generateMonoChromatic(ofxColorPalette::BRIGHTNESS, numColors_Theory_G2);
@@ -7175,6 +7191,20 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	}
 
 	else if (name == analogSpread.getName())
+	{
+		//TODO: ?
+		refresh_Theory_G1();
+		refresh_Theory_G2();
+
+		// workflow
+		if (bAuto_Build_Palette)
+		{
+			//if (SHOW_Theory) palette_FromTheory(last_Index_Theory);
+			build_Palette_Engine();
+		}
+	}
+
+	else if (name == triadSpread.getName())
 	{
 		//TODO: ?
 		refresh_Theory_G1();
@@ -9907,7 +9937,7 @@ void ofxColorManager::updateDemos()
 //--------------------------------------------------------------
 void ofxColorManager::draw_Demos()
 {
-	glm::vec3 offset = ofGetCurrentViewport().getCenter() - rectangle_Central_MAX.getCenter();
+	//glm::vec3 offset = ofGetCurrentViewport().getCenter() - rectangle_Central_MAX.getCenter();
 
 	// DEMO Svg
 	DEMO3_Svg.draw();//is centered to free space
