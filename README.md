@@ -87,12 +87,12 @@ Links a **MASTER OF_App** (with the **ofxColorManager**) to your **CLIENT OF_App
 <br/>
 
 ## ofxColorClient: The Player add-on 
-  * Also included into **ofxColorManager**. 
   * A Lightweight version of the add-on.
   * Works in the **Standalone Mode** too. 
   * Browse and use your **Palettes Presets Kit** files.
   * A Pack of tools: 
   Kit browser, palette and gradient previews, and tweakeable tweened timed transitions.  
+  * Also used by **ofxColorManager**. 
   
 <br/>
 
@@ -101,8 +101,8 @@ Links a **MASTER OF_App** (with the **ofxColorManager**) to your **CLIENT OF_App
 Ready to use pre-compiled versions for fast testing, or to have executable apps with for the most common uses/learning.  
 *Windows* / *macOS*
 <br/>
-## 1. **PALETTO v1.0** 
-**Master App**  
+## 1. **PALETTO v1.0**
+**Master App**
 Works Standalone or Linked to a **CLIENT App**  
 ( _1-example_Basic_ from **ofxColorManager** )  
 <br/>
@@ -111,7 +111,7 @@ Works Standalone or Linked to a **CLIENT App**
 <br/><br/><br/><br/>
 
 ## 2. **Scene_COLORiZED v1.0**
-**Client App**  
+**Client App**
 Works Standalone or Linked to a **MASTER App**  
 ( _3-example_Scenes_ from **ofxColorClient** )  
 <br/>
