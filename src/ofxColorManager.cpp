@@ -1473,8 +1473,6 @@ void ofxColorManager::draw(ofEventArgs & args)
 		{
 			mouseLockedByGui = draw_Gui();
 
-
-
 			//TODO:
 			//BUG:
 			//bBlockedKeys = false;
@@ -2242,7 +2240,7 @@ void ofxColorManager::gui_Editor()
 				ImGui::PopID();
 			}
 
-			ImGui::Dummy(ImVec2(0.0f, 5.0f));
+			ImGui::Dummy(ImVec2(0.0f, 2.0f));
 
 			//----
 
@@ -2429,112 +2427,127 @@ void ofxColorManager::gui_Editor()
 
 			if (bTweakPalette)
 				//if (ImGui::CollapsingHeader("TWEAKER", ImGuiWindowFlags_NoCollapse))
+			{
+				ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+
+
+				// colors
+				for (int n = 0; n < palette_AUX.size(); n++)
 				{
-					ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+					int _r = palette_AUX.size();
+					if (n != 0) ImGui::SameLine(0, 0);
 
+					float wb = (_w100 / _r);
+					float hb = 40 / 2;
+					//float hb = 40;
+					//float hb = WIDGETS_HEIGHT / 2;
 
-					// colors
-					for (int n = 0; n < palette_AUX.size(); n++)
+					_flags =
+						ImGuiColorEditFlags_NoSmallPreview |
+						ImGuiColorEditFlags_NoTooltip |
+						ImGuiColorEditFlags_NoLabel |
+						ImGuiColorEditFlags_NoSidePreview |
+						ImGuiColorEditFlags_NoInputs |
+						ImGuiColorEditFlags_NoAlpha;
+
+					ImVec2 bb = ImVec2(wb, hb);
+					ImGui::PushID(n);
 					{
-						int _r = palette_AUX.size();
-						if (n != 0) ImGui::SameLine(0, 0);
-
-						float wb = (_w100 / _r);
-						//float hb = 40 / 2;
-						float hb = 40;
-						//float hb = WIDGETS_HEIGHT / 2;
-
-						_flags =
-							ImGuiColorEditFlags_NoSmallPreview |
-							ImGuiColorEditFlags_NoTooltip |
-							ImGuiColorEditFlags_NoLabel |
-							ImGuiColorEditFlags_NoSidePreview |
-							ImGuiColorEditFlags_NoInputs |
-							ImGuiColorEditFlags_NoAlpha;
-
-						ImVec2 bb = ImVec2(wb, hb);
-						ImGui::PushID(n);
+						ofFloatColor _cc = palette_AUX[n];
+						if (ImGui::ColorButton("##paletteAux", _cc, _flags, bb))
 						{
-							ofFloatColor _cc = palette_AUX[n];
-							if (ImGui::ColorButton("##paletteAux", _cc, _flags, bb))
-							{
-							}
 						}
-						ImGui::PopID();
 					}
-
-					//if (ImGui::Button("GET", ImVec2(_w50, _h / 2)))
-					//{
-					//	saturationTweak = 0;
-					//	brigthnesTweak = 0;
-					//	palette_AUX = palette;
-					//}
-					//ImGui::SameLine();
-					//if (ImGui::Button("APPLY", ImVec2(_w50, _h / 2)))
-					//{
-					//	palette = palette_AUX;
-					//}
-
-					if (bTweakPalette)
-					{
-						const float RATIO_ABS = 4.0f;
-						const float RATIO_MIN = 1.0f / RATIO_ABS;
-						const float RATIO_MAX = RATIO_ABS;
-
-						ImGui::PushItemWidth(-70);
-						if (ofxImGui::AddParameter(saturationTweak)) {
-							for (int i = 0; i < palette.size(); i++)
-							{
-								float _sat = palette[i].getSaturation();
-								float _satTweak;
-
-								if (saturationTweak >= -1 && saturationTweak <= 0)
-									_satTweak = ofMap(saturationTweak, -1, 0, RATIO_MIN, 1);
-								else if (saturationTweak > 0 && saturationTweak <= 1)
-									_satTweak = ofMap(saturationTweak, 0, 1, 1, RATIO_MAX);
-								_satTweak *= _sat;
-
-								palette_AUX[i].setSaturation(_satTweak);
-								//palette_AUX[i].setSaturation(ofClamp(_satTweak, 0, 1));
-							}
-						};
-						if (ofxImGui::AddParameter(brigthnesTweak)) {
-							for (int i = 0; i < palette.size(); i++)
-							{
-								float _brg = palette[i].getBrightness();
-								float _brgTweak;
-
-								if (brigthnesTweak >= -1 && brigthnesTweak <= 0)
-									_brgTweak = ofMap(brigthnesTweak, -1, 0, RATIO_MIN, 1);
-								else if (brigthnesTweak > 0 && brigthnesTweak <= 1)
-									_brgTweak = ofMap(brigthnesTweak, 0, 1, 1, RATIO_MAX);
-								_brgTweak *= _brg;
-
-								palette_AUX[i].setBrightness(_brgTweak);
-								//palette_AUX[i].setBrightness(ofClamp(_brgTweak, 0, 1));
-							}
-						};
-						ImGui::PopItemWidth();
-					}
-
-					if (ImGui::Button("GET", ImVec2(_w100, _h / 2)))
-					{
-						getPaletteToTweaker();
-					}
-
-					if (ImGui::Button("APPLY", ImVec2(_w100, _h / 2)))
-					{
-						palette = palette_AUX;
-					}
-
-					//ImGui::Dummy(ImVec2(0.0f, 2.0f));
+					ImGui::PopID();
 				}
+
+				//if (ImGui::Button("GET", ImVec2(_w50, _h / 2)))
+				//{
+				//	saturationTweak = 0;
+				//	brigthnesTweak = 0;
+				//	palette_AUX = palette;
+				//}
+				//ImGui::SameLine();
+				//if (ImGui::Button("APPLY", ImVec2(_w50, _h / 2)))
+				//{
+				//	palette = palette_AUX;
+				//}
+
+				if (bTweakPalette)
+				{
+					const float RATIO_ABS = 4.0f;
+					const float RATIO_MIN = 1.0f / RATIO_ABS;
+					const float RATIO_MAX = RATIO_ABS;
+
+					ImGui::PushItemWidth(-70);
+
+					if (ofxImGui::AddParameter(hueTweak)) {
+						for (int i = 0; i < palette.size(); i++)
+						{
+							float _hue = palette[i].getHue();
+							float _hueTweak;
+
+							if (hueTweak >= -1 && hueTweak <= 0)
+								_hueTweak = ofMap(hueTweak, -1, 0, RATIO_MIN, 1);
+							else if (hueTweak > 0 && hueTweak <= 1)
+								_hueTweak = ofMap(hueTweak, 0, 1, 1, RATIO_MAX);
+							_hueTweak *= _hue;
+
+							palette_AUX[i].setHue(_hueTweak);
+						}
+					};
+					if (ofxImGui::AddParameter(saturationTweak)) {
+						for (int i = 0; i < palette.size(); i++)
+						{
+							float _sat = palette[i].getSaturation();
+							float _satTweak;
+
+							if (saturationTweak >= -1 && saturationTweak <= 0)
+								_satTweak = ofMap(saturationTweak, -1, 0, RATIO_MIN, 1);
+							else if (saturationTweak > 0 && saturationTweak <= 1)
+								_satTweak = ofMap(saturationTweak, 0, 1, 1, RATIO_MAX);
+							_satTweak *= _sat;
+
+							palette_AUX[i].setSaturation(_satTweak);
+						}
+					};
+					if (ofxImGui::AddParameter(brigthnesTweak)) {
+						for (int i = 0; i < palette.size(); i++)
+						{
+							float _brg = palette[i].getBrightness();
+							float _brgTweak;
+
+							if (brigthnesTweak >= -1 && brigthnesTweak <= 0)
+								_brgTweak = ofMap(brigthnesTweak, -1, 0, RATIO_MIN, 1);
+							else if (brigthnesTweak > 0 && brigthnesTweak <= 1)
+								_brgTweak = ofMap(brigthnesTweak, 0, 1, 1, RATIO_MAX);
+							_brgTweak *= _brg;
+
+							palette_AUX[i].setBrightness(_brgTweak);
+						}
+					};
+
+					ImGui::PopItemWidth();
+				}
+
+				if (ImGui::Button("GET", ImVec2(_w100, _h / 2)))
+				{
+					getPaletteToTweaker();
+				}
+
+				if (ImGui::Button("APPLY", ImVec2(_w100, _h / 2)))
+				{
+					palette = palette_AUX;
+				}
+
+				//ImGui::Dummy(ImVec2(0.0f, 2.0f));
+			}
 
 			//--
 
 			ImGui::Dummy(ImVec2(0.0f, 2.0f));
 
-			if (ImGui::CollapsingHeader("ARRANGE", ImGuiWindowFlags_None))
+			if (ImGui::CollapsingHeader("ORDERING", ImGuiWindowFlags_None))
 			{
 				ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 				{
@@ -3137,7 +3150,7 @@ void ofxColorManager::gui_Library()
 				ofxImGui::AddParameter(colorBrowser.ENABLE_keys);
 			}
 #endif
-		}
+					}
 
 		//--
 
@@ -3358,12 +3371,12 @@ void ofxColorManager::gui_Library()
 		{
 			refresh_FromPicked();
 		}
-	}
+				}
 
 	ofxImGui::EndWindow(mainSettings);
 
 	ImGui::PopStyleVar();
-}
+			}
 
 //--------------------------------------------------------------
 void ofxColorManager::gui_LinkExport()
@@ -3466,12 +3479,12 @@ void ofxColorManager::gui_LinkExport()
 
 				//TODO: tooltip
 				std::string ss;
-				ss += "Get palettes from Coolors.co: \n";
+				ss += "Get palettes from Coolors.co website: \n";
 				ss += "Export > Copy URL > PASTE/IMPORT \n";
-				ss += "Send palettes to Coolors.co: \n";
+				ss += "\nSend palettes to Coolors.co: \n";
 				ss += "COPY/EXPORT \n";
-				ss += "This will open the website in your browser \n";
-				ss += "Notice that you can Export and convert to: \n";
+				ss += "This will open the website in your browser. \n";
+				ss += "\nNotice that you can Export and convert to: \n";
 				ss += "ASE, CSS, SVG, PDF...etc \n";
 
 				//ImGui::SameLine();
@@ -4917,19 +4930,19 @@ void ofxColorManager::gui_Background()
 
 				//ImGui::Dummy(ImVec2(0.0f, 5.0f));
 				//ImGui::Checkbox("Auto-Resize", &auto_resize);
-			}
+						}
 
 			//-
 
 			//TODO: 
 			//? should update only when changed
 			if (bChanged) color_BackGround = color;
-		}
-	}
+					}
+				}
 	ofxImGui::EndWindow(mainSettings);
 
 	ImGui::PopStyleVar();
-}
+			}
 #endif
 //--------------------------------------------------------------
 void ofxColorManager::gui_Kit()
@@ -5158,13 +5171,13 @@ void ofxColorManager::gui_TextInput()
 					refresh_FilesSorting(textInput_New);
 				}
 				else ofLogError(__FUNCTION__) << "Empty name on textInput !";
-			}
+		}
 			ImGui::PopStyleColor();
 #endif
-		}
+	}
 
 		ImGui::Dummy(ImVec2(0.0f, 5.0f));
-	}
+}
 	ofxImGui::EndWindow(mainSettings);
 
 #ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
@@ -5175,7 +5188,7 @@ void ofxColorManager::gui_TextInput()
 	ImGui::PopStyleVar();
 
 	ImGui::PopStyleColor();
-}
+		}
 #endif
 
 //--------------------------------------------------------------
@@ -5421,7 +5434,7 @@ void ofxColorManager::gui_Presets()
 				else ofLogError(__FUNCTION__) << "Empty name on textInput !";
 			}
 			ImGui::PopStyleColor();
-		}
+	}
 		else
 		{
 			if (MODE_ReadyToUpdate)
@@ -5628,12 +5641,12 @@ void ofxColorManager::gui_Presets()
 		//ImGui::Dummy(ImVec2(0.0f, 2.0f));
 		//if (SHOW_Kit) ofxImGui::AddParameter(AutoScroll);
 		//ImGui::Checkbox("Auto-Resize", &auto_resize);
-	}
+}
 
 	ofxImGui::EndWindow(mainSettings);
 
 	ImGui::PopStyleVar();
-}
+	}
 
 //--------------------------------------------------------------
 void ofxColorManager::gui_Gradient()
@@ -5905,13 +5918,13 @@ void ofxColorManager::gui_Demo()
 					if (ImGui::Button("Save", ImVec2(_w50, _h))) {
 						DEMO3_Svg.save();
 					}
-				}
-			}
 	}
+}
+}
 	ofxImGui::EndWindow(mainSettings);
 
 	ImGui::PopStyleVar();
-}
+		}
 
 //--------------------------------------------------------------
 void ofxColorManager::setupGui()
@@ -6044,14 +6057,14 @@ bool ofxColorManager::draw_Gui()
 				// Depending on the viewports flag, the XY is either absolute or relative to the oF window.
 				if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable) viewCenter = viewCenter - ImVec2(ofGetWindowPositionX(), ofGetWindowPositionY());
 
-				int pad = 0;
-				float ww = availableSpace.GetSize().x - pad;
-				float hh = availableSpace.GetSize().y - pad;
+				float ww = availableSpace.GetSize().x;
+				float hh = availableSpace.GetSize().y;
 				rectangle_Central_MAX = ofRectangle(viewCenter.x, viewCenter.y, ww, hh);
 
 				bool bDebug = bDebugRectCentral;
-				if (bDebug) {
-					int _wl = 1;
+				if (bDebug)
+				{
+					int _wl = 3;
 					ofPushStyle();
 					ofSetRectMode(OF_RECTMODE_CENTER);
 					int g = 0;
@@ -6061,7 +6074,15 @@ bool ofxColorManager::draw_Gui()
 					ofSetColor(c);
 					ofNoFill();
 					ofSetLineWidth(_wl);
-					ofDrawRectangle(rectangle_Central_MAX);
+
+					ofRectangle rDebug;
+					int pad = 3;
+					float ww = availableSpace.GetSize().x - pad;
+					float hh = availableSpace.GetSize().y - pad;
+					rDebug = ofRectangle(viewCenter.x, viewCenter.y, ww, hh);
+					ofDrawRectangle(rDebug);
+
+					//ofDrawRectangle(rectangle_Central_MAX);
 					ofSetRectMode(OF_RECTMODE_CORNER);
 					ofPopStyle();
 				}
@@ -6071,7 +6092,7 @@ bool ofxColorManager::draw_Gui()
 				//-
 
 				static ofRectangle rectangle_Central_MAX_PRE;
-				if (rectangle_Central_MAX_PRE != rectangle_Central_MAX) {//update when canges..
+				if (rectangle_Central_MAX_PRE != rectangle_Central_MAX) {//update when layout canges..
 					rectangle_Central_MAX_PRE = rectangle_Central_MAX;
 
 					// fit exact rectangle to borders and scaled to fit
@@ -7666,7 +7687,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	//{
 	//	if (bLock_palette) bAuto_Build_Palette = false;
 	//}
-}
+	}
 
 //--------------------------------------------------------------
 void ofxColorManager::Changed_Range(ofAbstractParameter &e)
@@ -9648,7 +9669,7 @@ void ofxColorManager::exportPalette()
 #endif
 
 		storeText.push_back(ss.str() + "\n");
-	}
+}
 
 	//--
 }
@@ -9896,7 +9917,7 @@ void ofxColorManager::draw_Link(int x, int y)
 	//	ss += storeText[i];
 	//}
 	//ofxSurfingHelpers::drawTextBoxed(font, ss, x, y);
-}
+	}
 #endif
 
 //--------------------------------------------------------------
@@ -10778,6 +10799,7 @@ void ofxColorManager::doExportPaletteCoolors()
 
 //--------------------------------------------------------------
 void ofxColorManager::getPaletteToTweaker() {
+	hueTweak = 0;
 	saturationTweak = 0;
 	brigthnesTweak = 0;
 	palette_AUX = palette;

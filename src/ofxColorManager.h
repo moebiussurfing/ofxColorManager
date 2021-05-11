@@ -1016,8 +1016,9 @@ private:
 
 	vector<ofColor> palette_AUX;// aux palette to tweak saturation and brigthness to all the palette colors
 	ofParameter<bool> bTweakPalette{ "TWEAK", true };
-	ofParameter<float> saturationTweak{ "SAT TWEAK", 0,-1,1 };
-	ofParameter<float> brigthnesTweak{ "BRG TWEAK", 0,-1,1 };
+	ofParameter<float> hueTweak{ "HUE Twk", 0,-1,1 };
+	ofParameter<float> saturationTweak{ "SAT Twk", 0,-1,1 };
+	ofParameter<float> brigthnesTweak{ "BRG Twk", 0,-1,1 };
 	void getPaletteToTweaker();
 
 	void palette_AddColor(ofColor c);

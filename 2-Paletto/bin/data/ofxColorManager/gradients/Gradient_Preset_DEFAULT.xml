@@ -1,9 +1,9 @@
 {
     "GRADIENT": {
-        "Exp": "0.796875",
-        "Hard_Steps": "0",
+        "Exp": "0.742",
+        "Hard_Steps": "1",
         "Lock": "0",
         "Lock_Resize": "0",
-        "Pick": "0.5"
+        "Pick": "0"
     }
 }
