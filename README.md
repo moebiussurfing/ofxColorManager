@@ -163,13 +163,13 @@ Works Standalone or Linked to a **MASTER App**
 #include "ofxColorManager.h"
 
 ofxColorManager colorManager;
-vector<ofColor> palette; // colors to use
+vector<ofColor> palette; // the colors
 ```
 **ofApp.cpp**
 ```.c++
 void ofApp::setup()
 {
-  colorManager.setLinkPalette(palette); // subscribe local palette
+  colorManager.setLinkPalette(palette); // subscribe local colors palette
   colorManager.setup();
 }
 
