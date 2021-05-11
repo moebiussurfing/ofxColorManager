@@ -49,19 +49,19 @@ _Palettes ​Management._
 
 * **Editor**: 
   * Receive from the Engines and organize the palette colors.
-  * Edit using the color pickers and the _Pantone_ colors library.
-  * Add, remove, sort, shift, and drag colors.
+  * Edit using the color pickers, tweak global Hue/Sat/Brg and. Access to +2000 _Pantone_ colors library.
+  * Add, remove, sort, shift, copy and drag colors.
   * [Coolors.co](https://coolors.co/palettes/trending) URL import/export.
 
 * **Kit of Presets Manager**: 
-  * Receive palettes, name and save to presets kit. 
-  * Tweak, delete or duplicate presets from your kit.
+  * Receive palettes, name and save to Presets Kit. 
+  * Tweak, delete or duplicate Pesets from your Kit.
   * Fast preview all your presets on a scrollable clickable panel.
-  * Your user kit is ready to use (also in other apps using the **ofxColorClient** player.)
+  * Your Palettes Kit is ready to use in other apps using the **ofxColorClient** player.
 
 * **Gradient Designer**:
   * Auto-generates a gradient for each palette.
-  * Exposes the all the gradient and another extra pickable color.
+  * Exposes all the gradient colors and another extra pickable color.
   * Tweackeable curve to deform spread distribution.
   
 ## Three Workflow Setups
