@@ -67,12 +67,12 @@ _Palettes ​Management._
   
 ## Three Workflow Setups
 
-## 1. Powered Standalone
+### 1. Powered Standalone
 ### One Single app  
 Use the add-on inside your _Scene Render App_ when you want to use all the bundled Tools.  
 ( _Requires all the dependencies._ )  
 
-## 2. Minimal Standalone
+### 2. Minimal Standalone
 ### One single App  
 A **Lightweight** Mode into your _Scene Render App_.  
 Only using the **ofxColorClient** add-on.  
@@ -80,7 +80,7 @@ Only using the **ofxColorClient** add-on.
 Just as a player or palettes browser, but without all the Engines and Tools.  
 Only included some minimal edit tools. Fewer dependencies.  
 
-## 3. Dual Linked Master and Client Apps
+### 3. Dual Linked Master and Client Apps
 ### Two Apps
 All the Engines and Tools, but with a more handy setup.  
 Links a **MASTER OF_App** (with the **ofxColorManager**) to your **CLIENT OF_App** (with the **ofxColorClient**).  
@@ -151,7 +151,8 @@ Works Standalone or Linked to a **MASTER App**
   * **ImGui** based GUI. Docked and customizable with layouts presets management.
   * Hue wheel and rectangle **Color Pickers** with **HSV** sliders and clipboard copy/paste codes.
   * **Pantone** library with **2000+ colors**.
-  * Kit exporter of all **JSON** preset files to your project data path. (Can be used on the Standalone Client App.)
+  * Kit exporter of all **JSON** preset files to your project **DATA PATH**.  
+  (Can be used on the Standalone Client App.)
   </p>
 </details>
 
@@ -170,7 +171,7 @@ vector<ofColor> palette; // the colors
 ```.c++
 void ofApp::setup()
 {
-  colorManager.setLinkPalette(palette); // subscribe local colors palette
+  colorManager.setLinkPalette(palette); // subscribe local palette
   colorManager.setup();
 }
 
@@ -178,7 +179,7 @@ void ofApp::draw()
 {
   /*
   
-  Use the colors
+  COLORiZE
   Nothing more!
   
   */
@@ -242,7 +243,7 @@ For **ofxColorClient**:
   <summary>Preset File format</summary>
   <p>
 
-The **JSON** file format of a palette preset quite simple.  
+The **JSON** FILE FORMAT of a palette preset quite simple.  
 This is an example of a _3 colors palette_ file content:
 ```.json
 [
