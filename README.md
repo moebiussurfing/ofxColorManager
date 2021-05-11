@@ -107,6 +107,24 @@ Ready to use pre-compiled versions for fast testing, or to have executable apps 
 | ## 1. **PALETTO v1.0** **MASTER APP** Works Standalone or Linked to a **CLIENT APP**   ( _1-example_Basic_ from **ofxColorManager** )   <br/> ### **Download**:   <a href="https://moebiussurfing.itch.io/paletto"><img src="/docs/itch.io/Paletto.ico" align="left" height="96" width="96" ></a>   | ## 2. **Scene_COLORiZED v1.0** **CLIENT APP** Works Standalone or Linked to a **MASTER APP**   ( _3-example_Scenes_ from **ofxColorClient** )   <br/> ### **Download**:   <a href="https://moebiussurfing.itch.io/paletto"><img src="/docs/itch.io/Scene_COLORiZED.ico" align="left" height="96" width="96" ></a> |
 |-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 
+| <br/> |
+| ## 1. **PALETTO v1.0** |
+| **MASTER APP** |
+| Works Standalone or Linked to a **CLIENT APP** |
+| ( _1-example_Basic_ from **ofxColorManager** ) |
+| <br/> |
+| ### **Download**: |
+| <a href="https://moebiussurfing.itch.io/paletto"><img src="/docs/itch.io/Paletto.ico" align="left" height="96" width="96" ></a> |
+| <br/><br/><br/><br/> |
+| , |
+| ## 2. **Scene_COLORiZED v1.0** |
+| **CLIENT APP** |
+| Works Standalone or Linked to a **MASTER APP** |
+| ( _3-example_Scenes_ from **ofxColorClient** ) |
+| <br/>, |
+| ### **Download**: |
+| <a href="https://moebiussurfing.itch.io/paletto"><img src="/docs/itch.io/Scene_COLORiZED.ico" align="left" height="96" width="96" ></a> |
+
 <br/>
 ## 1. **PALETTO v1.0**
 **MASTER APP**
