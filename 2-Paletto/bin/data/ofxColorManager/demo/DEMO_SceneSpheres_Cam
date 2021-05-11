@@ -9,9 +9,9 @@ orientation
 fov
 60
 near
-9.11925
+0
 far
-9119.25
+0
 lensOffset
 0, 0
 forceAspectRatio
@@ -28,7 +28,7 @@ target
 bEnableMouseMiddleButton
 1
 bMouseInputEnabled
-0
+1
 drag
 0.9
 doTranslationKey
