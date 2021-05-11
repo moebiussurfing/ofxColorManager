@@ -38,7 +38,7 @@ _Send palettes to the Editor._
  
  ![GIF](https://media.giphy.com/media/L07R0ixmQrAvh9zfui/giphy.gif)
 
-  4. **Extract** the dominant colors **from image files**.  
+  4. **Extract** the Dominant Colors **from image files**.  
   *Sorting by Dominance, Hue, Saturation or Brightness*.  
 
 ![GIF](https://media.giphy.com/media/jMgk4fCbaeJG5pqjtv/giphy.gif)
@@ -49,9 +49,11 @@ _Palettes ​Management._
 
 * **Editor**: 
   * Receive from the Engines and organize the palette colors.
-  * Edit using the color pickers, tweak global Hue/Sat/Brg and. Access to +2000 _Pantone_ colors library.
+  * Edit using the color pickers, tweak global Hue/Sat/Brg and. 
+  * Access to +2000 _Pantone_ colors library.
   * Add, remove, sort, shift, copy and drag colors.
-  * [Coolors.co](https://coolors.co/palettes/trending) URL import/export.
+  * [Coolors.co](https://coolors.co/palettes/trending) URL import/export:
+   Adobe .ASE, CSS, SVG, ...
 
 * **Kit of Presets Manager**: 
   * Receive palettes, name and save to Presets Kit. 
