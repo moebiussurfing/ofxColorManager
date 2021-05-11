@@ -61,26 +61,27 @@ _Palettes ​Management._
 
 * **Gradient Designer**:
   * Auto-generates a gradient for each palette.
-  * Exposes all the gradient colors and another extra pickable color.
+  * Exposes all the gradient colors + one extra pickable color.
   * Tweackeable curve to deform spread distribution.
+  * Palettize gradient as a NEW preset palette.
   
 ## Three Workflow Setups
 
-### Powered Standalone
-* One Single app:  
+## Powered Standalone
+### One Single app  
 Use the add-on inside your _Scene Render App_ when you want to use all the bundled Tools.  
 ( _Requires all the dependencies._ )  
 
-### Minimal Standalone
-* One single App  
+## Minimal Standalone
+### One single App  
 A **Lightweight** Mode into your _Scene Render App_.  
 Only using the **ofxColorClient** add-on.  
 ( Without the bigger **ofxColorManager** )  
 Just as a player or palettes browser, but without all the Engines and Tools.  
 Only included some minimal edit tools. Fewer dependencies.  
 
-### Dual Linked Master and Client Apps
-* Two Apps
+## Dual Linked Master and Client Apps
+### Two Apps
 All the Engines and Tools, but with a more handy setup.  
 Links a **MASTER OF_App** (with the **ofxColorManager**) to your **CLIENT OF_App** (with the **ofxColorClient**).  
  
@@ -91,7 +92,7 @@ Links a **MASTER OF_App** (with the **ofxColorManager**) to your **CLIENT OF_App
   * Works in the **Standalone Mode** too. 
   * Browse and use your **Palettes Presets Kit** files.
   * A Pack of tools: 
-  Kit browser, palette and gradient previews, and tweakeable tweened timed transitions.  
+  Palettes Kit Browser, Colors and Gradient previews, and tweakeable tweened timed transitions.  
   * Also used by **ofxColorManager**. 
   
 <br/>
@@ -290,7 +291,6 @@ This is an example of a _3 colors palette_ file content:
   <summary>IDEAS / TODO</summary>
   <p>
 
-+ Global Saturation / Brightness modifiers to all the palette colors. _(?)_  
 + Create an App using all the power but more user-friendly and a very simplified GUI. _(?)_
   + Export Adobe .ASE, .ACO, ...etc _(?)_
 + Think about other creative code tools client/add-on: *Processing* / *Unity3D* / *UE4* clients plug-ins. _(?)_
