@@ -90,9 +90,9 @@ Links a **MASTER OF_App** (with the **ofxColorManager**) to your **CLIENT OF_App
   * Also included into **ofxColorManager**. 
   * A Lightweight version of the add-on.
   * Works in the **Standalone Mode** too. 
-  * Browse and use your **Presets Kit** files.
-  * A minimal set of tools: 
-  Kit browser, palette and gradient previews, and tweakeable tweened transitions.  
+  * Browse and use your **Palettes Presets Kit** files.
+  * A Pack of tools: 
+  Kit browser, palette and gradient previews, and tweakeable tweened timed transitions.  
   
 <br/>
 
