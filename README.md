@@ -106,7 +106,7 @@ Ready to use pre-compiled versions for fast testing, or to have executable apps 
 Works Standalone or Linked to a **CLIENT App**  
 ( _1-example_Basic_ from **ofxColorManager** )  
 <br/>
-#**Download**:  
+### **Download**:  
 <a href="https://moebiussurfing.itch.io/paletto"><img src="/docs/itch.io/Paletto.ico" align="left" height="96" width="96" ></a>  
 <br/><br/><br/><br/>
 
@@ -115,7 +115,7 @@ Works Standalone or Linked to a **CLIENT App**
 Works Standalone or Linked to a **MASTER App**  
 ( _3-example_Scenes_ from **ofxColorClient** )  
 <br/>
-# **Download**:  
+### **Download**:  
 <a href="https://moebiussurfing.itch.io/paletto"><img src="/docs/itch.io/Scene_COLORiZED.ico" align="left" height="96" width="96" ></a>  
 <br/><br/><br/><br/>
 
