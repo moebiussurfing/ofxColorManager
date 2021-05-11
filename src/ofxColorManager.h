@@ -16,14 +16,13 @@
 
 TODO:
 
-++ fix disabled keys sometimes bc ImGui over Gui?
 ++ fix lock move docking windows workflow
 ++ add color pictures browser to quantizer (copy from litSphere)
 ++ fix: alert when saving a preset with an already located filename. ask to overwrite
 
 + global sat / bright editor for editor palette
 + startup init layout by code, not .ini. check windows positions by code to responsive other elemnts
-+ add extra theory spread params like analogous
+++ fix disabled keys sometimes bc ImGui over Gui?
 
 + export Adobe ASE
 + undo engine
@@ -354,7 +353,7 @@ private:
 	int auto_pilot_timer;
 
 	//--
-	ofParameter<bool> bForceLayoutPosition{ "Layou AutoPosition", true };
+	ofParameter<bool> bForceLayoutPosition{ "LAYOUT AUTO-POS", true };
 
 	ofParameter<bool> SHOW_ImGui{ "ImGui", true };
 
@@ -777,6 +776,7 @@ public:
 	ofColor getColor(int index = -1);
 
 	// get color from gradient at prc
+//--------------------------------------------------------------
 	ofColor getColorAtPercent(float control)
 	{
 		gradientEngine.getColorAtPercent(control);
@@ -1013,6 +1013,12 @@ private:
 
 private:
 	vector<ofColor> palette;// main user palette
+
+	vector<ofColor> palette_AUX;// aux palette to tweak saturation and brigthness to all the palette colors
+	ofParameter<bool> bTweakPalette{ "TWEAK", true };
+	ofParameter<float> saturationTweak{ "SAT TWEAK", 0,-1,1 };
+	ofParameter<float> brigthnesTweak{ "BRG TWEAK", 0,-1,1 };
+	void getPaletteToTweaker();
 
 	void palette_AddColor(ofColor c);
 	void palette_RemoveColorLast();
