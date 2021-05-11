@@ -105,8 +105,8 @@ Ready to use pre-compiled versions for fast testing, or to have executable apps 
 *Windows* / *macOS*
 <br/>
 ## 1. **PALETTO v1.0**
-**Master App**
-Works Standalone or Linked to a **CLIENT App**  
+**MASTER APP**
+Works Standalone or Linked to a **CLIENT APP**  
 ( _1-example_Basic_ from **ofxColorManager** )  
 <br/>
 ### **Download**:  
@@ -114,8 +114,8 @@ Works Standalone or Linked to a **CLIENT App**
 <br/><br/><br/><br/>
 
 ## 2. **Scene_COLORiZED v1.0**
-**Client App**
-Works Standalone or Linked to a **MASTER App**  
+**CLIENT APP**
+Works Standalone or Linked to a **MASTER APP**  
 ( _3-example_Scenes_ from **ofxColorClient** )  
 <br/>
 ### **Download**:  
