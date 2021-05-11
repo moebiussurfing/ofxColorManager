@@ -76,14 +76,13 @@ Use the add-on inside your _Scene Render App_ when you want to use all the bundl
 
 ### 2. Minimal Standalone
 **ONE SINGLE APP**  
-A **Lightweight** Mode into your _Scene Render App_.  
-Only using the **ofxColorClient** add-on. ( Without the bigger **ofxColorManager** )  
-A Player to Browse Palettes, but without all the bigger Tools.  
-Only included some minimal edit tools.  
-Fewer dependencies.  
+A **Lightweight** Mode into your _Scene Render App_. Only using the **ofxColorClient** add-on.  
+( Without the bigger **ofxColorManager** )  
+Just as a player or palettes browser, but without all the Engines and Tools.  
+Only included some minimal edit tools. Fewer dependencies.  
 
 ### 3. Dual Linked Master and Client Apps
-**TWO APPS**  
+**TWO APPS**
 All the Engines and Tools, but with a more handy setup.  
 Links a **MASTER OF_App** (with the **ofxColorManager**) to your **CLIENT OF_App** (with the **ofxColorClient**).  
  
@@ -101,12 +100,19 @@ Links a **MASTER OF_App** (with the **ofxColorManager**) to your **CLIENT OF_App
 
 ## Ready-To-Use Binaries
 
-Ready to use pre-compiled versions for fast testing, or to have executable apps with for the most common uses/learning. *Windows* / *macOS*
+Ready to use pre-compiled versions for fast testing, or to have executable apps with for the most common uses/learning.  
+*Windows* / *macOS*
+
+
+| ## 1. **PALETTO v1.0** **MASTER APP** Works Standalone or Linked to a **CLIENT APP**   ( _1-example_Basic_ from **ofxColorManager** )   <br/> ### **Download**:   <a href="https://moebiussurfing.itch.io/paletto"><img src="/docs/itch.io/Paletto.ico" align="left" height="96" width="96" ></a>   | ## 2. **Scene_COLORiZED v1.0** **CLIENT APP** Works Standalone or Linked to a **MASTER APP**   ( _3-example_Scenes_ from **ofxColorClient** )   <br/> ### **Download**:   <a href="https://moebiussurfing.itch.io/paletto"><img src="/docs/itch.io/Scene_COLORiZED.ico" align="left" height="96" width="96" ></a> |
+|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+
 <br/>
 ## 1. **PALETTO v1.0**
 **MASTER APP**
 Works Standalone or Linked to a **CLIENT APP**  
 ( _1-example_Basic_ from **ofxColorManager** )  
+<br/>
 ### **Download**:  
 <a href="https://moebiussurfing.itch.io/paletto"><img src="/docs/itch.io/Paletto.ico" align="left" height="96" width="96" ></a>  
 <br/><br/><br/><br/>
@@ -115,6 +121,7 @@ Works Standalone or Linked to a **CLIENT APP**
 **CLIENT APP**
 Works Standalone or Linked to a **MASTER APP**  
 ( _3-example_Scenes_ from **ofxColorClient** )  
+<br/>
 ### **Download**:  
 <a href="https://moebiussurfing.itch.io/paletto"><img src="/docs/itch.io/Scene_COLORiZED.ico" align="left" height="96" width="96" ></a>  
 <br/><br/><br/><br/>
