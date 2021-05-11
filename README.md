@@ -66,12 +66,12 @@ _Palettes ​Management._
   
 ## Three Workflow Setups
 
-#### **Powered Standalone**:  
+### **Powered Standalone**:  
 **One Single app**:  
 Use the add-on inside your _Scene Render App_ when you want to use all the bundled Tools.  
 ( _Requires all the dependencies._ )  
 
-#### **Minimal Standalone**:  
+### **Minimal Standalone**:  
 **One single App**:  
 A **Lightweight** Mode into your _Scene Render App_.  
 Only using the **ofxColorClient** add-on.  
@@ -79,7 +79,7 @@ Only using the **ofxColorClient** add-on.
 Just as a player or palettes browser, but without all the Engines and Tools.  
 Only included some minimal edit tools. Fewer dependencies.  
 
-#### **Dual Linked**:  
+### **Dual Linked**:  
 **Two Apps**:  
 All the Engines and Tools, but with a more handy setup.  
 Links a **MASTER OF_App** (with the **ofxColorManager**) to your **CLIENT OF_App** (with the **ofxColorClient**).  
