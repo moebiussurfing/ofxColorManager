@@ -38,7 +38,7 @@ _Send palettes to the Editor._
  
  ![GIF](https://media.giphy.com/media/L07R0ixmQrAvh9zfui/giphy.gif)
 
-  4. **Extract** the dominant colors **from image files**.  
+  4. **Extract** the Dominant Colors **from image files**.  
   *Sorting by Dominance, Hue, Saturation or Brightness*.  
 
 ![GIF](https://media.giphy.com/media/jMgk4fCbaeJG5pqjtv/giphy.gif)
@@ -49,50 +49,52 @@ _Palettes ​Management._
 
 * **Editor**: 
   * Receive from the Engines and organize the palette colors.
-  * Edit using the color pickers and the _Pantone_ colors library.
-  * Add, remove, sort, shift, and drag colors.
-  * [Coolors.co](https://coolors.co/palettes/trending) URL import/export.
+  * Edit using the color pickers, tweak global Hue/Sat/Brg and. 
+  * Access to +2000 _Pantone_ colors library.
+  * Add, remove, sort, shift, copy and drag colors.
+  * [Coolors.co](https://coolors.co/palettes/trending) URL import/export:
+   Adobe .ASE, CSS, SVG, ...
 
 * **Kit of Presets Manager**: 
-  * Receive palettes, name and save to presets kit. 
-  * Tweak, delete or duplicate presets from your kit.
+  * Receive palettes, name and save to Presets Kit. 
+  * Tweak, delete or duplicate Pesets from your Kit.
   * Fast preview all your presets on a scrollable clickable panel.
-  * Your user kit is ready to use (also in other apps using the **ofxColorClient** player.)
+  * Your Palettes Kit is ready to use in other apps using the **ofxColorClient** player.
 
 * **Gradient Designer**:
   * Auto-generates a gradient for each palette.
-  * Exposes the all the gradient and another extra pickable color.
+  * Exposes all the gradient colors + one extra pickable color.
   * Tweackeable curve to deform spread distribution.
+  * Palettize gradient as a NEW preset palette.
   
 ## Three Workflow Setups
 
-#### 1. **Powered Standalone**:  
-**One Single app**:  
+### 1. Powered Standalone
+**ONE SINGLE APP**  
 Use the add-on inside your _Scene Render App_ when you want to use all the bundled Tools.  
 ( _Requires all the dependencies._ )  
 
-#### 2. **Minimal Standalone**:
-**One single App**:  
-A **Lightweight** Mode into your _Scene Render App_.  
-Only using the **ofxColorClient** add-on.  
+### 2. Minimal Standalone
+**ONE SINGLE APP**  
+A **Lightweight** Mode into your _Scene Render App_. Only using the **ofxColorClient** add-on.  
 ( Without the bigger **ofxColorManager** )  
 Just as a player or palettes browser, but without all the Engines and Tools.  
 Only included some minimal edit tools. Fewer dependencies.  
 
-#### 3. **Dual Linked**:  
-**Two Apps**:  
+### 3. Dual Linked Master and Client Apps
+**TWO APPS**
 All the Engines and Tools, but with a more handy setup.  
 Links a **MASTER OF_App** (with the **ofxColorManager**) to your **CLIENT OF_App** (with the **ofxColorClient**).  
  
 <br/>
 
 ## ofxColorClient: The Player add-on 
-  * Also included into **ofxColorManager**. 
   * A Lightweight version of the add-on.
   * Works in the **Standalone Mode** too. 
-  * Browse and use your **Presets Kit** files.
-  * A minimal set of tools: 
-  Kit browser, palette and gradient previews, and tweakeable tweened transitions.  
+  * Browse and use your **Palettes Presets Kit** files.
+  * A Pack of tools: 
+  Palettes Kit Browser, Colors and Gradient previews, and tweakeable tweened timed transitions.  
+  * Also used by **ofxColorManager**. 
   
 <br/>
 
@@ -100,22 +102,45 @@ Links a **MASTER OF_App** (with the **ofxColorManager**) to your **CLIENT OF_App
 
 Ready to use pre-compiled versions for fast testing, or to have executable apps with for the most common uses/learning.  
 *Windows* / *macOS*
+
+
+| ## 1. **PALETTO v1.0** **MASTER APP** Works Standalone or Linked to a **CLIENT APP**   ( _1-example_Basic_ from **ofxColorManager** )   <br/> ### **Download**:   <a href="https://moebiussurfing.itch.io/paletto"><img src="/docs/itch.io/Paletto.ico" align="left" height="96" width="96" ></a>   | ## 2. **Scene_COLORiZED v1.0** **CLIENT APP** Works Standalone or Linked to a **MASTER APP**   ( _3-example_Scenes_ from **ofxColorClient** )   <br/> ### **Download**:   <a href="https://moebiussurfing.itch.io/paletto"><img src="/docs/itch.io/Scene_COLORiZED.ico" align="left" height="96" width="96" ></a> |
+|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+
+| <br/> |
+| ## 1. **PALETTO v1.0** |
+| **MASTER APP** |
+| Works Standalone or Linked to a **CLIENT APP** |
+| ( _1-example_Basic_ from **ofxColorManager** ) |
+| <br/> |
+| ### **Download**: |
+| <a href="https://moebiussurfing.itch.io/paletto"><img src="/docs/itch.io/Paletto.ico" align="left" height="96" width="96" ></a> |
+| <br/><br/><br/><br/> |
+| , |
+| ## 2. **Scene_COLORiZED v1.0** |
+| **CLIENT APP** |
+| Works Standalone or Linked to a **MASTER APP** |
+| ( _3-example_Scenes_ from **ofxColorClient** ) |
+| <br/>, |
+| ### **Download**: |
+| <a href="https://moebiussurfing.itch.io/paletto"><img src="/docs/itch.io/Scene_COLORiZED.ico" align="left" height="96" width="96" ></a> |
+
 <br/>
-## 1. **PALETTO v1.0** 
-**Master App**  
-Works Standalone or Linked to a **CLIENT App**  
+## 1. **PALETTO v1.0**
+**MASTER APP**
+Works Standalone or Linked to a **CLIENT APP**  
 ( _1-example_Basic_ from **ofxColorManager** )  
 <br/>
-**Download**:  
+### **Download**:  
 <a href="https://moebiussurfing.itch.io/paletto"><img src="/docs/itch.io/Paletto.ico" align="left" height="96" width="96" ></a>  
 <br/><br/><br/><br/>
 
 ## 2. **Scene_COLORiZED v1.0**
-**Client App**  
-Works Standalone or Linked to a **MASTER App**  
+**CLIENT APP**
+Works Standalone or Linked to a **MASTER APP**  
 ( _3-example_Scenes_ from **ofxColorClient** )  
 <br/>
-**Download**:  
+### **Download**:  
 <a href="https://moebiussurfing.itch.io/paletto"><img src="/docs/itch.io/Scene_COLORiZED.ico" align="left" height="96" width="96" ></a>  
 <br/><br/><br/><br/>
 
@@ -150,7 +175,8 @@ Works Standalone or Linked to a **MASTER App**
   * **ImGui** based GUI. Docked and customizable with layouts presets management.
   * Hue wheel and rectangle **Color Pickers** with **HSV** sliders and clipboard copy/paste codes.
   * **Pantone** library with **2000+ colors**.
-  * Kit exporter of all **JSON** preset files to your project data path. (Can be used on the Standalone Client App.)
+  * Kit exporter of all **JSON** preset files to your project **DATA PATH**.  
+  (Can be used on the Standalone Client App.)
   </p>
 </details>
 
@@ -163,7 +189,7 @@ Works Standalone or Linked to a **MASTER App**
 #include "ofxColorManager.h"
 
 ofxColorManager colorManager;
-vector<ofColor> palette; // colors to use
+vector<ofColor> palette; // the colors
 ```
 **ofApp.cpp**
 ```.c++
@@ -177,7 +203,7 @@ void ofApp::draw()
 {
   /*
   
-  Use the colors
+  COLORiZE
   Nothing more!
   
   */
@@ -241,7 +267,7 @@ For **ofxColorClient**:
   <summary>Preset File format</summary>
   <p>
 
-The **JSON** file format of a palette preset quite simple.  
+The **JSON** FILE FORMAT of a palette preset quite simple.  
 This is an example of a _3 colors palette_ file content:
 ```.json
 [
@@ -290,7 +316,6 @@ This is an example of a _3 colors palette_ file content:
   <summary>IDEAS / TODO</summary>
   <p>
 
-+ Global Saturation / Brightness modifiers to all the palette colors. _(?)_  
 + Create an App using all the power but more user-friendly and a very simplified GUI. _(?)_
   + Export Adobe .ASE, .ACO, ...etc _(?)_
 + Think about other creative code tools client/add-on: *Processing* / *Unity3D* / *UE4* clients plug-ins. _(?)_
