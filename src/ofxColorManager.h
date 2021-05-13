@@ -16,13 +16,10 @@
 
 TODO:
 
-++ fix lock move docking windows workflow
 ++ add color pictures browser to quantizer (copy from litSphere)
 ++ fix: alert when saving a preset with an already located filename. ask to overwrite
-
-+ global sat / bright editor for editor palette
-+ startup init layout by code, not .ini. check windows positions by code to responsive other elemnts
 ++ fix disabled keys sometimes bc ImGui over Gui?
++ startup init layout by code, not .ini. check windows positions by code to responsive other elemnts
 
 + export Adobe ASE
 + undo engine
@@ -34,10 +31,9 @@ TODO:
 
 BUGS:
 
++ colour lovers search fails
 + first palette on kit browser do not fades border on first
 + keys disables sometimes
-+ colour lovers search with no results must stop spinner
-+ colour lovers search crashes sometimes. error -1?
 + fix text input boxes when docking mode. to avoid floating text input box
 + TCP port number switch, some problems on reconnect bc threading not implemented. should use some sync addon or OSC.
 + ImGui pickers hangs flickering sometimes bc max width
@@ -188,6 +184,7 @@ using namespace ofxColorTheory;
 #include "ofxSurfingHelpers.h"
 #include "ofxSurfing_Files.h"
 #include "ofxSurfing_ImGui.h"
+#include "ofxSurfing_ImGui_Widgets.h"
 using namespace ofxSurfingHelpers;
 
 //--
@@ -414,14 +411,14 @@ private:
 #ifdef MODE_BACKGROUND
 	ofParameter<bool> SHOW_BackGround;
 #endif
-	//ofParameter<bool> SHOW_Gradient;
+	ofParameter<bool> SHOW_Gradient;
 	ofParameter<bool> AutoScroll;
 
 	//-
 
 private:
 	// app modes
-	ofParameter<int> AppMode;// not being much used now..
+	ofParameter<int> AppEnginesMode;// not being much used now..
 	ofParameter<std::string> AppMode_name;
 #define NUM_APP_MODES 5
 
@@ -507,7 +504,7 @@ private:
 	ofParameter<int> last_Index_Theory{ "Last Theory Index", 0, 0,
 		NUM_COLOR_THEORY_TYPES_G1 + NUM_COLOR_THEORY_TYPES_G2 - 1 };//selected theory algorithm
 	ofParameter<int> last_Index_Range{ "Last Range Index", 0, 0, NUM_TYPES_RANGES - 1 };//selected range algorithm
-	ofParameter<int> last_Index_ColorPalette{ "Selected", 0, 0, 0 };//selected color on palette on editing
+	ofParameter<int> last_Index_ColorPalette{ "Color", 0, 0, 0 };//selected color on palette on editing
 	ofParameter<int> last_Index_Preset{ "Preset Index", 0, 0, 0 };//selected preset
 	int last_Lib_Index = -1;//last library picked color
 	void resetLibraryLayout();
@@ -980,9 +977,9 @@ private:
 	ofParameter<float> color_SAT_Power;
 	ofParameter<float> color_BRG_Power;
 
-	ofParameter<bool> bColor_HUE;
-	ofParameter<bool> bColor_SAT;
-	ofParameter<bool> bColor_BRG;
+	ofParameter<bool> bColor_rHUE;
+	ofParameter<bool> bColor_rSAT;
+	ofParameter<bool> bColor_rBRG;
 
 	//--
 
@@ -1016,10 +1013,11 @@ private:
 
 	vector<ofColor> palette_AUX;// aux palette to tweak saturation and brigthness to all the palette colors
 	ofParameter<bool> bTweakPalette{ "TWEAK", true };
-	ofParameter<float> hueTweak{ "HUE Twk", 0,-1,1 };
-	ofParameter<float> saturationTweak{ "SAT Twk", 0,-1,1 };
-	ofParameter<float> brigthnesTweak{ "BRG Twk", 0,-1,1 };
-	void getPaletteToTweaker();
+	ofParameter<float> hueTweak{ "HUE TWK", 0,-1,1 };
+	ofParameter<float> saturationTweak{ "SAT TWK", 0,-1,1 };
+	ofParameter<float> brigthnesTweak{ "BRG TWK", 0,-1,1 };
+	void doGetPaletteToTweaker();
+	void doApplyTweaker();
 
 	void palette_AddColor(ofColor c);
 	void palette_RemoveColorLast();
@@ -1278,7 +1276,7 @@ private:
 
 	ofRectangle rectangle_Central_MAX;
 	ofRectangle rectangle_Central;
-	ofRectangle rectangle_Central_Scaled;
+	ofRectangle rectangle_Central_Transposed;
 	ofParameter<bool> bDebugRectCentral{ "Rectangle Central", false };
 
 	//---

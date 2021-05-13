@@ -11,6 +11,7 @@
 
 #define MAKE_RELEASE_VERSION
 
+//----
 
 #define GUI_LOCK_BORDERS_PAD 20
 
