@@ -559,3 +559,8 @@ MigrationBackup/
 .ionide/
 2-Paletto/bin/data/AppUpdateLastCheckedDate
 2-Paletto/bin/imgui.ini
+2-Paletto/bin/data/ofxSCENE-SVG/Rectangle__DEMO_Svg.xml
+2-Paletto/bin/data/ofxSCENE-SVG/DEMO_Svg.xml
+2-Paletto/bin/data/ofxColorManager/ofxColorManager_Settings.xml
+2-Paletto/bin/data/ofxColorManager/demo/DEMO_SceneSpheres_Cam
+2-Paletto/bin/imgui.ini

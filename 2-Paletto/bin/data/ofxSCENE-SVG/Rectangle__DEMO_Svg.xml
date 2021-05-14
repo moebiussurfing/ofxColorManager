@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <interactiveRect>
 	<path>ofxSCENE-SVG/</path>
-	<x>662</x>
-	<y>395</y>
-	<width>907</width>
-	<height>589</height>
+	<x>711</x>
+	<y>460</y>
+	<width>551</width>
+	<height>358</height>
 	<name>_DEMO_Svg</name>
 	<isEditing>0</isEditing>
 </interactiveRect>

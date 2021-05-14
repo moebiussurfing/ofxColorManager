@@ -47,7 +47,7 @@ _Send palettes to the Editor._
 
 _Palettes ​Management._
 
-* **Editor**: 
+* **EDITOR**: 
   * Receive from the Engines and organize the palette colors.
   * Edit using the color pickers, tweak global Hue/Sat/Brg and. 
   * Access to +2000 _Pantone_ colors library.
@@ -55,40 +55,40 @@ _Palettes ​Management._
   * [Coolors.co](https://coolors.co/palettes/trending) URL import/export:
    Adobe .ASE, CSS, SVG, ...
 
-* **Kit of Presets Manager**: 
+* **KIT OF PRESETS MANAGER**: 
   * Receive palettes, name and save to Presets Kit. 
   * Tweak, delete or duplicate Pesets from your Kit.
   * Fast preview all your presets on a scrollable clickable panel.
   * Your Palettes Kit is ready to use in other apps using the **ofxColorClient** player.
 
-* **Gradient Designer**:
+* **GRADIENT DESIGNER**:
   * Auto-generates a gradient for each palette.
   * Exposes all the gradient colors + one extra pickable color.
   * Tweackeable curve to deform spread distribution.
   * Palettize gradient as a NEW preset palette.
   
-## Three Workflow Setups
+## THREE WORKFLOW SETUPS
 
-### 1. Powered Standalone
+### 1. POWERED STANDALONE
 **ONE SINGLE APP**  
 Use the add-on inside your _Scene Render App_ when you want to use all the bundled Tools.  
 ( _Requires all the dependencies._ )  
 
-### 2. Minimal Standalone
+### 2. MINIMAL STANDALONE
 **ONE SINGLE APP**  
 A **Lightweight** Mode into your _Scene Render App_. Only using the **ofxColorClient** add-on.  
 ( Without the bigger **ofxColorManager** )  
 Just as a player or palettes browser, but without all the Engines and Tools.  
 Only included some minimal edit tools. Fewer dependencies.  
 
-### 3. Dual Linked Master and Client Apps
-**TWO APPS**
+### 3. DUAL LINKED
+**TWO APPS: Master and Client Apps**  
 All the Engines and Tools, but with a more handy setup.  
 Links a **MASTER OF_App** (with the **ofxColorManager**) to your **CLIENT OF_App** (with the **ofxColorClient**).  
  
 <br/>
 
-## ofxColorClient: The Player add-on 
+## ofxColorClient: THE PLAYER ADD-ON 
   * A Lightweight version of the add-on.
   * Works in the **Standalone Mode** too. 
   * Browse and use your **Palettes Presets Kit** files.
@@ -104,8 +104,14 @@ Ready to use pre-compiled versions for fast testing, or to have executable apps 
 *Windows* / *macOS*
 
 <br/>
+Platform                     | CI Status
+-----------------------------|:---------
+Windows Visual Studio 64bits | [![Build status](https://appveyor-matrix-badges.herokuapp.com/repos/roymacdonald/ofxlineadetiempo/branch/master/3)](https://ci.appveyor.com/project/roymacdonald/ofxlineadetiempo/branch/master)
+Windows Visual Studio 64bits | [![Build status](https://appveyor-matrix-badges.herokuapp.com/repos/roymacdonald/ofxlineadetiempo/branch/master/3)](https://ci.appveyor.com/project/roymacdonald/ofxlineadetiempo/branch/master)
+
+
 ## 1. **PALETTO v1.0**
-**MASTER APP**
+**MASTER APP**  
 Works Standalone or Linked to a **CLIENT APP**  
 ( _1-example_Basic_ from **ofxColorManager** )  
 <br/>
@@ -114,7 +120,7 @@ Works Standalone or Linked to a **CLIENT APP**
 <br/><br/><br/><br/>
 
 ## 2. **Scene_COLORiZED v1.0**
-**CLIENT APP**
+**CLIENT APP**  
 Works Standalone or Linked to a **MASTER APP**  
 ( _3-example_Scenes_ from **ofxColorClient** )  
 <br/>

@@ -1,6 +1,6 @@
 {
     "ofxColorManager": {
-        "App_Layout": "1",
+        "App_Layout": "2",
         "AutoHide_Name": "1",
         "DEMO": {
             "Alpha_1": "0.7",
@@ -13,12 +13,12 @@
             "Zoom": "0.5"
         },
         "Engines": {
-            "Amount_Colors": "5",
+            "Amount_Colors": "10",
             "Analogue_Spread": "0.531",
-            "Color_1": "0.0352941, 0.572549, 0.0156863, 1",
-            "Color_2": "0.964706, 0.427451, 0.984314, 1",
+            "Color_1": "1, 0, 0.141176, 1",
+            "Color_2": "0, 0.0705882, 0.0980392, 1",
             "Last_Range_Index": "0",
-            "Last_Theory_Index": "0",
+            "Last_Theory_Index": "8",
             "Preset_Index": "2",
             "SCENE": "1",
             "Triad_Spread": "0.834"
@@ -32,7 +32,7 @@
         },
         "Font_Big_Size": "59",
         "Font_Size": "14",
-        "Gui_Layout_Position": "327, 506",
+        "Gui_Layout_Position": "603, 479",
         "LAYOUTS": "1",
         "LIBRARY": {
             "Columns_Max": "7",
@@ -57,25 +57,25 @@
         "PANELS": {
             "AutoScroll": "1",
             "DEMO": "0",
-            "EDITOR": "0",
+            "EDITOR": "1",
             "ENGINES": "1",
             "GRADIENT": "0",
             "GUI_MAIN": "1",
-            "KIT": "1",
+            "KIT": "0",
             "LIBRARY": "0",
             "LINK": "0",
             "LOVERS": "0",
             "PALETTE": "1",
             "PANELS": "0",
-            "PICKER": "0",
+            "PICKER": "1",
             "PICTURE": "0",
-            "PRESETS": "1",
+            "PRESETS": "0",
             "RANGE": "0",
             "SHOW_MINI_PALETTE": "0",
-            "THEORY": "0"
+            "THEORY": "1"
         },
         "PICKER": {
-            "COLOR": "0.0352941, 0.572549, 0.0156863, 1",
+            "COLOR": "0.0971757, 0.171406, 0.456168, 1",
             "H_POW": "0.862",
             "S_POW": "0.25",
             "V_POW": "0.25",
@@ -84,6 +84,6 @@
             "rSAT_": "1"
         },
         "SORTING": "0",
-        "TWEAK": "1"
+        "TWEAK": "0"
     }
 }
