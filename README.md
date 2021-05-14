@@ -104,9 +104,11 @@ Ready to use pre-compiled versions for fast testing, or to have executable apps 
 *Windows* / *macOS*
 
 <br/>
+
 Platform                     | CI Status
 -----------------------------|:---------
 Windows Visual Studio 64bits | [![Build status](https://appveyor-matrix-badges.herokuapp.com/repos/roymacdonald/ofxlineadetiempo/branch/master/3)](https://ci.appveyor.com/project/roymacdonald/ofxlineadetiempo/branch/master)
+Windows MSYS2 32bits         | [![Build status](https://appveyor-matrix-badges.herokuapp.com/repos/roymacdonald/ofxlineadetiempo/branch/master/1)](https://ci.appveyor.com/project/roymacdonald/ofxlineadetiempo/branch/master)
 Windows Visual Studio 64bits | [![Build status](https://appveyor-matrix-badges.herokuapp.com/repos/roymacdonald/ofxlineadetiempo/branch/master/3)](https://ci.appveyor.com/project/roymacdonald/ofxlineadetiempo/branch/master)
 
 
