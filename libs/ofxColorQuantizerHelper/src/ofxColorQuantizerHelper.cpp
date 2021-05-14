@@ -1384,6 +1384,9 @@ void ofxColorQuantizerHelper::kMeansTest()
 ofxColorQuantizerHelper::ofxColorQuantizerHelper()
 {
 	setActive(true);
+
+	//ofAddListener(parameters.parameterChangedE(), this, &ofxColorQuantizerHelper::Changed_parameters);
+	//ofAddListener(parameters_Advanced.parameterChangedE(), this, &ofxColorQuantizerHelper::Changed_parameters);
 }
 
 //--------------------------------------------------------------
@@ -1554,8 +1557,8 @@ ofxColorQuantizerHelper::~ofxColorQuantizerHelper()
 	//removeMouseListeners();
 	setActive(false);
 
-	ofAddListener(parameters.parameterChangedE(), this, &ofxColorQuantizerHelper::Changed_parameters);
-	ofAddListener(parameters_Advanced.parameterChangedE(), this, &ofxColorQuantizerHelper::Changed_parameters);
+	ofRemoveListener(parameters.parameterChangedE(), this, &ofxColorQuantizerHelper::Changed_parameters);
+	ofRemoveListener(parameters_Advanced.parameterChangedE(), this, &ofxColorQuantizerHelper::Changed_parameters);
 }
 
 //--------------------------------------------------------------

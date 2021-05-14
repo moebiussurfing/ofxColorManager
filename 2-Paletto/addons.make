@@ -3,10 +3,12 @@ ofxNetwork
 ofxOpenCv
 ofxSvg
 ofxXmlSettings
+ofxAppUpdateNotifier
 ofxColorClient
 ofxColorManager
 ofxImGui
 ofxIO
+ofxJSON
 ofxMouseRuler
 ofxMSAInteractiveObject
 ofxPoco

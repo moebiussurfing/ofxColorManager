@@ -324,6 +324,11 @@ void ofxColorManager::setup()
 	ofSetFrameRate(60);
 #endif
 
+	// app version checker
+	_isAnUpdateAvailable = false;
+	_appUpdateNotifier.init(1, "version.json", 1);
+	ofAddListener(_appUpdateNotifier.newVersionAvailable, this, &ofxColorManager::onNewVersionAvailable);
+
 	//--
 
 	setupRange();
@@ -1646,6 +1651,8 @@ void ofxColorManager::exit()
 	//	ini_to_save = ini_to_save_Str.c_str();//flags to save on update
 	//	ImGui::SaveIniSettingsToDisk(ini_to_save);
 	//}
+
+	_appUpdateNotifier.exit();
 }
 
 //----
@@ -1743,7 +1750,7 @@ void ofxColorManager::gui_Theory()
 		// 1. mini box color
 
 		ImGui::Text("Base Color");
-		
+
 		if (ImGui::ColorButton("##BoxTheory", *(ImVec4 *)&tmpRef.r, _flags, ImVec2(_w99, _h))) {}
 
 		//-
@@ -2634,7 +2641,7 @@ void ofxColorManager::gui_Editor()
 			ImGui::Dummy(ImVec2(0.0f, 2.0f));
 			ofxSurfingHelpers::AddBigToggle(bSortPalette, _w100, _h / 2);
 			if (bSortPalette)
-			//if (ImGui::CollapsingHeader("ORDERING", ImGuiWindowFlags_None))
+				//if (ImGui::CollapsingHeader("ORDERING", ImGuiWindowFlags_None))
 			{
 				ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 				{
@@ -2666,7 +2673,7 @@ void ofxColorManager::gui_Editor()
 				ImGui::Text("Drag"); //ImGui::SameLine();
 				if (ImGui::RadioButton("Copy", mode == Mode_Copy)) { mode = Mode_Copy; } ImGui::SameLine();
 				if (ImGui::RadioButton("Swap", mode == Mode_Swap)) { mode = Mode_Swap; }
-			
+
 				ImGui::Dummy(ImVec2(0.0f, 5.0f));
 			}
 
@@ -3239,9 +3246,9 @@ void ofxColorManager::gui_Library()
 				ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
 				ofxImGui::AddParameter(colorBrowser.ENABLE_keys);
-		}
+			}
 #endif
-	}
+		}
 
 		//--
 
@@ -3462,7 +3469,7 @@ void ofxColorManager::gui_Library()
 		{
 			refresh_FromPicked();
 		}
-}
+	}
 
 	ofxImGui::EndWindow(mainSettings);
 
@@ -5273,13 +5280,13 @@ void ofxColorManager::gui_TextInput()
 					refresh_FilesSorting(textInput_New);
 				}
 				else ofLogError(__FUNCTION__) << "Empty name on textInput !";
-		}
+			}
 			ImGui::PopStyleColor();
 #endif
-	}
+		}
 
 		ImGui::Dummy(ImVec2(0.0f, 5.0f));
-}
+	}
 	ofxImGui::EndWindow(mainSettings);
 
 #ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
@@ -5564,7 +5571,7 @@ void ofxColorManager::gui_Presets()
 				else ofLogError(__FUNCTION__) << "Empty name on textInput !";
 			}
 			ImGui::PopStyleColor();
-	}
+		}
 		else
 		{
 			if (MODE_ReadyToUpdate)
@@ -5771,7 +5778,7 @@ void ofxColorManager::gui_Presets()
 		//ImGui::Dummy(ImVec2(0.0f, 2.0f));
 		//if (SHOW_Kit) ofxImGui::AddParameter(AutoScroll);
 		//ImGui::Checkbox("Auto-Resize", &auto_resize);
-}
+	}
 
 	ofxImGui::EndWindow(mainSettings);
 
@@ -6305,6 +6312,49 @@ bool ofxColorManager::draw_Gui()
 			if (SHOW_Gradient) gui_Gradient();
 			//if (gradientEngine.SHOW_CurveEditor) gui_Gradient();
 			//if (gradientEngine.SHOW_Gradient) gui_Gradient();
+		}
+
+		//--
+
+		// app version checker
+		if (_isAnUpdateAvailable)
+		{
+			//const float x = 20;
+			//const float y = 20;
+			//const float padding = 20;
+			//ofDrawBitmapString("A new version is available !", x, y);
+			//ofDrawBitmapString("\tdisplayNumber :\t" + _newVersion.displayNumber, x, y + padding);
+			//ofDrawBitmapString("\tnumber :\t" + ofToString(_newVersion.number), x, y + padding * 2);
+			//ofDrawBitmapString("\tisCritical :\t" + ofToString(_newVersion.isCritical), x, y + padding * 3);
+			//ofDrawBitmapString("\turl :\t\t" + _newVersion.url, x, y + padding * 4);
+
+			std::string str;
+			str += "A new version is available !";
+			str += "\n";
+			str += "\tDisplay Number :\t" + ofToString(_newVersion.displayNumber);
+			str += "\n";
+			str += "\tNumber :\t" + ofToString(_newVersion.number);
+			str += "\n";
+			str += "\tis Critical :\t" + ofToString(_newVersion.isCritical ? "TRUE" : "FALSE");
+			str += "\n";
+			str += "\turl :\t\t" + ofToString(_newVersion.url);
+
+			bool p_open = true;
+			{
+				ImGuiWindowFlags flags;
+				flags = ImGuiWindowFlags_AlwaysAutoResize;
+				//flags = ImGuiWindowFlags_None;
+
+				ImGui::Begin("APP VERSION CHECKER", &p_open, flags);
+				{
+					ImGui::Text(APP_RELEASE_NAME);
+					//ImGui::Separator();
+					ImGui::Dummy(ImVec2(0.0f, 10.0f));
+					ImGui::Text(str.c_str());
+					ImGui::Dummy(ImVec2(0, 10.0f));
+				}
+				ImGui::End();
+			}
 		}
 
 		//--
@@ -7198,8 +7248,8 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 			//is not closing..
 			TCP_Sender.close();
+		}
 }
-	}
 #endif
 
 	//-
@@ -7854,7 +7904,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	//{
 	//	if (bLock_palette) bAuto_Build_Palette = false;
 	//}
-}
+	}
 
 //--------------------------------------------------------------
 void ofxColorManager::Changed_Range(ofAbstractParameter &e)
@@ -10996,3 +11046,11 @@ void ofxColorManager::doApplyTweaker() {
 		bExportFlag = true;
 	}
 };
+
+
+//--------------------------------------------------------------
+void ofxColorManager::onNewVersionAvailable(AppUpdateNotifier::Version& version)
+{
+	_isAnUpdateAvailable = true;
+	_newVersion = version;
+}

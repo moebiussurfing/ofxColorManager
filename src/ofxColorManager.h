@@ -77,6 +77,8 @@ BUGS:
 #include "ofxWindowApp.h"
 #endif
 
+#include "ofxAppUpdateNotifier.h"
+
 //--
 
 #define USE_VIEWPORTS // allow out-of-OF-window
@@ -279,6 +281,16 @@ private:
 
 private:
 	bool SHOW_EditTheme = false;
+	
+	//--
+
+	// app version checker
+public:
+	void onNewVersionAvailable(AppUpdateNotifier::Version& version);
+private:
+	ofxAppUpdateNotifier _appUpdateNotifier;
+	bool _isAnUpdateAvailable;
+	AppUpdateNotifier::Version _newVersion;
 
 	//--
 
