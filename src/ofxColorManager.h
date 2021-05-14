@@ -3,14 +3,6 @@
 
 #include "ofMain.h"
 
-//TODO:
-//ASE exporter
-//#define USE_ASE_MODULE
-#ifdef USE_ASE_MODULE
-#include "ase_common.h"
-#include "ase_writer.h"
-#endif
-
 /*
 
 
@@ -49,9 +41,17 @@ BUGS:
 
 #define MAKE_RELEASE_VERSION // disables console and other stuff, for final release version. name to Paletto v1.0
 
-//#define USE_VERSION_CHECKER
+//#define USE_VERSION_CHECKER // TODO: crashes on exit..
 
 //--
+
+//TODO:
+//ASE exporter
+//#define USE_ASE_MODULE
+#ifdef USE_ASE_MODULE
+#include "ase_common.h"
+#include "ase_writer.h"
+#endif
 
 // NOTE: can't be disabled now..
 // tcp modes: enable only one of the two modes

@@ -557,3 +557,5 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+2-Paletto/bin/data/AppUpdateLastCheckedDate
+2-Paletto/bin/imgui.ini

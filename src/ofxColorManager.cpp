@@ -2711,13 +2711,6 @@ void ofxColorManager::gui_Editor()
 			//	}
 			//}
 
-			// show picker
-			ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
-
-			ImGui::Dummy(ImVec2(0.0f, 5.0f));
-			ofxSurfingHelpers::AddBigToggle(SHOW_Picker, _w100, _h / 2);
-			ofxSurfingHelpers::AddBigToggle(SHOW_Library, _w100, _h / 2);
-
 			//--
 
 //#ifndef USE_MINIMAL_GUI
@@ -2767,7 +2760,16 @@ void ofxColorManager::gui_Editor()
 
 				//ofxImGui::AddParameter(bAutoResizePalette);//not works
 			}
-		}
+
+			//--
+
+			// show picker
+			ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+
+			ImGui::Dummy(ImVec2(0.0f, 5.0f));
+			ImGui::Separator();
+			ofxSurfingHelpers::AddBigToggle(SHOW_Picker, _w100, _h / 2);
+			ofxSurfingHelpers::AddBigToggle(SHOW_Library, _w100, _h / 2); }
 	}
 
 	ofxImGui::EndWindow(mainSettings);
@@ -3932,7 +3934,9 @@ void ofxColorManager::gui_Picker()
 		//	ImGui::Checkbox("Auto-Resize", &auto_resize);
 		//}
 
-		ImGui::Dummy(ImVec2(0.0f, 2.0f));
+		ImGui::Dummy(ImVec2(0.0f, 5.0f));
+		
+		ImGui::Separator();
 
 		ofxSurfingHelpers::AddBigToggle(SHOW_Library, _w100, _h / 2);
 	}
@@ -6338,6 +6342,7 @@ bool ofxColorManager::draw_Gui()
 
 			std::string str;
 			str += "A new version is available!";
+			str += "\n";
 			str += "\n";
 			str += "\tDisplay Number :\t" + ofToString(_newVersion.displayNumber);
 			str += "\n";
