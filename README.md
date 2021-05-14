@@ -103,28 +103,6 @@ Links a **MASTER OF_App** (with the **ofxColorManager**) to your **CLIENT OF_App
 Ready to use pre-compiled versions for fast testing, or to have executable apps with for the most common uses/learning.  
 *Windows* / *macOS*
 
-
-| ## 1. **PALETTO v1.0** **MASTER APP** Works Standalone or Linked to a **CLIENT APP**   ( _1-example_Basic_ from **ofxColorManager** )   <br/> ### **Download**:   <a href="https://moebiussurfing.itch.io/paletto"><img src="/docs/itch.io/Paletto.ico" align="left" height="96" width="96" ></a>   | ## 2. **Scene_COLORiZED v1.0** **CLIENT APP** Works Standalone or Linked to a **MASTER APP**   ( _3-example_Scenes_ from **ofxColorClient** )   <br/> ### **Download**:   <a href="https://moebiussurfing.itch.io/paletto"><img src="/docs/itch.io/Scene_COLORiZED.ico" align="left" height="96" width="96" ></a> |
-|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-
-| <br/> |
-| ## 1. **PALETTO v1.0** |
-| **MASTER APP** |
-| Works Standalone or Linked to a **CLIENT APP** |
-| ( _1-example_Basic_ from **ofxColorManager** ) |
-| <br/> |
-| ### **Download**: |
-| <a href="https://moebiussurfing.itch.io/paletto"><img src="/docs/itch.io/Paletto.ico" align="left" height="96" width="96" ></a> |
-| <br/><br/><br/><br/> |
-| , |
-| ## 2. **Scene_COLORiZED v1.0** |
-| **CLIENT APP** |
-| Works Standalone or Linked to a **MASTER APP** |
-| ( _3-example_Scenes_ from **ofxColorClient** ) |
-| <br/>, |
-| ### **Download**: |
-| <a href="https://moebiussurfing.itch.io/paletto"><img src="/docs/itch.io/Scene_COLORiZED.ico" align="left" height="96" width="96" ></a> |
-
 <br/>
 ## 1. **PALETTO v1.0**
 **MASTER APP**
@@ -251,13 +229,16 @@ No need to add them manually with the **OF Project Generator**:
 * [ofxColorQuantizer](https://github.com/mantissa/ofxColorQuantizer)  
 * [ofxHttpUtils](https://github.com/arturoc/ofxHttpUtils)  
 * [ofxSimpleTimer](https://github.com/HeliosInteractive/ofxSimpleTimer)  
+* [ofxAppUpdateNotifier](https://github.com/Mat-Loz/ofxAppUpdateNotifier)  
+* [ofxJSON](https://github.com/jeffcrouse/ofxJSON)  
 
 For **ofxColorClient**:  
 * [ofxAnimatable](https://github.com/armadillu/ofxAnimatable)  
 * [ofxColorGradient](https://github.com/armadillu/ofxColorGradient)  
 * [ofxCurvesTool](https://github.com/kylemcdonald/ofxCurvesTool)  
 * [ofxSerializer](https://github.com/bakercp/ofxSerializer)  
-* [ofxSimpleSlider](https://github.com/danomatika/ofxPd/blob/master/pitchShifter/src/ofxSimpleSlider.h)  
+* [ofxSimpleSlider](https://github.com/moebiussurfing/ofxSimpleSlider)  [ Fork ]
+* [ofxMSAInteractiveObject](https://github.com/moebiussurfing/ofxMSAInteractiveObject)  [ Fork ]  
 
 *Thanks a lot to all these ofxAddons coders. Look into each folder for authoring CREDITS, original forks, and license info.*  
   </p>
@@ -308,7 +289,7 @@ This is an example of a _3 colors palette_ file content:
   <p>
 
 *List of GitHub names of all coders of used ofxAddons:*  
-@jvcleave, @Daandelange, @roymacdonald, @bakercp, @kuflex, @borg, @mantissa, @makobouzu, @aspeteRakete, @kasparsj, @arturoc, @HeliosInteractive, @frauzufall, @armadillu, @kylemcdonald, @golanlevin.
+@jvcleave, @Daandelange, @roymacdonald, @bakercp, @kuflex, @borg, @mantissa, @makobouzu, @aspeteRakete, @kasparsj, @arturoc, @HeliosInteractive, @frauzufall, @armadillu, @kylemcdonald, @golanlevin, @Mat-Loz, @memo, @jeffcrouse.
   </p>
 </details>
 

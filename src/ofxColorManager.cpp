@@ -1003,7 +1003,7 @@ void ofxColorManager::setup()
 	params_LayoutPanelsState.add(SHOW_Gradient);
 
 	//exclude. shared by all the layout presets
-	//params_LayoutPanelsState.add(SHOW_Panels);
+	params_LayoutPanelsState.add(SHOW_Panels);
 	//params_LayoutPanelsState.add(Lock_DockingLayout);
 
 
@@ -2178,7 +2178,8 @@ void ofxColorManager::gui_Editor()
 
 					float wb = (_w100 / _r);
 					//float hb = WIDGETS_HEIGHT / 2;
-					float hb = 40;
+					float hb = _h;
+					//float hb = 40;
 
 					//--
 
@@ -2768,6 +2769,8 @@ void ofxColorManager::gui_Editor()
 
 			ImGui::Dummy(ImVec2(0.0f, 5.0f));
 			ImGui::Separator();
+			ImGui::Dummy(ImVec2(0.0f, 5.0f));
+
 			ofxSurfingHelpers::AddBigToggle(SHOW_Picker, _w100, _h / 2);
 			ofxSurfingHelpers::AddBigToggle(SHOW_Library, _w100, _h / 2); }
 	}
@@ -3744,7 +3747,8 @@ void ofxColorManager::gui_Picker()
 
 		ImGuiColorEditFlags _flags = ImGuiColorEditFlags_NoOptions | ImGuiColorEditFlags_NoTooltip;
 
-		ImGui::ColorButton("##cPreview", *(ImVec4 *)&cTmp, _flags, ImVec2(_w100, COLOR_STRIP_COLOR_HEIGHT));
+		ImGui::ColorButton("##cPreview", *(ImVec4 *)&cTmp, _flags, ImVec2(_w100, _h));
+		//ImGui::ColorButton("##cPreview", *(ImVec4 *)&cTmp, _flags, ImVec2(_w100, COLOR_STRIP_COLOR_HEIGHT));
 
 		//-
 
@@ -3935,8 +3939,8 @@ void ofxColorManager::gui_Picker()
 		//}
 
 		ImGui::Dummy(ImVec2(0.0f, 5.0f));
-		
 		ImGui::Separator();
+		ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
 		ofxSurfingHelpers::AddBigToggle(SHOW_Library, _w100, _h / 2);
 	}
@@ -4111,7 +4115,7 @@ void ofxColorManager::gui_LayoutsPresets()
 		////upper left
 		//glm::vec2 p = rectangle_Central_MAX.getTopLeft() + glm::vec2(-1, -1);
 		//center upper left
-		int _pad = 5;
+		int _pad = 10;
 		int _xx = rectangle_Central_MAX.getTopLeft().x + _pad;
 		int _yy = rectangle_Central_MAX.getTopLeft().y + rectangle_Central_MAX.getHeight() / 2 - hw / 2;
 		glm::vec2 p = glm::vec2(_xx, _yy);
@@ -4318,7 +4322,7 @@ void ofxColorManager::gui_LayoutsAdvanced()
 	//_flagc = ImGuiCond_Appearing;
 	//ImGui::SetNextWindowPos(ofVec2f(xw + ww + 2, yw), _flagc);
 	_flagc = ImGuiCond_Always;
-	int _pad = 5;
+	int _pad = 10;
 	ImGui::SetNextWindowPos(ofVec2f(positionGuiLayout.get().x + widthGuiLayout + _pad, positionGuiLayout.get().y), _flagc);
 	//ImGui::SetNextWindowSize(ofVec2f(ww, hw), _flagc);
 
@@ -5783,7 +5787,10 @@ void ofxColorManager::gui_Presets()
 
 		//----
 
-		//ImGui::Dummy(ImVec2(0.0f, 2.0f));
+		ImGui::Dummy(ImVec2(0.0f, 5.0f));
+		ImGui::Separator();
+		ImGui::Dummy(ImVec2(0.0f, 5.0f));
+
 		ofxSurfingHelpers::AddBigToggle(SHOW_Kit, _w100, _h / 2);
 
 		//ImGui::Dummy(ImVec2(0.0f, 2.0f));
@@ -5872,6 +5879,8 @@ void ofxColorManager::gui_Gradient()
 		}
 
 		//--
+		
+		ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
 		ImGuiWindowFlags _flagw;
 		_flagw |= ImGuiTreeNodeFlags_None;
@@ -10651,7 +10660,7 @@ void ofxColorManager::loadAppLayout(AppLayouts mode)
 		//hardcoded forced
 		if (bEnableHardcode) {
 			SHOW_Palette = true;
-			SHOW_Panels = true;
+			//SHOW_Panels = true;
 			SHOW_PanelEngines = true;
 			SHOW_Theory.setWithoutEventNotifications(true);
 			SHOW_Range = false;
@@ -10682,7 +10691,7 @@ void ofxColorManager::loadAppLayout(AppLayouts mode)
 		//hardcoded forced
 		if (bEnableHardcode) {
 			SHOW_Palette = true;
-			SHOW_Panels = false;
+			//SHOW_Panels = false;
 			SHOW_PanelEngines = false;
 			SHOW_Theory = false;
 			SHOW_Range = false;
@@ -10713,7 +10722,7 @@ void ofxColorManager::loadAppLayout(AppLayouts mode)
 		//hardcoded forced
 		if (bEnableHardcode) {
 			SHOW_Palette = true;
-			SHOW_Panels = false;
+			//SHOW_Panels = false;
 			SHOW_PanelEngines = true;
 			SHOW_Theory = true;
 			SHOW_Range = false;

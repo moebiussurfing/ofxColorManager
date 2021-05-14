@@ -1557,8 +1557,9 @@ ofxColorQuantizerHelper::~ofxColorQuantizerHelper()
 	//removeMouseListeners();
 	setActive(false);
 
-	ofRemoveListener(parameters.parameterChangedE(), this, &ofxColorQuantizerHelper::Changed_parameters);
-	ofRemoveListener(parameters_Advanced.parameterChangedE(), this, &ofxColorQuantizerHelper::Changed_parameters);
+	//crashes?
+	//ofRemoveListener(parameters.parameterChangedE(), this, &ofxColorQuantizerHelper::Changed_parameters);
+	//ofRemoveListener(parameters_Advanced.parameterChangedE(), this, &ofxColorQuantizerHelper::Changed_parameters);
 }
 
 //--------------------------------------------------------------
