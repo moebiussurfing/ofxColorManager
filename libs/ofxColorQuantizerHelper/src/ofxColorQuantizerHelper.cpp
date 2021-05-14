@@ -66,7 +66,8 @@ void ofxColorQuantizerHelper::draw_Gui()
 		float __pad = -90;
 		//ofxImGui::AddGroup(colorQuantizer.getParameters(), mainSettings);
 
-		ImGui::PushItemWidth(__pad);
+		ImGui::PushItemWidth(110);
+		//ImGui::PushItemWidth(__pad);
 		if (ImGui::InputInt(numColors.getName().c_str(), (int *)&numColors.get())) {
 			numColors = ofClamp(numColors, numColors.getMin(), numColors.getMax());
 		}
@@ -252,7 +253,7 @@ void ofxColorQuantizerHelper::draw_Gui()
 		ImGui::Dummy(ImVec2(0, 5));
 		//ImGui::Text(currentImage_name.get().c_str());
 
-		ofxSurfingHelpers::AddBigButton(bReBuild, _w100, _h);
+		ofxSurfingHelpers::AddBigButton(bReBuild, _w100, _h/2);
 		if (ImGui::Button("REFRESH FILES", ImVec2(_w100, _h / 2)))
 		{
 			// workflow

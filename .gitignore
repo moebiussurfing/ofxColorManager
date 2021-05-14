@@ -1,24 +1,22 @@
-#########################
-# general patterns
-#########################
+imgui.ini
+*.ini
+
+*.XML
+*.xml
+*.JSON
+*.json
 
 ##-------------------------------
 
-## can exclude some sttings files
-ignore.ps1
+Git_ignore.ps1
+Git_push.bat
+Git_push+.bat
+Git_setup.ps1
 
 config.make
 openFrameworks-Info.plist
 Project.xcconfig
 Makefile
-
-#*.XML
-#*.xml
-#*.JSON
-#*.json
-
-#imgui.ini
-#*.ini
 
 #*/bin/*
 #!*/bin/data/

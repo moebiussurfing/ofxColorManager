@@ -7,14 +7,13 @@
         "KIT": "0",
         "LIBRARY": "0",
         "LINK": "0",
-        "LOVERS": "1",
+        "LOVERS": "0",
         "MENU_BAR": "0",
         "PALETTE": "1",
-        "PANELS": "0",
         "PICKER": "1",
         "PICTURE": "0",
         "PRESETS": "0",
-        "RANGE": "0",
+        "RANGE": "1",
         "SHOW_MINI_PALETTE": "0",
         "THEORY": "0"
     }

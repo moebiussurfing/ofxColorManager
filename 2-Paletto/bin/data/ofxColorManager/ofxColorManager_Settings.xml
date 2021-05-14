@@ -13,12 +13,12 @@
             "Zoom": "0.5"
         },
         "Engines": {
-            "Amount_Colors": "5",
+            "Amount_Colors": "6",
             "Analogue_Spread": "0.531",
-            "Color_1": "0.0196078, 0.0745098, 0.215686, 1",
-            "Color_2": "0.513726, 0.286275, 0.0980392, 1",
+            "Color_1": "0.603922, 0.803922, 0.87451, 1",
+            "Color_2": "0, 0, 0.00784314, 1",
             "Last_Range_Index": "0",
-            "Last_Theory_Index": "3",
+            "Last_Theory_Index": "8",
             "Preset_Index": "0",
             "SCENE": "1",
             "Triad_Spread": "0.834"
@@ -75,7 +75,7 @@
             "THEORY": "0"
         },
         "PICKER": {
-            "COLOR": "0.0196078, 0.0823529, 0.227451, 1",
+            "COLOR": "0.10912, 0.692913, 0.308297, 1",
             "H_POW": "0.862",
             "S_POW": "0.25",
             "V_POW": "0.25",
@@ -83,6 +83,7 @@
             "rHUE_": "1",
             "rSAT_": "1"
         },
-        "TWEAK": "0"
+        "SORTING": "1",
+        "TWEAK": "1"
     }
 }

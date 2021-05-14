@@ -69,6 +69,14 @@ BUGS:
 #define USE_DEBUG_LAYOUT // includes mouse ruler to help layout design. show app console window
 //#endif
 
+// optional 
+// window manager
+#define USE_OFX_WINDOWAPP
+
+#ifdef USE_OFX_WINDOWAPP
+#include "ofxWindowApp.h"
+#endif
+
 //--
 
 #define USE_VIEWPORTS // allow out-of-OF-window
@@ -232,6 +240,12 @@ public:
 	void windowResized(int w, int h);
 	void dragEvent(ofDragInfo dragInfo);
 	void setImage();
+
+	//--
+
+#ifdef USE_OFX_WINDOWAPP
+	ofxWindowApp windowApp;
+#endif
 
 	//-
 
@@ -1012,7 +1026,8 @@ private:
 	vector<ofColor> palette;// main user palette
 
 	vector<ofColor> palette_AUX;// aux palette to tweak saturation and brigthness to all the palette colors
-	ofParameter<bool> bTweakPalette{ "TWEAK", true };
+	ofParameter<bool> bTweakPalette{ "TWEAK", false };
+	ofParameter<bool> bSortPalette{ "SORTING", false };
 	ofParameter<float> hueTweak{ "HUE TWK", 0,-1,1 };
 	ofParameter<float> saturationTweak{ "SAT TWK", 0,-1,1 };
 	ofParameter<float> brigthnesTweak{ "BRG TWK", 0,-1,1 };

@@ -3,18 +3,6 @@
 //--------------------------------------------------------------
 void ofApp::setup()
 {
-#ifdef USE_OFX_WINDOWAPP
-	//windowApp.setFrameRate(60);
-	//windowApp.setVerticalSync(false);
-#ifdef MAKE_RELEASE_VERSION
-	windowApp.setShowDebug(false);
-#endif
-#else
-	ofSetFrameRate(60);
-#endif
-
-	//--
-
 	// we subscribe the local colors
 	// using pointers/references
 	// to be auto-updated
