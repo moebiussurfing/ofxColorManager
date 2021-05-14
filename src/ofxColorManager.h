@@ -49,6 +49,8 @@ BUGS:
 
 #define MAKE_RELEASE_VERSION // disables console and other stuff, for final release version. name to Paletto v1.0
 
+//#define USE_VERSION_CHECKER
+
 //--
 
 // NOTE: can't be disabled now..
@@ -285,12 +287,14 @@ private:
 	//--
 
 	// app version checker
+#ifdef USE_VERSION_CHECKER
 public:
 	void onNewVersionAvailable(AppUpdateNotifier::Version& version);
 private:
 	ofxAppUpdateNotifier _appUpdateNotifier;
 	bool _isAnUpdateAvailable;
 	AppUpdateNotifier::Version _newVersion;
+#endif
 
 	//--
 

@@ -15,10 +15,10 @@
         "Engines": {
             "Amount_Colors": "6",
             "Analogue_Spread": "0.531",
-            "Color_1": "0.603922, 0.803922, 0.87451, 1",
-            "Color_2": "0, 0, 0.00784314, 1",
+            "Color_1": "0.803922, 0.619608, 0.298039, 1",
+            "Color_2": "0.0156863, 0.0196078, 0.0235294, 1",
             "Last_Range_Index": "0",
-            "Last_Theory_Index": "8",
+            "Last_Theory_Index": "3",
             "Preset_Index": "0",
             "SCENE": "1",
             "Triad_Spread": "0.834"
@@ -68,14 +68,14 @@
             "PALETTE": "1",
             "PANELS": "1",
             "PICKER": "1",
-            "PICTURE": "1",
+            "PICTURE": "0",
             "PRESETS": "0",
             "RANGE": "0",
             "SHOW_MINI_PALETTE": "0",
-            "THEORY": "0"
+            "THEORY": "1"
         },
         "PICKER": {
-            "COLOR": "0.603922, 0.803922, 0.87451, 1",
+            "COLOR": "0.803922, 0.619608, 0.298039, 1",
             "H_POW": "0.862",
             "S_POW": "0.25",
             "V_POW": "0.25",

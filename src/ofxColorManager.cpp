@@ -323,11 +323,15 @@ void ofxColorManager::setup()
 #else
 	ofSetFrameRate(60);
 #endif
+	
+	//--
 
+#ifdef USE_VERSION_CHECKER
 	// app version checker
 	_isAnUpdateAvailable = false;
 	_appUpdateNotifier.init(1, "version.json", 1);
 	ofAddListener(_appUpdateNotifier.newVersionAvailable, this, &ofxColorManager::onNewVersionAvailable);
+#endif
 
 	//--
 
@@ -1652,7 +1656,10 @@ void ofxColorManager::exit()
 	//	ImGui::SaveIniSettingsToDisk(ini_to_save);
 	//}
 
+	
+#ifdef USE_VERSION_CHECKER
 	_appUpdateNotifier.exit();
+#endif
 }
 
 //----
@@ -6315,7 +6322,8 @@ bool ofxColorManager::draw_Gui()
 		}
 
 		//--
-
+		
+#ifdef USE_VERSION_CHECKER
 		// app version checker
 		if (_isAnUpdateAvailable)
 		{
@@ -6329,7 +6337,7 @@ bool ofxColorManager::draw_Gui()
 			//ofDrawBitmapString("\turl :\t\t" + _newVersion.url, x, y + padding * 4);
 
 			std::string str;
-			str += "A new version is available !";
+			str += "A new version is available!";
 			str += "\n";
 			str += "\tDisplay Number :\t" + ofToString(_newVersion.displayNumber);
 			str += "\n";
@@ -6356,6 +6364,7 @@ bool ofxColorManager::draw_Gui()
 				ImGui::End();
 			}
 		}
+#endif
 
 		//--
 
@@ -11048,9 +11057,11 @@ void ofxColorManager::doApplyTweaker() {
 };
 
 
+#ifdef USE_VERSION_CHECKER
 //--------------------------------------------------------------
 void ofxColorManager::onNewVersionAvailable(AppUpdateNotifier::Version& version)
 {
 	_isAnUpdateAvailable = true;
 	_newVersion = version;
 }
+#endif
