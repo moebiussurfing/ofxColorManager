@@ -107,12 +107,13 @@ Ready to use pre-compiled versions for fast testing, or to have executable apps 
 
 Platform                     | CI Status
 -----------------------------|:---------
-**PALETTO v1.0**|
-**MASTER APP**  |
-Works Standalone or Linked to a **CLIENT APP**  
+**PALETTO v1.0**
+**MASTER APP**
+Works Standalone or Linked to a **CLIENT APP**
 ( _1-example_Basic_ from **ofxColorManager** )  
 **Download**:  
 <a href="https://moebiussurfing.itch.io/paletto"><img src="/docs/itch.io/Paletto.ico" align="left" height="96" width="96" ></a>  
+
 | 2. **Scene_COLORiZED v1.0**
 **CLIENT APP**  
 Works Standalone or Linked to a **MASTER APP**  
