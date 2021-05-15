@@ -29,7 +29,7 @@ void DEMO_SceneSpheres::update() {
 #define ZTW_SPEED 0.05f
 	if (tweenD > 0)
 	{
-		tweenD -= ZTW_SPEED * DEMO5_Speed;
+		tweenD -= ZTW_SPEED * speed;
 	}
 	tweenD = ofClamp(tweenD, 0, 1);
 
@@ -55,7 +55,7 @@ void DEMO_SceneSpheres::update() {
 		for (int i = 0; i < (*palette).size(); i++)
 		{
 			color.set((*palette)[i]);
-			color_list.push_back(ofColor(color.r, color.g, color.b, 255 * DEMO5_Alpha));
+			color_list.push_back(ofColor(color.r, color.g, color.b, 255 * alpha_));
 		}
 	}
 
@@ -195,7 +195,7 @@ void DEMO_SceneSpheres::draw(ofRectangle viewport)
 
 		ofPushMatrix();
 		
-		ofScale(1 + ZTW_MAX * tweenD * DEMO5_Zoom);
+		ofScale(1 + ZTW_MAX * tweenD * zoom);
 		//fboBig.draw(-w / 2, -h / 2, w, h);
 
 		ofRotateX(ofGetFrameNum() * 0.37);

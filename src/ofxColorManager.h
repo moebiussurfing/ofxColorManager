@@ -283,7 +283,7 @@ private:
 
 private:
 	bool SHOW_EditTheme = false;
-	
+
 	//--
 
 	// app version checker
@@ -474,11 +474,11 @@ private:
 		APP_ENGINES,
 		APP_MINIMAL,
 		APP_USER,
-		APP_MODE_SIZE
+		APP_LAYOUTS_AMOUNT
 	};
 	void loadAppLayout(AppLayouts mode);
 	void saveAppLayout(AppLayouts mode);
-	ofParameter<int> appLayoutIndex{ "App Layout", 0, 0, APP_MODE_SIZE - 1 };
+	ofParameter<int> appLayoutIndex{ "App Layout", 0, 0, APP_LAYOUTS_AMOUNT - 1 };
 	int appLayoutIndex_PRE = -1;
 
 	//--
@@ -1291,6 +1291,22 @@ private:
 
 	void Changed_LayoutPanels(ofAbstractParameter &e);
 	ofParameterGroup params_LayoutSPanel{ "LAYOUTS PANEL" };
+
+	//--------------------------------------------------------------
+	std::string getLayoutName(AppLayouts mode) {
+		std::string s = "";
+		//switch (appLayoutIndex)
+		switch (mode)
+		{
+		case APP_DEFAULT: s = path_ImGui + "imgui_DEFAULT.ini"; break;
+		case APP_PRESETS: s = path_ImGui + "imgui_PRESETS.ini"; break;
+		case APP_ENGINES: s = path_ImGui + "imgui_ENGINES.ini"; break;
+		case APP_MINIMAL: s = path_ImGui + "imgui_MINIMAL.ini"; break;
+		case APP_USER: s = path_ImGui + "imgui_USER.ini"; break;
+		default:break;
+		}
+		return s;
+	}
 
 	//--
 

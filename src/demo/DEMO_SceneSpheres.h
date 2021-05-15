@@ -26,10 +26,10 @@ public:
 		ofLogNotice(__FUNCTION__);
 	}
 
-	ofParameter<float> DEMO5_Speed{ "Speed", 0.5, 0.001 , 1 };
-	ofParameter<float> DEMO5_Zoom{ "Zoom", 0.5, 0, 1 };
-	ofParameter<float> DEMO5_Alpha{ "Alpha Spheres", 0.8, 0, 1 };
-	ofParameter<bool> DEMO5_Cam{ "Edit Camera Spheres", false };
+	ofParameter<float> speed{ "Speed", 0.5, 0.001 , 1 };
+	ofParameter<float> zoom{ "Zoom", 0.5, 0, 1 };
+	ofParameter<float> alpha_{ "Alpha Spheres", 0.8, 0, 1 };
+	ofParameter<bool> mouseCam{ "Edit Camera Spheres", false };
 
 	//-
 

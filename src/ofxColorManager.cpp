@@ -323,7 +323,7 @@ void ofxColorManager::setup()
 #else
 	ofSetFrameRate(60);
 #endif
-	
+
 	//--
 
 #ifdef USE_VERSION_CHECKER
@@ -573,7 +573,7 @@ void ofxColorManager::setup()
 	color_BRG_0.setSerializable(false);
 
 	DEMO1_Cam.setSerializable(false);
-	DEMO2_Spheres.DEMO5_Cam.setSerializable(false);
+	DEMO2_Spheres.mouseCam.setSerializable(false);
 	//DEMO2_Edit.setSerializable(false);
 
 	ofAddListener(params_Theory.parameterChangedE(), this, &ofxColorManager::Changed_Controls);
@@ -858,10 +858,10 @@ void ofxColorManager::setup()
 	params_Demo.add(DEMO1_Alpha);
 	params_Demo.add(DEMO1_Cam);
 	params_Demo.add(DEMO2_Enable);
-	params_Demo.add(DEMO2_Spheres.DEMO5_Alpha);
-	params_Demo.add(DEMO2_Spheres.DEMO5_Speed);
-	params_Demo.add(DEMO2_Spheres.DEMO5_Zoom);
-	params_Demo.add(DEMO2_Spheres.DEMO5_Cam);
+	params_Demo.add(DEMO2_Spheres.alpha_);
+	params_Demo.add(DEMO2_Spheres.speed);
+	params_Demo.add(DEMO2_Spheres.zoom);
+	params_Demo.add(DEMO2_Spheres.mouseCam);
 	params_AppState.add(params_Demo);
 
 	params_Picker.add(bColor_rHUE);
@@ -1659,7 +1659,7 @@ void ofxColorManager::exit()
 	//	ImGui::SaveIniSettingsToDisk(ini_to_save);
 	//}
 
-	
+
 #ifdef USE_VERSION_CHECKER
 	_appUpdateNotifier.exit();
 #endif
@@ -2465,6 +2465,9 @@ void ofxColorManager::gui_Editor()
 
 			if (bEditPalette)
 			{
+				ImGui::Indent();
+				ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+
 				//--
 
 				//selected color
@@ -2497,6 +2500,8 @@ void ofxColorManager::gui_Editor()
 					}
 				}
 				ImGui::Dummy(ImVec2(0.0f, 5.0f));
+
+				ImGui::Unindent();
 			}
 
 			ImGui::Dummy(ImVec2(0.0f, 2.0f));
@@ -2516,6 +2521,9 @@ void ofxColorManager::gui_Editor()
 
 			if (bTweakPalette)
 			{
+				ImGui::Indent();
+				ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+
 				if (ImGui::Button("GET", ImVec2(_w50, _h / 2)))
 				{
 					doGetPaletteToTweaker();
@@ -2527,7 +2535,6 @@ void ofxColorManager::gui_Editor()
 				}
 
 				//if (ImGui::CollapsingHeader("TWEAKER", ImGuiWindowFlags_NoCollapse))
-				ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 
 				// colors
 				for (int n = 0; n < palette_AUX.size(); n++)
@@ -2536,7 +2543,8 @@ void ofxColorManager::gui_Editor()
 					if (n != 0) ImGui::SameLine(0, 0);
 
 					float wb = (_w100 / _r);
-					float hb = 40 / 2;
+					float hb = _h;
+					//float hb = 40 / 2;
 					//float hb = 40;
 					//float hb = WIDGETS_HEIGHT / 2;
 
@@ -2642,6 +2650,8 @@ void ofxColorManager::gui_Editor()
 					ImGui::PopItemWidth();
 				}
 
+				ImGui::Unindent();
+
 				ImGui::Dummy(ImVec2(0.0f, 5.0f));
 			}
 
@@ -2651,9 +2661,11 @@ void ofxColorManager::gui_Editor()
 
 			ImGui::Dummy(ImVec2(0.0f, 2.0f));
 			ofxSurfingHelpers::AddBigToggle(bSortPalette, _w100, _h / 2);
+			//if (ImGui::CollapsingHeader("ORDERING", ImGuiWindowFlags_None))
 			if (bSortPalette)
-				//if (ImGui::CollapsingHeader("ORDERING", ImGuiWindowFlags_None))
 			{
+				ImGui::Indent();
+
 				ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 				{
 					// sort shift
@@ -2686,6 +2698,8 @@ void ofxColorManager::gui_Editor()
 				if (ImGui::RadioButton("Swap", mode == Mode_Swap)) { mode = Mode_Swap; }
 
 				ImGui::Dummy(ImVec2(0.0f, 5.0f));
+
+				ImGui::Unindent();
 			}
 
 			//--
@@ -3708,7 +3722,7 @@ void ofxColorManager::gui_LinkExport()
 //--------------------------------------------------------------
 void ofxColorManager::gui_Picker()
 {
-	static bool auto_resize = false;
+	static bool auto_resize = true;
 	static bool default_wheel = false;//or squared picker
 	float ww, hh;
 	ww = PANEL_WIDGETS_WIDTH;
@@ -4152,7 +4166,7 @@ void ofxColorManager::gui_LayoutsPresets()
 
 		//--
 
-		const int NUM_WIDGETS = APP_MODE_SIZE + 4;
+		const int NUM_WIDGETS = APP_LAYOUTS_AMOUNT + 4;
 
 		float _spcx = ImGui::GetStyle().ItemSpacing.x;
 		float _spcy = ImGui::GetStyle().ItemSpacing.y;
@@ -5882,7 +5896,7 @@ void ofxColorManager::gui_Gradient()
 		}
 
 		//--
-		
+
 		ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
 		ImGuiWindowFlags _flagw;
@@ -5958,11 +5972,11 @@ void ofxColorManager::gui_Demo()
 		float _w25;
 		float _h;
 		float _h50;
-		ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
-		_h50 = _h / 2;;
-
 		float _pad = -80;
 		//float _pad = _w33;
+
+		ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+
 		//--
 
 		// DEMO 1
@@ -5971,34 +5985,40 @@ void ofxColorManager::gui_Demo()
 		ofxSurfingHelpers::AddBigToggle(DEMO1_Enable, _w100, _h);
 		if (DEMO1_Enable)
 			//if (ImGui::CollapsingHeader("DEMO 1", ImGuiWindowFlags_None))
+		{
+			if (DEMO1_Enable)
 			{
-				if (DEMO1_Enable)
-				{
-					ImGui::PushItemWidth(_pad);
-					ofxImGui::AddParameter(DEMO1_Alpha);
-					ofxImGui::AddParameter(DEMO1_Auto);
-					ofxImGui::AddParameter(DEMO1_Timer);
-					if (ofxImGui::AddParameter(DEMO1_Cam))
-					{
-						DEMO1_Bubbles.setEnableMouseCamera(DEMO1_Cam);
-					}
-					ImGui::PopItemWidth();
+				ImGui::Indent();
+				ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+				_h50 = _h / 2;;
 
-					if (ImGui::Button("Reset", ImVec2(_w100, _h50))) {
-						DEMO1_Bubbles.setEnableMouseCamera(DEMO1_Cam);
-						DEMO1_Bubbles.resetCamera();
-						DEMO1_Alpha = 0.7;
-						DEMO1_Timer = 0.2;
-					}
-					if (ImGui::Button("Load", ImVec2(_w50, _h50))) {
-						DEMO1_Bubbles.load();
-					}
-					ImGui::SameLine();
-					if (ImGui::Button("Save", ImVec2(_w50, _h50))) {
-						DEMO1_Bubbles.save();
-					}
+				ImGui::PushItemWidth(_pad);
+				ofxImGui::AddParameter(DEMO1_Alpha);
+				ofxImGui::AddParameter(DEMO1_Auto);
+				ofxImGui::AddParameter(DEMO1_Timer);
+				if (ofxImGui::AddParameter(DEMO1_Cam))
+				{
+					DEMO1_Bubbles.setEnableMouseCamera(DEMO1_Cam);
 				}
+				ImGui::PopItemWidth();
+
+				if (ImGui::Button("Reset", ImVec2(_w100, _h50))) {
+					DEMO1_Bubbles.setEnableMouseCamera(DEMO1_Cam);
+					DEMO1_Bubbles.resetCamera();
+					DEMO1_Alpha = 0.7;
+					DEMO1_Timer = 0.2;
+				}
+				if (ImGui::Button("Load", ImVec2(_w50, _h50))) {
+					DEMO1_Bubbles.load();
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("Save", ImVec2(_w50, _h50))) {
+					DEMO1_Bubbles.save();
+				}
+
+				ImGui::Unindent();
 			}
+		}
 		ImGui::Dummy(ImVec2(0, 5));
 
 		//-
@@ -6015,35 +6035,41 @@ void ofxColorManager::gui_Demo()
 		ofxSurfingHelpers::AddBigToggle(DEMO2_Enable, _w100, _h);
 		if (DEMO2_Enable)
 			//if (ImGui::CollapsingHeader("DEMO 2", ImGuiWindowFlags_None))
+		{
+			if (DEMO2_Enable)
 			{
-				if (DEMO2_Enable)
-				{
-					_pad = -100;
-					ImGui::PushItemWidth(_pad);
-					ofxImGui::AddParameter(DEMO2_Spheres.DEMO5_Alpha);
-					ofxImGui::AddParameter(DEMO2_Spheres.DEMO5_Zoom);
-					ofxImGui::AddParameter(DEMO2_Spheres.DEMO5_Speed);
-					if (ofxImGui::AddParameter(DEMO2_Spheres.DEMO5_Cam))
-					{
-						DEMO2_Spheres.setEnableMouseCamera(DEMO2_Spheres.DEMO5_Cam);
-					}
-					ImGui::PopItemWidth();
+				ImGui::Indent();
+				ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+				_h50 = _h / 2;;
 
-					if (ImGui::Button("Reset", ImVec2(_w100, _h50))) {
-						DEMO2_Spheres.resetCamera();
-						DEMO2_Spheres.DEMO5_Alpha = 0.8;
-						DEMO2_Spheres.DEMO5_Zoom = 0.5;
-						DEMO2_Spheres.DEMO5_Speed = 0.5;
-					}
-					if (ImGui::Button("Load", ImVec2(_w50, _h50))) {
-						DEMO2_Spheres.load();
-					}
-					ImGui::SameLine();
-					if (ImGui::Button("Save", ImVec2(_w50, _h50))) {
-						DEMO2_Spheres.save();
-					}
+				_pad = -100;
+				ImGui::PushItemWidth(_pad);
+				ofxImGui::AddParameter(DEMO2_Spheres.alpha_);
+				ofxImGui::AddParameter(DEMO2_Spheres.zoom);
+				ofxImGui::AddParameter(DEMO2_Spheres.speed);
+				if (ofxImGui::AddParameter(DEMO2_Spheres.mouseCam))
+				{
+					DEMO2_Spheres.setEnableMouseCamera(DEMO2_Spheres.mouseCam);
 				}
+				ImGui::PopItemWidth();
+
+				if (ImGui::Button("Reset", ImVec2(_w100, _h50))) {
+					DEMO2_Spheres.resetCamera();
+					DEMO2_Spheres.alpha_ = 0.8;
+					DEMO2_Spheres.zoom = 0.5;
+					DEMO2_Spheres.speed = 0.5;
+				}
+				if (ImGui::Button("Load", ImVec2(_w50, _h50))) {
+					DEMO2_Spheres.load();
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("Save", ImVec2(_w50, _h50))) {
+					DEMO2_Spheres.save();
+				}
+
+				ImGui::Unindent();
 			}
+		}
 		ImGui::Dummy(ImVec2(0, 5));
 
 		//-
@@ -6060,39 +6086,45 @@ void ofxColorManager::gui_Demo()
 		ofxSurfingHelpers::AddBigToggle(DEMO3_Svg.bEnable, _w99, _h);
 		if (DEMO3_Svg.bEnable)
 			//if (ImGui::CollapsingHeader("DEMO 3", ImGuiWindowFlags_None))
+		{
+			if (DEMO3_Svg.bEnable)
 			{
-				if (DEMO3_Svg.bEnable)
-				{
-					//ImGui::PushItemWidth(-80);
-					ImGui::PushItemWidth(_pad);
+				ImGui::Indent();
+				ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+				_h50 = _h / 2;;
 
-					ofxImGui::AddParameter(DEMO3_Svg.bEdit);
-					if (DEMO3_Svg.bEdit) ofxImGui::AddParameter(DEMO3_Svg.scaleSvg);
-					ofxImGui::AddParameter(DEMO3_Svg.alphaSvg);
-					ofxImGui::AddStepper(DEMO3_Svg.blendMode);
-					ofxImGui::AddParameter(DEMO3_Svg.blendModeName);
-					ofxImGui::AddStepper(DEMO3_Svg.fileIndex);
-					ofxImGui::AddParameter(DEMO3_Svg.fileIndexName);
+				//ImGui::PushItemWidth(-80);
+				ImGui::PushItemWidth(_pad);
+
+				ofxImGui::AddParameter(DEMO3_Svg.bEdit);
+				if (DEMO3_Svg.bEdit) ofxImGui::AddParameter(DEMO3_Svg.scaleSvg);
+				ofxImGui::AddParameter(DEMO3_Svg.alphaSvg);
+				ofxImGui::AddStepper(DEMO3_Svg.blendMode);
+				ofxImGui::AddParameter(DEMO3_Svg.blendModeName);
+				ofxImGui::AddStepper(DEMO3_Svg.fileIndex);
+				ofxImGui::AddParameter(DEMO3_Svg.fileIndexName);
 #ifdef USE_SVG_MASK
-					ofxImGui::AddParameter(DEMO3_Svg.enable_Mask);
-					ofxImGui::AddParameter(DEMO3_Svg.DEMO2_BgWhite);
+				ofxImGui::AddParameter(DEMO3_Svg.enable_Mask);
+				ofxImGui::AddParameter(DEMO3_Svg.DEMO2_BgWhite);
 #endif		
-					ofxImGui::AddParameter(DEMO3_Svg.bKeys);
+				ofxImGui::AddParameter(DEMO3_Svg.bKeys);
 
-					ImGui::PopItemWidth();
+				ImGui::PopItemWidth();
 
-					if (ImGui::Button("Reset", ImVec2(_w99, _h50))) {
-						DEMO3_Svg.reset();
-					}
-					if (ImGui::Button("Load", ImVec2(_w50, _h50))) {
-						DEMO3_Svg.load();
-					}
-					ImGui::SameLine();
-					if (ImGui::Button("Save", ImVec2(_w50, _h50))) {
-						DEMO3_Svg.save();
-					}
+				if (ImGui::Button("Reset", ImVec2(_w99, _h50))) {
+					DEMO3_Svg.reset();
 				}
+				if (ImGui::Button("Load", ImVec2(_w50, _h50))) {
+					DEMO3_Svg.load();
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("Save", ImVec2(_w50, _h50))) {
+					DEMO3_Svg.save();
+				}
+
+				ImGui::Unindent();
 			}
+		}
 		ImGui::Dummy(ImVec2(0, 5));
 	}
 	ofxImGui::EndWindow(mainSettings);
@@ -6343,7 +6375,7 @@ bool ofxColorManager::draw_Gui()
 		}
 
 		//--
-		
+
 #ifdef USE_VERSION_CHECKER
 		// app version checker
 		if (_isAnUpdateAvailable)
@@ -6449,9 +6481,9 @@ bool ofxColorManager::draw_Gui()
 	//return ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow);
 	//bool b = ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow) && bTextInputActive;
 
-	//bool b = 
-	//	ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow) && 
-	//	bTextInputActive && 
+	//bool b =
+	//	ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow) &&
+	//	bTextInputActive &&
 	//	bCheckMouseOverTextInputLovers;
 	*/
 
@@ -7284,7 +7316,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			//is not closing..
 			TCP_Sender.close();
 		}
-}
+	}
 #endif
 
 	//-
@@ -7324,24 +7356,36 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	{
 		appLayoutIndex = ofClamp(appLayoutIndex.get(), appLayoutIndex.getMin(), appLayoutIndex.getMax());
 
-		if (appLayoutIndex != appLayoutIndex_PRE && appLayoutIndex_PRE != -1) //changed
+		if (appLayoutIndex != appLayoutIndex_PRE /*&& appLayoutIndex_PRE != -1*/) //changed
 		{
+			// 1. autosave
+
 			if (bAutoSave_Layout)
 			{
+				// workaround:
+				// must save here bc usually we use the fallged on update save...
+				// only once per cycle allowed this way.
 				//force to ensure save bc update chain load and save below
-				saveAppLayout(AppLayouts(appLayoutIndex_PRE));
-				if (ini_to_save)
-				{
-					ImGui::SaveIniSettingsToDisk(ini_to_save);
-					ini_to_save = NULL;
-				}
+				//saveAppLayout(AppLayouts(appLayoutIndex_PRE));
+				std::string __ini_to_save_Str = getLayoutName(AppLayouts(appLayoutIndex_PRE));
+				const char* __ini_to_save = NULL;
+				__ini_to_save = __ini_to_save_Str.c_str();//flags to save on update
+				ImGui::SaveIniSettingsToDisk(__ini_to_save);
+				ofxSurfingHelpers::saveGroup(params_LayoutPanelsState, __ini_to_save_Str + ".json");
+				//if (ini_to_save)
+				//{
+				//	ImGui::SaveIniSettingsToDisk(ini_to_save);
+				//	ini_to_save = NULL;
+				//}
 			}
 
 			appLayoutIndex_PRE = appLayoutIndex;
 			//loadAppLayout(AppLayouts(appLayoutIndex.get()));
-		}
+		//}
 
-		loadAppLayout(AppLayouts(appLayoutIndex.get()));
+			// 2. load layout
+			loadAppLayout(AppLayouts(appLayoutIndex.get()));
+		}
 	}
 
 	//--
@@ -7512,7 +7556,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	else if (name == bModeBundlePreset.getName())
 	{
 		bModePalettePreset.setWithoutEventNotifications(!bModeBundlePreset);
-	}
+		}
 	else if (name == bModePalettePreset.getName())
 	{
 		bModeBundlePreset = !bModePalettePreset;
@@ -7922,10 +7966,10 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 		////if (SHOW_Demos) DEMO3_Svg.DEMO2_Edit = true;
 
 		//// spheres
-		//DEMO2_Spheres.DEMO5_Cam = DEMO2_Enable;
-		////DEMO2_Spheres.DEMO5_Cam = false;
-		////if (SHOW_Demos) DEMO2_Spheres.DEMO5_Cam = true;
-		//DEMO2_Spheres.setEnableMouseCamera(DEMO2_Spheres.DEMO5_Cam);
+		//DEMO2_Spheres.mouseCam = DEMO2_Enable;
+		////DEMO2_Spheres.mouseCam = false;
+		////if (SHOW_Demos) DEMO2_Spheres.mouseCam = true;
+		//DEMO2_Spheres.setEnableMouseCamera(DEMO2_Spheres.mouseCam);
 	}
 
 	//---
@@ -8941,7 +8985,7 @@ void ofxColorManager::mousePressed(ofMouseEventArgs &eventArgs)
 	//mouseLockedByGui_PRE not working..
 
 	if (!mouseLockedByGui)
-	//if (/*SHOW_About &&*/ !mouseLockedByGui_PRE)
+		//if (/*SHOW_About &&*/ !mouseLockedByGui_PRE)
 	{
 		if (DEMO1_Enable)
 		{
@@ -9918,11 +9962,11 @@ void ofxColorManager::exportPalette()
 			TCP_Sender.clearBuffer();
 			TCP_Sender.putString(ss.str());
 			TCP_Sender.send();
-	}
+		}
 #endif
 
 		storeText.push_back(ss.str() + "\n");
-}
+	}
 
 	//--
 }
@@ -10623,29 +10667,20 @@ void ofxColorManager::gui_About(bool* p_open)
 //--------------------------------------------------------------
 void ofxColorManager::saveAppLayout(AppLayouts mode)
 {
-	//switch (appLayoutIndex)
-	switch (mode)
-	{
-	case APP_DEFAULT: ini_to_save_Str = path_ImGui + "imgui_DEFAULT.ini"; break;
-	case APP_PRESETS: ini_to_save_Str = path_ImGui + "imgui_PRESETS.ini"; break;
-	case APP_ENGINES: ini_to_save_Str = path_ImGui + "imgui_ENGINES.ini"; break;
-	case APP_MINIMAL: ini_to_save_Str = path_ImGui + "imgui_MINIMAL.ini"; break;
-	case APP_USER: ini_to_save_Str = path_ImGui + "imgui_USER.ini"; break;
-	default:break;
-	}
+	ini_to_save_Str = getLayoutName(mode);
 
-	//TODO:
-	//workaround
-	//avoid empty name
-	//force save
-	if (ini_to_save_Str == "")
-	{
-		appLayoutIndex_PRE = -1;
-		appLayoutIndex = 0;
-		ini_to_save_Str = path_ImGui + "imgui_DEFAULT.ini";
-		ini_to_save = ini_to_save_Str.c_str();
-		ImGui::SaveIniSettingsToDisk(ini_to_save);
-	}
+	////TODO:
+	////workaround
+	////avoid empty name
+	////force save
+	//if (ini_to_save_Str == "")//when unknown name
+	//{
+	//	appLayoutIndex_PRE = -1;
+	//	appLayoutIndex = 0;
+	//	ini_to_save_Str = path_ImGui + "imgui_DEFAULT.ini";
+	//	ini_to_save = ini_to_save_Str.c_str();
+	//	ImGui::SaveIniSettingsToDisk(ini_to_save);
+	//}
 
 	ini_to_save = ini_to_save_Str.c_str();//flags to save on update
 

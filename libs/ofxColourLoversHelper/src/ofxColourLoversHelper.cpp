@@ -91,8 +91,8 @@ void ofxColourLoversHelper::gui_Search()
 {
 	if (MODE_Search)
 	{
-		float ww= PANEL_WIDGETS_WIDTH;
-		float hh = PANEL_WIDGETS_WIDTH/3;
+		float ww = PANEL_WIDGETS_WIDTH;
+		float hh = PANEL_WIDGETS_WIDTH / 3;
 
 		ImGuiWindowFlags flags = auto_resize1 ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
 		if (!auto_resize1) ImGui::SetWindowSize(ImVec2(ww, hh));
@@ -272,7 +272,7 @@ void ofxColourLoversHelper::gui_Main()
 	//--
 
 	//crash?
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(ww, hh/2));
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(ww, hh / 2));
 
 	//----
 
@@ -507,6 +507,48 @@ void ofxColourLoversHelper::gui_Main()
 				}
 			}
 
+			//-
+
+			// palette colors
+
+			ImGuiColorEditFlags colorEdiFlags =
+				ImGuiColorEditFlags_NoAlpha |
+				ImGuiColorEditFlags_NoPicker |
+				ImGuiColorEditFlags_NoTooltip;
+
+			if (palettes.size() > 0)
+			{
+				vector<ofColor> p = palettes[currPalette].colours;
+				//const auto p = palettes[currPalette].colours;
+				//auto p = palettes[currPalette].colours;
+
+				//myPalette_BACK
+
+				if (p.size() > 0)
+				{
+					// fit width
+					float wb = (_w100 / (int)p.size());// -_spc;
+					float hb = BUTTON_BIG_HEIGHT;
+
+					for (int n = 0; n < p.size(); n++)
+					{
+						ImGui::PushID(n);
+
+						// fit width
+						if (n != 0) ImGui::SameLine(0, 0);
+
+						// box colors
+						if (ImGui::ColorButton("##paletteLover", p[n], colorEdiFlags, ImVec2(wb, hb))) {}
+
+						ImGui::PopID();
+					}
+				}
+				else
+				{
+					ofLogWarning(__FUNCTION__) << "empty palette!";
+				}
+			}
+
 			//----
 
 			// scrollable list
@@ -596,6 +638,8 @@ void ofxColourLoversHelper::gui_Main()
 			s = ofToString("-1/0");
 		}
 		ImGui::Text(s.c_str());
+		
+		ImGui::Dummy(ImVec2(0, 2));
 
 		//-
 
@@ -627,50 +671,7 @@ void ofxColourLoversHelper::gui_Main()
 
 		//-
 
-		// palette colors
-
-		ImGuiColorEditFlags colorEdiFlags =
-			ImGuiColorEditFlags_NoAlpha |
-			ImGuiColorEditFlags_NoPicker |
-			ImGuiColorEditFlags_NoTooltip;
-
-		// macOS
-		if (palettes.size() > 0) 
-		{
-			vector<ofColor> p = palettes[currPalette].colours;
-			//const auto p = palettes[currPalette].colours;
-			//auto p = palettes[currPalette].colours;
-
-			//myPalette_BACK
-
-			if (p.size() > 0)
-			{
-				// fit width
-				float wb = (_w100 / (int)p.size());// -_spc;
-				float hb = BUTTON_BIG_HEIGHT;
-
-				for (int n = 0; n < p.size(); n++)
-				{
-					ImGui::PushID(n);
-
-					// fit width
-					if (n != 0) ImGui::SameLine(0, 0);
-
-					// box colors
-					if (ImGui::ColorButton("##paletteLover", p[n], colorEdiFlags, ImVec2(wb, hb))) {}
-
-					ImGui::PopID();
-				}
-			}
-			else
-			{
-				ofLogWarning(__FUNCTION__) << "empty palette!";
-			}
-		}
-
-		//-
-
-		if (ImGui::Button("Randomize", ImVec2(_w100, 2 * _hb)))
+		if (ImGui::Button("RANDOM", ImVec2(_w100, 2 * _hb)))
 		{
 			randomPalette();
 
@@ -681,11 +682,11 @@ void ofxColourLoversHelper::gui_Main()
 		}
 
 		//-
-		
+
 		// I prefer to control this toggle on a main app
 		// but we can include it on standalone mode
 #ifndef USE_OFX_IM_GUI_EXTERNAL
-		ofxSurfingHelpers::AddBigToggle(SHOW_AdvancedLayout, _w100, _h/2); 
+		ofxSurfingHelpers::AddBigToggle(SHOW_AdvancedLayout, _w100, _h / 2);
 #endif
 		if (SHOW_AdvancedLayout)
 		{
@@ -713,7 +714,8 @@ void ofxColourLoversHelper::gui_Main()
 						}
 					}
 					if (ofxImGui::AddParameter(MODE_Slim))
-					{}
+					{
+					}
 
 					// layout
 					ImGui::Checkbox("Focus", &bfocus);
@@ -740,7 +742,7 @@ void ofxColourLoversHelper::gui_Kit()
 
 		mainSettings = ofxImGui::Settings();
 
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, PANEL_WIDGETS_HEIGHT/2));
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, PANEL_WIDGETS_HEIGHT / 2));
 
 		if (ofxImGui::BeginWindow("LOVER PALETTES", mainSettings, flags))
 		{
@@ -887,11 +889,11 @@ void ofxColourLoversHelper::gui_Kit()
 
 					if (p == indexExt_PRE)
 					{
-						if (btween) 
+						if (btween)
 						{
 							if (bfocus) _scale = ofMap(alpha, 1, 0, 1.75f, 1.0f, true);
 						}
-						else 
+						else
 						{
 							if (bfocus) _scale = 1.0f;
 						}
@@ -1705,7 +1707,7 @@ void ofxColourLoversHelper::refreshPalette()
 			//(*myPalette_Name_BACK) = p.title;
 
 			// set BACK palette colors
-			if (myPalette_BACK != nullptr) 
+			if (myPalette_BACK != nullptr)
 			{
 				myPalette_BACK->clear();
 				myPalette_BACK->resize(_sz);
