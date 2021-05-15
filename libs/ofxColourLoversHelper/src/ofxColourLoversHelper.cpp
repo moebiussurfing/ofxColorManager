@@ -498,8 +498,6 @@ void ofxColourLoversHelper::gui_Main()
 
 				ImGui::Dummy(ImVec2(0, 5));
 
-				ofxSurfingHelpers::AddBigToggle(SHOW_BrowserPalettes, _w100, _hb);
-
 				if (SHOW_AdvancedLayout)
 				{
 					ImGui::SameLine();
@@ -690,7 +688,7 @@ void ofxColourLoversHelper::gui_Main()
 #endif
 		if (SHOW_AdvancedLayout)
 		{
-			if (ImGui::CollapsingHeader("Advanced"))
+			if (ImGui::CollapsingHeader("ADVANCED"))
 			{
 				_w100 = ImGui::GetContentRegionAvail().x;
 				_w99 = _w100 - _spc;
@@ -702,7 +700,7 @@ void ofxColourLoversHelper::gui_Main()
 				ofxImGui::AddParameter(MODE_PickColor_BACK);
 				ofxImGui::AddParameter(ENABLER_Keys);
 
-				if (ImGui::CollapsingHeader("Layout"))
+				if (ImGui::CollapsingHeader("LAYOUT"))
 				{
 					//if (ImGui::Checkbox("Fixed Width", &MODE_FixedSize))
 					bool bPre = MODE_FixedSize;
@@ -726,6 +724,15 @@ void ofxColourLoversHelper::gui_Main()
 		}
 
 		//if (SHOW_BrowserPalettes) ofxImGui::AddParameter(AutoScroll);
+
+		//--
+
+		ImGui::Dummy(ImVec2(0.0f, 5.0f));
+		ImGui::Separator();
+		ImGui::Dummy(ImVec2(0.0f, 5.0f));
+
+		ofxSurfingHelpers::AddBigToggle(SHOW_BrowserPalettes, _w100, _hb);
+
 	}
 	ofxImGui::EndWindow(mainSettings);
 

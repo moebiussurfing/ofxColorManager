@@ -120,8 +120,8 @@ private:
 	bool auto_resize1 = true;
 	bool auto_resize2 = false;
 	//bool auto_resize = true;
-	bool bfocus = false;
-	//bool bfocus = true;
+	//bool bfocus = false;
+	bool bfocus = true;
 
 public:
 	ofParameter<bool> SHOW_AdvancedLayout{ "Show Advanced", false };
@@ -200,7 +200,7 @@ private:
 
 private:
 	ofParameter<bool> MODE_FixedSize{ "Fixed Width", false };
-	ofParameter<bool> MODE_Slim{ "Slim", false };
+	ofParameter<bool> MODE_Slim{ "Slim", true };
 
 	ofColor lastColor_clicked;
 

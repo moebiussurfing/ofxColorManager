@@ -2683,12 +2683,12 @@ void ofxColorManager::gui_Editor()
 
 					// sort flip
 
-					if (ofxSurfingHelpers::AddSmallButton(bFlipUserPalette, _w100, _h / 2)) {}
-					//ImGui::SameLine();
+					if (ofxSurfingHelpers::AddSmallButton(bFlipUserPalette, _w50, _h / 2)) {}
+					ImGui::SameLine();
 
 					// sort random
 
-					if (ImGui::Button("SORT RANDOM", ImVec2(_w100, _h / 2)))
+					if (ImGui::Button("SORT RANDOM", ImVec2(_w50, _h / 2)))
 					{
 						build_Palette_SortRandom();
 					}
