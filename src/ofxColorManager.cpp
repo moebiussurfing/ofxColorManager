@@ -1002,9 +1002,10 @@ void ofxColorManager::setup()
 	//params_LayoutPanelsState.add(gradientEngine.SHOW_CurveEditor);
 	params_LayoutPanelsState.add(SHOW_Gradient);
 
-	//exclude. shared by all the layout presets
+	//workflow
+	////exclude. shared by all the layout presets
 	params_LayoutPanelsState.add(SHOW_Panels);
-	//params_LayoutPanelsState.add(Lock_DockingLayout);
+	params_LayoutPanelsState.add(Lock_DockingLayout);
 
 
 	//------------------------------------------------
@@ -5639,6 +5640,7 @@ void ofxColorManager::gui_Presets()
 
 		if (ImGui::CollapsingHeader("EXTRA"))
 		{
+			/*
 			if (ImGui::Button("UPDATE", ImVec2(_w50, _h / 2)))
 			{
 				//TODO:
@@ -5657,11 +5659,12 @@ void ofxColorManager::gui_Presets()
 				preset_RefreshFiles(false);
 			}
 
+			//ImGui::SameLine();
+			*/
+
 			//----
 
-			ImGui::SameLine();
-
-			if (ImGui::Button("RELOAD", ImVec2(_w50, _h / 2)))//not required..
+			if (ImGui::Button("RELOAD", ImVec2(_w100, _h / 2)))//not required..
 			{
 				ofLogNotice(__FUNCTION__) << "RELOAD : " << PRESET_Name;
 
@@ -5776,7 +5779,7 @@ void ofxColorManager::gui_Presets()
 
 			ImGui::SameLine();
 
-			if (ImGui::Button("REFRESH", ImVec2(_w50, _h / 2)))
+			if (ImGui::Button("REFRESH KIT", ImVec2(_w50, _h / 2)))
 			{
 				ofLogNotice(__FUNCTION__) << "REFRESH KIT";
 
@@ -5808,6 +5811,7 @@ void ofxColorManager::gui_Presets()
 		ImGui::Separator();
 		ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
+		ofxSurfingHelpers::AddBigToggle(SHOW_Editor, _w100, _h / 2);
 		ofxSurfingHelpers::AddBigToggle(SHOW_Kit, _w100, _h / 2);
 
 		//ImGui::Dummy(ImVec2(0.0f, 2.0f));
@@ -7380,6 +7384,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			}
 
 			appLayoutIndex_PRE = appLayoutIndex;
+
 			//loadAppLayout(AppLayouts(appLayoutIndex.get()));
 		//}
 
@@ -7556,7 +7561,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	else if (name == bModeBundlePreset.getName())
 	{
 		bModePalettePreset.setWithoutEventNotifications(!bModeBundlePreset);
-		}
+	}
 	else if (name == bModePalettePreset.getName())
 	{
 		bModeBundlePreset = !bModePalettePreset;
@@ -7983,7 +7988,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	//{
 	//	if (bLock_palette) bAuto_Build_Palette = false;
 	//}
-	}
+		}
 
 //--------------------------------------------------------------
 void ofxColorManager::Changed_Range(ofAbstractParameter &e)
