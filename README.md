@@ -107,9 +107,20 @@ Ready to use pre-compiled versions for fast testing, or to have executable apps 
 
 Platform                     | CI Status
 -----------------------------|:---------
-Windows Visual Studio 64bits | [![Build status](https://appveyor-matrix-badges.herokuapp.com/repos/roymacdonald/ofxlineadetiempo/branch/master/3)](https://ci.appveyor.com/project/roymacdonald/ofxlineadetiempo/branch/master)
-Windows MSYS2 32bits         | [![Build status](https://appveyor-matrix-badges.herokuapp.com/repos/roymacdonald/ofxlineadetiempo/branch/master/1)](https://ci.appveyor.com/project/roymacdonald/ofxlineadetiempo/branch/master)
-Windows Visual Studio 64bits | [![Build status](https://appveyor-matrix-badges.herokuapp.com/repos/roymacdonald/ofxlineadetiempo/branch/master/3)](https://ci.appveyor.com/project/roymacdonald/ofxlineadetiempo/branch/master)
+1. **PALETTO v1.0**
+**MASTER APP**  
+Works Standalone or Linked to a **CLIENT APP**  
+( _1-example_Basic_ from **ofxColorManager** )  
+<br/>
+**Download**:  
+<a href="https://moebiussurfing.itch.io/paletto"><img src="/docs/itch.io/Paletto.ico" align="left" height="96" width="96" ></a>  
+| 2. **Scene_COLORiZED v1.0**
+**CLIENT APP**  
+Works Standalone or Linked to a **MASTER APP**  
+( _3-example_Scenes_ from **ofxColorClient** )  
+<br/>
+**Download**:  
+<a href="https://moebiussurfing.itch.io/paletto"><img src="/docs/itch.io/Scene_COLORiZED.ico" align="left" height="96" width="96" ></a>  
 
 
 ## 1. **PALETTO v1.0**
