@@ -107,8 +107,8 @@ Ready to use pre-compiled versions for fast testing, or to have executable apps 
 
 Platform                     | CI Status
 -----------------------------|:---------
-**PALETTO v1.0**
-**MASTER APP**  
+**PALETTO v1.0**|
+**MASTER APP**  |
 Works Standalone or Linked to a **CLIENT APP**  
 ( _1-example_Basic_ from **ofxColorManager** )  
 **Download**:  
