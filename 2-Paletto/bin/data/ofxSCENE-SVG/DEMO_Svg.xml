@@ -4,12 +4,12 @@
         "Blend_Type": "4",
         "Box": {
             "Rectangle": {
-                "Height": "358",
-                "Position_x": "711",
-                "Position_y": "460",
-                "Width": "551"
+                "Height": "426",
+                "Position_x": "552",
+                "Position_y": "491",
+                "Width": "656"
             },
-            "Scale": "0.538086"
+            "Scale": "0.640625"
         },
         "DEMO3_Enable_Svg": "0",
         "Enable_Keys": "0",

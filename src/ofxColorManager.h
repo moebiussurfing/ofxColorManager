@@ -904,7 +904,7 @@ private:
 
 	// mouse or key locker
 	bool mouseLockedByGui;
-	bool mouseLockedByGui_PRE;
+	//bool mouseLockedByGui_PRE;
 	bool bCheckMouseOverTextInput = false;//flag to return mouse over any gui panel or over text input only!
 	bool bCheckMouseOverTextInputLovers = false;//flag to return mouse over any gui panel or over text input only!
 	bool bLockAllKeysByGui;

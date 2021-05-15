@@ -460,7 +460,9 @@ void ofxColorsBrowser::load_Pantone_JSON()
 		ofLogNotice(__FUNCTION__) << js;
 		ofLogNotice(__FUNCTION__) << endl;
 
-		int i = 0;
+		int i;
+
+		i = 0;
 		for (auto &jsName : js["names"])
 		{
 			//ofLogNotice(__FUNCTION__) << "NAMES  ["<<i<<"] "<<jsName<<endl;
@@ -487,8 +489,18 @@ void ofxColorsBrowser::load_Pantone_JSON()
 	{
 		ofLogNotice(__FUNCTION__) << "FILE '" << path_File << "' NOT FOUND!";
 	}
-}
 
+	//reverse sorting 
+	bool bReverseOrder = true;
+	if (bReverseOrder) {
+		std::vector<std::string> tempNames(colors_PantoneNames.rbegin(), colors_PantoneNames.rend());
+		std::vector<ofColor> tempValues(colors_Pantone.rbegin(), colors_Pantone.rend());
+
+		colors_PantoneNames = tempNames;
+		colors_Pantone = tempValues;
+	}
+
+}
 
 //--------------------------------------------------------------
 void ofxColorsBrowser::setup()
@@ -819,8 +831,8 @@ void ofxColorsBrowser::draw()
 					ofSetLineWidth(2.0);
 					ofDrawLine(px, py, px + lineSize, py);
 				}
-			}
-		}
+	}
+}
 #endif
 
 		//--

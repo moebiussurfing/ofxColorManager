@@ -1518,8 +1518,10 @@ void ofxColorManager::draw(ofEventArgs & args)
 	{
 		if (guiVisible)
 		{
-			mouseLockedByGui = draw_Gui();
+			draw_Gui();
 
+			/*
+			//mouseLockedByGui = draw_Gui();
 			//TODO:
 			//BUG:
 			//bBlockedKeys = false;
@@ -1553,6 +1555,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 			//	}
 			//	colourLoversHelper.setEnableKeys(b);
 			//}
+			*/
 		}
 	}
 
@@ -4073,7 +4076,7 @@ void ofxColorManager::gui_Advanced()
 			{
 				ImGui::Checkbox("Blocked Keys", &bBlockedKeys);
 				ImGui::Checkbox("Locked All", &bLockAllKeysByGui);
-				ImGui::Checkbox("Locked Mouse", &mouseLockedByGui);
+				ImGui::Checkbox("Mouse Over Gui", &mouseLockedByGui);
 				ImGui::Checkbox("Text Input Lovers", &bCheckMouseOverTextInputLovers);
 				ImGui::Checkbox("Text Input", &bTextInputActive);
 				//ImGui::Checkbox("Locked Mouse2", &bLockMouseByImGui);
@@ -5954,7 +5957,9 @@ void ofxColorManager::gui_Demo()
 		float _w33;
 		float _w25;
 		float _h;
+		float _h50;
 		ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+		_h50 = _h / 2;;
 
 		float _pad = -80;
 		//float _pad = _w33;
@@ -5965,7 +5970,7 @@ void ofxColorManager::gui_Demo()
 		//demo bubbles
 		ofxSurfingHelpers::AddBigToggle(DEMO1_Enable, _w100, _h);
 		if (DEMO1_Enable)
-			if (ImGui::CollapsingHeader("DEMO 1", ImGuiWindowFlags_None))
+			//if (ImGui::CollapsingHeader("DEMO 1", ImGuiWindowFlags_None))
 			{
 				if (DEMO1_Enable)
 				{
@@ -5979,21 +5984,22 @@ void ofxColorManager::gui_Demo()
 					}
 					ImGui::PopItemWidth();
 
-					if (ImGui::Button("Reset", ImVec2(_w100, _h))) {
+					if (ImGui::Button("Reset", ImVec2(_w100, _h50))) {
 						DEMO1_Bubbles.setEnableMouseCamera(DEMO1_Cam);
 						DEMO1_Bubbles.resetCamera();
 						DEMO1_Alpha = 0.7;
 						DEMO1_Timer = 0.2;
 					}
-					if (ImGui::Button("Load", ImVec2(_w50, _h))) {
+					if (ImGui::Button("Load", ImVec2(_w50, _h50))) {
 						DEMO1_Bubbles.load();
 					}
 					ImGui::SameLine();
-					if (ImGui::Button("Save", ImVec2(_w50, _h))) {
+					if (ImGui::Button("Save", ImVec2(_w50, _h50))) {
 						DEMO1_Bubbles.save();
 					}
 				}
 			}
+		ImGui::Dummy(ImVec2(0, 5));
 
 		//-
 
@@ -6008,7 +6014,7 @@ void ofxColorManager::gui_Demo()
 		// demo spheres
 		ofxSurfingHelpers::AddBigToggle(DEMO2_Enable, _w100, _h);
 		if (DEMO2_Enable)
-			if (ImGui::CollapsingHeader("DEMO 2", ImGuiWindowFlags_None))
+			//if (ImGui::CollapsingHeader("DEMO 2", ImGuiWindowFlags_None))
 			{
 				if (DEMO2_Enable)
 				{
@@ -6023,21 +6029,22 @@ void ofxColorManager::gui_Demo()
 					}
 					ImGui::PopItemWidth();
 
-					if (ImGui::Button("Reset", ImVec2(_w100, _h))) {
+					if (ImGui::Button("Reset", ImVec2(_w100, _h50))) {
 						DEMO2_Spheres.resetCamera();
 						DEMO2_Spheres.DEMO5_Alpha = 0.8;
 						DEMO2_Spheres.DEMO5_Zoom = 0.5;
 						DEMO2_Spheres.DEMO5_Speed = 0.5;
 					}
-					if (ImGui::Button("Load", ImVec2(_w50, _h))) {
+					if (ImGui::Button("Load", ImVec2(_w50, _h50))) {
 						DEMO2_Spheres.load();
 					}
 					ImGui::SameLine();
-					if (ImGui::Button("Save", ImVec2(_w50, _h))) {
+					if (ImGui::Button("Save", ImVec2(_w50, _h50))) {
 						DEMO2_Spheres.save();
 					}
 				}
 			}
+		ImGui::Dummy(ImVec2(0, 5));
 
 		//-
 
@@ -6052,7 +6059,7 @@ void ofxColorManager::gui_Demo()
 		// svg demo
 		ofxSurfingHelpers::AddBigToggle(DEMO3_Svg.bEnable, _w99, _h);
 		if (DEMO3_Svg.bEnable)
-			if (ImGui::CollapsingHeader("DEMO 3", ImGuiWindowFlags_None))
+			//if (ImGui::CollapsingHeader("DEMO 3", ImGuiWindowFlags_None))
 			{
 				if (DEMO3_Svg.bEnable)
 				{
@@ -6074,18 +6081,19 @@ void ofxColorManager::gui_Demo()
 
 					ImGui::PopItemWidth();
 
-					if (ImGui::Button("Reset", ImVec2(_w99, _h))) {
+					if (ImGui::Button("Reset", ImVec2(_w99, _h50))) {
 						DEMO3_Svg.reset();
 					}
-					if (ImGui::Button("Load", ImVec2(_w50, _h))) {
+					if (ImGui::Button("Load", ImVec2(_w50, _h50))) {
 						DEMO3_Svg.load();
 					}
 					ImGui::SameLine();
-					if (ImGui::Button("Save", ImVec2(_w50, _h))) {
+					if (ImGui::Button("Save", ImVec2(_w50, _h50))) {
 						DEMO3_Svg.save();
 					}
 				}
 			}
+		ImGui::Dummy(ImVec2(0, 5));
 	}
 	ofxImGui::EndWindow(mainSettings);
 
@@ -6427,6 +6435,9 @@ bool ofxColorManager::draw_Gui()
 	}
 	gui.end();
 
+	mouseLockedByGui = ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow);
+
+	/*
 	//// two different modes:
 
 	//a.
@@ -6442,6 +6453,7 @@ bool ofxColorManager::draw_Gui()
 	//	ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow) && 
 	//	bTextInputActive && 
 	//	bCheckMouseOverTextInputLovers;
+	*/
 
 	//-
 
@@ -8928,13 +8940,14 @@ void ofxColorManager::mousePressed(ofMouseEventArgs &eventArgs)
 	//TODO:
 	//mouseLockedByGui_PRE not working..
 
-	if (/*SHOW_About &&*/ !mouseLockedByGui_PRE)
+	if (!mouseLockedByGui)
+	//if (/*SHOW_About &&*/ !mouseLockedByGui_PRE)
 	{
 		if (DEMO1_Enable)
 		{
-			//wf
+			// workflow
 			//disable mouse on auto mode
-			if (!DEMO1_Auto)
+			//if (!DEMO1_Auto)
 			{
 				//second mouse button cleans DEMO
 				if (button == 2) DEMO1_Bubbles.clear();
@@ -9742,7 +9755,7 @@ void ofxColorManager::setImage()
 
 		ofLogNotice(__FUNCTION__) << "Image file to extract: " << path;
 
-		//wf
+		// workflow
 		SHOW_Quantizer = true;
 	}
 	else
