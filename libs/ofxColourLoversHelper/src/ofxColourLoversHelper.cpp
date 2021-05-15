@@ -419,7 +419,7 @@ void ofxColourLoversHelper::gui_Main()
 				_w50 = _w99 / 2;
 
 				{
-					if (ImGui::Button("ADD FAVORITE", ImVec2(_w100, _hb)))
+					if (ImGui::Button("ADD FAVORITE", ImVec2(_w100, _h)))
 					{
 						ofxSurfingHelpers::CheckFolder(path_Global + "favorites/");
 

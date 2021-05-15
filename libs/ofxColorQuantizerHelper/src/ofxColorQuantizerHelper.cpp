@@ -253,8 +253,9 @@ void ofxColorQuantizerHelper::draw_Gui()
 		ImGui::Dummy(ImVec2(0, 5));
 		//ImGui::Text(currentImage_name.get().c_str());
 
-		ofxSurfingHelpers::AddBigButton(bReBuild, _w100, _h/2);
-		if (ImGui::Button("REFRESH FILES", ImVec2(_w100, _h / 2)))
+		ofxSurfingHelpers::AddBigButton(bReBuild, _w50, _h/2);
+		ImGui::SameLine();
+		if (ImGui::Button("REFRESH FILES", ImVec2(_w50, _h / 2)))
 		{
 			// workflow
 			//to allow add more files on runtime
