@@ -3876,7 +3876,7 @@ void ofxColorManager::gui_Picker()
 		{
 			//TODO:
 			//flickering bug..
-			//ImGui::PushID(1);
+			ImGui::PushID("##BUGFLICK");
 			ImGui::PushItemWidth(-35);
 			{
 				//TODO:
@@ -3900,16 +3900,24 @@ void ofxColorManager::gui_Picker()
 
 				//invert
 				ImGui::PushID(i++);
-				if (ImGui::Button("INVERT", ImVec2(_w100, _h / 2)))
+				if (ImGui::Button("INVERT", ImVec2(_w50, _h / 2)))
 				{
 					ofColor c = color_Picked.get();
 					invert(c);
 					color_Picked.set(c);
 				}
 				ImGui::PopID();
+				ImGui::SameLine();
+				ImGui::PushID(i++);
+				if (ImGui::Button("COMPLEMENT", ImVec2(_w50, _h / 2)))
+				{
+					ofColor c = color_Picked.get();
+					color_Picked.set(getComplement(c));
+				}
+				ImGui::PopID();
 			}
 			ImGui::PopItemWidth();
-			//ImGui::PopID();
+			ImGui::PopID();
 		}
 
 		//--

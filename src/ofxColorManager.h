@@ -1385,9 +1385,10 @@ private:
 
 #endif
 
+	//----
 
 	//TODO:
-	//extra helpers
+	//extra THEORY COLOR helpers
 	//https://github.com/borg/ofxColourTheory/blob/master/src/ofxColourTheory.h
 	static void invert(ofColor &col) {
 		col.set(255 - col.r, 255 - col.g, 255 - col.b);
@@ -1397,13 +1398,98 @@ private:
 		return (col.r * 0.299f + col.g * 0.587f + col.b * 0.114f) / tot;
 	}
 	/**
-		 * Inverts all colors in the list.
-		 *
-		 * @return itself
-		 */
+	* Inverts all colors in the list.
+	*
+	* @return itself
+	*/
 	static void invert(vector<ofColor> &colors) {
 		for (int i = 0; i < colors.size(); i++) {
 			invert(colors[i]);
 		}
 	}
+	static  vector<ofVec2f> getRYB_WHEEL() {
+		vector<ofVec2f> RYB_WHEEL;
+		RYB_WHEEL.push_back(ofVec2f(0, 0));
+		RYB_WHEEL.push_back(ofVec2f(15, 8));
+		RYB_WHEEL.push_back(ofVec2f(30, 17));
+		RYB_WHEEL.push_back(ofVec2f(45, 26));
+		RYB_WHEEL.push_back(ofVec2f(60, 34));
+		RYB_WHEEL.push_back(ofVec2f(75, 41));
+		RYB_WHEEL.push_back(ofVec2f(90, 48));
+		RYB_WHEEL.push_back(ofVec2f(105, 54));
+		RYB_WHEEL.push_back(ofVec2f(120, 60));
+		RYB_WHEEL.push_back(ofVec2f(135, 81));
+		RYB_WHEEL.push_back(ofVec2f(150, 103));
+		RYB_WHEEL.push_back(ofVec2f(165, 123));
+		RYB_WHEEL.push_back(ofVec2f(180, 138));
+		RYB_WHEEL.push_back(ofVec2f(195, 155));
+		RYB_WHEEL.push_back(ofVec2f(210, 171));
+		RYB_WHEEL.push_back(ofVec2f(225, 187));
+		RYB_WHEEL.push_back(ofVec2f(240, 204));
+		RYB_WHEEL.push_back(ofVec2f(255, 219));
+		RYB_WHEEL.push_back(ofVec2f(270, 234));
+		RYB_WHEEL.push_back(ofVec2f(285, 251));
+		RYB_WHEEL.push_back(ofVec2f(300, 267));
+		RYB_WHEEL.push_back(ofVec2f(315, 282));
+		RYB_WHEEL.push_back(ofVec2f(330, 298));
+		RYB_WHEEL.push_back(ofVec2f(345, 329));
+		RYB_WHEEL.push_back(ofVec2f(360, 0));
+
+		return RYB_WHEEL;
+	}
+	static ofColor rotateRYB(ofColor col, int theta) {
+
+		float h = (float)col.getHue() / 255.0 * 360;
+		vector<float> hsb;
+		hsb.push_back((float)col.getHue() / 255.0);
+		hsb.push_back((float)col.getSaturation() / 255.0);
+		hsb.push_back((float)col.getBrightness() / 255.0);
+		theta %= 360;
+
+		float resultHue = 0;
+
+		vector<ofVec2f> RYB_WHEEL = getRYB_WHEEL();
+
+		for (int i = 0; i < RYB_WHEEL.size() - 1; i++) {
+			ofVec2f p = RYB_WHEEL[i];
+			ofVec2f q = RYB_WHEEL[i + 1];
+			if (q.y < p.y) {
+				q.y += 360;
+			}
+			if (p.y <= h && h <= q.y) {
+				resultHue = p.x + (q.x - p.x) * (h - p.y) / (q.y - p.y);
+				break;
+			}
+		}
+
+		//fmod = %, ie remainder
+
+		// And the user-given angle (e.g. complement).
+		resultHue = fmod((resultHue + theta), 360);
+
+		// For the given angle, find out what hue is
+		// located there on the artistic color wheel.
+		for (int i = 0; i < RYB_WHEEL.size() - 1; i++) {
+			ofVec2f p = RYB_WHEEL[i];
+			ofVec2f q = RYB_WHEEL[i + 1];
+			if (q.y < p.y) {
+				q.y += 360;
+			}
+			if (p.x <= resultHue && resultHue <= q.x) {
+				h = p.y + (q.y - p.y) * (resultHue - p.x) / (q.x - p.x);
+				break;
+			}
+		}
+
+		// col.setHsb(<#float hue#>, <#float saturation#>, <#float brightness#>)
+		hsb[0] = fmod(h, 360) / 360.0f;
+
+		ofColor newCol;
+		newCol.setHsb(hsb[0] * 255, hsb[1] * 255, hsb[2] * 255);
+		return newCol;
+	}
+	static ofColor getComplement(ofColor col) {
+		return rotateRYB(col, 180);
+	}
+
 };
