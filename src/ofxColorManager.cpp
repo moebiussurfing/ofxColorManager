@@ -344,8 +344,8 @@ void ofxColorManager::setup()
 	ofSetLoggerChannel(ofxSuperLog::getLogger(logToConsole, logToScreen, "logs"));
 #endif
 
-	ENABLE_HelpInfo.set("Help Info", false);
-	ENABLE_HelpInfo.setSerializable(false);
+	SHOW_HelpInfo.set("Help Info", false);
+	SHOW_HelpInfo.setSerializable(false);
 
 	//-
 
@@ -1564,7 +1564,7 @@ void ofxColorManager::draw(ofEventArgs & args)
 
 	// help info
 
-	if (ENABLE_HelpInfo)
+	if (SHOW_HelpInfo)
 	{
 		ofPushMatrix();
 		int w = ofxSurfingHelpers::getWidthBBtextBoxed(font, helpInfo);
@@ -8310,7 +8310,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 		// help
 		else if ((key == 'h' || key == 'H') && !mod_CONTROL)
 		{
-			ENABLE_HelpInfo = !ENABLE_HelpInfo;
+			SHOW_HelpInfo = !SHOW_HelpInfo;
 		}
 
 		// about
@@ -8325,7 +8325,7 @@ void ofxColorManager::keyPressed(ofKeyEventArgs &eventArgs)
 			setToggleVisible();
 
 			// workflow
-			if (!SHOW_ALL_GUI) ENABLE_HelpInfo = false;
+			if (!SHOW_ALL_GUI) SHOW_HelpInfo = false;
 		}
 
 		// advanced Ctrl+Alt+a
@@ -10599,10 +10599,10 @@ void ofxColorManager::gui_MenuBar()
 
 		if (ImGui::BeginMenu("Help"))
 		{
-			static bool pref = ENABLE_HelpInfo.get();
+			static bool pref = SHOW_HelpInfo.get();
 			if (ImGui::MenuItem("Key Commands", NULL, &pref))
 			{
-				ENABLE_HelpInfo = pref;
+				SHOW_HelpInfo = pref;
 			}
 			if (ImGui::MenuItem("GitHub", NULL)) {
 				std::string url = "https://github.com/moebiussurfing/ofxColorManager";

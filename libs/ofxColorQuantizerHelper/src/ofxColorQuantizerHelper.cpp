@@ -72,7 +72,7 @@ void ofxColorQuantizerHelper::draw_Gui()
 			numColors = ofClamp(numColors, numColors.getMin(), numColors.getMax());
 		}
 		ImGui::PopItemWidth();
-		
+
 		ImGui::Dummy(ImVec2(0, 5));
 
 		//--
@@ -253,7 +253,7 @@ void ofxColorQuantizerHelper::draw_Gui()
 		ImGui::Dummy(ImVec2(0, 5));
 		//ImGui::Text(currentImage_name.get().c_str());
 
-		ofxSurfingHelpers::AddBigButton(bReBuild, _w50, _h/2);
+		ofxSurfingHelpers::AddBigButton(bReBuild, _w50, _h / 2);
 		ImGui::SameLine();
 		if (ImGui::Button("REFRESH FILES", ImVec2(_w50, _h / 2)))
 		{
@@ -264,26 +264,29 @@ void ofxColorQuantizerHelper::draw_Gui()
 			currentImage = currentImage_PRE;
 			build();
 		}
-		
+
 		//-
 
 		if (ImGui::Button("OPEN IMAGE", ImVec2(_w100, _h / 2)))
 		{
 			setImage();
 		}
+		ofxSurfingHelpers::AddBigToggle(SHOW_ImageInfo, _w100, _h);
 
 		//--
 
 #ifdef USE_IM_GUI__QUANTIZER_INTERNAL
-		ImGui::Dummy(ImVec2(0, 5));
+		ImGui::Dummy(ImVec2(0.0f, 5.0f));
+		ImGui::Separator();
+		ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
-		if (ImGui::CollapsingHeader("LIBRARY", ImGuiTreeNodeFlags_None))
-		{
-			ofxSurfingHelpers::AddBigToggle(SHOW_Library, _w100, _h);
-			ofxSurfingHelpers::AddBigToggle(bResponsive, _w100, _h/2);
+		//if (ImGui::CollapsingHeader("LIBRARY", ImGuiTreeNodeFlags_None))
+		ofxSurfingHelpers::AddBigToggle(SHOW_Library, _w100, _h);
+		if (SHOW_Library) {
+			ofxSurfingHelpers::AddBigToggle(bResponsive, _w100, _h / 2);
 			//ofxImGui::AddParameter(SHOW_Library);
 
-			if (SHOW_Library)
+			//if (SHOW_Library)
 			{
 				if (!bResponsive) {
 					ImGui::PushItemWidth(__pad);
@@ -312,7 +315,7 @@ void ofxColorQuantizerHelper::draw_Gui()
 
 				ImGui::Checkbox("Auto-Resize", &auto_resize);
 				ofxImGui::AddParameter(ENABLE_Keys);
-				ofxImGui::AddParameter(ENABLE_HelpInfo);
+				ofxImGui::AddParameter(SHOW_HelpInfo);
 			}
 		}
 
@@ -360,7 +363,7 @@ void ofxColorQuantizerHelper::draw_Gui()
 			}
 			//if (bResponsive) _ww = __widthPicts;
 			//else _ww = (float)sizeThumb.get();
-			
+
 			_ww = (float)sizeThumb.get();
 
 			//-
@@ -654,13 +657,14 @@ void ofxColorQuantizerHelper::setup()
 	//parameters.add(labelUrlStr.set("type url", labelUrlStr));
 
 #ifdef USE_IM_GUI__QUANTIZER_INTERNAL
-	parameters.add(SHOW_Library.set("THUMBS", true));
+	parameters.add(SHOW_Library.set("LIBRARY", true));
 	parameters.add(bResponsive.set("Responsive", true));
 	parameters.add(sizeThumb);
 #endif
 
 	parameters_Advanced.setName("ADVANCED");
-	parameters_Advanced.add(ENABLE_HelpInfo.set("Help Info", false));
+	parameters_Advanced.add(SHOW_HelpInfo.set("Help Info", false));
+	parameters_Advanced.add(SHOW_ImageInfo.set("Image Info", false));
 	parameters_Advanced.add(ENABLE_Keys.set("Enable Keys", true));
 #ifdef USE_OFX_GUI__QUANTIZER
 	parameters_Advanced.add(bGuiVisible.set("GUI", false));
@@ -702,8 +706,9 @@ void ofxColorQuantizerHelper::setup()
 	XML_params.add(numColors);
 	XML_params.add(currentImage);
 	XML_params.add(sortedType);
-	XML_params.add(ENABLE_HelpInfo);
-	XML_params.add(ENABLE_Keys); 
+	//XML_params.add(SHOW_HelpInfo);
+	XML_params.add(SHOW_ImageInfo);
+	XML_params.add(ENABLE_Keys);
 #ifdef USE_IM_GUI__QUANTIZER_INTERNAL
 	XML_params.add(sizeThumb);
 	XML_params.add(SHOW_Library);
@@ -734,12 +739,12 @@ void ofxColorQuantizerHelper::draw()
 	bool bCenter = true;
 
 	//if (isLoadedImage && bGuiVisible && bInfo)
-	if (ENABLE_HelpInfo)
+	if (SHOW_ImageInfo)
 	{
 		ofPushStyle();
 
 		// 1. debug big window
-		//if (!ENABLE_HelpInfo)
+		//if (!SHOW_HelpInfo)
 		{
 			ofPushMatrix();
 			{
@@ -755,7 +760,8 @@ void ofxColorQuantizerHelper::draw()
 
 				// 1. image
 
-				int imgW = 200;
+				int imgW = 200;//set all sizes relatives to this
+
 				// draw original image but resized to imgW pixels width, same aspect ratio
 				float imgRatio = image.getHeight() / image.getWidth();
 				int imgH = imgRatio * imgW;
@@ -763,6 +769,9 @@ void ofxColorQuantizerHelper::draw()
 				//-
 
 				// 2. resize box sizes
+				
+				size = glm::vec2(500, 400);
+				//size = glm::vec2(1440, 900);
 
 				wPal = size.x - (margin + imgW + margin);
 				boxW = wPal / colorQuantizer.getNumColors();
@@ -850,137 +859,141 @@ void ofxColorQuantizerHelper::draw()
 			}
 			ofPopMatrix();
 
-			//----
-
-			// 1. help info
-
-			std::string str = infoHelp;
-			ofPushMatrix();
-			{
-				//center box
-				int w = ofxSurfingHelpers::getWidthBBtextBoxed(font, str);
-				int h = ofxSurfingHelpers::getHeightBBtextBoxed(font, str);
-				ofTranslate(ofGetWidth() * 0.5 - w * 0.5, ofGetHeight() * 0.5 - h * 0.5);
-				ofSetColor(255, 255);
-				ofxSurfingHelpers::drawTextBoxed(font, str);
-			}
-			ofPopMatrix();
-
-			//-
-
-			ofPopStyle();
 		}
 
-		/*
-		//// 2. MINI MODE user window
-		//else
-		//{
-		//	if (bottomMode)//put preview in the bottom window
-		//	{
-		//		//ignore y position and put at the window bottom
-		//		int x = position.x;//x pad for left/right window
-		//		//int y = position.y;
-		//		int pad = 0;
-		//		boxPad = 0;//pad between boxes
+		//-
 
-		//		ofPushMatrix();
-		//		ofPushStyle();
-
-		//		ofTranslate(x, 0);
-		//		ofSetColor(255);
-
-		//		// 1. draw original image but resized to imgW pixels width, same aspect ratio
-		//		float imgRatio = image.getHeight() / image.getWidth();
-
-		//		//// 1. fixed width
-		//		//int imgW = 200;
-		//		//int imgH = imgRatio * imgW;
-
-		//		// 2. fixed height
-		//		int imgH = 125;
-		//		int imgW = imgH / imgRatio;
-
-		//		image.draw(0, ofGetHeight() - (imgH + pad), imgW, imgH);
-
-		//		// 2. image border
-		//		if (bUseBorder)
-		//		{
-		//			ofRectangle r;
-		//			r = ofRectangle(0, ofGetHeight() - (imgH + pad), imgW, imgH);
-		//			ofNoFill();
-		//			ofSetColor(ofColor(ofColor::white, 64));
-		//			ofDrawRectangle(r);
-		//		}
-
-		//		// 3. palette position
-		//		ofTranslate(imgW + pad, 0);
-
-		//		//// resize box sizes
-		//		//wPal = size.x - (pad + imgW + pad);
-		//		//boxW = wPal / colorQuantizer.getNumColors();
-		//		//boxBgSize = boxW - boxPad;
-		//		//boxSize_h = imgH;
-
-		//		// resize box sizes
-		//		// panel size is ignored
-		//		//wPal = size.x - (pad + imgW + pad);
-		//		wPal = ofGetWidth() - imgW;
-		//		boxW = (float)wPal / colorQuantizer.getNumColors();
-		//		boxBgSize = boxW - boxPad;
-		//		boxSize_h = imgH;
-
-		//		// palette preview
-		//		ofTranslate(0, ofGetHeight() - (boxSize_h + pad));
-		//		draw_Palette_Preview();
-
-		//		ofPopStyle();
-		//		ofPopMatrix();
-		//	}
-		//	else
-		//	{
-		//		int x = position.x;//x pad for left/right window
-		//		int y = position.y;
-		//		int pad = 0;
-		//		boxPad = 0;//pad between boxes
-
-		//		ofPushMatrix();
-		//		ofPushStyle();
-
-		//		ofTranslate(x, y);
-		//		ofSetColor(255);
-
-		//		// draw original image but resized to imgW pixels width, same aspect ratio
-		//		float imgRatio = image.getHeight() / image.getWidth();
-		//		int imgW = 200;
-		//		int imgH = imgRatio * imgW;
-		//		image.draw(0, 0, imgW, imgH);
-
-		//		// palette position
-
-		//		//// 1. down
-		//		//ofTranslate(0, imgH);
-		//		//// resize box sizes
-		//		//wPal = ofGetWidth() - (x + imgW + x);
-		//		//boxW = wPal / colorQuantizer.getNumColors();
-		//		//boxBgSize = boxW - boxPad;
-
-		//		// 2. right
-		//		ofTranslate(imgW + pad, 0);
-		//		// resize box sizes
-		//		wPal = size.x - (pad + imgW + pad);
-		//		boxW = wPal / colorQuantizer.getNumColors();
-		//		boxBgSize = boxW - boxPad;
-		//		boxSize_h = imgH;
-
-		//		// palette preview
-		//		draw_Palette_Preview();
-
-		//		ofPopStyle();
-		//		ofPopMatrix();
-		//	}
-		//}
-		*/
+		ofPopStyle();
 	}
+	//----
+
+	// 1. help info
+	if (SHOW_HelpInfo)
+	{
+		ofPushStyle();
+		std::string str = infoHelp;
+		ofPushMatrix();
+		{
+			//center box
+			int w = ofxSurfingHelpers::getWidthBBtextBoxed(font, str);
+			int h = ofxSurfingHelpers::getHeightBBtextBoxed(font, str);
+			ofTranslate(ofGetWidth() * 0.5 - w * 0.5, ofGetHeight() * 0.5 - h * 0.5);
+			ofSetColor(255, 255);
+			ofxSurfingHelpers::drawTextBoxed(font, str);
+		}
+		ofPopMatrix();
+		ofPopStyle();
+	}
+
+	/*
+	//// 2. MINI MODE user window
+	//else
+	//{
+	//	if (bottomMode)//put preview in the bottom window
+	//	{
+	//		//ignore y position and put at the window bottom
+	//		int x = position.x;//x pad for left/right window
+	//		//int y = position.y;
+	//		int pad = 0;
+	//		boxPad = 0;//pad between boxes
+
+	//		ofPushMatrix();
+	//		ofPushStyle();
+
+	//		ofTranslate(x, 0);
+	//		ofSetColor(255);
+
+	//		// 1. draw original image but resized to imgW pixels width, same aspect ratio
+	//		float imgRatio = image.getHeight() / image.getWidth();
+
+	//		//// 1. fixed width
+	//		//int imgW = 200;
+	//		//int imgH = imgRatio * imgW;
+
+	//		// 2. fixed height
+	//		int imgH = 125;
+	//		int imgW = imgH / imgRatio;
+
+	//		image.draw(0, ofGetHeight() - (imgH + pad), imgW, imgH);
+
+	//		// 2. image border
+	//		if (bUseBorder)
+	//		{
+	//			ofRectangle r;
+	//			r = ofRectangle(0, ofGetHeight() - (imgH + pad), imgW, imgH);
+	//			ofNoFill();
+	//			ofSetColor(ofColor(ofColor::white, 64));
+	//			ofDrawRectangle(r);
+	//		}
+
+	//		// 3. palette position
+	//		ofTranslate(imgW + pad, 0);
+
+	//		//// resize box sizes
+	//		//wPal = size.x - (pad + imgW + pad);
+	//		//boxW = wPal / colorQuantizer.getNumColors();
+	//		//boxBgSize = boxW - boxPad;
+	//		//boxSize_h = imgH;
+
+	//		// resize box sizes
+	//		// panel size is ignored
+	//		//wPal = size.x - (pad + imgW + pad);
+	//		wPal = ofGetWidth() - imgW;
+	//		boxW = (float)wPal / colorQuantizer.getNumColors();
+	//		boxBgSize = boxW - boxPad;
+	//		boxSize_h = imgH;
+
+	//		// palette preview
+	//		ofTranslate(0, ofGetHeight() - (boxSize_h + pad));
+	//		draw_Palette_Preview();
+
+	//		ofPopStyle();
+	//		ofPopMatrix();
+	//	}
+	//	else
+	//	{
+	//		int x = position.x;//x pad for left/right window
+	//		int y = position.y;
+	//		int pad = 0;
+	//		boxPad = 0;//pad between boxes
+
+	//		ofPushMatrix();
+	//		ofPushStyle();
+
+	//		ofTranslate(x, y);
+	//		ofSetColor(255);
+
+	//		// draw original image but resized to imgW pixels width, same aspect ratio
+	//		float imgRatio = image.getHeight() / image.getWidth();
+	//		int imgW = 200;
+	//		int imgH = imgRatio * imgW;
+	//		image.draw(0, 0, imgW, imgH);
+
+	//		// palette position
+
+	//		//// 1. down
+	//		//ofTranslate(0, imgH);
+	//		//// resize box sizes
+	//		//wPal = ofGetWidth() - (x + imgW + x);
+	//		//boxW = wPal / colorQuantizer.getNumColors();
+	//		//boxBgSize = boxW - boxPad;
+
+	//		// 2. right
+	//		ofTranslate(imgW + pad, 0);
+	//		// resize box sizes
+	//		wPal = size.x - (pad + imgW + pad);
+	//		boxW = wPal / colorQuantizer.getNumColors();
+	//		boxBgSize = boxW - boxPad;
+	//		boxSize_h = imgH;
+
+	//		// palette preview
+	//		draw_Palette_Preview();
+
+	//		ofPopStyle();
+	//		ofPopMatrix();
+	//	}
+	//}
+	*/
 
 	//-
 
@@ -1401,7 +1414,7 @@ void ofxColorQuantizerHelper::keyPressed(ofKeyEventArgs &eventArgs)
 		// minimal mode
 		if (key == 'H')
 		{
-			ENABLE_HelpInfo = !ENABLE_HelpInfo;
+			SHOW_HelpInfo = !SHOW_HelpInfo;
 		}
 
 		//-

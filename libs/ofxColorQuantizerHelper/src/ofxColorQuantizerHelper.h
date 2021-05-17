@@ -201,7 +201,8 @@ public:
 
 	void setEnableVisibleHelpInfo(bool b)
 	{
-		ENABLE_HelpInfo = b;
+		SHOW_HelpInfo = b;
+		SHOW_ImageInfo = b;
 	}
 
 	glm::vec2 getPosition()
@@ -370,7 +371,8 @@ private:
 	ofDirectory dir;
 
 public:
-	ofParameter<bool> ENABLE_HelpInfo;// { "HELP INFO", false };
+	ofParameter<bool> SHOW_HelpInfo;// { "HELP INFO", false };
+	ofParameter<bool> SHOW_ImageInfo;
 
 public:
 	void dragEvent(ofDragInfo &eventArgs);

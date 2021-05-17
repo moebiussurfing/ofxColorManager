@@ -385,7 +385,7 @@ private:
 	ofParameter<bool> SHOW_ImGui{ "ImGui", true };
 
 private:
-	ofParameter<bool> ENABLE_HelpInfo;
+	ofParameter<bool> SHOW_HelpInfo;
 	std::string helpInfo;//key commands
 
 private:

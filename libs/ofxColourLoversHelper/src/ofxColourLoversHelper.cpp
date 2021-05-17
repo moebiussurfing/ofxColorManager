@@ -927,6 +927,7 @@ void ofxColourLoversHelper::gui_Kit()
 						}
 						else
 						{
+							//if (bfocus) _scale = 1.0f;
 							if (bfocus) _scale = 1.75f;
 						}
 
