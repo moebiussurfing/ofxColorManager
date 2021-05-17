@@ -2150,6 +2150,7 @@ void ofxColorManager::gui_Editor()
 		ImGuiColorEditFlags _flags = ImGuiColorEditFlags_None;
 
 		//--
+
 		{
 			// responsive
 			ImVec2 button_sz((float)sizePaletteBox.get(), (float)sizePaletteBox.get());
@@ -2647,6 +2648,11 @@ void ofxColorManager::gui_Editor()
 							palette_AUX[i].setBrightness(_brgTweak);
 						}
 					};
+
+					if (ImGui::Button("INVERT", ImVec2(_w100, _h / 2)))
+					{
+						invert(palette_AUX);
+					}
 
 					ImGui::PopItemWidth();
 				}
@@ -3891,6 +3897,16 @@ void ofxColorManager::gui_Picker()
 				ImGui::PushID(i++);
 				if (ofxImGui::AddParameter(color_BRG)) {}
 				ImGui::PopID();// ?? only once ?
+
+				//invert
+				ImGui::PushID(i++);
+				if (ImGui::Button("INVERT", ImVec2(_w100, _h / 2)))
+				{
+					ofColor c = color_Picked.get();
+					invert(c);
+					color_Picked.set(c);
+				}
+				ImGui::PopID();
 			}
 			ImGui::PopItemWidth();
 			//ImGui::PopID();
@@ -5604,7 +5620,7 @@ void ofxColorManager::gui_Presets()
 				else ofLogError(__FUNCTION__) << "Empty name on textInput !";
 			}
 			ImGui::PopStyleColor();
-		}
+	}
 		else
 		{
 			if (MODE_ReadyToUpdate)
@@ -5817,7 +5833,7 @@ void ofxColorManager::gui_Presets()
 		//ImGui::Dummy(ImVec2(0.0f, 2.0f));
 		//if (SHOW_Kit) ofxImGui::AddParameter(AutoScroll);
 		//ImGui::Checkbox("Auto-Resize", &auto_resize);
-	}
+}
 
 	ofxImGui::EndWindow(mainSettings);
 
@@ -6421,7 +6437,7 @@ bool ofxColorManager::draw_Gui()
 				}
 				ImGui::End();
 			}
-		}
+	}
 #endif
 
 		//--
@@ -6468,7 +6484,7 @@ bool ofxColorManager::draw_Gui()
 		//bLockMouseByImGui = bLockMouseByImGui | ImGui::IsWindowHovered(ImGuiHoveredFlags_AllowWhenBlockedByActiveItem);
 
 		//--
-	}
+}
 	gui.end();
 
 	mouseLockedByGui = ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow);
@@ -7320,7 +7336,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 			//is not closing..
 			TCP_Sender.close();
 		}
-	}
+}
 #endif
 
 	//-
@@ -8982,7 +8998,7 @@ void ofxColorManager::mousePressed(ofMouseEventArgs &eventArgs)
 	const int &y = eventArgs.y;
 	const int &button = eventArgs.button;
 
-	//-
+	//--
 
 	// DEMO
 
@@ -8990,8 +9006,8 @@ void ofxColorManager::mousePressed(ofMouseEventArgs &eventArgs)
 	//mouseLockedByGui_PRE not working..
 
 	if (!mouseLockedByGui)
-		//if (/*SHOW_About &&*/ !mouseLockedByGui_PRE)
 	{
+		//if (/*SHOW_About &&*/ !mouseLockedByGui_PRE)
 		if (DEMO1_Enable)
 		{
 			// workflow
@@ -9003,9 +9019,9 @@ void ofxColorManager::mousePressed(ofMouseEventArgs &eventArgs)
 				else DEMO1_Bubbles.start();//trig DEMO start
 			}
 		}
-	}
 
-	if (DEMO2_Enable || SHOW_About) DEMO2_Spheres.start();
+		if (DEMO2_Enable || SHOW_About) DEMO2_Spheres.start();
+	}
 }
 
 //--------------------------------------------------------------
@@ -9967,11 +9983,11 @@ void ofxColorManager::exportPalette()
 			TCP_Sender.clearBuffer();
 			TCP_Sender.putString(ss.str());
 			TCP_Sender.send();
-		}
+	}
 #endif
 
 		storeText.push_back(ss.str() + "\n");
-	}
+}
 
 	//--
 }

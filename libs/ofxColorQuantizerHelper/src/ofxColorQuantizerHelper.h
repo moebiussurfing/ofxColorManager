@@ -400,7 +400,8 @@ private:
 	void XML_save_AppSettings(ofParameterGroup &g, std::string path);
 	void XML_load_AppSettings(ofParameterGroup &g, std::string path);
 	ofParameterGroup XML_params;
-	std::string XML_path = "ofxColorQuantizerHelper/ofxColorQuantizerHelper_Settings.xml";
+	std::string XML_path_Folder = "ofxColorQuantizerHelper/";
+	std::string XML_path = "ofxColorQuantizerHelper_Settings.xml";
 
 	void setImage();
 };

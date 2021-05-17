@@ -1384,4 +1384,26 @@ private:
 }
 
 #endif
+
+
+	//TODO:
+	//extra helpers
+	//https://github.com/borg/ofxColourTheory/blob/master/src/ofxColourTheory.h
+	static void invert(ofColor &col) {
+		col.set(255 - col.r, 255 - col.g, 255 - col.b);
+	}
+	static float luminance(ofColor col) {
+		float tot = 255 * 0.299f + 255 * 0.587f + 255 * 0.114f;
+		return (col.r * 0.299f + col.g * 0.587f + col.b * 0.114f) / tot;
+	}
+	/**
+		 * Inverts all colors in the list.
+		 *
+		 * @return itself
+		 */
+	static void invert(vector<ofColor> &colors) {
+		for (int i = 0; i < colors.size(); i++) {
+			invert(colors[i]);
+		}
+	}
 };

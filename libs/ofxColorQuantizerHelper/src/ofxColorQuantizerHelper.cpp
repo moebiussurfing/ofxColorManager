@@ -271,7 +271,7 @@ void ofxColorQuantizerHelper::draw_Gui()
 		{
 			setImage();
 		}
-		ofxSurfingHelpers::AddBigToggle(SHOW_ImageInfo, _w100, _h);
+		ofxSurfingHelpers::AddBigToggle(SHOW_ImageInfo, _w100, _h / 2);
 
 		//--
 
@@ -690,7 +690,8 @@ void ofxColorQuantizerHelper::setup()
 
 	//-
 
-	font.load("assets/fonts/telegrama_render.otf", 11, true, true);
+	font.load("assets/fonts/telegrama_render.otf", 6, true, true);
+	//font.load("assets/fonts/telegrama_render.otf", 11, true, true);
 	//font.load("assets/fonts/LCD_Solid.ttf", 11, true, true);
 	//font.load("assets/fonts/overpass-mono-bold.otf", 9, true, true);
 
@@ -715,7 +716,7 @@ void ofxColorQuantizerHelper::setup()
 	XML_params.add(bResponsive);
 #endif
 
-	XML_load_AppSettings(XML_params, XML_path);
+	XML_load_AppSettings(XML_params, XML_path_Folder + XML_path);
 
 	//-
 
@@ -754,7 +755,7 @@ void ofxColorQuantizerHelper::draw()
 				boxPad = 0;
 				//boxPad = 2;
 				int margin = 5;
-				int space = 40;
+				//int space = 40;
 
 				//----
 
@@ -769,7 +770,7 @@ void ofxColorQuantizerHelper::draw()
 				//-
 
 				// 2. resize box sizes
-				
+
 				size = glm::vec2(500, 400);
 				//size = glm::vec2(1440, 900);
 
@@ -777,6 +778,8 @@ void ofxColorQuantizerHelper::draw()
 				boxW = wPal / colorQuantizer.getNumColors();
 				boxBgSize = boxW - boxPad;
 				boxSize_h = 50;
+
+				setPosition(glm::vec2(370, ofGetHeight() - imgH - 50));
 
 				//-
 
@@ -823,8 +826,8 @@ void ofxColorQuantizerHelper::draw()
 				//-
 
 				// 4. all colors % bars
-
-				ofTranslate(imgW + 20, 0);
+				int _space = 10;
+				ofTranslate(imgW + _space, 0);
 
 				//bg box
 				ofSetColor(0, 128);
@@ -847,7 +850,8 @@ void ofxColorQuantizerHelper::draw()
 
 					//label
 					ofSetColor(255, 255);
-					ofDrawBitmapString(ofToString(int(sortedColors[i].weight * 100)) + "%", i * _wb, 15);
+					//ofDrawBitmapString(ofToString(int(sortedColors[i].weight * 100)) + "%", i * _wb, 15);
+					font.drawString(ofToString(int(sortedColors[i].weight * 100)) + "%", i * _wb + 8, 15);
 				}
 
 				//// palette preview
@@ -1559,7 +1563,8 @@ void ofxColorQuantizerHelper::removeMouseListeners()
 //--------------------------------------------------------------
 void ofxColorQuantizerHelper::exit()
 {
-	XML_save_AppSettings(XML_params, XML_path);
+	ofxSurfingHelpers::CheckFolder(XML_path_Folder);
+	XML_save_AppSettings(XML_params, XML_path_Folder + XML_path);
 }
 
 //--------------------------------------------------------------
