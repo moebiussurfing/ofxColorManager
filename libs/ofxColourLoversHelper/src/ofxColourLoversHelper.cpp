@@ -290,7 +290,7 @@ void ofxColourLoversHelper::gui_Main()
 
 		//-
 
-		ofxSurfingHelpers::AddBigToggle(MODE_Search, _w100, _h);
+		ofxImGuiSurfing::AddBigToggle(MODE_Search, _w100, _h);
 
 		// spinner
 		if (bSearching) ImGui::Text("Searching  %c", "|/-\\"[(int)(ImGui::GetTime() / 0.07f) & 3]);
@@ -400,15 +400,15 @@ void ofxColourLoversHelper::gui_Main()
 
 			// mode selectors
 
-			ofxSurfingHelpers::AddBigToggle(bFavorites, _w50, _hb * 2);
+			ofxImGuiSurfing::AddBigToggle(bFavorites, _w50, _hb * 2);
 			ImGui::SameLine();
-			ofxSurfingHelpers::AddBigToggle(bHistory, _w50, _hb * 2);
+			ofxImGuiSurfing::AddBigToggle(bHistory, _w50, _hb * 2);
 
-			//ofxSurfingHelpers::AddBigToggle(bFavorites, _w33, _hb * 2);
+			//ofxImGuiSurfing::AddBigToggle(bFavorites, _w33, _hb * 2);
 			//ImGui::SameLine();
-			//ofxSurfingHelpers::AddBigToggle(bHistory, _w33, _hb * 2);
+			//ofxImGuiSurfing::AddBigToggle(bHistory, _w33, _hb * 2);
 			//ImGui::SameLine();
-			//ofxSurfingHelpers::AddBigToggle(bSearch, _w33, _hb * 2);
+			//ofxImGuiSurfing::AddBigToggle(bSearch, _w33, _hb * 2);
 
 			//--
 
@@ -684,7 +684,7 @@ void ofxColourLoversHelper::gui_Main()
 		// I prefer to control this toggle on a main app
 		// but we can include it on standalone mode
 #ifndef USE_OFX_IM_GUI_EXTERNAL
-		ofxSurfingHelpers::AddBigToggle(SHOW_AdvancedLayout, _w100, _h / 2);
+		ofxImGuiSurfing::AddBigToggle(SHOW_AdvancedLayout, _w100, _h / 2);
 #endif
 		if (SHOW_AdvancedLayout)
 		{
@@ -731,7 +731,7 @@ void ofxColourLoversHelper::gui_Main()
 		ImGui::Separator();
 		ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
-		ofxSurfingHelpers::AddBigToggle(SHOW_BrowserPalettes, _w100, _hb);
+		ofxImGuiSurfing::AddBigToggle(SHOW_BrowserPalettes, _w100, _hb);
 
 	}
 	ofxImGui::EndWindow(mainSettings);

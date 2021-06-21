@@ -274,6 +274,7 @@ ofxColorManager::ofxColorManager()
 
 	// file paths
 
+	path_Kit = "USER KIT"; // default kit
 	path_Global = "ofxColorManager/";
 	ofxSurfingHelpers::CheckFolder(path_Global);
 	path_AppState = path_Global + "ofxColorManager_Settings.xml";
@@ -781,7 +782,10 @@ void ofxColorManager::setup()
 	params_AppState.setName("ofxColorManager");
 
 	params_engines.setName("Engines");
+
+	params_engines.add(last_Index_Kit);
 	params_engines.add(last_Index_Preset);
+
 	params_engines.add(AppEnginesMode);
 	params_engines.add(SHOW_Scene);
 	params_engines.add(last_Index_Theory);
@@ -976,6 +980,7 @@ void ofxColorManager::setup()
 	params_control.add(SHOW_Layouts);
 	params_control.add(SHOW_LayoutsAdvanced);
 	params_control.add(bExportByTCP);
+	params_control.add(last_Index_Kit);
 
 	ofAddListener(params_control.parameterChangedE(), this, &ofxColorManager::Changed_Controls);
 
@@ -1063,8 +1068,16 @@ void ofxColorManager::startup()
 
 	//--
 
-	// preset manager
+	// files paths
 
+	refresh_Paths();
+
+	//-
+
+	// kits
+	refresh_Kits();
+
+	// preset manager
 	preset_RefreshFiles();
 
 	//--
@@ -1072,6 +1085,7 @@ void ofxColorManager::startup()
 	// load all app states
 
 	ofxSurfingHelpers::loadGroup(params_AppState, path_AppState);
+
 
 	//--
 
@@ -1321,6 +1335,29 @@ void ofxColorManager::update(ofEventArgs & args)
 
 		color_Picked.set(color_BACK);
 	}
+}
+
+//--------------------------------------------------------------
+void ofxColorManager::refresh_Kits()
+{
+	string _path_KitsPresets = path_Global + path_Kits;
+
+	files_KitNames.clear();
+
+	ofDirectory dir(_path_KitsPresets);
+
+	//dir.allowExt("png");
+	dir.listDir();
+
+	for (int i = 0; i < dir.size(); i++)
+	{
+		ofLogNotice(dir.getPath(i));
+		files_KitNames.push_back(dir.getName(i));
+	}
+	last_Index_Kit.setMin(0);
+	last_Index_Kit.setMax(files_KitNames.size() - 1);
+
+	//std::vector<ofFile> _files;
 }
 
 //--------------------------------------------------------------
@@ -1701,7 +1738,7 @@ void ofxColorManager::gui_Theory()
 
 		// amount colors
 		ImGui::PushItemWidth(110);
-		if (ofxSurfingHelpers::AddIntStepped(numColors_Engines)) {}
+		if (ofxImGuiSurfing::AddIntStepped(numColors_Engines)) {}
 		ImGui::PopItemWidth();
 
 		ImGui::Dummy(ImVec2(0.0f, 2.0f));
@@ -1716,7 +1753,7 @@ void ofxColorManager::gui_Theory()
 		float _w33;
 		float _w25;
 		float _h;
-		ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+		ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 
 		float _w49 = _w50 - 2;
 		//float _h100;
@@ -1865,7 +1902,7 @@ void ofxColorManager::gui_Theory()
 			//align
 			//ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(labelPadding, 0.5f));
 			//std::string _label = ColorWheelSchemes::colorSchemeNames[i];
-			if (ofxSurfingHelpers::AddSmallButton(theory_Types_G1[i], butlabelw, _hSz2))
+			if (ofxImGuiSurfing::AddSmallButton(theory_Types_G1[i], butlabelw, _hSz2))
 			{
 				last_Index_Theory_PickPalette = i;
 
@@ -1985,7 +2022,7 @@ void ofxColorManager::gui_Theory()
 
 			//align
 			//ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(labelPadding, 0.5f));
-			if (ofxSurfingHelpers::AddSmallButton(types_Theory_G2[i], butlabelw, _hSz2))
+			if (ofxImGuiSurfing::AddSmallButton(types_Theory_G2[i], butlabelw, _hSz2))
 			{
 				last_Index_Theory_PickPalette = NUM_COLOR_THEORY_TYPES_G1 + i;
 
@@ -2145,7 +2182,7 @@ void ofxColorManager::gui_Editor()
 		float _w33;
 		float _w25;
 		float _h;
-		ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+		ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 
 		ImGuiColorEditFlags _flags = ImGuiColorEditFlags_None;
 
@@ -2315,7 +2352,7 @@ void ofxColorManager::gui_Editor()
 			{
 				float _hh = _h / 2;//smaller
 
-				if (ofxSurfingHelpers::AddBigToggle(MODE_NewPreset, _w100, _h))
+				if (ofxImGuiSurfing::AddBigToggle(MODE_NewPreset, _w100, _h))
 				{
 					if (name_TARGET != nullptr) textInput_New = name_TARGET[0];
 					if (textInput_New == "") textInput_New = "type name";
@@ -2451,7 +2488,7 @@ void ofxColorManager::gui_Editor()
 			//	//ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.5f, 0.0f, 0.5f, a));
 			//}
 
-			ofxSurfingHelpers::AddBigToggle(bEditPalette, _w100, _h / 2);
+			ofxImGuiSurfing::AddBigToggle(bEditPalette, _w100, _h / 2);
 
 			//if (bEditPalette.get())
 			//{
@@ -2468,7 +2505,7 @@ void ofxColorManager::gui_Editor()
 			if (bEditPalette)
 			{
 				ImGui::Indent();
-				ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+				ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 
 				//--
 
@@ -2478,15 +2515,15 @@ void ofxColorManager::gui_Editor()
 				};
 				ImGui::PopItemWidth();
 				//apply to selected color
-				ofxSurfingHelpers::AddBigButton(bRemoveColor, _w50, _h / 2);
+				ofxImGuiSurfing::AddBigButton(bRemoveColor, _w50, _h / 2);
 				ImGui::SameLine();
-				ofxSurfingHelpers::AddBigButton(bAddColor, _w50, _h / 2);
-				ofxSurfingHelpers::AddBigButton(bClearPalette, _w50, _h / 2);
+				ofxImGuiSurfing::AddBigButton(bAddColor, _w50, _h / 2);
+				ofxImGuiSurfing::AddBigButton(bClearPalette, _w50, _h / 2);
 				//random
 				if (bColor_rHUE || bColor_rSAT || bColor_rBRG)
 				{
 					ImGui::SameLine();
-					ofxSurfingHelpers::AddBigButton(bRandomColor, _w50, _h / 2);
+					ofxImGuiSurfing::AddBigButton(bRandomColor, _w50, _h / 2);
 				}
 				//amount colors
 				if (!SHOW_Presets && !SHOW_ColourLovers && SHOW_Engines)
@@ -2514,7 +2551,7 @@ void ofxColorManager::gui_Editor()
 
 			// aux palette tweaker
 
-			if (ofxSurfingHelpers::AddBigToggle(bTweakPalette, _w100, _h / 2))
+			if (ofxImGuiSurfing::AddBigToggle(bTweakPalette, _w100, _h / 2))
 			{
 				if (bTweakPalette) {//get palette
 					palette_AUX = palette;
@@ -2524,7 +2561,7 @@ void ofxColorManager::gui_Editor()
 			if (bTweakPalette)
 			{
 				ImGui::Indent();
-				ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+				ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 
 				if (ImGui::Button("GET", ImVec2(_w50, _h / 2)))
 				{
@@ -2667,13 +2704,13 @@ void ofxColorManager::gui_Editor()
 			// 3. sorting
 
 			ImGui::Dummy(ImVec2(0.0f, 2.0f));
-			ofxSurfingHelpers::AddBigToggle(bSortPalette, _w100, _h / 2);
+			ofxImGuiSurfing::AddBigToggle(bSortPalette, _w100, _h / 2);
 			//if (ImGui::CollapsingHeader("ORDERING", ImGuiWindowFlags_None))
 			if (bSortPalette)
 			{
 				ImGui::Indent();
 
-				ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+				ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 				{
 					// sort shift
 
@@ -2689,7 +2726,7 @@ void ofxColorManager::gui_Editor()
 
 					// sort flip
 
-					if (ofxSurfingHelpers::AddSmallButton(bFlipUserPalette, _w50, _h / 2)) {}
+					if (ofxImGuiSurfing::AddSmallButton(bFlipUserPalette, _w50, _h / 2)) {}
 					ImGui::SameLine();
 
 					// sort random
@@ -2719,7 +2756,7 @@ void ofxColorManager::gui_Editor()
 
 			//if (ImGui::CollapsingHeader("COOLORS.CO", ImGuiWindowFlags_None))
 			//{
-			//	ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+			//	ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 
 			//	if (ImGui::Button("IMPORT", ImVec2(_w50, _h / 2)))
 			//	{
@@ -2745,7 +2782,7 @@ void ofxColorManager::gui_Editor()
 //				ImGui::Dummy(ImVec2(0.0f, 2.0f));
 //
 //				// show floating palette
-//				ofxSurfingHelpers::AddBigToggle(SHOW_Palette, _w99, _h / 2);
+//				ofxImGuiSurfing::AddBigToggle(SHOW_Palette, _w99, _h / 2);
 //			}
 //#endif
 
@@ -2759,7 +2796,7 @@ void ofxColorManager::gui_Editor()
 				{
 					if (ImGui::CollapsingHeader("Layout"))
 					{
-						ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+						ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 
 						ofxImGui::AddParameter(bFitLayout);
 						if (!bFitLayout) {
@@ -2789,14 +2826,14 @@ void ofxColorManager::gui_Editor()
 			//--
 
 			// show picker
-			ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+			ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 
 			ImGui::Dummy(ImVec2(0.0f, 5.0f));
 			ImGui::Separator();
 			ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
-			ofxSurfingHelpers::AddBigToggle(SHOW_Picker, _w100, _h / 2);
-			ofxSurfingHelpers::AddBigToggle(SHOW_Library, _w100, _h / 2); }
+			ofxImGuiSurfing::AddBigToggle(SHOW_Picker, _w100, _h / 2);
+			ofxImGuiSurfing::AddBigToggle(SHOW_Library, _w100, _h / 2); }
 	}
 
 	ofxImGui::EndWindow(mainSettings);
@@ -3135,7 +3172,7 @@ void ofxColorManager::gui_Library()
 		float _w33;
 		float _w25;
 		float _h;
-		ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+		ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 
 		int _colsSize;
 		if (lib_CardsMode) _colsSize = lib_RowSize;
@@ -3540,7 +3577,7 @@ void ofxColorManager::gui_LinkExport()
 		float _w33;
 		float _w25;
 		float _h;
-		ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+		ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 
 		//--
 
@@ -3554,10 +3591,10 @@ void ofxColorManager::gui_LinkExport()
 			//ImGui::PopItemWidth();
 
 #ifndef USE_SIMPLE_PRESET_PALETTE	
-			ofxSurfingHelpers::AddBigToggle(bModeBundlePreset, _w100, _h / 2);
-			ofxSurfingHelpers::AddBigToggle(bModePalettePreset, _w100, _h / 2);
+			ofxImGuiSurfing::AddBigToggle(bModeBundlePreset, _w100, _h / 2);
+			ofxImGuiSurfing::AddBigToggle(bModePalettePreset, _w100, _h / 2);
 #endif
-			ofxSurfingHelpers::AddBigToggle(bAutoExportPreset, _w100, _h / 2);
+			ofxImGuiSurfing::AddBigToggle(bAutoExportPreset, _w100, _h / 2);
 
 			ImGui::Dummy(ImVec2(0.0f, 2.0f));
 			//ImGui::Text("LINK:");
@@ -3574,20 +3611,20 @@ void ofxColorManager::gui_LinkExport()
 			if (b) a = ofxSurfingHelpers::getFadeBlink();
 			else a = 1.0f;
 			if (b) ImGui::PushStyleColor(ImGuiCol_Border, (ImVec4)ImColor::HSV(0.5f, 0.0f, 1.0f, a));
-			ofxSurfingHelpers::AddBigToggle(bExportByTCP, _w100, _h, false); /*ImGui::SameLine();*/
+			ofxImGuiSurfing::AddBigToggle(bExportByTCP, _w100, _h, false); /*ImGui::SameLine();*/
 			if (b) ImGui::PopStyleColor();
 
 			b = bExportByFile.get();
 			if (b) a = ofxSurfingHelpers::getFadeBlink();
 			else a = 1.0f;
 			if (b) ImGui::PushStyleColor(ImGuiCol_Border, (ImVec4)ImColor::HSV(0.5f, 0.0f, 1.0f, a));
-			ofxSurfingHelpers::AddBigToggle(bExportByFile, _w100, _h, false);
+			ofxImGuiSurfing::AddBigToggle(bExportByFile, _w100, _h, false);
 			if (b) ImGui::PopStyleColor();
 
 			//--
 
-			//ofxSurfingHelpers::AddBigToggle(bExportByFile, _w50, _h / 2); ImGui::SameLine();
-			//ofxSurfingHelpers::AddBigToggle(bExportByTCP, _w50, _h / 2);
+			//ofxImGuiSurfing::AddBigToggle(bExportByFile, _w50, _h / 2); ImGui::SameLine();
+			//ofxImGuiSurfing::AddBigToggle(bExportByTCP, _w50, _h / 2);
 			////ofxImGui::AddParameter(bAutoExportPreset);
 
 			//-
@@ -3754,7 +3791,7 @@ void ofxColorManager::gui_Picker()
 		float _w33;
 		float _w25;
 		float _h;
-		ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+		ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 
 		//--
 
@@ -3799,7 +3836,7 @@ void ofxColorManager::gui_Picker()
 
 			if (ImGui::TreeNodeEx("WHEEL", _flagw))
 			{
-				ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+				ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 
 				// 1.1 circled
 				_flags =
@@ -3838,7 +3875,7 @@ void ofxColorManager::gui_Picker()
 			//flickering bug..
 			if (ImGui::TreeNodeEx("SQUARE", _flagw))
 			{
-				ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+				ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 
 				_flags =
 					ImGuiColorEditFlags_NoSmallPreview |
@@ -3924,9 +3961,9 @@ void ofxColorManager::gui_Picker()
 
 		if (ImGui::CollapsingHeader("RANDOMIZER"))
 		{
-			ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+			ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 
-			if (bColor_rHUE || bColor_rSAT || bColor_rBRG) ofxSurfingHelpers::AddBigButton(bRandomColor, _w100, _h);
+			if (bColor_rHUE || bColor_rSAT || bColor_rBRG) ofxImGuiSurfing::AddBigButton(bRandomColor, _w100, _h);
 
 			if (bColor_rHUE) color_HUE_0 = color_HUE;
 			if (bColor_rSAT) color_SAT_0 = color_SAT;
@@ -3984,7 +4021,7 @@ void ofxColorManager::gui_Picker()
 		ImGui::Separator();
 		ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
-		ofxSurfingHelpers::AddBigToggle(SHOW_Library, _w100, _h / 2);
+		ofxImGuiSurfing::AddBigToggle(SHOW_Library, _w100, _h / 2);
 	}
 	ofxImGui::EndWindow(mainSettings);
 
@@ -4018,14 +4055,14 @@ void ofxColorManager::gui_EnginesPanel()
 		float _w33;
 		float _w25;
 		float _h;
-		ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+		ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 
 		float _w = _w100 / NUM_WIDGETS - _spcx;
 
-		ofxSurfingHelpers::AddBigToggle(SHOW_Theory, _w, _h); ImGui::SameLine();
-		ofxSurfingHelpers::AddBigToggle(SHOW_Range, _w, _h); ImGui::SameLine();
-		ofxSurfingHelpers::AddBigToggle(SHOW_ColourLovers, _w, _h); ImGui::SameLine();
-		ofxSurfingHelpers::AddBigToggle(SHOW_Quantizer, _w, _h);
+		ofxImGuiSurfing::AddBigToggle(SHOW_Theory, _w, _h); ImGui::SameLine();
+		ofxImGuiSurfing::AddBigToggle(SHOW_Range, _w, _h); ImGui::SameLine();
+		ofxImGuiSurfing::AddBigToggle(SHOW_ColourLovers, _w, _h); ImGui::SameLine();
+		ofxImGuiSurfing::AddBigToggle(SHOW_Quantizer, _w, _h);
 	}
 	ofxImGui::EndWindow(mainSettings);
 
@@ -4057,7 +4094,7 @@ void ofxColorManager::gui_Advanced()
 		float _w33;
 		float _w25;
 		float _h;
-		ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+		ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 
 		//--
 
@@ -4226,11 +4263,11 @@ void ofxColorManager::gui_LayoutsPresets()
 		}
 
 		// layouts
-		ofxSurfingHelpers::AddBigToggle(b0, _w, _h); ImGui::SameLine();
-		ofxSurfingHelpers::AddBigToggle(b1, _w, _h); if (!bbox) ImGui::SameLine();
-		ofxSurfingHelpers::AddBigToggle(b2, _w, _h); ImGui::SameLine();
-		ofxSurfingHelpers::AddBigToggle(b3, _w, _h); if (!bbox) ImGui::SameLine();
-		ofxSurfingHelpers::AddBigToggle(b4, _w, _h); ImGui::SameLine();
+		ofxImGuiSurfing::AddBigToggle(b0, _w, _h); ImGui::SameLine();
+		ofxImGuiSurfing::AddBigToggle(b1, _w, _h); if (!bbox) ImGui::SameLine();
+		ofxImGuiSurfing::AddBigToggle(b2, _w, _h); ImGui::SameLine();
+		ofxImGuiSurfing::AddBigToggle(b3, _w, _h); if (!bbox) ImGui::SameLine();
+		ofxImGuiSurfing::AddBigToggle(b4, _w, _h); ImGui::SameLine();
 
 		ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.5f, 0.0f, 0.0f, a));
 		ImGui::PushID("##saveLayout");
@@ -4254,11 +4291,11 @@ void ofxColorManager::gui_LayoutsPresets()
 		}
 
 		//one row
-		ofxSurfingHelpers::AddBigToggle(SHOW_Panels, _w, _h);
+		ofxImGuiSurfing::AddBigToggle(SHOW_Panels, _w, _h);
 		if (!bbox) ImGui::SameLine();
-		ofxSurfingHelpers::AddBigToggle(SHOW_LayoutsAdvanced, _w, _h);
+		ofxImGuiSurfing::AddBigToggle(SHOW_LayoutsAdvanced, _w, _h);
 		if (!bbox) ImGui::SameLine();
-		ofxSurfingHelpers::AddBigToggle(Lock_DockingLayout, _w, _h);
+		ofxImGuiSurfing::AddBigToggle(Lock_DockingLayout, _w, _h);
 	}
 	ofxImGui::EndWindow(mainSettings);
 
@@ -4383,16 +4420,16 @@ void ofxColorManager::gui_LayoutsAdvanced()
 		float _w33;
 		float _w25;
 		float _h;
-		ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+		ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 		_h = _h / 2;
 		int i = 0;
 
 		//----
 
-		ofxSurfingHelpers::AddBigToggle(SHOW_Panels, _w100, _h);
-		ofxSurfingHelpers::AddBigToggle(bAutoSave_Layout, _w100, _h);
-		ofxSurfingHelpers::AddBigToggle(bForceLayoutPosition, _w100, _h);
-		ofxSurfingHelpers::AddBigToggle(Lock_DockingLayout, _w100, _h);
+		ofxImGuiSurfing::AddBigToggle(SHOW_Panels, _w100, _h);
+		ofxImGuiSurfing::AddBigToggle(bAutoSave_Layout, _w100, _h);
+		ofxImGuiSurfing::AddBigToggle(bForceLayoutPosition, _w100, _h);
+		ofxImGuiSurfing::AddBigToggle(Lock_DockingLayout, _w100, _h);
 
 		//----
 
@@ -4535,10 +4572,10 @@ void ofxColorManager::gui_LayoutsAdvanced()
 
 		if (ImGui::CollapsingHeader("EXTRA", ImGuiWindowFlags_None))
 		{
-			ofxSurfingHelpers::AddBigToggle(SHOW_Engines, _w100, _h);
-			ofxSurfingHelpers::AddBigToggle(SHOW_MenuBar, _w100, _h);
-			ofxSurfingHelpers::AddBigToggle(SHOW_Advanced, _w100, _h);
-			//ofxSurfingHelpers::AddBigToggle(SHOW_LayoutsAdvanced, _w100, _h);
+			ofxImGuiSurfing::AddBigToggle(SHOW_Engines, _w100, _h);
+			ofxImGuiSurfing::AddBigToggle(SHOW_MenuBar, _w100, _h);
+			ofxImGuiSurfing::AddBigToggle(SHOW_Advanced, _w100, _h);
+			//ofxImGuiSurfing::AddBigToggle(SHOW_LayoutsAdvanced, _w100, _h);
 
 			ImGui::Checkbox("Auto-Resize", &auto_resize);
 		}
@@ -4586,25 +4623,25 @@ void ofxColorManager::gui_Panels()
 		if (!bMini)_w = _w99 / NUM_WIDGETS - _spcx;
 		else _w = _w99 / 6 - _spcx;
 
-		ofxSurfingHelpers::AddBigToggle(SHOW_Palette, _w, _h); ImGui::SameLine();
-		ofxSurfingHelpers::AddBigToggle(SHOW_Presets, _w, _h); ImGui::SameLine();
-		ofxSurfingHelpers::AddBigToggle(SHOW_Kit, _w, _h); ImGui::SameLine();
-		ofxSurfingHelpers::AddBigToggle(SHOW_Editor, _w, _h); ImGui::SameLine();
-		ofxSurfingHelpers::AddBigToggle(SHOW_Picker, _w, _h); ImGui::SameLine();
+		ofxImGuiSurfing::AddBigToggle(SHOW_Palette, _w, _h); ImGui::SameLine();
+		ofxImGuiSurfing::AddBigToggle(SHOW_Presets, _w, _h); ImGui::SameLine();
+		ofxImGuiSurfing::AddBigToggle(SHOW_Kit, _w, _h); ImGui::SameLine();
+		ofxImGuiSurfing::AddBigToggle(SHOW_Editor, _w, _h); ImGui::SameLine();
+		ofxImGuiSurfing::AddBigToggle(SHOW_Picker, _w, _h); ImGui::SameLine();
 
 #ifdef MODE_BACKGROUND
-		ofxSurfingHelpers::AddBigToggle(SHOW_BackGround, _w, _h);
+		ofxImGuiSurfing::AddBigToggle(SHOW_BackGround, _w, _h);
 		ImGui::SameLine();
 #endif
-		ofxSurfingHelpers::AddBigToggle(SHOW_Library, _w, _h);
+		ofxImGuiSurfing::AddBigToggle(SHOW_Library, _w, _h);
 		if (!bMini) ImGui::SameLine();//split if mini
 
 		//ImGui::Separator();
 
-		ofxSurfingHelpers::AddBigToggle(SHOW_PanelEngines, _w, _h); ImGui::SameLine();
-		ofxSurfingHelpers::AddBigToggle(SHOW_Gradient, _w, _h); ImGui::SameLine();
-		//ofxSurfingHelpers::AddBigToggle(gradientEngine.SHOW_CurveEditor, _w, _h); ImGui::SameLine();
-		//ofxSurfingHelpers::AddBigToggle(SHOW_MINI_Preview, _w, _h);//ImGui::SameLine();
+		ofxImGuiSurfing::AddBigToggle(SHOW_PanelEngines, _w, _h); ImGui::SameLine();
+		ofxImGuiSurfing::AddBigToggle(SHOW_Gradient, _w, _h); ImGui::SameLine();
+		//ofxImGuiSurfing::AddBigToggle(gradientEngine.SHOW_CurveEditor, _w, _h); ImGui::SameLine();
+		//ofxImGuiSurfing::AddBigToggle(SHOW_MINI_Preview, _w, _h);//ImGui::SameLine();
 
 		//-
 
@@ -4621,18 +4658,18 @@ void ofxColorManager::gui_Panels()
 		else a = 1.0f;
 		if (b) ImGui::PushStyleColor(ImGuiCol_Border, (ImVec4)ImColor::HSV(0.5f, 0.0f, 1.0f, a));
 
-		ofxSurfingHelpers::AddBigToggle(SHOW_LinkExport, _w, _h, false); ImGui::SameLine();
+		ofxImGuiSurfing::AddBigToggle(SHOW_LinkExport, _w, _h, false); ImGui::SameLine();
 
 		if (b) ImGui::PopStyleColor();
 
 		//-
 
-		ofxSurfingHelpers::AddBigToggle(SHOW_Demos, _w, _h); ImGui::SameLine();
-		ofxSurfingHelpers::AddBigToggle(SHOW_Layouts, _w, _h);
+		ofxImGuiSurfing::AddBigToggle(SHOW_Demos, _w, _h); ImGui::SameLine();
+		ofxImGuiSurfing::AddBigToggle(SHOW_Layouts, _w, _h);
 
 #ifndef USE_MINIMAL_GUI
 		ImGui::SameLine();
-		ofxSurfingHelpers::AddBigToggle(SHOW_Advanced, _w, _h);
+		ofxImGuiSurfing::AddBigToggle(SHOW_Advanced, _w, _h);
 #endif
 	}
 	ofxImGui::EndWindow(mainSettings);
@@ -4673,7 +4710,7 @@ void ofxColorManager::gui_Range()
 		float _w33;
 		float _w25;
 		float _h;
-		ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+		ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 
 		float _w49 = _w50 - 2;
 
@@ -4695,7 +4732,7 @@ void ofxColorManager::gui_Range()
 
 		//ImGui::PushItemWidth(-50);
 		ImGui::PushItemWidth(110);
-		if (ofxSurfingHelpers::AddIntStepped(numColors_Range)) {}
+		if (ofxImGuiSurfing::AddIntStepped(numColors_Range)) {}
 		ImGui::PopItemWidth();
 
 		//-
@@ -4731,7 +4768,7 @@ void ofxColorManager::gui_Range()
 			// 1.2 mini box
 			ImGui::PushID(i++);//avoid repeat names and flicking bug
 			if (ImGui::ColorButton("##C1", _c1, _flags, ImVec2(_w50, _h))) {}
-			ofxSurfingHelpers::AddBigToggle(bAuto_Color1_FromPicker_Range, _w50, BUTTON_BIG_HEIGHT / 2);
+			ofxImGuiSurfing::AddBigToggle(bAuto_Color1_FromPicker_Range, _w50, BUTTON_BIG_HEIGHT / 2);
 			ImGui::PopItemWidth();
 
 			ImGui::NextColumn();
@@ -4743,7 +4780,7 @@ void ofxColorManager::gui_Range()
 			ImGui::PushID(i++);//avoid repeat names and flicking bug
 			if (ImGui::ColorButton("##C2", _c2, _flags, ImVec2(_w50, _h))) {}
 			ImGui::PushID(i++);//avoid repeat names and flicking bug
-			ofxSurfingHelpers::AddBigToggle(bAuto_Color2_FromPicker_Range, _w50, BUTTON_BIG_HEIGHT / 2);
+			ofxImGuiSurfing::AddBigToggle(bAuto_Color2_FromPicker_Range, _w50, BUTTON_BIG_HEIGHT / 2);
 			ImGui::PopItemWidth();
 			ImGui::Columns(1);
 
@@ -4824,7 +4861,7 @@ void ofxColorManager::gui_Range()
 					generate_Range(color_1_Range.get(), color_2_Range.get());
 				}
 			}
-			//ofxSurfingHelpers::AddSmallButton(bGetPalette_From_Range, 150, 30);
+			//ofxImGuiSurfing::AddSmallButton(bGetPalette_From_Range, 150, 30);
 
 			//-
 
@@ -4896,7 +4933,7 @@ void ofxColorManager::gui_Range()
 
 				//align
 				//ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(labelPadding, 0.5f));
-				if (ofxSurfingHelpers::AddSmallButton(types_Range[t], _szLabel, _hSz2))
+				if (ofxImGuiSurfing::AddSmallButton(types_Range[t], _szLabel, _hSz2))
 				{
 					//ofLogNotice(__FUNCTION__) << types_Range[t].getName() << " #" << t;// ? allways triggering..
 				}
@@ -5076,8 +5113,8 @@ void ofxColorManager::gui_Background()
 					//TODO:
 					if (AutoSet_BackGround_Color)
 					{
-						ofxSurfingHelpers::AddBigToggle(color_BackGround_DarkerMode);
-						ofxSurfingHelpers::AddBigToggle(color_BackGround_GradientMode);
+						ofxImGuiSurfing::AddBigToggle(color_BackGround_DarkerMode);
+						ofxImGuiSurfing::AddBigToggle(color_BackGround_GradientMode);
 
 						if (color_BackGround_DarkerMode)
 						{
@@ -5127,7 +5164,7 @@ void ofxColorManager::gui_Kit()
 	//add kit palettes browser
 	if (SHOW_Kit)
 	{
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, PANEL_WIDGETS_HEIGHT));
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, PANEL_WIDGETS_WIDTH));
 
 		if (ofxImGui::BeginWindow("KIT", mainSettings, flags))
 		{
@@ -5418,21 +5455,74 @@ void ofxColorManager::gui_Presets()
 		float _w33;
 		float _w25;
 		float _h;
-		ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 
-		ImGui::Dummy(ImVec2(0.0f, 5.0f));
+		//-
+
+		// KITS
+		{
+			bool bOpen = false;
+			ImGuiTreeNodeFlags _flagt = (bOpen ? ImGuiTreeNodeFlags_DefaultOpen : ImGuiTreeNodeFlags_None);
+			_flagt |= ImGuiTreeNodeFlags_Framed;
+
+			if (ImGui::TreeNodeEx(path_Kit.c_str(), _flagt))
+			{
+				ofxImGuiSurfing::refreshImGui_WidgetsSizes(_w100, _w50, _w33, _w25, _h);
+
+				// scrollable list
+
+				if (!files_KitNames.empty())
+				{
+					int _i = last_Index_Kit;
+
+					string n = "##kits";
+					ImGui::PushItemWidth(-10);
+					ImGui::PushID(n.c_str());
+
+					if (ofxImGui::VectorCombo(" ", &_i, files_KitNames))
+					{
+						ofLogNotice(__FUNCTION__) << "_i: " << ofToString(_i);
+
+						if (_i < files_KitNames.size())
+						{
+							last_Index_Kit = _i;
+
+							//path_Kit = files_KitNames[_i];
+							////path_Kit = "USER KIT"; // default
+
+							//preset_RefreshFiles(true);
+						}
+					}
+
+					ImGui::PopID();
+					ImGui::PopItemWidth();
+				}
+
+				if (ImGui::Button("REFRESH KITS", ImVec2(_w100, _h / 2)))
+				{
+					refresh_Kits();
+				}
+
+				ImGui::TreePop();
+			}
+		}
+
+		//-
+
+		//ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
 		//----
 
-		// 1. scrollable list
+		// 1. Palette presets. scrollable list
 
 		if (!files_Names.empty())
 		{
+			ofxImGuiSurfing::refreshImGui_WidgetsSizes(_w100, _w50, _w33, _w25, _h);
+
 			int _i = last_Index_Preset;
 
+			string n = "##presets";
 			ImGui::PushItemWidth(-10);
-			//ImGui::PushItemWidth(-20);
-			//ImGui::PushItemWidth(_w99);
+			ImGui::PushID(n.c_str());
 
 			if (ofxImGui::VectorCombo(" ", &_i, files_Names))
 			{
@@ -5451,6 +5541,7 @@ void ofxColorManager::gui_Presets()
 				MODE_ReadyToUpdate = true;
 			}
 
+			ImGui::PopID();
 			ImGui::PopItemWidth();
 		}
 
@@ -5464,7 +5555,8 @@ void ofxColorManager::gui_Presets()
 
 		int _sz = files_Names.size() - 1;
 
-		ImGui::Text("%d/%d", counter, _sz);
+		ImGui::Text("%d/%d", counter + 1, _sz + 1);//start on 1 not 0
+		//ImGui::Text("%d/%d", counter, _sz);
 
 		//----
 
@@ -5496,7 +5588,7 @@ void ofxColorManager::gui_Presets()
 
 		// manual toggle
 
-		if (ofxSurfingHelpers::AddBigToggle(MODE_NewPreset, _w100, _h))
+		if (ofxImGuiSurfing::AddBigToggle(MODE_NewPreset, _w100, _h))
 		{
 			if (name_TARGET != nullptr) textInput_New = name_TARGET[0];
 			if (textInput_New == "") textInput_New = "type name";
@@ -5835,8 +5927,8 @@ void ofxColorManager::gui_Presets()
 		ImGui::Separator();
 		ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
-		ofxSurfingHelpers::AddBigToggle(SHOW_Editor, _w100, _h / 2);
-		ofxSurfingHelpers::AddBigToggle(SHOW_Kit, _w100, _h / 2);
+		ofxImGuiSurfing::AddBigToggle(SHOW_Editor, _w100, _h / 2);
+		ofxImGuiSurfing::AddBigToggle(SHOW_Kit, _w100, _h / 2);
 
 		//ImGui::Dummy(ImVec2(0.0f, 2.0f));
 		//if (SHOW_Kit) ofxImGui::AddParameter(AutoScroll);
@@ -5872,7 +5964,7 @@ void ofxColorManager::gui_Gradient()
 		float _w33;
 		float _w25;
 		float _h;
-		ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+		ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 
 		//-
 
@@ -5885,9 +5977,9 @@ void ofxColorManager::gui_Gradient()
 		{
 			//ImGui::Dummy(ImVec2(0.0f, 5.0f));;
 
-			//ofxSurfingHelpers::AddBigToggle(SHOW_Gradient, _w100, _h / 2);
-			ofxSurfingHelpers::AddBigToggle(gradientEngine.SHOW_CurveEditor, _w100, _h);
-			//ofxSurfingHelpers::AddBigToggle(gradientEngine.SHOW_Gradient_Mini, _w100, _h);
+			//ofxImGuiSurfing::AddBigToggle(SHOW_Gradient, _w100, _h / 2);
+			ofxImGuiSurfing::AddBigToggle(gradientEngine.SHOW_CurveEditor, _w100, _h);
+			//ofxImGuiSurfing::AddBigToggle(gradientEngine.SHOW_Gradient_Mini, _w100, _h);
 
 			//TODO:
 			// get and draw the widgets to draw inside ImGui
@@ -5915,7 +6007,7 @@ void ofxColorManager::gui_Gradient()
 				ofxImGui::AddParameter(color_BackGround);
 				ofxImGui::AddParameter(gradientEngine.bAutoSet_PickColor);
 			}
-			ofxSurfingHelpers::AddBigToggle(gradientEngine.color_BackGround_GradientMode, _w100, _h / 2);
+			ofxImGuiSurfing::AddBigToggle(gradientEngine.color_BackGround_GradientMode, _w100, _h / 2);
 			if (ImGui::Button(gradientEngine.bPalettize.getName().c_str(), ImVec2(_w100, _h / 2)))
 			{
 				gradientEngine.bPalettize = true;
@@ -5941,7 +6033,7 @@ void ofxColorManager::gui_Gradient()
 			//-
 
 			ImGui::Dummy(ImVec2(0.0f, 5.0f));
-			if (ofxSurfingHelpers::AddBigToggle(gradientEngine.bEditLayout, _w100, _h / 2))
+			if (ofxImGuiSurfing::AddBigToggle(gradientEngine.bEditLayout, _w100, _h / 2))
 			{
 			}
 
@@ -6003,21 +6095,21 @@ void ofxColorManager::gui_Demo()
 		float _pad = -80;
 		//float _pad = _w33;
 
-		ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+		ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 
 		//--
 
 		// DEMO 1
 
 		//demo bubbles
-		ofxSurfingHelpers::AddBigToggle(DEMO1_Enable, _w100, _h);
+		ofxImGuiSurfing::AddBigToggle(DEMO1_Enable, _w100, _h);
 		if (DEMO1_Enable)
 			//if (ImGui::CollapsingHeader("DEMO 1", ImGuiWindowFlags_None))
 		{
 			if (DEMO1_Enable)
 			{
 				ImGui::Indent();
-				ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+				ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 				_h50 = _h / 2;;
 
 				ImGui::PushItemWidth(_pad);
@@ -6060,14 +6152,14 @@ void ofxColorManager::gui_Demo()
 		// DEMO 2
 
 		// demo spheres
-		ofxSurfingHelpers::AddBigToggle(DEMO2_Enable, _w100, _h);
+		ofxImGuiSurfing::AddBigToggle(DEMO2_Enable, _w100, _h);
 		if (DEMO2_Enable)
 			//if (ImGui::CollapsingHeader("DEMO 2", ImGuiWindowFlags_None))
 		{
 			if (DEMO2_Enable)
 			{
 				ImGui::Indent();
-				ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+				ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 				_h50 = _h / 2;;
 
 				_pad = -100;
@@ -6111,14 +6203,14 @@ void ofxColorManager::gui_Demo()
 		// DEMO 3
 
 		// svg demo
-		ofxSurfingHelpers::AddBigToggle(DEMO3_Svg.bEnable, _w99, _h);
+		ofxImGuiSurfing::AddBigToggle(DEMO3_Svg.bEnable, _w99, _h);
 		if (DEMO3_Svg.bEnable)
 			//if (ImGui::CollapsingHeader("DEMO 3", ImGuiWindowFlags_None))
 		{
 			if (DEMO3_Svg.bEnable)
 			{
 				ImGui::Indent();
-				ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+				ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 				_h50 = _h / 2;;
 
 				//ImGui::PushItemWidth(-80);
@@ -6207,7 +6299,7 @@ void ofxColorManager::setupGui()
 
 	// theme
 #ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
-	ofxSurfingHelpers::ImGui_ThemeMoebiusSurfing();
+	ofxImGuiSurfing::ImGui_ThemeMoebiusSurfing();
 
 	//ofxSurfingHelpers::ImGui_ThemeModernDark();
 	//ImGui::StyleColorsDark();
@@ -7302,6 +7394,19 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	//	colorBrowser.setEnableKeys(SHOW_Library);
 	//}
 
+	// kit
+	else if (name == last_Index_Kit.getName())
+	{
+		int _i = ofClamp(last_Index_Kit, last_Index_Kit.getMin(), last_Index_Kit.getMax());
+		if (_i != last_Index_Kit.get()) last_Index_Kit.setWithoutEventNotifications(_i);
+
+		//int _i = MAX(last_Index_Kit, files_KitNames.size() - 1);
+		path_Kit = files_KitNames[_i];
+		//path_Kit = "USER KIT"; // default
+
+		preset_RefreshFiles(true);
+	}
+
 	// layout
 	else if (name == SHOW_Layouts.getName())
 	{
@@ -8012,7 +8117,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	//{
 	//	if (bLock_palette) bAuto_Build_Palette = false;
 	//}
-		}
+	}
 
 //--------------------------------------------------------------
 void ofxColorManager::Changed_Range(ofAbstractParameter &e)
@@ -9137,21 +9242,14 @@ void ofxColorManager::refresh_FilesSorting(std::string name)
 }
 
 //--------------------------------------------------------------
-bool ofxColorManager::preset_RefreshFiles(bool bForeLoadFirst)
+void ofxColorManager::refresh_Paths()
 {
-	ofLogNotice(__FUNCTION__) << "----------------- REFRESH FILES-----------------";
-
-	bool b = false;//returns true if amount files changed.
-	//bc sometimes we couild b overwritting a file
-
-	//-
-
 	// initialize
-
+	//path_Kit = "USER KIT";
 	path_Global = "ofxColorManager/";
 	path_Kits = "kits/";
-	path_Presets = path_Global + path_Kits + "presets/";
-	path_Palettes = path_Global + path_Kits + "palettes/";
+	path_Presets = path_Global + path_Kits + path_Kit;
+	//path_Palettes = path_Global + path_Kits + "palettes/"; // not used
 	ofxSurfingHelpers::CheckFolder(path_Global + path_Kits);
 
 	//std::string _path = path_Presets;
@@ -9162,6 +9260,19 @@ bool ofxColorManager::preset_RefreshFiles(bool bForeLoadFirst)
 
 	// export for live reload preset from client app
 	//path_Name_ExportColor = "ofxColorManager";
+}
+
+//--------------------------------------------------------------
+bool ofxColorManager::preset_RefreshFiles(bool bForeLoadFirst)
+{
+	ofLogNotice(__FUNCTION__) << "----------------- REFRESH FILES-----------------";
+
+	bool b = false;//returns true if amount files changed.
+	//bc sometimes we couild b overwritting a file
+
+	//-
+
+	refresh_Paths();
 
 	//-
 
@@ -9172,6 +9283,12 @@ bool ofxColorManager::preset_RefreshFiles(bool bForeLoadFirst)
 	files_Names.clear();
 
 	// load all folder files in one call
+
+	ofxSurfingHelpers::CheckFolder(path_Presets);
+	ofDirectory dataDirectory(ofToDataPath(path_Presets, true));
+	ofxSurfingHelpers::CheckFolder(path_Presets);
+	ofLogNotice(__FUNCTION__) << path_Presets;
+
 	files = dataDirectory.getFiles();
 
 	for (size_t i = 0; i < files.size(); i++)
@@ -9183,6 +9300,10 @@ bool ofxColorManager::preset_RefreshFiles(bool bForeLoadFirst)
 
 	last_Index_Preset.setMax(files.size() - 1);
 	if (last_Index_Preset > files.size() - 1) last_Index_Preset = -1;
+
+
+	//TODO:
+	PRESET_Temp.setPathKit(path_Kit + "/");
 
 	//-
 
@@ -10243,7 +10364,7 @@ void ofxColorManager::draw_Link(int x, int y)
 	//	ss += storeText[i];
 	//}
 	//ofxSurfingHelpers::drawTextBoxed(font, ss, x, y);
-}
+	}
 #endif
 
 //--------------------------------------------------------------

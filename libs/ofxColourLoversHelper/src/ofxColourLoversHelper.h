@@ -31,7 +31,7 @@
 //----
 
 #include "ofxSurfingHelpers.h"
-#include "ofxSurfing_ImGui.h"
+#include "ofxSurfingImGui.h"
 
 #ifdef USE_OFX_UI
 #include "ofxUI.h"

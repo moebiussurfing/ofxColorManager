@@ -39,7 +39,7 @@ BUGS:
 // some preprocessor directives
 // mainly for debug purposes only
 
-#define MAKE_RELEASE_VERSION // disables console and other stuff, for final release version. name to Paletto v1.0
+//#define MAKE_RELEASE_VERSION // -> To be used for deploy. Disables console and other stuff, for final release version. name to Paletto v1.0
 
 //#define USE_VERSION_CHECKER // TODO: crashes on exit..
 
@@ -195,9 +195,9 @@ using namespace ofxColorTheory;
 #include "ofxSerializer.h"
 #include "ofxSurfingHelpers.h"
 #include "ofxSurfing_Files.h"
-#include "ofxSurfing_ImGui.h"
-#include "ofxSurfing_ImGui_Widgets.h"
+#include "ofxSurfingImGui.h"
 using namespace ofxSurfingHelpers;
+using namespace ofxImGuiSurfing;
 
 //--
 
@@ -278,7 +278,7 @@ private:
 	//--
 
 private:
-	float dt;//for preview speeds only..
+	float dt; // for preview speeds only..
 	float fps;
 
 private:
@@ -301,8 +301,8 @@ private:
 	// TCP LINK
 
 private:
-	std::string host = "127.0.0.1";//hardcoded. can't be change on runtime
-	int port = 10666;//localhost. hardcoded. can't be change on runtime
+	std::string host = "127.0.0.1"; // hardcoded. can't be change on runtime
+	int port = 10666; // localhost. hardcoded. can't be change on runtime
 	//_port.set("port", 6448, 1000, 50000);
 	//ofParameter<std::string> host{ "Host", "127.0.0.1" };
 	//ofParameter<int> port{ "Port", 66666, 0, 99999 };
@@ -336,7 +336,7 @@ private:
 	//TODO:
 	shared_ptr<ColorWheelScheme> _scheme;
 
-	bool bExportFlag = false;//flag to avoid multiple overflow of calls.. we read on update()
+	bool bExportFlag = false; // flag to avoid multiple overflow of calls.. we read on update()
 
 	//TODO:
 	enum typeEngine
@@ -386,7 +386,7 @@ private:
 
 private:
 	ofParameter<bool> SHOW_HelpInfo;
-	std::string helpInfo;//key commands
+	std::string helpInfo; // key commands
 
 private:
 	ofParameter<bool> ENABLE_keys{ "KEYS", true };
@@ -448,7 +448,7 @@ private:
 
 private:
 	// app modes
-	ofParameter<int> AppEnginesMode;// not being much used now..
+	ofParameter<int> AppEnginesMode; //  not being much used now..
 	ofParameter<std::string> AppMode_name;
 #define NUM_APP_MODES 5
 
@@ -489,10 +489,11 @@ private:
 	std::string path_Global;
 	std::string path_ImGui;
 	std::string path_Kits;
+	std::string path_Kit;
 	std::string path_FileExport;
 	std::string path_AppState;
 	std::string path_Presets;
-	std::string path_Palettes;
+	//std::string path_Palettes;
 
 	//export
 	std::string path_Name_ExportColor;
@@ -532,11 +533,11 @@ private:
 private:
 	ofParameter<int> last_Index_Theory_PickPalette;
 	ofParameter<int> last_Index_Theory{ "Last Theory Index", 0, 0,
-		NUM_COLOR_THEORY_TYPES_G1 + NUM_COLOR_THEORY_TYPES_G2 - 1 };//selected theory algorithm
-	ofParameter<int> last_Index_Range{ "Last Range Index", 0, 0, NUM_TYPES_RANGES - 1 };//selected range algorithm
-	ofParameter<int> last_Index_ColorPalette{ "Color", 0, 0, 0 };//selected color on palette on editing
-	ofParameter<int> last_Index_Preset{ "Preset Index", 0, 0, 0 };//selected preset
-	int last_Lib_Index = -1;//last library picked color
+		NUM_COLOR_THEORY_TYPES_G1 + NUM_COLOR_THEORY_TYPES_G2 - 1 }; // selected theory algorithm
+	ofParameter<int> last_Index_Range{ "Last Range Index", 0, 0, NUM_TYPES_RANGES - 1 }; // selected range algorithm
+	ofParameter<int> last_Index_ColorPalette{ "Color", 0, 0, 0 }; // selected color on palette on editing
+	ofParameter<int> last_Index_Preset{ "Preset Index", 0, 0, 0 }; // selected preset
+	int last_Lib_Index = -1; // last library picked color
 	void resetLibraryLayout();
 
 	bool bLast_Index_Theory = true;
@@ -553,7 +554,7 @@ private:
 	ofTrueTypeFont fontMedium;
 	ofTrueTypeFont fontBig;
 
-	ofParameter<int> last_Index_Type{ "Last Type Index", -1, 0, 3 };//to help workflow of what's the last engine used...Not using now.
+	ofParameter<int> last_Index_Type{ "Last Type Index", -1, 0, 3 }; // to help workflow of what's the last engine used...Not using now.
 	//0 preset name
 	//1 lover name
 	//2 theory name
@@ -707,9 +708,9 @@ private:
 
 	//-	
 
-	ImVec4 borderLineColor = ImVec4(0, 0, 0, 0.65);// for selected color buttons, toggles and blinking 
+	ImVec4 borderLineColor = ImVec4(0, 0, 0, 0.65); //  for selected color buttons, toggles and blinking 
 	float borderLineWidth = 1.0f;
-	float labelPadding = 0.0;//label buttons
+	float labelPadding = 0.0; // label buttons
 
 	enum Mode
 	{
@@ -781,9 +782,9 @@ public:
 
 private:
 	std::string *name_TARGET = NULL;
-	ofColor *color_TARGET = NULL;//backwards pointer to ofApp picker color
-	ofColor *colorBg_TARGET = NULL;//backwards pointer to ofApp background color
-	vector<ofColor> *palette_TARGET = NULL;//backwards pointer to ofApp palette
+	ofColor *color_TARGET = NULL; // backwards pointer to ofApp picker color
+	ofColor *colorBg_TARGET = NULL; // backwards pointer to ofApp background color
+	vector<ofColor> *palette_TARGET = NULL; // backwards pointer to ofApp palette
 
 private:
 	void refresh_Palette_TARGET(vector<ofColor> &p);
@@ -814,7 +815,7 @@ public:
 	// setters
 
 public:
-	void setPickControl(float control);//set the input control for gradient selector. to control the picked color
+	void setPickControl(float control); // set the input control for gradient selector. to control the picked color
 
 public:
 	void setVisible(bool b);
@@ -880,7 +881,7 @@ private:
 	//ofParameter<bool> bLock_palette;
 
 	ofParameter<bool> bRandomPalette;
-	ofParameter<bool> bAuto_Build_Palette;//trig last used algo palette on click or change color
+	ofParameter<bool> bAuto_Build_Palette; // trig last used algo palette on click or change color
 
 private:
 	void refresh_Theory_G2();
@@ -905,8 +906,8 @@ private:
 	// mouse or key locker
 	bool mouseLockedByGui;
 	//bool mouseLockedByGui_PRE;
-	bool bCheckMouseOverTextInput = false;//flag to return mouse over any gui panel or over text input only!
-	bool bCheckMouseOverTextInputLovers = false;//flag to return mouse over any gui panel or over text input only!
+	bool bCheckMouseOverTextInput = false; // flag to return mouse over any gui panel or over text input only!
+	bool bCheckMouseOverTextInputLovers = false; // flag to return mouse over any gui panel or over text input only!
 	bool bLockAllKeysByGui;
 	bool bBlockedKeys;
 	//bool bLockMouseByImGui = false;
@@ -959,7 +960,7 @@ private:
 
 private:
 	void refresh_Background();
-	ofParameter<ofFloatColor> color_BackGround;//main bg color
+	ofParameter<ofFloatColor> color_BackGround; // main bg color
 	ofParameter<bool> color_backGround_SET;
 	ofParameter<bool> AutoSet_BackGround_Color;
 	ofParameter<bool> color_BackGround_DarkerMode;
@@ -1039,9 +1040,9 @@ private:
 	// editor
 
 private:
-	vector<ofColor> palette;// main user palette
+	vector<ofColor> palette; //  main user palette
 
-	vector<ofColor> palette_AUX;// aux palette to tweak saturation and brigthness to all the palette colors
+	vector<ofColor> palette_AUX; //  aux palette to tweak saturation and brigthness to all the palette colors
 	ofParameter<bool> bTweakPalette{ "TWEAK", false };
 	ofParameter<bool> bSortPalette{ "SORTING", false };
 	ofParameter<float> hueTweak{ "HUE TWK", 0,-1,1 };
@@ -1077,8 +1078,10 @@ private:
 	ofEventListener listener_ModeSorting;
 
 	void refresh_Libs();
+	void refresh_Kits();
+	void refresh_Paths();
 
-	int lib_RowSize = 7;//7 colors per row Pantone lib
+	int lib_RowSize = 7; // 7 colors per row Pantone lib
 	int lib_Page_NumColors;
 	int lib_TotalColors;
 	int lib_Page_Max;
@@ -1114,7 +1117,7 @@ private:
 
 	// app settings json/xml
 private:
-	ofParameterGroup params_AppState;//without callbacks, just to handle settings
+	ofParameterGroup params_AppState; // without callbacks, just to handle settings
 	ofParameterGroup params_Panels{ "PANELS" };
 	ofParameterGroup params_Background{ "BACKGROUND" };
 	ofParameterGroup params_Demo{ "DEMO" };
@@ -1158,7 +1161,7 @@ private:
 	// new preset state mode
 	ofParameter<bool> MODE_NewPreset{ "NEW PRESET", false };
 
-	bool MODE_ReadyToUpdate = false;//when a preset is loaded will allow update/overwrite save
+	bool MODE_ReadyToUpdate = false; // when a preset is loaded will allow update/overwrite save
 
 	std::string textInput_New = "name..";
 
@@ -1171,9 +1174,13 @@ private:
 
 	// preset files
 
-	bool preset_RefreshFiles(bool bForeLoadFirst = true);//read folder files
-	void refresh_FilesSorting(std::string name);//after saving new preset, refresh files and select the just saved preset
+	bool preset_RefreshFiles(bool bForeLoadFirst = true); // read folder files
+	void refresh_FilesSorting(std::string name); // after saving new preset, refresh files and select the just saved preset
 	std::vector<std::string> files_Names;
+	
+	std::vector<std::string> files_KitNames;
+	ofParameter<int> last_Index_Kit{ "Kit", -1, 0, 0 };
+
 	std::vector<ofFile> files;
 	vector<vector<ofColor>> palettesKit;
 	vector<PresetData> kit;
@@ -1193,8 +1200,8 @@ private:
 	// demo to draw into about panel
 private:
 	ofTexture tex;
-	ofFbo fbo;//mini preview
-	ofFbo fboBig;//fullscreen fbo
+	ofFbo fbo; // mini preview
+	ofFbo fboBig; // fullscreen fbo
 	float wAboutDemo = 250;
 	float tweenD = 1;
 	void refresh_DemoFboAbout();
@@ -1329,8 +1336,7 @@ private:
 	//---
 
 //TODO:
-// ASE
-
+// ASE exporter/importer
 #ifdef USE_ASE_MODULE
 
 	void createAse() {
@@ -1376,13 +1382,12 @@ private:
 		_ASE_FILE.groups = &_ASE_GROUP;
 
 		ASE_ERRORTYPE error;
-		FILE *f;// = fopen(ofToDataPath("myASE"));
+		FILE *f; //  = fopen(ofToDataPath("myASE"));
 
 		//error = ase_writeAseFile(&_ASE_FILE, f);
 		//ase_writeAseFile(ASE_FILE *ase, FILE *f);
 		//https://github.com/JamesHovet/ofxASE
 }
-
 #endif
 
 	//----

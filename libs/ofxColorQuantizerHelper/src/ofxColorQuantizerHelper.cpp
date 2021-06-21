@@ -49,7 +49,7 @@ void ofxColorQuantizerHelper::draw_Gui()
 		float _w33;
 		float _w25;
 		float _h;
-		ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+		ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 
 		//-
 
@@ -253,7 +253,7 @@ void ofxColorQuantizerHelper::draw_Gui()
 		ImGui::Dummy(ImVec2(0, 5));
 		//ImGui::Text(currentImage_name.get().c_str());
 
-		ofxSurfingHelpers::AddBigButton(bReBuild, _w50, _h / 2);
+		ofxImGuiSurfing::AddBigButton(bReBuild, _w50, _h / 2);
 		ImGui::SameLine();
 		if (ImGui::Button("REFRESH FILES", ImVec2(_w50, _h / 2)))
 		{
@@ -271,7 +271,7 @@ void ofxColorQuantizerHelper::draw_Gui()
 		{
 			setImage();
 		}
-		ofxSurfingHelpers::AddBigToggle(SHOW_ImageInfo, _w100, _h / 2);
+		ofxImGuiSurfing::AddBigToggle(SHOW_ImageInfo, _w100, _h / 2);
 
 		//--
 
@@ -281,9 +281,9 @@ void ofxColorQuantizerHelper::draw_Gui()
 		ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
 		//if (ImGui::CollapsingHeader("LIBRARY", ImGuiTreeNodeFlags_None))
-		ofxSurfingHelpers::AddBigToggle(SHOW_Library, _w100, _h);
+		ofxImGuiSurfing::AddBigToggle(SHOW_Library, _w100, _h);
 		if (SHOW_Library) {
-			ofxSurfingHelpers::AddBigToggle(bResponsive, _w100, _h / 2);
+			ofxImGuiSurfing::AddBigToggle(bResponsive, _w100, _h / 2);
 			//ofxImGui::AddParameter(SHOW_Library);
 
 			//if (SHOW_Library)
@@ -348,7 +348,7 @@ void ofxColorQuantizerHelper::draw_Gui()
 			float _w33;
 			float _w25;
 			float _h;
-			ofxSurfingHelpers::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+			ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 			__widthPicts = _w100 - _spcx;
 			__widthPicts -= ImGui::GetStyle().ItemInnerSpacing.x;
 
