@@ -5,16 +5,36 @@
 void ofApp::setup() {
 	ofSetFrameRate(25);
 
-	ttf.load(OF_TTF_SERIF, 10, true, true, true);
+	ttf.load(OF_TTF_MONO, 8, true, true, true);
 
-	//--
+	//-
 
-	// 1.
+	// Usage:
+	// set only one of the importer snippets 
+	// to if (1)
+
+	if (0) batch1();
+	if (0) batch2();
+	if (0) batch3();
+	if (1) batch4();
+}
+
+//--------------------------------------------------------------
+void ofApp::draw() {
+	ofSetColor(255);
+	text = ss.str();
+	ttf.drawString(text, 20, 20);
+}
+
+//--------------------------------------------------------------
+void ofApp::batch1() {
+
 	// Taken from https://github.com/Jam3/nice-color-palettes
 	// A JSON of the top color palettes on ColourLovers.com, as RGB hex strings.
-	if (0)
+	/*
+	[["#69d2e7","#a7dbd8","#e0e4cc","#f38630","#fa6900"],["#fe4365","#fc9d9a","#f9cdad","#c8c8a9","#83af9b"],["#ecd078","#
+	*/
 	{
-
 		// set the source file to convert
 		ofFile file("1000.json");
 		//ofFile file("100.json");
@@ -93,13 +113,35 @@ void ofApp::setup() {
 			ss << "Total processed palettes: " << ip << endl;
 		}
 	}
+}
 
-	//--
+//--------------------------------------------------------------
+void ofApp::batch2() {
 
-	// 2.
 	// Taken from
 	// https://github.com/sravanrekandar/google-material-color-palette-json
-	if (0)
+	/*
+	{
+	  "red": {
+		"shade_50": "#ffebee",
+		"shade_100": "#ffcdd2",
+		"shade_200": "#ef9a9a",
+		"shade_300": "#e57373",
+		"shade_400": "#ef5350",
+		"shade_500": "#f44336",
+		"shade_600": "#e53935",
+		"shade_700": "#d32f2f",
+		"shade_800": "#c62828",
+		"shade_900": "#b71c1c",
+		"shade_A100": "#ff8a80",
+		"shade_A200": "#ff5252",
+		"shade_A400": "#ff1744",
+		"shade_A700": "#d50000"
+	  },
+	  "pink": {
+		"shade_50": "#fce4ec",
+		"shade_100": "#f8bbd0",
+	*/
 	{
 		ofFile file("palette.json");
 
@@ -205,9 +247,11 @@ void ofApp::setup() {
 		}
 	}
 
-	//--
+}
 
-	// 3.
+//--------------------------------------------------------------
+void ofApp::batch3() {
+
 	// This part is to generate palettes. But also can be used to
 	// get colors to make a new library like the pantone lib included in Paletto.
 	// This is a more manual converter, not using json methods but "tricky" manual string manipulations.
@@ -240,8 +284,6 @@ void ofApp::setup() {
 		"pink-700": "#c2185b",
 		..
 	*/
-
-	if (1)
 	{
 		ofFile file("colors.json");
 
@@ -400,24 +442,255 @@ void ofApp::setup() {
 		//--
 
 		slog += "\n names:" + ofToString(names) + "\n";
-		text = slog;
-
 		cout << slog << endl;
+		//text = slog;
+
+		ss << slog.c_str();
 	}
 }
 
 //--------------------------------------------------------------
-void ofApp::update() {
+void ofApp::batch4() {
 
-}
+	// Taken from https://github.com/mattdesl/dictionary-of-colour-combinations
+	// A JSON dataset of 348 colour combinations (of 2, 3, and 4 colours) of 159 unique colours, from the book "A Dictionary of Colour Combinations" 
+	//compiled by Sanzo Wada (1883 – 1967) and published by Seigensha Art.
+	/*
+			[
+		{
+		"name": "Hermosa Pink",
+		"combinations": [
+			176,
+			227,
+			273
+		],
+		"swatch": 0,
+		"cmyk": [
+			0,
+			30,
+			6,
+			0
+		],
+		"lab": [
+			83.42717631799802,
+			22.136186770428026,
+			1.6381322957198563
+		],
+		"rgb": [
+			249,
+			193,
+			206
+		],
+		"hex": "#f9c1ce"
+		},
+		{
+		"name": "Corinthian Pink",
+		"combinations": [
+			27,
+			43,
+			87,
+			97,
+			128,
+			169,
+			174,
+			206,
+			246,
+			254,
+			264,
+			342
+		],
+		"swatch": 0,
+		"cmyk": [
+			0,
+			35,
+			15,
+			0
+		],
+		"lab": [
+			80.34637979705501,
+			25.369649805447466,
+			7.879377431906619
+		],
+		"rgb": [
+			248,
+			182,
+		*/
+	{
+		// set the source file to convert
+		ofFile file("colorsDict.json");
 
-//--------------------------------------------------------------
-void ofApp::draw() {
-	ofSetColor(255);
-	text = ss.str();
-	ttf.drawString(text, 20, 20);
-}
+		string kitName = "SANZO WADA DICTIONARY";
+		string path = "OUTPUT/" + kitName; // set kit folder name
+		string filenameRoot = "SANZO"; // set palette names root
 
-//--------------------------------------------------------------
-void ofApp::keyPressed(int key) {
+		vector<colorType> colorsKit;
+		vector<combinationType> palettesKit;
+		vector<int> icombinations;
+
+		static bool bDebug = true;
+
+		if (file.exists())
+		{
+			file >> js;
+
+			if (bDebug)
+			{
+				ss.clear();
+				ss << "IMPORTING JSON FILE PALETTES" << endl;
+				ss << "to path: " << path << endl;
+				ss << "with name: " << filenameRoot << "_xx" << endl << endl;
+				ss << js << endl << endl;
+			}
+
+			int ip = 0;
+			for (auto & j : js) // iterate each color
+			{
+				ip++;
+				if (bDebug) {
+					ss << "----------------------------------------------" << endl;
+					ss << "Color #" << ip << endl;
+				}
+
+				if (!j.empty())
+				{
+					//ss << j << endl << endl; // log json item
+
+					string name = j["name"];
+					string hex = j["hex"];
+
+					ss << "Name:" << name << " hex:" << hex << endl;
+
+					vector<int> _colCombinations = j["combinations"]; // get all the combinations where a color appears
+
+					for (auto & comb : _colCombinations) // add combination only if not queued
+					{
+						bool bFound = false;
+
+						if (icombinations.size() == 0) bFound = false;
+						else
+							for (auto & c : icombinations)
+							{
+								if (comb == c)
+								{
+									bFound = true;
+								}
+							}
+
+						//-
+
+						// only push for counting purposes 
+						if (!bFound) icombinations.push_back(comb); // skip push if already present
+					}
+
+					//-
+
+					if (bDebug)
+					{
+						ss << "Combinations:";
+						for (int i = 0; i < _colCombinations.size(); i++)
+						{
+							ss << _colCombinations[i] << (i != _colCombinations.size() - 1 ? ", " : "");
+						}
+						ss << endl << endl;
+					}
+
+					//cout << ss;
+					//ss.clear();
+
+					//-
+
+					colorType c;
+					c.name = name;
+					c.combinations = _colCombinations;
+
+					ofColor _color;
+					ofStringReplace(hex, "#", ""); // remove "#"
+					hexToColor(_color, hex);
+					c.color = _color;
+
+					colorsKit.push_back(c);
+				}
+			}
+
+			//---
+
+			if (bDebug)
+			{
+				// we should count 348 colour combinations accumulated
+				ss << endl << "Combinations amount:" << icombinations.size();
+
+				//for (int i = 0; i < icombinations.size(); i++) {
+				//	ss << icombinations[i] << (i != icombinations.size() - 1 ? ", " : "");
+				//}
+				//ss << endl << endl;
+
+				cout << ss;
+				ss.clear();
+			}
+
+			//---
+
+			// we will generate a palette for each combination re-using all the referenced colors
+
+			for (int p = 0; p < icombinations.size(); p++)
+			{
+				ofJson jp; // palette
+
+				bool bvalid = false;
+
+				if (bDebug)
+				{
+					ss << endl << "Combinations #" << p << endl;
+				}
+
+				//-
+
+				// 1. iterate each color
+				// 2. if the color has the combination listed inside his data, push the color to current palette
+				for (int i = 0; i < colorsKit.size(); i++) // all colors
+				{
+					int ii = i + 0;
+
+					colorType c = colorsKit[i];
+
+					// notice that we cant use c.combinations[ic] 
+
+					for (int ic = 0; ic < c.combinations.size(); ic++) // iterate listed combinations in the color
+					{
+						if (ii == p) // combination is listed in the color
+						//if (ii == p) // combination is listed in the color
+						{
+							ofColor col = c.color;
+
+							ofJson jc; // color
+							jc["r"] = col.r;
+							jc["g"] = col.g;
+							jc["b"] = col.b;
+							jc["a"] = col.a;
+							jp.push_back(jc); // push then color to palette
+
+							bvalid = true; // almost one color included..
+						}
+					}
+				}
+
+				//--
+
+				if (bvalid)
+				{
+					string suffix = "";
+					int ip = p + 0;
+					//suffix += ofToString(ip < 1000 ? "0" : "");
+					suffix += ofToString(ip < 100 ? "0" : "");
+					suffix += ofToString(ip < 10 ? "0" : "");
+					suffix += ofToString(ip);
+
+					string filename = filenameRoot + "_" + suffix + ".json";
+
+					// save json
+					ofSavePrettyJson(path + "/" + filename, jp);
+				}
+			}
+		}
+	}
 }

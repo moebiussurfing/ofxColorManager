@@ -17,10 +17,8 @@
 
 #include "ofxSerializer.h"
 
-/*
- These string to hex conversions aren't trivial.
- */
- //--------------------------------------------------------------
+// These string to hex conversions aren't trivial.
+//--------------------------------------------------------------
 static int stringToHex(string hex) {
 	int aHex;
 	stringstream convert(hex);
@@ -44,11 +42,24 @@ class paletteType {
 public:
 	vector<ofColor> palette;
 };
-
 //--------------------------------------------------------------
 class kitType {
 public:
 	vector<paletteType> palettes;
+};
+
+//--------------------------------------------------------------
+class colorType {
+public:
+	string name; // color name
+	ofColor color; // color code
+	vector<int> combinations; // on wich combinations the color appears
+};
+//--------------------------------------------------------------
+class combinationType { // aka palette
+public:
+	string name; // combination name
+	vector<int> icolors; // colors index
 };
 
 //--------------------------------------------------------------
@@ -59,10 +70,12 @@ public:
 	kitType kit;
 
 	void setup();
-	void update();
 	void draw();
 
-	void keyPressed(int key);
+	void batch1();
+	void batch2();
+	void batch3();
+	void batch4();
 
 	ofJson js;
 
