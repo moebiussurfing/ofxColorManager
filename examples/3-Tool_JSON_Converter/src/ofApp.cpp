@@ -142,6 +142,19 @@ void ofApp::batch2() {
 		"shade_50": "#fce4ec",
 		"shade_100": "#f8bbd0",
 	*/
+
+	// TODO:
+	// https://github.com/frizeiro/material-colors
+	// https://github.com/frizeiro/material-colors/blob/master/base/material-colors.txt
+	// another alternative to make user palettes like:
+	//    "name": "Teal",
+	/*
+	"weight": "300",
+		"color" : "#4DB6AC",
+		"light" : "#82E9DE",
+		"dark" : "#00867D",
+		"text" : "#000000"
+	*/
 	{
 		ofFile file("palette.json");
 
@@ -454,9 +467,12 @@ void ofApp::batch4() {
 
 	// Taken from https://github.com/mattdesl/dictionary-of-colour-combinations
 	// A JSON dataset of 348 colour combinations (of 2, 3, and 4 colours) of 159 unique colours, from the book "A Dictionary of Colour Combinations" 
-	//compiled by Sanzo Wada (1883 – 1967) and published by Seigensha Art.
+	// compiled by Sanzo Wada (1883 – 1967) and published by Seigensha Art.
+	// I noticed than the converted colors looked a bit different than the https://github.com/dblodorn/sanzo-wada/ version.
+	// I should verify if something if wrong or if look more similar using CMYK or RGB instead of the used hex.
+
 	/*
-			[
+	[
 		{
 		"name": "Hermosa Pink",
 		"combinations": [
@@ -483,18 +499,12 @@ void ofApp::batch4() {
 		],
 		"hex": "#f9c1ce"
 		},
+
 		{
 		"name": "Corinthian Pink",
 		"combinations": [
 			27,
 			43,
-			87,
-			97,
-			128,
-			169,
-			174,
-			206,
-			246,
 			254,
 			264,
 			342
@@ -506,22 +516,18 @@ void ofApp::batch4() {
 			15,
 			0
 		],
-		"lab": [
-			80.34637979705501,
-			25.369649805447466,
-			7.879377431906619
-		],
 		"rgb": [
 			248,
 			182,
+		..
 		*/
 	{
 		// set the source file to convert
 		ofFile file("colorsDict.json");
 
-		string kitName = "SANZO WADA DICTIONARY"; // to name the container folder
+		string kitName = "SANZOWADA DICTIONARY"; // to name the container folder
 		string path = "OUTPUT/" + kitName; // set kit folder name
-		string filenameRoot = "SANZO"; // set palette names root
+		string filenameRoot = "SANZOWADA"; // set palette names root
 
 		vector<colorType> colorsKit;
 		vector<combinationType> palettesKit;
@@ -579,7 +585,7 @@ void ofApp::batch4() {
 						// only push for counting purposes 
 						if (!bFound) icombinations.push_back(comb); // skip push if already present
 					}
-					
+
 					//-
 
 					if (bDebug)
@@ -659,7 +665,7 @@ void ofApp::batch4() {
 
 				for (int i = 0; i < colorsKit.size(); i++) // all colors
 				{
-					int ii = i + 1;
+					//int ii = i + 1;
 
 					colorType c = colorsKit[i];
 
@@ -671,10 +677,9 @@ void ofApp::batch4() {
 
 						// pseudocode:
 						// is the color on current i combination?
-						
+
 						// combination is listed in the color
-						if (ic == p)
-						//if (i == colcomb) // color pos is equals to listed colors con combinator
+						if (p + 1 == colcomb) // color pos is equals to listed colors con combinator
 						{
 							ofColor col = c.color;
 							ofJson jc; // color
@@ -694,7 +699,7 @@ void ofApp::batch4() {
 				if (bvalid)
 				{
 					string suffix = "";
-					int ip = p + 0;
+					int ip = p + 1;
 					//suffix += ofToString(ip < 1000 ? "0" : "");
 					suffix += ofToString(ip < 100 ? "0" : "");
 					suffix += ofToString(ip < 10 ? "0" : "");
