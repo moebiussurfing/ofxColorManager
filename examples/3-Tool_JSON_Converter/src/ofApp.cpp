@@ -9,14 +9,14 @@ void ofApp::setup() {
 
 	//-
 
-	// Usage:
-	// set only one of the importer snippets 
-	// to if (1)
+	// uncomment ont of the converters:
 
-	if (0) batch1();
-	if (0) batch2();
-	if (0) batch3();
-	if (1) batch4();
+	//batch1();
+	//batch2();
+	//batch3();
+	batch4();
+
+	ofLogNotice(__FUNCTION__) << text;
 }
 
 //--------------------------------------------------------------
@@ -519,18 +519,21 @@ void ofApp::batch4() {
 		// set the source file to convert
 		ofFile file("colorsDict.json");
 
-		string kitName = "SANZO WADA DICTIONARY";
+		string kitName = "SANZO WADA DICTIONARY"; // to name the container folder
 		string path = "OUTPUT/" + kitName; // set kit folder name
 		string filenameRoot = "SANZO"; // set palette names root
 
 		vector<colorType> colorsKit;
 		vector<combinationType> palettesKit;
+		//int icombinations = 0;
 		vector<int> icombinations;
 
 		static bool bDebug = true;
 
 		if (file.exists())
 		{
+			// 1. read json file content:
+
 			file >> js;
 
 			if (bDebug)
@@ -543,7 +546,7 @@ void ofApp::batch4() {
 			}
 
 			int ip = 0;
-			for (auto & j : js) // iterate each color
+			for (auto & jc : js) // iterate each color
 			{
 				ip++;
 				if (bDebug) {
@@ -551,22 +554,19 @@ void ofApp::batch4() {
 					ss << "Color #" << ip << endl;
 				}
 
-				if (!j.empty())
+				if (!jc.empty())
 				{
 					//ss << j << endl << endl; // log json item
 
-					string name = j["name"];
-					string hex = j["hex"];
-
+					string name = jc["name"];
+					string hex = jc["hex"];
+					vector<int> _colCombinations = jc["combinations"]; // get all the combinations where a color appears
 					ss << "Name:" << name << " hex:" << hex << endl;
-
-					vector<int> _colCombinations = j["combinations"]; // get all the combinations where a color appears
 
 					for (auto & comb : _colCombinations) // add combination only if not queued
 					{
 						bool bFound = false;
-
-						if (icombinations.size() == 0) bFound = false;
+						if (icombinations.size() == 0) bFound = false; // force queue add
 						else
 							for (auto & c : icombinations)
 							{
@@ -576,12 +576,10 @@ void ofApp::batch4() {
 								}
 							}
 
-						//-
-
 						// only push for counting purposes 
 						if (!bFound) icombinations.push_back(comb); // skip push if already present
 					}
-
+					
 					//-
 
 					if (bDebug)
@@ -598,6 +596,8 @@ void ofApp::batch4() {
 					//ss.clear();
 
 					//-
+
+					// we queue each iterated color (all)
 
 					colorType c;
 					c.name = name;
@@ -617,39 +617,49 @@ void ofApp::batch4() {
 			if (bDebug)
 			{
 				// we should count 348 colour combinations accumulated
-				ss << endl << "Combinations amount:" << icombinations.size();
+				ss << endl << "Combinations amount:" << icombinations.size() << endl;
 
-				//for (int i = 0; i < icombinations.size(); i++) {
-				//	ss << icombinations[i] << (i != icombinations.size() - 1 ? ", " : "");
-				//}
-				//ss << endl << endl;
-
+				ss << endl << "List Combinations:" << endl;
+				for (int _i = 0; _i < icombinations.size(); _i++)
+				{
+					ss << icombinations[_i] << ", ";
+				}
+				ss << endl << endl;
 				cout << ss;
-				ss.clear();
+
+				std::sort(icombinations.begin(), icombinations.end());
+				cout << "Sorted Combinations:" << endl;
+				for (auto x : icombinations)
+					cout << x << ", ";
+
+				//ss.clear();
 			}
 
 			//---
+
+			// 2. build palettes kit:
 
 			// we will generate a palette for each combination re-using all the referenced colors
 
 			for (int p = 0; p < icombinations.size(); p++)
 			{
-				ofJson jp; // palette
-
-				bool bvalid = false;
-
 				if (bDebug)
 				{
 					ss << endl << "Combinations #" << p << endl;
 				}
 
+				ofJson jp; // palette
+
+				bool bvalid = false;
+
 				//-
 
 				// 1. iterate each color
 				// 2. if the color has the combination listed inside his data, push the color to current palette
+
 				for (int i = 0; i < colorsKit.size(); i++) // all colors
 				{
-					int ii = i + 0;
+					int ii = i + 1;
 
 					colorType c = colorsKit[i];
 
@@ -657,18 +667,22 @@ void ofApp::batch4() {
 
 					for (int ic = 0; ic < c.combinations.size(); ic++) // iterate listed combinations in the color
 					{
-						if (ii == p) // combination is listed in the color
-						//if (ii == p) // combination is listed in the color
+						int colcomb = c.combinations[ic];
+
+						// pseudocode:
+						// is the color on current i combination?
+						
+						// combination is listed in the color
+						if (ic == p)
+						//if (i == colcomb) // color pos is equals to listed colors con combinator
 						{
 							ofColor col = c.color;
-
 							ofJson jc; // color
 							jc["r"] = col.r;
 							jc["g"] = col.g;
 							jc["b"] = col.b;
 							jc["a"] = col.a;
 							jp.push_back(jc); // push then color to palette
-
 							bvalid = true; // almost one color included..
 						}
 					}
@@ -676,6 +690,7 @@ void ofApp::batch4() {
 
 				//--
 
+				// store json if valid (= there's one or more colors)
 				if (bvalid)
 				{
 					string suffix = "";
@@ -685,9 +700,8 @@ void ofApp::batch4() {
 					suffix += ofToString(ip < 10 ? "0" : "");
 					suffix += ofToString(ip);
 
-					string filename = filenameRoot + "_" + suffix + ".json";
-
 					// save json
+					string filename = filenameRoot + "_" + suffix + ".json";
 					ofSavePrettyJson(path + "/" + filename, jp);
 				}
 			}

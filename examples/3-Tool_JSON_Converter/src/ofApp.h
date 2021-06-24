@@ -59,7 +59,7 @@ public:
 class combinationType { // aka palette
 public:
 	string name; // combination name
-	vector<int> icolors; // colors index
+	vector<int> icolors; // colors index that the combination aka palette contains
 };
 
 //--------------------------------------------------------------
