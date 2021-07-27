@@ -39,6 +39,7 @@ BUGS:
 // some preprocessor directives
 // mainly for debug purposes only
 
+#include "ofxSurfing_appDEFINES.h" // -> we set MAKE_RELEASE_VERSION here!
 //#define MAKE_RELEASE_VERSION // -> To be used for deploy. Disables console and other stuff, for final release version. name to Paletto v1.0
 
 //#define USE_VERSION_CHECKER // TODO: crashes on exit..
@@ -500,20 +501,6 @@ private:
 	ofParameter <std::string> path_Folder_ExportColor_Custom;
 	ofParameter <std::string> path_Folder_ExportColor_Data;
 
-	//--
-
-	// colors library layout
-
-private:
-	ofParameter<bool> lib_Responsive_ModeGrid;
-	ofParameter<bool> lib_Responsive_ModeFit;
-	ofParameter<bool> bPagerized;
-	ofParameter<int> sizeLibColBox;
-	ofParameter<bool> bResponsive_Panels;
-	ofParameter<int> sizePaletteBox;
-
-	ofParameter<bool> bFitLayout;
-
 	//-
 
 private:
@@ -537,8 +524,6 @@ private:
 	ofParameter<int> last_Index_Range{ "Last Range Index", 0, 0, NUM_TYPES_RANGES - 1 }; // selected range algorithm
 	ofParameter<int> last_Index_ColorPalette{ "Color", 0, 0, 0 }; // selected color on palette on editing
 	ofParameter<int> last_Index_Preset{ "Preset Index", 0, 0, 0 }; // selected preset
-	int last_Lib_Index = -1; // last library picked color
-	void resetLibraryLayout();
 
 	bool bLast_Index_Theory = true;
 	bool bLast_Index_Range = true;
@@ -654,6 +639,7 @@ private:
 	ofParameter<int> boxMaxRows;
 	ofParameter<float> scale_ColPalette;
 	ofParameter<bool> bFlipUserPalette;
+
 	ofParameter<float> scale_ColRange;
 
 	//-
@@ -699,15 +685,9 @@ private:
 	DEMO_Scene DEMO1_Bubbles;
 	DEMO_SceneSpheres DEMO2_Spheres;
 
-	//--
-
-private:
-
-	std::string last_Lib_NameColor = "";
-	int last_ColorPicked_Lib;
-
 	//-	
 
+private:
 	ImVec4 borderLineColor = ImVec4(0, 0, 0, 0.65); //  for selected color buttons, toggles and blinking 
 	float borderLineWidth = 1.0f;
 	float labelPadding = 0.0; // label buttons
@@ -894,9 +874,11 @@ private:
 private:
 	ofxImGui::Gui gui;
 	ofxImGui::Settings mainSettings = ofxImGui::Settings();
+
 	ImFont* customFont = nullptr;
 	ImFont* customFontBig = nullptr;
 	ImGuiStyle *style = nullptr;
+	
 	ImGuiWindowFlags flagsWindowsLocked;
 	ofParameter<int> fontSizeBigParam;
 	ofParameter<int> fontSizeParam;
@@ -1093,6 +1075,29 @@ private:
 	ofParameter<bool>lib_CardsMode{ "Mode Cards", false };
 	ofParameter<int> lib_MaxColumns{ "Columns Max", 7, 1, 7 * 6 };
 	ofParameter<float> scale_LibCol{ "Scale", 1, 0.5, 1.5 };
+
+	void resetLibraryLayout();
+
+	//--
+
+private:
+	std::string last_Lib_NameColor = "";
+	int last_ColorPicked_Lib;
+	int last_Lib_Index = -1; // last library picked color
+
+	//--
+
+	// colors library layout
+
+private:
+	ofParameter<bool> lib_Responsive_ModeGrid;
+	ofParameter<bool> lib_Responsive_ModeFit;
+	ofParameter<bool> bPagerized;
+	ofParameter<int> sizeLibColBox;
+	ofParameter<bool> bResponsive_Panels;
+	ofParameter<int> sizePaletteBox;
+
+	ofParameter<bool> bFitLayout;
 
 	//--
 
@@ -1412,7 +1417,7 @@ private:
 			invert(colors[i]);
 		}
 	}
-	static  vector<ofVec2f> getRYB_WHEEL() {
+	static vector<ofVec2f> getRYB_WHEEL() {
 		vector<ofVec2f> RYB_WHEEL;
 		RYB_WHEEL.push_back(ofVec2f(0, 0));
 		RYB_WHEEL.push_back(ofVec2f(15, 8));
