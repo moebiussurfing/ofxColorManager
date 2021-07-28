@@ -207,7 +207,8 @@ using namespace ofxImGuiSurfing;
 #include "ofxGui.h"
 #endif
 
-#include "ofxImGui.h"
+#include "ofxSurfingImGui.h"
+//#include "ofxImGui.h"
 #include "imgui_internal.h" // <-- example uses some imgui internals...
 //#include "tools/imgui_stdlib.h" // <-- string helpers
 
@@ -872,8 +873,9 @@ private:
 	// GUI
 
 private:
-	ofxImGui::Gui gui;
+	//ofxImGui::Gui gui;
 	ofxImGui::Settings mainSettings = ofxImGui::Settings();
+	ofxSurfing_ImGui_Manager guiManager;
 
 	ImFont* customFont = nullptr;
 	ImFont* customFontBig = nullptr;

@@ -50,6 +50,7 @@ void ofxColorQuantizerHelper::draw_Gui()
 		float _w25;
 		float _h;
 		ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+		_h *= 2;
 
 		//-
 
@@ -351,6 +352,7 @@ void ofxColorQuantizerHelper::draw_Gui()
 			ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 			__widthPicts = _w100 - _spcx;
 			__widthPicts -= ImGui::GetStyle().ItemInnerSpacing.x;
+			_h *= 2;
 
 			//-
 

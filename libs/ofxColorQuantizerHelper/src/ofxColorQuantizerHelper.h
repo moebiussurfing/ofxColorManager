@@ -74,6 +74,7 @@ private:
 	float __widthPicts;
 
 	ofxImGui::Gui* gui_ImGui;
+
 public:
 	void setImGuiPointer(ofxImGui::Gui& _gui) {
 		gui_ImGui = &_gui;
