@@ -1736,7 +1736,7 @@ void ofxColorManager::gui_Theory()
 
 	//--
 
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(2 * PANEL_WIDGETS_WIDTH, 800));
+	//ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(2 * PANEL_WIDGETS_WIDTH, 800));
 
 	guiManager.beginWindow(SHOW_Theory, flags);
 	//guiManager.beginWindow("THEORY", flags);
@@ -2158,7 +2158,7 @@ void ofxColorManager::gui_Theory()
 	//ofxImGui::EndWindow(mainSettings);
 	guiManager.endWindow();
 
-	ImGui::PopStyleVar();
+	//ImGui::PopStyleVar();
 }
 
 //--------------------------------------------------------------
@@ -2179,9 +2179,11 @@ void ofxColorManager::gui_Editor()
 
 	//--
 
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, PANEL_WIDGETS_HEIGHT));
+	//ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, PANEL_WIDGETS_HEIGHT));
+	
+	guiManager.beginWindow(SHOW_Editor, flagsw);
+	//if (ofxImGui::BeginWindow("EDITOR", mainSettings, flagsw))
 
-	if (ofxImGui::BeginWindow("EDITOR", mainSettings, flagsw))
 	{
 		float _spcx;
 		float _spcy;
@@ -2354,6 +2356,9 @@ void ofxColorManager::gui_Editor()
 			ImGui::Dummy(ImVec2(0.0f, 2.0f));
 
 			//----
+
+			ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+			_h *= 2;
 
 			//TODO:
 			//add here to for using when presets panel is hidden
@@ -2559,6 +2564,9 @@ void ofxColorManager::gui_Editor()
 
 			//--
 
+			ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+			_h *= 2;
+
 			// 2. TWEAK
 
 			// aux palette tweaker
@@ -2573,8 +2581,6 @@ void ofxColorManager::gui_Editor()
 			if (bTweakPalette)
 			{
 				ImGui::Indent();
-				ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
-				_h *= 2;
 
 				if (ImGui::Button("GET", ImVec2(_w50, _h / 2)))
 				{
@@ -2852,9 +2858,10 @@ void ofxColorManager::gui_Editor()
 			ofxImGuiSurfing::AddBigToggle(SHOW_Library, _w100, _h / 2); }
 	}
 
-	ofxImGui::EndWindow(mainSettings);
+	//ofxImGui::EndWindow(mainSettings);
+	guiManager.endWindow();
 
-	ImGui::PopStyleVar();
+	//ImGui::PopStyleVar();
 }
 
 //--------------------------------------------------------------
@@ -2874,7 +2881,7 @@ void ofxColorManager::gui_Palette()
 
 	//-
 
-	if (lockMin)ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(500, PANEL_WIDGETS_HEIGHT));
+	//if (lockMin)ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(500, PANEL_WIDGETS_HEIGHT));
 
 	guiManager.beginWindow(SHOW_Palette, flagsw);
 	//if (ofxImGui::BeginWindow("PALETTE", mainSettings, flagsw))
@@ -3568,7 +3575,7 @@ void ofxColorManager::gui_Library()
 	guiManager.endWindow();
 	//ofxImGui::EndWindow(mainSettings);
 
-	ImGui::PopStyleVar();
+	//ImGui::PopStyleVar();
 }
 
 //--------------------------------------------------------------
@@ -3584,12 +3591,13 @@ void ofxColorManager::gui_LinkExport()
 	flagsw = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
 	flagsw |= flagsWindowsLocked;
 
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(ww, hh));
+	//ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(ww, hh));
 
 	//--
 
 	guiManager.beginWindow(SHOW_LinkExport, flagsw);
 	//if (ofxImGui::BeginWindow("LINK", mainSettings, flagsw))
+
 	{
 		float _spcx;
 		float _spcy;
@@ -3785,7 +3793,7 @@ void ofxColorManager::gui_LinkExport()
 	//ofxImGui::EndWindow(mainSettings);
 	guiManager.endWindow();
 
-	ImGui::PopStyleVar();
+	//ImGui::PopStyleVar();
 }
 
 //--------------------------------------------------------------
@@ -3807,6 +3815,7 @@ void ofxColorManager::gui_Picker()
 
 	guiManager.beginWindow(SHOW_Picker, flagsw);
 	//if (ofxImGui::BeginWindow("PICKER", mainSettings, flagsw))
+
 	{
 		float _spcx;
 		float _spcy;
@@ -4076,6 +4085,7 @@ void ofxColorManager::gui_EnginesPanel()
 
 	guiManager.beginWindow(SHOW_Engines, flagsw);
 	//if (ofxImGui::BeginWindow("ENGINES", mainSettings, flagsw))
+
 	{
 		const int NUM_WIDGETS = 4;
 
@@ -4117,10 +4127,11 @@ void ofxColorManager::gui_Advanced()
 
 	//----
 
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(325, PANEL_WIDGETS_HEIGHT));
+	//ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(325, PANEL_WIDGETS_HEIGHT));
 
-	guiManager.beginWindow(SHOW_LayoutsAdvanced, flags);
+	guiManager.beginWindow(SHOW_Advanced, flags);
 	//if (ofxImGui::BeginWindow("ADVANCED", mainSettings, flags))
+
 	{
 		float _spcx;
 		float _spcy;
@@ -4132,7 +4143,7 @@ void ofxColorManager::gui_Advanced()
 		float _w25;
 		float _h;
 		ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
-
+		_h *= 2;
 		//--
 
 		if (ImGui::CollapsingHeader("PANELS", ImGuiWindowFlags_None))
@@ -4201,7 +4212,7 @@ void ofxColorManager::gui_Advanced()
 	//ofxImGui::EndWindow(mainSettings);
 	guiManager.endWindow();
 
-	ImGui::PopStyleVar();
+	//ImGui::PopStyleVar();
 }
 #endif
 
@@ -4252,10 +4263,11 @@ void ofxColorManager::gui_LayoutsPresets()
 
 	//----
 
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(ww, CURRENT_WINDOW_MIN_HEIGHT));
+	//ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(ww, CURRENT_WINDOW_MIN_HEIGHT));
 
 	guiManager.beginWindow(SHOW_Layouts, flags);
 	//if (ofxImGui::BeginWindow("LAYOUT PRESETS", mainSettings, flags))
+
 	{
 		//get window position for advanced layout paired position
 		auto posx = ImGui::GetWindowPos().x;
@@ -4339,7 +4351,7 @@ void ofxColorManager::gui_LayoutsPresets()
 	//ofxImGui::EndWindow(mainSettings);
 	guiManager.endWindow();
 
-	ImGui::PopStyleVar();
+	//ImGui::PopStyleVar();
 }
 
 //--------------------------------------------------------------
@@ -4420,10 +4432,10 @@ void ofxColorManager::gui_LayoutsAdvanced()
 	static bool auto_resize = true;
 
 	ImGuiWindowFlags flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
-	flags |= ImGuiWindowFlags_NoSavedSettings;//exclude from restore layouts
+	flags |= ImGuiWindowFlags_NoSavedSettings; // exclude from restore layouts
 	//flags |= flagsWindowsLocked;
 
-	bool bMin = false;//hide load buttons to simplify
+	bool bMin = false; // hide load buttons to simplify
 	float max = (bMin ? 150 : 175);
 
 	//----
@@ -4431,25 +4443,29 @@ void ofxColorManager::gui_LayoutsAdvanced()
 	static float CURRENT_WINDOW_MIN_HEIGHT = 100;
 
 	// position is linked to main layout window
-	//is excluded from .ini
+	// is excluded from .ini
 	float xw, yw, ww, hw;
 	ww = LAYOUT_WINDOW_WIDTH;
 	hw = CURRENT_WINDOW_MIN_HEIGHT;
 	xw = ofGetWidth() / 2 - ww / 2;
 	yw = ofGetHeight() / 2 - hw / 2;
+
 	ImGuiCond _flagc;
 	//_flagc = ImGuiCond_Appearing;
 	//ImGui::SetNextWindowPos(ofVec2f(xw + ww + 2, yw), _flagc);
 	_flagc = ImGuiCond_Always;
+
 	int _pad = 10;
 	ImGui::SetNextWindowPos(ofVec2f(positionGuiLayout.get().x + widthGuiLayout + _pad, positionGuiLayout.get().y), _flagc);
 	//ImGui::SetNextWindowSize(ofVec2f(ww, hw), _flagc);
 
 	//----
 
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(max, CURRENT_WINDOW_MIN_HEIGHT));
+	//ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(max, CURRENT_WINDOW_MIN_HEIGHT));
 
-	if (ofxImGui::BeginWindow("LAYOUTS", mainSettings, flags))
+	guiManager.beginWindow(SHOW_LayoutsAdvanced, flags);
+	//if (ofxImGui::BeginWindow("LAYOUTS", mainSettings, flags))
+
 	{
 		float _spcx;
 		float _spcy;
@@ -4621,9 +4637,10 @@ void ofxColorManager::gui_LayoutsAdvanced()
 		}
 	}
 
-	ofxImGui::EndWindow(mainSettings);
+	//ofxImGui::EndWindow(mainSettings);
+	guiManager.endWindow();
 
-	ImGui::PopStyleVar();
+	//ImGui::PopStyleVar();
 }
 
 //--------------------------------------------------------------
@@ -4634,12 +4651,13 @@ void ofxColorManager::gui_Panels()
 	ImGuiWindowFlags flags = auto_resize ? ImGuiWindowFlags_AlwaysAutoResize : ImGuiWindowFlags_None;
 	flags |= flagsWindowsLocked;
 
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(625, PANEL_WIDGETS_HEIGHT));
+	//ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(625, PANEL_WIDGETS_HEIGHT));
 
 	//----
 
 	guiManager.beginWindow(SHOW_Panels, flags);
 	//if (ofxImGui::BeginWindow("PANELS", mainSettings, flags))
+
 	{
 		int NUM_WIDGETS = 11;//expected num widgets
 
@@ -4716,7 +4734,7 @@ void ofxColorManager::gui_Panels()
 	//ofxImGui::EndWindow(mainSettings);
 	guiManager.endWindow();
 
-	ImGui::PopStyleVar();
+	//ImGui::PopStyleVar();
 }
 
 //--------------------------------------------------------------
@@ -4734,10 +4752,11 @@ void ofxColorManager::gui_Range()
 
 	//--
 
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, 600));
+	//ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, 600));
 
 	guiManager.beginWindow(SHOW_Range, flags);
 	//if (ofxImGui::BeginWindow("RANGE", mainSettings, flags))
+
 	{
 		//float _h = float(COLOR_STRIP_COLOR_HEIGHT);
 		float _hSz = int(BUTTON_COLOR_SIZE) * scale_ColRange.get();//color boxes
@@ -5049,7 +5068,7 @@ void ofxColorManager::gui_Range()
 	//ofxImGui::EndWindow(mainSettings);
 	guiManager.endWindow();
 
-	ImGui::PopStyleVar();
+	//ImGui::PopStyleVar();
 }
 
 #ifdef MODE_BACKGROUND
@@ -5065,10 +5084,11 @@ void ofxColorManager::gui_Background()
 
 	//--
 
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, PANEL_WIDGETS_HEIGHT));
+	//ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, PANEL_WIDGETS_HEIGHT));
 
 	guiManager.beginWindow(SHOW_BackGround, flagsw);
 	//if (ofxImGui::BeginWindow("BACKGROUND", mainSettings, flagsw))
+
 	{
 		//--
 
@@ -5190,7 +5210,7 @@ void ofxColorManager::gui_Background()
 	//ofxImGui::EndWindow(mainSettings);
 	guiManager.endWindow();
 
-	ImGui::PopStyleVar();
+	//ImGui::PopStyleVar();
 }
 #endif
 //--------------------------------------------------------------
@@ -5223,6 +5243,7 @@ void ofxColorManager::gui_Kit()
 
 		guiManager.beginWindow(SHOW_Kit, flags);
 		//if (ofxImGui::BeginWindow("KIT", mainSettings, flags))
+
 		{
 			// populate widgets
 			bool bfocus = false;
@@ -5237,6 +5258,7 @@ void ofxColorManager::gui_Kit()
 				preset_Load(files_Names[last_Index_Preset]);
 			}
 		}
+
 		//ofxImGui::EndWindow(mainSettings);
 		guiManager.endWindow();
 
@@ -5297,7 +5319,6 @@ void ofxColorManager::gui_TextInput()
 	flagsw |= ImGuiWindowFlags_NoBackground;
 	flagsw |= ImGuiWindowFlags_NoDecoration;
 
-
 	//-
 
 	// make it transparent
@@ -5307,7 +5328,7 @@ void ofxColorManager::gui_TextInput()
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(_ww, _hh));
 	ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.0);
 
-	//blink when a new preset is editing
+	// blink when a new preset is editing
 	float a;
 	if (MODE_NewPreset) a = ofxSurfingHelpers::getFadeBlink();
 	else a = 1.0f;
@@ -5321,7 +5342,7 @@ void ofxColorManager::gui_TextInput()
 	};
 	THEME_COLORS _THEME;
 
-	//select one
+	// select one
 	if (DEMO3_Svg.bEnable) _THEME = THEME_DAY;//this demo has white bg
 	else _THEME = THEME_NIGHT;
 
@@ -5344,7 +5365,9 @@ void ofxColorManager::gui_TextInput()
 
 	//--
 
-	if (ofxImGui::BeginWindow("PRESET NAME", mainSettings, flagsw))
+	guiManager.beginWindow("PRESET NAME", flagsw);
+	//if (ofxImGui::BeginWindow("PRESET NAME", mainSettings, flagsw))
+
 	{
 		ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
@@ -5431,14 +5454,16 @@ void ofxColorManager::gui_TextInput()
 					refresh_FilesSorting(textInput_New);
 				}
 				else ofLogError(__FUNCTION__) << "Empty name on textInput !";
-		}
+			}
 			ImGui::PopStyleColor();
 #endif
-	}
+		}
 
 		ImGui::Dummy(ImVec2(0.0f, 5.0f));
-}
-	ofxImGui::EndWindow(mainSettings);
+	}
+
+	//ofxImGui::EndWindow(mainSettings);
+	guiManager.endWindow();
 
 #ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
 	ImGui::PopFont();
@@ -5471,7 +5496,7 @@ void ofxColorManager::gui_Presets()
 
 	//--
 
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, PANEL_WIDGETS_HEIGHT));
+	//ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, PANEL_WIDGETS_HEIGHT));
 
 	//--
 
@@ -5503,6 +5528,7 @@ void ofxColorManager::gui_Presets()
 
 	guiManager.beginWindow(SHOW_Presets, flags);
 	//if (ofxImGui::BeginWindow("PRESETS", mainSettings, flags))
+
 	{
 		float _spcx;
 		float _spcy;
@@ -5513,6 +5539,9 @@ void ofxColorManager::gui_Presets()
 		float _w33;
 		float _w25;
 		float _h;
+
+		ofxImGuiSurfing::refreshImGui_WidgetsSizes(_w100, _w50, _w33, _w25, _h);
+		_h *= 2;
 
 		//-
 
@@ -5534,7 +5563,9 @@ void ofxColorManager::gui_Presets()
 					int _i = last_Index_Kit;
 
 					string n = "##kits";
-					ImGui::PushItemWidth(-10);
+					//ImGui::PushItemWidth(_w50);
+					ImGui::PushItemWidth(_w100 - 20);
+					//ImGui::PushItemWidth(-10);
 					ImGui::PushID(n.c_str());
 
 					if (ofxImGui::VectorCombo(" ", &_i, files_KitNames))
@@ -5581,7 +5612,9 @@ void ofxColorManager::gui_Presets()
 			int _i = last_Index_Preset;
 
 			string n = "##presets";
-			ImGui::PushItemWidth(-10);
+			//ImGui::PushItemWidth(-10);
+			//ImGui::PushItemWidth(100);
+			ImGui::PushItemWidth(_w100 - 20);
 			ImGui::PushID(n.c_str());
 
 			if (ofxImGui::VectorCombo(" ", &_i, files_Names))
@@ -5606,6 +5639,9 @@ void ofxColorManager::gui_Presets()
 		}
 
 		ImGui::Dummy(ImVec2(0.0f, 2.0f));
+
+		ofxImGuiSurfing::refreshImGui_WidgetsSizes(_w100, _w50, _w33, _w25, _h);
+		_h *= 2;
 
 		//----
 
@@ -5816,6 +5852,9 @@ void ofxColorManager::gui_Presets()
 
 		if (ImGui::CollapsingHeader("EXTRA"))
 		{
+			ofxImGuiSurfing::refreshImGui_WidgetsSizes(_w100, _w50, _w33, _w25, _h);
+			_h *= 2;
+
 			/*
 			if (ImGui::Button("UPDATE", ImVec2(_w50, _h / 2)))
 			{
@@ -5970,25 +6009,32 @@ void ofxColorManager::gui_Presets()
 
 			// palette colors mini preview
 			// auto browse presets. to testing and auto export
-			ImGui::PushItemWidth(_w99);
-			if (ofxImGui::AddParameter(bPlaySlideShow)) {}
-			ImGui::PopItemWidth();
+			//ImGui::PushItemWidth(_w99);
+			//if (ofxImGui::AddParameter(bPlaySlideShow)) {}
+			guiManager.Add(bPlaySlideShow, OFX_IM_TOGGLE_BUTTON_ROUNDED_SMALL);
+			//ImGui::PopItemWidth();
 
-			ImGui::PushItemWidth(-35);
-			if (bPlaySlideShow) ofxImGui::AddParameter(auto_pilot_Duration);
-			ofxImGui::AddParameter(bAutoHide_Name);
-
-			ImGui::PopItemWidth();
+			//ImGui::PushItemWidth(-35);
+			if (bPlaySlideShow) guiManager.Add(auto_pilot_Duration, OFX_IM_DEFAULT);
+			//if (bPlaySlideShow) ofxImGui::AddParameter(auto_pilot_Duration);
+			guiManager.Add(bAutoHide_Name, OFX_IM_TOGGLE_BUTTON_ROUNDED_SMALL);
+			//ofxImGui::AddParameter(bAutoHide_Name);
+			//ImGui::PopItemWidth();
 		}
 
 		//----
+
+		ofxImGuiSurfing::refreshImGui_WidgetsSizes(_w100, _w50, _w33, _w25, _h);
+		_h *= 2;
 
 		ImGui::Dummy(ImVec2(0.0f, 5.0f));
 		ImGui::Separator();
 		ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
-		ofxImGuiSurfing::AddBigToggle(SHOW_Editor, _w100, _h / 2);
-		ofxImGuiSurfing::AddBigToggle(SHOW_Kit, _w100, _h / 2);
+		guiManager.Add(SHOW_Editor, OFX_IM_TOGGLE_BUTTON_ROUNDED_SMALL);
+		guiManager.Add(SHOW_Kit, OFX_IM_TOGGLE_BUTTON_ROUNDED_SMALL);
+		//ofxImGuiSurfing::AddBigToggle(SHOW_Editor, _w100, _h / 2);
+		//ofxImGuiSurfing::AddBigToggle(SHOW_Kit, _w100, _h / 2);
 
 		//ImGui::Dummy(ImVec2(0.0f, 2.0f));
 		//if (SHOW_Kit) ofxImGui::AddParameter(AutoScroll);
@@ -5998,7 +6044,7 @@ void ofxColorManager::gui_Presets()
 	guiManager.endWindow();
 	//ofxImGui::EndWindow(mainSettings);
 
-	ImGui::PopStyleVar();
+	//ImGui::PopStyleVar();
 }
 
 //--------------------------------------------------------------
@@ -6012,10 +6058,11 @@ void ofxColorManager::gui_Gradient()
 
 	//--
 
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, PANEL_WIDGETS_HEIGHT));
+	//ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, PANEL_WIDGETS_HEIGHT));
 
 	guiManager.beginWindow(SHOW_Gradient, flagsw);
 	//if (ofxImGui::BeginWindow("GRADIENT", mainSettings, flagsw))
+
 	{
 		float _spcx;
 		float _spcy;
@@ -6041,7 +6088,8 @@ void ofxColorManager::gui_Gradient()
 			//ImGui::Dummy(ImVec2(0.0f, 5.0f));;
 
 			//ofxImGuiSurfing::AddBigToggle(SHOW_Gradient, _w100, _h / 2);
-			ofxImGuiSurfing::AddBigToggle(gradientEngine.SHOW_CurveEditor, _w100, _h);
+			guiManager.Add(gradientEngine.SHOW_CurveEditor, OFX_IM_TOGGLE_BUTTON_ROUNDED_SMALL);
+			//ofxImGuiSurfing::AddBigToggle(gradientEngine.SHOW_CurveEditor, _w100, _h);
 			//ofxImGuiSurfing::AddBigToggle(gradientEngine.SHOW_Gradient_Mini, _w100, _h);
 
 			//TODO:
@@ -6124,7 +6172,7 @@ void ofxColorManager::gui_Gradient()
 	//ofxImGui::EndWindow(mainSettings);
 	guiManager.endWindow();
 
-	ImGui::PopStyleVar();
+	//ImGui::PopStyleVar();
 }
 
 //--------------------------------------------------------------
@@ -6142,10 +6190,11 @@ void ofxColorManager::gui_Demo()
 
 	//-
 
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(ww, hh));
+	//ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(ww, hh));
 
 	guiManager.beginWindow(SHOW_Demos, flagsw);
 	//if (ofxImGui::BeginWindow("DEMO", mainSettings, flagsw))
+
 	{
 		float _spcx;
 		float _spcy;
@@ -6319,7 +6368,7 @@ void ofxColorManager::gui_Demo()
 	//ofxImGui::EndWindow(mainSettings);
 	guiManager.endWindow();
 
-	ImGui::PopStyleVar();
+	//ImGui::PopStyleVar();
 }
 
 //--------------------------------------------------------------
@@ -6365,17 +6414,18 @@ void ofxColorManager::setupGui()
 
 	fontSizeBigParam.set("Font Big Size", 100, 20, 200);
 	//fontBigName = "Kazesawa-Extrabold.ttf";
+
 #endif
 
 	//--
 
-	// theme
-#ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
-	ofxImGuiSurfing::ImGui_ThemeMoebiusSurfing();
-
-	//ofxSurfingHelpers::ImGui_ThemeModernDark();
-	//ImGui::StyleColorsDark();
-#endif
+//	// theme
+//#ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
+//	ofxImGuiSurfing::ImGui_ThemeMoebiusSurfing();
+//
+//	//ofxSurfingHelpers::ImGui_ThemeModernDark();
+//	//ImGui::StyleColorsDark();
+//#endif
 
 	//-
 
@@ -6524,6 +6574,7 @@ bool ofxColorManager::draw_Gui()
 			if (SHOW_Palette) gui_Palette();
 			if (SHOW_Editor) gui_Editor();
 			if (SHOW_Presets) gui_Presets();
+
 #ifdef MODE_TEXT_INPUT_WORKAROUND
 			if ((MODE_NewPreset && bAutoHide_Name) || !bAutoHide_Name)//hide text input
 			//if (MODE_NewPreset)//hide text input
@@ -6542,6 +6593,7 @@ bool ofxColorManager::draw_Gui()
 				if (SHOW_Engines) gui_EnginesPanel();
 				if (SHOW_Theory) gui_Theory();
 				if (SHOW_Range) gui_Range();
+
 #ifdef USE_COLOR_LOVERS
 				if (SHOW_ColourLovers)
 				{
@@ -6557,6 +6609,7 @@ bool ofxColorManager::draw_Gui()
 			}
 			if (SHOW_LinkExport) gui_LinkExport();
 			if (SHOW_Demos) gui_Demo();
+
 #ifndef USE_MINIMAL_GUI
 			if (SHOW_Advanced) gui_Advanced();
 #endif
@@ -6608,10 +6661,10 @@ bool ofxColorManager::draw_Gui()
 					ImGui::Dummy(ImVec2(0.0f, 10.0f));
 					ImGui::Text(str.c_str());
 					ImGui::Dummy(ImVec2(0, 10.0f));
-		}
+				}
 				ImGui::End();
+			}
 	}
-}
 #endif
 
 		//--
@@ -6626,7 +6679,7 @@ bool ofxColorManager::draw_Gui()
 		if (SHOW_EditTheme)
 		{
 			guiManager.beginWindow(SHOW_EditTheme, ImGuiWindowFlags_None);
-			if (ofxImGui::BeginWindow("THEME", mainSettings, ImGuiWindowFlags_None))
+			//if (ofxImGui::BeginWindow("THEME", mainSettings, ImGuiWindowFlags_None))
 			{
 				ImGui::ShowStyleEditor();
 			}
@@ -7527,8 +7580,8 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 			//is not closing..
 			TCP_Sender.close();
-			}
-	}
+		}
+}
 #endif
 
 	//-
@@ -7603,31 +7656,33 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 
 	//--
 
-//	// font preset name size
-//#ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
-//	else if (name == fontSizeParam.getName())
-//	{
-//		auto &io = ImGui::GetIO();
-//		auto normalCharRanges = io.Fonts->GetGlyphRangesDefault();
-//
-//		fontName = "Ruda-Bold.ttf";
-//
-//		std::string _path = "assets/fonts/";//assets folder
-//		customFont = gui.addFont(_path + fontName, fontSizeParam, nullptr, normalCharRanges);
-//
-//		io.FontDefault = customFont;
-//	}
-//	else if (name == fontSizeBigParam.getName())
-//	{
-//		auto &io = ImGui::GetIO();
-//		auto normalCharRanges = io.Fonts->GetGlyphRangesDefault();
-//
-//		fontBigName = "Kazesawa-Extrabold.ttf";
-//
-//		std::string _path = "assets/fonts/";//assets folder
-//		customFontBig = gui.addFont(_path + fontBigName, fontSizeBigParam, nullptr, normalCharRanges);
-//	}
-//#endif
+	// font preset name size
+#ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
+	else if (name == fontSizeParam.getName())
+	{
+		auto &io = ImGui::GetIO();
+		auto normalCharRanges = io.Fonts->GetGlyphRangesDefault();
+
+		fontName = "Ruda-Bold.ttf";
+
+		std::string _path = "assets/fonts/";//assets folder
+		customFont = guiManager.getGui().addFont(_path + fontName, fontSizeParam, nullptr, normalCharRanges);
+		//customFont = gui.addFont(_path + fontName, fontSizeParam, nullptr, normalCharRanges);
+
+		io.FontDefault = customFont;
+	}
+	else if (name == fontSizeBigParam.getName())
+	{
+		auto &io = ImGui::GetIO();
+		auto normalCharRanges = io.Fonts->GetGlyphRangesDefault();
+
+		fontBigName = "Kazesawa-Extrabold.ttf";
+
+		std::string _path = "assets/fonts/";//assets folder
+		customFontBig = guiManager.getGui().addFont(_path + fontBigName, fontSizeBigParam, nullptr, normalCharRanges);
+		//customFontBig = gui.addFont(_path + fontBigName, fontSizeBigParam, nullptr, normalCharRanges);
+	}
+#endif
 
 	//--
 
@@ -7769,7 +7824,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	else if (name == bModeBundlePreset.getName())
 	{
 		bModePalettePreset.setWithoutEventNotifications(!bModeBundlePreset);
-		}
+	}
 	else if (name == bModePalettePreset.getName())
 	{
 		bModeBundlePreset = !bModePalettePreset;
@@ -10191,11 +10246,11 @@ void ofxColorManager::exportPalette()
 			TCP_Sender.clearBuffer();
 			TCP_Sender.putString(ss.str());
 			TCP_Sender.send();
-		}
+	}
 #endif
 
 		storeText.push_back(ss.str() + "\n");
-	}
+}
 
 	//--
 }
@@ -10868,7 +10923,7 @@ void ofxColorManager::gui_About(bool* p_open)
 	//ImGui::Separator();
 	ImGui::Dummy(ImVec2(0.0f, 10.0f));
 	ImGui::Text("Author:");
-	ImGui::Text("moebiusSurfing  ( ManuMolina )");
+	ImGui::Text("moebiusSurfing. ManuMolina");
 	ImGui::Text("Barcelona / Buenos Aires.");
 	ImGui::Text("2019 - 2021");
 	ImGui::Dummy(ImVec2(0.0f, 5.0f));
@@ -10878,7 +10933,8 @@ void ofxColorManager::gui_About(bool* p_open)
 	ImGui::Text("Email:");
 	ImGui::Text("moebiusSurfing@gmail.com");
 	ImGui::Dummy(ImVec2(0, 10.f));
-	ImGui::Text("Thanks to all the openFrameworks");
+	ImGui::Text("Thanks to:");
+	ImGui::Text("All the openFrameworks");
 	ImGui::Text("community, coders and contributors of");
 	ImGui::Text("included libraries and add-ons.");
 	ImGui::Dummy(ImVec2(0.0f, 10.0f));
