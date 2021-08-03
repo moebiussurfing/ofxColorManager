@@ -114,6 +114,11 @@ void DEMO_Scene::update() {
 //--------------------------------------------------------------
 void DEMO_Scene::draw(ofRectangle viewport, float alpha)
 {
+	//TODO: workaround to avoid crash
+if (viewport == ofRectangle(0, 0, 0, 0)) {
+	viewport = ofRectangle(100, 100, 100, 100);
+}
+
 	{
 		// DEMO 1 - CIRCLES
 

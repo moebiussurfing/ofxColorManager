@@ -10714,6 +10714,11 @@ void ofxColorManager::draw_Demos()
 	// DEMO Bubbles
 	if (DEMO1_Enable)
 	{
+		////TODO: workaround to avoid crash
+		//if (rectangle_Central_MAX == ofRectangle(0, 0, 0, 0)) {
+		//	rectangle_Central_MAX = ofRectangle(100, 100, 100, 100);
+		//}
+
 		DEMO1_Bubbles.draw(rectangle_Central_MAX, DEMO1_Alpha);
 	}
 
