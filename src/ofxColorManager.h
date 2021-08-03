@@ -233,6 +233,7 @@ class ofxColorManager : public ofBaseApp
 	//-
 
 public:
+
 	ofxColorManager();
 	~ofxColorManager();
 
@@ -242,6 +243,7 @@ public:
 	void draw(ofEventArgs & args);
 
 public:
+
 	void exit();
 	void windowResized(int w, int h);
 	void dragEvent(ofDragInfo dragInfo);
@@ -258,6 +260,7 @@ public:
 	// OF callbacks
 
 public:
+
 	void keyPressed(ofKeyEventArgs &eventArgs);
 	void keyReleased(ofKeyEventArgs &eventArgs);
 
@@ -267,6 +270,7 @@ public:
 	void mouseScrolled(ofMouseEventArgs &eventArgs);
 
 private:
+
 	void addKeysListeners();
 	void removeKeysListeners();
 	void addMouseListeners();
@@ -275,15 +279,18 @@ private:
 	//--
 
 private:
+
 	//void draw_PresetName();
 
 	//--
 
 private:
+
 	float dt; // for preview speeds only..
 	float fps;
 
 private:
+
 	bool SHOW_EditTheme = false;
 
 	//--
@@ -303,6 +310,7 @@ private:
 	// TCP LINK
 
 private:
+
 	std::string host = "127.0.0.1"; // hardcoded. can't be change on runtime
 	int port = 10666; // localhost. hardcoded. can't be change on runtime
 	//_port.set("port", 6448, 1000, 50000);
@@ -326,11 +334,13 @@ private:
 	//--
 
 private:
+
 	GradientEngine gradientEngine;
 
 	//--
 
 private:
+
 	PreviewPaletteMini miniPreview;
 
 	DEMO_Svg DEMO3_Svg;
@@ -355,6 +365,7 @@ private:
 	// must be even sometimes to get same size in all palettes
 
 private:
+
 	ofParameter<int> numColors_Engines;
 	ofParameter<int> numColors_Range;
 	ofParameter<int> numColors_Theory_G1;
@@ -363,14 +374,16 @@ private:
 	//--
 
 private:
+
 	ofParameter<bool> bAutoHide_Name{ "AutoHide Name", true };
 
+	ofParameter<bool> SHOW_PanelEngines{ "ENGINES", true };
 	ofParameter<bool> SHOW_Name{ "Show Extra Name", false };
 	ofParameter<bool> SHOW_Advanced{ "ADVANCED", false };
 	ofParameter<bool> SHOW_Panels;
+
 	ofParameter<bool> SHOW_LayoutsAdvanced{ "LAYOUTS ", false };
 	ofParameter<bool> SHOW_Layouts{ "LAYOUTS", false };
-	ofParameter<bool> SHOW_PanelEngines{ "ENGINES", true };
 	//shows advanced panels to tweak layout or workflow behaviour
 
 	ofParameter<bool> Lock_DockingLayout{ "LOCK", false };
@@ -387,10 +400,12 @@ private:
 	ofParameter<bool> SHOW_ImGui{ "ImGui", true };
 
 private:
+
 	ofParameter<bool> SHOW_HelpInfo;
 	std::string helpInfo; // key commands
 
 private:
+
 	ofParameter<bool> ENABLE_keys{ "KEYS", true };
 	bool ENABLE_keys_PRE;
 
@@ -424,6 +439,7 @@ public:
 	}
 
 private:
+
 	ofParameter<bool> SHOW_ColourLovers;
 	ofParameter<bool> SHOW_ColourLovers_searcher;
 	ofParameter<bool> SHOW_BrowserColors;
@@ -449,6 +465,7 @@ private:
 	//-
 
 private:
+
 	// app modes
 	ofParameter<int> AppEnginesMode; //  not being much used now..
 	ofParameter<std::string> AppMode_name;
@@ -460,10 +477,12 @@ private:
 	//const char* element_names[Element_COUNT] = { "NONE", "THEORY", "RANGE", "LOVERS", "PICTURE" };
 	//int current_element = Element_0;
 
-	//--
+	//----
 
 	// ImGui layouts engine
+
 private:
+
 	const char* ini_to_load = NULL;
 	const char* ini_to_save = NULL;
 	std::string ini_to_load_Str;
@@ -483,11 +502,39 @@ private:
 	ofParameter<int> appLayoutIndex{ "App Layout", 0, 0, APP_LAYOUTS_AMOUNT - 1 };
 	int appLayoutIndex_PRE = -1;
 
-	//--
+	//-
+
+	ofParameter<bool> b0{ "DEFAULT", false };
+	ofParameter<bool> b1{ "PRESETS", false };
+	ofParameter<bool> b2{ "ENGINES", false };
+	ofParameter<bool> b3{ "MINIMAL", false };
+	ofParameter<bool> b4{ "USER", false };
+
+	void Changed_LayoutPanels(ofAbstractParameter &e);
+	ofParameterGroup params_LayoutSPanel{ "LAYOUTS PANEL" };
+
+	//--------------------------------------------------------------
+	std::string getLayoutName(AppLayouts mode) {
+		std::string s = "";
+		//switch (appLayoutIndex)
+		switch (mode)
+		{
+		case APP_DEFAULT: s = path_ImGui + "imgui_DEFAULT.ini"; break;
+		case APP_PRESETS: s = path_ImGui + "imgui_PRESETS.ini"; break;
+		case APP_ENGINES: s = path_ImGui + "imgui_ENGINES.ini"; break;
+		case APP_MINIMAL: s = path_ImGui + "imgui_MINIMAL.ini"; break;
+		case APP_USER: s = path_ImGui + "imgui_USER.ini"; break;
+		default:break;
+		}
+		return s;
+	}
+
+	//----
 
 	// settings file paths
 
 private:
+
 	std::string path_Global;
 	std::string path_ImGui;
 	std::string path_Kits;
@@ -505,6 +552,7 @@ private:
 	//-
 
 private:
+
 	ofEventListener listener_LoverName;
 
 	//--
@@ -519,6 +567,7 @@ private:
 	// current selectors states on user session
 
 private:
+
 	ofParameter<int> last_Index_Theory_PickPalette;
 	ofParameter<int> last_Index_Theory{ "Last Theory Index", 0, 0,
 		NUM_COLOR_THEORY_TYPES_G1 + NUM_COLOR_THEORY_TYPES_G2 - 1 }; // selected theory algorithm
@@ -532,6 +581,7 @@ private:
 	//--
 
 private:
+
 	// text labels
 	//to help workflow of what's the last engine used...Not using now.
 	std::string messageInfo;
@@ -549,7 +599,9 @@ private:
 	//--
 
 	// range
+
 private:
+
 	void setupRange();
 	void generate_Range(ofColor col1, ofColor col2);
 	bool bRange_Intitiated = false;
@@ -557,6 +609,7 @@ private:
 	void palette_FromRange(int index);
 
 private:
+
 	ofParameter<ofFloatColor> color_1_Range;
 	ofParameter<ofFloatColor> color_2_Range;
 
@@ -580,7 +633,9 @@ private:
 	// export 
 	// engine 
 	// to live reload colors file into client addon/app
+
 private:
+
 	ofParameterGroup params_Export;
 	ofParameter<bool> bAutoExportPreset;
 	ofParameter<bool> bExportByFile;
@@ -590,6 +645,7 @@ private:
 	ofParameter<bool> bModeBundlePreset;
 	ofParameter<bool> bModePalettePreset;
 #endif
+
 	void setPathPresetWatch();
 	void exportPalette();
 	void exportKit();
@@ -607,14 +663,18 @@ private:
 
 	// quantizer
 #ifdef USE_IMAGE_QUANTIZER
+
 private:
+
 	ofxColorQuantizerHelper colorQuantizer;
 #endif
 
 	//-
 
 	// theory
+
 private:
+
 	ofParameter<bool> theory_Types_G1[NUM_COLOR_THEORY_TYPES_G1];
 	shared_ptr<ColorWheelScheme> scheme;
 	vector<ofColor> colors_Theory_G1[NUM_COLOR_THEORY_TYPES_G1];
@@ -635,6 +695,7 @@ private:
 	//-
 
 private:
+
 	// palette layout
 	ofParameter<int> boxSizeUser;
 	ofParameter<int> boxMaxRows;
@@ -646,12 +707,14 @@ private:
 	//-
 
 private:
+
 	void setupTheory_G1();
 	void refresh_Theory_G2_2();
 
 	//-
 
 private:
+
 	std::string scheme_Analogous_name;
 	std::string scheme_Complementary_name;
 	std::string scheme_SplitComplementary_name;
@@ -682,13 +745,16 @@ private:
 	//--
 
 	// DEMO
+
 private:
+
 	DEMO_Scene DEMO1_Bubbles;
 	DEMO_SceneSpheres DEMO2_Spheres;
 
 	//-	
 
 private:
+
 	ImVec4 borderLineColor = ImVec4(0, 0, 0, 0.65); //  for selected color buttons, toggles and blinking 
 	float borderLineWidth = 1.0f;
 	float labelPadding = 0.0; // label buttons
@@ -705,13 +771,16 @@ private:
 	// colour lovers
 
 #ifdef USE_COLOR_LOVERS
+
 private:
+
 	ofxColourLoversHelper colourLoversHelper;
 #endif
 
 	//--
 
 private:
+
 	void build_Palette_Engine();
 	void build_Palette_Preset();
 
@@ -727,6 +796,7 @@ private:
 	//--
 
 public:
+
 	//--------------------------------------------------------------
 	void setFps(float _fps)//for the demo speed only
 	{
@@ -741,6 +811,7 @@ public:
 	// (quantizer+lovers) with addon palette/color
 
 private:
+
 	std::string myPalette_Name_BACK = "";
 	ofColor myColor_BACK;
 	vector<ofColor> myPalette_BACK;
@@ -756,18 +827,21 @@ private:
 	// must be initialized before setup
 
 public:
+
 	void setLinkName(std::string &s);
 	void setLinkColorPick(ofColor &c);
 	void setLinkColorBg(ofColor &c);
 	void setLinkPalette(vector<ofColor> &p);
 
 private:
+
 	std::string *name_TARGET = NULL;
 	ofColor *color_TARGET = NULL; // backwards pointer to ofApp picker color
 	ofColor *colorBg_TARGET = NULL; // backwards pointer to ofApp background color
 	vector<ofColor> *palette_TARGET = NULL; // backwards pointer to ofApp palette
 
 private:
+
 	void refresh_Palette_TARGET(vector<ofColor> &p);
 
 	//----
@@ -796,9 +870,11 @@ public:
 	// setters
 
 public:
+
 	void setPickControl(float control); // set the input control for gradient selector. to control the picked color
 
 public:
+
 	void setVisible(bool b);
 	void setToggleVisible();
 	void setVisible_GUI_MINI(bool b);
@@ -807,7 +883,9 @@ public:
 	//-----------------------------------------------------------
 
 #ifdef USE_DEBUG_LAYOUT
+
 private:
+
 	ofxMouseRuler mouseRuler;
 #endif
 
@@ -816,6 +894,7 @@ private:
 	// manager
 
 private:
+
 	ofParameter<bool> bEditPalette;
 	ofParameter<bool> bRandomColor;
 	ofParameter<bool> bAddColor;
@@ -827,6 +906,7 @@ private:
 	// parameters
 
 private:
+
 	//ofParameterGroup params_data;
 	ofParameterGroup params_engines;
 	ofParameterGroup params_color;
@@ -841,6 +921,7 @@ private:
 	// algorithmic palettes
 
 private:
+
 	ofxColorPalette complement;
 	ofxColorPalette complementBrightness;
 	ofxColorPalette triad;
@@ -865,6 +946,7 @@ private:
 	ofParameter<bool> bAuto_Build_Palette; // trig last used algo palette on click or change color
 
 private:
+
 	void refresh_Theory_G2();
 	void palettes_Resize();
 
@@ -873,6 +955,7 @@ private:
 	// GUI
 
 private:
+
 	//ofxImGui::Gui gui;
 	ofxImGui::Settings mainSettings = ofxImGui::Settings();
 	ofxSurfing_ImGui_Manager guiManager;
@@ -882,6 +965,7 @@ private:
 	ImGuiStyle *style = nullptr;
 	
 	ImGuiWindowFlags flagsWindowsLocked;
+
 	ofParameter<int> fontSizeBigParam;
 	ofParameter<int> fontSizeParam;
 	std::string fontName;
@@ -943,6 +1027,7 @@ private:
 	// colors
 
 private:
+
 	void refresh_Background();
 	ofParameter<ofFloatColor> color_BackGround; // main bg color
 	ofParameter<bool> color_backGround_SET;
@@ -1012,6 +1097,7 @@ private:
 	// color pickers
 
 private:
+
 	ofParameter<ofFloatColor> color_Clicked;
 
 	void Changed_ColorPicked(ofFloatColor &color);
@@ -1024,6 +1110,7 @@ private:
 	// editor
 
 private:
+
 	vector<ofColor> palette; //  main user palette
 
 	vector<ofColor> palette_AUX; //  aux palette to tweak saturation and brigthness to all the palette colors
@@ -1049,6 +1136,7 @@ private:
 
 	// libs library palette
 	// using colorBrowser
+
 private:
 
 #ifdef USE_OFX_COLOR_BROWSER
@@ -1083,6 +1171,7 @@ private:
 	//--
 
 private:
+
 	std::string last_Lib_NameColor = "";
 	int last_ColorPicked_Lib;
 	int last_Lib_Index = -1; // last library picked color
@@ -1092,6 +1181,7 @@ private:
 	// colors library layout
 
 private:
+
 	ofParameter<bool> lib_Responsive_ModeGrid;
 	ofParameter<bool> lib_Responsive_ModeFit;
 	ofParameter<bool> bPagerized;
@@ -1123,7 +1213,9 @@ private:
 	//--
 
 	// app settings json/xml
+
 private:
+
 	ofParameterGroup params_AppState; // without callbacks, just to handle settings
 	ofParameterGroup params_Panels{ "PANELS" };
 	ofParameterGroup params_Background{ "BACKGROUND" };
@@ -1147,9 +1239,11 @@ private:
 	// presets
 
 private:
+
 	PresetPalette PRESET_Temp;
 
 private:
+
 	// default name 
 	std::string PRESET_Name = "_emptyPreset";
 	std::string PRESET_Name_Gradient = "_";
@@ -1197,6 +1291,7 @@ private:
 	//----
 
 private:
+
 	ofParameter<bool> SHOW_MenuBar{ "MENU BAR", false };
 	bool SHOW_About = false;
 	void gui_MenuBar();
@@ -1205,7 +1300,9 @@ private:
 	//--
 
 	// demo to draw into about panel
+
 private:
+
 	ofTexture tex;
 	ofFbo fbo; // mini preview
 	ofFbo fboBig; // fullscreen fbo
@@ -1246,6 +1343,7 @@ private:
 	//}
 
 private:
+
 	//TODO:
 	// Helper to display a little (?) mark which shows a tooltip when hovered.
 	// In your own code you may want to display an actual icon if you are using a merged icon fonts (see docs/FONTS.txt)
@@ -1296,31 +1394,6 @@ private:
 	//	}
 
 	//}
-
-	ofParameter<bool> b0{ "DEFAULT", false };
-	ofParameter<bool> b1{ "PRESETS", false };
-	ofParameter<bool> b2{ "ENGINES", false };
-	ofParameter<bool> b3{ "MINIMAL", false };
-	ofParameter<bool> b4{ "USER", false };
-
-	void Changed_LayoutPanels(ofAbstractParameter &e);
-	ofParameterGroup params_LayoutSPanel{ "LAYOUTS PANEL" };
-
-	//--------------------------------------------------------------
-	std::string getLayoutName(AppLayouts mode) {
-		std::string s = "";
-		//switch (appLayoutIndex)
-		switch (mode)
-		{
-		case APP_DEFAULT: s = path_ImGui + "imgui_DEFAULT.ini"; break;
-		case APP_PRESETS: s = path_ImGui + "imgui_PRESETS.ini"; break;
-		case APP_ENGINES: s = path_ImGui + "imgui_ENGINES.ini"; break;
-		case APP_MINIMAL: s = path_ImGui + "imgui_MINIMAL.ini"; break;
-		case APP_USER: s = path_ImGui + "imgui_USER.ini"; break;
-		default:break;
-		}
-		return s;
-	}
 
 	//--
 

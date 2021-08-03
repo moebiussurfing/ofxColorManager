@@ -693,6 +693,7 @@ void ofxColorQuantizerHelper::setup()
 	//-
 
 	font.load("assets/fonts/telegrama_render.otf", 6, true, true);
+	//font.load("assets/fonts/Ruda-Bold.ttf", 6, true, true);
 	//font.load("assets/fonts/telegrama_render.otf", 11, true, true);
 	//font.load("assets/fonts/LCD_Solid.ttf", 11, true, true);
 	//font.load("assets/fonts/overpass-mono-bold.otf", 9, true, true);

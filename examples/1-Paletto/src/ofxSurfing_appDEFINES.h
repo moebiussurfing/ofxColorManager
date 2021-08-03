@@ -9,7 +9,7 @@
 // that will be loaded from some of the app classes
 // to initializa the class/addons with the same settings
 
-#define MAKE_RELEASE_VERSION
+//#define MAKE_RELEASE_VERSION
 
 //----
 
