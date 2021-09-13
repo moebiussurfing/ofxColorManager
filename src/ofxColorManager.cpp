@@ -2351,7 +2351,7 @@ void ofxColorManager::gui_Editor()
 				ImGui::PopID();
 			}
 
-			ImGui::Dummy(ImVec2(0.0f, 2.0f));
+			//ImGui::Dummy(ImVec2(0.0f, 2.0f));
 
 			//----
 
@@ -2484,12 +2484,16 @@ void ofxColorManager::gui_Editor()
 					}
 				}
 
-				ImGui::Dummy(ImVec2(0.0f, 5.0f));
+				//ImGui::Dummy(ImVec2(0.0f, 5.0f));
 			}
 
 			//----
 
-			ImGui::Dummy(ImVec2(0.0f, 2.0f));
+			//ImGui::Dummy(ImVec2(0.0f, 2.0f));
+			ofxImGuiSurfing::AddSpacingSeparated();
+
+			//-
+
 
 			// 2. edit
 
@@ -2558,18 +2562,22 @@ void ofxColorManager::gui_Editor()
 						numColors_Engines++;
 					}
 				}
-				ImGui::Dummy(ImVec2(0.0f, 5.0f));
+				//ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
 				ImGui::Unindent();
 			}
 
-			ImGui::Dummy(ImVec2(0.0f, 2.0f));
+			//ImGui::Dummy(ImVec2(0.0f, 2.0f));
 
 			//--
 
 			ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 			_h *= 4;
 			guiManager.refreshLayout();
+
+			//-
+
+			ofxImGuiSurfing::AddSpacingSeparated();
 
 			//----
 
@@ -2646,7 +2654,9 @@ void ofxColorManager::gui_Editor()
 				//{
 				//	palette = palette_AUX;
 				//}
+				
 
+				// tweak
 				if (bTweakPalette)
 				{
 					ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
@@ -2728,16 +2738,18 @@ void ofxColorManager::gui_Editor()
 
 				ImGui::Unindent();
 
-				ImGui::Dummy(ImVec2(0.0f, 5.0f));
+				//ImGui::Dummy(ImVec2(0.0f, 5.0f));
 			}
+
+		ofxImGuiSurfing::AddSpacingSeparated();
 
 			//--
 
 			// 3. sorting
 
-			ImGui::Dummy(ImVec2(0.0f, 2.0f));
+			//ImGui::Dummy(ImVec2(0.0f, 2.0f));
 			_h = ofxImGuiSurfing::getWidgetsHeightUnit();
-			ofxImGuiSurfing::AddBigToggle(bSortPalette, _w100, _h);
+			ofxImGuiSurfing::AddBigToggle(bSortPalette, _w100, _h*2);
 			//if (ImGui::CollapsingHeader("ORDERING", ImGuiWindowFlags_None))
 			if (bSortPalette)
 			{
@@ -2778,7 +2790,7 @@ void ofxColorManager::gui_Editor()
 				if (ImGui::RadioButton("Copy", mode == Mode_Copy)) { mode = Mode_Copy; } ImGui::SameLine();
 				if (ImGui::RadioButton("Swap", mode == Mode_Swap)) { mode = Mode_Swap; }
 
-				ImGui::Dummy(ImVec2(0.0f, 5.0f));
+				//ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
 				ImGui::Unindent();
 			}
@@ -2827,7 +2839,7 @@ void ofxColorManager::gui_Editor()
 
 			if (SHOW_Advanced)
 			{
-				ImGui::Dummy(ImVec2(0.0f, 2.0f));
+				//ImGui::Dummy(ImVec2(0.0f, 2.0f));
 
 				if (SHOW_Palette)
 				{
@@ -2869,9 +2881,12 @@ void ofxColorManager::gui_Editor()
 			_h *= 2;
 			guiManager.refreshLayout();
 
-			ImGui::Dummy(ImVec2(0.0f, 5.0f));
-			ImGui::Separator();
-			ImGui::Dummy(ImVec2(0.0f, 5.0f));
+			//-
+
+			ofxImGuiSurfing::AddSpacingSeparated();
+			//ImGui::Dummy(ImVec2(0.0f, 5.0f));
+			//ImGui::Separator();
+			//ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
 			ofxImGuiSurfing::AddBigToggle(SHOW_Picker, _w100, _h / 2);
 			ofxImGuiSurfing::AddBigToggle(SHOW_Library, _w100, _h / 2); }
@@ -6269,7 +6284,7 @@ void ofxColorManager::gui_Demo()
 				ImGui::Unindent();
 			}
 		}
-		ImGui::Dummy(ImVec2(0, 5));
+		//ImGui::Dummy(ImVec2(0, 5));
 
 		//-
 
@@ -6324,7 +6339,7 @@ void ofxColorManager::gui_Demo()
 				ImGui::Unindent();
 			}
 		}
-		ImGui::Dummy(ImVec2(0, 5));
+		//ImGui::Dummy(ImVec2(0, 5));
 
 		//-
 
@@ -6383,7 +6398,7 @@ void ofxColorManager::gui_Demo()
 				ImGui::Unindent();
 			}
 		}
-		ImGui::Dummy(ImVec2(0, 5));
+		//ImGui::Dummy(ImVec2(0, 5));
 	}
 	guiManager.endWindow();
 
