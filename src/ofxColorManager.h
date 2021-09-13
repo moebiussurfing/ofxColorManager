@@ -8,17 +8,18 @@
 
 TODO:
 
-++ add color pictures browser to quantizer (copy from litSphere)
+++ add undo engine
+++ remove esc key
 ++ fix: alert when saving a preset with an already located filename. ask to overwrite
 ++ fix disabled keys sometimes bc ImGui over Gui?
 + startup init layout by code, not .ini. check windows positions by code to responsive other elemnts
 
 + export Adobe ASE
-+ undo engine
 + add tween transitions to presets ?
 + add cosine/shift gradients engine https://github.com/soufianekhiat/DearWidgets
 + check theory picker if calls too much callbacks
-+ plugins for UE4 / Unity3D / Processing ?
+
++ Make plugins for UE4 / Unity3D / Processing ?
 
 
 BUGS:
@@ -342,8 +343,8 @@ private:
 private:
 
 	ofxHLuv HLuv;
-	ofParameter<int> color_Luv_Hue{ "Luv Hue", 0, 0, 360 };
-	ofParameter<int> color_Luv_Luminance{ "Luv Luminance", 0, 0, 100 };
+	ofParameter<int> color_Luv_Hue{ "L Hue", 1, 1, 360 };
+	ofParameter<int> color_Luv_Luminance{ "L Luminance", 50, 0, 100 };
 
 	//--
 

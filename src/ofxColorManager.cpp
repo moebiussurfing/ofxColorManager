@@ -599,7 +599,8 @@ void ofxColorManager::setup()
 
 	//-
 
-	bRandomColor.set("RANDOMIZE", false);
+	//bRandomColor.set("RANDOMIZE", false);
+	bRandomColor.set("RANDOM", false);
 	bAddColor.set("COPY", false);
 	bEditPalette.set("EDIT", false);
 	bRemoveColor.set("REMOVE", false);
@@ -1740,7 +1741,6 @@ void ofxColorManager::gui_Theory()
 
 	guiManager.beginWindow(SHOW_Theory, flags);
 	//guiManager.beginWindow("THEORY", flags);
-	//if (ofxImGui::BeginWindow("THEORY", mainSettings, flags))
 	{
 		ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
@@ -2155,7 +2155,6 @@ void ofxColorManager::gui_Theory()
 			refresh_FromPicked();
 		}
 	}
-	//ofxImGui::EndWindow(mainSettings);
 	guiManager.endWindow();
 
 	//ImGui::PopStyleVar();
@@ -2182,8 +2181,6 @@ void ofxColorManager::gui_Editor()
 	//ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, PANEL_WIDGETS_HEIGHT));
 
 	guiManager.beginWindow(SHOW_Editor, flagsw);
-	//if (ofxImGui::BeginWindow("EDITOR", mainSettings, flagsw))
-
 	{
 		float _spcx;
 		float _spcy;
@@ -2195,7 +2192,8 @@ void ofxColorManager::gui_Editor()
 		float _w25;
 		float _h;
 		ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
-		_h *= 2;
+		_h *= 4;
+		guiManager.refreshLayout();
 
 		ImGuiColorEditFlags _flags = ImGuiColorEditFlags_None;
 
@@ -2232,8 +2230,8 @@ void ofxColorManager::gui_Editor()
 					//----
 
 					float wb = (_w100 / _r);
+					float hb = _h/4;
 					//float hb = WIDGETS_HEIGHT / 2;
-					float hb = _h;
 					//float hb = 40;
 
 					//--
@@ -2358,7 +2356,8 @@ void ofxColorManager::gui_Editor()
 			//----
 
 			ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
-			_h *= 2;
+			_h *= 4;
+			guiManager.refreshLayout();
 
 			//TODO:
 			//add here to for using when presets panel is hidden
@@ -2523,25 +2522,29 @@ void ofxColorManager::gui_Editor()
 				ImGui::Indent();
 				ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 				_h *= 2;
+				guiManager.refreshLayout();
 
 				//--
 
 				//selected color
-				ImGui::PushItemWidth(-70);
+				ImGui::PushItemWidth(-55);
 				if (guiManager.Add(last_Index_ColorPalette)) {
 				};
 				ImGui::PopItemWidth();
+
 				//apply to selected color
 				ofxImGuiSurfing::AddBigButton(bRemoveColor, _w50, _h / 2);
 				ImGui::SameLine();
 				ofxImGuiSurfing::AddBigButton(bAddColor, _w50, _h / 2);
 				ofxImGuiSurfing::AddBigButton(bClearPalette, _w50, _h / 2);
+
 				//random
 				if (bColor_rHUE || bColor_rSAT || bColor_rBRG)
 				{
 					ImGui::SameLine();
 					ofxImGuiSurfing::AddBigButton(bRandomColor, _w50, _h / 2);
 				}
+
 				//amount colors
 				if (!SHOW_Presets && !SHOW_ColourLovers && SHOW_Engines)
 				{
@@ -2565,7 +2568,10 @@ void ofxColorManager::gui_Editor()
 			//--
 
 			ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
-			_h *= 2;
+			_h *= 4;
+			guiManager.refreshLayout();
+
+			//----
 
 			// 2. TWEAK
 
@@ -2581,6 +2587,8 @@ void ofxColorManager::gui_Editor()
 			if (bTweakPalette)
 			{
 				ImGui::Indent();
+				ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+				_h *= 2;
 
 				if (ImGui::Button("GET", ImVec2(_w50, _h / 2)))
 				{
@@ -2597,6 +2605,8 @@ void ofxColorManager::gui_Editor()
 				// colors
 				for (int n = 0; n < palette_AUX.size(); n++)
 				{
+					ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+
 					int _r = palette_AUX.size();
 					if (n != 0) ImGui::SameLine(0, 0);
 
@@ -2639,6 +2649,9 @@ void ofxColorManager::gui_Editor()
 
 				if (bTweakPalette)
 				{
+					ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
+					_h *= 2;
+
 					//float value_p = 0.5;
 					//float minv = 0;
 					//float maxv = 1;
@@ -2723,14 +2736,18 @@ void ofxColorManager::gui_Editor()
 			// 3. sorting
 
 			ImGui::Dummy(ImVec2(0.0f, 2.0f));
-			ofxImGuiSurfing::AddBigToggle(bSortPalette, _w100, _h / 2);
+			_h = ofxImGuiSurfing::getWidgetsHeightUnit();
+			ofxImGuiSurfing::AddBigToggle(bSortPalette, _w100, _h);
 			//if (ImGui::CollapsingHeader("ORDERING", ImGuiWindowFlags_None))
 			if (bSortPalette)
 			{
 				ImGui::Indent();
-
 				ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
-				_h *= 2;
+
+				_h *= 4;
+
+				guiManager.refreshLayout();
+
 				{
 					// sort shift
 
@@ -2746,12 +2763,12 @@ void ofxColorManager::gui_Editor()
 
 					// sort flip
 
-					if (ofxImGuiSurfing::AddSmallButton(bFlipUserPalette, _w50, _h / 2)) {}
-					ImGui::SameLine();
+					if (ofxImGuiSurfing::AddSmallButton(bFlipUserPalette, _w100, _h / 4)) {}
+					//ImGui::SameLine();
 
 					// sort random
 
-					if (ImGui::Button("SORT RANDOM", ImVec2(_w50, _h / 2)))
+					if (ImGui::Button("SORT RANDOM", ImVec2(_w100, _h / 4)))
 					{
 						build_Palette_SortRandom();
 					}
@@ -2817,7 +2834,8 @@ void ofxColorManager::gui_Editor()
 					if (ImGui::CollapsingHeader("Layout"))
 					{
 						ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
-						_h *= 2;
+						_h *= 4;
+						guiManager.refreshLayout();
 
 						guiManager.Add(bFitLayout);
 						if (!bFitLayout) {
@@ -2849,6 +2867,7 @@ void ofxColorManager::gui_Editor()
 			// show picker
 			ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 			_h *= 2;
+			guiManager.refreshLayout();
 
 			ImGui::Dummy(ImVec2(0.0f, 5.0f));
 			ImGui::Separator();
@@ -2857,8 +2876,6 @@ void ofxColorManager::gui_Editor()
 			ofxImGuiSurfing::AddBigToggle(SHOW_Picker, _w100, _h / 2);
 			ofxImGuiSurfing::AddBigToggle(SHOW_Library, _w100, _h / 2); }
 	}
-
-	//ofxImGui::EndWindow(mainSettings);
 	guiManager.endWindow();
 
 	//ImGui::PopStyleVar();
@@ -2884,7 +2901,6 @@ void ofxColorManager::gui_Palette()
 	//if (lockMin)ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(500, PANEL_WIDGETS_HEIGHT));
 
 	guiManager.beginWindow(SHOW_Palette, flagsw);
-	//if (ofxImGui::BeginWindow("PALETTE", mainSettings, flagsw))
 	{
 		ImGuiColorEditFlags _flags = ImGuiColorEditFlags_None;
 
@@ -3150,7 +3166,6 @@ void ofxColorManager::gui_Palette()
 
 		ImGui::Dummy(ImVec2(0.0f, 5.0f));
 	}
-	//ofxImGui::EndWindow(mainSettings);
 	guiManager.endWindow();
 
 	if (lockMin)ImGui::PopStyleVar();
@@ -3183,8 +3198,6 @@ void ofxColorManager::gui_Library()
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(ww, hh));
 
 	guiManager.beginWindow(SHOW_Library, flagsw);
-	//if (ofxImGui::BeginWindow("LIBRARY", mainSettings, flagsw))
-
 	{
 		bool bUpdate = false;
 
@@ -3571,9 +3584,7 @@ void ofxColorManager::gui_Library()
 			refresh_FromPicked();
 		}
 	}
-
 	guiManager.endWindow();
-	//ofxImGui::EndWindow(mainSettings);
 
 	//ImGui::PopStyleVar();
 }
@@ -3596,8 +3607,6 @@ void ofxColorManager::gui_LinkExport()
 	//--
 
 	guiManager.beginWindow(SHOW_LinkExport, flagsw);
-	//if (ofxImGui::BeginWindow("LINK", mainSettings, flagsw))
-
 	{
 		float _spcx;
 		float _spcy;
@@ -3610,6 +3619,7 @@ void ofxColorManager::gui_LinkExport()
 		float _h;
 		ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 		_h *= 2;
+		guiManager.refreshLayout();
 
 		//--
 
@@ -3790,7 +3800,6 @@ void ofxColorManager::gui_LinkExport()
 			}
 		}
 	}
-	//ofxImGui::EndWindow(mainSettings);
 	guiManager.endWindow();
 
 	//ImGui::PopStyleVar();
@@ -3814,8 +3823,6 @@ void ofxColorManager::gui_Picker()
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(ww, hh));
 
 	guiManager.beginWindow(SHOW_Picker, flagsw);
-	//if (ofxImGui::BeginWindow("PICKER", mainSettings, flagsw))
-
 	{
 		float _spcx;
 		float _spcy;
@@ -3954,6 +3961,7 @@ void ofxColorManager::gui_Picker()
 		{
 			ofxImGuiSurfing::refreshImGui_WidgetsSizes(_spcx, _spcy, _w100, _h100, _w99, _w50, _w33, _w25, _h);
 			guiManager.refreshLayout();
+						_h *= 2;
 
 			//TODO:
 			//flickering bug..
@@ -3981,7 +3989,7 @@ void ofxColorManager::gui_Picker()
 
 				//invert
 				ImGui::PushID(i++);
-				if (ImGui::Button("INVERT", ImVec2(_w50, _h / 2)))
+				if (ImGui::Button("INVERT", ImVec2(_w50, _h/2)))
 				{
 					ofColor c = color_Picked.get();
 					invert(c);
@@ -3990,7 +3998,7 @@ void ofxColorManager::gui_Picker()
 				ImGui::PopID();
 				ImGui::SameLine();
 				ImGui::PushID(i++);
-				if (ImGui::Button("COMPLEMENT", ImVec2(_w50, _h / 2)))
+				if (ImGui::Button("COMPLEMENT", ImVec2(_w50, _h/2)))
 				{
 					ofColor c = color_Picked.get();
 					color_Picked.set(getComplement(c));
@@ -4019,8 +4027,11 @@ void ofxColorManager::gui_Picker()
 				bchanged = true;
 			}
 			if (bchanged) {
-				ofColor c = HLuv.getColor(color_Luv_Hue, color_Luv_Luminance);
+				ofFloatColor c = HLuv.getColor(color_Luv_Hue, color_Luv_Luminance);
 				color_Picked.set(c);
+				//cTmp = ImVec4(c.r, c.g, c.b, 1.0f);
+				//cTmp = color_Picked.get();
+				////bChg_Pick = true;
 			}
 		}
 
@@ -4051,19 +4062,19 @@ void ofxColorManager::gui_Picker()
 			if (bColor_rHUE)
 				if (ofxImGuiSurfing::AddParameter(color_HUE_Power))
 				{
-					ofLogNotice(__FUNCTION__) << "HUE P : moved";
+					ofLogNotice(__FUNCTION__) << "HUE P : Moved";
 				}
 
 			if (bColor_rSAT)
 				if (ofxImGuiSurfing::AddParameter(color_SAT_Power))
 				{
-					ofLogNotice(__FUNCTION__) << "SAT P : moved";
+					ofLogNotice(__FUNCTION__) << "SAT P : Moved";
 				}
 
 			if (bColor_rBRG)
 				if (ofxImGuiSurfing::AddParameter(color_BRG_Power))
 				{
-					ofLogNotice(__FUNCTION__) << "BRG P : moved";
+					ofLogNotice(__FUNCTION__) << "BRG P : Moved";
 				}
 
 			ImGui::PopItemWidth();
@@ -4077,6 +4088,7 @@ void ofxColorManager::gui_Picker()
 		{
 			color_Picked = cTmp;
 
+			color_Luv_Hue = ofMap(color_HUE.get(), 0, 255, 1, 360);
 			//bFlag_refresh_EnginesFromPalette = true;
 		}
 
@@ -4093,8 +4105,6 @@ void ofxColorManager::gui_Picker()
 
 		ofxImGuiSurfing::AddBigToggle(SHOW_Library, _w100, _h / 2);
 	}
-
-	//ofxImGui::EndWindow(mainSettings);
 	guiManager.endWindow();
 
 	ImGui::PopStyleVar();
@@ -4115,8 +4125,6 @@ void ofxColorManager::gui_EnginesPanel()
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(400, BUTTON_BIG_HEIGHT + 20));
 
 	guiManager.beginWindow(SHOW_Engines, flagsw);
-	//if (ofxImGui::BeginWindow("ENGINES", mainSettings, flagsw))
-
 	{
 		const int NUM_WIDGETS = 4;
 
@@ -4139,8 +4147,6 @@ void ofxColorManager::gui_EnginesPanel()
 		ofxImGuiSurfing::AddBigToggle(SHOW_ColourLovers, _w, _h); ImGui::SameLine();
 		ofxImGuiSurfing::AddBigToggle(SHOW_Quantizer, _w, _h);
 	}
-
-	//ofxImGui::EndWindow(mainSettings);
 	guiManager.endWindow();
 
 	ImGui::PopStyleVar();
@@ -4161,8 +4167,6 @@ void ofxColorManager::gui_Advanced()
 	//ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(325, PANEL_WIDGETS_HEIGHT));
 
 	guiManager.beginWindow(SHOW_Advanced, flags);
-	//if (ofxImGui::BeginWindow("ADVANCED", mainSettings, flags))
-
 	{
 		float _spcx;
 		float _spcy;
@@ -4240,7 +4244,6 @@ void ofxColorManager::gui_Advanced()
 			}
 		}
 	}
-	//ofxImGui::EndWindow(mainSettings);
 	guiManager.endWindow();
 
 	//ImGui::PopStyleVar();
@@ -4297,8 +4300,6 @@ void ofxColorManager::gui_LayoutsPresets()
 	//ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(ww, CURRENT_WINDOW_MIN_HEIGHT));
 
 	guiManager.beginWindow(SHOW_Layouts, flags);
-	//if (ofxImGui::BeginWindow("LAYOUT PRESETS", mainSettings, flags))
-
 	{
 		//get window position for advanced layout paired position
 		auto posx = ImGui::GetWindowPos().x;
@@ -4379,7 +4380,6 @@ void ofxColorManager::gui_LayoutsPresets()
 		if (!bbox) ImGui::SameLine();
 		ofxImGuiSurfing::AddBigToggle(Lock_DockingLayout, _w, _h);
 	}
-	//ofxImGui::EndWindow(mainSettings);
 	guiManager.endWindow();
 
 	//ImGui::PopStyleVar();
@@ -4495,8 +4495,6 @@ void ofxColorManager::gui_LayoutsAdvanced()
 	//ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(max, CURRENT_WINDOW_MIN_HEIGHT));
 
 	guiManager.beginWindow(SHOW_LayoutsAdvanced, flags);
-	//if (ofxImGui::BeginWindow("LAYOUTS", mainSettings, flags))
-
 	{
 		float _spcx;
 		float _spcy;
@@ -4667,8 +4665,6 @@ void ofxColorManager::gui_LayoutsAdvanced()
 			ImGui::Checkbox("Auto-Resize", &auto_resize);
 		}
 	}
-
-	//ofxImGui::EndWindow(mainSettings);
 	guiManager.endWindow();
 
 	//ImGui::PopStyleVar();
@@ -4687,8 +4683,6 @@ void ofxColorManager::gui_Panels()
 	//----
 
 	guiManager.beginWindow(SHOW_Panels, flags);
-	//if (ofxImGui::BeginWindow("PANELS", mainSettings, flags))
-
 	{
 		int NUM_WIDGETS = 11;//expected num widgets
 
@@ -4762,7 +4756,6 @@ void ofxColorManager::gui_Panels()
 		ofxImGuiSurfing::AddBigToggle(SHOW_Advanced, _w, _h);
 #endif
 	}
-	//ofxImGui::EndWindow(mainSettings);
 	guiManager.endWindow();
 
 	//ImGui::PopStyleVar();
@@ -4786,8 +4779,6 @@ void ofxColorManager::gui_Range()
 	//ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, 600));
 
 	guiManager.beginWindow(SHOW_Range, flags);
-	//if (ofxImGui::BeginWindow("RANGE", mainSettings, flags))
-
 	{
 		//float _h = float(COLOR_STRIP_COLOR_HEIGHT);
 		float _hSz = int(BUTTON_COLOR_SIZE) * scale_ColRange.get();//color boxes
@@ -5096,7 +5087,6 @@ void ofxColorManager::gui_Range()
 			}
 		}
 	}
-	//ofxImGui::EndWindow(mainSettings);
 	guiManager.endWindow();
 
 	//ImGui::PopStyleVar();
@@ -5118,8 +5108,6 @@ void ofxColorManager::gui_Background()
 	//ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, PANEL_WIDGETS_HEIGHT));
 
 	guiManager.beginWindow(SHOW_BackGround, flagsw);
-	//if (ofxImGui::BeginWindow("BACKGROUND", mainSettings, flagsw))
-
 	{
 		//--
 
@@ -5238,7 +5226,6 @@ void ofxColorManager::gui_Background()
 			if (bChanged) color_BackGround = color;
 		}
 	}
-	//ofxImGui::EndWindow(mainSettings);
 	guiManager.endWindow();
 
 	//ImGui::PopStyleVar();
@@ -5273,8 +5260,6 @@ void ofxColorManager::gui_Kit()
 		ImGui::SetNextWindowSize(ImVec2(w, h), ImGuiCond_Once);
 
 		guiManager.beginWindow(SHOW_Kit, flags);
-		//if (ofxImGui::BeginWindow("KIT", mainSettings, flags))
-
 		{
 			// populate widgets
 			bool bfocus = false;
@@ -5289,8 +5274,6 @@ void ofxColorManager::gui_Kit()
 				preset_Load(files_Names[last_Index_Preset]);
 			}
 		}
-
-		//ofxImGui::EndWindow(mainSettings);
 		guiManager.endWindow();
 
 		ImGui::PopStyleVar();
@@ -5397,8 +5380,6 @@ void ofxColorManager::gui_TextInput()
 	//--
 
 	guiManager.beginWindow("PRESET NAME", flagsw);
-	//if (ofxImGui::BeginWindow("PRESET NAME", mainSettings, flagsw))
-
 	{
 		ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
@@ -5491,9 +5472,8 @@ void ofxColorManager::gui_TextInput()
 		}
 
 		ImGui::Dummy(ImVec2(0.0f, 5.0f));
-	}
+		}
 
-	//ofxImGui::EndWindow(mainSettings);
 	guiManager.endWindow();
 
 #ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
@@ -5504,7 +5484,7 @@ void ofxColorManager::gui_TextInput()
 	ImGui::PopStyleVar();
 
 	ImGui::PopStyleColor();
-}
+	}
 #endif
 
 //--------------------------------------------------------------
@@ -5558,8 +5538,6 @@ void ofxColorManager::gui_Presets()
 	//--
 
 	guiManager.beginWindow(SHOW_Presets, flags);
-	//if (ofxImGui::BeginWindow("PRESETS", mainSettings, flags))
-
 	{
 		float _spcx;
 		float _spcy;
@@ -5585,6 +5563,7 @@ void ofxColorManager::gui_Presets()
 			if (ImGui::TreeNodeEx(path_Kit.c_str(), _flagt))
 			{
 				ofxImGuiSurfing::refreshImGui_WidgetsSizes(_w100, _w50, _w33, _w25, _h);
+				guiManager.refreshLayout();
 				_h *= 2;
 
 				// scrollable list
@@ -5638,6 +5617,7 @@ void ofxColorManager::gui_Presets()
 		if (!files_Names.empty())
 		{
 			ofxImGuiSurfing::refreshImGui_WidgetsSizes(_w100, _w50, _w33, _w25, _h);
+			guiManager.refreshLayout();
 			_h *= 2;
 
 			int _i = last_Index_Preset;
@@ -5672,6 +5652,7 @@ void ofxColorManager::gui_Presets()
 		ImGui::Dummy(ImVec2(0.0f, 2.0f));
 
 		ofxImGuiSurfing::refreshImGui_WidgetsSizes(_w100, _w50, _w33, _w25, _h);
+		guiManager.refreshLayout();
 		_h *= 2;
 
 		//----
@@ -5703,6 +5684,12 @@ void ofxColorManager::gui_Presets()
 		if (ImGui::Button(">", ImVec2(_w50, _h)))
 		{
 			preset_Next();
+		}
+
+
+		if (ImGui::Button("RANDOM", ImVec2(_w100, _h / 2)))
+		{
+			preset_RandomIndex();
 		}
 
 		ImGui::PopButtonRepeat();
@@ -6056,6 +6043,7 @@ void ofxColorManager::gui_Presets()
 		//----
 
 		ofxImGuiSurfing::refreshImGui_WidgetsSizes(_w100, _w50, _w33, _w25, _h);
+		guiManager.refreshLayout();
 		_h *= 2;
 
 		ImGui::Dummy(ImVec2(0.0f, 5.0f));
@@ -6073,7 +6061,6 @@ void ofxColorManager::gui_Presets()
 	}
 
 	guiManager.endWindow();
-	//ofxImGui::EndWindow(mainSettings);
 
 	//ImGui::PopStyleVar();
 }
@@ -6092,8 +6079,6 @@ void ofxColorManager::gui_Gradient()
 	//ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, PANEL_WIDGETS_HEIGHT));
 
 	guiManager.beginWindow(SHOW_Gradient, flagsw);
-	//if (ofxImGui::BeginWindow("GRADIENT", mainSettings, flagsw))
-
 	{
 		float _spcx;
 		float _spcy;
@@ -6200,7 +6185,6 @@ void ofxColorManager::gui_Gradient()
 			ImGui::Checkbox("Auto-Resize", &auto_resize);
 		}
 	}
-	//ofxImGui::EndWindow(mainSettings);
 	guiManager.endWindow();
 
 	//ImGui::PopStyleVar();
@@ -6224,8 +6208,6 @@ void ofxColorManager::gui_Demo()
 	//ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(ww, hh));
 
 	guiManager.beginWindow(SHOW_Demos, flagsw);
-	//if (ofxImGui::BeginWindow("DEMO", mainSettings, flagsw))
-
 	{
 		float _spcx;
 		float _spcy;
@@ -6294,6 +6276,7 @@ void ofxColorManager::gui_Demo()
 		//ImGui::Dummy(ImVec2(0.0f, 2.0f));
 		//ImGui::Separator();
 		//ImGui::Dummy(ImVec2(0.0f, 2.0f));
+		ofxImGuiSurfing::AddSpacingSeparated();
 
 		//--
 
@@ -6348,13 +6331,14 @@ void ofxColorManager::gui_Demo()
 		//ImGui::Dummy(ImVec2(0.0f, 2.0f));
 		//ImGui::Separator();
 		//ImGui::Dummy(ImVec2(0.0f, 2.0f));
+		ofxImGuiSurfing::AddSpacingSeparated();
 
 		//--
 
 		// DEMO 3
 
 		// svg demo
-		ofxImGuiSurfing::AddBigToggle(DEMO3_Svg.bEnable, _w99, _h);
+		ofxImGuiSurfing::AddBigToggle(DEMO3_Svg.bEnable, _w100, _h);
 		if (DEMO3_Svg.bEnable)
 			//if (ImGui::CollapsingHeader("DEMO 3", ImGuiWindowFlags_None))
 		{
@@ -6385,7 +6369,7 @@ void ofxColorManager::gui_Demo()
 
 				ImGui::PopItemWidth();
 
-				if (ImGui::Button("Reset", ImVec2(_w99, _h50))) {
+				if (ImGui::Button("Reset", ImVec2(_w100, _h50))) {
 					DEMO3_Svg.reset();
 				}
 				if (ImGui::Button("Load", ImVec2(_w50, _h50))) {
@@ -6401,7 +6385,6 @@ void ofxColorManager::gui_Demo()
 		}
 		ImGui::Dummy(ImVec2(0, 5));
 	}
-	//ofxImGui::EndWindow(mainSettings);
 	guiManager.endWindow();
 
 	//ImGui::PopStyleVar();
@@ -6715,19 +6698,15 @@ bool ofxColorManager::draw_Gui()
 		if (SHOW_EditTheme)
 		{
 			guiManager.beginWindow(SHOW_EditTheme, ImGuiWindowFlags_None);
-			//if (ofxImGui::BeginWindow("THEME", mainSettings, ImGuiWindowFlags_None))
 			{
 				ImGui::ShowStyleEditor();
 			}
-			//ofxImGui::EndWindow(mainSettings);
 			guiManager.endWindow();
 
 			guiManager.beginWindow("STYLE SLECTOR", ImGuiWindowFlags_None);
-			//if (ofxImGui::BeginWindow("STYLE SLECTOR", mainSettings, ImGuiWindowFlags_None))
 			{
 				ImGui::ShowStyleSelector(" ");
 			}
-			//ofxImGui::EndWindow(mainSettings);
 			guiManager.endWindow();
 
 			//if (ofxImGui::BeginWindow("VIEW PORT THUMBS", mainSettings, ImGuiWindowFlags_None))
@@ -6751,7 +6730,7 @@ bool ofxColorManager::draw_Gui()
 		//bLockMouseByImGui = bLockMouseByImGui | ImGui::IsWindowHovered(ImGuiHoveredFlags_AllowWhenBlockedByActiveItem);
 
 		//--
-	}
+		}
 	//gui.end();
 	guiManager.end();
 
@@ -6784,7 +6763,7 @@ bool ofxColorManager::draw_Gui()
 		bCheckMouseOverTextInputLovers;
 
 	return bLockAllKeysByGui;
-}
+	}
 
 //--------------------------------------------------------------
 void ofxColorManager::palette_FromTheory(int p)
@@ -8287,7 +8266,7 @@ void ofxColorManager::Changed_Controls(ofAbstractParameter &e)
 	//{
 	//	if (bLock_palette) bAuto_Build_Palette = false;
 	//}
-}
+	}
 
 //--------------------------------------------------------------
 void ofxColorManager::Changed_Range(ofAbstractParameter &e)
@@ -10289,7 +10268,7 @@ void ofxColorManager::exportPalette()
 	}
 
 	//--
-}
+	}
 
 //--------------------------------------------------------------
 void ofxColorManager::savePresetFile()

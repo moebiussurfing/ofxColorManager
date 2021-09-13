@@ -3,6 +3,8 @@
 //--------------------------------------------------------------
 void ofApp::setup()
 {
+	//ofAppkey
+
 	// we subscribe the local colors
 	// using pointers/references
 	// to be auto-updated

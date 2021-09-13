@@ -28,7 +28,7 @@ public:
 
 	ofParameter<float> speed{ "Speed", 0.5, 0.001 , 1 };
 	ofParameter<float> zoom{ "Zoom", 0.5, 0, 1 };
-	ofParameter<float> alpha_{ "Alpha Spheres", 0.8, 0, 1 };
+	ofParameter<float> alpha_{ "Alpha 2", 0.8, 0, 1 };
 	ofParameter<bool> mouseCam{ "Edit Camera Spheres", false };
 
 	//-

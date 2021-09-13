@@ -570,3 +570,5 @@ MigrationBackup/
 2-Paletto/bin/data/ofxColourLoversHelper/ofxColourLoversHelper_Settings.xml
 2-Paletto/bin/data/ofxColorManager/ofxColorManager_Settings.xml
 2-Paletto/bin/imgui.ini
+examples/1-Paletto/bin/data/ofxColorManager/demo/DEMO_SceneSpheres_Cam
+examples/1-Paletto/bin/data/ofxColorManager/gradients/Gradient_Preset_DEFAULT_Curve.yml
