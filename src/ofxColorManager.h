@@ -168,6 +168,8 @@ BUGS:
 #include "ofxColourLoversHelper.h"
 #endif
 
+#include "ofxHLuv.h";
+
 #include "ofxColorPalette.h"
 
 #include "ColorWheelScheme.h"
@@ -336,6 +338,12 @@ private:
 private:
 
 	GradientEngine gradientEngine;
+	
+private:
+
+	ofxHLuv HLuv;
+	ofParameter<int> color_Luv_Hue{ "Luv Hue", 0, 0, 360 };
+	ofParameter<int> color_Luv_Luminance{ "Luv Luminance", 0, 0, 100 };
 
 	//--
 
@@ -957,7 +965,7 @@ private:
 private:
 
 	//ofxImGui::Gui gui;
-	ofxImGui::Settings mainSettings = ofxImGui::Settings();
+	//ofxImGui::Settings mainSettings = ofxImGui::Settings();
 	ofxSurfing_ImGui_Manager guiManager;
 
 	ImFont* customFont = nullptr;
