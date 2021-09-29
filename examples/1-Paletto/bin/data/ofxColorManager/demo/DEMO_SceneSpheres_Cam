@@ -9,9 +9,9 @@ orientation
 fov
 60
 near
-9.11925
+0
 far
-9119.25
+0
 lensOffset
 0, 0
 forceAspectRatio
@@ -40,4 +40,4 @@ doInertia
 upAxis
 0, 1, 0
 controlArea
-0, -8, 0, 1920, 1061
+0, -6, 0, 1920, 1061
