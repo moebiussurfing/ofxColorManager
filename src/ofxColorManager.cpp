@@ -4656,7 +4656,7 @@ void ofxColorManager::gui_LayoutsAdvanced()
 				SHOW_Picker = false;
 				SHOW_Library = false;
 				SHOW_Demos = false;
-				gradientEngine.SHOW_CurveEditor = false;
+				//gradientEngine.SHOW_CurveEditor = false;
 				SHOW_MINI_Preview = false;
 				SHOW_LinkExport = false;
 				SHOW_Advanced = false;
@@ -5278,7 +5278,7 @@ void ofxColorManager::gui_Kit()
 		{
 			// populate widgets
 			bool bfocus = false;
-			int indexPreset = gui_GridPalettes(kit, last_Index_Preset, AutoScroll.get(), bfocus);
+			int indexPreset = ImGui_PalettesPicker::draw_Gui_KitPalettes(kit, last_Index_Preset, AutoScroll, bfocus);
 
 			//--
 
@@ -6119,7 +6119,7 @@ void ofxColorManager::gui_Gradient()
 			//ImGui::Dummy(ImVec2(0.0f, 5.0f));;
 
 			//ofxImGuiSurfing::AddBigToggle(SHOW_Gradient, _w100, _h / 2);
-			guiManager.Add(gradientEngine.SHOW_CurveEditor, OFX_IM_TOGGLE_BUTTON_ROUNDED_SMALL);
+			guiManager.Add(gradientEngine.bGui_WidgetGradientTool, OFX_IM_TOGGLE_BUTTON_ROUNDED_SMALL);
 			//ofxImGuiSurfing::AddBigToggle(gradientEngine.SHOW_CurveEditor, _w100, _h);
 			//ofxImGuiSurfing::AddBigToggle(gradientEngine.SHOW_Gradient_Mini, _w100, _h);
 
