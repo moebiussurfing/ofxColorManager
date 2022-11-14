@@ -1739,15 +1739,16 @@ void ofxColorManager::gui_Theory()
 
 	//ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(2 * PANEL_WIDGETS_WIDTH, 800));
 
-	guiManager.beginWindow(SHOW_Theory, flags);
-	//guiManager.beginWindow("THEORY", flags);
+	guiManager.BeginWindow(SHOW_Theory, flags);
+	//guiManager.BeginWindow("THEORY", flags);
 	{
 		ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
 		// amount colors
-		ImGui::PushItemWidth(110);
-		if (ofxImGuiSurfing::AddIntStepped(numColors_Engines)) {}
-		ImGui::PopItemWidth();
+		//ImGui::PushItemWidth(110);
+		if (guiManager.Add(numColors_Engines, OFX_IM_STEPPER)) {}
+		//if (ofxImGuiSurfing::AddIntStepped(numColors_Engines)) {}
+		//ImGui::PopItemWidth();
 
 		ImGui::Dummy(ImVec2(0.0f, 2.0f));
 
@@ -2155,7 +2156,7 @@ void ofxColorManager::gui_Theory()
 			refresh_FromPicked();
 		}
 	}
-	guiManager.endWindow();
+	guiManager.EndWindow();
 
 	//ImGui::PopStyleVar();
 }
@@ -2180,7 +2181,7 @@ void ofxColorManager::gui_Editor()
 
 	//ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, PANEL_WIDGETS_HEIGHT));
 
-	guiManager.beginWindow(SHOW_Editor, flagsw);
+	guiManager.BeginWindow(SHOW_Editor, flagsw);
 	{
 		float _spcx;
 		float _spcy;
@@ -2891,7 +2892,7 @@ void ofxColorManager::gui_Editor()
 			ofxImGuiSurfing::AddBigToggle(SHOW_Picker, _w100, _h / 2);
 			ofxImGuiSurfing::AddBigToggle(SHOW_Library, _w100, _h / 2); }
 	}
-	guiManager.endWindow();
+	guiManager.EndWindow();
 
 	//ImGui::PopStyleVar();
 }
@@ -2915,7 +2916,7 @@ void ofxColorManager::gui_Palette()
 
 	//if (lockMin)ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(500, PANEL_WIDGETS_HEIGHT));
 
-	guiManager.beginWindow(SHOW_Palette, flagsw);
+	guiManager.BeginWindow(SHOW_Palette, flagsw);
 	{
 		ImGuiColorEditFlags _flags = ImGuiColorEditFlags_None;
 
@@ -3181,7 +3182,7 @@ void ofxColorManager::gui_Palette()
 
 		ImGui::Dummy(ImVec2(0.0f, 5.0f));
 	}
-	guiManager.endWindow();
+	guiManager.EndWindow();
 
 	if (lockMin)ImGui::PopStyleVar();
 }
@@ -3212,7 +3213,7 @@ void ofxColorManager::gui_Library()
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(ww, hh));
 
-	guiManager.beginWindow(SHOW_Library, flagsw);
+	guiManager.BeginWindow(SHOW_Library, flagsw);
 	{
 		bool bUpdate = false;
 
@@ -3599,7 +3600,7 @@ void ofxColorManager::gui_Library()
 			refresh_FromPicked();
 		}
 	}
-	guiManager.endWindow();
+	guiManager.EndWindow();
 
 	//ImGui::PopStyleVar();
 }
@@ -3621,7 +3622,7 @@ void ofxColorManager::gui_LinkExport()
 
 	//--
 
-	guiManager.beginWindow(SHOW_LinkExport, flagsw);
+	guiManager.BeginWindow(SHOW_LinkExport, flagsw);
 	{
 		float _spcx;
 		float _spcy;
@@ -3815,7 +3816,7 @@ void ofxColorManager::gui_LinkExport()
 			}
 		}
 	}
-	guiManager.endWindow();
+	guiManager.EndWindow();
 
 	//ImGui::PopStyleVar();
 }
@@ -3837,7 +3838,7 @@ void ofxColorManager::gui_Picker()
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(ww, hh));
 
-	guiManager.beginWindow(SHOW_Picker, flagsw);
+	guiManager.BeginWindow(SHOW_Picker, flagsw);
 	{
 		float _spcx;
 		float _spcy;
@@ -3905,8 +3906,8 @@ void ofxColorManager::gui_Picker()
 					ImGuiColorEditFlags_NoTooltip |
 					ImGuiColorEditFlags_NoLabel |
 					ImGuiColorEditFlags_NoSidePreview |
-					ImGuiColorEditFlags_HSV |
-					ImGuiColorEditFlags_RGB |
+					ImGuiColorEditFlags_DisplayHSV |
+					ImGuiColorEditFlags_DisplayRGB |
 					ImGuiColorEditFlags_NoInputs |
 					ImGuiColorEditFlags_NoAlpha |
 					ImGuiColorEditFlags_PickerHueWheel;
@@ -3945,9 +3946,9 @@ void ofxColorManager::gui_Picker()
 					ImGuiColorEditFlags_NoTooltip |
 					ImGuiColorEditFlags_NoLabel |
 					ImGuiColorEditFlags_NoSidePreview |
-					ImGuiColorEditFlags_HSV |
-					ImGuiColorEditFlags_RGB |
-					ImGuiColorEditFlags_HEX |
+					ImGuiColorEditFlags_DisplayHSV |
+					ImGuiColorEditFlags_DisplayRGB |
+					ImGuiColorEditFlags_DisplayHex |
 					ImGuiColorEditFlags_HDR |
 					ImGuiColorEditFlags_NoAlpha |
 					ImGuiColorEditFlags_PickerHueBar;
@@ -4120,7 +4121,7 @@ void ofxColorManager::gui_Picker()
 
 		ofxImGuiSurfing::AddBigToggle(SHOW_Library, _w100, _h / 2);
 	}
-	guiManager.endWindow();
+	guiManager.EndWindow();
 
 	ImGui::PopStyleVar();
 }
@@ -4139,7 +4140,7 @@ void ofxColorManager::gui_EnginesPanel()
 
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(400, BUTTON_BIG_HEIGHT + 20));
 
-	guiManager.beginWindow(SHOW_Engines, flagsw);
+	guiManager.BeginWindow(SHOW_Engines, flagsw);
 	{
 		const int NUM_WIDGETS = 4;
 
@@ -4162,7 +4163,7 @@ void ofxColorManager::gui_EnginesPanel()
 		ofxImGuiSurfing::AddBigToggle(SHOW_ColourLovers, _w, _h); ImGui::SameLine();
 		ofxImGuiSurfing::AddBigToggle(SHOW_Quantizer, _w, _h);
 	}
-	guiManager.endWindow();
+	guiManager.EndWindow();
 
 	ImGui::PopStyleVar();
 }
@@ -4181,7 +4182,7 @@ void ofxColorManager::gui_Advanced()
 
 	//ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(325, PANEL_WIDGETS_HEIGHT));
 
-	guiManager.beginWindow(SHOW_Advanced, flags);
+	guiManager.BeginWindow(SHOW_Advanced, flags);
 	{
 		float _spcx;
 		float _spcy;
@@ -4259,7 +4260,7 @@ void ofxColorManager::gui_Advanced()
 			}
 		}
 	}
-	guiManager.endWindow();
+	guiManager.EndWindow();
 
 	//ImGui::PopStyleVar();
 }
@@ -4314,7 +4315,7 @@ void ofxColorManager::gui_LayoutsPresets()
 
 	//ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(ww, CURRENT_WINDOW_MIN_HEIGHT));
 
-	guiManager.beginWindow(SHOW_Layouts, flags);
+	guiManager.BeginWindow(SHOW_Layouts, flags);
 	{
 		//get window position for advanced layout paired position
 		auto posx = ImGui::GetWindowPos().x;
@@ -4395,7 +4396,7 @@ void ofxColorManager::gui_LayoutsPresets()
 		if (!bbox) ImGui::SameLine();
 		ofxImGuiSurfing::AddBigToggle(Lock_DockingLayout, _w, _h);
 	}
-	guiManager.endWindow();
+	guiManager.EndWindow();
 
 	//ImGui::PopStyleVar();
 }
@@ -4509,7 +4510,7 @@ void ofxColorManager::gui_LayoutsAdvanced()
 
 	//ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(max, CURRENT_WINDOW_MIN_HEIGHT));
 
-	guiManager.beginWindow(SHOW_LayoutsAdvanced, flags);
+	guiManager.BeginWindow(SHOW_LayoutsAdvanced, flags);
 	{
 		float _spcx;
 		float _spcy;
@@ -4680,7 +4681,7 @@ void ofxColorManager::gui_LayoutsAdvanced()
 			ImGui::Checkbox("Auto-Resize", &auto_resize);
 		}
 	}
-	guiManager.endWindow();
+	guiManager.EndWindow();
 
 	//ImGui::PopStyleVar();
 }
@@ -4697,7 +4698,7 @@ void ofxColorManager::gui_Panels()
 
 	//----
 
-	guiManager.beginWindow(SHOW_Panels, flags);
+	guiManager.BeginWindow(SHOW_Panels, flags);
 	{
 		int NUM_WIDGETS = 11;//expected num widgets
 
@@ -4771,7 +4772,7 @@ void ofxColorManager::gui_Panels()
 		ofxImGuiSurfing::AddBigToggle(SHOW_Advanced, _w, _h);
 #endif
 	}
-	guiManager.endWindow();
+	guiManager.EndWindow();
 
 	//ImGui::PopStyleVar();
 }
@@ -4793,7 +4794,7 @@ void ofxColorManager::gui_Range()
 
 	//ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, 600));
 
-	guiManager.beginWindow(SHOW_Range, flags);
+	guiManager.BeginWindow(SHOW_Range, flags);
 	{
 		//float _h = float(COLOR_STRIP_COLOR_HEIGHT);
 		float _hSz = int(BUTTON_COLOR_SIZE) * scale_ColRange.get();//color boxes
@@ -4830,9 +4831,10 @@ void ofxColorManager::gui_Range()
 		// amount of colors
 
 		//ImGui::PushItemWidth(-50);
-		ImGui::PushItemWidth(110);
-		if (ofxImGuiSurfing::AddIntStepped(numColors_Range)) {}
-		ImGui::PopItemWidth();
+		//ImGui::PushItemWidth(110);
+		//if (ofxImGuiSurfing::AddIntStepped(numColors_Range)) {}
+		if (guiManager.Add(numColors_Range, OFX_IM_STEPPER)) {}
+		//ImGui::PopItemWidth();
 
 		//-
 
@@ -4843,8 +4845,8 @@ void ofxColorManager::gui_Range()
 			ImGuiColorEditFlags_NoTooltip |
 			ImGuiColorEditFlags_NoLabel |
 			ImGuiColorEditFlags_NoSidePreview |
-			ImGuiColorEditFlags_HSV |
-			ImGuiColorEditFlags_RGB |
+			ImGuiColorEditFlags_DisplayHSV |
+			ImGuiColorEditFlags_DisplayHSV |
 			ImGuiColorEditFlags_NoAlpha |
 			ImGuiColorEditFlags_NoInputs |
 			ImGuiColorEditFlags_NoDragDrop |
@@ -5102,7 +5104,7 @@ void ofxColorManager::gui_Range()
 			}
 		}
 	}
-	guiManager.endWindow();
+	guiManager.EndWindow();
 
 	//ImGui::PopStyleVar();
 }
@@ -5122,7 +5124,7 @@ void ofxColorManager::gui_Background()
 
 	//ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, PANEL_WIDGETS_HEIGHT));
 
-	guiManager.beginWindow(SHOW_BackGround, flagsw);
+	guiManager.BeginWindow(SHOW_BackGround, flagsw);
 	{
 		//--
 
@@ -5241,7 +5243,7 @@ void ofxColorManager::gui_Background()
 			if (bChanged) color_BackGround = color;
 		}
 	}
-	guiManager.endWindow();
+	guiManager.EndWindow();
 
 	//ImGui::PopStyleVar();
 }
@@ -5274,7 +5276,7 @@ void ofxColorManager::gui_Kit()
 		ImGui::SetNextWindowPos(ImVec2(x, y), ImGuiCond_FirstUseEver);
 		ImGui::SetNextWindowSize(ImVec2(w, h), ImGuiCond_Once);
 
-		guiManager.beginWindow(SHOW_Kit, flags);
+		guiManager.BeginWindow(SHOW_Kit, flags);
 		{
 			// populate widgets
 			bool bfocus = false;
@@ -5289,7 +5291,7 @@ void ofxColorManager::gui_Kit()
 				preset_Load(files_Names[last_Index_Preset]);
 			}
 		}
-		guiManager.endWindow();
+		guiManager.EndWindow();
 
 		ImGui::PopStyleVar();
 
@@ -5394,7 +5396,8 @@ void ofxColorManager::gui_TextInput()
 
 	//--
 
-	guiManager.beginWindow("PRESET NAME", flagsw);
+	guiManager.BeginWindow("PRESET NAME", flagsw);
+	//guiManager.BeginWindow("PRESET NAME");
 	{
 		ImGui::Dummy(ImVec2(0.0f, 5.0f));
 
@@ -5489,7 +5492,7 @@ void ofxColorManager::gui_TextInput()
 		ImGui::Dummy(ImVec2(0.0f, 5.0f));
 		}
 
-	guiManager.endWindow();
+	guiManager.EndWindow();
 
 #ifdef INCLUDE_IMGUI_CUSTOM_THEME_AND_FONT
 	ImGui::PopFont();
@@ -5552,7 +5555,7 @@ void ofxColorManager::gui_Presets()
 
 	//--
 
-	guiManager.beginWindow(SHOW_Presets, flags);
+	guiManager.BeginWindow(SHOW_Presets, flags);
 	{
 		float _spcx;
 		float _spcy;
@@ -6075,7 +6078,7 @@ void ofxColorManager::gui_Presets()
 		//ImGui::Checkbox("Auto-Resize", &auto_resize);
 	}
 
-	guiManager.endWindow();
+	guiManager.EndWindow();
 
 	//ImGui::PopStyleVar();
 }
@@ -6093,7 +6096,7 @@ void ofxColorManager::gui_Gradient()
 
 	//ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(PANEL_WIDGETS_WIDTH, PANEL_WIDGETS_HEIGHT));
 
-	guiManager.beginWindow(SHOW_Gradient, flagsw);
+	guiManager.BeginWindow(SHOW_Gradient, flagsw);
 	{
 		float _spcx;
 		float _spcy;
@@ -6200,7 +6203,7 @@ void ofxColorManager::gui_Gradient()
 			ImGui::Checkbox("Auto-Resize", &auto_resize);
 		}
 	}
-	guiManager.endWindow();
+	guiManager.EndWindow();
 
 	//ImGui::PopStyleVar();
 }
@@ -6222,7 +6225,7 @@ void ofxColorManager::gui_Demo()
 
 	//ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(ww, hh));
 
-	guiManager.beginWindow(SHOW_Demos, flagsw);
+	guiManager.BeginWindow(SHOW_Demos, flagsw);
 	{
 		float _spcx;
 		float _spcy;
@@ -6400,7 +6403,7 @@ void ofxColorManager::gui_Demo()
 		}
 		//ImGui::Dummy(ImVec2(0, 5));
 	}
-	guiManager.endWindow();
+	guiManager.EndWindow();
 
 	//ImGui::PopStyleVar();
 }
@@ -6484,7 +6487,7 @@ bool ofxColorManager::draw_Gui()
 {
 	//bLockMouseByImGui = false;
 
-	guiManager.begin();
+	guiManager.Begin();
 	//gui.begin();
 	{
 
@@ -6712,17 +6715,21 @@ bool ofxColorManager::draw_Gui()
 		//extra advanced panels
 		if (SHOW_EditTheme)
 		{
-			guiManager.beginWindow(SHOW_EditTheme, ImGuiWindowFlags_None);
 			{
-				ImGui::ShowStyleEditor();
+				//guiManager.BeginWindow(SHOW_EditTheme, ImGuiWindowFlags_None);
+				guiManager.BeginWindow("SHOW_EditTheme");
+				{
+					ImGui::ShowStyleEditor();
+				}
+				guiManager.EndWindow();
 			}
-			guiManager.endWindow();
 
-			guiManager.beginWindow("STYLE SLECTOR", ImGuiWindowFlags_None);
+			guiManager.BeginWindow("STYLE SLECTOR");
+			//guiManager.BeginWindow("STYLE SLECTOR", ImGuiWindowFlags_None);
 			{
 				ImGui::ShowStyleSelector(" ");
 			}
-			guiManager.endWindow();
+			guiManager.EndWindow();
 
 			//if (ofxImGui::BeginWindow("VIEW PORT THUMBS", mainSettings, ImGuiWindowFlags_None))
 			//{
@@ -6747,7 +6754,7 @@ bool ofxColorManager::draw_Gui()
 		//--
 		}
 	//gui.end();
-	guiManager.end();
+	guiManager.End();
 
 	mouseLockedByGui = ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow);
 
