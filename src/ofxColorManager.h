@@ -198,7 +198,7 @@ using namespace ofxColorTheory;
 
 #include "ofxSerializer.h"
 #include "ofxSurfingHelpers.h"
-#include "ofxSurfing_Files.h"
+#include "surfingFiles.h"
 #include "ofxSurfingImGui.h"
 using namespace ofxSurfingHelpers;
 using namespace ofxImGuiSurfing;
@@ -967,7 +967,7 @@ private:
 
 	//ofxImGui::Gui gui;
 	//ofxImGui::Settings mainSettings = ofxImGui::Settings();
-	ofxSurfing_ImGui_Manager guiManager;
+	ofxSurfingGui guiManager;
 
 	ImFont* customFont = nullptr;
 	ImFont* customFontBig = nullptr;
