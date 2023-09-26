@@ -22,8 +22,8 @@
 #endif
 
 #ifdef USE_IM_GUI__QUANTIZER
-//#include "ofxImGui.h"
 #include "ofxSurfingImGui.h"
+#include "ImHelpers.h"
 #endif
 
 #include "ofxOpenCv.h"

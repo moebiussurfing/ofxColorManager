@@ -12,9 +12,11 @@ ofxNetworkUtils
 ofxHTTP
 ofxImGui
 ofxJSON
-ofxMouseRuler2
+ofxMouseRuler
+ofxMSAInteractiveObject
 ofxNetwork
 ofxOpenCv
+ofxScaleDragRect
 ofxSCENE-SVG
 ofxSimpleSlider
 ofxSurfingHelpers

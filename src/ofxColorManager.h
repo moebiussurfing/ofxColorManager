@@ -55,10 +55,15 @@ BUGS:
 #include "ase_writer.h"
 #endif
 
+#define SURF__DISABLE_LINK_SYNC//global disable all the sync features
+#ifndef SURF__DISABLE_LINK_SYNC
 // NOTE: can't be disabled now..
 // tcp modes: enable only one of the two modes
 #define LINK_TCP_MASTER_CLIENT_OF
 //#define LINK_TCP_MASTER_CLIENT_KU
+#endif
+
+//#define SURFING__USE_SPLASHSCREEN
 
 //--
 
@@ -136,6 +141,8 @@ BUGS:
 
 //----
 
+#ifndef SURF__DISABLE_LINK_SYNC
+
 // tcp link
 // only one of the two
 #ifdef LINK_TCP_MASTER_CLIENT_OF
@@ -144,6 +151,8 @@ BUGS:
 
 #ifdef LINK_TCP_MASTER_CLIENT_KU
 #include "ofxKuNetwork.h"
+#endif
+
 #endif
 
 // note that threading is not implemented. so ofxColorClient hangs some seconds when connecting retries. 
@@ -212,6 +221,7 @@ using namespace ofxImGuiSurfing;
 
 #include "ofxSurfingImGui.h"
 //#include "ofxImGui.h"
+#include "ImHelpers.h"
 #include "imgui_internal.h" // <-- example uses some imgui internals...
 //#include "tools/imgui_stdlib.h" // <-- string helpers
 
@@ -220,14 +230,16 @@ using namespace ImGui_PalettesPicker;
 
 #include "GradientEngine.h"
 
-//TODO: for a posible future custom multitouch user GUI without ImGui
+//TODO: for a possible future custom multi touch user GUI without ImGui
 #ifdef USE_RECTANGLE_INTERFACES
 #include "ofxInterface.h"
 #include "interface/ButtonPaletteSelector.h"
 #include "interface/ButtonExample.h"
 #endif
 
+#ifdef SURFING__USE_SPLASHSCREEN
 #include "SplashScreen.h"
+#endif
 
 //----
 
@@ -967,7 +979,7 @@ private:
 
 	//ofxImGui::Gui gui;
 	//ofxImGui::Settings mainSettings = ofxImGui::Settings();
-	ofxSurfingGui guiManager;
+	ofxSurfingGui ui;
 
 	ImFont* customFont = nullptr;
 	ImFont* customFontBig = nullptr;
@@ -1413,7 +1425,9 @@ private:
 		return "#" + ofToHex(col.r) + ofToHex(col.g) + ofToHex(col.b);
 	}
 
+#ifdef SURFING__USE_SPLASHSCREEN
 	SplashScreen splash;
+#endif
 
 	void buildHelpInfo();
 
