@@ -1,5 +1,6 @@
 # WIP
 ### OPEN SOURCED PACKED TOOLS AND ENGINES TO POWER [Paletto](https://moebiussurfing.itch.io/paletto?secret=VXDlB9ydmE23TwQwdng75c7uo)
+<br/>
 
 # ofxColorManager
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
