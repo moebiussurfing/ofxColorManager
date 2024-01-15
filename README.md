@@ -15,11 +15,11 @@ This **openFrameworks** add-on is a **bundle of Tools and Engines** to create an
 
 ## Videos
 
-**ofxColorManager**:  
+**ofxColorManager**: (YouTube)  
 
 [![VIDEO](http://img.youtube.com/vi/oSvGwpbWEuc/0.jpg)](http://www.youtube.com/watch?v=oSvGwpbWEuc "VIDEO")
 
-**ofxColorClient**:  
+**ofxColorClient**: (YouTube)  
 
 [![VIDEO](http://img.youtube.com/vi/oSvGwpbWEuc/0.jpg)](http://www.youtube.com/watch?v=oSvGwpbWEuc "VIDEO")
 
