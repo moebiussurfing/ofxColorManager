@@ -1,7 +1,5 @@
 # WIP
-### OPEN SOURCED PACKED TOOLS 
-### AND ENGINES TO POWER
-### [Paletto](https://moebiussurfing.itch.io/paletto?secret=VXDlB9ydmE23TwQwdng75c7uo), a **WIP** _desktop app_.
+### OPEN SOURCED PACKED TOOLS AND ENGINES TO POWER [Paletto](https://moebiussurfing.itch.io/paletto?secret=VXDlB9ydmE23TwQwdng75c7uo), a **WIP** _desktop app_.
 
 <br/>
 
